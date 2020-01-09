@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'entity.dart';
-import 'package:game_collection/game_view.dart';
+import 'package:game_collection/entity_view/game_view.dart';
 
 const String gameTable = "Game";
 
@@ -61,14 +61,49 @@ class Game extends Entity {
 
   }
 
-  Widget getCard(BuildContext context) {
+  static List<Game> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<Game> gamesList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
+      Game game = Game.fromDynamicMap(map[gameTable]);
+
+      gamesList.add(game);
+    });
+
+    return gamesList;
+
+  }
+
+  String getNameAndEdition() {
+
+    if(this.edition == '') {
+      return this.name;
+    }
+
+    return this.name + " - " + this.edition;
+
+  }
+
+  @override
+  Widget getEssentialInfo({Function handleDelete}) {
+    return ListTile(
+      title: Text(this.getNameAndEdition()),
+      subtitle: Text(this.status),
+      trailing: FlatButton(
+        child: Text("Delete", style: TextStyle(color: Colors.white),),
+        color: Colors.red,
+        onPressed: handleDelete,
+      ),
+    );
+  }
+
+  @override
+  Widget getCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: ListTile(
-          title: Text(this.name + " - " + this.edition),
-          subtitle: Text(this.status),
-        ),
+        child: this.getEssentialInfo(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(

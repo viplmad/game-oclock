@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
 import 'entity.dart';
-import 'package:game_collection/purchase_view.dart';
+import 'package:game_collection/entity_view/purchase_view.dart';
 
 const purchaseTable = "Purchase";
 
@@ -46,14 +46,39 @@ class Purchase extends Entity {
 
   }
 
-  Widget getCard(BuildContext context) {
+  static List<Purchase> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<Purchase> purchasesList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
+      Purchase purchase = Purchase.fromDynamicMap(map[purchaseTable]);
+
+      purchasesList.add(purchase);
+    });
+
+    return purchasesList;
+
+  }
+
+  @override
+  Widget getEssentialInfo({Function handleDelete}) {
+    return ListTile(
+      title: Text(this.description),
+      subtitle: Text(this.price.toString()),
+      trailing: FlatButton(
+        child: Text("Delete", style: TextStyle(color: Colors.white),),
+        color: Colors.red,
+        onPressed: handleDelete,
+      ),
+    );
+  }
+
+  @override
+  Widget getCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: ListTile(
-          title: Text(this.description),
-          subtitle: Text(this.price.toString()),
-        ),
+        child: this.getEssentialInfo(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(

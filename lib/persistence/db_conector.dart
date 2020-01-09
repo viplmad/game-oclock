@@ -9,15 +9,15 @@ import 'package:game_collection/entity/tag.dart';
 
 abstract class DBConnector {
 
-  Future<void> open();
-  Future<void> close();
+  Future<dynamic> open();
+  Future<dynamic> close();
 
   Stream<List<Game>> getAllGames();
   Stream<List<Platform>> getPlatformsFromGame(int ID);
   Stream<List<Purchase>> getPurchasesFromGame(int ID);
   Stream<List<DLC>> getDLCsFromGame(int ID);
   Stream<List<Tag>> getTagsFromGame(int ID);
-  /*
+
   Stream<List<DLC>> getAllDLCs();
   Stream<Game> getBaseGameFromDLC(int baseGameID);
   Stream<List<Purchase>> getPurchasesFromDLC(int ID);
@@ -40,7 +40,16 @@ abstract class DBConnector {
 
   Stream<List<Tag>> getAllTags();
   Stream<List<Game>> getGamesFromTag(int ID);
-  */
+
   Stream<List<PurchaseType>> getAllTypes();
   Stream<List<Purchase>> getPurchasesFromType(int ID);
+
+  Stream<List<Game>> getGamesWithName(String name);
+
+  Future<dynamic> updateDescriptionPurchase(int ID, String newText);
+
+  Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
+  Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
+
+  Future<dynamic> insertPurchase();
 }

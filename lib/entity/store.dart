@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'entity.dart';
+import 'package:game_collection/entity_view/store_view.dart';
 
 const String storeTable = "Store";
 
@@ -25,4 +26,51 @@ class Store extends Entity {
     );
 
   }
+
+  static List<Store> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<Store> storesList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
+      Store store = Store.fromDynamicMap(map[storeTable]);
+
+      storesList.add(store);
+    });
+
+    return storesList;
+
+  }
+
+  Widget getEssentialInfo({Function handleDelete}) {
+    return ListTile(
+      title: Text(this.name),
+      trailing: FlatButton(
+        child: Text("Delete", style: TextStyle(color: Colors.white),),
+        color: Colors.red,
+        onPressed: handleDelete,
+      ),
+    );
+  }
+
+  @override
+  Widget getCard(BuildContext context, {Function handleDelete}) {
+
+    return GestureDetector(
+      child: Card(
+        child: this.getEssentialInfo(handleDelete: handleDelete),
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) =>
+              StoreView(
+                store: this,
+              )
+          ),
+        );
+      },
+    );
+
+  }
+
 }

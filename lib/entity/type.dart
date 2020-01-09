@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'entity.dart';
-import 'package:game_collection/type_view.dart';
+import 'package:game_collection/entity_view/type_view.dart';
 
 const String typeTable = "Type";
 
@@ -24,13 +24,38 @@ class PurchaseType extends Entity{
 
   }
 
-  Widget getCard(BuildContext context) {
+  static List<PurchaseType> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<PurchaseType> typesList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
+      PurchaseType type = PurchaseType.fromDynamicMap(map[typeTable]);
+
+      typesList.add(type);
+    });
+
+    return typesList;
+
+  }
+
+  @override
+  Widget getEssentialInfo({Function handleDelete}) {
+    return ListTile(
+      title: Text(this.name),
+      trailing: FlatButton(
+        child: Text("Delete", style: TextStyle(color: Colors.white),),
+        color: Colors.red,
+        onPressed: handleDelete,
+      ),
+    );
+  }
+
+  @override
+  Widget getCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: ListTile(
-          title: Text(this.name),
-        ),
+        child: this.getEssentialInfo(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(
@@ -45,4 +70,5 @@ class PurchaseType extends Entity{
     );
 
   }
+
 }
