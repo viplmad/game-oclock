@@ -56,36 +56,17 @@ class DLC extends Entity {
   }
 
   @override
-  Widget getEssentialInfo({Function handleDelete}) {
-    return ListTile(
-      title: Text(this.name),
-      trailing: FlatButton(
-        child: Text("Delete", style: TextStyle(color: Colors.white),),
-        color: Colors.red,
-        onPressed: handleDelete,
-      ),
-    );
+  String getFormattedTitle() {
+
+    return this.name;
+
   }
 
   @override
-  Widget getCard(BuildContext context, {Function handleDelete}) {
+  Widget entityBuilder(BuildContext context) {
 
-    return GestureDetector(
-      child: Card(
-        child: ListTile(
-          title: this.getEssentialInfo(handleDelete: handleDelete),
-        ),
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) =>
-              DLCView(
-                dlc: this,
-              )
-          ),
-        );
-      },
+    return DLCView(
+      dlc: this,
     );
 
   }

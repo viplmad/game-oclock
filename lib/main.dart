@@ -179,7 +179,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             Game result = results[index];
 
-            return result.getCard(context);
+            return result.getModifyCard(context);
           },
         );
       },
@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             DLC result = results[index];
 
-            return result.getCard(context);
+            return result.getModifyCard(context);
           },
         );
       },
@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             Purchase result = results[index];
 
-            return result.getCard(context);
+            return result.getModifyCard(context);
           },
         );
       },
@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             Store result = results[index];
 
-            return result.getCard(context);
+            return result.getModifyCard(context);
           },
         );
       },
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             Platform result = results[index];
 
-            return result.getCard(context);
+            return result.getModifyCard(context);
           },
         );
       },

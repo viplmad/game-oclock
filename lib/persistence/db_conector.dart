@@ -1,3 +1,4 @@
+import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/game.dart';
 import 'package:game_collection/entity/dlc.dart';
 import 'package:game_collection/entity/type.dart';
@@ -44,12 +45,15 @@ abstract class DBConnector {
   Stream<List<PurchaseType>> getAllTypes();
   Stream<List<Purchase>> getPurchasesFromType(int ID);
 
-  Stream<List<Game>> getGamesWithName(String name);
-
   Future<dynamic> updateDescriptionPurchase(int ID, String newText);
 
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
 
   Future<dynamic> insertPurchase();
+
+
+  Stream<List<Entity>> getSearchStream(String tableName, String query);
+  Stream<List<Game>> getGamesWithName(String name);
+
 }

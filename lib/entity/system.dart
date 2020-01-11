@@ -49,24 +49,25 @@ class System extends Entity {
   }
 
   @override
-  Widget getEssentialInfo({Function handleDelete}) {
-    return ListTile(
-      title: Text(this.name),
-      subtitle: Text(this.manufacturer),
-      trailing: FlatButton(
-        child: Text("Delete", style: TextStyle(color: Colors.white),),
-        color: Colors.red,
-        onPressed: handleDelete,
-      ),
-    );
+  String getFormattedTitle() {
+
+    return this.name;
+
   }
 
   @override
-  Widget getCard(BuildContext context, {Function handleDelete}) {
+  String getFormattedSubtitle() {
+
+    return this.manufacturer;
+
+  }
+
+  @override
+  Widget getModifyCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: this.getEssentialInfo(handleDelete: handleDelete),
+        child: this.getCard(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(

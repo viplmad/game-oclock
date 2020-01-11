@@ -24,7 +24,7 @@ class _SystemViewState extends State<SystemView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: widget.system.getEssentialInfo(),
+        title: widget.system.getCard(),
       ),
       body: Center(),
     );

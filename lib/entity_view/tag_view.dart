@@ -24,7 +24,7 @@ class _TagViewState extends State<TagView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: widget.tag.getEssentialInfo(),
+        title: widget.tag.getCard(),
       ),
       body: Center(),
     );

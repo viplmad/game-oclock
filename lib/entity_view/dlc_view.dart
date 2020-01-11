@@ -1,33 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:game_collection/entity_view/entity_view.dart';
 
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
-import '../entity/entity.dart';
-import '../entity/dlc.dart';
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/entity/dlc.dart';
+import 'package:game_collection/entity/game.dart' as game;
+import 'package:game_collection/entity/purchase.dart';
 
-import 'package:game_collection/loading_icon.dart';
-
-class DLCView extends StatefulWidget {
-  DLCView({Key key, this.dlc}) : super(key: key);
-
-  final DLC dlc;
+class DLCView extends EntityView {
+  DLCView({Key key, @required DLC dlc}) : super(key: key, entity: dlc);
 
   @override
-  State<DLCView> createState() => _DLCViewState();
+  State<EntityView> createState() => _DLCViewState();
 }
 
-class _DLCViewState extends State<DLCView> {
+class _DLCViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
-  @override
-  Widget build(BuildContext context) {
+  DLC getEntity() => widget.entity as DLC;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.dlc.name),
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+          fieldName: IDField,
+          value: getEntity().ID.toString(),
       ),
-      body: Center(),
-    );
+      attributeBuilder(
+        fieldName: nameField,
+        value: getEntity().name.toString(),
+      ),
+      attributeBuilder(
+        fieldName: releaseYearField,
+        value: getEntity().releaseYear.toString(),
+      ),
+      attributeBuilder(
+        fieldName: finishDateField,
+        value: getEntity().finishDate?.toIso8601String() ?? "Unknown",
+      ),
+      streamBuilderEntity(
+          entityStream: _db.getBaseGameFromDLC(getEntity().baseGame),
+          tableName: game.gameTable,
+          addText: "Add " + baseGameField,
+      ),
+      streamBuilderEntities(
+          entityStream: _db.getPurchasesFromDLC(getEntity().ID),
+          tableName: purchaseTable,
+          addText: "Add " + purchaseTable,
+      ),
+    ];
 
   }
+
 }

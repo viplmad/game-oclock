@@ -40,7 +40,7 @@ class _GameViewState extends State<GameView> {
         } else {
           Entity result = results[index];
 
-          return result.getCard(context);
+          return result.getModifyCard(context);
         }
       },
     );

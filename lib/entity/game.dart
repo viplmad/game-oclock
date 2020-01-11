@@ -75,7 +75,8 @@ class Game extends Entity {
 
   }
 
-  String getNameAndEdition() {
+  @override
+  String getFormattedTitle() {
 
     if(this.edition == '') {
       return this.name;
@@ -86,24 +87,18 @@ class Game extends Entity {
   }
 
   @override
-  Widget getEssentialInfo({Function handleDelete}) {
-    return ListTile(
-      title: Text(this.getNameAndEdition()),
-      subtitle: Text(this.status),
-      trailing: FlatButton(
-        child: Text("Delete", style: TextStyle(color: Colors.white),),
-        color: Colors.red,
-        onPressed: handleDelete,
-      ),
-    );
+  String getFormattedSubtitle() {
+
+    return this.status;
+
   }
 
   @override
-  Widget getCard(BuildContext context, {Function handleDelete}) {
+  Widget getModifyCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: this.getEssentialInfo(handleDelete: handleDelete),
+        child: this.getCard(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(

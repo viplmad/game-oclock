@@ -61,24 +61,25 @@ class Purchase extends Entity {
   }
 
   @override
-  Widget getEssentialInfo({Function handleDelete}) {
-    return ListTile(
-      title: Text(this.description),
-      subtitle: Text(this.price.toString()),
-      trailing: FlatButton(
-        child: Text("Delete", style: TextStyle(color: Colors.white),),
-        color: Colors.red,
-        onPressed: handleDelete,
-      ),
-    );
+  String getFormattedTitle() {
+
+    return this.description;
+
   }
 
   @override
-  Widget getCard(BuildContext context, {Function handleDelete}) {
+  String getFormattedSubtitle() {
+
+    return this.price.toString();
+
+  }
+
+  @override
+  Widget getModifyCard(BuildContext context, {Function handleDelete}) {
 
     return GestureDetector(
       child: Card(
-        child: this.getEssentialInfo(handleDelete: handleDelete),
+        child: this.getCard(handleDelete: handleDelete),
       ),
       onTap: () {
         Navigator.push(

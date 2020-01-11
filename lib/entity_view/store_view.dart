@@ -37,7 +37,7 @@ class _StoreViewState extends State<StoreView> {
         } else {
           Entity entity = results[index];
 
-          return entity.getCard(
+          return entity.getModifyCard(
             context,
             handleDelete: () => handleDelete(entity.ID),
           );

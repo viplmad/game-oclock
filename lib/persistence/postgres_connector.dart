@@ -535,6 +535,14 @@ class PostgresConnector implements DBConnector {
 
   }
 
+  Stream<List<Entity>> getSearchStream(String tableName, String query) {
+
+    switch(tableName) {
+      case gameEntity.gameTable:
+        return getGamesWithName(query);
+    }
+  }
+
   @override
   Stream<List<Game>> getGamesWithName(String nameQuery) {
 

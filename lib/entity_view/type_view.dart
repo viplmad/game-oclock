@@ -57,7 +57,7 @@ class _TypeViewState extends State<TypeView> {
                   itemBuilder: (BuildContext context, int index) {
                     Purchase result = results[index];
 
-                    return result.getCard(context);
+                    return result.getModifyCard(context);
                   },
                 );
               },

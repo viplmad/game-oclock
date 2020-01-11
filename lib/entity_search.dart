@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
 import 'package:game_collection/entity/entity.dart';
-import 'package:game_collection/entity/game.dart';
 
 import 'package:game_collection/loading_icon.dart';
 
-class GameSearch extends SearchDelegate<Game> {
+class EntitySearch extends SearchDelegate<Entity> {
+  EntitySearch({@required String searchGroup});
+
   final DBConnector _db = PostgresConnector.getConnector();
 
   int _maxResults = 25;
@@ -40,47 +41,55 @@ class GameSearch extends SearchDelegate<Game> {
   @override
   Widget buildResults(BuildContext context) {
     if (query.trim().length > 1) {
+
       return StreamBuilder(
         stream: _db.getGamesWithName(query),
-        builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
           return listResults(snapshot.data);
         },
       );
+
     } else {
+
       return Center(child: Text("Try with more words"),);
+
     }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.trim().length > 1) {
+
       return StreamBuilder(
         stream: _db.getGamesWithName(query),
-        builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
           return listSuggestions(snapshot.data);
         },
       );
+
     } else {
+
       return Container();
+
     }
   }
 
-  Widget listResults(List results) {
+  Widget listResults(List<Entity> results) {
 
     return ListView.separated(
       padding: const EdgeInsets.all(8.0),
       itemCount: results.length,
       separatorBuilder: (BuildContext context, int index) => Divider(height: 1.0,),
       itemBuilder: (BuildContext context, int index) {
-        Game result = results[index];
+        Entity result = results[index];
 
         return GestureDetector(
           child: Card(
-            child: result.getEssentialInfo(),
+            child: result.getCard(),
           ),
           onTap: () {
 
@@ -99,12 +108,12 @@ class GameSearch extends SearchDelegate<Game> {
       shrinkWrap: true,
       itemCount: results.length,
       itemBuilder: (BuildContext context, int index) {
-        Game result = results[index];
+        Entity result = results[index];
 
         return ListTile(
-          title: Text(result.getNameAndEdition()),
+          title: Text(result.getFormattedTitle()),
           onTap: () {
-            query = result.name;
+            query = result.getFormattedTitle();
             showResults(context);
           },
           trailing: IconButton(
@@ -114,7 +123,7 @@ class GameSearch extends SearchDelegate<Game> {
             ),
             tooltip: "Auto-fill",
             onPressed: () {
-              query = result.name;
+              query = result.getFormattedTitle();
             },
           ),
         );

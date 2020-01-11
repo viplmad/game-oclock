@@ -9,6 +9,7 @@ import 'package:game_collection/entity/dlc.dart';
 import 'package:game_collection/entity/store.dart';
 
 import 'package:game_collection/game_search.dart';
+import 'entity_view.dart';
 
 import 'package:game_collection/loading_icon.dart';
 
@@ -32,58 +33,6 @@ class _PurchaseViewState extends State<PurchaseView> {
       duration: Duration(seconds: 2),
     );
     scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  Widget showResults(List results, String addText, {Function handleNew, Function handleDelete}) {
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: results.length + 1,
-      itemBuilder: (BuildContext context, int index) {
-        if(index == results.length) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton(
-              child: Text(addText),
-              onPressed: handleNew,
-            ),
-          );
-        } else {
-          Entity entity = results[index];
-
-          return entity.getCard(
-              context,
-              handleDelete: () => handleDelete(entity.ID),
-          );
-
-        }
-      },
-    );
-
-  }
-
-  Widget showResultsNonExpandable(Entity result, String addText) {
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: 1,
-      itemBuilder: (BuildContext context, int index) {
-        if(result == null) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton(
-              child: Text(addText),
-              onPressed: () {},
-            ),
-          );
-        } else {
-
-          return result.getCard(context);
-
-        }
-      },
-    );
-
   }
 
   @override
@@ -177,14 +126,40 @@ class _PurchaseViewState extends State<PurchaseView> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: StreamBuilder(
+              child: EntityView.StreamBuilderEntities(
+                  entityStream: _db.getGamesFromPurchase(widget.purchase.ID),
+                  addText: "Add Game",
+                  handleNew: (Game addedGame) {
+                    _db.insertGamePurchase(addedGame.ID, widget.purchase.ID).then( (dynamic data) {
+
+                      _showSnackBar("Added " + addedGame.getNameAndEdition());
+
+                    }, onError: (e) {
+
+                      _showSnackBar("Unable to add " + addedGame.getNameAndEdition());
+
+                    });
+                  },
+                  handleDelete: (Game removedGame) {
+                    _db.deleteGamePurchase(removedGame.ID, widget.purchase.ID).then( (dynamic data) {
+
+                      _showSnackBar("Deleted " + removedGame.getNameAndEdition());
+
+                    }, onError: (e) {
+
+                      _showSnackBar("Unable to delete" + removedGame.getNameAndEdition());
+
+                    });
+                  }
+              ),
+              /*StreamBuilder(
                 stream: _db.getGamesFromPurchase(widget.purchase.ID),
                 builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
                   if(!snapshot.hasData) { return LoadingIcon(); }
 
-                  return showResults(
-                    snapshot.data,
-                    "Add Game",
+                  return EntityView.showResults(
+                    results: snapshot.data,
+                    addText: "Add Game",
                     handleNew: () {
                       showSearch<Game>(
                           context: context,
@@ -217,7 +192,7 @@ class _PurchaseViewState extends State<PurchaseView> {
                   );
 
                 },
-              ),
+              ),*/
             ),
             Divider(),
             Padding(
@@ -231,7 +206,10 @@ class _PurchaseViewState extends State<PurchaseView> {
                 builder: (BuildContext context, AsyncSnapshot<List<DLC>> snapshot) {
                   if(!snapshot.hasData) { return LoadingIcon(); }
 
-                  return showResults(snapshot.data, "Add DLC");
+                  return EntityView.showResults(
+                      results: snapshot.data,
+                      addText: "Add DLC"
+                  );
 
                 },
               ),
@@ -248,7 +226,9 @@ class _PurchaseViewState extends State<PurchaseView> {
                 builder: (BuildContext context, AsyncSnapshot<Store> snapshot) {
                   if(!snapshot.hasData) { return LoadingIcon(); }
 
-                  return showResultsNonExpandable(snapshot.data.ID < 0? null : snapshot.data, "Add Store");
+                  return EntityView.showResultsNonExpandable(
+                      result: snapshot.data.ID < 0? null : snapshot.data,
+                      addText: "Add Store");
 
                 },
               ),
