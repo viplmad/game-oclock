@@ -7,7 +7,7 @@ import 'db_conector.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/game.dart';
-import 'package:game_collection/entity/dlc.dart';
+import 'package:game_collection/entity/dlc.dart' as dlcEntity;
 import 'package:game_collection/entity/type.dart';
 import 'package:game_collection/entity/purchase.dart';
 import 'package:game_collection/entity/platform.dart';
@@ -131,18 +131,18 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<DLC>> getDLCsFromGame(int ID) {
+  Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID) {
 
     String sql = "SELECT * ";
 
-    sql += "FROM " + _forceDoubleQuotes(dlcTable) + " d JOIN " + _forceDoubleQuotes(gameTable) + " g "
-        + " ON d." + _forceDoubleQuotes(baseGameField) + " = g." + _forceDoubleQuotes(IDField) + " ";
+    sql += "FROM " + _forceDoubleQuotes(dlcEntity.dlcTable) + " d JOIN " + _forceDoubleQuotes(gameTable) + " g "
+        + " ON d." + _forceDoubleQuotes(dlcEntity.baseGameField) + " = g." + _forceDoubleQuotes(IDField) + " ";
 
     return _connection.mappedResultsQuery(sql + " WHERE g." + _forceDoubleQuotes(IDField) + " = @gameID", substitutionValues: {
       "gameID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return DLC.fromDynamicMapList(results);
+      return dlcEntity.DLC.fromDynamicMapList(results);
 
     });
 
@@ -173,13 +173,13 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<DLC>> getAllDLCs() {
+  Stream<List<dlcEntity.DLC>> getAllDLCs() {
 
-    String sql = _allQuery(dlcTable);
+    String sql = _allQuery(dlcEntity.dlcTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return DLC.fromDynamicMapList(results);
+      return dlcEntity.DLC.fromDynamicMapList(results);
 
     });
 
@@ -195,7 +195,11 @@ class PostgresConnector implements DBConnector {
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
       Game baseGame;
 
-      baseGame = Game.fromDynamicMap(results[0][gameTable]);
+      if(results.isEmpty) {
+        baseGame = gameEntity.Game(ID: -1);
+      } else {
+        baseGame = Game.fromDynamicMap(results[0][gameTable]);
+      }
 
       return baseGame;
     });
@@ -205,9 +209,9 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<Purchase>> getPurchasesFromDLC(int ID) {
 
-    String relationTable = _relationTable(dlcTable, purchaseTable);
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseTable);
     String purchaseIDField = _relationIDField(purchaseTable);
-    String dlcIDField = _relationIDField(dlcTable);
+    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
 
     String sql = _joinQuery(
         purchaseTable,
@@ -346,14 +350,14 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<DLC>> getDLCsFromPurchase(int ID) {
+  Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID) {
 
-    String relationTable = _relationTable(dlcTable, purchaseTable);
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseTable);
     String purchaseIDField = _relationIDField(purchaseTable);
-    String dlcIDField = _relationIDField(dlcTable);
+    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
 
     String sql = _joinQuery(
-        dlcTable,
+        dlcEntity.dlcTable,
         relationTable,
         IDField,
         dlcIDField
@@ -363,7 +367,7 @@ class PostgresConnector implements DBConnector {
       "purchaseID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return DLC.fromDynamicMapList(results);
+      return dlcEntity.DLC.fromDynamicMapList(results);
 
     });
 
@@ -541,6 +545,7 @@ class PostgresConnector implements DBConnector {
       case gameEntity.gameTable:
         return getGamesWithName(query);
     }
+
   }
 
   @override
@@ -601,6 +606,19 @@ class PostgresConnector implements DBConnector {
 
   }
 
+  Future<dynamic> insertDLC() {
+
+    String sql = "ALter TABLE " + _forceDoubleQuotes(dlcEntity.dlcTable) + " COLUMN " + _forceDoubleQuotes(dlcEntity.baseGameField) + "NULL";
+
+    /*
+    String sql = "INSERT INTO " + _forceDoubleQuotes(dlcEntity.dlcTable) + " (" + _forceDoubleQuotes(dlcEntity.nameField) + ", " +_forceDoubleQuotes(dlcEntity.releaseYearField) + ", " +_forceDoubleQuotes(dlcEntity.baseGameField) + ") ";
+
+    return _connection.mappedResultsQuery(sql + " VALUES('Test', 1998, 1) ");
+
+     */
+
+  }
+
   Future<dynamic> insertPurchase() {
 
     String sql = "INSERT INTO " + _forceDoubleQuotes(purchaseTable) + " (" + _forceDoubleQuotes(descriptionField) + ") ";
@@ -642,6 +660,64 @@ class PostgresConnector implements DBConnector {
   String _relationIDField(String table) {
 
     return table + "_" + IDField;
+
+  }
+
+  @override
+  Future updateStringDLC(int ID, String fieldName, String newText) {
+
+    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newText WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
+      "newText" : newText,
+      "dlcID" : ID,
+    });
+
+  }
+  @override
+  Future updateNumberDLC(int ID, String fieldName, int newNumber) {
+
+    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newNumber WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
+      "newNumber" : newNumber,
+      "dlcID" : ID,
+    });
+
+  }
+
+  @override
+  Future updateDateDLC(int ID, String fieldName, DateTime newDate) {
+
+    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newDate WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
+      "newDate" : newDate,
+      "dlcID" : ID,
+    });
+
+  }
+
+  @override
+  Future deleteGameDLC(int dlcID) {
+
+    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(dlcEntity.baseGameField) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
+      "dlcID" : dlcID,
+    });
+
+  }
+
+  @override
+  Future insertGameDLC(int gameID, int dlcID) {
+
+    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(dlcEntity.baseGameField) + " = @baseGameID WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
+      "baseGameID" : gameID,
+      "dlcID" : dlcID,
+    });
 
   }
 

@@ -63,22 +63,10 @@ class System extends Entity {
   }
 
   @override
-  Widget getModifyCard(BuildContext context, {Function handleDelete}) {
+  Widget entityBuilder(BuildContext context) {
 
-    return GestureDetector(
-      child: Card(
-        child: this.getCard(handleDelete: handleDelete),
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) =>
-              SystemView(
-                system: this,
-              )
-          ),
-        );
-      },
+    return SystemView(
+      system: this,
     );
 
   }

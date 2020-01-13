@@ -17,7 +17,7 @@ class EntityView extends StatefulWidget {
 class EntityViewState extends State<EntityView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _showSnackBar(String message){
+  void showSnackBar(String message){
 
     final snackBar = SnackBar(
       content: Text(message),
@@ -78,6 +78,7 @@ class EntityViewState extends State<EntityView> {
       itemCount: results.length + 1,
       tableName: tableName,
       addText: addText,
+      isSingle: false,
       handleNew: handleNew,
       handleDelete: handleDelete,
     );
@@ -141,7 +142,7 @@ class EntityViewState extends State<EntityView> {
                   FlatButton(
                     child: Text("Accept"),
                     onPressed: () {
-                      Navigator.maybePop(context, fieldController.text);
+                      Navigator.maybePop(context, fieldController.text as dynamic);
                     },
                   )
                 ],
@@ -168,12 +169,23 @@ class EntityViewState extends State<EntityView> {
 
   }
 
+  Widget headerRelationText({@required String fieldName}) {
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+      child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+    );
+
+  }
+
   Widget modifyDoubleAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
 
     return _modifyAttributeBuilder(
       fieldName: fieldName,
       value: value,
-      handleUpdate: handleUpdate,
+      handleUpdate: (String newValue) {
+        handleUpdate(double.parse(newValue));
+      },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter.digitsOnly,
@@ -182,13 +194,40 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyDateAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
+  Widget modifyYearAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
 
-    return _modifyAttributeBuilder(
+    return modifyDateAttributeBuilder(
       fieldName: fieldName,
       value: value,
-      handleUpdate: handleUpdate,
-      keyboardType: TextInputType.datetime,
+      initialDate: DateTime(int.parse(value)),
+      pickerMode: DatePickerMode.year,
+      handleUpdate: (DateTime newDate) {
+        handleUpdate(newDate.year);
+      },
+    );
+
+  }
+
+  Widget modifyDateAttributeBuilder({@required String fieldName, @required String value, DateTime initialDate, DatePickerMode pickerMode, Function handleUpdate}) {
+
+    return GestureDetector(
+      child: this.attributeBuilder(
+        fieldName: fieldName,
+        value: value,
+      ),
+      onTap: () {
+        showDatePicker(
+          context: context,
+          firstDate: DateTime(1970),
+          lastDate: DateTime(2030),
+          initialDate: initialDate?? DateTime.tryParse(value)?? DateTime.now(),
+          initialDatePickerMode: pickerMode?? DatePickerMode.day,
+        ).then( (DateTime newDate) {
+          if (newDate != null) {
+            handleUpdate(newDate);
+          }
+        });
+      },
     );
 
   }

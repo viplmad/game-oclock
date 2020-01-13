@@ -88,9 +88,7 @@ class EntitySearch extends SearchDelegate<Entity> {
         Entity result = results[index];
 
         return GestureDetector(
-          child: Card(
-            child: result.getCard(),
-          ),
+          child: result.getCard(),
           onTap: () {
 
             close(context, result);

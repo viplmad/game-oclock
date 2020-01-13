@@ -8,33 +8,32 @@ import 'package:game_collection/entity/game.dart';
 import 'package:game_collection/entity/dlc.dart';
 import 'package:game_collection/entity/store.dart';
 
-import 'package:game_collection/game_search.dart';
 import 'entity_view.dart';
 
-import 'package:game_collection/loading_icon.dart';
-
-class PurchaseView extends StatefulWidget {
-  PurchaseView({Key key, this.purchase}) : super(key: key);
-
-  final Purchase purchase;
+class PurchaseView extends EntityView {
+  PurchaseView({Key key, @required Purchase purchase}) : super(key: key, entity: purchase);
 
   @override
-  State<PurchaseView> createState() => _PurchaseViewState();
+  State<EntityView> createState() => _PurchaseViewState();
 }
 
-class _PurchaseViewState extends State<PurchaseView> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+class _PurchaseViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
-  void _showSnackBar(String message){
-    final snackBar = new SnackBar(
-      content: new Text(message),
-      duration: Duration(seconds: 2),
-    );
-    scaffoldKey.currentState.showSnackBar(snackBar);
-  }
+  Purchase getEntity() => widget.entity as Purchase;
 
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+          fieldName: IDField,
+          value: getEntity().ID.toString()
+      ),
+    ];
+
+  }
+  /*
   @override
   Widget build(BuildContext context) {
 
@@ -152,47 +151,6 @@ class _PurchaseViewState extends State<PurchaseView> {
                     });
                   }
               ),
-              /*StreamBuilder(
-                stream: _db.getGamesFromPurchase(widget.purchase.ID),
-                builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
-                  if(!snapshot.hasData) { return LoadingIcon(); }
-
-                  return EntityView.showResults(
-                    results: snapshot.data,
-                    addText: "Add Game",
-                    handleNew: () {
-                      showSearch<Game>(
-                          context: context,
-                          delegate: GameSearch(),
-                      ).then( (Game result) {
-                        if (result != null) {
-                          _db.insertGamePurchase(result.ID, widget.purchase.ID).then( (dynamic data) {
-
-                            _showSnackBar("Added " + result.getNameAndEdition());
-
-                          }, onError: (e) {
-
-                            _showSnackBar("Unable to add " + result.getNameAndEdition());
-
-                          });
-                        }
-                      });
-                    },
-                    handleDelete: (int gameID) {
-                      _db.deleteGamePurchase(gameID, widget.purchase.ID).then( (dynamic data) {
-
-                        _showSnackBar("Deleted");
-
-                      }, onError: (e) {
-
-                        _showSnackBar("Unable to delete");
-
-                      });
-                    }
-                  );
-
-                },
-              ),*/
             ),
             Divider(),
             Padding(
@@ -239,4 +197,5 @@ class _PurchaseViewState extends State<PurchaseView> {
     );
 
   }
+  */
 }

@@ -50,10 +50,18 @@ abstract class DBConnector {
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
 
+  Future<dynamic> insertDLC();
   Future<dynamic> insertPurchase();
+
+  Future<dynamic> insertGameDLC(int gameID, int dlcID);
+  Future<dynamic> deleteGameDLC(int dlcID);
 
 
   Stream<List<Entity>> getSearchStream(String tableName, String query);
   Stream<List<Game>> getGamesWithName(String name);
+
+  Future<dynamic> updateStringDLC(int ID, String fieldName, String newText);
+  Future<dynamic> updateNumberDLC(int ID, String fieldName, int newNumber);
+  Future<dynamic> updateDateDLC(int ID, String fieldName, DateTime newDate);
 
 }

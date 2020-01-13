@@ -103,6 +103,15 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return FloatingActionButton(
           onPressed: () {
+            _db.insertDLC().then( (dynamic data) {
+
+              _showSnackBar("Added new DLC");
+
+            }, onError: (e) {
+
+              _showSnackBar("Unable to add new DLC");
+
+            });
             /*Navigator.push(
               context,
               MaterialPageRoute(builder: (BuildContext context) =>

@@ -14,7 +14,7 @@ abstract class Entity {
 
   String getFormattedSubtitle() {
 
-    return null;
+    return "";
 
   }
 

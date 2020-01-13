@@ -46,22 +46,10 @@ class Tag extends Entity {
   }
 
   @override
-  Widget getModifyCard(BuildContext context, {Function handleDelete}) {
+  Widget entityBuilder(BuildContext context) {
 
-    return GestureDetector(
-      child: Card(
-        child: this.getCard(handleDelete: handleDelete),
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) =>
-              TagView(
-                tag: this,
-              )
-          ),
-        );
-      },
+    return TagView(
+      tag: this,
     );
 
   }
