@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:game_collection/entity/game.dart' as gameEntity;
 import 'package:postgres/postgres.dart';
 
 import 'db_conector.dart';
 
 import 'package:game_collection/entity/entity.dart';
-import 'package:game_collection/entity/game.dart';
+import 'package:game_collection/entity/game.dart' as gameEntity;
 import 'package:game_collection/entity/dlc.dart' as dlcEntity;
-import 'package:game_collection/entity/type.dart';
-import 'package:game_collection/entity/purchase.dart';
-import 'package:game_collection/entity/platform.dart';
-import 'package:game_collection/entity/store.dart';
-import 'package:game_collection/entity/system.dart';
-import 'package:game_collection/entity/tag.dart';
+import 'package:game_collection/entity/purchase.dart' as purchaseEntity;
+import 'package:game_collection/entity/platform.dart' as platformEntity;
+import 'package:game_collection/entity/store.dart' as storeEntity;
+import 'package:game_collection/entity/system.dart' as systemEntity;
+import 'package:game_collection/entity/tag.dart' as tagEntity;
+import 'package:game_collection/entity/type.dart' as typeEntity;
 
 const herokuURIPattern = "^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$";
 
@@ -70,27 +69,27 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<Game>> getAllGames() {
+  Stream<List<gameEntity.Game>> getAllGames() {
 
-    String sql = _allQuery(gameTable);
+    String sql = _allQuery(gameEntity.gameTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Game.fromDynamicMapList(results);
+      return gameEntity.Game.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Platform>> getPlatformsFromGame(int ID) {
+  Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID) {
 
-    String relationTable = _relationTable(gameTable, platformTable);
-    String gameIDField = _relationIDField(gameTable);
-    String platformIDField = _relationIDField(platformTable);
+    String relationTable = _relationTable(gameEntity.gameTable, platformEntity.platformTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String platformIDField = _relationIDField(platformEntity.platformTable);
 
     String sql = _joinQuery(
-        platformTable,
+        platformEntity.platformTable,
         relationTable,
         IDField,
         platformIDField
@@ -100,21 +99,21 @@ class PostgresConnector implements DBConnector {
       "gameID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Platform.fromDynamicMapList(results);
+      return platformEntity.Platform.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromGame(int ID) {
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromGame(int ID) {
 
-    String relationTable = _relationTable(gameTable, purchaseTable);
-    String gameIDField = _relationIDField(gameTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
+    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
 
     String sql = _joinQuery(
-        purchaseTable,
+        purchaseEntity.purchaseTable,
         relationTable,
         IDField,
         purchaseIDField
@@ -124,7 +123,7 @@ class PostgresConnector implements DBConnector {
       "gameID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Purchase.fromDynamicMapList(results);
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
 
     });
 
@@ -135,7 +134,7 @@ class PostgresConnector implements DBConnector {
 
     String sql = "SELECT * ";
 
-    sql += "FROM " + _forceDoubleQuotes(dlcEntity.dlcTable) + " d JOIN " + _forceDoubleQuotes(gameTable) + " g "
+    sql += "FROM " + _forceDoubleQuotes(dlcEntity.dlcTable) + " d JOIN " + _forceDoubleQuotes(gameEntity.gameTable) + " g "
         + " ON d." + _forceDoubleQuotes(dlcEntity.baseGameField) + " = g." + _forceDoubleQuotes(IDField) + " ";
 
     return _connection.mappedResultsQuery(sql + " WHERE g." + _forceDoubleQuotes(IDField) + " = @gameID", substitutionValues: {
@@ -149,14 +148,14 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<Tag>> getTagsFromGame(int ID) {
+  Stream<List<tagEntity.Tag>> getTagsFromGame(int ID) {
 
-    String relationTable = _relationTable(gameTable, tagTable);
-    String gameIDField = _relationIDField(gameTable);
-    String tagIDField = _relationIDField(tagTable);
+    String relationTable = _relationTable(gameEntity.gameTable, tagEntity.tagTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String tagIDField = _relationIDField(tagEntity.tagTable);
 
     String sql = _joinQuery(
-        tagTable,
+        tagEntity.tagTable,
         relationTable,
         IDField,
         tagIDField
@@ -166,7 +165,7 @@ class PostgresConnector implements DBConnector {
       "gameID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Tag.fromDynamicMapList(results);
+      return tagEntity.Tag.fromDynamicMapList(results);
 
     });
 
@@ -186,19 +185,19 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<Game> getBaseGameFromDLC(int baseGameID) {
+  Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID) {
 
-    String sql = _allQuery(gameTable);
+    String sql = _allQuery(gameEntity.gameTable);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @baseGameID ", substitutionValues: {
       "baseGameID" : baseGameID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-      Game baseGame;
+      gameEntity.Game baseGame;
 
       if(results.isEmpty) {
         baseGame = gameEntity.Game(ID: -1);
       } else {
-        baseGame = Game.fromDynamicMap(results[0][gameTable]);
+        baseGame = gameEntity.Game.fromDynamicMap(results[0][gameEntity.gameTable]);
       }
 
       return baseGame;
@@ -207,14 +206,14 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromDLC(int ID) {
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID) {
 
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
     String dlcIDField = _relationIDField(dlcEntity.dlcTable);
 
     String sql = _joinQuery(
-        purchaseTable,
+        purchaseEntity.purchaseTable,
         relationTable,
         IDField,
         purchaseIDField
@@ -224,34 +223,34 @@ class PostgresConnector implements DBConnector {
       "dlcID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Purchase.fromDynamicMapList(results);
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Platform>> getAllPlatforms() {
+  Stream<List<platformEntity.Platform>> getAllPlatforms() {
 
-    String sql = _allQuery(platformTable);
+    String sql = _allQuery(platformEntity.platformTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Platform.fromDynamicMapList(results);
+      return platformEntity.Platform.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Game>> getGamesFromPlatform(int ID) {
+  Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID) {
 
-    String relationTable = _relationTable(gameTable, platformTable);
-    String gameIDField = _relationIDField(gameTable);
-    String platformIDField = _relationIDField(platformTable);
+    String relationTable = _relationTable(gameEntity.gameTable, platformEntity.platformTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String platformIDField = _relationIDField(platformEntity.platformTable);
 
     String sql = _joinQuery(
-        gameTable,
+        gameEntity.gameTable,
         relationTable,
         IDField,
         gameIDField
@@ -261,21 +260,21 @@ class PostgresConnector implements DBConnector {
       "platformID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Game.fromDynamicMapList(results);
+      return gameEntity.Game.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<System>> getSystemsFromPlatform(int ID) {
+  Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID) {
 
-    String relationTable = _relationTable(platformTable, systemTable);
-    String platformIDField = _relationIDField(platformTable);
-    String systemIDField = _relationIDField(systemTable);
+    String relationTable = _relationTable(platformEntity.platformTable, systemEntity.systemTable);
+    String platformIDField = _relationIDField(platformEntity.platformTable);
+    String systemIDField = _relationIDField(systemEntity.systemTable);
 
     String sql = _joinQuery(
-        systemTable,
+        systemEntity.systemTable,
         relationTable,
         IDField,
         systemIDField
@@ -285,39 +284,39 @@ class PostgresConnector implements DBConnector {
       "platformID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return System.fromDynamicMapList(results);
+      return systemEntity.System.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Purchase>> getAllPurchases() {
+  Stream<List<purchaseEntity.Purchase>> getAllPurchases() {
 
-    String sql = _allQuery(purchaseTable);
+    String sql = _allQuery(purchaseEntity.purchaseTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Purchase.fromDynamicMapList(results);
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<Store> getStoreFromPurchase(int storeID) {
+  Stream<storeEntity.Store> getStoreFromPurchase(int storeID) {
 
-    String sql = _allQuery(storeTable);
+    String sql = _allQuery(storeEntity.storeTable);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @storeID ", substitutionValues: {
       "storeID" : storeID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-      Store purchaseStore;
+      storeEntity.Store purchaseStore;
 
       if(results.isEmpty) {
-        purchaseStore = Store(ID: -1);
+        purchaseStore = storeEntity.Store(ID: -1);
       } else {
-        purchaseStore = Store.fromDynamicMap(results[0][storeTable]);
+        purchaseStore = storeEntity.Store.fromDynamicMap(results[0][storeEntity.storeTable]);
       }
 
       return purchaseStore;
@@ -326,14 +325,14 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<Game>> getGamesFromPurchase(int ID) {
+  Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID) {
 
-    String relationTable = _relationTable(gameTable, purchaseTable);
-    String gameIDField = _relationIDField(gameTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
+    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
 
     String sql = _joinQuery(
-        gameTable,
+        gameEntity.gameTable,
         relationTable,
         IDField,
         gameIDField
@@ -343,7 +342,7 @@ class PostgresConnector implements DBConnector {
       "purchaseID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Game.fromDynamicMapList(results);
+      return gameEntity.Game.fromDynamicMapList(results);
 
     });
 
@@ -352,8 +351,8 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID) {
 
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
     String dlcIDField = _relationIDField(dlcEntity.dlcTable);
 
     String sql = _joinQuery(
@@ -374,14 +373,14 @@ class PostgresConnector implements DBConnector {
   }
 
   @override
-  Stream<List<PurchaseType>> getTypesFromPurchase(int ID) {
+  Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID) {
 
-    String relationTable = _relationTable(purchaseTable, typeTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
-    String typeIDField = _relationIDField(typeTable);
+    String relationTable = _relationTable(purchaseEntity.purchaseTable, typeEntity.typeTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
+    String typeIDField = _relationIDField(typeEntity.typeTable);
 
     String sql = _joinQuery(
-        typeTable,
+        typeEntity.typeTable,
         relationTable,
         IDField,
         typeIDField
@@ -391,65 +390,65 @@ class PostgresConnector implements DBConnector {
       "purchaseID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return PurchaseType.fromDynamicMapList(results);
+      return typeEntity.PurchaseType.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Store>> getAllStores() {
+  Stream<List<storeEntity.Store>> getAllStores() {
 
-    String sql = _allQuery(storeTable);
+    String sql = _allQuery(storeEntity.storeTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Store.fromDynamicMapList(results);
+      return storeEntity.Store.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromStore(int ID) {
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromStore(int ID) {
 
     String sql = "SELECT * ";
 
-    sql += "FROM " + _forceDoubleQuotes(purchaseTable) + " p JOIN " + _forceDoubleQuotes(storeTable) + " s "
-        + " ON p." + _forceDoubleQuotes(storeField) + " = s." + _forceDoubleQuotes(IDField) + " ";
+    sql += "FROM " + _forceDoubleQuotes(purchaseEntity.purchaseTable) + " p JOIN " + _forceDoubleQuotes(storeEntity.storeTable) + " s "
+        + " ON p." + _forceDoubleQuotes(purchaseEntity.storeField) + " = s." + _forceDoubleQuotes(IDField) + " ";
 
     return _connection.mappedResultsQuery(sql + " WHERE s." + _forceDoubleQuotes(IDField) + " = @storeID", substitutionValues: {
       "storeID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Purchase.fromDynamicMapList(results);
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<System>> getAllSystems() {
+  Stream<List<systemEntity.System>> getAllSystems() {
 
-    String sql = _allQuery(systemTable);
+    String sql = _allQuery(systemEntity.systemTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return System.fromDynamicMapList(results);
+      return systemEntity.System.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Platform>> getPlatformsFromSystem(int ID) {
+  Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID) {
 
-    String relationTable = _relationTable(platformTable, systemTable);
-    String platformIDField = _relationIDField(platformTable);
-    String systemIDField = _relationIDField(systemTable);
+    String relationTable = _relationTable(platformEntity.platformTable, systemEntity.systemTable);
+    String platformIDField = _relationIDField(platformEntity.platformTable);
+    String systemIDField = _relationIDField(systemEntity.systemTable);
 
     String sql = _joinQuery(
-        platformTable,
+        platformEntity.platformTable,
         relationTable,
         IDField,
         platformIDField
@@ -459,34 +458,34 @@ class PostgresConnector implements DBConnector {
       "systemID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Platform.fromDynamicMapList(results);
+      return platformEntity.Platform.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Tag>> getAllTags() {
+  Stream<List<tagEntity.Tag>> getAllTags() {
 
-    String sql = _allQuery(tagTable);
+    String sql = _allQuery(tagEntity.tagTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Tag.fromDynamicMapList(results);
+      return tagEntity.Tag.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Game>> getGamesFromTag(int ID) {
+  Stream<List<gameEntity.Game>> getGamesFromTag(int ID) {
 
-    String relationTable = _relationTable(gameTable, tagTable);
-    String gameIDField = _relationIDField(gameTable);
-    String tagIDField = _relationIDField(tagTable);
+    String relationTable = _relationTable(gameEntity.gameTable, tagEntity.tagTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String tagIDField = _relationIDField(tagEntity.tagTable);
 
     String sql = _joinQuery(
-        gameTable,
+        gameEntity.gameTable,
         relationTable,
         IDField,
         gameIDField
@@ -496,34 +495,34 @@ class PostgresConnector implements DBConnector {
       "tagID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Game.fromDynamicMapList(results);
+      return gameEntity.Game.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<PurchaseType>> getAllTypes() {
+  Stream<List<typeEntity.PurchaseType>> getAllTypes() {
 
-    String sql = _allQuery(typeTable);
+    String sql = _allQuery(typeEntity.typeTable);
 
     return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return PurchaseType.fromDynamicMapList(results);
+      return typeEntity.PurchaseType.fromDynamicMapList(results);
 
     });
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromType(int ID) {
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID) {
 
-    String relationTable = _relationTable(purchaseTable, typeTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
-    String typeIDField = _relationIDField(typeTable);
+    String relationTable = _relationTable(purchaseEntity.purchaseTable, typeEntity.typeTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
+    String typeIDField = _relationIDField(typeEntity.typeTable);
 
     String sql = _joinQuery(
-        purchaseTable,
+        purchaseEntity.purchaseTable,
         relationTable,
         IDField,
         purchaseIDField
@@ -533,7 +532,7 @@ class PostgresConnector implements DBConnector {
       "typeID" : ID,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Purchase.fromDynamicMapList(results);
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
 
     });
 
@@ -544,22 +543,156 @@ class PostgresConnector implements DBConnector {
     switch(tableName) {
       case gameEntity.gameTable:
         return getGamesWithName(query);
+      case dlcEntity.dlcTable:
+        return getDLCsWithName(query);
+      case platformEntity.platformTable:
+        return getPlatformsWithName(query);
+      case purchaseEntity.purchaseTable:
+        return getPurchasesWithDescription(query);
+      case storeEntity.storeTable:
+        return getStoresWithName(query);
+      case systemEntity.systemTable:
+        return getSystemsWithName(query);
+      case tagEntity.tagTable:
+        return getTagsWithName(query);
+      case typeEntity.typeTable:
+        return getTypesWithName(query);
     }
+    return null;
 
   }
 
   @override
-  Stream<List<Game>> getGamesWithName(String nameQuery) {
+  Stream<List<gameEntity.Game>> getGamesWithName(String nameQuery) {
 
     nameQuery = "%" + nameQuery + "%";
 
-    String sql = _allQuery(gameTable);
+    String sql = _allQuery(gameEntity.gameTable);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(gameEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
       "nameQuery" : nameQuery,
     }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
 
-      return Game.fromDynamicMapList(results);
+      return gameEntity.Game.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<dlcEntity.DLC>> getDLCsWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(dlcEntity.dlcTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(dlcEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return dlcEntity.DLC.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<platformEntity.Platform>> getPlatformsWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(platformEntity.platformTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(platformEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return platformEntity.Platform.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String descQuery) {
+
+    descQuery = "%" + descQuery + "%";
+
+    String sql = _allQuery(purchaseEntity.purchaseTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(purchaseEntity.descriptionField) + " ILIKE @descQuery ", substitutionValues: {
+      "descQuery" : descQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return purchaseEntity.Purchase.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<storeEntity.Store>> getStoresWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(storeEntity.storeTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(storeEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return storeEntity.Store.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<systemEntity.System>> getSystemsWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(systemEntity.systemTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(systemEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return systemEntity.System.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<tagEntity.Tag>> getTagsWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(tagEntity.tagTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(tagEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return tagEntity.Tag.fromDynamicMapList(results);
+
+    });
+
+  }
+
+  @override
+  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String nameQuery) {
+
+    nameQuery = "%" + nameQuery + "%";
+
+    String sql = _allQuery(typeEntity.typeTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(typeEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
+      "nameQuery" : nameQuery,
+    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
+
+      return typeEntity.PurchaseType.fromDynamicMapList(results);
 
     });
 
@@ -568,9 +701,9 @@ class PostgresConnector implements DBConnector {
   @override
   Future<dynamic> updateDescriptionPurchase(int ID, String newText) {
 
-    String sql = "UPDATE " + _forceDoubleQuotes(purchaseTable);
+    String sql = "UPDATE " + _forceDoubleQuotes(purchaseEntity.purchaseTable);
 
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(descriptionField) + " = @newText WHERE " + _forceDoubleQuotes(IDField) + " = @purchaseID ", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(purchaseEntity.descriptionField) + " = @newText WHERE " + _forceDoubleQuotes(IDField) + " = @purchaseID ", substitutionValues: {
       "newText" : newText,
       "purchaseID" : ID,
     });
@@ -580,7 +713,7 @@ class PostgresConnector implements DBConnector {
   @override
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
 
-    String relationTable = _relationTable(gameTable, purchaseTable);
+    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
 
     String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
 
@@ -593,9 +726,9 @@ class PostgresConnector implements DBConnector {
 
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
 
-    String relationTable = _relationTable(gameTable, purchaseTable);
-    String gameIDField = _relationIDField(gameTable);
-    String purchaseIDField = _relationIDField(purchaseTable);
+    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
+    String gameIDField = _relationIDField(gameEntity.gameTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
 
     String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
 
@@ -606,22 +739,48 @@ class PostgresConnector implements DBConnector {
 
   }
 
+
+
+  @override
+  Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID) {
+
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
+
+    String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
+
+    return _connection.mappedResultsQuery(sql + " VALUES(@dlcID, @purchaseID) ", substitutionValues: {
+      "dlcID" : dlcID,
+      "purchaseID" : purchaseID,
+    });
+
+  }
+
+  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
+
+    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
+    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
+    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
+
+    String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(dlcIDField) + " = @dlcID AND " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
+      "dlcID" : dlcID,
+      "purchaseID" : purchaseID,
+    });
+
+  }
+
   Future<dynamic> insertDLC() {
 
-    String sql = "ALter TABLE " + _forceDoubleQuotes(dlcEntity.dlcTable) + " COLUMN " + _forceDoubleQuotes(dlcEntity.baseGameField) + "NULL";
+    String sql = "INSERT INTO " + _forceDoubleQuotes(dlcEntity.dlcTable) + " (" + _forceDoubleQuotes(dlcEntity.nameField) + ") ";
 
-    /*
-    String sql = "INSERT INTO " + _forceDoubleQuotes(dlcEntity.dlcTable) + " (" + _forceDoubleQuotes(dlcEntity.nameField) + ", " +_forceDoubleQuotes(dlcEntity.releaseYearField) + ", " +_forceDoubleQuotes(dlcEntity.baseGameField) + ") ";
-
-    return _connection.mappedResultsQuery(sql + " VALUES('Test', 1998, 1) ");
-
-     */
+    return _connection.mappedResultsQuery(sql + " VALUES('') ");
 
   }
 
   Future<dynamic> insertPurchase() {
 
-    String sql = "INSERT INTO " + _forceDoubleQuotes(purchaseTable) + " (" + _forceDoubleQuotes(descriptionField) + ") ";
+    String sql = "INSERT INTO " + _forceDoubleQuotes(purchaseEntity.purchaseTable) + " (" + _forceDoubleQuotes(purchaseEntity.descriptionField) + ") ";
 
     return _connection.mappedResultsQuery(sql + " VALUES('') ");
 

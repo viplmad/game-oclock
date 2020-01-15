@@ -5,7 +5,7 @@ import 'package:game_collection/persistence/postgres_connector.dart';
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/dlc.dart';
 import 'package:game_collection/entity/game.dart' as gameEntity;
-import 'package:game_collection/entity/purchase.dart';
+import 'package:game_collection/entity/purchase.dart' as purchaseEntity;
 
 import 'entity_view.dart';
 
@@ -46,7 +46,7 @@ class _DLCViewState extends EntityViewState {
       ),
       modifyYearAttributeBuilder(
         fieldName: releaseYearField,
-        value: getEntity().releaseYear.toString(),
+        value: getEntity().releaseYear,
         handleUpdate: (int newYear) {
           _db.updateNumberDLC(getEntity().ID, releaseYearField, newYear).then( (dynamic data) {
 
@@ -61,7 +61,7 @@ class _DLCViewState extends EntityViewState {
       ),
       modifyDateAttributeBuilder(
         fieldName: finishDateField,
-        value: getEntity().finishDate?.toIso8601String() ?? "Unknown",
+        value: getEntity().finishDate,
         handleUpdate: (DateTime newDate) {
           _db.updateDateDLC(getEntity().ID, finishDateField, newDate).then( (dynamic data) {
 
@@ -93,25 +93,47 @@ class _DLCViewState extends EntityViewState {
 
             });
           },
-          handleDelete: (gameEntity.Game addedGame) {
+          handleDelete: (gameEntity.Game removedGame) {
             _db.deleteGameDLC(getEntity().ID).then( (dynamic data) {
 
-              showSnackBar("Deleted " + addedGame.getFormattedTitle());
+              showSnackBar("Deleted " + removedGame.getFormattedTitle());
 
             }, onError: (e) {
 
-              showSnackBar("Unable to delete " + addedGame.getFormattedTitle());
+              showSnackBar("Unable to delete " + removedGame.getFormattedTitle());
 
             });
           },
       ),
       Divider(),
       headerRelationText(
-        fieldName: purchaseTable + 's',
+        fieldName: purchaseEntity.purchaseTable + 's',
       ),
       streamBuilderEntities(
           entityStream: _db.getPurchasesFromDLC(getEntity().ID),
-          tableName: purchaseTable,
+          tableName: purchaseEntity.purchaseTable,
+          handleNew: (purchaseEntity.Purchase addedPurchase) {
+            _db.insertDLCPurchase(getEntity().ID, addedPurchase.ID).then( (dynamic data) {
+
+              showSnackBar("Added " + addedPurchase.getFormattedTitle());
+
+            }, onError: (e) {
+
+              showSnackBar("Unable to add " + addedPurchase.getFormattedTitle());
+
+            });
+          },
+          handleDelete: (purchaseEntity.Purchase removedPurchase) {
+            _db.deleteDLCPurchase(getEntity().ID, removedPurchase.ID).then( (dynamic data) {
+
+              showSnackBar("Deleted " + removedPurchase.getFormattedTitle());
+
+            }, onError: (e) {
+
+              showSnackBar("Unable to delete " + removedPurchase.getFormattedTitle());
+
+            });
+          },
       ),
     ];
 

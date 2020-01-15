@@ -46,7 +46,7 @@ class EntityViewState extends State<EntityView> {
                 showSearch<Entity>(
                   context: context,
                   delegate: EntitySearch(
-                    searchGroup: tableName,
+                    searchTable: tableName,
                   ),
                 ).then( (Entity result) {
                   if (result != null) {
@@ -178,50 +178,62 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyDoubleAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
+  Widget modifyDoubleAttributeBuilder({@required String fieldName, @required double value, Function handleUpdate}) {
 
     return _modifyAttributeBuilder(
       fieldName: fieldName,
-      value: value,
+      value: value.toString(),
       handleUpdate: (String newValue) {
         handleUpdate(double.parse(newValue));
       },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
-        WhitelistingTextInputFormatter.digitsOnly,
+        WhitelistingTextInputFormatter(RegExp(r'^\d{1,3}(\.\d{0,2}){0,1}$')),
       ],
     );
 
   }
 
-  Widget modifyYearAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
+  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value, Function handleUpdate}) {
 
-    return modifyDateAttributeBuilder(
-      fieldName: fieldName,
-      value: value,
-      initialDate: DateTime(int.parse(value)),
-      pickerMode: DatePickerMode.year,
-      handleUpdate: (DateTime newDate) {
-        handleUpdate(newDate.year);
+    return GestureDetector(
+      child: this.attributeBuilder(
+        fieldName: fieldName,
+        value: value.toString(),
+      ),
+      onTap: () {
+        showDialog<int>(
+            context: context,
+            builder: (BuildContext context) {
+              return YearPickerDialog(
+                fieldName: fieldName,
+                year: value,
+              );
+            }
+        ).then( (int newYear) {
+          if (newYear != null) {
+            handleUpdate(newYear);
+          }
+        });
       },
     );
 
   }
 
-  Widget modifyDateAttributeBuilder({@required String fieldName, @required String value, DateTime initialDate, DatePickerMode pickerMode, Function handleUpdate}) {
+  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day, Function handleUpdate}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
         fieldName: fieldName,
-        value: value,
+        value: value?.toIso8601String() ?? "Unknown",
       ),
       onTap: () {
         showDatePicker(
           context: context,
           firstDate: DateTime(1970),
           lastDate: DateTime(2030),
-          initialDate: initialDate?? DateTime.tryParse(value)?? DateTime.now(),
-          initialDatePickerMode: pickerMode?? DatePickerMode.day,
+          initialDate: value?? DateTime.now(),
+          initialDatePickerMode: pickerMode,
         ).then( (DateTime newDate) {
           if (newDate != null) {
             handleUpdate(newDate);
@@ -290,6 +302,89 @@ class EntityViewState extends State<EntityView> {
           physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           children: this.getListFields(),
+        ),
+      ),
+    );
+
+  }
+
+}
+
+class YearPickerDialog extends StatefulWidget {
+  YearPickerDialog({Key key, this.fieldName, this.year}) : super(key: key);
+
+  final String fieldName;
+  final int year;
+
+  State<YearPickerDialog> createState() => YearPickerDialogState();
+}
+class YearPickerDialogState extends State<YearPickerDialog> {
+
+  DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedDate = DateTime(widget.year);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+    return Dialog(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              color: Theme.of(context).primaryColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(localizations.formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subhead.copyWith( color: Colors.white),),
+                  )
+                ],
+              ),
+            ),
+            Flexible(
+              child: YearPicker(
+                firstDate: DateTime(1970),
+                lastDate: DateTime(2030),
+                selectedDate: _selectedDate,
+                onChanged: (DateTime newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                },
+              ),
+            ),
+            ButtonTheme.bar(
+              child: ButtonBar(
+                children: <Widget>[
+                  FlatButton(
+                    child: Text(localizations.cancelButtonLabel),
+                    onPressed: () {
+                      Navigator.maybePop(context);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(localizations.okButtonLabel),
+                    onPressed: () {
+                      Navigator.maybePop(context, _selectedDate.year);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -7,8 +7,9 @@ import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/loading_icon.dart';
 
 class EntitySearch extends SearchDelegate<Entity> {
-  EntitySearch({@required String searchGroup});
+  EntitySearch({@required this.searchTable});
 
+  final String searchTable;
   final DBConnector _db = PostgresConnector.getConnector();
 
   int _maxResults = 25;
@@ -43,7 +44,7 @@ class EntitySearch extends SearchDelegate<Entity> {
     if (query.trim().length > 1) {
 
       return StreamBuilder(
-        stream: _db.getGamesWithName(query),
+        stream: _db.getSearchStream(searchTable, query),
         builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
@@ -63,7 +64,7 @@ class EntitySearch extends SearchDelegate<Entity> {
     if (query.trim().length > 1) {
 
       return StreamBuilder(
-        stream: _db.getGamesWithName(query),
+        stream: _db.getSearchStream(searchTable, query),
         builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
