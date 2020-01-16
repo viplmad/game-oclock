@@ -68,7 +68,7 @@ class EntitySearch extends SearchDelegate<Entity> {
         builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
-          return listSuggestions(snapshot.data);
+          return listResults(snapshot.data);
         },
       );
 
@@ -81,10 +81,9 @@ class EntitySearch extends SearchDelegate<Entity> {
 
   Widget listResults(List<Entity> results) {
 
-    return ListView.separated(
+    return ListView.builder(
       padding: const EdgeInsets.all(8.0),
       itemCount: results.length,
-      separatorBuilder: (BuildContext context, int index) => Divider(height: 1.0,),
       itemBuilder: (BuildContext context, int index) {
         Entity result = results[index];
 
@@ -101,10 +100,9 @@ class EntitySearch extends SearchDelegate<Entity> {
 
   }
 
-  Widget listSuggestions(List results) {
+  /*Widget listSuggestions(List<Entity> results) {
 
     return ListView.builder(
-      shrinkWrap: true,
       itemCount: results.length,
       itemBuilder: (BuildContext context, int index) {
         Entity result = results[index];
@@ -129,5 +127,5 @@ class EntitySearch extends SearchDelegate<Entity> {
       },
     );
 
-  }
+  }*/
 }

@@ -4,9 +4,10 @@ import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/purchase.dart';
-import 'package:game_collection/entity/game.dart';
-import 'package:game_collection/entity/dlc.dart';
-import 'package:game_collection/entity/store.dart';
+import 'package:game_collection/entity/game.dart' as gameEntity;
+import 'package:game_collection/entity/dlc.dart' as dlcEntity;
+import 'package:game_collection/entity/store.dart' as storeEntity;
+import 'package:game_collection/entity/type.dart' as typeEntity;
 
 import 'entity_view.dart';
 
@@ -20,7 +21,11 @@ class PurchaseView extends EntityView {
 class _PurchaseViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
+  @override
   Purchase getEntity() => widget.entity as Purchase;
+
+  @override
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updatePurchase(getEntity().ID, fieldName, newValue);
 
   @override
   List<Widget> getListFields() {
@@ -29,6 +34,66 @@ class _PurchaseViewState extends EntityViewState {
       attributeBuilder(
           fieldName: IDField,
           value: getEntity().ID.toString()
+      ),
+      modifyTextAttributeBuilder(
+        fieldName: descriptionField,
+        value: getEntity().description,
+      ),
+      modifyDoubleAttributeBuilder(
+        fieldName: priceField,
+        value: getEntity().price,
+      ),
+      modifyDoubleAttributeBuilder(
+        fieldName: externalCreditField,
+        value: getEntity().externalCredit,
+      ),
+      modifyDateAttributeBuilder(
+        fieldName: dateField,
+        value: getEntity().date,
+      ),
+      modifyDoubleAttributeBuilder(
+        fieldName: originalPriceField,
+        value: getEntity().originalPrice,
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: storeField,
+      ),
+      streamBuilderEntity(
+        entityStream: _db.getStoreFromPurchase(getEntity().store),
+        tableName: storeEntity.storeTable,
+        newRelationFuture: (int addedStoreID) => _db.insertStorePurchase(addedStoreID, getEntity().ID),
+        deleteRelationFuture: (int deletedStoreID) => _db.deleteStorePurchase(getEntity().ID),
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: gameEntity.gameTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getGamesFromPurchase(getEntity().ID),
+        tableName: gameEntity.gameTable,
+        newRelationFuture: (int addedGameID) => _db.insertGamePurchase(addedGameID, getEntity().ID),
+        deleteRelationFuture: (int deletedGameID) => _db.deleteGamePurchase(deletedGameID, getEntity().ID),
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: dlcEntity.dlcTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getDLCsFromPurchase(getEntity().ID),
+        tableName: dlcEntity.dlcTable,
+        newRelationFuture: (int addedDLCID) => _db.insertDLCPurchase(addedDLCID, getEntity().ID),
+        deleteRelationFuture: (int deletedDLCID) => _db.deleteDLCPurchase(deletedDLCID, getEntity().ID),
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: typeEntity.typeTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getTypesFromPurchase(getEntity().ID),
+        tableName: typeEntity.typeTable,
+        newRelationFuture: (int addedTypeID) => _db.insertPurchaseType(getEntity().ID, addedTypeID),
+        deleteRelationFuture: (int deletedTypeID) => _db.deletePurchaseType(getEntity().ID, deletedTypeID),
       ),
     ];
 

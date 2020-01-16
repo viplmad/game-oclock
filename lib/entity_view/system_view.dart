@@ -2,32 +2,60 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
-import '../entity/entity.dart';
-import '../entity/system.dart';
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/entity/system.dart';
+import 'package:game_collection/entity/platform.dart' as platformEntity;
 
-import 'package:game_collection/loading_icon.dart';
+import 'entity_view.dart';
 
-class SystemView extends StatefulWidget {
-  SystemView({Key key, this.system}) : super(key: key);
-
-  final System system;
+class SystemView extends EntityView {
+  SystemView({Key key, @required System system}) : super(key: key, entity: system);
 
   @override
-  State<SystemView> createState() => _SystemViewState();
+  State<EntityView> createState() => _SystemViewState();
 }
 
-class _SystemViewState extends State<SystemView> {
+class _SystemViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
   @override
-  Widget build(BuildContext context) {
+  System getEntity() => widget.entity as System;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: widget.system.getCard(),
+  @override
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateSystem(getEntity().ID, fieldName, newValue);
+
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+        fieldName: IDField,
+        value: getEntity().ID.toString(),
       ),
-      body: Center(),
-    );
+      modifyTextAttributeBuilder(
+        fieldName: nameField,
+        value: getEntity().name,
+      ),
+      modifyIntAttributeBuilder(
+        fieldName: generationField,
+        value: getEntity().generation,
+      ),
+      /*modifyEnumAttributeBuilder(
+        fieldName: manufacturerField,
+        value: getEntity().manufacturer,
+      ),*/
+      Divider(),
+      headerRelationText(
+        fieldName: platformEntity.platformTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getPlatformsFromSystem(getEntity().ID),
+        tableName: platformEntity.platformTable,
+        newRelationFuture: (int addedPlatformID) => _db.insertPlatformSystem(addedPlatformID, getEntity().ID),
+        deleteRelationFuture: (int deletedPlatformID) => _db.deletePlatformSystem(deletedPlatformID, getEntity().ID),
+      ),
+    ];
 
   }
+
 }

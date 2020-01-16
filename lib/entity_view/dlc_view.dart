@@ -19,60 +19,31 @@ class DLCView extends EntityView {
 class _DLCViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
+  @override
   DLC getEntity() => widget.entity as DLC;
+
+  @override
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateDLC(getEntity().ID, fieldName, newValue);
 
   @override
   List<Widget> getListFields() {
 
     return [
       attributeBuilder(
-          fieldName: IDField,
-          value: getEntity().ID.toString(),
+        fieldName: IDField,
+        value: getEntity().ID.toString(),
       ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
-        value: getEntity().name.toString(),
-        handleUpdate: (String newName) {
-          _db.updateDLC(getEntity().ID, nameField, newName).then( (dynamic data) {
-
-            showSnackBar("Updated");
-
-          }, onError: (e) {
-
-            showSnackBar("Unable to update");
-
-          });
-        }
+        value: getEntity().name,
       ),
       modifyYearAttributeBuilder(
         fieldName: releaseYearField,
         value: getEntity().releaseYear,
-        handleUpdate: (int newYear) {
-          _db.updateDLC(getEntity().ID, releaseYearField, newYear).then( (dynamic data) {
-
-            showSnackBar("Updated");
-
-          }, onError: (e) {
-
-            showSnackBar("Unable to update");
-
-          });
-        }
       ),
       modifyDateAttributeBuilder(
         fieldName: finishDateField,
         value: getEntity().finishDate,
-        handleUpdate: (DateTime newDate) {
-          _db.updateDLC(getEntity().ID, finishDateField, newDate).then( (dynamic data) {
-
-            showSnackBar("Updated");
-
-          }, onError: (e) {
-
-            showSnackBar("Unable to update");
-
-          });
-        }
       ),
       Divider(),
       headerRelationText(
@@ -81,29 +52,8 @@ class _DLCViewState extends EntityViewState {
       streamBuilderEntity(
           entityStream: _db.getBaseGameFromDLC(getEntity().baseGame),
           tableName: gameEntity.gameTable,
-          addText: "Add " + baseGameField,
-          handleNew: (gameEntity.Game addedGame) {
-            _db.insertGameDLC(addedGame.ID, getEntity().ID).then( (dynamic data) {
-
-              showSnackBar("Added " + addedGame.getFormattedTitle());
-
-            }, onError: (e) {
-
-              showSnackBar("Unable to add " + addedGame.getFormattedTitle());
-
-            });
-          },
-          handleDelete: (gameEntity.Game removedGame) {
-            _db.deleteGameDLC(getEntity().ID).then( (dynamic data) {
-
-              showSnackBar("Deleted " + removedGame.getFormattedTitle());
-
-            }, onError: (e) {
-
-              showSnackBar("Unable to delete " + removedGame.getFormattedTitle());
-
-            });
-          },
+          newRelationFuture: (int baseGameID) => _db.insertGameDLC(baseGameID, getEntity().ID),
+          deleteRelationFuture: (int removedGameID) => _db.deleteGameDLC(getEntity().ID),
       ),
       Divider(),
       headerRelationText(
@@ -112,28 +62,8 @@ class _DLCViewState extends EntityViewState {
       streamBuilderEntities(
           entityStream: _db.getPurchasesFromDLC(getEntity().ID),
           tableName: purchaseEntity.purchaseTable,
-          handleNew: (purchaseEntity.Purchase addedPurchase) {
-            _db.insertDLCPurchase(getEntity().ID, addedPurchase.ID).then( (dynamic data) {
-
-              showSnackBar("Added " + addedPurchase.getFormattedTitle());
-
-            }, onError: (e) {
-
-              showSnackBar("Unable to add " + addedPurchase.getFormattedTitle());
-
-            });
-          },
-          handleDelete: (purchaseEntity.Purchase removedPurchase) {
-            _db.deleteDLCPurchase(getEntity().ID, removedPurchase.ID).then( (dynamic data) {
-
-              showSnackBar("Deleted " + removedPurchase.getFormattedTitle());
-
-            }, onError: (e) {
-
-              showSnackBar("Unable to delete " + removedPurchase.getFormattedTitle());
-
-            });
-          },
+          newRelationFuture: (int addedPurchaseID) => _db.insertDLCPurchase(getEntity().ID, addedPurchaseID),
+          deleteRelationFuture: (int removedPurchaseID) => _db.deleteDLCPurchase(getEntity().ID, removedPurchaseID),
       ),
     ];
 

@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity_search.dart';
 
 import 'package:game_collection/loading_icon.dart';
+
+
+const _addedMessage = "Linked";
+const _failedAddMessage = "Unable to link";
+const _updatedMessage = "Updated";
+const _failedUpdateMessage = "Unable to update";
+const _deletedMessage = "Unlinked";
+const _failedDeleteMessage = "Unable to unlink";
+
 
 class EntityView extends StatefulWidget {
   EntityView({Key key, @required this.entity}) : super(key: key);
@@ -17,6 +28,10 @@ class EntityView extends StatefulWidget {
 class EntityViewState extends State<EntityView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Entity getEntity() => widget.entity;
+
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) { return null; }
+
   void showSnackBar(String message){
 
     final snackBar = SnackBar(
@@ -28,7 +43,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget _getResults({@required List<Entity> results, @required int itemCount, @required String tableName, @required String addText, bool isSingle, Function handleNew, Function handleDelete}) {
+  Widget _getResults({@required List<Entity> results, @required int itemCount, @required String tableName, @required String addText, bool isSingle, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
     return ListView.builder(
       shrinkWrap: true,
@@ -50,7 +65,15 @@ class EntityViewState extends State<EntityView> {
                   ),
                 ).then( (Entity result) {
                   if (result != null) {
-                    handleNew(result);
+                    newRelationFuture(result.ID).then( (dynamic data) {
+
+                      showSnackBar(_addedMessage);
+
+                    }, onError: (e) {
+
+                      showSnackBar(_failedAddMessage);
+
+                    });
                   }
                 });
               },
@@ -62,7 +85,17 @@ class EntityViewState extends State<EntityView> {
 
           return result.getModifyCard(
             context,
-            handleDelete: () => handleDelete(result),
+            handleDelete: () {
+              deleteRelationFuture(result.ID).then( (dynamic data) {
+
+                showSnackBar(_deletedMessage + " " + result.getFormattedTitle());
+
+              }, onError: (e) {
+
+                showSnackBar(_failedDeleteMessage + " " + result.getFormattedTitle());
+
+              });
+            },
           );
 
         }
@@ -71,7 +104,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget showResults({@required List results, @required String tableName, @required String addText, Function handleNew, Function handleDelete}) {
+  Widget showResults({@required List results, @required String tableName, @required String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
     return _getResults(
       results: results,
@@ -79,13 +112,13 @@ class EntityViewState extends State<EntityView> {
       tableName: tableName,
       addText: addText,
       isSingle: false,
-      handleNew: handleNew,
-      handleDelete: handleDelete,
+      newRelationFuture: newRelationFuture,
+      deleteRelationFuture: deleteRelationFuture,
     );
 
   }
 
-  Widget showResultsNonExpandable({@required Entity result, @required String tableName, @required String addText, Function handleNew, Function handleDelete}) {
+  Widget showResultsNonExpandable({@required Entity result, @required String tableName, @required String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
     return _getResults(
         results: [result],
@@ -93,8 +126,17 @@ class EntityViewState extends State<EntityView> {
         tableName: tableName,
         addText: addText,
         isSingle: true,
-        handleNew: handleNew,
-        handleDelete: handleDelete,
+      newRelationFuture: newRelationFuture,
+      deleteRelationFuture: deleteRelationFuture,
+    );
+
+  }
+
+  Widget headerRelationText({@required String fieldName}) {
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+      child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
     );
 
   }
@@ -108,7 +150,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget _modifyAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate, TextInputType keyboardType, List<TextInputFormatter> inputFormatters}) {
+  Widget _modifyAttributeBuilder({@required String fieldName, @required String value, TextInputType keyboardType, List<TextInputFormatter> inputFormatters, Function handleUpdate}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
@@ -119,7 +161,7 @@ class EntityViewState extends State<EntityView> {
         TextEditingController fieldController = TextEditingController();
         fieldController.text = value;
 
-        showDialog<dynamic>(
+        showDialog<String>(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -148,7 +190,7 @@ class EntityViewState extends State<EntityView> {
                 ],
               );
             }
-        ).then( (dynamic newValue) {
+        ).then( (String newValue) {
           if (newValue != null) {
             handleUpdate(newValue);
           }
@@ -158,43 +200,76 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, Function handleUpdate}) {
+  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, bool isLongText = false, bool isURL = false}) {
 
     return _modifyAttributeBuilder(
         fieldName: fieldName,
         value: value,
-        handleUpdate: handleUpdate,
-        keyboardType: TextInputType.text,
+        keyboardType: (isURL? TextInputType.url : (isLongText? TextInputType.multiline : TextInputType.text)),
+        handleUpdate: (String newText) {
+          getUpdateFuture(fieldName, newText).then( (dynamic data) {
+
+            showSnackBar(_updatedMessage);
+
+          }, onError: (e) {
+
+            showSnackBar(_failedUpdateMessage);
+
+          });
+        },
     );
 
   }
 
-  Widget headerRelationText({@required String fieldName}) {
+  Widget modifyIntAttributeBuilder({@required String fieldName, @required int value}) {
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-      child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+    return _modifyAttributeBuilder(
+        fieldName: fieldName,
+        value: value.toString(),
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          WhitelistingTextInputFormatter.digitsOnly,
+        ],
+        handleUpdate: (String newInt) {
+          getUpdateFuture(fieldName, int.parse(newInt)).then( (dynamic data) {
+
+            showSnackBar(_updatedMessage);
+
+          }, onError: (e) {
+
+            showSnackBar(_failedUpdateMessage);
+
+          });
+        },
     );
 
   }
 
-  Widget modifyDoubleAttributeBuilder({@required String fieldName, @required double value, Function handleUpdate}) {
+  Widget modifyDoubleAttributeBuilder({@required String fieldName, @required double value}) {
 
     return _modifyAttributeBuilder(
       fieldName: fieldName,
       value: value.toString(),
-      handleUpdate: (String newValue) {
-        handleUpdate(double.parse(newValue));
-      },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter(RegExp(r'^\d{1,3}(\.\d{0,2}){0,1}$')),
       ],
+      handleUpdate: (String newDouble) {
+        getUpdateFuture(fieldName, double.parse(newDouble)).then( (dynamic data) {
+
+          showSnackBar(_updatedMessage);
+
+        }, onError: (e) {
+
+          showSnackBar(_failedUpdateMessage);
+
+        });
+      },
     );
 
   }
 
-  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value, Function handleUpdate}) {
+  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
@@ -212,7 +287,15 @@ class EntityViewState extends State<EntityView> {
             }
         ).then( (int newYear) {
           if (newYear != null) {
-            handleUpdate(newYear);
+            getUpdateFuture(fieldName, newYear).then( (dynamic data) {
+
+              showSnackBar(_updatedMessage);
+
+            }, onError: (e) {
+
+              showSnackBar(_failedUpdateMessage);
+
+            });
           }
         });
       },
@@ -220,7 +303,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day, Function handleUpdate}) {
+  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
@@ -236,7 +319,15 @@ class EntityViewState extends State<EntityView> {
           initialDatePickerMode: pickerMode,
         ).then( (DateTime newDate) {
           if (newDate != null) {
-            handleUpdate(newDate);
+            getUpdateFuture(fieldName, newDate).then( (dynamic data) {
+
+              showSnackBar(_updatedMessage);
+
+            }, onError: (e) {
+
+              showSnackBar(_failedUpdateMessage);
+
+            });
           }
         });
       },
@@ -244,45 +335,85 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget streamBuilderEntities({@required Stream<List<Entity>> entityStream, @required String tableName, String addText, Function handleNew, Function handleDelete}) {
+  double _tempRating = 8.0;
 
-    addText = addText?? "Add " + tableName;
+  Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value}) {
 
-    return StreamBuilder(
-      stream: entityStream,
-      builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
+    return GestureDetector(
+      child: Column(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              headerRelationText(
+                fieldName: fieldName,
+              ),
+            ],
+          ),
+          SmoothStarRating(
+            allowHalfRating: false,
+            onRatingChanged: (double newRating) {
+              setState(() {
+                _tempRating = newRating;
+              });
+            },
+            starCount: 10,
+            rating: _tempRating,
+            color: Colors.yellow,
+            borderColor: Colors.yellow,
+            size: 40.0,
+          ),
+        ],
+      ),
+    );
 
-        return this.showResults(
-            results: snapshot.data,
-            tableName: tableName,
-            addText: addText,
-            handleNew: handleNew,
-            handleDelete: handleDelete,
-        );
+  }
 
-      },
+  Widget streamBuilderEntities({@required Stream<List<Entity>> entityStream, @required String tableName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
+
+    addText = addText?? "Link " + tableName;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: StreamBuilder(
+        stream: entityStream,
+        builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
+          if(!snapshot.hasData) { return LoadingIcon(); }
+
+          return this.showResults(
+              results: snapshot.data,
+              tableName: tableName,
+              addText: addText,
+              newRelationFuture: newRelationFuture,
+              deleteRelationFuture: deleteRelationFuture,
+          );
+
+        },
+      ),
     );
   }
 
-  Widget streamBuilderEntity({@required Stream<Entity> entityStream, @required String tableName, String addText, Function handleNew, Function handleDelete}) {
+  Widget streamBuilderEntity({@required Stream<Entity> entityStream, @required String tableName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
-    addText = addText?? "Add " + tableName;
+    addText = addText?? "Link " + tableName;
 
-    return StreamBuilder(
-      stream: entityStream,
-      builder: (BuildContext context, AsyncSnapshot<Entity> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: StreamBuilder(
+        stream: entityStream,
+        builder: (BuildContext context, AsyncSnapshot<Entity> snapshot) {
+          if(!snapshot.hasData) { return LoadingIcon(); }
 
-        return this.showResultsNonExpandable(
-            result: snapshot.data.ID < 0? null : snapshot.data,
-            tableName: tableName,
-            addText: addText,
-            handleNew: handleNew,
-            handleDelete: handleDelete,
-        );
+          return this.showResultsNonExpandable(
+              result: snapshot.data.ID < 0? null : snapshot.data,
+              tableName: tableName,
+              addText: addText,
+              newRelationFuture: newRelationFuture,
+              deleteRelationFuture: deleteRelationFuture,
+          );
 
-      },
+        },
+      ),
     );
 
   }

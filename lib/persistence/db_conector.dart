@@ -16,7 +16,7 @@ abstract class DBConnector {
 
   //#region CREATE
     //Game
-  Future<dynamic> insertGame(String name);
+  Future<dynamic> insertGame(String name, String edition);
   Future<dynamic> insertGamePlatform(int gameID, int platformID);
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
   Future<dynamic> insertGameDLC(int gameID, int dlcID);

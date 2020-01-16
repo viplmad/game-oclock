@@ -216,50 +216,52 @@ class _HomePageState extends State<HomePage> {
 
         List<Entity> results = snapshot.data;
 
-        return ListView.builder(
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            Entity result = results[index];
+        return Scrollbar(
+          child: ListView.builder(
+            itemCount: results.length,
+            itemBuilder: (BuildContext context, int index) {
+              Entity result = results[index];
 
-            return result.getModifyCard(
-                context,
-                handleDelete: () {
-                  showDialog<bool>(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Delete"),
-                        content: ListTile(
-                          title: Text("Are you sure you want to delete " + result.getFormattedTitle() + "?"),
-                          subtitle: Text("This action cannot be undone"),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.maybePop(context);
-                            },
+              return result.getModifyCard(
+                  context,
+                  handleDelete: () {
+                    showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Delete"),
+                          content: ListTile(
+                            title: Text("Are you sure you want to delete " + result.getFormattedTitle() + "?"),
+                            subtitle: Text("This action cannot be undone"),
                           ),
-                          RaisedButton(
-                            child: Text("Delete", style: TextStyle(color: Colors.white),),
-                            onPressed: () {
-                              Navigator.maybePop(context, true);
-                            },
-                            color: Colors.red,
-                          )
-                        ],
-                      );
-                    },
-                  ).then( (bool option) {
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("Cancel"),
+                              onPressed: () {
+                                Navigator.maybePop(context);
+                              },
+                            ),
+                            RaisedButton(
+                              child: Text("Delete", style: TextStyle(color: Colors.white),),
+                              onPressed: () {
+                                Navigator.maybePop(context, true);
+                              },
+                              color: Colors.red,
+                            )
+                          ],
+                        );
+                      },
+                    ).then( (bool option) {
 
-                    if(option != null && option) {
-                      handleDelete(result);
-                    }
+                      if(option != null && option) {
+                        handleDelete(result);
+                      }
 
-                  });
-                }
-            );
-          },
+                    });
+                  }
+              );
+            },
+          ),
         );
       },
 

@@ -73,7 +73,7 @@ class PostgresConnector implements DBConnector {
   //#region Generic Queries
   Future<dynamic> _updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required dynamic newValue}) {
 
-    String sql = _updateQuery(tableName);
+    String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
       "newValue" : (newValue as T),
@@ -84,7 +84,7 @@ class PostgresConnector implements DBConnector {
 
   Future<dynamic> _updateTableToNull({@required String tableName, @required int ID, @required String fieldName}) {
 
-    String sql = _updateQuery(tableName);
+    String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
       "tableID" : ID,
@@ -94,7 +94,7 @@ class PostgresConnector implements DBConnector {
 
   Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName}) {
 
-    String sql = _selectAllQuery(tableName);
+    String sql = _selectAllStatement(tableName);
 
     return _connection.mappedResultsQuery(sql);
 
@@ -106,7 +106,7 @@ class PostgresConnector implements DBConnector {
     String leftIDField = _relationIDField(leftTableName);
     String rightIDField = _relationIDField(rightTableName);
 
-    String sql = _selectJoinQuery(
+    String sql = _selectJoinStatement(
         leftResults? leftTableName : rightTableName,
         relationTable,
         IDField,
@@ -134,7 +134,7 @@ class PostgresConnector implements DBConnector {
 
   Future<List<Map<String, Map<String, dynamic>>>> _readWithID({@required String tableName, @required int tableID}) {
 
-    String sql = _selectAllQuery(tableName);
+    String sql = _selectAllStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
       "tableID" : tableID,
@@ -144,9 +144,9 @@ class PostgresConnector implements DBConnector {
 
   Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query}) {
 
-    query = "%" + query + "%";
+    query = _searchableQuery(query);
 
-    String sql = _selectAllQuery(tableName);
+    String sql = _selectAllStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(searchField) + " ILIKE @query ", substitutionValues: {
       "query" : query,
@@ -158,7 +158,7 @@ class PostgresConnector implements DBConnector {
 
     String relationTable = _relationTable(leftTableName, rightTableName);
 
-    String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
+    String sql = _insertStatement(relationTable);
 
     return _connection.mappedResultsQuery(sql + " VALUES(@leftID, @rightID) ", substitutionValues: {
       "leftID" : leftTableID,
@@ -167,9 +167,31 @@ class PostgresConnector implements DBConnector {
 
   }
 
+  Future<dynamic> _insertTable({@required String tableName, Map<String, dynamic> fieldAndValues}) {
+
+    String sql = _insertStatement(tableName);
+
+    String fieldNamesForSQL;
+    String fieldValuesForSQL;
+    fieldAndValues.forEach( (String fieldName, dynamic value) {
+
+      fieldNamesForSQL += _forceDoubleQuotes(fieldName) + ", ";
+
+      fieldValuesForSQL += "@" + fieldName + ", ";
+
+    });
+    fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
+    fieldValuesForSQL.substring(0, fieldValuesForSQL.length-2);
+
+    return _connection.mappedResultsQuery(sql + " (" + fieldNamesForSQL + ") VALUES(" + fieldValuesForSQL + ") ",
+        substitutionValues: fieldAndValues,
+    );
+
+  }
+
   Future<dynamic> _insertTableOnlyName({@required String tableName, @required String fieldName, @required String nameValue}) {
 
-    String sql = "INSERT INTO " + _forceDoubleQuotes(tableName) + " (" + _forceDoubleQuotes(fieldName) + ") ";
+    String sql = _insertStatement(tableName) + " (" + _forceDoubleQuotes(fieldName) + ") ";
 
     return _connection.mappedResultsQuery(sql + " VALUES(@nameValue) ", substitutionValues: {
       "nameValue" : nameValue,
@@ -179,7 +201,7 @@ class PostgresConnector implements DBConnector {
   
   Future<dynamic> _deleteTable({@required String tableName, @required int ID}) {
 
-    String sql = "DELETE FROM " + _forceDoubleQuotes(tableName);
+    String sql = _deleteStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(IDField) + " = @ID ", substitutionValues: {
       "ID" : ID,
@@ -193,7 +215,7 @@ class PostgresConnector implements DBConnector {
     String leftIDField = _relationIDField(leftTableName);
     String rightIDField = _relationIDField(rightTableName);
 
-    String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
+    String sql = _deleteStatement(relationTable);
 
     return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftIDField) + " = @leftID AND " + _forceDoubleQuotes(rightIDField) + " = @rightID ", substitutionValues: {
       "leftID" : leftID,
@@ -206,6 +228,31 @@ class PostgresConnector implements DBConnector {
 
   //#region CREATE
     //#region Game
+  @override
+  Future<dynamic> insertGame(String name, String edition) {
+
+    return _insertTable(
+      tableName: gameEntity.gameTable,
+      fieldAndValues: <String, dynamic> {
+        gameEntity.nameField : name,
+        gameEntity.editionField : edition,
+      },
+    );
+
+  }
+
+  @override
+  Future<dynamic> insertGamePlatform(int gameID, int platformID) {
+
+    return _insertRelation(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: platformEntity.platformTable,
+      leftTableID: gameID,
+      rightTableID: platformID,
+    );
+
+  }
+
   @override
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
 
@@ -226,6 +273,18 @@ class PostgresConnector implements DBConnector {
       ID: dlcID,
       fieldName: dlcEntity.baseGameField,
       newValue: gameID,
+    );
+
+  }
+
+  @override
+  Future<dynamic> insertGameTag(int gameID, int tagID) {
+
+    return _insertRelation(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: tagEntity.tagTable,
+      leftTableID: gameID,
+      rightTableID: tagID,
     );
 
   }
@@ -257,6 +316,28 @@ class PostgresConnector implements DBConnector {
     //#endregion DLC
 
     //#region Platform
+  @override
+  Future<dynamic> insertPlatform(String name) {
+
+    return _insertTableOnlyName(
+      tableName: platformEntity.platformTable,
+      fieldName: platformEntity.nameField,
+      nameValue: name,
+    );
+
+  }
+
+  @override
+  Future<dynamic> insertPlatformSystem(int platformID, int systemID) {
+
+    return _insertRelation(
+      leftTableName: platformEntity.platformTable,
+      rightTableName: systemEntity.systemTable,
+      leftTableID: platformID,
+      rightTableID: systemID,
+    );
+
+  }
     //#endregion Platform
 
     //#region Purchase
@@ -269,21 +350,82 @@ class PostgresConnector implements DBConnector {
     );
 
   }
-    //#endregion Purchase
 
-    //#region Purchase
+  @override
+  Future<dynamic> insertPurchaseType(int purchaseID, int typeID) {
+
+    return _insertRelation(
+      leftTableName: purchaseEntity.purchaseTable,
+      rightTableName: typeEntity.typeTable,
+      leftTableID: purchaseID,
+      rightTableID: typeID,
+    );
+
+  }
     //#endregion Purchase
 
     //#region Store
+  @override
+  Future<dynamic> insertStore(String name) {
+
+    return _insertTableOnlyName(
+      tableName: storeEntity.storeTable,
+      fieldName: storeEntity.nameField,
+      nameValue: name,
+    );
+
+  }
+
+  @override
+  Future<dynamic> insertStorePurchase(int storeID, int purchaseID) {
+
+    return _updateTable(
+      tableName: purchaseEntity.purchaseTable,
+      ID: purchaseID,
+      fieldName: purchaseEntity.storeField,
+      newValue: storeID,
+    );
+
+  }
     //#endregion Store
 
     //#region System
+  @override
+  Future<dynamic> insertSystem(String name) {
+
+    return _insertTableOnlyName(
+      tableName: systemEntity.systemTable,
+      fieldName: systemEntity.nameField,
+      nameValue: name,
+    );
+
+  }
     //#endregion System
 
     //#region Tag
+  @override
+  Future<dynamic> insertTag(String name) {
+
+    return _insertTableOnlyName(
+      tableName: tagEntity.tagTable,
+      fieldName: tagEntity.nameField,
+      nameValue: name,
+    );
+
+  }
     //#endregion Tag
 
     //#region Type
+  @override
+  Future<dynamic> insertType(String name) {
+
+    return _insertTableOnlyName(
+      tableName: typeEntity.typeTable,
+      fieldName: typeEntity.nameField,
+      nameValue: name,
+    );
+
+  }
     //#endregion Type
   //#endregion CREATE
 
@@ -674,6 +816,19 @@ class PostgresConnector implements DBConnector {
     );
 
   }
+
+  @override
+  Future<dynamic> deleteGamePlatform(int gameID, int platformID) {
+
+    return _deleteRelation(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: platformEntity.platformTable,
+      leftID: gameID,
+      rightID: platformID,
+    );
+
+  }
+
   @override
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
 
@@ -693,6 +848,18 @@ class PostgresConnector implements DBConnector {
         tableName: dlcEntity.dlcTable,
         ID: dlcID,
         fieldName: dlcEntity.baseGameField,
+    );
+
+  }
+
+  @override
+  Future<dynamic> deleteGameTag(int gameID, int tagID) {
+
+    return _deleteRelation(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: tagEntity.tagTable,
+      leftID: gameID,
+      rightID: tagID,
     );
 
   }
@@ -732,6 +899,18 @@ class PostgresConnector implements DBConnector {
     );
 
   }
+
+  @override
+  Future<dynamic> deletePlatformSystem(int platformID, int systemID) {
+
+    return _deleteRelation(
+      leftTableName: platformEntity.platformTable,
+      rightTableName: systemEntity.systemTable,
+      leftID: platformID,
+      rightID: systemID,
+    );
+
+  }
     //#endregion Platform
 
     //#region Purchase
@@ -744,6 +923,18 @@ class PostgresConnector implements DBConnector {
     );
 
   }
+
+  @override
+  Future<dynamic> deletePurchaseType(int purchaseID, int typeID) {
+
+    return _deleteRelation(
+      leftTableName: purchaseEntity.purchaseTable,
+      rightTableName: typeEntity.typeTable,
+      leftID: purchaseID,
+      rightID: typeID,
+    );
+
+  }
     //#endregion Purchase
 
     //#region Store
@@ -753,6 +944,17 @@ class PostgresConnector implements DBConnector {
     return _deleteTable(
       tableName: storeEntity.storeTable,
       ID: ID,
+    );
+
+  }
+
+  @override
+  Future<dynamic> deleteStorePurchase(int purchaseID) {
+
+    return _updateTableToNull(
+      tableName: purchaseEntity.purchaseTable,
+      ID: purchaseID,
+      fieldName: purchaseEntity.storeField,
     );
 
   }
@@ -911,21 +1113,39 @@ class PostgresConnector implements DBConnector {
 
 
   //#region Helpers
-  String _selectAllQuery(String table) {
+  String _selectAllStatement(String table) {
 
     return "SELECT * FROM " + _forceDoubleQuotes(table);
 
   }
 
-  String _selectJoinQuery(String leftTable, String rightTable, String leftTableID, String rightTableID, [String select = "Select * "]) {
+  String _selectJoinStatement(String leftTable, String rightTable, String leftTableID, String rightTableID, [String select = "Select * "]) {
 
     return select + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
 
   }
 
-  String _updateQuery(String table) {
+  String _updateStatement(String table) {
 
     return "UPDATE " + _forceDoubleQuotes(table);
+
+  }
+
+  String _insertStatement(String table) {
+
+    return "INSERT INTO " + _forceDoubleQuotes(table);
+
+  }
+
+  String _deleteStatement(String table) {
+
+    return "DELETE FROM " + _forceDoubleQuotes(table);
+
+  }
+
+  String _searchableQuery(String query) {
+
+    return "%" + query + "%";
 
   }
 

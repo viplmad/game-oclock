@@ -47,7 +47,7 @@ class Platform extends Entity {
   @override
   String getFormattedTitle() {
 
-    this.name;
+    return this.name;
 
   }
 

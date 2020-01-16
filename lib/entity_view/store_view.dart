@@ -1,86 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:game_collection/entity/purchase.dart';
 
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
-import '../entity/entity.dart';
-import '../entity/store.dart';
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/entity/store.dart';
+import 'package:game_collection/entity/purchase.dart' as purchaseEntity;
 
-import 'package:game_collection/loading_icon.dart';
+import 'entity_view.dart';
 
-class StoreView extends StatefulWidget {
-  StoreView({Key key, this.store}) : super(key: key);
-
-  final Store store;
+class StoreView extends EntityView {
+  StoreView({Key key, @required Store store}) : super(key: key, entity: store);
 
   @override
-  State<StoreView> createState() => _StoreViewState();
+  State<EntityView> createState() => _StoreViewState();
 }
 
-class _StoreViewState extends State<StoreView> {
+class _StoreViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
-  Widget showResults(List results, String addText, {Function handleNew, Function handleDelete}) {
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: results.length + 1,
-      itemBuilder: (BuildContext context, int index) {
-        if(index == results.length) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton(
-              child: Text(addText),
-              onPressed: handleNew,
-            ),
-          );
-        } else {
-          Entity entity = results[index];
-
-          return entity.getModifyCard(
-            context,
-            handleDelete: () => handleDelete(entity.ID),
-          );
-
-        }
-      },
-    );
-
-  }
+  @override
+  Store getEntity() => widget.entity as Store;
 
   @override
-  Widget build(BuildContext context) {
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateStore(getEntity().ID, fieldName, newValue);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.store.name),
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+        fieldName: IDField,
+        value: getEntity().ID.toString(),
       ),
-        body: Center(
-            child: ListView(
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              children: <Widget>[
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-                  child: Text("Purchases", style: Theme.of(context).textTheme.subhead),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: StreamBuilder(
-                    stream: _db.getPurchasesFromStore(widget.store.ID),
-                    builder: (BuildContext context, AsyncSnapshot<List<Purchase>> snapshot) {
-                      if(!snapshot.hasData) { return LoadingIcon(); }
-
-                      return showResults(snapshot.data, "Add Purchase", handleDelete: null);
-
-                    },
-                  ),
-                ),
-              ],
-            )
-        )
-    );
+      modifyTextAttributeBuilder(
+        fieldName: nameField,
+        value: getEntity().name,
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: purchaseEntity.purchaseTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getPurchasesFromStore(getEntity().ID),
+        tableName: purchaseEntity.purchaseTable,
+        newRelationFuture: (int addedPurchaseID) => _db.insertStorePurchase(getEntity().ID, addedPurchaseID),
+        deleteRelationFuture: (int deletedPurchaseID) => _db.deleteStorePurchase(deletedPurchaseID),
+      ),
+    ];
 
   }
+
 }

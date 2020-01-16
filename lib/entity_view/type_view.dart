@@ -4,69 +4,50 @@ import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/type.dart';
-import 'package:game_collection/entity/purchase.dart';
+import 'package:game_collection/entity/purchase.dart' as purchaseEntity;
 
-import 'package:game_collection/loading_icon.dart';
+import 'entity_view.dart';
 
-class TypeView extends StatefulWidget {
-  TypeView({Key key, this.type}) : super(key: key);
-
-  final PurchaseType type;
+class TypeView extends EntityView {
+  TypeView({Key key, @required PurchaseType type}) : super(key: key, entity: type);
 
   @override
-  State<TypeView> createState() => _TypeViewState();
+  State<EntityView> createState() => _TypeViewState();
 }
 
-class _TypeViewState extends State<TypeView> {
+class _TypeViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
   @override
-  Widget build(BuildContext context) {
+  PurchaseType getEntity() => widget.entity as PurchaseType;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: ListTile(
-          title: Text(widget.type.name),
-        ),
+  @override
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateType(getEntity().ID, fieldName, newValue);
+
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+        fieldName: IDField,
+        value: getEntity().ID.toString(),
       ),
-      body: Center(
-        child: ListView(
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          children: <Widget>[
-            ListTile(
-              title: Text(IDField),
-              subtitle: Text(widget.type.ID.toString()),
-            ),
-            ListTile(
-              title: Text(nameField),
-              subtitle: Text(widget.type.name),
-            ),
-            Divider(),
-            Text("Purchases", style: Theme.of(context).textTheme.subhead),
-            StreamBuilder(
-              stream: _db.getPurchasesFromType(widget.type.ID),
-              builder: (BuildContext context, AsyncSnapshot<List<Purchase>> snapshot) {
-                if(!snapshot.hasData) { return LoadingIcon(); }
-
-                List<Purchase> results = snapshot.data;
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: results.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Purchase result = results[index];
-
-                    return result.getModifyCard(context);
-                  },
-                );
-              },
-
-            ),
-          ],
-        ),
+      modifyTextAttributeBuilder(
+        fieldName: nameField,
+        value: getEntity().name,
       ),
-    );
+      Divider(),
+      headerRelationText(
+        fieldName: purchaseEntity.purchaseTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getPurchasesFromType(getEntity().ID),
+        tableName: purchaseEntity.purchaseTable,
+        newRelationFuture: (int addedPurchaseID) => _db.insertPurchaseType(addedPurchaseID, getEntity().ID),
+        deleteRelationFuture: (int deletedPurchaseID) => _db.deletePurchaseType(deletedPurchaseID, getEntity().ID),
+      ),
+    ];
 
   }
+
 }

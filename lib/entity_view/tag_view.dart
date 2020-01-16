@@ -2,32 +2,52 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
-import '../entity/entity.dart';
-import '../entity/tag.dart';
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/entity/tag.dart';
+import 'package:game_collection/entity/game.dart' as gameEntity;
 
-import 'package:game_collection/loading_icon.dart';
+import 'entity_view.dart';
 
-class TagView extends StatefulWidget {
-  TagView({Key key, this.tag}) : super(key: key);
-
-  final Tag tag;
+class TagView extends EntityView {
+  TagView({Key key, @required Tag tag}) : super(key: key, entity: tag);
 
   @override
-  State<TagView> createState() => _TagViewState();
+  State<EntityView> createState() => _TagViewState();
 }
 
-class _TagViewState extends State<TagView> {
+class _TagViewState extends EntityViewState {
   final DBConnector _db = PostgresConnector.getConnector();
 
   @override
-  Widget build(BuildContext context) {
+  Tag getEntity() => widget.entity as Tag;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: widget.tag.getCard(),
+  @override
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateTag(getEntity().ID, fieldName, newValue);
+
+  @override
+  List<Widget> getListFields() {
+
+    return [
+      attributeBuilder(
+        fieldName: IDField,
+        value: getEntity().ID.toString(),
       ),
-      body: Center(),
-    );
+      modifyTextAttributeBuilder(
+        fieldName: nameField,
+        value: getEntity().name,
+      ),
+      Divider(),
+      headerRelationText(
+        fieldName: gameEntity.gameTable + 's',
+      ),
+      streamBuilderEntities(
+        entityStream: _db.getGamesFromTag(getEntity().ID),
+        tableName: gameEntity.gameTable,
+        newRelationFuture: (int addedGameID) => _db.insertGameTag(addedGameID, getEntity().ID),
+        deleteRelationFuture: (int deletedGameID) => _db.deleteGameTag(deletedGameID, getEntity().ID),
+      ),
+    ];
 
   }
+
 }
