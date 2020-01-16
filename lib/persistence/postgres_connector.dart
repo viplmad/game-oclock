@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
+
+import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 
 import 'db_conector.dart';
@@ -68,476 +70,732 @@ class PostgresConnector implements DBConnector {
 
   }
 
+  //#region Generic Queries
+  Future<dynamic> _updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required dynamic newValue}) {
+
+    String sql = _updateQuery(tableName);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
+      "newValue" : (newValue as T),
+      "tableID" : ID,
+    });
+
+  }
+
+  Future<dynamic> _updateTableToNull({@required String tableName, @required int ID, @required String fieldName}) {
+
+    String sql = _updateQuery(tableName);
+
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
+      "tableID" : ID,
+    });
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName}) {
+
+    String sql = _selectAllQuery(tableName);
+
+    return _connection.mappedResultsQuery(sql);
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readRelationAll({@required String leftTableName, @required String rightTableName, @required bool leftResults, @required int relationID}) {
+
+    String relationTable = _relationTable(leftTableName, rightTableName);
+    String leftIDField = _relationIDField(leftTableName);
+    String rightIDField = _relationIDField(rightTableName);
+
+    String sql = _selectJoinQuery(
+        leftResults? leftTableName : rightTableName,
+        relationTable,
+        IDField,
+        leftResults? leftIDField : rightIDField,
+    );
+
+    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftResults? rightIDField : leftIDField) + " = @relationID ", substitutionValues: {
+      "relationID" : relationID,
+    });
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readWeakRelationAll({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID}) {
+
+    String sql = "SELECT * ";
+
+    sql += "FROM " + _forceDoubleQuotes(subordinateTable) + " b JOIN " + _forceDoubleQuotes(primaryTable) + " a "
+        + " ON b." + _forceDoubleQuotes(relationField) + " = a." + _forceDoubleQuotes(IDField) + " ";
+
+    return _connection.mappedResultsQuery(sql + " WHERE a." + _forceDoubleQuotes(IDField) + " = @relationID", substitutionValues: {
+      "relationID" : relationID,
+    });
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readWithID({@required String tableName, @required int tableID}) {
+
+    String sql = _selectAllQuery(tableName);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
+      "tableID" : tableID,
+    });
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query}) {
+
+    query = "%" + query + "%";
+
+    String sql = _selectAllQuery(tableName);
+
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(searchField) + " ILIKE @query ", substitutionValues: {
+      "query" : query,
+    });
+
+  }
+
+  Future<dynamic> _insertRelation({@required String leftTableName, @required String rightTableName, @required int leftTableID, @required int rightTableID}) {
+
+    String relationTable = _relationTable(leftTableName, rightTableName);
+
+    String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
+
+    return _connection.mappedResultsQuery(sql + " VALUES(@leftID, @rightID) ", substitutionValues: {
+      "leftID" : leftTableID,
+      "rightID" : rightTableID,
+    });
+
+  }
+
+  Future<dynamic> _insertTableOnlyName({@required String tableName, @required String fieldName, @required String nameValue}) {
+
+    String sql = "INSERT INTO " + _forceDoubleQuotes(tableName) + " (" + _forceDoubleQuotes(fieldName) + ") ";
+
+    return _connection.mappedResultsQuery(sql + " VALUES(@nameValue) ", substitutionValues: {
+      "nameValue" : nameValue,
+    });
+
+  }
+  
+  Future<dynamic> _deleteTable({@required String tableName, @required int ID}) {
+
+    String sql = "DELETE FROM " + _forceDoubleQuotes(tableName);
+
+    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(IDField) + " = @ID ", substitutionValues: {
+      "ID" : ID,
+    });
+    
+  }
+
+  Future<dynamic> _deleteRelation({@required String leftTableName, @required String rightTableName, @required int leftID, @required int rightID}) {
+
+    String relationTable = _relationTable(leftTableName, rightTableName);
+    String leftIDField = _relationIDField(leftTableName);
+    String rightIDField = _relationIDField(rightTableName);
+
+    String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
+
+    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftIDField) + " = @leftID AND " + _forceDoubleQuotes(rightIDField) + " = @rightID ", substitutionValues: {
+      "leftID" : leftID,
+      "rightID" : rightID,
+    });
+
+  }
+  //#endregion Generic Queries
+
+
+  //#region CREATE
+    //#region Game
+  @override
+  Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
+
+    return _insertRelation(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftTableID: gameID,
+      rightTableID: purchaseID,
+    );
+
+  }
+
+  @override
+  Future insertGameDLC(int gameID, int dlcID) {
+
+    return _updateTable(
+      tableName: dlcEntity.dlcTable,
+      ID: dlcID,
+      fieldName: dlcEntity.baseGameField,
+      newValue: gameID,
+    );
+
+  }
+    //#endregion Game
+
+    //#region DLC
+  @override
+  Future<dynamic> insertDLC(String name) {
+
+    return _insertTableOnlyName(
+        tableName: dlcEntity.dlcTable,
+        fieldName: dlcEntity.nameField,
+        nameValue: name,
+    );
+
+  }
+
+  @override
+  Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID) {
+
+    return _insertRelation(
+      leftTableName: dlcEntity.dlcTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftTableID: dlcID,
+      rightTableID: purchaseID,
+    );
+
+  }
+    //#endregion DLC
+
+    //#region Platform
+    //#endregion Platform
+
+    //#region Purchase
+  Future<dynamic> insertPurchase(String description) {
+
+    return _insertTableOnlyName(
+      tableName: purchaseEntity.purchaseTable,
+      fieldName: purchaseEntity.descriptionField,
+      nameValue: description,
+    );
+
+  }
+    //#endregion Purchase
+
+    //#region Purchase
+    //#endregion Purchase
+
+    //#region Store
+    //#endregion Store
+
+    //#region System
+    //#endregion System
+
+    //#region Tag
+    //#endregion Tag
+
+    //#region Type
+    //#endregion Type
+  //#endregion CREATE
+
+  //#region READ
+    //#region Game
   @override
   Stream<List<gameEntity.Game>> getAllGames() {
 
-    String sql = _allQuery(gameEntity.gameTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return gameEntity.Game.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: gameEntity.gameTable,
+    ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
   Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, platformEntity.platformTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String platformIDField = _relationIDField(platformEntity.platformTable);
-
-    String sql = _joinQuery(
-        platformEntity.platformTable,
-        relationTable,
-        IDField,
-        platformIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(gameIDField) + " = @gameID ", substitutionValues: {
-      "gameID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return platformEntity.Platform.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: platformEntity.platformTable,
+        leftResults: false,
+        relationID: ID,
+    ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromGame(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-
-    String sql = _joinQuery(
-        purchaseEntity.purchaseTable,
-        relationTable,
-        IDField,
-        purchaseIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(gameIDField) + " = @gameID ", substitutionValues: {
-      "gameID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+      leftTableName: gameEntity.gameTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftResults: false,
+      relationID: ID,
+    ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
   Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID) {
 
-    String sql = "SELECT * ";
-
-    sql += "FROM " + _forceDoubleQuotes(dlcEntity.dlcTable) + " d JOIN " + _forceDoubleQuotes(gameEntity.gameTable) + " g "
-        + " ON d." + _forceDoubleQuotes(dlcEntity.baseGameField) + " = g." + _forceDoubleQuotes(IDField) + " ";
-
-    return _connection.mappedResultsQuery(sql + " WHERE g." + _forceDoubleQuotes(IDField) + " = @gameID", substitutionValues: {
-      "gameID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return dlcEntity.DLC.fromDynamicMapList(results);
-
-    });
+    return _readWeakRelationAll(
+        primaryTable: gameEntity.gameTable,
+        subordinateTable: dlcEntity.dlcTable,
+        relationField: dlcEntity.baseGameField,
+        relationID: ID,
+    ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
   Stream<List<tagEntity.Tag>> getTagsFromGame(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, tagEntity.tagTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String tagIDField = _relationIDField(tagEntity.tagTable);
-
-    String sql = _joinQuery(
-        tagEntity.tagTable,
-        relationTable,
-        IDField,
-        tagIDField
-    );
-    
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(gameIDField) + " = @gameID ", substitutionValues: {
-      "gameID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return tagEntity.Tag.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: tagEntity.tagTable,
+        leftResults: false,
+        relationID: ID,
+    ).asStream().map( _dynamicToListTag );
 
   }
+    //#endregion Game
 
+    //#region DLC
   @override
   Stream<List<dlcEntity.DLC>> getAllDLCs() {
 
-    String sql = _allQuery(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return dlcEntity.DLC.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: dlcEntity.dlcTable,
+    ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
   Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID) {
 
-    String sql = _allQuery(gameEntity.gameTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @baseGameID ", substitutionValues: {
-      "baseGameID" : baseGameID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-      gameEntity.Game baseGame;
-
-      if(results.isEmpty) {
-        baseGame = gameEntity.Game(ID: -1);
-      } else {
-        baseGame = gameEntity.Game.fromDynamicMap(results[0][gameEntity.gameTable]);
-      }
-
-      return baseGame;
-    });
+    return _readWithID(
+        tableName: gameEntity.gameTable,
+        tableID: baseGameID,
+    ).asStream().map( _dynamicToSingleGame );
 
   }
 
   @override
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID) {
 
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
-
-    String sql = _joinQuery(
-        purchaseEntity.purchaseTable,
-        relationTable,
-        IDField,
-        purchaseIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(dlcIDField) + " = @dlcID ", substitutionValues: {
-      "dlcID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: dlcEntity.dlcTable,
+        rightTableName: purchaseEntity.purchaseTable,
+        leftResults: false,
+        relationID: ID,
+    ).asStream().map( _dynamicToListPurchase );
 
   }
+    //#endregion DLC
 
+    //#region Platform
   @override
   Stream<List<platformEntity.Platform>> getAllPlatforms() {
 
-    String sql = _allQuery(platformEntity.platformTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return platformEntity.Platform.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: platformEntity.platformTable,
+    ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
   Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, platformEntity.platformTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String platformIDField = _relationIDField(platformEntity.platformTable);
-
-    String sql = _joinQuery(
-        gameEntity.gameTable,
-        relationTable,
-        IDField,
-        gameIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(platformIDField) + " = @platformID ", substitutionValues: {
-      "platformID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return gameEntity.Game.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: platformEntity.platformTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
   Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID) {
 
-    String relationTable = _relationTable(platformEntity.platformTable, systemEntity.systemTable);
-    String platformIDField = _relationIDField(platformEntity.platformTable);
-    String systemIDField = _relationIDField(systemEntity.systemTable);
-
-    String sql = _joinQuery(
-        systemEntity.systemTable,
-        relationTable,
-        IDField,
-        systemIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(platformIDField) + " = @platformID ", substitutionValues: {
-      "platformID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return systemEntity.System.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: platformEntity.platformTable,
+        rightTableName: systemEntity.systemTable,
+        leftResults: false,
+        relationID: ID,
+    ).asStream().map( _dynamicToListSystem );
 
   }
+    //#endregion Platform
 
+    //#region Purchase
   @override
   Stream<List<purchaseEntity.Purchase>> getAllPurchases() {
 
-    String sql = _allQuery(purchaseEntity.purchaseTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: purchaseEntity.purchaseTable,
+    ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
   Stream<storeEntity.Store> getStoreFromPurchase(int storeID) {
 
-    String sql = _allQuery(storeEntity.storeTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @storeID ", substitutionValues: {
-      "storeID" : storeID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-      storeEntity.Store purchaseStore;
-
-      if(results.isEmpty) {
-        purchaseStore = storeEntity.Store(ID: -1);
-      } else {
-        purchaseStore = storeEntity.Store.fromDynamicMap(results[0][storeEntity.storeTable]);
-      }
-
-      return purchaseStore;
-    });
+    return _readWithID(
+      tableName: storeEntity.storeTable,
+      tableID: storeID,
+    ).asStream().map( _dynamicToSingleStore );
 
   }
 
   @override
   Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-
-    String sql = _joinQuery(
-        gameEntity.gameTable,
-        relationTable,
-        IDField,
-        gameIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
-      "purchaseID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return gameEntity.Game.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: purchaseEntity.purchaseTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
   Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID) {
 
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
-
-    String sql = _joinQuery(
-        dlcEntity.dlcTable,
-        relationTable,
-        IDField,
-        dlcIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
-      "purchaseID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return dlcEntity.DLC.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: dlcEntity.dlcTable,
+        rightTableName: purchaseEntity.purchaseTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
   Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID) {
 
-    String relationTable = _relationTable(purchaseEntity.purchaseTable, typeEntity.typeTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-    String typeIDField = _relationIDField(typeEntity.typeTable);
-
-    String sql = _joinQuery(
-        typeEntity.typeTable,
-        relationTable,
-        IDField,
-        typeIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
-      "purchaseID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return typeEntity.PurchaseType.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: purchaseEntity.purchaseTable,
+        rightTableName: typeEntity.typeTable,
+        leftResults: false,
+        relationID: ID,
+    ).asStream().map( _dynamicToListType );
 
   }
+    //#endregion Purchase
 
+    //#region Purchase
   @override
   Stream<List<storeEntity.Store>> getAllStores() {
 
-    String sql = _allQuery(storeEntity.storeTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return storeEntity.Store.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: storeEntity.storeTable,
+    ).asStream().map( _dynamicToListStore );
 
   }
 
   @override
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromStore(int ID) {
 
-    String sql = "SELECT * ";
-
-    sql += "FROM " + _forceDoubleQuotes(purchaseEntity.purchaseTable) + " p JOIN " + _forceDoubleQuotes(storeEntity.storeTable) + " s "
-        + " ON p." + _forceDoubleQuotes(purchaseEntity.storeField) + " = s." + _forceDoubleQuotes(IDField) + " ";
-
-    return _connection.mappedResultsQuery(sql + " WHERE s." + _forceDoubleQuotes(IDField) + " = @storeID", substitutionValues: {
-      "storeID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
+    return _readWeakRelationAll(
+      primaryTable: storeEntity.storeTable,
+      subordinateTable: purchaseEntity.purchaseTable,
+      relationField: purchaseEntity.storeField,
+      relationID: ID,
+    ).asStream().map( _dynamicToListPurchase );
 
   }
+    //#endregion Store
 
+    //#region System
   @override
   Stream<List<systemEntity.System>> getAllSystems() {
 
-    String sql = _allQuery(systemEntity.systemTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return systemEntity.System.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: systemEntity.systemTable,
+    ).asStream().map( _dynamicToListSystem );
 
   }
 
   @override
   Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID) {
 
-    String relationTable = _relationTable(platformEntity.platformTable, systemEntity.systemTable);
-    String platformIDField = _relationIDField(platformEntity.platformTable);
-    String systemIDField = _relationIDField(systemEntity.systemTable);
-
-    String sql = _joinQuery(
-        platformEntity.platformTable,
-        relationTable,
-        IDField,
-        platformIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(systemIDField) + " = @systemID ", substitutionValues: {
-      "systemID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return platformEntity.Platform.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: platformEntity.platformTable,
+        rightTableName: systemEntity.systemTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListPlatform );
 
   }
+    //@endregion System
 
+    //#region Tag
   @override
   Stream<List<tagEntity.Tag>> getAllTags() {
 
-    String sql = _allQuery(tagEntity.tagTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return tagEntity.Tag.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: tagEntity.tagTable,
+    ).asStream().map( _dynamicToListTag );
 
   }
 
   @override
   Stream<List<gameEntity.Game>> getGamesFromTag(int ID) {
 
-    String relationTable = _relationTable(gameEntity.gameTable, tagEntity.tagTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String tagIDField = _relationIDField(tagEntity.tagTable);
-
-    String sql = _joinQuery(
-        gameEntity.gameTable,
-        relationTable,
-        IDField,
-        gameIDField
-    );
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(tagIDField) + " = @tagID ", substitutionValues: {
-      "tagID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return gameEntity.Game.fromDynamicMapList(results);
-
-    });
+    return _readRelationAll(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: tagEntity.tagTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListGame );
 
   }
+    //#endregion Tag
 
+    //#region Type
   @override
   Stream<List<typeEntity.PurchaseType>> getAllTypes() {
 
-    String sql = _allQuery(typeEntity.typeTable);
-
-    return _connection.mappedResultsQuery(sql).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return typeEntity.PurchaseType.fromDynamicMapList(results);
-
-    });
+    return _readTableAll(
+        tableName: typeEntity.typeTable,
+    ).asStream().map( _dynamicToListType );
 
   }
 
   @override
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID) {
 
-    String relationTable = _relationTable(purchaseEntity.purchaseTable, typeEntity.typeTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-    String typeIDField = _relationIDField(typeEntity.typeTable);
+    return _readRelationAll(
+        leftTableName: purchaseEntity.purchaseTable,
+        rightTableName: typeEntity.typeTable,
+        leftResults: true,
+        relationID: ID,
+    ).asStream().map( _dynamicToListPurchase );
 
-    String sql = _joinQuery(
-        purchaseEntity.purchaseTable,
-        relationTable,
-        IDField,
-        purchaseIDField
+  }
+    //#endregion Type
+  //#endregion READ
+
+  //#region UPDATE
+  @override
+  Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+        tableName: gameEntity.gameTable,
+        ID: ID,
+        fieldName: fieldName,
+        newValue: newValue,
     );
-
-    return _connection.mappedResultsQuery(sql + "WHERE " + _forceDoubleQuotes(typeIDField) + " = @typeID ", substitutionValues: {
-      "typeID" : ID,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
 
   }
 
+  @override
+  Future<dynamic> updateDLC<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: dlcEntity.dlcTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: platformEntity.platformTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updatePurchase<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: purchaseEntity.purchaseTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updateStore<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: storeEntity.storeTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updateSystem<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: systemEntity.systemTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updateTag<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: tagEntity.tagTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+
+  @override
+  Future<dynamic> updateType<T>(int ID, String fieldName, T newValue) {
+
+    return _updateTable(
+      tableName: typeEntity.typeTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+    //#region Game
+  @override
+  Future<dynamic> deleteGame(int ID) {
+
+    return _deleteTable(
+      tableName: gameEntity.gameTable,
+      ID: ID,
+    );
+
+  }
+  @override
+  Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
+
+    return _deleteRelation(
+        leftTableName: gameEntity.gameTable,
+        rightTableName: purchaseEntity.purchaseTable,
+        leftID: gameID,
+        rightID: purchaseID,
+    );
+
+  }
+
+  @override
+  Future<dynamic> deleteGameDLC(int dlcID) {
+
+    return _updateTableToNull(
+        tableName: dlcEntity.dlcTable,
+        ID: dlcID,
+        fieldName: dlcEntity.baseGameField,
+    );
+
+  }
+    //#endregion Game
+
+    //#region DLC
+  @override
+  Future<dynamic> deleteDLC(int ID) {
+
+    return _deleteTable(
+        tableName: dlcEntity.dlcTable,
+        ID: ID,
+    );
+
+  }
+
+  @override
+  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
+
+    return _deleteRelation(
+      leftTableName: dlcEntity.dlcTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftID: dlcID,
+      rightID: purchaseID,
+    );
+
+  }
+    //#endregion DLC
+
+    //#region Platform
+  @override
+  Future<dynamic> deletePlatform(int ID) {
+
+    return _deleteTable(
+      tableName: platformEntity.platformTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion Platform
+
+    //#region Purchase
+  @override
+  Future<dynamic> deletePurchase(int ID) {
+
+    return _deleteTable(
+      tableName: purchaseEntity.purchaseTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion Purchase
+
+    //#region Store
+  @override
+  Future<dynamic> deleteStore(int ID) {
+
+    return _deleteTable(
+      tableName: storeEntity.storeTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion Store
+
+    //#region System
+  @override
+  Future<dynamic> deleteSystem(int ID) {
+
+    return _deleteTable(
+      tableName: systemEntity.systemTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion System
+
+    //#region Tag
+  @override
+  Future<dynamic> deleteTag(int ID) {
+
+    return _deleteTable(
+      tableName: tagEntity.tagTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion Tag
+
+    //#region Type
+  @override
+  Future<dynamic> deleteType(int ID) {
+
+    return _deleteTable(
+      tableName: typeEntity.typeTable,
+      ID: ID,
+    );
+
+  }
+    //#endregion Type
+  //#endregion DELETE
+
+  //#region SEARCH
   Stream<List<Entity>> getSearchStream(String tableName, String query) {
 
     switch(tableName) {
@@ -565,236 +823,109 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<gameEntity.Game>> getGamesWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(gameEntity.gameTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(gameEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return gameEntity.Game.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+        tableName: gameEntity.gameTable,
+        searchField: gameEntity.nameField,
+        query: nameQuery,
+    ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
   Stream<List<dlcEntity.DLC>> getDLCsWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(dlcEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return dlcEntity.DLC.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: dlcEntity.dlcTable,
+      searchField: dlcEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
   Stream<List<platformEntity.Platform>> getPlatformsWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(platformEntity.platformTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(platformEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return platformEntity.Platform.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: platformEntity.platformTable,
+      searchField: platformEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
   Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String descQuery) {
 
-    descQuery = "%" + descQuery + "%";
-
-    String sql = _allQuery(purchaseEntity.purchaseTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(purchaseEntity.descriptionField) + " ILIKE @descQuery ", substitutionValues: {
-      "descQuery" : descQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return purchaseEntity.Purchase.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: purchaseEntity.purchaseTable,
+      searchField: purchaseEntity.descriptionField,
+      query: descQuery,
+    ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
   Stream<List<storeEntity.Store>> getStoresWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(storeEntity.storeTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(storeEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return storeEntity.Store.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: storeEntity.storeTable,
+      searchField: storeEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListStore );
 
   }
 
   @override
   Stream<List<systemEntity.System>> getSystemsWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(systemEntity.systemTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(systemEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return systemEntity.System.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: systemEntity.systemTable,
+      searchField: systemEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListSystem );
 
   }
 
   @override
   Stream<List<tagEntity.Tag>> getTagsWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(tagEntity.tagTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(tagEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return tagEntity.Tag.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: tagEntity.tagTable,
+      searchField: tagEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListTag );
 
   }
 
   @override
   Stream<List<typeEntity.PurchaseType>> getTypesWithName(String nameQuery) {
 
-    nameQuery = "%" + nameQuery + "%";
-
-    String sql = _allQuery(typeEntity.typeTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(typeEntity.nameField) + " ILIKE @nameQuery ", substitutionValues: {
-      "nameQuery" : nameQuery,
-    }).asStream().map( (List<Map<String, Map<String, dynamic>>> results) {
-
-      return typeEntity.PurchaseType.fromDynamicMapList(results);
-
-    });
+    return _readTableSearch(
+      tableName: typeEntity.typeTable,
+      searchField: typeEntity.nameField,
+      query: nameQuery,
+    ).asStream().map( _dynamicToListType );
 
   }
-
-  @override
-  Future<dynamic> updateDescriptionPurchase(int ID, String newText) {
-
-    String sql = "UPDATE " + _forceDoubleQuotes(purchaseEntity.purchaseTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(purchaseEntity.descriptionField) + " = @newText WHERE " + _forceDoubleQuotes(IDField) + " = @purchaseID ", substitutionValues: {
-      "newText" : newText,
-      "purchaseID" : ID,
-    });
-
-  }
-
-  @override
-  Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
-
-    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
-
-    String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
-
-    return _connection.mappedResultsQuery(sql + " VALUES(@gameID, @purchaseID) ", substitutionValues: {
-      "gameID" : gameID,
-      "purchaseID" : purchaseID,
-    });
-
-  }
-
-  Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
-
-    String relationTable = _relationTable(gameEntity.gameTable, purchaseEntity.purchaseTable);
-    String gameIDField = _relationIDField(gameEntity.gameTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-
-    String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(gameIDField) + " = @gameID AND " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
-      "gameID" : gameID,
-      "purchaseID" : purchaseID,
-    });
-
-  }
+  //#endregion SEARCH
 
 
-
-  @override
-  Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID) {
-
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
-
-    String sql = "INSERT INTO " + _forceDoubleQuotes(relationTable);
-
-    return _connection.mappedResultsQuery(sql + " VALUES(@dlcID, @purchaseID) ", substitutionValues: {
-      "dlcID" : dlcID,
-      "purchaseID" : purchaseID,
-    });
-
-  }
-
-  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
-
-    String relationTable = _relationTable(dlcEntity.dlcTable, purchaseEntity.purchaseTable);
-    String dlcIDField = _relationIDField(dlcEntity.dlcTable);
-    String purchaseIDField = _relationIDField(purchaseEntity.purchaseTable);
-
-    String sql = "DELETE FROM " + _forceDoubleQuotes(relationTable);
-
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(dlcIDField) + " = @dlcID AND " + _forceDoubleQuotes(purchaseIDField) + " = @purchaseID ", substitutionValues: {
-      "dlcID" : dlcID,
-      "purchaseID" : purchaseID,
-    });
-
-  }
-
-  Future<dynamic> insertDLC() {
-
-    String sql = "INSERT INTO " + _forceDoubleQuotes(dlcEntity.dlcTable) + " (" + _forceDoubleQuotes(dlcEntity.nameField) + ") ";
-
-    return _connection.mappedResultsQuery(sql + " VALUES('') ");
-
-  }
-
-  Future<dynamic> insertPurchase() {
-
-    String sql = "INSERT INTO " + _forceDoubleQuotes(purchaseEntity.purchaseTable) + " (" + _forceDoubleQuotes(purchaseEntity.descriptionField) + ") ";
-
-    return _connection.mappedResultsQuery(sql + " VALUES('') ");
-
-  }
-
-  String _allQuery(String table) {
+  //#region Helpers
+  String _selectAllQuery(String table) {
 
     return "SELECT * FROM " + _forceDoubleQuotes(table);
 
   }
 
-  String _joinQuery(String leftTable, String rightTable, String leftTableID, String rightTableID, [String select = "Select * "]) {
+  String _selectJoinQuery(String leftTable, String rightTable, String leftTableID, String rightTableID, [String select = "Select * "]) {
 
     return select + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
+
+  }
+
+  String _updateQuery(String table) {
+
+    return "UPDATE " + _forceDoubleQuotes(table);
 
   }
 
@@ -821,64 +952,85 @@ class PostgresConnector implements DBConnector {
     return table + "_" + IDField;
 
   }
+  //#endregion Helpers
 
-  @override
-  Future updateStringDLC(int ID, String fieldName, String newText) {
+  //#region Dynamic Map to List
+  List<gameEntity.Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
 
-    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newText WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
-      "newText" : newText,
-      "dlcID" : ID,
-    });
-
-  }
-  @override
-  Future updateNumberDLC(int ID, String fieldName, int newNumber) {
-
-    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newNumber WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
-      "newNumber" : newNumber,
-      "dlcID" : ID,
-    });
+    return gameEntity.Game.fromDynamicMapList(results);
 
   }
 
-  @override
-  Future updateDateDLC(int ID, String fieldName, DateTime newDate) {
+  List<dlcEntity.DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
 
-    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newDate WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
-      "newDate" : newDate,
-      "dlcID" : ID,
-    });
+    return dlcEntity.DLC.fromDynamicMapList(results);
 
   }
 
-  @override
-  Future deleteGameDLC(int dlcID) {
+  List<platformEntity.Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
 
-    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(dlcEntity.baseGameField) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
-      "dlcID" : dlcID,
-    });
+    return platformEntity.Platform.fromDynamicMapList(results);
 
   }
 
-  @override
-  Future insertGameDLC(int gameID, int dlcID) {
+  List<purchaseEntity.Purchase> _dynamicToListPurchase(List<Map<String, Map<String, dynamic>>> results) {
 
-    String sql = "UPDATE " + _forceDoubleQuotes(dlcEntity.dlcTable);
-
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(dlcEntity.baseGameField) + " = @baseGameID WHERE " + _forceDoubleQuotes(IDField) + " = @dlcID ", substitutionValues: {
-      "baseGameID" : gameID,
-      "dlcID" : dlcID,
-    });
+    return purchaseEntity.Purchase.fromDynamicMapList(results);
 
   }
+
+  List<storeEntity.Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
+
+    return storeEntity.Store.fromDynamicMapList(results);
+
+  }
+
+  List<systemEntity.System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
+
+    return systemEntity.System.fromDynamicMapList(results);
+
+  }
+
+  List<tagEntity.Tag> _dynamicToListTag(List<Map<String, Map<String, dynamic>>> results) {
+
+    return tagEntity.Tag.fromDynamicMapList(results);
+
+  }
+
+  List<typeEntity.PurchaseType> _dynamicToListType(List<Map<String, Map<String, dynamic>>> results) {
+
+    return typeEntity.PurchaseType.fromDynamicMapList(results);
+
+  }
+
+  gameEntity.Game _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
+
+    gameEntity.Game singleGame;
+
+    if(results.isEmpty) {
+      singleGame = gameEntity.Game(ID: -1);
+    } else {
+      singleGame = gameEntity.Game.fromDynamicMap(results[0][gameEntity.gameTable]);
+    }
+
+    return singleGame;
+
+  }
+
+  storeEntity.Store _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
+
+    storeEntity.Store singleStore;
+
+    if(results.isEmpty) {
+      singleStore = storeEntity.Store(ID: -1);
+    } else {
+      singleStore = storeEntity.Store.fromDynamicMap(results[0][storeEntity.storeTable]);
+    }
+
+    return singleStore;
+
+  }
+  //#endregion Dynamic Map to List
 
 }
 

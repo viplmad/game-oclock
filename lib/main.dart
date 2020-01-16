@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:game_collection/persistence/db_conector.dart';
 import 'package:game_collection/persistence/postgres_connector.dart';
@@ -22,6 +23,11 @@ class GameCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MaterialApp(
       title: 'Game Collection',
       theme: ThemeData(
@@ -55,11 +61,14 @@ class _HomePageState extends State<HomePage> {
   int _selectedScreen = 0;
 
   void _showSnackBar(String message){
+
     final snackBar = new SnackBar(
       content: new Text(message),
       duration: Duration(seconds: 3),
     );
+
     scaffoldKey.currentState.showSnackBar(snackBar);
+
   }
 
   final List<BottomNavigationBarItem> _barItems = [
@@ -103,21 +112,52 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return FloatingActionButton(
           onPressed: () {
-            _db.insertDLC().then( (dynamic data) {
+            TextEditingController fieldController = TextEditingController();
 
-              _showSnackBar("Added new DLC");
+            showModalBottomSheet<String>(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 250,
+                    child: Column(
+                      children: <Widget>[
+                        TextField(
+                          controller: fieldController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            hintText: 'Name',
+                          ),
+                        ),
+                        FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Navigator.maybePop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Accept"),
+                          onPressed: () {
+                            Navigator.maybePop(context, fieldController.text);
+                          },
+                        )
+                      ],
+                    ),
 
-            }, onError: (e) {
+                  );
+                }
+            ).then( (String nameOfNew) {
+              if (nameOfNew != null && nameOfNew.trim().isNotEmpty) {
+                _db.insertDLC(nameOfNew).then( (dynamic data) {
 
-              _showSnackBar("Unable to add new DLC");
+                  _showSnackBar("Added new DLC");
 
+                }, onError: (e) {
+
+                  _showSnackBar("Unable to add new DLC");
+
+                });
+              }
             });
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  NewDLC(scaffoldKey)
-              ),
-            );*/
           },
           tooltip: 'New DLC',
           child: Icon(Icons.add),
@@ -125,7 +165,7 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return FloatingActionButton(
           onPressed: () {
-            _db.insertPurchase().then( (dynamic data) {
+            /*_db.insertPurchase().then( (dynamic data) {
 
               _showSnackBar("Added new purchase");
 
@@ -133,13 +173,7 @@ class _HomePageState extends State<HomePage> {
 
               _showSnackBar("Unable to add new purchase");
 
-            });
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  NewPurchase(scaffoldKey)
-              ),
-            );*/
+            });*/
           },
           tooltip: 'New Purchase',
           child: Icon(Icons.add),
@@ -173,119 +207,159 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget getGamesStream() {
+  Widget _getEntityStream({@required Stream<List<Entity>> entityStream, @required Function handleDelete}) {
+
     return StreamBuilder(
-      stream: _db.getAllGames(),
-      builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
+      stream: entityStream,
+      builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
         if(!snapshot.hasData) { return LoadingIcon(); }
 
-        List<Game> results = snapshot.data;
+        List<Entity> results = snapshot.data;
 
         return ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
           itemCount: results.length,
           itemBuilder: (BuildContext context, int index) {
-            Game result = results[index];
+            Entity result = results[index];
 
-            return result.getModifyCard(context);
+            return result.getModifyCard(
+                context,
+                handleDelete: () {
+                  showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Delete"),
+                        content: ListTile(
+                          title: Text("Are you sure you want to delete " + result.getFormattedTitle() + "?"),
+                          subtitle: Text("This action cannot be undone"),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.maybePop(context);
+                            },
+                          ),
+                          RaisedButton(
+                            child: Text("Delete", style: TextStyle(color: Colors.white),),
+                            onPressed: () {
+                              Navigator.maybePop(context, true);
+                            },
+                            color: Colors.red,
+                          )
+                        ],
+                      );
+                    },
+                  ).then( (bool option) {
+
+                    if(option != null && option) {
+                      handleDelete(result);
+                    }
+
+                  });
+                }
+            );
           },
         );
       },
 
     );
+
+  }
+
+  Widget getGamesStream() {
+
+    return _getEntityStream(
+        entityStream: _db.getAllGames(),
+        handleDelete: (Game result) {
+          _db.deleteGame(result.ID).then( (dynamic data) {
+
+            _showSnackBar("Deleted " + result.getFormattedTitle());
+
+          }, onError: (e) {
+
+            _showSnackBar("Unable to delete " + result.getFormattedTitle());
+
+          });
+        },
+    );
+
   }
 
   Widget getDLCsStream() {
-    return StreamBuilder(
-      stream: _db.getAllDLCs(),
-      builder: (BuildContext context, AsyncSnapshot<List<DLC>> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
 
-        List<DLC> results = snapshot.data;
+    return _getEntityStream(
+      entityStream: _db.getAllDLCs(),
+      handleDelete: (DLC result) {
+        _db.deleteDLC(result.ID).then( (dynamic data) {
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            DLC result = results[index];
+          _showSnackBar("Deleted " + result.getFormattedTitle());
 
-            return result.getModifyCard(context);
-          },
-        );
+        }, onError: (e) {
+
+          _showSnackBar("Unable to delete " + result.getFormattedTitle());
+
+        });
       },
-
     );
+
   }
 
   Widget getPurchasesStream() {
-    return StreamBuilder(
-      stream: _db.getAllPurchases(),
-      builder: (BuildContext context, AsyncSnapshot<List<Purchase>> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
 
-        List<Purchase> results = snapshot.data;
+    return _getEntityStream(
+      entityStream: _db.getAllPurchases(),
+      handleDelete: (Purchase result) {
+        _db.deletePurchase(result.ID).then( (dynamic data) {
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            Purchase result = results[index];
+          _showSnackBar("Deleted " + result.getFormattedTitle());
 
-            return result.getModifyCard(context);
-          },
-        );
+        }, onError: (e) {
+
+          _showSnackBar("Unable to delete " + result.getFormattedTitle());
+
+        });
       },
-
     );
+
   }
 
   Widget getStoresStream() {
-    return StreamBuilder(
-      stream: _db.getAllStores(),
-      builder: (BuildContext context, AsyncSnapshot<List<Store>> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
 
-        List<Store> results = snapshot.data;
+    return _getEntityStream(
+      entityStream: _db.getAllStores(),
+      handleDelete: (Store result) {
+        _db.deleteStore(result.ID).then( (dynamic data) {
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            Store result = results[index];
+          _showSnackBar("Deleted " + result.getFormattedTitle());
 
-            return result.getModifyCard(context);
-          },
-        );
+        }, onError: (e) {
+
+          _showSnackBar("Unable to delete " + result.getFormattedTitle());
+
+        });
       },
-
     );
+
   }
 
   Widget getPlatformsStream() {
-    return StreamBuilder(
-      stream: _db.getAllPlatforms(),
-      builder: (BuildContext context, AsyncSnapshot<List<Platform>> snapshot) {
-        if(!snapshot.hasData) { return LoadingIcon(); }
 
-        List<Platform> results = snapshot.data;
+    return _getEntityStream(
+      entityStream: _db.getAllPlatforms(),
+      handleDelete: (Platform result) {
+        _db.deletePlatform(result.ID).then( (dynamic data) {
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (BuildContext context, int index) {
-            Platform result = results[index];
+          _showSnackBar("Deleted " + result.getFormattedTitle());
 
-            return result.getModifyCard(context);
-          },
-        );
+        }, onError: (e) {
+
+          _showSnackBar("Unable to delete " + result.getFormattedTitle());
+
+        });
       },
-
     );
+
   }
 
   Widget _getSelectedWidget() {

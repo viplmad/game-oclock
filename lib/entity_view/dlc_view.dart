@@ -33,7 +33,7 @@ class _DLCViewState extends EntityViewState {
         fieldName: nameField,
         value: getEntity().name.toString(),
         handleUpdate: (String newName) {
-          _db.updateStringDLC(getEntity().ID, nameField, newName).then( (dynamic data) {
+          _db.updateDLC(getEntity().ID, nameField, newName).then( (dynamic data) {
 
             showSnackBar("Updated");
 
@@ -48,7 +48,7 @@ class _DLCViewState extends EntityViewState {
         fieldName: releaseYearField,
         value: getEntity().releaseYear,
         handleUpdate: (int newYear) {
-          _db.updateNumberDLC(getEntity().ID, releaseYearField, newYear).then( (dynamic data) {
+          _db.updateDLC(getEntity().ID, releaseYearField, newYear).then( (dynamic data) {
 
             showSnackBar("Updated");
 
@@ -63,7 +63,7 @@ class _DLCViewState extends EntityViewState {
         fieldName: finishDateField,
         value: getEntity().finishDate,
         handleUpdate: (DateTime newDate) {
-          _db.updateDateDLC(getEntity().ID, finishDateField, newDate).then( (dynamic data) {
+          _db.updateDLC(getEntity().ID, finishDateField, newDate).then( (dynamic data) {
 
             showSnackBar("Updated");
 

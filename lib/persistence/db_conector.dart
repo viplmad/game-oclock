@@ -13,7 +13,36 @@ abstract class DBConnector {
   Future<dynamic> open();
   Future<dynamic> close();
 
-  //READ
+
+  //#region CREATE
+    //Game
+  Future<dynamic> insertGame(String name);
+  Future<dynamic> insertGamePlatform(int gameID, int platformID);
+  Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
+  Future<dynamic> insertGameDLC(int gameID, int dlcID);
+  Future<dynamic> insertGameTag(int gameID, int tagID);
+    //DLC
+  Future<dynamic> insertDLC(String name);
+  Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID);
+    //Platform
+  Future<dynamic> insertPlatform(String name);
+  Future<dynamic> insertPlatformSystem(int platformID, int systemID);
+    //Purchase
+  Future<dynamic> insertPurchase(String description);
+  Future<dynamic> insertPurchaseType(int purchaseID, int typeID);
+    //Store
+  Future<dynamic> insertStore(String name);
+  Future<dynamic> insertStorePurchase(int storeID, int purchaseID);
+    //System
+  Future<dynamic> insertSystem(String name);
+    //Tag
+  Future<dynamic> insertTag(String name);
+    //Type
+  Future<dynamic> insertType(String name);
+  //#endregion CREATE
+
+
+  //#region READ
     //Game
   Stream<List<Game>> getAllGames();
   Stream<List<Platform>> getPlatformsFromGame(int ID);
@@ -53,50 +82,65 @@ abstract class DBConnector {
     //Type
   Stream<List<PurchaseType>> getAllTypes();
   Stream<List<Purchase>> getPurchasesFromType(int ID);
+  //#endregion READ
 
-  //CREATE
+
+  //#region UPDATE
     //Game
-  Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
-  Future<dynamic> insertGameDLC(int gameID, int dlcID);
+  Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue);
+
     //DLC
-  Future<dynamic> insertDLC();
-  Future<dynamic> insertDLCPurchase(int gameID, int purchaseID);
-    //Platform
-    //Purchase
-  Future<dynamic> insertPurchase();
-    //Store
-    //System
-    //Tag
-    //Type
+  Future<dynamic> updateDLC<T>(int ID, String fieldName, T newValue);
 
-  //UPDATE
-    //Game
-    //DLC
-  Future<dynamic> updateStringDLC(int ID, String fieldName, String newText);
-  Future<dynamic> updateNumberDLC(int ID, String fieldName, int newNumber);
-  Future<dynamic> updateDateDLC(int ID, String fieldName, DateTime newDate);
     //Platform
-    //Purchase
-  Future<dynamic> updateDescriptionPurchase(int ID, String newText);
-    //Store
-    //System
-    //Tag
-    //Type
+  Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue);
 
-  //DELETE
+    //Purchase
+  Future<dynamic> updatePurchase<T>(int ID, String fieldName, T newValue);
+
+    //Store
+  Future<dynamic> updateStore<T>(int ID, String fieldName, T newValue);
+
+    //System
+  Future<dynamic> updateSystem<T>(int ID, String fieldName, T newValue);
+
+    //Tag
+  Future<dynamic> updateTag<T>(int ID, String fieldName, T newValue);
+
+    //Type
+  Future<dynamic> updateType<T>(int ID, String fieldName, T newValue);
+  //#endregion UPDATE
+
+
+  //#region DELETE
     //Game
+  Future<dynamic> deleteGame(int ID);
+  Future<dynamic> deleteGamePlatform(int gameID, int platformID);
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
   Future<dynamic> deleteGameDLC(int dlcID);
+  Future<dynamic> deleteGameTag(int gameID, int tagID);
     //DLC
-  Future<dynamic> deleteDLCPurchase(int gameID, int purchaseID);
+  Future<dynamic> deleteDLC(int ID);
+  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID);
     //Platform
+  Future<dynamic> deletePlatform(int ID);
+  Future<dynamic> deletePlatformSystem(int platformID, int systemID);
     //Purchase
+  Future<dynamic> deletePurchase(int ID);
+  Future<dynamic> deletePurchaseType(int purchaseID, int typeID);
     //Store
+  Future<dynamic> deleteStore(int ID);
+  Future<dynamic> deleteStorePurchase(int purchaseID);
     //System
+  Future<dynamic> deleteSystem(int ID);
     //Tag
+  Future<dynamic> deleteTag(int ID);
     //Type
+  Future<dynamic> deleteType(int ID);
+  //#endregion DELETE
 
-  //SEARCH
+
+  //#region SEARCH
   Stream<List<Entity>> getSearchStream(String tableName, String query);
   Stream<List<Game>> getGamesWithName(String name);
   Stream<List<DLC>> getDLCsWithName(String name);
@@ -106,5 +150,7 @@ abstract class DBConnector {
   Stream<List<System>> getSystemsWithName(String name);
   Stream<List<Tag>> getTagsWithName(String name);
   Stream<List<PurchaseType>> getTypesWithName(String name);
+  //#endregion SEARCH
+
 
 }

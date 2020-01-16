@@ -10,6 +10,8 @@ abstract class Entity {
 
   Entity({@required this.ID});
 
+  static Entity fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {}
+
   String getFormattedTitle();
 
   String getFormattedSubtitle() {

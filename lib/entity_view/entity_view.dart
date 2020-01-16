@@ -144,7 +144,7 @@ class EntityViewState extends State<EntityView> {
                     onPressed: () {
                       Navigator.maybePop(context, fieldController.text as dynamic);
                     },
-                  )
+                  ),
                 ],
               );
             }
@@ -199,7 +199,7 @@ class EntityViewState extends State<EntityView> {
     return GestureDetector(
       child: this.attributeBuilder(
         fieldName: fieldName,
-        value: value.toString(),
+        value: value?.toString() ?? "Unknown",
       ),
       onTap: () {
         showDialog<int>(
@@ -326,7 +326,7 @@ class YearPickerDialogState extends State<YearPickerDialog> {
   void initState() {
     super.initState();
 
-    _selectedDate = DateTime(widget.year);
+    _selectedDate = widget.year != null? DateTime(widget.year) : DateTime.now();
   }
 
   @override
