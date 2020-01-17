@@ -28,10 +28,6 @@ class _SystemViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-        fieldName: IDField,
-        value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
@@ -44,10 +40,6 @@ class _SystemViewState extends EntityViewState {
         fieldName: manufacturerField,
         value: getEntity().manufacturer,
       ),*/
-      Divider(),
-      headerRelationText(
-        fieldName: platformEntity.platformTable + 's',
-      ),
       streamBuilderEntities(
         entityStream: _db.getPlatformsFromSystem(getEntity().ID),
         tableName: platformEntity.platformTable,

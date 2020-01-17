@@ -29,10 +29,6 @@ class _PlatformViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-        fieldName: IDField,
-        value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
@@ -41,19 +37,11 @@ class _PlatformViewState extends EntityViewState {
         fieldName: typeField,
         value: getEntity().type,
       ),*/
-      Divider(),
-      headerRelationText(
-        fieldName: gameEntity.gameTable + 's',
-      ),
       streamBuilderEntities(
         entityStream: _db.getGamesFromPlatform(getEntity().ID),
         tableName: gameEntity.gameTable,
         newRelationFuture: (int addedGameID) => _db.insertGamePlatform(addedGameID, getEntity().ID),
         deleteRelationFuture: (int deletedGameID) => _db.deleteGamePlatform(deletedGameID, getEntity().ID),
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: systemEntity.systemTable + 's',
       ),
       streamBuilderEntities(
         entityStream: _db.getSystemsFromPlatform(getEntity().ID),

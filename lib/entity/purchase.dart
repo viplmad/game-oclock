@@ -8,7 +8,7 @@ import 'package:game_collection/entity_view/purchase_view.dart';
 
 const purchaseTable = "Purchase";
 
-const List<String> purchaseFields = [IDField, descriptionField, priceField, externalCreditField, dateField, originalPriceField];
+const List<String> purchaseFields = [IDField, descriptionField, priceField, externalCreditField, dateField, originalPriceField, storeField];
 
 const String descriptionField = 'Description';
 const String priceField = 'Price';
@@ -36,7 +36,7 @@ class Purchase extends Entity {
     return Purchase(
       ID: map[IDField],
       description: map[descriptionField],
-      price: map[priceField] / 100,
+      price: map[priceField] / 100, //Temporal fix as numeric is not supported and an integer is stored in its place
       externalCredit: map[externalCreditField] / 100,
       date: map[dateField],
       originalPrice: map[originalPriceField] / 100,

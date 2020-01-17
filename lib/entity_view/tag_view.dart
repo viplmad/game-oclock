@@ -28,17 +28,9 @@ class _TagViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-        fieldName: IDField,
-        value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: gameEntity.gameTable + 's',
       ),
       streamBuilderEntities(
         entityStream: _db.getGamesFromTag(getEntity().ID),

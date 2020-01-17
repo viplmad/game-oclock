@@ -47,6 +47,7 @@ class EntityViewState extends State<EntityView> {
 
     return ListView.builder(
       shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
       itemCount: itemCount,
       itemBuilder: (BuildContext context, int index) {
 
@@ -83,8 +84,8 @@ class EntityViewState extends State<EntityView> {
         } else {
           Entity result = results[index];
 
-          return result.getModifyCard(
-            context,
+          return result.getDismissibleCard(
+            context: context,
             handleDelete: () {
               deleteRelationFuture(result.ID).then( (dynamic data) {
 
@@ -150,12 +151,12 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget _modifyAttributeBuilder({@required String fieldName, @required String value, TextInputType keyboardType, List<TextInputFormatter> inputFormatters, Function handleUpdate}) {
+  Widget _modifyAttributeBuilder({@required String fieldName, @required String value, String shownValue, TextInputType keyboardType, List<TextInputFormatter> inputFormatters, Function handleUpdate}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
         fieldName: fieldName,
-        value: value,
+        value: shownValue?? value,
       ),
       onTap: () {
         TextEditingController fieldController = TextEditingController();
@@ -245,23 +246,25 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyDoubleAttributeBuilder({@required String fieldName, @required double value}) {
+  Widget modifyMoneyAttributeBuilder({@required String fieldName, @required double value}) {
 
     return _modifyAttributeBuilder(
       fieldName: fieldName,
       value: value.toString(),
+      shownValue: value.toString() + ' €',
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter(RegExp(r'^\d{1,3}(\.\d{0,2}){0,1}$')),
       ],
       handleUpdate: (String newDouble) {
-        getUpdateFuture(fieldName, double.parse(newDouble)).then( (dynamic data) {
+        getUpdateFuture(fieldName, (double.parse(newDouble) * 100).toInt()).then( (dynamic data) {
 
           showSnackBar(_updatedMessage);
 
         }, onError: (e) {
 
           showSnackBar(_failedUpdateMessage);
+          print(e);
 
         });
       },
@@ -308,7 +311,7 @@ class EntityViewState extends State<EntityView> {
     return GestureDetector(
       child: this.attributeBuilder(
         fieldName: fieldName,
-        value: value?.toIso8601String() ?? "Unknown",
+        value: value != null? value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString() : "Unknown",
       ),
       onTap: () {
         showDatePicker(
@@ -335,8 +338,6 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  double _tempRating = 8.0;
-
   Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value}) {
 
     return GestureDetector(
@@ -353,12 +354,10 @@ class EntityViewState extends State<EntityView> {
           SmoothStarRating(
             allowHalfRating: false,
             onRatingChanged: (double newRating) {
-              setState(() {
-                _tempRating = newRating;
-              });
+
             },
             starCount: 10,
-            rating: _tempRating,
+            rating: value.roundToDouble(),
             color: Colors.yellow,
             borderColor: Colors.yellow,
             size: 40.0,
@@ -369,51 +368,215 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget streamBuilderEntities({@required Stream<List<Entity>> entityStream, @required String tableName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
+  Widget modifyEnumAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, Function(bool) updateLocal}) {
 
-    addText = addText?? "Link " + tableName;
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      alignment: WrapAlignment.spaceEvenly,
+      children: List<Widget>.generate(
+        listOptions.length,
+        (int index) {
+          String option = listOptions[index];
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: StreamBuilder(
-        stream: entityStream,
-        builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
-          if(!snapshot.hasData) { return LoadingIcon(); }
+          return ChoiceChip(
+            label: Text(option),
+            selected: value == option,
+            onSelected: (bool selected) {
+              getUpdateFuture(fieldName, option).then( (dynamic data) {
 
-          return this.showResults(
-              results: snapshot.data,
-              tableName: tableName,
-              addText: addText,
-              newRelationFuture: newRelationFuture,
-              deleteRelationFuture: deleteRelationFuture,
+                //updateLocal(selected);
+                showSnackBar(_updatedMessage);
+
+
+              }, onError: (e) {
+
+                showSnackBar(_failedUpdateMessage);
+                print(e);
+
+              });
+            },
           );
-
         },
-      ),
+      ).toList(),
     );
+
   }
 
-  Widget streamBuilderEntity({@required Stream<Entity> entityStream, @required String tableName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
+  Widget streamBuilderEntitiesAsChips({@required Stream<List<Entity>> entityStream, @required Stream<List<Entity>> allOptionsStream, @required String tableName, String fieldName, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
-    addText = addText?? "Link " + tableName;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Divider(),
+        this.headerRelationText(
+          fieldName: fieldName?? tableName + 's',
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: entityStream,
+            builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
+              if(!snapshot.hasData) { return LoadingIcon(); }
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: StreamBuilder(
-        stream: entityStream,
-        builder: (BuildContext context, AsyncSnapshot<Entity> snapshot) {
-          if(!snapshot.hasData) { return LoadingIcon(); }
+              List<Entity> listOptions = snapshot.data;
 
-          return this.showResultsNonExpandable(
-              result: snapshot.data.ID < 0? null : snapshot.data,
-              tableName: tableName,
-              addText: addText,
-              newRelationFuture: newRelationFuture,
-              deleteRelationFuture: deleteRelationFuture,
-          );
+              return Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.spaceEvenly,
+                  children: List<Widget>.generate(
+                    listOptions.length + 1,
+                    (int index) {
+                      if(index == listOptions.length) {
 
-        },
-      ),
+                        return FilterChip(
+                          label: Text("Link new " + tableName),
+                          selected: true,
+                          onSelected: (bool selected) {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 200,
+                                  child: StreamBuilder(
+                                      stream: allOptionsStream,
+                                      builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
+                                        if(!snapshot.hasData) { return LoadingIcon(); }
+
+                                        List<Entity> listAllOptions = snapshot.data;
+
+                                        return Wrap(
+                                          crossAxisAlignment: WrapCrossAlignment.center,
+                                          alignment: WrapAlignment.spaceEvenly,
+                                          children: List<Widget>.generate(
+                                            listAllOptions.length,
+                                            (int index) {
+                                              Entity allOption = listAllOptions[index];
+
+                                              String optionName = allOption.getFormattedTitle();
+
+                                              return FilterChip(
+                                                label: Text(optionName),
+                                                selected: listOptions.any( (Entity myOption) => myOption.getFormattedTitle() == allOption.getFormattedTitle() ),
+                                                onSelected: (bool selected) {
+                                                  newRelationFuture(allOption.ID).then( (dynamic data) {
+
+                                                    //updateLocal(selected);
+                                                    showSnackBar(_updatedMessage);
+
+
+                                                  }, onError: (e) {
+
+                                                    showSnackBar(_failedUpdateMessage);
+
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ).toList(),
+                                        );
+                                      }
+                                  ),
+
+                                );
+                              },
+                            );
+                          },
+                        );
+
+                      }
+                      Entity option = listOptions[index];
+
+                      String optionName = option.getFormattedTitle();
+
+                      return FilterChip(
+                        label: Text(optionName),
+                        selected: true,
+                        onSelected: (bool selected) {
+                          deleteRelationFuture(option.ID).then( (dynamic data) {
+
+                            //updateLocal(selected);
+                            showSnackBar(_addedMessage + " " + optionName);
+
+
+                          }, onError: (e) {
+
+                            showSnackBar(_failedAddMessage + " " + optionName);
+
+                          });
+                        },
+                      );
+                    },
+                  ).toList(),
+                );
+
+            },
+          ),
+        ),
+      ],
+    );
+
+  }
+
+  Widget streamBuilderEntities({@required Stream<List<Entity>> entityStream, @required String tableName, String fieldName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Divider(),
+        this.headerRelationText(
+          fieldName: fieldName?? tableName + 's',
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: entityStream,
+            builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
+              if(!snapshot.hasData) { return LoadingIcon(); }
+
+              return this.showResults(
+                results: snapshot.data,
+                tableName: tableName,
+                addText: addText?? "Link " + tableName,
+                newRelationFuture: newRelationFuture,
+                deleteRelationFuture: deleteRelationFuture,
+              );
+
+            },
+          ),
+        ),
+      ],
+    );
+
+  }
+
+  Widget streamBuilderEntity({@required Stream<Entity> entityStream, @required String tableName, String fieldName, String addText, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Divider(),
+        this.headerRelationText(
+          fieldName: fieldName?? tableName + 's',
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: entityStream,
+            builder: (BuildContext context, AsyncSnapshot<Entity> snapshot) {
+              if(!snapshot.hasData) { return LoadingIcon(); }
+
+              return this.showResultsNonExpandable(
+                result: snapshot.data.ID < 0? null : snapshot.data,
+                tableName: tableName,
+                addText: addText?? "Link " + tableName,
+                newRelationFuture: newRelationFuture,
+                deleteRelationFuture: deleteRelationFuture,
+              );
+
+            },
+          ),
+        ),
+      ],
     );
 
   }
@@ -425,13 +588,26 @@ class EntityViewState extends State<EntityView> {
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        title: Text(widget.entity.getFormattedTitle()),
-      ),
-      body: Center(
-        child: ListView(
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 300.0,
+              floating: false,
+              pinned: true,
+              snap: false,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(getEntity().getFormattedTitle()),
+                collapseMode: CollapseMode.parallax,
+                background: Padding(
+                  padding: const EdgeInsets.only(top: 80.0, left: 20.0, right: 20.0),
+                  child: FlutterLogo(),
+                ),
+              ),
+            ),
+          ];
+        },
+        body: ListView(
           children: this.getListFields(),
         ),
       ),
@@ -497,23 +673,21 @@ class YearPickerDialogState extends State<YearPickerDialog> {
                 },
               ),
             ),
-            ButtonTheme.bar(
-              child: ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: Text(localizations.cancelButtonLabel),
-                    onPressed: () {
-                      Navigator.maybePop(context);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text(localizations.okButtonLabel),
-                    onPressed: () {
-                      Navigator.maybePop(context, _selectedDate.year);
-                    },
-                  ),
-                ],
-              ),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: Text(localizations.cancelButtonLabel),
+                  onPressed: () {
+                    Navigator.maybePop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text(localizations.okButtonLabel),
+                  onPressed: () {
+                    Navigator.maybePop(context, _selectedDate.year);
+                  },
+                ),
+              ],
             ),
           ],
         ),

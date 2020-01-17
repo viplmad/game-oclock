@@ -31,10 +31,6 @@ class _GameViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-          fieldName: IDField,
-          value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
           fieldName: nameField,
           value: getEntity().name,
@@ -47,10 +43,11 @@ class _GameViewState extends EntityViewState {
         fieldName: releaseYearField,
         value: getEntity().releaseYear,
       ),
-      /*modifyEnumAttributeBuilder(
+      modifyEnumAttributeBuilder(
         fieldName: statusField,
         value: getEntity().status,
-      ),*/
+        listOptions: statuses,
+      ),
       modifyRatingAttributeBuilder(
         fieldName: ratingField,
         value: getEntity().rating,
@@ -82,19 +79,11 @@ class _GameViewState extends EntityViewState {
         fieldName: backupField,
         value: getEntity().isBackup,
       ),*/
-      Divider(),
-      headerRelationText(
-        fieldName: purchaseEntity.purchaseTable + 's',
-      ),
       streamBuilderEntities(
         entityStream: _db.getPurchasesFromGame(getEntity().ID),
         tableName: purchaseEntity.purchaseTable,
         newRelationFuture: (int addedPurchaseID) => _db.insertGamePurchase(getEntity().ID, addedPurchaseID),
         deleteRelationFuture: (int deletedPurchaseID) => _db.deleteGamePurchase(getEntity().ID, deletedPurchaseID),
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: platformEntity.platformTable + 's',
       ),
       streamBuilderEntities(
         entityStream: _db.getPlatformsFromGame(getEntity().ID),
@@ -102,22 +91,15 @@ class _GameViewState extends EntityViewState {
         newRelationFuture: (int addedPlatformID) => _db.insertGamePlatform(getEntity().ID, addedPlatformID),
         deleteRelationFuture: (int deletedPlatformID) => _db.deleteGamePlatform(getEntity().ID, deletedPlatformID),
       ),
-      Divider(),
-      headerRelationText(
-        fieldName: dlcEntity.dlcTable + 's',
-      ),
       streamBuilderEntities(
         entityStream: _db.getDLCsFromGame(getEntity().ID),
         tableName: dlcEntity.dlcTable,
         newRelationFuture: (int addedDLCID) => _db.insertGameDLC(getEntity().ID, addedDLCID),
         deleteRelationFuture: (int deletedDLCID) => _db.deleteGameDLC(deletedDLCID),
       ),
-      Divider(),
-      headerRelationText(
-        fieldName: tagEntity.tagTable + 's',
-      ),
-      streamBuilderEntities(
+      streamBuilderEntitiesAsChips(
         entityStream: _db.getTagsFromGame(getEntity().ID),
+        allOptionsStream: _db.getAllTags(),
         tableName: tagEntity.tagTable,
         newRelationFuture: (int addedTagID) => _db.insertGameTag(getEntity().ID, addedTagID),
         deleteRelationFuture: (int deletedTagID) => _db.deleteGameTag(getEntity().ID, deletedTagID),

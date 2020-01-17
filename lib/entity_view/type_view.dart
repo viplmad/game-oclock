@@ -28,17 +28,9 @@ class _TypeViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-        fieldName: IDField,
-        value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: purchaseEntity.purchaseTable + 's',
       ),
       streamBuilderEntities(
         entityStream: _db.getPurchasesFromType(getEntity().ID),

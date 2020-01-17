@@ -22,6 +22,13 @@ const String screenshotFolderField = 'Screenshot Folder';
 const String finishDateField = 'Finish Date';
 const String backupField = 'Backup';
 
+List<String> statuses = [
+  "Low Priority",
+  "Next Up",
+  "Playing",
+  "Played",
+];
+
 class Game extends Entity {
 
   final String name;
@@ -89,7 +96,7 @@ class Game extends Entity {
   @override
   String getFormattedSubtitle() {
 
-    return this.status;
+    return this.status?? "";
 
   }
 

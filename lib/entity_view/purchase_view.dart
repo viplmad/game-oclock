@@ -31,19 +31,15 @@ class _PurchaseViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-          fieldName: IDField,
-          value: getEntity().ID.toString()
-      ),
       modifyTextAttributeBuilder(
         fieldName: descriptionField,
         value: getEntity().description,
       ),
-      modifyDoubleAttributeBuilder(
+      modifyMoneyAttributeBuilder(
         fieldName: priceField,
         value: getEntity().price,
       ),
-      modifyDoubleAttributeBuilder(
+      modifyMoneyAttributeBuilder(
         fieldName: externalCreditField,
         value: getEntity().externalCredit,
       ),
@@ -51,23 +47,16 @@ class _PurchaseViewState extends EntityViewState {
         fieldName: dateField,
         value: getEntity().date,
       ),
-      modifyDoubleAttributeBuilder(
+      modifyMoneyAttributeBuilder(
         fieldName: originalPriceField,
         value: getEntity().originalPrice,
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: storeField,
       ),
       streamBuilderEntity(
         entityStream: _db.getStoreFromPurchase(getEntity().store),
         tableName: storeEntity.storeTable,
+        fieldName: storeField,
         newRelationFuture: (int addedStoreID) => _db.insertStorePurchase(addedStoreID, getEntity().ID),
         deleteRelationFuture: (int deletedStoreID) => _db.deleteStorePurchase(getEntity().ID),
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: gameEntity.gameTable + 's',
       ),
       streamBuilderEntities(
         entityStream: _db.getGamesFromPurchase(getEntity().ID),
@@ -75,22 +64,15 @@ class _PurchaseViewState extends EntityViewState {
         newRelationFuture: (int addedGameID) => _db.insertGamePurchase(addedGameID, getEntity().ID),
         deleteRelationFuture: (int deletedGameID) => _db.deleteGamePurchase(deletedGameID, getEntity().ID),
       ),
-      Divider(),
-      headerRelationText(
-        fieldName: dlcEntity.dlcTable + 's',
-      ),
       streamBuilderEntities(
         entityStream: _db.getDLCsFromPurchase(getEntity().ID),
         tableName: dlcEntity.dlcTable,
         newRelationFuture: (int addedDLCID) => _db.insertDLCPurchase(addedDLCID, getEntity().ID),
         deleteRelationFuture: (int deletedDLCID) => _db.deleteDLCPurchase(deletedDLCID, getEntity().ID),
       ),
-      Divider(),
-      headerRelationText(
-        fieldName: typeEntity.typeTable + 's',
-      ),
-      streamBuilderEntities(
+      streamBuilderEntitiesAsChips(
         entityStream: _db.getTypesFromPurchase(getEntity().ID),
+        allOptionsStream: _db.getAllTypes(),
         tableName: typeEntity.typeTable,
         newRelationFuture: (int addedTypeID) => _db.insertPurchaseType(getEntity().ID, addedTypeID),
         deleteRelationFuture: (int deletedTypeID) => _db.deletePurchaseType(getEntity().ID, deletedTypeID),
@@ -98,169 +80,5 @@ class _PurchaseViewState extends EntityViewState {
     ];
 
   }
-  /*
-  @override
-  Widget build(BuildContext context) {
 
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        title: Text(widget.purchase.description),
-      ),
-      body: Center(
-        child: ListView(
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          children: <Widget>[
-            ListTile(
-              title: Text(IDField),
-              subtitle: Text(widget.purchase.ID.toString()),
-            ),
-            GestureDetector(
-              child: ListTile(
-                title: Text(descriptionField),
-                subtitle: Text(widget.purchase.description),
-              ),
-              onTap: () {
-                TextEditingController fieldController = TextEditingController();
-                fieldController.text = widget.purchase.description;
-
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Edit " + descriptionField),
-                      content: TextField(
-                        controller: fieldController,
-                        decoration: InputDecoration(
-                          hintText: "Description",
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.maybePop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Accept"),
-                          onPressed: () {
-                            Navigator.maybePop(context, fieldController.text);
-                          },
-                        )
-                      ],
-                    );
-                  }
-                ).then( (String newText) {
-                  if (newText != null) {
-                    _db.updateDescriptionPurchase(widget.purchase.ID, newText).then( (dynamic data) {
-
-                      _showSnackBar("Updated");
-
-                    }, onError: (e) {
-
-                      _showSnackBar("Unable to update");
-
-                    });
-                  }
-                });
-              },
-            ),
-            ListTile(
-              title: Text(priceField),
-              subtitle: Text(widget.purchase.price?.toString() ?? ""),
-            ),
-            ListTile(
-              title: Text(externalCreditField),
-              subtitle: Text(widget.purchase.externalCredit?.toString() ?? ""),
-            ),
-            ListTile(
-              title: Text(dateField),
-              subtitle: Text(widget.purchase.date?.toIso8601String() ?? "Unknown"),
-            ),
-            ListTile(
-              title: Text(originalPriceField),
-              subtitle: Text(widget.purchase.originalPrice?.toString() ?? ""),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-              child: Text("Games", style: Theme.of(context).textTheme.subhead),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: EntityView.StreamBuilderEntities(
-                  entityStream: _db.getGamesFromPurchase(widget.purchase.ID),
-                  addText: "Add Game",
-                  handleNew: (Game addedGame) {
-                    _db.insertGamePurchase(addedGame.ID, widget.purchase.ID).then( (dynamic data) {
-
-                      _showSnackBar("Added " + addedGame.getNameAndEdition());
-
-                    }, onError: (e) {
-
-                      _showSnackBar("Unable to add " + addedGame.getNameAndEdition());
-
-                    });
-                  },
-                  handleDelete: (Game removedGame) {
-                    _db.deleteGamePurchase(removedGame.ID, widget.purchase.ID).then( (dynamic data) {
-
-                      _showSnackBar("Deleted " + removedGame.getNameAndEdition());
-
-                    }, onError: (e) {
-
-                      _showSnackBar("Unable to delete" + removedGame.getNameAndEdition());
-
-                    });
-                  }
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-              child: Text("DLCs", style: Theme.of(context).textTheme.subhead),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: StreamBuilder(
-                stream: _db.getDLCsFromPurchase(widget.purchase.ID),
-                builder: (BuildContext context, AsyncSnapshot<List<DLC>> snapshot) {
-                  if(!snapshot.hasData) { return LoadingIcon(); }
-
-                  return EntityView.showResults(
-                      results: snapshot.data,
-                      addText: "Add DLC"
-                  );
-
-                },
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-              child: Text("Store", style: Theme.of(context).textTheme.subhead),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: StreamBuilder(
-                stream: _db.getStoreFromPurchase(widget.purchase.ID),
-                builder: (BuildContext context, AsyncSnapshot<Store> snapshot) {
-                  if(!snapshot.hasData) { return LoadingIcon(); }
-
-                  return EntityView.showResultsNonExpandable(
-                      result: snapshot.data.ID < 0? null : snapshot.data,
-                      addText: "Add Store");
-
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-  }
-  */
 }

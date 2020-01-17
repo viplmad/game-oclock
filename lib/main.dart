@@ -17,6 +17,9 @@ import 'package:game_collection/entity/tag.dart';
 import 'package:game_collection/loading_icon.dart';
 import 'package:game_collection/start.dart';
 
+const _addedMessage = "Added";
+const _failedAddMessage = "Unable to add";
+
 void main() => runApp(GameCollection());
 
 class GameCollection extends StatelessWidget {
@@ -99,12 +102,10 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return FloatingActionButton(
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  NewGame(scaffoldKey)
-              ),
-            );*/
+            _showEntityModal(
+              tableName: gameTable,
+              newFuture: (String newGameName) => _db.insertGame(newGameName, ""),
+            );
           },
           tooltip: 'New Game',
           child: Icon(Icons.add),
@@ -112,52 +113,10 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return FloatingActionButton(
           onPressed: () {
-            TextEditingController fieldController = TextEditingController();
-
-            showModalBottomSheet<String>(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 250,
-                    child: Column(
-                      children: <Widget>[
-                        TextField(
-                          controller: fieldController,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            hintText: 'Name',
-                          ),
-                        ),
-                        FlatButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.maybePop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Accept"),
-                          onPressed: () {
-                            Navigator.maybePop(context, fieldController.text);
-                          },
-                        )
-                      ],
-                    ),
-
-                  );
-                }
-            ).then( (String nameOfNew) {
-              if (nameOfNew != null && nameOfNew.trim().isNotEmpty) {
-                _db.insertDLC(nameOfNew).then( (dynamic data) {
-
-                  _showSnackBar("Added new DLC");
-
-                }, onError: (e) {
-
-                  _showSnackBar("Unable to add new DLC");
-
-                });
-              }
-            });
+            _showEntityModal(
+              tableName: dlcTable,
+              newFuture: (String newDLCName) => _db.insertDLC(newDLCName),
+            );
           },
           tooltip: 'New DLC',
           child: Icon(Icons.add),
@@ -165,15 +124,11 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return FloatingActionButton(
           onPressed: () {
-            /*_db.insertPurchase().then( (dynamic data) {
-
-              _showSnackBar("Added new purchase");
-
-            }, onError: (e) {
-
-              _showSnackBar("Unable to add new purchase");
-
-            });*/
+            _showEntityModal(
+                tableName: purchaseTable,
+                hintText: 'Description',
+                newFuture: (String newPurchaseDesc) => _db.insertPurchase(newPurchaseDesc),
+            );
           },
           tooltip: 'New Purchase',
           child: Icon(Icons.add),
@@ -181,12 +136,10 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return FloatingActionButton(
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  NewStore(scaffoldKey)
-              ),
-            );*/
+            _showEntityModal(
+              tableName: storeTable,
+              newFuture: (String newStoreName) => _db.insertStore(newStoreName),
+            );
           },
           tooltip: 'New Store',
           child: Icon(Icons.add),
@@ -194,17 +147,81 @@ class _HomePageState extends State<HomePage> {
       case 4:
         return FloatingActionButton(
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  NewPlatform(scaffoldKey)
-              ),
-            );*/
+            _showEntityModal(
+              tableName: platformTable,
+              newFuture: (String newPlatformName) => _db.insertPlatform(newPlatformName),
+            );
           },
           tooltip: 'New Platform',
           child: Icon(Icons.add),
         );
     }
+
+    return null;
+  }
+
+  void _showEntityModal({@required String tableName, @required Future<dynamic> Function(String) newFuture, String hintText = 'Name'}) {
+
+    TextEditingController fieldController = TextEditingController();
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+    showModalBottomSheet<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 250,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: fieldController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                  ),
+                ),
+                ButtonBarTheme(
+                  data: ButtonBarThemeData(
+                    alignment: MainAxisAlignment.end,
+                  ),
+                  child: ButtonBar(
+                    children: <Widget>[
+                      FlatButton(
+                        child: Text(localizations.cancelButtonLabel),
+                        onPressed: () {
+                          Navigator.maybePop(context);
+                        },
+                      ),
+                      RaisedButton(
+                        child: Text(localizations.okButtonLabel, style: TextStyle(color: Colors.white)),
+                        onPressed: fieldController.text.isEmpty?
+                        null
+                            :
+                            () {
+                          Navigator.maybePop(context, fieldController.text);
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+
+          );
+        }
+    ).then( (String nameOfNew) {
+      if (nameOfNew != null) {
+        newFuture(nameOfNew).then( (dynamic data) {
+
+          _showSnackBar(_addedMessage + " new " + tableName);
+
+        }, onError: (e) {
+
+          _showSnackBar(_failedAddMessage + " new " + tableName);
+
+        });
+      }
+    });
+
   }
 
   Widget _getEntityStream({@required Stream<List<Entity>> entityStream, @required Function handleDelete}) {
@@ -222,10 +239,10 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (BuildContext context, int index) {
               Entity result = results[index];
 
-              return result.getModifyCard(
-                  context,
-                  handleDelete: () {
-                    showDialog<bool>(
+              return result.getDismissibleCard(
+                  context: context,
+                  handleConfirm: () {
+                    return showDialog<bool>(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
@@ -251,13 +268,10 @@ class _HomePageState extends State<HomePage> {
                           ],
                         );
                       },
-                    ).then( (bool option) {
-
-                      if(option != null && option) {
-                        handleDelete(result);
-                      }
-
-                    });
+                    );
+                  },
+                  handleDelete: () {
+                    handleDelete(result);
                   }
               );
             },
@@ -377,6 +391,8 @@ class _HomePageState extends State<HomePage> {
       case 4:
         return getPlatformsStream();
     }
+
+    return null;
   }
 
   @override

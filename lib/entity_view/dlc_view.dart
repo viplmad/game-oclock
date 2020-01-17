@@ -29,10 +29,6 @@ class _DLCViewState extends EntityViewState {
   List<Widget> getListFields() {
 
     return [
-      attributeBuilder(
-        fieldName: IDField,
-        value: getEntity().ID.toString(),
-      ),
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
@@ -45,21 +41,13 @@ class _DLCViewState extends EntityViewState {
         fieldName: finishDateField,
         value: getEntity().finishDate,
       ),
-      Divider(),
-      headerRelationText(
-          fieldName: baseGameField,
-      ),
       streamBuilderEntity(
           entityStream: _db.getBaseGameFromDLC(getEntity().baseGame),
           tableName: gameEntity.gameTable,
+          fieldName: baseGameField,
           newRelationFuture: (int baseGameID) => _db.insertGameDLC(baseGameID, getEntity().ID),
           deleteRelationFuture: (int removedGameID) => _db.deleteGameDLC(getEntity().ID),
-      ),
-      Divider(),
-      headerRelationText(
-        fieldName: purchaseEntity.purchaseTable + 's',
-      ),
-      streamBuilderEntities(
+      ),streamBuilderEntities(
           entityStream: _db.getPurchasesFromDLC(getEntity().ID),
           tableName: purchaseEntity.purchaseTable,
           newRelationFuture: (int addedPurchaseID) => _db.insertDLCPurchase(getEntity().ID, addedPurchaseID),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:game_collection/entity_view/entity_view.dart';
 
 const String IDField = 'ID';
@@ -16,40 +17,63 @@ abstract class Entity {
 
   String getFormattedSubtitle() {
 
-    return "";
+    return null;
 
   }
 
-  Widget getCard({Function handleDelete}) {
+  Widget getListTile() {
 
-    return Card(
-      child: ListTile(
-        title: Text(this.getFormattedTitle()),
-        subtitle: Text(this.getFormattedSubtitle()),
-        trailing: FlatButton(
-          child: Text("Delete", style: TextStyle(color: Colors.white),),
-          color: Colors.red,
-          onPressed: handleDelete
-        ),
+    return this.getFormattedSubtitle() == null?
+        ListTile(
+          title: Text(this.getFormattedTitle()),
+        )
+        :
+        ListTile(
+          title: Text(this.getFormattedTitle()),
+          subtitle: Text(this.getFormattedSubtitle()),
+        );
+
+  }
+
+  Widget getDismissibleCard({@required BuildContext context, Function onTap, void Function() handleDelete, Future<bool> Function() handleConfirm}) {
+
+    return Dismissible(
+      key: ValueKey(this.ID),
+      background: Container(
+        color: Colors.red,
       ),
+      child: this.getCard(
+          context: context,
+          onTap: onTap,
+      ),
+      onDismissed: (DismissDirection direction) {
+        handleDelete();
+      },
+      confirmDismiss: handleConfirm == null?
+          null
+          :
+          (DismissDirection direction) {
+            return handleConfirm();
+          },
     );
 
   }
 
-  Widget getModifyCard(BuildContext context, {Function handleDelete})  {
+  Widget getCard({@required BuildContext context, Function onTap}) {
 
-    return GestureDetector(
-      child: this.getCard(
-          handleDelete: handleDelete
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.all(Radius.circular(4.0),),
+        child: this.getListTile(),
+        onTap: onTap?? () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: this.entityBuilder,
+            ),
+          );
+        },
       ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: this.entityBuilder,
-          ),
-        );
-      },
     );
 
   }

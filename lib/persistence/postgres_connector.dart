@@ -171,8 +171,8 @@ class PostgresConnector implements DBConnector {
 
     String sql = _insertStatement(tableName);
 
-    String fieldNamesForSQL;
-    String fieldValuesForSQL;
+    String fieldNamesForSQL = "";
+    String fieldValuesForSQL = "";
     fieldAndValues.forEach( (String fieldName, dynamic value) {
 
       fieldNamesForSQL += _forceDoubleQuotes(fieldName) + ", ";
@@ -180,8 +180,8 @@ class PostgresConnector implements DBConnector {
       fieldValuesForSQL += "@" + fieldName + ", ";
 
     });
-    fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
-    fieldValuesForSQL.substring(0, fieldValuesForSQL.length-2);
+    fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
+    fieldValuesForSQL = fieldValuesForSQL.substring(0, fieldValuesForSQL.length-2);
 
     return _connection.mappedResultsQuery(sql + " (" + fieldNamesForSQL + ") VALUES(" + fieldValuesForSQL + ") ",
         substitutionValues: fieldAndValues,
