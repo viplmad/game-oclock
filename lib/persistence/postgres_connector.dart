@@ -70,13 +70,43 @@ class PostgresConnector implements DBConnector {
 
   }
 
+  @override
+  bool isClosed() {
+
+    return _connection.isClosed;
+
+  }
+
+  @override
+  bool isOpen() {
+
+    return !_connection.isClosed;
+
+  }
+
+  @override
+  bool isUpdating() {
+
+    //TODO
+    return _connection.queueSize != 0;
+
+  }
+
   //#region Generic Queries
-  Future<dynamic> _updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required dynamic newValue}) {
+  Future<dynamic> _updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue}) {
+
+    if(newValue == null) {
+      return _updateTableToNull(
+          tableName: tableName,
+          ID: ID,
+          fieldName: fieldName,
+      );
+    }
 
     String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
-      "newValue" : (newValue as T),
+      "newValue" : newValue,
       "tableID" : ID,
     });
 
@@ -95,6 +125,43 @@ class PostgresConnector implements DBConnector {
   Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName}) {
 
     String sql = _selectAllStatement(tableName);
+
+    return _connection.mappedResultsQuery(sql);
+
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableSelection({@required String tableName, @required List<String> fieldNames}) {
+
+    String sql = "SELECT ";
+
+    String fieldNamesForSQL = "";
+    fieldNames.forEach( (String fieldName) {
+
+      String _formattedField = _forceDoubleQuotes(fieldName);
+
+      if(fieldName == purchaseEntity.priceField
+          || fieldName == purchaseEntity.externalCreditField
+          || fieldName == purchaseEntity.originalPriceField) {
+
+        fieldNamesForSQL += _formattedField + "::float";
+
+      } else if(fieldName == gameEntity.timeField) {
+
+        fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _formattedField;
+
+      } else {
+
+        fieldNamesForSQL += _formattedField;
+
+      }
+
+      fieldNamesForSQL += ", ";
+
+    });
+    //Remove trailing comma
+    fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
+    
+    sql += fieldNamesForSQL + " FROM " + _forceDoubleQuotes(tableName); 
 
     return _connection.mappedResultsQuery(sql);
 
@@ -434,8 +501,9 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<gameEntity.Game>> getAllGames() {
 
-    return _readTableAll(
+    return _readTableSelection(
         tableName: gameEntity.gameTable,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -561,9 +629,14 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<purchaseEntity.Purchase>> getAllPurchases() {
 
-    return _readTableAll(
+    return _readTableSelection(
         tableName: purchaseEntity.purchaseTable,
+        fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
+
+    /*return _readTableAll(
+        tableName: purchaseEntity.purchaseTable,
+    ).asStream().map( _dynamicToListPurchase );*/
 
   }
 

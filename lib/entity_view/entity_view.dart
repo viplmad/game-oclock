@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -28,9 +31,23 @@ class EntityView extends StatefulWidget {
 class EntityViewState extends State<EntityView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _isUpdating = false;
+
+  void startUpdate() {
+    setState(() {
+      _isUpdating = true;
+    });
+  }
+  void endUpdate() {
+    setState(() {
+      _isUpdating = false;
+    });
+  }
+  bool isUpdating() { return _isUpdating; }
+
   Entity getEntity() => widget.entity;
 
-  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) { return null; }
+  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) {}
 
   void showSnackBar(String message){
 
@@ -201,15 +218,16 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, bool isLongText = false, bool isURL = false}) {
+  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, Function(String) updateLocal}) {
 
     return _modifyAttributeBuilder(
         fieldName: fieldName,
         value: value,
-        keyboardType: (isURL? TextInputType.url : (isLongText? TextInputType.multiline : TextInputType.text)),
+        keyboardType: TextInputType.text,
         handleUpdate: (String newText) {
           getUpdateFuture(fieldName, newText).then( (dynamic data) {
 
+            updateLocal(newText);
             showSnackBar(_updatedMessage);
 
           }, onError: (e) {
@@ -222,7 +240,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyIntAttributeBuilder({@required String fieldName, @required int value}) {
+  Widget modifyIntAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
 
     return _modifyAttributeBuilder(
         fieldName: fieldName,
@@ -231,9 +249,12 @@ class EntityViewState extends State<EntityView> {
         inputFormatters: <TextInputFormatter>[
           WhitelistingTextInputFormatter.digitsOnly,
         ],
-        handleUpdate: (String newInt) {
-          getUpdateFuture(fieldName, int.parse(newInt)).then( (dynamic data) {
+        handleUpdate: (String newString) {
 
+          int newInt = int.parse(newString);
+          getUpdateFuture(fieldName, newInt).then( (dynamic data) {
+
+            updateLocal(newInt);
             showSnackBar(_updatedMessage);
 
           }, onError: (e) {
@@ -246,7 +267,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyMoneyAttributeBuilder({@required String fieldName, @required double value}) {
+  Widget modifyMoneyAttributeBuilder({@required String fieldName, @required double value, Function(double) updateLocal}) {
 
     return _modifyAttributeBuilder(
       fieldName: fieldName,
@@ -256,15 +277,17 @@ class EntityViewState extends State<EntityView> {
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter(RegExp(r'^\d{1,3}(\.\d{0,2}){0,1}$')),
       ],
-      handleUpdate: (String newDouble) {
-        getUpdateFuture(fieldName, (double.parse(newDouble) * 100).toInt()).then( (dynamic data) {
+      handleUpdate: (String newString) {
 
+        double newMoney = double.parse(newString) * 100;
+        getUpdateFuture(fieldName, newMoney).then( (dynamic data) {
+
+          updateLocal(newMoney);
           showSnackBar(_updatedMessage);
 
         }, onError: (e) {
 
           showSnackBar(_failedUpdateMessage);
-          print(e);
 
         });
       },
@@ -272,7 +295,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value}) {
+  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
@@ -292,6 +315,7 @@ class EntityViewState extends State<EntityView> {
           if (newYear != null) {
             getUpdateFuture(fieldName, newYear).then( (dynamic data) {
 
+              updateLocal(newYear);
               showSnackBar(_updatedMessage);
 
             }, onError: (e) {
@@ -306,12 +330,15 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day}) {
+  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day, Function(DateTime) updateLocal}) {
 
     return GestureDetector(
       child: this.attributeBuilder(
         fieldName: fieldName,
-        value: value != null? value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString() : "Unknown",
+        value: value != null?
+            value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString()
+            :
+            "Unknown",
       ),
       onTap: () {
         showDatePicker(
@@ -324,6 +351,7 @@ class EntityViewState extends State<EntityView> {
           if (newDate != null) {
             getUpdateFuture(fieldName, newDate).then( (dynamic data) {
 
+              updateLocal(newDate);
               showSnackBar(_updatedMessage);
 
             }, onError: (e) {
@@ -338,7 +366,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value}) {
+  Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
 
     return GestureDetector(
       child: Column(
@@ -353,12 +381,19 @@ class EntityViewState extends State<EntityView> {
           ),
           SmoothStarRating(
             allowHalfRating: false,
-            onRatingChanged: (double newRating) {
-
-            },
+            onRatingChanged: onUpdate<double, int>(
+              fieldName: fieldName,
+              updateLocal: updateLocal,
+              applyTransformation: (double newRating) {
+                if(newRating == value.roundToDouble()) {
+                  return 0;
+                }
+                return newRating.toInt();
+              },
+            ),
             starCount: 10,
             rating: value.roundToDouble(),
-            color: Colors.yellow,
+            color: isUpdating()? Colors.grey : Colors.yellow,
             borderColor: Colors.yellow,
             size: 40.0,
           ),
@@ -368,7 +403,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget modifyEnumAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, Function(bool) updateLocal}) {
+  Widget modifyEnumAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, @required void Function(String) updateLocal}) {
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -381,23 +416,104 @@ class EntityViewState extends State<EntityView> {
           return ChoiceChip(
             label: Text(option),
             selected: value == option,
-            onSelected: (bool selected) {
-              getUpdateFuture(fieldName, option).then( (dynamic data) {
-
-                //updateLocal(selected);
-                showSnackBar(_updatedMessage);
-
-
-              }, onError: (e) {
-
-                showSnackBar(_failedUpdateMessage);
-                print(e);
-
-              });
-            },
+            onSelected: onUpdate<bool, String>(
+              fieldName: fieldName,
+              updateLocal: updateLocal,
+              altUpdateValue: option,
+            ),
           );
         },
       ).toList(),
+    );
+
+  }
+
+  Function(T) onUpdate<T, K>({@required String fieldName, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) applyTransformation}) {
+
+    return isUpdating()?
+        null
+        :
+        (T newValue) {
+
+          handleUpdate(
+              fieldName: fieldName,
+              newValue: (applyTransformation == null)? newValue : applyTransformation(newValue),
+              updateLocal: updateLocal,
+              altUpdateValue: altUpdateValue,
+          );
+
+        };
+
+  }
+
+  void handleUpdate<T, K>({@required String fieldName, @required T newValue, @required void Function(K) updateLocal, K altUpdateValue}) {
+
+    startUpdate();
+
+    getUpdateFuture(fieldName, altUpdateValue?? newValue).then( (dynamic data) {
+
+      updateLocal(altUpdateValue?? newValue);
+      showSnackBar(_updatedMessage);
+
+    }, onError: (e) {
+
+      showSnackBar(_failedUpdateMessage);
+      print(e);
+
+    }).whenComplete( () {
+      endUpdate();
+    });
+
+  }
+
+  Widget modifyDurationAttributeBuilder({@required String fieldName, @required Duration value, Function(Duration) updateLocal}) {
+
+    return GestureDetector(
+      child: this.attributeBuilder(
+        fieldName: fieldName,
+        value: value != null?
+            value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString()
+            :
+            "Unknown",
+      ),
+      onTap: () {
+        showDialog<Duration>(
+            context: context,
+            builder: (BuildContext context) {
+              return DurationPickerDialog(
+                fieldName: fieldName,
+                duration: value,
+              );
+            }
+        ).then( (Duration newDuration) {
+          if (newDuration != null) {
+            //convert to seconds
+            getUpdateFuture(fieldName, newDuration.inSeconds).then( (dynamic data) {
+
+              updateLocal(newDuration);
+              showSnackBar(_updatedMessage);
+
+            }, onError: (e) {
+
+              showSnackBar(_failedUpdateMessage);
+
+            });
+          }
+        });
+      },
+    );
+
+  }
+
+  Widget modifyBoolAttributeBuilder({@required String fieldName, @required bool value, Function(bool) updateLocal}) {
+
+    return SwitchListTile(
+      title: Text(fieldName),
+      value: value,
+      onChanged: onUpdate(
+        fieldName: fieldName,
+        updateLocal: updateLocal,
+      )
     );
 
   }
@@ -696,4 +812,78 @@ class YearPickerDialogState extends State<YearPickerDialog> {
 
   }
 
+}
+
+class DurationPickerDialog extends StatefulWidget {
+  DurationPickerDialog({Key key, this.fieldName, this.duration}) : super(key: key);
+
+  final String fieldName;
+  final Duration duration;
+
+  State<DurationPickerDialog> createState() => DurationPickerDialogState();
+}
+class DurationPickerDialogState extends State<DurationPickerDialog> {
+  int _hours;
+  int _minutes;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _hours = widget.duration.inHours;
+    _minutes = widget.duration.inMinutes - (_hours * 60);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text("Edit " + widget.fieldName),
+      content: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          NumberPicker.integer(
+              initialValue: _hours,
+              minValue: 0,
+              maxValue: 1000,
+              highlightSelectedValue: true,
+              onChanged: (num newHours) {
+                setState(() {
+                  _hours = newHours;
+                });
+              }
+          ),
+          Text(':', style: Theme.of(context).textTheme.title,),
+          NumberPicker.integer(
+              initialValue: _minutes,
+              minValue: 0,
+              maxValue: 59,
+              highlightSelectedValue: true,
+              onChanged: (num newMin) {
+                setState(() {
+                  _minutes = newMin;
+                });
+              }
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(localizations.cancelButtonLabel),
+          onPressed: () {
+            Navigator.maybePop(context);
+          },
+        ),
+        FlatButton(
+          child: Text(localizations.okButtonLabel),
+          onPressed: () {
+            Navigator.maybePop(context, Duration(hours: _hours, minutes: _minutes));
+          },
+        ),
+      ],
+    );
+  }
 }

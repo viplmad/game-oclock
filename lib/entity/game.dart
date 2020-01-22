@@ -31,18 +31,18 @@ List<String> statuses = [
 
 class Game extends Entity {
 
-  final String name;
-  final String edition;
-  final int releaseYear;
-  final dynamic cover;
-  final String status;
-  final int rating;
-  final String thoughts;
-  final int time;
-  final String saveFolder;
-  final String screenshotFolder;
-  final DateTime finishDate;
-  final bool isBackup;
+  String name;
+  String edition;
+  int releaseYear;
+  dynamic cover;
+  String status;
+  int rating;
+  String thoughts;
+  Duration time;
+  String saveFolder;
+  String screenshotFolder;
+  DateTime finishDate;
+  bool isBackup;
 
   Game({@required int ID, this.name, this.edition, this.releaseYear, this.cover,
     this.status, this.rating, this.thoughts, this.time, this.saveFolder,
@@ -59,7 +59,7 @@ class Game extends Entity {
       status: map[statusField],
       rating: map[ratingField],
       thoughts: map[thoughtsField],
-      //time: map[timeField],
+      time: Duration(minutes: map[timeField]),
       saveFolder: map[saveFolderField],
       screenshotFolder: map[screenshotFolderField],
       finishDate: map[finishDateField],
@@ -73,7 +73,12 @@ class Game extends Entity {
     List<Game> gamesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Game game = Game.fromDynamicMap(map[gameTable]);
+      Map<String, dynamic> _tempFixMap = Map.from(map[gameTable]);
+      _tempFixMap.addAll(
+        map[null],
+      );
+
+      Game game = Game.fromDynamicMap(_tempFixMap);
 
       gamesList.add(game);
     });

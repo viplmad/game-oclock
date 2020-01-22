@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,6 +26,7 @@ dependencies:
 
   postgres: ^2.1.0
   smooth_star_rating: ^1.0.4+2
+  numberpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,9 @@ abstract class DBConnector {
 
   Future<dynamic> open();
   Future<dynamic> close();
-
+  bool isOpen();
+  bool isClosed();
+  bool isUpdating();
 
   //#region CREATE
     //Game

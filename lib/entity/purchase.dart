@@ -20,13 +20,13 @@ const String storeField = 'Store';
 
 class Purchase extends Entity {
 
-  final String description;
-  final double price;
-  final double externalCredit;
-  final DateTime date;
-  final double originalPrice;
+  String description;
+  double price;
+  double externalCredit;
+  DateTime date;
+  double originalPrice;
 
-  final int store;
+  int store;
 
   Purchase({@required int ID, this.description, this.price, this.externalCredit,
     this.date, this.originalPrice, this.store}) : super(ID: ID);
@@ -36,10 +36,10 @@ class Purchase extends Entity {
     return Purchase(
       ID: map[IDField],
       description: map[descriptionField],
-      price: map[priceField] / 100, //Temporal fix as numeric is not supported and an integer is stored in its place
-      externalCredit: map[externalCreditField] / 100,
+      price: map[priceField],
+      externalCredit: map[externalCreditField],
       date: map[dateField],
-      originalPrice: map[originalPriceField] / 100,
+      originalPrice: map[originalPriceField],
 
       store: map[storeField],
     );
@@ -51,7 +51,13 @@ class Purchase extends Entity {
     List<Purchase> purchasesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Purchase purchase = Purchase.fromDynamicMap(map[purchaseTable]);
+      Map<String, dynamic> _tempFixMap = Map.from(map[purchaseTable]);
+      _tempFixMap.addAll(
+        map[null],
+      );
+
+      Purchase purchase = Purchase.fromDynamicMap(_tempFixMap);
+      //Purchase purchase = Purchase.fromDynamicMap(map[purchaseTable]);
 
       purchasesList.add(purchase);
     });

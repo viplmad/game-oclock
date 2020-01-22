@@ -34,52 +34,104 @@ class _GameViewState extends EntityViewState {
       modifyTextAttributeBuilder(
           fieldName: nameField,
           value: getEntity().name,
+          updateLocal: (String newName) {
+            setState(() {
+              getEntity().name = newName;
+            });
+          },
       ),
       modifyTextAttributeBuilder(
         fieldName: editionField,
         value: getEntity().edition,
+        updateLocal: (String newEdition) {
+          setState(() {
+            getEntity().edition = newEdition;
+          });
+        },
       ),
       modifyYearAttributeBuilder(
         fieldName: releaseYearField,
         value: getEntity().releaseYear,
+        updateLocal: (int newYear) {
+          setState(() {
+            getEntity().releaseYear = newYear;
+          });
+        },
       ),
       modifyEnumAttributeBuilder(
         fieldName: statusField,
         value: getEntity().status,
         listOptions: statuses,
+        updateLocal: (String newStatus) {
+          setState(() {
+            getEntity().status = newStatus;
+          });
+        },
       ),
       modifyRatingAttributeBuilder(
         fieldName: ratingField,
         value: getEntity().rating,
+        updateLocal: (int newRating) {
+          setState(() {
+            getEntity().rating = newRating;
+          });
+        },
       ),
       modifyTextAttributeBuilder(
         fieldName: thoughtsField,
         value: getEntity().thoughts,
-        isLongText: true,
+        updateLocal: (String newThoughts) {
+          setState(() {
+            getEntity().thoughts = newThoughts;
+          });
+        },
       ),
-      /*modifyDurationAttributeBuilder(
+      modifyDurationAttributeBuilder(
         fieldName: timeField,
         value: getEntity().time,
-      ),*/
+        updateLocal: (Duration newTime) {
+          setState(() {
+            getEntity().time = newTime;
+          });
+        },
+      ),
       modifyTextAttributeBuilder(
         fieldName: saveFolderField,
         value: getEntity().saveFolder,
-        isURL: true,
+        updateLocal: (String newSaveFolder) {
+          setState(() {
+            getEntity().saveFolder = newSaveFolder;
+          });
+        },
       ),
       modifyTextAttributeBuilder(
         fieldName: screenshotFolderField,
         value: getEntity().screenshotFolder,
-        isURL: true,
+        updateLocal: (String newScreenshotFolder) {
+          setState(() {
+            getEntity().screenshotFolder = newScreenshotFolder;
+          });
+        },
       ),
       modifyDateAttributeBuilder(
         fieldName: finishDateField,
         value: getEntity().finishDate,
+        updateLocal: (DateTime newDate) {
+          setState(() {
+            getEntity().finishDate = newDate;
+          });
+        }
       ),
-      /*modifyBoolAttributeBuilder(
+      modifyBoolAttributeBuilder(
         fieldName: backupField,
         value: getEntity().isBackup,
-      ),*/
-      streamBuilderEntities(
+        updateLocal: (bool newBool) {
+          setState(() {
+            getEntity().isBackup = newBool;
+          });
+        }
+      ),
+      /*streamBuilderEntities(
         entityStream: _db.getPurchasesFromGame(getEntity().ID),
         tableName: purchaseEntity.purchaseTable,
         newRelationFuture: (int addedPurchaseID) => _db.insertGamePurchase(getEntity().ID, addedPurchaseID),
@@ -103,7 +155,7 @@ class _GameViewState extends EntityViewState {
         tableName: tagEntity.tagTable,
         newRelationFuture: (int addedTagID) => _db.insertGameTag(getEntity().ID, addedTagID),
         deleteRelationFuture: (int deletedTagID) => _db.deleteGameTag(getEntity().ID, deletedTagID),
-      ),
+      ),*/
     ];
 
   }
