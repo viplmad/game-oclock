@@ -34,22 +34,47 @@ class _PurchaseViewState extends EntityViewState {
       modifyTextAttributeBuilder(
         fieldName: descriptionField,
         value: getEntity().description,
+        updateLocal: (String newDesc) {
+          setState(() {
+            getEntity().description = newDesc;
+          });
+        },
       ),
       modifyMoneyAttributeBuilder(
         fieldName: priceField,
         value: getEntity().price,
+        updateLocal: (double newMoney) {
+          setState(() {
+            getEntity().price = newMoney;
+          });
+        },
       ),
       modifyMoneyAttributeBuilder(
         fieldName: externalCreditField,
         value: getEntity().externalCredit,
+        updateLocal: (double newMoney) {
+          setState(() {
+            getEntity().externalCredit = newMoney;
+          });
+        },
       ),
       modifyDateAttributeBuilder(
         fieldName: dateField,
         value: getEntity().date,
+        updateLocal: (DateTime newDate) {
+          setState(() {
+            getEntity().date = newDate;
+          });
+        }
       ),
       modifyMoneyAttributeBuilder(
         fieldName: originalPriceField,
         value: getEntity().originalPrice,
+        updateLocal: (double newMoney) {
+          setState(() {
+            getEntity().originalPrice = newMoney;
+          });
+        },
       ),
       streamBuilderEntity(
         entityStream: _db.getStoreFromPurchase(getEntity().store),
@@ -70,13 +95,13 @@ class _PurchaseViewState extends EntityViewState {
         newRelationFuture: (int addedDLCID) => _db.insertDLCPurchase(addedDLCID, getEntity().ID),
         deleteRelationFuture: (int deletedDLCID) => _db.deleteDLCPurchase(deletedDLCID, getEntity().ID),
       ),
-      streamBuilderEntitiesAsChips(
+      /*streamBuilderEntitiesAsChips(
         entityStream: _db.getTypesFromPurchase(getEntity().ID),
         allOptionsStream: _db.getAllTypes(),
         tableName: typeEntity.typeTable,
         newRelationFuture: (int addedTypeID) => _db.insertPurchaseType(getEntity().ID, addedTypeID),
         deleteRelationFuture: (int deletedTypeID) => _db.deletePurchaseType(getEntity().ID, deletedTypeID),
-      ),
+      ),*/
     ];
 
   }

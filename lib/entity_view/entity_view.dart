@@ -31,6 +31,8 @@ class EntityView extends StatefulWidget {
 class EntityViewState extends State<EntityView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  MaterialLocalizations localizations;
+
   bool _isUpdating = false;
 
   void startUpdate() {
@@ -48,6 +50,406 @@ class EntityViewState extends State<EntityView> {
   Entity getEntity() => widget.entity;
 
   Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) {}
+
+  Function(T) onUpdate<T, K>({@required String fieldName, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) applyTransformation}) {
+
+    return isUpdating()?
+        null
+        :
+        (T newValue) {
+
+          handleUpdate(
+            fieldName: fieldName,
+            newValue: (applyTransformation == null)? newValue : applyTransformation(newValue),
+            updateLocal: updateLocal,
+            altUpdateValue: altUpdateValue,
+          );
+
+        };
+
+  }
+
+  void handleUpdate<T, K>({@required String fieldName, @required T newValue, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) transform}) {
+
+    startUpdate();
+
+    var updateValue = (transform == null)? newValue : transform(newValue);
+
+    getUpdateFuture(fieldName, updateValue).then( (dynamic data) {
+
+      updateLocal(updateValue);
+      showSnackBar(_updatedMessage);
+
+    }, onError: (e) {
+
+      showSnackBar(_failedUpdateMessage);
+      print(e);
+
+    }).whenComplete( () {
+      endUpdate();
+    });
+
+  }
+
+  Widget modifyBoolAttributeBuilder({@required String fieldName, @required bool value, Function(bool) updateLocal}) {
+
+    return SwitchListTile(
+        title: Text(fieldName),
+        value: value,
+        onChanged: onUpdate<bool, bool>(
+          fieldName: fieldName,
+          updateLocal: updateLocal,
+        )
+    );
+
+  }
+
+  Widget _headerRelationText({@required String fieldName}) {
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+      child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+    );
+
+  }
+
+  Widget _genericModifyAttributeBuilder<T, K>({@required String fieldName, @required T value, String shownValue, @required Future<T> Function() onTap, void Function(K) updateLocal, K Function(T) transform}) {
+
+    return ListTileTheme.merge(
+      child: ListTile(
+        title: Text(fieldName),
+        trailing: Text(shownValue?? value?? "Unknown"),
+        enabled: !isUpdating(),
+        onTap: () {
+          onTap().then( (T newValue) {
+            if (newValue != null) {
+              handleUpdate<T, K>(
+                fieldName: fieldName,
+                newValue: newValue,
+                updateLocal: updateLocal,
+                transform: transform,
+              );
+            }
+          });
+        },
+      ),
+    );
+
+  }
+
+  Widget _modifyTextFieldBuilder<K>({@required String fieldName, @required String value, String shownValue, TextInputType keyboardType, List<TextInputFormatter> inputFormatters, @required void Function(K) updateLocal, K Function(String) transform}) {
+
+    return _genericModifyAttributeBuilder<String, K>(
+        fieldName: fieldName,
+        value: value,
+        shownValue: shownValue,
+        onTap: () {
+          TextEditingController fieldController = TextEditingController();
+          fieldController.text = value;
+
+          return showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Edit " + fieldName),
+                  content: TextField(
+                    controller: fieldController,
+                    keyboardType: keyboardType,
+                    inputFormatters: inputFormatters,
+                    decoration: InputDecoration(
+                      hintText: fieldName,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(localizations.cancelButtonLabel),
+                      onPressed: () {
+                        Navigator.maybePop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(localizations.okButtonLabel),
+                      onPressed: () {
+                        Navigator.maybePop(context, fieldController.text);
+                      },
+                    ),
+                  ],
+                );
+              }
+          );
+        },
+        transform: transform,
+        updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyIntPickerAttributeBuilder({@required String fieldName, @required int value, String shownValue, @required void Function(int) updateLocal}) {
+
+    return _genericModifyAttributeBuilder<int, int>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: shownValue,
+      onTap: () {
+        return showDialog<int>(
+            context: context,
+            builder: (BuildContext context) {
+              return NumberPickerDialog.integer(
+                title: Text("Edit " + fieldName),
+                initialIntegerValue: value,
+                minValue: 1,
+                maxValue: 10,
+                cancelWidget: Text(localizations.cancelButtonLabel),
+                confirmWidget: Text(localizations.okButtonLabel),
+              );
+            }
+        );
+      },
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyDoublePickerAttributeBuilder({@required String fieldName, @required double value, String shownValue, @required void Function(double) updateLocal}) {
+
+    return _genericModifyAttributeBuilder<double, double>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: shownValue,
+      onTap: () {
+        return showDialog<double>(
+            context: context,
+            builder: (BuildContext context) {
+              return NumberPickerDialog.decimal(
+                title: Text("Edit " + fieldName),
+                initialDoubleValue: value,
+                decimalPlaces: 2,
+                minValue: 0,
+                maxValue: 100,
+                cancelWidget: Text(localizations.cancelButtonLabel),
+                confirmWidget: Text(localizations.okButtonLabel),
+              );
+            }
+        );
+      },
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyYearPickerAttributeBuilder({@required String fieldName, @required int value, String shownValue, @required Function(int) updateLocal}) {
+
+    return _genericModifyAttributeBuilder<int, int>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: shownValue,
+      onTap: () {
+        return showDialog<int>(
+            context: context,
+            builder: (BuildContext context) {
+              return YearPickerDialog(
+                fieldName: fieldName,
+                year: value,
+              );
+            }
+        );
+      },
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyDateTimeAttributeBuilder({@required String fieldName, @required DateTime value, String shownValue, @required Function(DateTime) updateLocal}) {
+
+    return _genericModifyAttributeBuilder<DateTime, DateTime>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: shownValue,
+      onTap: () {
+        return showDatePicker(
+          context: context,
+          firstDate: DateTime(1970),
+          lastDate: DateTime(2030),
+          initialDate: value?? DateTime.now(),
+        );
+      },
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyDurationPickerAttributeBuilder({@required String fieldName, @required Duration value, String shownValue, @required void Function(Duration) updateLocal}) {
+
+    return _genericModifyAttributeBuilder<Duration, Duration>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: shownValue,
+      onTap: () {
+        return showDialog<Duration>(
+            context: context,
+            builder: (BuildContext context) {
+              return DurationPickerDialog(
+                fieldName: fieldName,
+                duration: value,
+              );
+            }
+        );
+      },
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget _modifyChoiceChipAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, @required void Function(String) updateLocal}) {
+
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      alignment: WrapAlignment.spaceEvenly,
+      children: List<Widget>.generate(
+        listOptions.length,
+        (int index) {
+          String option = listOptions[index];
+
+          return ChoiceChip(
+            label: Text(option),
+            selected: value == option,
+            onSelected: (bool newChoice) {
+              handleUpdate<bool, String>(
+                  fieldName: fieldName,
+                  newValue: newChoice,
+                  updateLocal: updateLocal,
+                  transform: (bool newBool) => option,
+              );
+            },
+          );
+        },
+      ).toList(),
+    );
+
+  }
+
+  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, @required void Function(String) updateLocal}) {
+
+    return _modifyTextFieldBuilder<String>(
+      fieldName: fieldName,
+      value: value,
+      keyboardType: TextInputType.text,
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyIntAttributeBuilder({@required String fieldName, @required int value, @required void Function(int) updateLocal}) {
+
+    return _modifyIntPickerAttributeBuilder(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value?.toString(),
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyMoneyAttributeBuilder({@required String fieldName, @required double value, @required void Function(double) updateLocal}) {
+
+    return _modifyDoublePickerAttributeBuilder(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+          value.toString() + ' €'
+          :
+          null,
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value, @required void Function(int) updateLocal}) {
+
+    return _modifyYearPickerAttributeBuilder(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value?.toString(),
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, @required void Function(DateTime) updateLocal}) {
+
+    return _modifyDateTimeAttributeBuilder(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+          value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString()
+          :
+          null,
+      updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyDurationAttributeBuilder({@required String fieldName, @required Duration value, @required void Function(Duration) updateLocal}) {
+
+    return _modifyDurationPickerAttributeBuilder(
+        fieldName: fieldName,
+        value: value,
+        shownValue: value != null?
+            value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString()
+            :
+            null,
+        updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyEnumAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, @required void Function(String) updateLocal}) {
+
+    return _modifyChoiceChipAttributeBuilder(
+        fieldName: fieldName,
+        value: value,
+        listOptions: listOptions,
+        updateLocal: updateLocal,
+    );
+
+  }
+
+  Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
+
+    return GestureDetector(
+      child: Column(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _headerRelationText(
+                fieldName: fieldName,
+              ),
+            ],
+          ),
+          SmoothStarRating(
+            allowHalfRating: false,
+            onRatingChanged: onUpdate<double, int>(
+              fieldName: fieldName,
+              updateLocal: updateLocal,
+              applyTransformation: (double newRating) {
+                if(newRating == value.roundToDouble()) {
+                  return 0;
+                }
+                return newRating.toInt();
+              },
+            ),
+            starCount: 10,
+            rating: value.roundToDouble(),
+            color: isUpdating()? Colors.grey : Colors.yellow,
+            borderColor: Colors.yellow,
+            size: 40.0,
+          ),
+        ],
+      ),
+    );
+
+  }
 
   void showSnackBar(String message){
 
@@ -150,381 +552,13 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  Widget headerRelationText({@required String fieldName}) {
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-      child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
-    );
-
-  }
-
-  Widget attributeBuilder({@required String fieldName, @required String value}) {
-
-    return ListTile(
-      title: Text(fieldName),
-      subtitle: Text(value),
-    );
-
-  }
-
-  Widget _modifyAttributeBuilder({@required String fieldName, @required String value, String shownValue, TextInputType keyboardType, List<TextInputFormatter> inputFormatters, Function handleUpdate}) {
-
-    return GestureDetector(
-      child: this.attributeBuilder(
-        fieldName: fieldName,
-        value: shownValue?? value,
-      ),
-      onTap: () {
-        TextEditingController fieldController = TextEditingController();
-        fieldController.text = value;
-
-        showDialog<String>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Edit " + fieldName),
-                content: TextField(
-                  controller: fieldController,
-                  keyboardType: keyboardType,
-                  inputFormatters: inputFormatters,
-                  decoration: InputDecoration(
-                    hintText: fieldName,
-                  ),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      Navigator.maybePop(context);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text("Accept"),
-                    onPressed: () {
-                      Navigator.maybePop(context, fieldController.text as dynamic);
-                    },
-                  ),
-                ],
-              );
-            }
-        ).then( (String newValue) {
-          if (newValue != null) {
-            handleUpdate(newValue);
-          }
-        });
-      },
-    );
-
-  }
-
-  Widget modifyTextAttributeBuilder({@required String fieldName, @required String value, Function(String) updateLocal}) {
-
-    return _modifyAttributeBuilder(
-        fieldName: fieldName,
-        value: value,
-        keyboardType: TextInputType.text,
-        handleUpdate: (String newText) {
-          getUpdateFuture(fieldName, newText).then( (dynamic data) {
-
-            updateLocal(newText);
-            showSnackBar(_updatedMessage);
-
-          }, onError: (e) {
-
-            showSnackBar(_failedUpdateMessage);
-
-          });
-        },
-    );
-
-  }
-
-  Widget modifyIntAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
-
-    return _modifyAttributeBuilder(
-        fieldName: fieldName,
-        value: value.toString(),
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          WhitelistingTextInputFormatter.digitsOnly,
-        ],
-        handleUpdate: (String newString) {
-
-          int newInt = int.parse(newString);
-          getUpdateFuture(fieldName, newInt).then( (dynamic data) {
-
-            updateLocal(newInt);
-            showSnackBar(_updatedMessage);
-
-          }, onError: (e) {
-
-            showSnackBar(_failedUpdateMessage);
-
-          });
-        },
-    );
-
-  }
-
-  Widget modifyMoneyAttributeBuilder({@required String fieldName, @required double value, Function(double) updateLocal}) {
-
-    return _modifyAttributeBuilder(
-      fieldName: fieldName,
-      value: value.toString(),
-      shownValue: value.toString() + ' €',
-      keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
-        WhitelistingTextInputFormatter(RegExp(r'^\d{1,3}(\.\d{0,2}){0,1}$')),
-      ],
-      handleUpdate: (String newString) {
-
-        double newMoney = double.parse(newString) * 100;
-        getUpdateFuture(fieldName, newMoney).then( (dynamic data) {
-
-          updateLocal(newMoney);
-          showSnackBar(_updatedMessage);
-
-        }, onError: (e) {
-
-          showSnackBar(_failedUpdateMessage);
-
-        });
-      },
-    );
-
-  }
-
-  Widget modifyYearAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
-
-    return GestureDetector(
-      child: this.attributeBuilder(
-        fieldName: fieldName,
-        value: value?.toString() ?? "Unknown",
-      ),
-      onTap: () {
-        showDialog<int>(
-            context: context,
-            builder: (BuildContext context) {
-              return YearPickerDialog(
-                fieldName: fieldName,
-                year: value,
-              );
-            }
-        ).then( (int newYear) {
-          if (newYear != null) {
-            getUpdateFuture(fieldName, newYear).then( (dynamic data) {
-
-              updateLocal(newYear);
-              showSnackBar(_updatedMessage);
-
-            }, onError: (e) {
-
-              showSnackBar(_failedUpdateMessage);
-
-            });
-          }
-        });
-      },
-    );
-
-  }
-
-  Widget modifyDateAttributeBuilder({@required String fieldName, @required DateTime value, DatePickerMode pickerMode = DatePickerMode.day, Function(DateTime) updateLocal}) {
-
-    return GestureDetector(
-      child: this.attributeBuilder(
-        fieldName: fieldName,
-        value: value != null?
-            value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString()
-            :
-            "Unknown",
-      ),
-      onTap: () {
-        showDatePicker(
-          context: context,
-          firstDate: DateTime(1970),
-          lastDate: DateTime(2030),
-          initialDate: value?? DateTime.now(),
-          initialDatePickerMode: pickerMode,
-        ).then( (DateTime newDate) {
-          if (newDate != null) {
-            getUpdateFuture(fieldName, newDate).then( (dynamic data) {
-
-              updateLocal(newDate);
-              showSnackBar(_updatedMessage);
-
-            }, onError: (e) {
-
-              showSnackBar(_failedUpdateMessage);
-
-            });
-          }
-        });
-      },
-    );
-
-  }
-
-  Widget modifyRatingAttributeBuilder({@required String fieldName, @required int value, Function(int) updateLocal}) {
-
-    return GestureDetector(
-      child: Column(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              headerRelationText(
-                fieldName: fieldName,
-              ),
-            ],
-          ),
-          SmoothStarRating(
-            allowHalfRating: false,
-            onRatingChanged: onUpdate<double, int>(
-              fieldName: fieldName,
-              updateLocal: updateLocal,
-              applyTransformation: (double newRating) {
-                if(newRating == value.roundToDouble()) {
-                  return 0;
-                }
-                return newRating.toInt();
-              },
-            ),
-            starCount: 10,
-            rating: value.roundToDouble(),
-            color: isUpdating()? Colors.grey : Colors.yellow,
-            borderColor: Colors.yellow,
-            size: 40.0,
-          ),
-        ],
-      ),
-    );
-
-  }
-
-  Widget modifyEnumAttributeBuilder({@required String fieldName, @required String value, @required List<String> listOptions, @required void Function(String) updateLocal}) {
-
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      alignment: WrapAlignment.spaceEvenly,
-      children: List<Widget>.generate(
-        listOptions.length,
-        (int index) {
-          String option = listOptions[index];
-
-          return ChoiceChip(
-            label: Text(option),
-            selected: value == option,
-            onSelected: onUpdate<bool, String>(
-              fieldName: fieldName,
-              updateLocal: updateLocal,
-              altUpdateValue: option,
-            ),
-          );
-        },
-      ).toList(),
-    );
-
-  }
-
-  Function(T) onUpdate<T, K>({@required String fieldName, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) applyTransformation}) {
-
-    return isUpdating()?
-        null
-        :
-        (T newValue) {
-
-          handleUpdate(
-              fieldName: fieldName,
-              newValue: (applyTransformation == null)? newValue : applyTransformation(newValue),
-              updateLocal: updateLocal,
-              altUpdateValue: altUpdateValue,
-          );
-
-        };
-
-  }
-
-  void handleUpdate<T, K>({@required String fieldName, @required T newValue, @required void Function(K) updateLocal, K altUpdateValue}) {
-
-    startUpdate();
-
-    getUpdateFuture(fieldName, altUpdateValue?? newValue).then( (dynamic data) {
-
-      updateLocal(altUpdateValue?? newValue);
-      showSnackBar(_updatedMessage);
-
-    }, onError: (e) {
-
-      showSnackBar(_failedUpdateMessage);
-      print(e);
-
-    }).whenComplete( () {
-      endUpdate();
-    });
-
-  }
-
-  Widget modifyDurationAttributeBuilder({@required String fieldName, @required Duration value, Function(Duration) updateLocal}) {
-
-    return GestureDetector(
-      child: this.attributeBuilder(
-        fieldName: fieldName,
-        value: value != null?
-            value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString()
-            :
-            "Unknown",
-      ),
-      onTap: () {
-        showDialog<Duration>(
-            context: context,
-            builder: (BuildContext context) {
-              return DurationPickerDialog(
-                fieldName: fieldName,
-                duration: value,
-              );
-            }
-        ).then( (Duration newDuration) {
-          if (newDuration != null) {
-            //convert to seconds
-            getUpdateFuture(fieldName, newDuration.inSeconds).then( (dynamic data) {
-
-              updateLocal(newDuration);
-              showSnackBar(_updatedMessage);
-
-            }, onError: (e) {
-
-              showSnackBar(_failedUpdateMessage);
-
-            });
-          }
-        });
-      },
-    );
-
-  }
-
-  Widget modifyBoolAttributeBuilder({@required String fieldName, @required bool value, Function(bool) updateLocal}) {
-
-    return SwitchListTile(
-      title: Text(fieldName),
-      value: value,
-      onChanged: onUpdate(
-        fieldName: fieldName,
-        updateLocal: updateLocal,
-      )
-    );
-
-  }
-
   Widget streamBuilderEntitiesAsChips({@required Stream<List<Entity>> entityStream, @required Stream<List<Entity>> allOptionsStream, @required String tableName, String fieldName, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Divider(),
-        this.headerRelationText(
+        this._headerRelationText(
           fieldName: fieldName?? tableName + 's',
         ),
         Padding(
@@ -639,7 +673,7 @@ class EntityViewState extends State<EntityView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Divider(),
-        this.headerRelationText(
+        this._headerRelationText(
           fieldName: fieldName?? tableName + 's',
         ),
         Padding(
@@ -671,7 +705,7 @@ class EntityViewState extends State<EntityView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Divider(),
-        this.headerRelationText(
+        this._headerRelationText(
           fieldName: fieldName?? tableName + 's',
         ),
         Padding(
@@ -701,6 +735,8 @@ class EntityViewState extends State<EntityView> {
 
   @override
   Widget build(BuildContext context) {
+
+    localizations = MaterialLocalizations.of(context);
 
     return Scaffold(
       key: scaffoldKey,

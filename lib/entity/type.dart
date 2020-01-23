@@ -11,7 +11,7 @@ const String nameField = 'Name';
 
 class PurchaseType extends Entity{
 
-  final String name;
+  String name;
 
   PurchaseType({@required int ID, this.name}) : super(ID: ID);
 

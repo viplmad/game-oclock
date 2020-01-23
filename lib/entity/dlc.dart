@@ -17,10 +17,10 @@ const String baseGameField = 'Base Game';
 
 class DLC extends Entity {
 
-  final String name;
-  final int releaseYear;
-  final dynamic cover;
-  final DateTime finishDate;
+  String name;
+  int releaseYear;
+  dynamic cover;
+  DateTime finishDate;
 
   final int baseGame;
 

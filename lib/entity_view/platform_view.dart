@@ -32,11 +32,22 @@ class _PlatformViewState extends EntityViewState {
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
+        updateLocal: (String newName) {
+          setState(() {
+            getEntity().name = newName;
+          });
+        },
       ),
-      /*modifyEnumAttributeBuilder(
+      modifyEnumAttributeBuilder(
         fieldName: typeField,
         value: getEntity().type,
-      ),*/
+        listOptions: types,
+        updateLocal: (String newType) {
+          setState(() {
+            getEntity().type = newType;
+          });
+        }
+      ),
       streamBuilderEntities(
         entityStream: _db.getGamesFromPlatform(getEntity().ID),
         tableName: gameEntity.gameTable,

@@ -12,8 +12,8 @@ const String iconField = 'Icon';
 
 class Store extends Entity {
 
-  final String name;
-  final dynamic icon;
+  String name;
+  dynamic icon;
 
   Store({@required int ID, this.name, this.icon}) : super(ID: ID);
 

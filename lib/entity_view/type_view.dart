@@ -31,6 +31,11 @@ class _TypeViewState extends EntityViewState {
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
+        updateLocal: (String newName) {
+          setState(() {
+            getEntity().name = newName;
+          });
+        },
       ),
       streamBuilderEntities(
         entityStream: _db.getPurchasesFromType(getEntity().ID),

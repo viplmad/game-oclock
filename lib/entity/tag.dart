@@ -11,7 +11,7 @@ const nameField = 'Name';
 
 class Tag extends Entity {
 
-  final String name;
+  String name;
 
   Tag({@required int ID, this.name}) : super(ID: ID);
 

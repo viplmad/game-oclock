@@ -31,15 +31,31 @@ class _SystemViewState extends EntityViewState {
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
+        updateLocal: (String newName) {
+          setState(() {
+            getEntity().name = newName;
+          });
+        },
       ),
       modifyIntAttributeBuilder(
         fieldName: generationField,
         value: getEntity().generation,
+        updateLocal: (int newGen) {
+          setState(() {
+            getEntity().generation = newGen;
+          });
+        }
       ),
-      /*modifyEnumAttributeBuilder(
+      modifyEnumAttributeBuilder(
         fieldName: manufacturerField,
         value: getEntity().manufacturer,
-      ),*/
+        listOptions: manufacturers,
+        updateLocal: (String newManufacturer) {
+          setState(() {
+            getEntity().manufacturer = newManufacturer;
+          });
+        }
+      ),
       streamBuilderEntities(
         entityStream: _db.getPlatformsFromSystem(getEntity().ID),
         tableName: platformEntity.platformTable,

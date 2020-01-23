@@ -13,12 +13,19 @@ const String iconField = 'Icon';
 const String generationField = 'Generation';
 const String manufacturerField = 'Manufacturer';
 
+List<String> manufacturers = [
+  "Nintendo",
+  "Sony",
+  "Microsoft",
+  "Sega",
+];
+
 class System extends Entity {
 
-  final String name;
-  final dynamic icon;
-  final int generation;
-  final String manufacturer;
+  String name;
+  dynamic icon;
+  int generation;
+  String manufacturer;
 
   System({@required int ID, this.name, this.icon, this.generation, this.manufacturer}) : super(ID: ID);
 

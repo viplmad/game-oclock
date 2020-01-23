@@ -1,7 +1,4 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:postgres/postgres.dart';
 
 import 'entity.dart';
 import 'package:game_collection/entity_view/purchase_view.dart';

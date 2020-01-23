@@ -32,14 +32,29 @@ class _DLCViewState extends EntityViewState {
       modifyTextAttributeBuilder(
         fieldName: nameField,
         value: getEntity().name,
+        updateLocal: (String newName) {
+          setState(() {
+            getEntity().name = newName;
+          });
+        },
       ),
       modifyYearAttributeBuilder(
         fieldName: releaseYearField,
         value: getEntity().releaseYear,
+        updateLocal: (int newYear) {
+          setState(() {
+            getEntity().releaseYear = newYear;
+          });
+        },
       ),
       modifyDateAttributeBuilder(
         fieldName: finishDateField,
         value: getEntity().finishDate,
+        updateLocal: (DateTime newDate) {
+          setState(() {
+            getEntity().finishDate = newDate;
+          });
+        },
       ),
       streamBuilderEntity(
           entityStream: _db.getBaseGameFromDLC(getEntity().baseGame),
@@ -47,7 +62,8 @@ class _DLCViewState extends EntityViewState {
           fieldName: baseGameField,
           newRelationFuture: (int baseGameID) => _db.insertGameDLC(baseGameID, getEntity().ID),
           deleteRelationFuture: (int removedGameID) => _db.deleteGameDLC(getEntity().ID),
-      ),streamBuilderEntities(
+      ),
+      streamBuilderEntities(
           entityStream: _db.getPurchasesFromDLC(getEntity().ID),
           tableName: purchaseEntity.purchaseTable,
           newRelationFuture: (int addedPurchaseID) => _db.insertDLCPurchase(getEntity().ID, addedPurchaseID),

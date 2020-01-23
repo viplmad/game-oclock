@@ -87,7 +87,6 @@ class PostgresConnector implements DBConnector {
   @override
   bool isUpdating() {
 
-    //TODO
     return _connection.queueSize != 0;
 
   }
@@ -106,7 +105,11 @@ class PostgresConnector implements DBConnector {
     String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
-      "newValue" : newValue,
+      "newValue" : !(newValue is Duration)?
+          newValue
+          :
+          //Duration is not supported, special case
+          (newValue as Duration).inSeconds,
       "tableID" : ID,
     });
 
