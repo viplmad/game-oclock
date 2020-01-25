@@ -1,23 +1,21 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
-
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity_search.dart';
 
 import 'package:game_collection/loading_icon.dart';
+import 'package:game_collection/show_snackbar.dart';
 
 
-const _addedMessage = "Linked";
-const _failedAddMessage = "Unable to link";
+const _linkedMessage = "Linked";
+const _failedLinkMessage = "Unable to link";
 const _updatedMessage = "Updated";
 const _failedUpdateMessage = "Unable to update";
-const _deletedMessage = "Unlinked";
-const _failedDeleteMessage = "Unable to unlink";
+const _unlinkMessage = "Unlinked";
+const _failedUnlinkMessage = "Unable to unlink";
 
 
 class EntityView extends StatefulWidget {
@@ -32,6 +30,27 @@ class EntityViewState extends State<EntityView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   MaterialLocalizations localizations;
+
+  void _showSnackBar(String message, {SnackBarAction snackBarAction}){
+
+    showSnackBar(
+      scaffoldState: scaffoldKey.currentState,
+      message: message,
+      seconds: 2,
+      snackBarAction: snackBarAction,
+    );
+
+  }
+  SnackBarAction _errorInfoSnackBarAction({@required String errorTitle, @required String errorMessage}) {
+
+    return dialogSnackBarAction(
+      context,
+      label: 'More',
+      title: errorTitle,
+      content: errorMessage,
+    );
+
+  }
 
   bool _isUpdating = false;
 
@@ -49,7 +68,7 @@ class EntityViewState extends State<EntityView> {
 
   Entity getEntity() => widget.entity;
 
-  Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) {}
+  external Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue);
 
   Function(T) onUpdate<T, K>({@required String fieldName, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) applyTransformation}) {
 
@@ -78,12 +97,17 @@ class EntityViewState extends State<EntityView> {
     getUpdateFuture(fieldName, updateValue).then( (dynamic data) {
 
       updateLocal(updateValue);
-      showSnackBar(_updatedMessage);
+      _showSnackBar(_updatedMessage);
 
     }, onError: (e) {
 
-      showSnackBar(_failedUpdateMessage);
-      print(e);
+      _showSnackBar(
+        _failedUpdateMessage,
+        snackBarAction: _errorInfoSnackBarAction(
+          errorTitle: _failedUpdateMessage,
+          errorMessage: e.toString(),
+        ),
+      );
 
     }).whenComplete( () {
       endUpdate();
@@ -451,17 +475,6 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  void showSnackBar(String message){
-
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 2),
-    );
-
-    scaffoldKey.currentState.showSnackBar(snackBar);
-
-  }
-
   Widget _getResults({@required List<Entity> results, @required int itemCount, @required String tableName, @required String addText, bool isSingle, Future<dynamic> Function(int) newRelationFuture, Future<dynamic> Function(int) deleteRelationFuture}) {
 
     return ListView.builder(
@@ -475,8 +488,11 @@ class EntityViewState extends State<EntityView> {
 
           return Padding(
             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton(
-              child: Text(addText),
+            child: RaisedButton.icon(
+              label: Text(addText),
+              icon: Icon(Icons.link),
+              elevation: 1.0,
+              highlightElevation: 2.0,
               onPressed: () {
                 showSearch<Entity>(
                   context: context,
@@ -487,11 +503,17 @@ class EntityViewState extends State<EntityView> {
                   if (result != null) {
                     newRelationFuture(result.ID).then( (dynamic data) {
 
-                      showSnackBar(_addedMessage);
+                      _showSnackBar(_linkedMessage);
 
                     }, onError: (e) {
 
-                      showSnackBar(_failedAddMessage);
+                      _showSnackBar(
+                        _failedLinkMessage,
+                        snackBarAction: _errorInfoSnackBarAction(
+                          errorTitle: _failedLinkMessage,
+                          errorMessage: e.toString(),
+                        ),
+                      );
 
                     });
                   }
@@ -505,14 +527,21 @@ class EntityViewState extends State<EntityView> {
 
           return result.getDismissibleCard(
             context: context,
+            deleteIcon: Icons.link_off,
             handleDelete: () {
               deleteRelationFuture(result.ID).then( (dynamic data) {
 
-                showSnackBar(_deletedMessage + " " + result.getFormattedTitle());
+                _showSnackBar(_unlinkMessage + " " + result.getFormattedTitle());
 
               }, onError: (e) {
 
-                showSnackBar(_failedDeleteMessage + " " + result.getFormattedTitle());
+                _showSnackBar(
+                  _failedUnlinkMessage + " " + result.getFormattedTitle(),
+                  snackBarAction: _errorInfoSnackBarAction(
+                    errorTitle: _failedUnlinkMessage,
+                    errorMessage: e.toString(),
+                  ),
+                );
 
               });
             },
@@ -611,12 +640,12 @@ class EntityViewState extends State<EntityView> {
                                                   newRelationFuture(allOption.ID).then( (dynamic data) {
 
                                                     //updateLocal(selected);
-                                                    showSnackBar(_updatedMessage);
+                                                    _showSnackBar(_updatedMessage);
 
 
                                                   }, onError: (e) {
 
-                                                    showSnackBar(_failedUpdateMessage);
+                                                    _showSnackBar(_failedUpdateMessage);
 
                                                   });
                                                 },
@@ -645,12 +674,12 @@ class EntityViewState extends State<EntityView> {
                           deleteRelationFuture(option.ID).then( (dynamic data) {
 
                             //updateLocal(selected);
-                            showSnackBar(_addedMessage + " " + optionName);
+                            _showSnackBar(_linkedMessage + " " + optionName);
 
 
                           }, onError: (e) {
 
-                            showSnackBar(_failedAddMessage + " " + optionName);
+                            _showSnackBar(_failedLinkMessage + " " + optionName);
 
                           });
                         },
@@ -731,7 +760,7 @@ class EntityViewState extends State<EntityView> {
 
   }
 
-  List<Widget> getListFields() {}
+  external List<Widget> getListFields();
 
   @override
   Widget build(BuildContext context) {
@@ -749,10 +778,19 @@ class EntityViewState extends State<EntityView> {
               pinned: true,
               snap: false,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(getEntity().getFormattedTitle()),
+                title: Hero(
+                  tag: getEntity().getUniqueID() + 'text',
+                  child: Text(getEntity().getFormattedTitle()),
+                  flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
+                    return DefaultTextStyle(
+                      style: DefaultTextStyle.of(toHeroContext).style,
+                      child: toHeroContext.widget,
+                    );
+                  },
+                ),
                 collapseMode: CollapseMode.parallax,
-                background: Padding(
-                  padding: const EdgeInsets.only(top: 80.0, left: 20.0, right: 20.0),
+                background: Hero(
+                  tag: getEntity().getUniqueID() + 'image',
                   child: FlutterLogo(),
                 ),
               ),

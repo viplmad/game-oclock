@@ -4,6 +4,11 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/game_view.dart';
 
 const String gameTable = "Game";
+const Color gameColour = nextUpColour;
+const Color lowPriorityColour = Colors.grey;
+const Color nextUpColour = Colors.redAccent;
+const Color playingColour = Colors.blueAccent;
+const Color playedColour = Colors.greenAccent;
 
 const List<String> gameFields = [IDField, nameField, editionField, releaseYearField, coverField,
   statusField, ratingField, thoughtsField, timeField, saveFolderField,
@@ -22,7 +27,7 @@ const String screenshotFolderField = 'Screenshot Folder';
 const String finishDateField = 'Finish Date';
 const String backupField = 'Backup';
 
-List<String> statuses = [
+const List<String> statuses = [
   "Low Priority",
   "Next Up",
   "Playing",
@@ -34,7 +39,7 @@ class Game extends Entity {
   String name;
   String edition;
   int releaseYear;
-  dynamic cover;
+  Image cover;
   String status;
   int rating;
   String thoughts;
@@ -106,11 +111,44 @@ class Game extends Entity {
   }
 
   @override
+  Image getImage() {
+
+    //TODO
+    return null;
+
+  }
+
+  @override
   Widget entityBuilder(BuildContext context) {
 
     return GameView(
       game: this,
     );
+
+  }
+
+  @override
+  String getClassID() {
+
+    return 'G';
+
+  }
+
+  @override
+  Color getColour() {
+
+    switch(this.status) {
+      case "Low Priority":
+        return lowPriorityColour;
+      case "Next Up":
+        return nextUpColour;
+      case "Playing":
+        return playingColour;
+      case "Played":
+        return playedColour;
+
+    }
+    return lowPriorityColour;
 
   }
 

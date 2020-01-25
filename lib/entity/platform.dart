@@ -4,6 +4,7 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/platform_view.dart';
 
 const String platformTable = "Platform";
+const Color platformColour = Colors.black87;
 
 const List<String> platformFields = [IDField, nameField, iconField, typeField];
 
@@ -64,5 +65,19 @@ class Platform extends Entity {
     );
 
   }
+
+  @override
+  String getClassID() {
+
+    return 'Pl';
+
+  }
+
+  /*@override
+  Color getColour() {
+
+    return platformColour;
+
+  }*/
 
 }

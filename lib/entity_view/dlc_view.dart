@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/persistence/db_conector.dart';
-import 'package:game_collection/persistence/postgres_connector.dart';
+import 'package:game_collection/persistence/db_connector.dart';
+import 'package:game_collection/persistence/db_manager.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/dlc.dart';
 import 'package:game_collection/entity/game.dart' as gameEntity;
@@ -17,7 +18,7 @@ class DLCView extends EntityView {
 }
 
 class _DLCViewState extends EntityViewState {
-  final DBConnector _db = PostgresConnector.getConnector();
+  final DBConnector _db = DBManager().getConnector();
 
   @override
   DLC getEntity() => widget.entity as DLC;
@@ -61,13 +62,13 @@ class _DLCViewState extends EntityViewState {
           tableName: gameEntity.gameTable,
           fieldName: baseGameField,
           newRelationFuture: (int baseGameID) => _db.insertGameDLC(baseGameID, getEntity().ID),
-          deleteRelationFuture: (int removedGameID) => _db.deleteGameDLC(getEntity().ID),
+          deleteRelationFuture: (int deletedGameID) => _db.deleteGameDLC(getEntity().ID),
       ),
       streamBuilderEntities(
           entityStream: _db.getPurchasesFromDLC(getEntity().ID),
           tableName: purchaseEntity.purchaseTable,
           newRelationFuture: (int addedPurchaseID) => _db.insertDLCPurchase(getEntity().ID, addedPurchaseID),
-          deleteRelationFuture: (int removedPurchaseID) => _db.deleteDLCPurchase(getEntity().ID, removedPurchaseID),
+          deleteRelationFuture: (int deletedPurchaseID) => _db.deleteDLCPurchase(getEntity().ID, deletedPurchaseID),
       ),
     ];
 

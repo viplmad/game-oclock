@@ -13,7 +13,14 @@ abstract class Entity {
 
   static Entity fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {}
 
-  String getFormattedTitle();
+  String getUniqueID() {
+
+    return getClassID() + this.ID.toString();
+
+  }
+  external String getClassID();
+
+  external String getFormattedTitle();
 
   String getFormattedSubtitle() {
 
@@ -21,26 +28,57 @@ abstract class Entity {
 
   }
 
-  Widget getListTile() {
+  Image getImage() {
 
-    return this.getFormattedSubtitle() == null?
-        ListTile(
-          title: Text(this.getFormattedTitle()),
-        )
-        :
-        ListTile(
-          title: Text(this.getFormattedTitle()),
-          subtitle: Text(this.getFormattedSubtitle()),
-        );
+    return null;
 
   }
 
-  Widget getDismissibleCard({@required BuildContext context, Function onTap, void Function() handleDelete, Future<bool> Function() handleConfirm}) {
+  Widget getListTile() {
+
+    return ListTile(
+      leading: this.getImage() != null?
+          Hero(
+            tag: this.getUniqueID() + 'image',
+            child: FlutterLogo(),
+          )
+          :
+          null,
+      title: Hero(
+        tag: this.getUniqueID() + 'text',
+        child: Text(this.getFormattedTitle()),
+        flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
+          return DefaultTextStyle(
+            style: DefaultTextStyle.of(toHeroContext).style,
+            child: toHeroContext.widget,
+          );
+        },
+      ),
+      subtitle: this.getFormattedSubtitle() != null?
+          Text(this.getFormattedSubtitle())
+          :
+          null,
+    );
+
+  }
+
+  Widget getDismissibleCard({@required BuildContext context, Function onTap, void Function() handleDelete, Future<bool> Function() handleConfirm, IconData deleteIcon = Icons.delete}) {
 
     return Dismissible(
-      key: ValueKey(this.ID),
+      key: ValueKey(getUniqueID()),
       background: Container(
         color: Colors.red,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: <Widget>[
+              Icon(deleteIcon, color: Colors.white,),
+              Icon(deleteIcon, color: Colors.white,),
+            ],
+          ),
+        )
       ),
       child: this.getCard(
           context: context,
@@ -62,6 +100,7 @@ abstract class Entity {
   Widget getCard({@required BuildContext context, Function onTap}) {
 
     return Card(
+      color: this.getColour()?.withOpacity(0.5),
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
         child: this.getListTile(),
@@ -78,6 +117,12 @@ abstract class Entity {
 
   }
 
-  Widget entityBuilder(BuildContext context);
+  external Widget entityBuilder(BuildContext context);
+
+  Color getColour() {
+
+    return null;
+
+  }
 
 }

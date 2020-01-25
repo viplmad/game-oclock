@@ -27,6 +27,7 @@ dependencies:
   postgres: ^2.1.0
   smooth_star_rating: ^1.0.4+2
   numberpicker: ^1.1.0
+  image_picker: ^0.6.3+1
 
 dev_dependencies:
   flutter_test:

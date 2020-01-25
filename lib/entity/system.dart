@@ -4,6 +4,7 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/system_view.dart';
 
 const String systemTable = "System";
+const Color systemColour = Colors.white10;
 
 const List<String> systemTables = [IDField, nameField, iconField, generationField,
   manufacturerField];
@@ -75,6 +76,20 @@ class System extends Entity {
     return SystemView(
       system: this,
     );
+
+  }
+
+  @override
+  String getClassID() {
+
+    return 'Sy';
+
+  }
+
+  @override
+  Color getColour() {
+
+    return systemColour;
 
   }
 

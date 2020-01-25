@@ -54,4 +54,11 @@ class PurchaseType extends Entity{
 
   }
 
+  @override
+  String getClassID() {
+
+    return 'Tp';
+
+  }
+
 }

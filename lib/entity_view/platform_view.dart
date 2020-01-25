@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/persistence/db_conector.dart';
-import 'package:game_collection/persistence/postgres_connector.dart';
+import 'package:game_collection/persistence/db_connector.dart';
+import 'package:game_collection/persistence/db_manager.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/platform.dart';
 import 'package:game_collection/entity/game.dart' as gameEntity;
@@ -17,7 +18,7 @@ class PlatformView extends EntityView {
 }
 
 class _PlatformViewState extends EntityViewState {
-  final DBConnector _db = PostgresConnector.getConnector();
+  final DBConnector _db = DBManager().getConnector();
 
   @override
   Platform getEntity() => widget.entity as Platform;

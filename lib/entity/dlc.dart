@@ -4,6 +4,7 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/dlc_view.dart';
 
 const String dlcTable = "DLC";
+const Color dlcColour = Colors.deepPurpleAccent;
 
 const List<String> dlcFields = [IDField, nameField, releaseYearField,
   coverField, finishDateField, baseGameField];
@@ -68,6 +69,20 @@ class DLC extends Entity {
     return DLCView(
       dlc: this,
     );
+
+  }
+
+  @override
+  String getClassID() {
+
+    return 'D';
+
+  }
+
+  @override
+  Color getColour() {
+
+    return dlcColour;
 
   }
 

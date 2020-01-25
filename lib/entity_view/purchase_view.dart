@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/persistence/db_conector.dart';
-import 'package:game_collection/persistence/postgres_connector.dart';
+import 'package:game_collection/persistence/db_connector.dart';
+import 'package:game_collection/persistence/db_manager.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/purchase.dart';
 import 'package:game_collection/entity/game.dart' as gameEntity;
@@ -19,7 +20,7 @@ class PurchaseView extends EntityView {
 }
 
 class _PurchaseViewState extends EntityViewState {
-  final DBConnector _db = PostgresConnector.getConnector();
+  final DBConnector _db = DBManager().getConnector();
 
   @override
   Purchase getEntity() => widget.entity as Purchase;

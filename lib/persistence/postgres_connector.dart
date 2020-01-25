@@ -4,7 +4,7 @@ import 'dart:io' as io;
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 
-import 'db_conector.dart';
+import 'db_connector.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/entity/game.dart' as gameEntity;
@@ -24,16 +24,6 @@ class PostgresConnector implements DBConnector {
 
   PostgresInstance _instance;
   PostgreSQLConnection _connection;
-
-  static PostgresConnector _singleton;
-
-  static PostgresConnector getConnector() {
-    if (_singleton == null) {
-      _singleton = PostgresConnector();
-    }
-
-    return _singleton;
-  }
 
   PostgresConnector() {
     try {
@@ -125,52 +115,15 @@ class PostgresConnector implements DBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName, List<String> fieldNames}) {
 
-    String sql = _selectAllStatement(tableName);
-
-    return _connection.mappedResultsQuery(sql);
-
-  }
-
-  Future<List<Map<String, Map<String, dynamic>>>> _readTableSelection({@required String tableName, @required List<String> fieldNames}) {
-
-    String sql = "SELECT ";
-
-    String fieldNamesForSQL = "";
-    fieldNames.forEach( (String fieldName) {
-
-      String _formattedField = _forceDoubleQuotes(fieldName);
-
-      if(fieldName == purchaseEntity.priceField
-          || fieldName == purchaseEntity.externalCreditField
-          || fieldName == purchaseEntity.originalPriceField) {
-
-        fieldNamesForSQL += _formattedField + "::float";
-
-      } else if(fieldName == gameEntity.timeField) {
-
-        fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _formattedField;
-
-      } else {
-
-        fieldNamesForSQL += _formattedField;
-
-      }
-
-      fieldNamesForSQL += ", ";
-
-    });
-    //Remove trailing comma
-    fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
-    
-    sql += fieldNamesForSQL + " FROM " + _forceDoubleQuotes(tableName); 
+    String sql = _selectAllStatement(tableName, fieldNames);
 
     return _connection.mappedResultsQuery(sql);
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readRelationAll({@required String leftTableName, @required String rightTableName, @required bool leftResults, @required int relationID}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readRelationAll({@required String leftTableName, @required String rightTableName, @required bool leftResults, @required int relationID, List<String> fieldNames}) {
 
     String relationTable = _relationTable(leftTableName, rightTableName);
     String leftIDField = _relationIDField(leftTableName);
@@ -181,6 +134,7 @@ class PostgresConnector implements DBConnector {
         relationTable,
         IDField,
         leftResults? leftIDField : rightIDField,
+        fieldNames,
     );
 
     return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftResults? rightIDField : leftIDField) + " = @relationID ", substitutionValues: {
@@ -189,11 +143,11 @@ class PostgresConnector implements DBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readWeakRelationAll({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readWeakRelationAll({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID, List<String> fieldNames}) {
 
-    String sql = "SELECT * ";
+    String sql = _selectStatement(fieldNames, 'b');
 
-    sql += "FROM " + _forceDoubleQuotes(subordinateTable) + " b JOIN " + _forceDoubleQuotes(primaryTable) + " a "
+    sql += " FROM " + _forceDoubleQuotes(subordinateTable) + " b JOIN " + _forceDoubleQuotes(primaryTable) + " a "
         + " ON b." + _forceDoubleQuotes(relationField) + " = a." + _forceDoubleQuotes(IDField) + " ";
 
     return _connection.mappedResultsQuery(sql + " WHERE a." + _forceDoubleQuotes(IDField) + " = @relationID", substitutionValues: {
@@ -202,9 +156,9 @@ class PostgresConnector implements DBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readWithID({@required String tableName, @required int tableID}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readWithID({@required String tableName, @required int tableID, List<String> fieldNames}) {
 
-    String sql = _selectAllStatement(tableName);
+    String sql = _selectAllStatement(tableName, fieldNames);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
       "tableID" : tableID,
@@ -212,11 +166,11 @@ class PostgresConnector implements DBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query, List<String> fieldNames}) {
 
     query = _searchableQuery(query);
 
-    String sql = _selectAllStatement(tableName);
+    String sql = _selectAllStatement(tableName, fieldNames);
 
     return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(searchField) + " ILIKE @query ", substitutionValues: {
       "query" : query,
@@ -504,7 +458,7 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<gameEntity.Game>> getAllGames() {
 
-    return _readTableSelection(
+    return _readTableAll(
         tableName: gameEntity.gameTable,
         fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
@@ -531,6 +485,7 @@ class PostgresConnector implements DBConnector {
       rightTableName: purchaseEntity.purchaseTable,
       leftResults: false,
       relationID: ID,
+      fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -576,6 +531,7 @@ class PostgresConnector implements DBConnector {
     return _readWithID(
         tableName: gameEntity.gameTable,
         tableID: baseGameID,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToSingleGame );
 
   }
@@ -588,6 +544,7 @@ class PostgresConnector implements DBConnector {
         rightTableName: purchaseEntity.purchaseTable,
         leftResults: false,
         relationID: ID,
+        fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -611,6 +568,7 @@ class PostgresConnector implements DBConnector {
         rightTableName: platformEntity.platformTable,
         leftResults: true,
         relationID: ID,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -632,14 +590,10 @@ class PostgresConnector implements DBConnector {
   @override
   Stream<List<purchaseEntity.Purchase>> getAllPurchases() {
 
-    return _readTableSelection(
+    return _readTableAll(
         tableName: purchaseEntity.purchaseTable,
         fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
-
-    /*return _readTableAll(
-        tableName: purchaseEntity.purchaseTable,
-    ).asStream().map( _dynamicToListPurchase );*/
 
   }
 
@@ -661,6 +615,7 @@ class PostgresConnector implements DBConnector {
         rightTableName: purchaseEntity.purchaseTable,
         leftResults: true,
         relationID: ID,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -708,6 +663,7 @@ class PostgresConnector implements DBConnector {
       subordinateTable: purchaseEntity.purchaseTable,
       relationField: purchaseEntity.storeField,
       relationID: ID,
+      fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -754,6 +710,7 @@ class PostgresConnector implements DBConnector {
         rightTableName: tagEntity.tagTable,
         leftResults: true,
         relationID: ID,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -777,6 +734,7 @@ class PostgresConnector implements DBConnector {
         rightTableName: typeEntity.typeTable,
         leftResults: true,
         relationID: ID,
+        fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -1105,6 +1063,7 @@ class PostgresConnector implements DBConnector {
         tableName: gameEntity.gameTable,
         searchField: gameEntity.nameField,
         query: nameQuery,
+        fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -1138,6 +1097,7 @@ class PostgresConnector implements DBConnector {
       tableName: purchaseEntity.purchaseTable,
       searchField: purchaseEntity.descriptionField,
       query: descQuery,
+      fieldNames: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -1189,15 +1149,26 @@ class PostgresConnector implements DBConnector {
 
 
   //#region Helpers
-  String _selectAllStatement(String table) {
+  String _selectStatement([List<String> fieldNames, String alias = '']) {
 
-    return "SELECT * FROM " + _forceDoubleQuotes(table);
+    String selection = ' * ';
+    if(fieldNames != null) {
+      selection = _formatSelectionFields(fieldNames, alias);
+    }
+
+    return "SELECT " + selection;
 
   }
 
-  String _selectJoinStatement(String leftTable, String rightTable, String leftTableID, String rightTableID, [String select = "Select * "]) {
+  String _selectAllStatement(String table, [List<String> fieldNames]) {
 
-    return select + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
+    return _selectStatement(fieldNames) + " FROM " + _forceDoubleQuotes(table);
+
+  }
+
+  String _selectJoinStatement(String leftTable, String rightTable, String leftTableID, String rightTableID, [List<String> fieldNames]) {
+
+    return _selectStatement(fieldNames) + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
 
   }
 
@@ -1234,6 +1205,41 @@ class PostgresConnector implements DBConnector {
   List<String> _forceFieldsDoubleQuotes(List<String> fields) {
 
     return fields.map( (String field) => _forceDoubleQuotes(field) ).toList();
+
+  }
+
+  String _formatSelectionFields(List<String> fieldNames, [String alias = '']) {
+
+    alias = (alias != null && alias != '')? alias + '.' : '';
+
+    String fieldNamesForSQL = "";
+    fieldNames.forEach( (String fieldName) {
+
+      String _formattedField = alias + _forceDoubleQuotes(fieldName);
+
+      if(fieldName == purchaseEntity.priceField
+          || fieldName == purchaseEntity.externalCreditField
+          || fieldName == purchaseEntity.originalPriceField) {
+
+        fieldNamesForSQL += _formattedField + "::float";
+
+      } else if(fieldName == gameEntity.timeField) {
+
+        fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _formattedField;
+
+      } else {
+
+        fieldNamesForSQL += _formattedField;
+
+      }
+
+      fieldNamesForSQL += ", ";
+
+    });
+    //Remove trailing comma
+    fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
+
+    return fieldNamesForSQL;
 
   }
 
@@ -1306,7 +1312,7 @@ class PostgresConnector implements DBConnector {
     if(results.isEmpty) {
       singleGame = gameEntity.Game(ID: -1);
     } else {
-      singleGame = gameEntity.Game.fromDynamicMap(results[0][gameEntity.gameTable]);
+      singleGame = _dynamicToListGame(results).first;
     }
 
     return singleGame;
@@ -1320,7 +1326,7 @@ class PostgresConnector implements DBConnector {
     if(results.isEmpty) {
       singleStore = storeEntity.Store(ID: -1);
     } else {
-      singleStore = storeEntity.Store.fromDynamicMap(results[0][storeEntity.storeTable]);
+      singleStore = _dynamicToListStore(results).first;
     }
 
     return singleStore;

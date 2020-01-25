@@ -4,6 +4,7 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/store_view.dart';
 
 const String storeTable = "Store";
+const Color storeColour = Colors.grey;
 
 const List<String> storeFields = [IDField, nameField, iconField];
 
@@ -54,6 +55,20 @@ class Store extends Entity {
     return StoreView(
       store: this,
     );
+
+  }
+
+  @override
+  String getClassID() {
+
+    return 'St';
+
+  }
+
+  @override
+  Color getColour() {
+
+    return storeColour;
 
   }
 

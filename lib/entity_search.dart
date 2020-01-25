@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/persistence/db_conector.dart';
-import 'package:game_collection/persistence/postgres_connector.dart';
+import 'package:game_collection/persistence/db_connector.dart';
+import 'package:game_collection/persistence/db_manager.dart';
+
 import 'package:game_collection/entity/entity.dart';
 
 import 'package:game_collection/loading_icon.dart';
 
 class EntitySearch extends SearchDelegate<Entity> {
+  final DBConnector _db = DBManager().getConnector();
+
   EntitySearch({@required this.searchTable});
 
   final String searchTable;
-  final DBConnector _db = PostgresConnector.getConnector();
 
   int _maxResults = 25;
   int _maxSuggestions = 8;

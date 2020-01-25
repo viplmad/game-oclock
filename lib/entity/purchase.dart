@@ -4,6 +4,7 @@ import 'entity.dart';
 import 'package:game_collection/entity_view/purchase_view.dart';
 
 const purchaseTable = "Purchase";
+const Color purchaseColour = Colors.lightBlue;
 
 const List<String> purchaseFields = [IDField, descriptionField, priceField, externalCreditField, dateField, originalPriceField, storeField];
 
@@ -83,6 +84,20 @@ class Purchase extends Entity {
     return PurchaseView(
       purchase: this,
     );
+
+  }
+
+  @override
+  String getClassID() {
+
+    return 'Pu';
+
+  }
+
+  @override
+  Color getColour() {
+
+    return purchaseColour;
 
   }
 

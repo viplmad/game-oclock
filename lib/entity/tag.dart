@@ -54,4 +54,11 @@ class Tag extends Entity {
 
   }
 
+  @override
+  String getClassID() {
+
+    return 'Tg';
+
+  }
+
 }
