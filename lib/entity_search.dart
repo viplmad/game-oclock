@@ -8,7 +8,7 @@ import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/loading_icon.dart';
 
 class EntitySearch extends SearchDelegate<Entity> {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   EntitySearch({@required this.searchTable});
 

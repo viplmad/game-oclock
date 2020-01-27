@@ -18,7 +18,7 @@ class DLCView extends EntityView {
 }
 
 class _DLCViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   DLC getEntity() => widget.entity as DLC;

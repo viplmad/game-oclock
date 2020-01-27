@@ -111,14 +111,6 @@ class Game extends Entity {
   }
 
   @override
-  Image getImage() {
-
-    //TODO
-    return null;
-
-  }
-
-  @override
   Widget entityBuilder(BuildContext context) {
 
     return GameView(

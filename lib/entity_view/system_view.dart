@@ -17,7 +17,7 @@ class SystemView extends EntityView {
 }
 
 class _SystemViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   System getEntity() => widget.entity as System;

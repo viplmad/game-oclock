@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -69,6 +73,9 @@ class EntityViewState extends State<EntityView> {
   Entity getEntity() => widget.entity;
 
   external Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue);
+
+  external String getImageURL();
+  external Future<dynamic> getImageUpdateFuture(String imagePath);
 
   Function(T) onUpdate<T, K>({@required String fieldName, @required void Function(K) updateLocal, K altUpdateValue, K Function(T) applyTransformation}) {
 
@@ -777,22 +784,70 @@ class EntityViewState extends State<EntityView> {
               floating: false,
               pinned: true,
               snap: false,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Hero(
-                  tag: getEntity().getUniqueID() + 'text',
-                  child: Text(getEntity().getFormattedTitle()),
-                  flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
-                    return DefaultTextStyle(
-                      style: DefaultTextStyle.of(toHeroContext).style,
-                      child: toHeroContext.widget,
-                    );
-                  },
+              flexibleSpace: GestureDetector(
+                child: FlexibleSpaceBar(
+                  title: Hero(
+                    tag: getEntity().getUniqueID() + 'text',
+                    child: Text(getEntity().getFormattedTitle()),
+                    flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
+                      return DefaultTextStyle(
+                        style: DefaultTextStyle.of(toHeroContext).style,
+                        child: toHeroContext.widget,
+                      );
+                    },
+                  ),
+                  collapseMode: CollapseMode.parallax,
+                  background: getImageURL() != null?
+                      //TODO: does not change when new image
+                      CachedNetworkImage(
+                        imageUrl: getImageURL(),
+                        fit: BoxFit.cover,
+                        useOldImageOnUrlChange: false,
+                        placeholder: (BuildContext context, String url) => LoadingIcon(),
+                        errorWidget: (BuildContext context, String url, Object error) => null,
+                      )
+                      :
+                      null,
                 ),
-                collapseMode: CollapseMode.parallax,
-                background: Hero(
-                  tag: getEntity().getUniqueID() + 'image',
-                  child: FlutterLogo(),
-                ),
+                onTap: () {
+                  //TODO: refactor
+                  showModalBottomSheet<File>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: 200,
+                        child: FlatButton(
+                          child: Text("Upload image"),
+                          onPressed: () async {
+                            File file = await ImagePicker.pickImage(
+                              source: ImageSource.gallery,
+                            );
+                            Navigator.maybePop(context, file);
+                          },
+                        ),
+                      );
+                    },
+                  ).then( (File imagePicked) {
+                    if(imagePicked != null) {
+                      startUpdate();
+                      getImageUpdateFuture(
+                          imagePicked.path
+                      ).then( (dynamic) {
+                        _showSnackBar("Image successfully added");
+                      }, onError: (e) {
+                        _showSnackBar(
+                          "Unable to update image",
+                          snackBarAction: _errorInfoSnackBarAction(
+                            errorTitle: "Unable to update image",
+                            errorMessage: e.toString(),
+                          ),
+                        );
+                      }).whenComplete(() {
+                        endUpdate();
+                      });
+                    }
+                  });
+                },
               ),
             ),
           ];

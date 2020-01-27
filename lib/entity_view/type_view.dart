@@ -17,7 +17,7 @@ class TypeView extends EntityView {
 }
 
 class _TypeViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   PurchaseType getEntity() => widget.entity as PurchaseType;

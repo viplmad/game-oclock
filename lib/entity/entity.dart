@@ -28,22 +28,9 @@ abstract class Entity {
 
   }
 
-  Image getImage() {
-
-    return null;
-
-  }
-
   Widget getListTile() {
 
     return ListTile(
-      leading: this.getImage() != null?
-          Hero(
-            tag: this.getUniqueID() + 'image',
-            child: FlutterLogo(),
-          )
-          :
-          null,
       title: Hero(
         tag: this.getUniqueID() + 'text',
         child: Text(this.getFormattedTitle()),
@@ -100,7 +87,6 @@ abstract class Entity {
   Widget getCard({@required BuildContext context, Function onTap}) {
 
     return Card(
-      color: this.getColour()?.withOpacity(0.5),
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
         child: this.getListTile(),

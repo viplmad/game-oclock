@@ -29,7 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<HomePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   int _selectedIndex = 0;
 

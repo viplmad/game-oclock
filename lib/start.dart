@@ -11,7 +11,7 @@ import 'package:game_collection/homepage.dart';
 class StartPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   void _showSnackBar(String message){
 

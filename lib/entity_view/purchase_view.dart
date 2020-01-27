@@ -20,7 +20,7 @@ class PurchaseView extends EntityView {
 }
 
 class _PurchaseViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   Purchase getEntity() => widget.entity as Purchase;

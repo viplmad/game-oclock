@@ -18,7 +18,7 @@ class PlatformView extends EntityView {
 }
 
 class _PlatformViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   Platform getEntity() => widget.entity as Platform;

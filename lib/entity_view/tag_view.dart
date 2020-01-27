@@ -17,7 +17,7 @@ class TagView extends EntityView {
 }
 
 class _TagViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   Tag getEntity() => widget.entity as Tag;

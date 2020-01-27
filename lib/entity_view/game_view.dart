@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:game_collection/persistence/db_connector.dart';
+import 'package:game_collection/persistence/image_connector.dart';
 import 'package:game_collection/persistence/db_manager.dart';
 
 import 'package:game_collection/entity/entity.dart';
@@ -20,7 +21,8 @@ class GameView extends EntityView {
 }
 
 class _GameViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
+  final IImageConnector _imageDb = DBManager().getImageConnector();
 
   @override
   Game getEntity() => widget.entity as Game;
@@ -29,9 +31,15 @@ class _GameViewState extends EntityViewState {
   Future<dynamic> getUpdateFuture<T>(String fieldName, T newValue) => _db.updateGame(getEntity().ID, fieldName, newValue);
 
   @override
+  String getImageURL() => _imageDb.getGameCoverURL(getEntity().ID);
+  @override
+  Future<dynamic> getImageUpdateFuture(String imagePath) => _imageDb.uploadGameCover(getEntity().ID, imagePath);
+
+  @override
   List<Widget> getListFields() {
 
     return [
+      Text(getEntity().ID.toString()),
       modifyTextAttributeBuilder(
           fieldName: nameField,
           value: getEntity().name,

@@ -8,7 +8,7 @@ import 'package:game_collection/entity/store.dart';
 import 'package:game_collection/entity/system.dart';
 import 'package:game_collection/entity/tag.dart';
 
-abstract class DBConnector {
+abstract class IDBConnector {
 
   Future<dynamic> open();
   Future<dynamic> close();

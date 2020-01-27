@@ -17,7 +17,7 @@ class StoreView extends EntityView {
 }
 
 class _StoreViewState extends EntityViewState {
-  final DBConnector _db = DBManager().getConnector();
+  final IDBConnector _db = DBManager().getDBConnector();
 
   @override
   Store getEntity() => widget.entity as Store;
