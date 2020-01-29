@@ -1,12 +1,12 @@
 import 'package:game_collection/entity/entity.dart';
-import 'package:game_collection/entity/game.dart';
-import 'package:game_collection/entity/dlc.dart';
-import 'package:game_collection/entity/type.dart';
-import 'package:game_collection/entity/purchase.dart';
-import 'package:game_collection/entity/platform.dart';
-import 'package:game_collection/entity/store.dart';
-import 'package:game_collection/entity/system.dart';
-import 'package:game_collection/entity/tag.dart';
+import 'package:game_collection/entity/game.dart' as gameEntity;
+import 'package:game_collection/entity/dlc.dart' as dlcEntity;
+import 'package:game_collection/entity/purchase.dart' as purchaseEntity;
+import 'package:game_collection/entity/platform.dart' as platformEntity;
+import 'package:game_collection/entity/store.dart' as storeEntity;
+import 'package:game_collection/entity/system.dart' as systemEntity;
+import 'package:game_collection/entity/tag.dart' as tagEntity;
+import 'package:game_collection/entity/type.dart' as typeEntity;
 
 abstract class IDBConnector {
 
@@ -46,44 +46,44 @@ abstract class IDBConnector {
 
   //#region READ
     //Game
-  Stream<List<Game>> getAllGames();
-  Stream<List<Platform>> getPlatformsFromGame(int ID);
-  Stream<List<Purchase>> getPurchasesFromGame(int ID);
-  Stream<List<DLC>> getDLCsFromGame(int ID);
-  Stream<List<Tag>> getTagsFromGame(int ID);
+  Stream<List<gameEntity.Game>> getAllGames([List<String> sortFields = const [gameEntity.releaseYearField, gameEntity.nameField]]);
+  Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID);
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromGame(int ID);
+  Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID);
+  Stream<List<tagEntity.Tag>> getTagsFromGame(int ID);
 
     //DLC
-  Stream<List<DLC>> getAllDLCs();
-  Stream<Game> getBaseGameFromDLC(int baseGameID);
-  Stream<List<Purchase>> getPurchasesFromDLC(int ID);
+  Stream<List<dlcEntity.DLC>> getAllDLCs([List<String> sortFields = const [dlcEntity.releaseYearField, dlcEntity.nameField]]);
+  Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID);
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
-  Stream<List<Platform>> getAllPlatforms();
-  Stream<List<Game>> getGamesFromPlatform(int ID);
-  Stream<List<System>> getSystemsFromPlatform(int ID);
+  Stream<List<platformEntity.Platform>> getAllPlatforms([List<String> sortFields = const [platformEntity.typeField, platformEntity.nameField]]);
+  Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID);
+  Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID);
 
     //Purchase
-  Stream<List<Purchase>> getAllPurchases();
-  Stream<Store> getStoreFromPurchase(int storeID);
-  Stream<List<Game>> getGamesFromPurchase(int ID);
-  Stream<List<DLC>> getDLCsFromPurchase(int ID);
-  Stream<List<PurchaseType>> getTypesFromPurchase(int ID);
+  Stream<List<purchaseEntity.Purchase>> getAllPurchases([List<String> sortFields = const [purchaseEntity.dateField, purchaseEntity.descriptionField]]);
+  Stream<storeEntity.Store> getStoreFromPurchase(int storeID);
+  Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID);
+  Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID);
+  Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID);
 
     //Store
-  Stream<List<Store>> getAllStores();
-  Stream<List<Purchase>> getPurchasesFromStore(int ID);
+  Stream<List<storeEntity.Store>> getAllStores([List<String> sortFields = const [storeEntity.nameField]]);
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromStore(int ID);
 
     //System
-  Stream<List<System>> getAllSystems();
-  Stream<List<Platform>> getPlatformsFromSystem(int ID);
+  Stream<List<systemEntity.System>> getAllSystems([List<String> sortFields = const [systemEntity.generationField, systemEntity.manufacturerField]]);
+  Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
-  Stream<List<Tag>> getAllTags();
-  Stream<List<Game>> getGamesFromTag(int ID);
+  Stream<List<tagEntity.Tag>> getAllTags([List<String> sortFields = const [tagEntity.nameField]]);
+  Stream<List<gameEntity.Game>> getGamesFromTag(int ID);
 
     //Type
-  Stream<List<PurchaseType>> getAllTypes();
-  Stream<List<Purchase>> getPurchasesFromType(int ID);
+  Stream<List<typeEntity.PurchaseType>> getAllTypes([List<String> sortFields = const [typeEntity.nameField]]);
+  Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
 
 
@@ -143,15 +143,15 @@ abstract class IDBConnector {
 
 
   //#region SEARCH
-  Stream<List<Entity>> getSearchStream(String tableName, String query);
-  Stream<List<Game>> getGamesWithName(String name);
-  Stream<List<DLC>> getDLCsWithName(String name);
-  Stream<List<Platform>> getPlatformsWithName(String name);
-  Stream<List<Purchase>> getPurchasesWithDescription(String description);
-  Stream<List<Store>> getStoresWithName(String name);
-  Stream<List<System>> getSystemsWithName(String name);
-  Stream<List<Tag>> getTagsWithName(String name);
-  Stream<List<PurchaseType>> getTypesWithName(String name);
+  Stream<List<Entity>> getSearchStream(String tableName, String query, int maxResults);
+  Stream<List<gameEntity.Game>> getGamesWithName(String name, int maxResults);
+  Stream<List<dlcEntity.DLC>> getDLCsWithName(String name, int maxResults);
+  Stream<List<platformEntity.Platform>> getPlatformsWithName(String name, int maxResults);
+  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String description, int maxResults);
+  Stream<List<storeEntity.Store>> getStoresWithName(String name, int maxResults);
+  Stream<List<systemEntity.System>> getSystemsWithName(String name, int maxResults);
+  Stream<List<tagEntity.Tag>> getTagsWithName(String name, int maxResults);
+  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String name, int maxResults);
   //#endregion SEARCH
 
 

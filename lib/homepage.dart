@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:game_collection/persistence/db_connector.dart';
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
   Function() _onUpdate({@required Future<dynamic> Function() insertFuture}) {
 
     return isUpdating()?
-    null
+        null
         :
         () {
           handleUpdate(
@@ -87,6 +89,8 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
 
   }
 
+  List<List<String>> _barSortFields;
+
   List<BarItem> _barItems;
   List<Key> _destinationKeys;
   List<AnimationController> _faders;
@@ -95,12 +99,14 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
   void initState() {
     super.initState();
 
+
     _barItems = [
       BarItem(
         title: gameEntity.gameTable,
         icon: Icons.videogame_asset,
         color: gameEntity.gameColour,
-        allStream: _db.getAllGames(),
+        fields: gameEntity.gameFields,
+        allStream: ([List<String> sortFields = const [gameEntity.releaseYearField, gameEntity.nameField]]) => _db.getAllGames(sortFields),
         insertFuture: () => _db.insertGame('', ''),
         deleteFuture: (int deletedGameID) => _db.deleteGame(deletedGameID),
       ),
@@ -108,7 +114,8 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
         title: dlcEntity.dlcTable,
         icon: Icons.widgets,
         color: dlcEntity.dlcColour,
-        allStream: _db.getAllDLCs(),
+        fields: dlcEntity.dlcFields,
+        allStream: ([List<String> sortFields = const [dlcEntity.releaseYearField, dlcEntity.nameField]]) => _db.getAllDLCs(sortFields),
         insertFuture: () => _db.insertDLC(''),
         deleteFuture: (int deletedDLCID) => _db.deleteDLC(deletedDLCID),
       ),
@@ -116,7 +123,8 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
         title: purchaseEntity.purchaseTable,
         icon: Icons.local_grocery_store,
         color: purchaseEntity.purchaseColour,
-        allStream: _db.getAllPurchases(),
+        fields: purchaseEntity.purchaseFields,
+        allStream: ([List<String> sortFields = const [purchaseEntity.dateField, purchaseEntity.descriptionField]]) => _db.getAllPurchases(sortFields),
         insertFuture: () => _db.insertPurchase(''),
         deleteFuture: (int deletedPurchaseID) => _db.deletePurchase(deletedPurchaseID),
       ),
@@ -124,7 +132,8 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
         title: storeEntity.storeTable,
         icon: Icons.store,
         color: storeEntity.storeColour,
-        allStream: _db.getAllStores(),
+        fields: storeEntity.storeFields,
+        allStream: ([List<String> sortFields = const [storeEntity.nameField]]) => _db.getAllStores(sortFields),
         insertFuture: () => _db.insertStore(''),
         deleteFuture: (int deletedStoreID) => _db.deleteStore(deletedStoreID),
       ),
@@ -132,12 +141,17 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
         title: platformEntity.platformTable,
         icon: Icons.phonelink,
         color: platformEntity.platformColour,
-        allStream: _db.getAllPlatforms(),
+        fields: platformEntity.platformFields,
+        allStream: ([List<String> sortFields = const [platformEntity.typeField, platformEntity.nameField]]) => _db.getAllPlatforms(sortFields),
         insertFuture: () => _db.insertPlatform(''),
         deleteFuture: (int deletedPlatformID) => _db.deletePlatform(deletedPlatformID),
       ),
     ];
+    _barSortFields = _barItems.map<List<String>>( (BarItem item) {
+      return [];
+    }).toList(growable: false);
 
+    //implementation of fade in, fade out
     _faders = _barItems.map<AnimationController>((dynamic data) {
       return AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     }).toList();
@@ -176,12 +190,12 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
         child: KeyedSubtree(
           key: _destinationKeys[barIndex],
           child: EntityList(
-            entityStream: item.allStream,
+            entityStream: _barSortFields[barIndex].isNotEmpty? item.allStream(_barSortFields[barIndex]) : item.allStream(),
             deleteFuture: item.deleteFuture,
           ),
         ),
       );
-      if (barIndex== _selectedIndex) {
+      if (barIndex == _selectedIndex) {
         _faders[barIndex].forward();
         return view;
       } else {
@@ -193,11 +207,40 @@ class _HomePageState extends State<HomePage>  with TickerProviderStateMixin<Home
       }
     }).toList(growable: false);
 
+    List<IconButton> _barSortIcons = _barItems.map<IconButton>((BarItem item) {
+      int barIndex = _barItems.indexOf(item);
+
+      return IconButton(
+        icon: Icon(Icons.sort),
+        tooltip: 'Sort',
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+
+              return ReorderableSortList(
+                title: item.title,
+                getSortFields: () {
+                  return _barSortFields.elementAt(barIndex);
+                },
+                allFields: item.fields,
+              );
+
+            },
+          );
+        },
+      );
+
+    }).toList(growable: false);
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         title: Text(_barItems.elementAt(_selectedIndex).title + 's'),
         backgroundColor: _barItems.elementAt(_selectedIndex).color,
+        actions: <Widget>[
+          _barSortIcons.elementAt(_selectedIndex),
+        ],
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -309,12 +352,97 @@ class _EntityListState extends State<EntityList> {
 }
 
 class BarItem {
-  const BarItem({@required this.title, this.color, @required this.icon, @required this.allStream, @required this.insertFuture, @required this.deleteFuture});
+  const BarItem({@required this.title, this.color, @required this.icon, @required this.fields, @required this.allStream, @required this.insertFuture, @required this.deleteFuture});
 
   final String title;
   final IconData icon;
   final Color color;
-  final Stream<List<Entity>> allStream;
+  final List<String> fields;
+  final Stream<List<Entity>> Function([List<String> sortFields]) allStream;
   final Future<dynamic> Function() insertFuture;
   final Future<dynamic> Function(int) deleteFuture;
+}
+
+class ReorderableSortList extends StatefulWidget {
+  ReorderableSortList({Key key, @required this.title, @required this.getSortFields, @required this.allFields}) : super(key: key);
+
+  final String title;
+  final List<String> Function() getSortFields;
+  final List<String> allFields;
+
+  State<ReorderableSortList> createState() => _ReorderableSortListState();
+}
+class _ReorderableSortListState extends State<ReorderableSortList> {
+
+  List<String> _copy;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _copy = List.from(widget.getSortFields());
+    _copy.addAll( widget.allFields.skipWhile( (String field) {
+      return widget.getSortFields().contains(field);
+    }) );
+  }
+
+  void swap(List<String> list, int oldIndex, int newIndex) {
+
+    if (oldIndex == newIndex) {
+      return;
+    }
+    String _temp = list.removeAt(oldIndex);
+    list.insert(newIndex, _temp);
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      height: MediaQuery.of(context).size.height / 3,
+      child: ReorderableListView(
+        children: _copy.map<Widget>( (String field) {
+          return CheckboxListTile(
+            key: ValueKey(widget.title + field),
+            title: Text(field),
+            value: widget.getSortFields().contains(field),
+            onChanged: (bool isSelected) {
+              if(isSelected) {
+                int _oldIndex = _copy.indexOf(field);
+                int _lastAvailableIndex = widget.getSortFields().length;
+                swap(_copy, _oldIndex, _lastAvailableIndex);
+                setState(() {
+                  widget.getSortFields().add(field);
+                });
+              } else {
+                int _oldIndex = _copy.indexOf(field);
+                int _lastSelectedIndex = widget.getSortFields().length-1;
+                swap(_copy, _oldIndex, _lastSelectedIndex);
+                setState(() {
+                  widget.getSortFields().remove(field);
+                });
+              }
+            },
+          );
+        }).toList(),
+        onReorder: (int oldIndex, int newIndex) {
+          if(oldIndex < newIndex) {
+            newIndex--;
+          }
+          String field = _copy.elementAt(oldIndex);
+          if(widget.getSortFields().contains(field)) {
+            newIndex = min(newIndex, widget.getSortFields().length-1);
+            setState(() {
+              swap(widget.getSortFields(), oldIndex, newIndex);
+            });
+          } else {
+            newIndex = max(newIndex, widget.getSortFields().length);
+          }
+          swap(_copy, oldIndex, newIndex);
+        },
+      ),
+    );
+
+  }
 }

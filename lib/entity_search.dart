@@ -46,7 +46,7 @@ class EntitySearch extends SearchDelegate<Entity> {
     if (query.trim().length > 1) {
 
       return StreamBuilder(
-        stream: _db.getSearchStream(searchTable, query),
+        stream: _db.getSearchStream(searchTable, query, _maxResults),
         builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 
@@ -66,7 +66,7 @@ class EntitySearch extends SearchDelegate<Entity> {
     if (query.trim().length > 1) {
 
       return StreamBuilder(
-        stream: _db.getSearchStream(searchTable, query),
+        stream: _db.getSearchStream(searchTable, query, _maxSuggestions),
         builder: (BuildContext context, AsyncSnapshot<List<Entity>> snapshot) {
           if (!snapshot.hasData) { return LoadingIcon(); }
 

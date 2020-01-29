@@ -112,15 +112,15 @@ class PostgresConnector implements IDBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName, List<String> fieldNames}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableAll({@required String tableName, List<String> selectFields, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields}) {
 
-    String sql = _selectAllStatement(tableName, fieldNames);
+    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList()?? null) + _orderByStatement(sortFields);
 
-    return _connection.mappedResultsQuery(sql);
+    return _connection.mappedResultsQuery(sql, substitutionValues: whereFieldsAndValues);
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readRelationAll({@required String leftTableName, @required String rightTableName, @required bool leftResults, @required int relationID, List<String> fieldNames}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readRelationAll({@required String leftTableName, @required String rightTableName, @required bool leftResults, @required int relationID, List<String> selectFields, List<String> sortFields}) {
 
     String relationTable = _relationTable(leftTableName, rightTableName);
     String leftIDField = _relationIDField(leftTableName);
@@ -131,23 +131,23 @@ class PostgresConnector implements IDBConnector {
         relationTable,
         IDField,
         leftResults? leftIDField : rightIDField,
-        fieldNames,
+        selectFields,
     );
 
-    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftResults? rightIDField : leftIDField) + " = @relationID ", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(leftResults? rightIDField : leftIDField) + " = @relationID " + _orderByStatement(sortFields), substitutionValues: {
       "relationID" : relationID,
     });
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readWeakRelationAll({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID, List<String> fieldNames}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readWeakRelationAll({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID, List<String> selectFields, List<String> sortFields}) {
 
-    String sql = _selectStatement(fieldNames, 'b');
+    String sql = _selectStatement(selectFields, 'b');
 
     sql += " FROM " + _forceDoubleQuotes(subordinateTable) + " b JOIN " + _forceDoubleQuotes(primaryTable) + " a "
         + " ON b." + _forceDoubleQuotes(relationField) + " = a." + _forceDoubleQuotes(IDField) + " ";
 
-    return _connection.mappedResultsQuery(sql + " WHERE a." + _forceDoubleQuotes(IDField) + " = @relationID", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " WHERE a." + _forceDoubleQuotes(IDField) + " = @relationID" + _orderByStatement(sortFields), substitutionValues: {
       "relationID" : relationID,
     });
 
@@ -163,13 +163,13 @@ class PostgresConnector implements IDBConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query, List<String> fieldNames}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _readTableSearch({@required String tableName, @required String searchField, @required String query, List<String> fieldNames, int limitResults}) {
 
     query = _searchableQuery(query);
 
     String sql = _selectAllStatement(tableName, fieldNames);
 
-    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(searchField) + " ILIKE @query ", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " WHERE " + _forceDoubleQuotes(searchField) + " ILIKE @query LIMIT " + limitResults.toString(), substitutionValues: {
       "query" : query,
     });
 
@@ -316,9 +316,9 @@ class PostgresConnector implements IDBConnector {
   Future<dynamic> insertDLC(String name) {
 
     return _insertTableOnlyName(
-        tableName: dlcEntity.dlcTable,
-        fieldName: dlcEntity.nameField,
-        nameValue: name,
+      tableName: dlcEntity.dlcTable,
+      fieldName: dlcEntity.nameField,
+      nameValue: name,
     );
 
   }
@@ -453,11 +453,12 @@ class PostgresConnector implements IDBConnector {
   //#region READ
     //#region Game
   @override
-  Stream<List<gameEntity.Game>> getAllGames() {
+  Stream<List<gameEntity.Game>> getAllGames([List<String> sortFields = const [gameEntity.releaseYearField, gameEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: gameEntity.gameTable,
-        fieldNames: gameEntity.gameFields,
+      tableName: gameEntity.gameTable,
+      selectFields: gameEntity.gameFields,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -466,10 +467,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID) {
 
     return _readRelationAll(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: platformEntity.platformTable,
-        leftResults: false,
-        relationID: ID,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: platformEntity.platformTable,
+      leftResults: false,
+      relationID: ID,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -482,7 +483,7 @@ class PostgresConnector implements IDBConnector {
       rightTableName: purchaseEntity.purchaseTable,
       leftResults: false,
       relationID: ID,
-      fieldNames: purchaseEntity.purchaseFields,
+      selectFields: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -491,10 +492,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID) {
 
     return _readWeakRelationAll(
-        primaryTable: gameEntity.gameTable,
-        subordinateTable: dlcEntity.dlcTable,
-        relationField: dlcEntity.baseGameField,
-        relationID: ID,
+      primaryTable: gameEntity.gameTable,
+      subordinateTable: dlcEntity.dlcTable,
+      relationField: dlcEntity.baseGameField,
+      relationID: ID,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -503,10 +504,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<tagEntity.Tag>> getTagsFromGame(int ID) {
 
     return _readRelationAll(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: tagEntity.tagTable,
-        leftResults: false,
-        relationID: ID,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: tagEntity.tagTable,
+      leftResults: false,
+      relationID: ID,
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -514,10 +515,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region DLC
   @override
-  Stream<List<dlcEntity.DLC>> getAllDLCs() {
+  Stream<List<dlcEntity.DLC>> getAllDLCs([List<String> sortFields = const [dlcEntity.releaseYearField, dlcEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: dlcEntity.dlcTable,
+      tableName: dlcEntity.dlcTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -526,9 +528,9 @@ class PostgresConnector implements IDBConnector {
   Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID) {
 
     return _readWithID(
-        tableName: gameEntity.gameTable,
-        tableID: baseGameID,
-        fieldNames: gameEntity.gameFields,
+      tableName: gameEntity.gameTable,
+      tableID: baseGameID,
+      fieldNames: gameEntity.gameFields,
     ).asStream().map( _dynamicToSingleGame );
 
   }
@@ -537,11 +539,11 @@ class PostgresConnector implements IDBConnector {
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID) {
 
     return _readRelationAll(
-        leftTableName: dlcEntity.dlcTable,
-        rightTableName: purchaseEntity.purchaseTable,
-        leftResults: false,
-        relationID: ID,
-        fieldNames: purchaseEntity.purchaseFields,
+      leftTableName: dlcEntity.dlcTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftResults: false,
+      relationID: ID,
+      selectFields: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -549,10 +551,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region Platform
   @override
-  Stream<List<platformEntity.Platform>> getAllPlatforms() {
+  Stream<List<platformEntity.Platform>> getAllPlatforms([List<String> sortFields = const [platformEntity.typeField, platformEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: platformEntity.platformTable,
+      tableName: platformEntity.platformTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -561,11 +564,11 @@ class PostgresConnector implements IDBConnector {
   Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID) {
 
     return _readRelationAll(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: platformEntity.platformTable,
-        leftResults: true,
-        relationID: ID,
-        fieldNames: gameEntity.gameFields,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: platformEntity.platformTable,
+      leftResults: true,
+      relationID: ID,
+      selectFields: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -574,10 +577,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID) {
 
     return _readRelationAll(
-        leftTableName: platformEntity.platformTable,
-        rightTableName: systemEntity.systemTable,
-        leftResults: false,
-        relationID: ID,
+      leftTableName: platformEntity.platformTable,
+      rightTableName: systemEntity.systemTable,
+      leftResults: false,
+      relationID: ID,
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -585,11 +588,12 @@ class PostgresConnector implements IDBConnector {
 
     //#region Purchase
   @override
-  Stream<List<purchaseEntity.Purchase>> getAllPurchases() {
+  Stream<List<purchaseEntity.Purchase>> getAllPurchases([List<String> sortFields = const [purchaseEntity.dateField, purchaseEntity.descriptionField]]) {
 
     return _readTableAll(
-        tableName: purchaseEntity.purchaseTable,
-        fieldNames: purchaseEntity.purchaseFields,
+      tableName: purchaseEntity.purchaseTable,
+      selectFields: purchaseEntity.purchaseFields,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -608,11 +612,11 @@ class PostgresConnector implements IDBConnector {
   Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID) {
 
     return _readRelationAll(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: purchaseEntity.purchaseTable,
-        leftResults: true,
-        relationID: ID,
-        fieldNames: gameEntity.gameFields,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftResults: true,
+      relationID: ID,
+      selectFields: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -621,10 +625,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID) {
 
     return _readRelationAll(
-        leftTableName: dlcEntity.dlcTable,
-        rightTableName: purchaseEntity.purchaseTable,
-        leftResults: true,
-        relationID: ID,
+      leftTableName: dlcEntity.dlcTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftResults: true,
+      relationID: ID,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -633,10 +637,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID) {
 
     return _readRelationAll(
-        leftTableName: purchaseEntity.purchaseTable,
-        rightTableName: typeEntity.typeTable,
-        leftResults: false,
-        relationID: ID,
+      leftTableName: purchaseEntity.purchaseTable,
+      rightTableName: typeEntity.typeTable,
+      leftResults: false,
+      relationID: ID,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -644,10 +648,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region Purchase
   @override
-  Stream<List<storeEntity.Store>> getAllStores() {
+  Stream<List<storeEntity.Store>> getAllStores([List<String> sortFields = const [storeEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: storeEntity.storeTable,
+      tableName: storeEntity.storeTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListStore );
 
   }
@@ -660,7 +665,7 @@ class PostgresConnector implements IDBConnector {
       subordinateTable: purchaseEntity.purchaseTable,
       relationField: purchaseEntity.storeField,
       relationID: ID,
-      fieldNames: purchaseEntity.purchaseFields,
+      selectFields: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -668,10 +673,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region System
   @override
-  Stream<List<systemEntity.System>> getAllSystems() {
+  Stream<List<systemEntity.System>> getAllSystems([List<String> sortFields = const [systemEntity.generationField, systemEntity.manufacturerField]]) {
 
     return _readTableAll(
-        tableName: systemEntity.systemTable,
+      tableName: systemEntity.systemTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -680,10 +686,10 @@ class PostgresConnector implements IDBConnector {
   Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID) {
 
     return _readRelationAll(
-        leftTableName: platformEntity.platformTable,
-        rightTableName: systemEntity.systemTable,
-        leftResults: true,
-        relationID: ID,
+      leftTableName: platformEntity.platformTable,
+      rightTableName: systemEntity.systemTable,
+      leftResults: true,
+      relationID: ID,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -691,10 +697,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region Tag
   @override
-  Stream<List<tagEntity.Tag>> getAllTags() {
+  Stream<List<tagEntity.Tag>> getAllTags([List<String> sortFields = const [tagEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: tagEntity.tagTable,
+      tableName: tagEntity.tagTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -703,11 +710,11 @@ class PostgresConnector implements IDBConnector {
   Stream<List<gameEntity.Game>> getGamesFromTag(int ID) {
 
     return _readRelationAll(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: tagEntity.tagTable,
-        leftResults: true,
-        relationID: ID,
-        fieldNames: gameEntity.gameFields,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: tagEntity.tagTable,
+      leftResults: true,
+      relationID: ID,
+      selectFields: gameEntity.gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -715,10 +722,11 @@ class PostgresConnector implements IDBConnector {
 
     //#region Type
   @override
-  Stream<List<typeEntity.PurchaseType>> getAllTypes() {
+  Stream<List<typeEntity.PurchaseType>> getAllTypes([List<String> sortFields = const [typeEntity.nameField]]) {
 
     return _readTableAll(
-        tableName: typeEntity.typeTable,
+      tableName: typeEntity.typeTable,
+      sortFields: sortFields,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -727,11 +735,11 @@ class PostgresConnector implements IDBConnector {
   Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID) {
 
     return _readRelationAll(
-        leftTableName: purchaseEntity.purchaseTable,
-        rightTableName: typeEntity.typeTable,
-        leftResults: true,
-        relationID: ID,
-        fieldNames: purchaseEntity.purchaseFields,
+      leftTableName: purchaseEntity.purchaseTable,
+      rightTableName: typeEntity.typeTable,
+      leftResults: true,
+      relationID: ID,
+      selectFields: purchaseEntity.purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -743,10 +751,10 @@ class PostgresConnector implements IDBConnector {
   Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue) {
 
     return _updateTable(
-        tableName: gameEntity.gameTable,
-        ID: ID,
-        fieldName: fieldName,
-        newValue: newValue,
+      tableName: gameEntity.gameTable,
+      ID: ID,
+      fieldName: fieldName,
+      newValue: newValue,
     );
 
   }
@@ -864,10 +872,10 @@ class PostgresConnector implements IDBConnector {
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
 
     return _deleteRelation(
-        leftTableName: gameEntity.gameTable,
-        rightTableName: purchaseEntity.purchaseTable,
-        leftID: gameID,
-        rightID: purchaseID,
+      leftTableName: gameEntity.gameTable,
+      rightTableName: purchaseEntity.purchaseTable,
+      leftID: gameID,
+      rightID: purchaseID,
     );
 
   }
@@ -876,9 +884,9 @@ class PostgresConnector implements IDBConnector {
   Future<dynamic> deleteGameDLC(int dlcID) {
 
     return _updateTableToNull(
-        tableName: dlcEntity.dlcTable,
-        ID: dlcID,
-        fieldName: dlcEntity.baseGameField,
+      tableName: dlcEntity.dlcTable,
+      ID: dlcID,
+      fieldName: dlcEntity.baseGameField,
     );
 
   }
@@ -901,8 +909,8 @@ class PostgresConnector implements IDBConnector {
   Future<dynamic> deleteDLC(int ID) {
 
     return _deleteTable(
-        tableName: dlcEntity.dlcTable,
-        ID: ID,
+      tableName: dlcEntity.dlcTable,
+      ID: ID,
     );
 
   }
@@ -1029,116 +1037,124 @@ class PostgresConnector implements IDBConnector {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<Entity>> getSearchStream(String tableName, String query) {
+  Stream<List<Entity>> getSearchStream(String tableName, String query, int maxResults) {
 
     switch(tableName) {
       case gameEntity.gameTable:
-        return getGamesWithName(query);
+        return getGamesWithName(query, maxResults);
       case dlcEntity.dlcTable:
-        return getDLCsWithName(query);
+        return getDLCsWithName(query, maxResults);
       case platformEntity.platformTable:
-        return getPlatformsWithName(query);
+        return getPlatformsWithName(query, maxResults);
       case purchaseEntity.purchaseTable:
-        return getPurchasesWithDescription(query);
+        return getPurchasesWithDescription(query, maxResults);
       case storeEntity.storeTable:
-        return getStoresWithName(query);
+        return getStoresWithName(query, maxResults);
       case systemEntity.systemTable:
-        return getSystemsWithName(query);
+        return getSystemsWithName(query, maxResults);
       case tagEntity.tagTable:
-        return getTagsWithName(query);
+        return getTagsWithName(query, maxResults);
       case typeEntity.typeTable:
-        return getTypesWithName(query);
+        return getTypesWithName(query, maxResults);
     }
     return null;
 
   }
 
   @override
-  Stream<List<gameEntity.Game>> getGamesWithName(String nameQuery) {
+  Stream<List<gameEntity.Game>> getGamesWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
-        tableName: gameEntity.gameTable,
-        searchField: gameEntity.nameField,
-        query: nameQuery,
-        fieldNames: gameEntity.gameFields,
+      tableName: gameEntity.gameTable,
+      searchField: gameEntity.nameField,
+      query: nameQuery,
+      fieldNames: gameEntity.gameFields,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<dlcEntity.DLC>> getDLCsWithName(String nameQuery) {
+  Stream<List<dlcEntity.DLC>> getDLCsWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: dlcEntity.dlcTable,
       searchField: dlcEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<List<platformEntity.Platform>> getPlatformsWithName(String nameQuery) {
+  Stream<List<platformEntity.Platform>> getPlatformsWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: platformEntity.platformTable,
       searchField: platformEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String descQuery) {
+  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String descQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: purchaseEntity.purchaseTable,
       searchField: purchaseEntity.descriptionField,
       query: descQuery,
       fieldNames: purchaseEntity.purchaseFields,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
-  Stream<List<storeEntity.Store>> getStoresWithName(String nameQuery) {
+  Stream<List<storeEntity.Store>> getStoresWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: storeEntity.storeTable,
       searchField: storeEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListStore );
 
   }
 
   @override
-  Stream<List<systemEntity.System>> getSystemsWithName(String nameQuery) {
+  Stream<List<systemEntity.System>> getSystemsWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: systemEntity.systemTable,
       searchField: systemEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListSystem );
 
   }
 
   @override
-  Stream<List<tagEntity.Tag>> getTagsWithName(String nameQuery) {
+  Stream<List<tagEntity.Tag>> getTagsWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: tagEntity.tagTable,
       searchField: tagEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListTag );
 
   }
 
   @override
-  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String nameQuery) {
+  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String nameQuery, int maxResults) {
 
     return _readTableSearch(
       tableName: typeEntity.typeTable,
       searchField: typeEntity.nameField,
       query: nameQuery,
+      limitResults: maxResults,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -1163,9 +1179,35 @@ class PostgresConnector implements IDBConnector {
 
   }
 
-  String _selectJoinStatement(String leftTable, String rightTable, String leftTableID, String rightTableID, [List<String> fieldNames]) {
+  String _selectJoinStatement(String leftTable, String rightTable, String leftTableID, String rightTableID, [List<String> selectFields]) {
 
-    return _selectStatement(fieldNames) + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
+    return _selectStatement(selectFields) + " FROM \"" + leftTable + "\" JOIN \"" + rightTable + "\" ON \"" + leftTableID + "\" = \"" + rightTableID + "\" ";
+
+  }
+
+  String _orderByStatement(List<String> sortFields) {
+
+    return sortFields != null? " ORDER BY " + _forceFieldsDoubleQuotes(sortFields).join(", ") : "";
+
+  }
+
+  String _whereStatement(List<String> filterFields) {
+
+    if(filterFields != null) {
+
+      String filterForSQL;
+      filterFields.forEach( (String fieldName) {
+
+        filterForSQL += _forceDoubleQuotes(fieldName) + " = @" + fieldName + " AND ";
+
+      });
+      //Remove trailing AND
+      filterForSQL = filterForSQL.substring(0, filterForSQL.length-4);
+
+      return " WHERE " + filterForSQL;
+    }
+
+    return "";
 
   }
 
@@ -1189,7 +1231,7 @@ class PostgresConnector implements IDBConnector {
 
   String _searchableQuery(String query) {
 
-    return "%" + query + "%";
+    return " %" + query + "% ";
 
   }
 
