@@ -14,7 +14,7 @@ import 'item_detail.dart';
 abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   ItemDetailBloc({@required this.itemBloc}) {
-    itemSubscription = itemBloc.listen( (state) async* {
+    itemSubscription = itemBloc.listen( (ItemState state) {
       //TODO
     });
   }
