@@ -1,37 +1,10 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/game_entity.dart';
 
-const String gameTable = "Game";
+import 'collection_item.dart';
 
-const List<String> gameFields = [
-  IDField,
-  nameField,
-  editionField,
-  releaseYearField,
-  coverField,
-  statusField,
-  ratingField,
-  thoughtsField,
-  timeField,
-  saveFolderField,
-  screenshotFolderField,
-  finishDateField,
-  backupField,
-];
-
-const String nameField = 'Name';
-const String editionField = 'Edition';
-const String releaseYearField = 'Release Year';
-const String coverField = 'Cover';
-const String statusField = 'Status';
-const String ratingField = 'Rating';
-const String thoughtsField = 'Thoughts';
-const String timeField = 'Time';
-const String saveFolderField = 'Save Folder';
-const String screenshotFolderField = 'Screenshot Folder';
-const String finishDateField = 'Finish Date';
-const String backupField = 'Backup';
 
 const List<String> statuses = [
   "Low Priority",
@@ -40,19 +13,7 @@ const List<String> statuses = [
   "Played",
 ];
 
-class Game extends Entity {
-
-  final String name;
-  final String edition;
-  final int releaseYear;
-  final String status;
-  final int rating;
-  final String thoughts;
-  final Duration time;
-  final String saveFolder;
-  final String screenshotFolder;
-  final DateTime finishDate;
-  final bool isBackup;
+class Game extends CollectionItem {
 
   Game({
     @required int ID,
@@ -68,6 +29,57 @@ class Game extends Entity {
     this.finishDate,
     this.isBackup,
   }) : super(ID: ID);
+
+  final String name;
+  final String edition;
+  final int releaseYear;
+  final String status;
+  final int rating;
+  final String thoughts;
+  final Duration time;
+  final String saveFolder;
+  final String screenshotFolder;
+  final DateTime finishDate;
+  final bool isBackup;
+
+  static Game fromEntity(GameEntity entity) {
+
+    return Game(
+      ID: entity.ID,
+      name: entity.name,
+      edition: entity.edition,
+      releaseYear: entity.releaseYear,
+      status: entity.status,
+      rating: entity.rating,
+      thoughts: entity.thoughts,
+      time: entity.time,
+      saveFolder: entity.saveFolder,
+      screenshotFolder: entity.screenshotFolder,
+      finishDate: entity.finishDate,
+      isBackup: entity.isBackup,
+    );
+
+  }
+
+  @override
+  GameEntity toEntity() {
+
+    return GameEntity(
+      ID: this.ID,
+      name: this.name,
+      edition: this.edition,
+      releaseYear: this.releaseYear,
+      status: this.status,
+      rating: this.rating,
+      thoughts: this.thoughts,
+      time: this.time,
+      saveFolder: this.saveFolder,
+      screenshotFolder: this.screenshotFolder,
+      finishDate: this.finishDate,
+      isBackup: this.isBackup,
+    );
+
+  }
 
   @override
   Game copyWith({
@@ -126,44 +138,6 @@ class Game extends Entity {
 
   }
 
-  static Game fromDynamicMap(Map<String, dynamic> map) {
-
-    return Game(
-      ID: map[IDField],
-      name: map[nameField],
-      edition: map[editionField],
-      releaseYear: map[releaseYearField],
-      status: map[statusField],
-      rating: map[ratingField],
-      thoughts: map[thoughtsField],
-      time: Duration(minutes: map[timeField]),
-      saveFolder: map[saveFolderField],
-      screenshotFolder: map[screenshotFolderField],
-      finishDate: map[finishDateField],
-      isBackup: map[backupField],
-    );
-
-  }
-
-  static List<Game> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<Game> gamesList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Map<String, dynamic> _tempFixMap = Map.from(map[gameTable]);
-      _tempFixMap.addAll(
-        map[null],
-      );
-
-      Game game = Game.fromDynamicMap(_tempFixMap);
-
-      gamesList.add(game);
-    });
-
-    return gamesList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -185,17 +159,17 @@ class Game extends Entity {
 
     return '$gameTable { '
         '$IDField: $ID, '
-        '$nameField: $name, '
-        '$editionField: $edition, '
-        '$releaseYearField: $releaseYear, '
-        '$statusField: $status, '
-        '$ratingField: $rating, '
-        '$thoughtsField: $thoughts, '
-        '$timeField: $time, '
-        '$saveFolderField: $saveFolder, '
-        '$screenshotFolderField: $screenshotFolder, '
-        '$finishDateField: $finishDate, '
-        '$backupField: $isBackup'
+        '$game_nameField: $name, '
+        '$game_editionField: $edition, '
+        '$game_releaseYearField: $releaseYear, '
+        '$game_statusField: $status, '
+        '$game_ratingField: $rating, '
+        '$game_thoughtsField: $thoughts, '
+        '$game_timeField: $time, '
+        '$game_saveFolderField: $saveFolder, '
+        '$game_screenshotFolderField: $screenshotFolder, '
+        '$game_finishDateField: $finishDate, '
+        '$game_backupField: $isBackup'
         ' }';
 
   }

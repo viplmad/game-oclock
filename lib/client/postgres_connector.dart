@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 
-import 'package:game_collection/model/entity.dart';
-import 'package:game_collection/model/game.dart' as gameEntity;
-import 'package:game_collection/model/purchase.dart' as purchaseEntity;
+import 'package:game_collection/entity/entity.dart';
 
 import 'idb_connector.dart';
 
@@ -75,7 +73,7 @@ class PostgresConnector extends IDBConnector {
 
   //#region CREATE
   @override
-  Future<dynamic> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues}) {
+  Future<List<Map<String, Map<String, dynamic>>>> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields}) {
 
     String sql = _insertStatement(tableName);
 
@@ -91,7 +89,7 @@ class PostgresConnector extends IDBConnector {
     fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
     fieldValuesForSQL = fieldValuesForSQL.substring(0, fieldValuesForSQL.length-2);
 
-    return _connection.mappedResultsQuery(sql + " (" + fieldNamesForSQL + ") VALUES(" + fieldValuesForSQL + ") ",
+    return _connection.mappedResultsQuery(sql + " (" + fieldNamesForSQL + ") VALUES(" + fieldValuesForSQL + ") " + _returningStatement(returningFields),
       substitutionValues: fieldAndValues,
     );
 
@@ -305,6 +303,17 @@ class PostgresConnector extends IDBConnector {
 
   }
 
+  String _returningStatement([List<String> fieldNames]) {
+
+    String selection = ' * ';
+    if(fieldNames != null) {
+      selection = _formatSelectionFields(fieldNames);
+    }
+
+    return " RETURNING " + selection;
+
+  }
+
   String _searchableQuery(String query) {
 
     return " %" + query + "% ";
@@ -332,13 +341,13 @@ class PostgresConnector extends IDBConnector {
 
       String _formattedField = alias + _forceDoubleQuotes(fieldName);
 
-      if(fieldName == purchaseEntity.priceField
-          || fieldName == purchaseEntity.externalCreditField
-          || fieldName == purchaseEntity.originalPriceField) {
+      if(fieldName == purc_priceField
+          || fieldName == purc_externalCreditField
+          || fieldName == purc_originalPriceField) {
 
         fieldNamesForSQL += _formattedField + "::float";
 
-      } else if(fieldName == gameEntity.timeField) {
+      } else if(fieldName == game_timeField) {
 
         fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _formattedField;
 

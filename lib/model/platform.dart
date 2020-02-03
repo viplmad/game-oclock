@@ -1,35 +1,40 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/platform_entity.dart';
 
-const String platformTable = "Platform";
+import 'collection_item.dart';
 
-const List<String> platformFields = [
-  IDField,
-  nameField,
-  iconField,
-  typeField,
-];
 
-const String nameField = "Name";
-const String iconField = "Icon";
-const String typeField = "Type";
-
-List<String> types = [
-  "Physical",
-  "Digital",
-];
-
-class Platform extends Entity {
-
-  final String name;
-  final String type;
+class Platform extends CollectionItem {
 
   Platform({
     @required int ID,
     this.name,
     this.type
   }) : super(ID: ID);
+
+  final String name;
+  final String type;
+
+  static Platform fromEntity(PlatformEntity entity) {
+
+    return Platform(
+      ID: entity.ID,
+      name: entity.name,
+    );
+
+  }
+
+  @override
+  PlatformEntity toEntity() {
+
+    return PlatformEntity(
+      ID: this.ID,
+      name: this.name,
+    );
+
+  }
 
   @override
   Platform copyWith({
@@ -59,30 +64,6 @@ class Platform extends Entity {
 
   }
 
-  static Platform fromDynamicMap(Map<String, dynamic> map) {
-
-    return Platform(
-      ID: map[IDField],
-      name: map[nameField],
-      type: map[typeField],
-    );
-
-  }
-
-  static List<Platform> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<Platform> platformsList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Platform platform = Platform.fromDynamicMap(map[platformTable]);
-
-      platformsList.add(platform);
-    });
-
-    return platformsList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -95,8 +76,8 @@ class Platform extends Entity {
 
     return '$platformTable { '
         '$IDField: $ID, '
-        '$nameField: $name, '
-        '$typeField: $type'
+        '$plat_nameField: $name, '
+        '$plat_typeField: $type'
         ' }';
 
   }

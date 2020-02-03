@@ -9,7 +9,7 @@ import 'package:game_collection/ui/helpers/show_snackbar.dart';
 import 'package:game_collection/model/app_tab.dart';
 
 import 'package:game_collection/bloc/connection/connection.dart';
-import 'package:game_collection/bloc/entity_list/entity_list.dart';
+import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
 
 import 'homepage.dart';
@@ -49,18 +49,18 @@ class ConnectPage extends StatelessWidget {
                         return TabBloc()..add(UpdateTab(AppTab.game));
                       },
                     ),
-                    BlocProvider<GameListBloc>(
+                    BlocProvider<GameBloc>(
                       create: (BuildContext context) {
-                        return GameListBloc(
+                        return GameBloc(
                           collectionRepository: CollectionRepository(),
-                        )..add(LoadEntityList());
+                        );
                       },
                     ),
-                    BlocProvider<DLCListBloc>(
+                    BlocProvider<DLCBloc>(
                       create: (BuildContext context) {
-                        return DLCListBloc(
+                        return DLCBloc(
                           collectionRepository: CollectionRepository(),
-                        )..add(LoadEntityList());
+                        );
                       },
                     ),
                   ],

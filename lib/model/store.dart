@@ -1,26 +1,38 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/store_entity.dart';
 
-const String storeTable = "Store";
+import 'collection_item.dart';
 
-const List<String> storeFields = [
-  IDField,
-  nameField,
-  iconField,
-];
 
-const String nameField = 'Name';
-const String iconField = 'Icon';
-
-class Store extends Entity {
-
-  final String name;
+class Store extends CollectionItem {
 
   Store({
     @required int ID,
     this.name,
   }) : super(ID: ID);
+
+  final String name;
+
+  static Store fromEntity(StoreEntity entity) {
+
+    return Store(
+      ID: entity.ID,
+      name: entity.name,
+    );
+
+  }
+
+  @override
+  StoreEntity toEntity() {
+
+    return StoreEntity(
+      ID: this.ID,
+      name: this.name,
+    );
+
+  }
 
   @override
   Store copyWith({
@@ -48,29 +60,6 @@ class Store extends Entity {
 
   }
 
-  static Store fromDynamicMap(Map<String, dynamic> map) {
-
-    return Store(
-      ID: map[IDField],
-      name: map[nameField],
-    );
-
-  }
-
-  static List<Store> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<Store> storesList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Store store = Store.fromDynamicMap(map[storeTable]);
-
-      storesList.add(store);
-    });
-
-    return storesList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -82,7 +71,7 @@ class Store extends Entity {
 
     return '$storeTable { '
         '$IDField: $ID, '
-        '$nameField: $name'
+        '$stor_nameField: $name'
         ' }';
 
   }

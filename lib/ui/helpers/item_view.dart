@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/entity.dart';
+import 'package:game_collection/model/collection_item.dart';
 
 class DismissibleEntity extends StatelessWidget {
 
-  final Entity entity;
+  final CollectionItem entity;
   final void Function(DismissDirection direction) onDismissed;
   final void Function() onTap;
   final Future<bool> Function(DismissDirection direction) confirmDismiss;
@@ -45,7 +45,7 @@ class DismissibleEntity extends StatelessWidget {
 
 class EntityCard extends StatelessWidget {
 
-  final Entity entity;
+  final CollectionItem entity;
   final void Function() onTap;
 
   const EntityCard({Key key, @required this.entity, @required this.onTap}) : super(key: key);
@@ -67,7 +67,7 @@ class EntityCard extends StatelessWidget {
 
 class EntityListTile extends StatelessWidget {
 
-  final Entity entity;
+  final CollectionItem entity;
 
   const EntityListTile({Key key, this.entity}) : super(key: key);
 

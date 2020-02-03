@@ -3,27 +3,20 @@ import 'package:game_collection/client/iimage_connector.dart';
 import 'package:game_collection/client/postgres_connector.dart';
 import 'package:game_collection/client/cloudinary_connector.dart';
 
-import 'package:game_collection/model/entity.dart';
-import 'package:game_collection/model/game.dart' as gameEntity;
-import 'package:game_collection/model/dlc.dart' as dlcEntity;
-import 'package:game_collection/model/purchase.dart' as purchaseEntity;
-import 'package:game_collection/model/platform.dart' as platformEntity;
-import 'package:game_collection/model/store.dart' as storeEntity;
-import 'package:game_collection/model/system.dart' as systemEntity;
-import 'package:game_collection/model/tag.dart' as tagEntity;
-import 'package:game_collection/model/type.dart' as typeEntity;
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'icollection_repository.dart';
 
 class CollectionRepository implements ICollectionRepository {
 
-  IDBConnector _dbConnector;
-  IImageConnector _imageConnector;
-
   CollectionRepository._() {
     _dbConnector = PostgresConnector();
     _imageConnector = CloudinaryConnector();
   }
+
+  IDBConnector _dbConnector;
+  IImageConnector _imageConnector;
 
   static CollectionRepository _singleton;
   factory CollectionRepository() {
@@ -50,15 +43,16 @@ class CollectionRepository implements ICollectionRepository {
   //#region CREATE
   //#region Game
   @override
-  Future<dynamic> insertGame(String name, String edition) {
+  Future<Game> insertGame(String name, String edition) {
 
     return _dbConnector.insertTable(
-      tableName: gameEntity.gameTable,
+      tableName: gameTable,
       fieldAndValues: <String, dynamic> {
-        gameEntity.nameField : name,
-        gameEntity.editionField : edition,
+        game_nameField : name,
+        game_editionField : edition,
       },
-    );
+      returningFields: gameFields,
+    ).asStream().map( _dynamicToSingleGame ).first;
 
   }
 
@@ -66,8 +60,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertGamePlatform(int gameID, int platformID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: platformEntity.platformTable,
+      leftTableName: gameTable,
+      rightTableName: platformTable,
       leftTableID: gameID,
       rightTableID: platformID,
     );
@@ -78,8 +72,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: gameTable,
+      rightTableName: purchaseTable,
       leftTableID: gameID,
       rightTableID: purchaseID,
     );
@@ -90,9 +84,9 @@ class CollectionRepository implements ICollectionRepository {
   Future insertGameDLC(int gameID, int dlcID) {
 
     return _dbConnector.updateTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       ID: dlcID,
-      fieldName: dlcEntity.baseGameField,
+      fieldName: dlc_baseGameField,
       newValue: gameID,
     );
 
@@ -102,8 +96,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertGameTag(int gameID, int tagID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: tagEntity.tagTable,
+      leftTableName: gameTable,
+      rightTableName: tagTable,
       leftTableID: gameID,
       rightTableID: tagID,
     );
@@ -113,14 +107,14 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Future<dynamic> insertDLC(String name) {
+  Future<DLC> insertDLC(String name) {
 
     return _dbConnector.insertTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       fieldAndValues: <String, dynamic> {
-        dlcEntity.nameField : name,
+        dlc_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSingleDLC ).first;
 
   }
 
@@ -128,8 +122,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: dlcEntity.dlcTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: dlcTable,
+      rightTableName: purchaseTable,
       leftTableID: dlcID,
       rightTableID: purchaseID,
     );
@@ -142,9 +136,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertPlatform(String name) {
 
     return _dbConnector.insertTable(
-      tableName: platformEntity.platformTable,
+      tableName: platformTable,
       fieldAndValues: <String, dynamic> {
-        platformEntity.nameField : name,
+        plat_nameField : name,
       },
     );
 
@@ -154,8 +148,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertPlatformSystem(int platformID, int systemID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: platformEntity.platformTable,
-      rightTableName: systemEntity.systemTable,
+      leftTableName: platformTable,
+      rightTableName: systemTable,
       leftTableID: platformID,
       rightTableID: systemID,
     );
@@ -167,10 +161,11 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertPurchase(String description) {
 
     return _dbConnector.insertTable(
-      tableName: purchaseEntity.purchaseTable,
+      tableName: purchaseTable,
       fieldAndValues: <String, dynamic> {
-        purchaseEntity.descriptionField : description,
+        purc_descriptionField : description,
       },
+      returningFields: purchaseFields,
     );
 
   }
@@ -179,8 +174,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertPurchaseType(int purchaseID, int typeID) {
 
     return _dbConnector.insertRelation(
-      leftTableName: purchaseEntity.purchaseTable,
-      rightTableName: typeEntity.typeTable,
+      leftTableName: purchaseTable,
+      rightTableName: typeTable,
       leftTableID: purchaseID,
       rightTableID: typeID,
     );
@@ -193,9 +188,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertStore(String name) {
 
     return _dbConnector.insertTable(
-      tableName: storeEntity.storeTable,
+      tableName: storeTable,
       fieldAndValues: <String, dynamic> {
-        storeEntity.nameField : name,
+        stor_nameField : name,
       },
     );
 
@@ -205,9 +200,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertStorePurchase(int storeID, int purchaseID) {
 
     return _dbConnector.updateTable(
-      tableName: purchaseEntity.purchaseTable,
+      tableName: purchaseTable,
       ID: purchaseID,
-      fieldName: purchaseEntity.storeField,
+      fieldName: purc_storeField,
       newValue: storeID,
     );
 
@@ -219,9 +214,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertSystem(String name) {
 
     return _dbConnector.insertTable(
-      tableName: systemEntity.systemTable,
+      tableName: systemTable,
       fieldAndValues: <String, dynamic> {
-        systemEntity.nameField : name,
+        sys_nameField : name,
       },
     );
 
@@ -233,9 +228,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertTag(String name) {
 
     return _dbConnector.insertTable(
-      tableName: tagEntity.tagTable,
+      tableName: tagTable,
       fieldAndValues: <String, dynamic> {
-        tagEntity.nameField : name,
+        tag_nameField : name,
       },
     );
 
@@ -247,9 +242,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> insertType(String name) {
 
     return _dbConnector.insertTable(
-      tableName: typeEntity.typeTable,
+      tableName: typeTable,
       fieldAndValues: <String, dynamic> {
-        typeEntity.nameField : name,
+        type_nameField : name,
       },
     );
 
@@ -260,22 +255,22 @@ class CollectionRepository implements ICollectionRepository {
   //#region READ
   //#region Game
   @override
-  Stream<List<gameEntity.Game>> getAllGames([List<String> sortFields]) {
+  Stream<List<Game>> getAllGames([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: gameEntity.gameTable,
-      selectFields: gameEntity.gameFields,
+      tableName: gameTable,
+      selectFields: gameFields,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID) {
+  Stream<List<Platform>> getPlatformsFromGame(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: platformEntity.platformTable,
+      leftTableName: gameTable,
+      rightTableName: platformTable,
       leftResults: false,
       relationID: ID,
     ).asStream().map( _dynamicToListPlatform );
@@ -283,36 +278,36 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromGame(int ID) {
+  Stream<List<Purchase>> getPurchasesFromGame(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: gameTable,
+      rightTableName: purchaseTable,
       leftResults: false,
       relationID: ID,
-      selectFields: purchaseEntity.purchaseFields,
+      selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
-  Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID) {
+  Stream<List<DLC>> getDLCsFromGame(int ID) {
 
     return _dbConnector.readWeakRelation(
-      primaryTable: gameEntity.gameTable,
-      subordinateTable: dlcEntity.dlcTable,
-      relationField: dlcEntity.baseGameField,
+      primaryTable: gameTable,
+      subordinateTable: dlcTable,
+      relationField: dlc_baseGameField,
       relationID: ID,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<List<tagEntity.Tag>> getTagsFromGame(int ID) {
+  Stream<List<Tag>> getTagsFromGame(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: tagEntity.tagTable,
+      leftTableName: gameTable,
+      rightTableName: tagTable,
       leftResults: false,
       relationID: ID,
     ).asStream().map( _dynamicToListTag );
@@ -322,21 +317,21 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Stream<List<dlcEntity.DLC>> getAllDLCs([List<String> sortFields]) {
+  Stream<List<DLC>> getAllDLCs([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID) {
+  Stream<Game> getBaseGameFromDLC(int baseGameID) {
 
     return _dbConnector.readTable(
-      tableName: gameEntity.gameTable,
-      selectFields: gameEntity.gameFields,
+      tableName: gameTable,
+      selectFields: gameFields,
       whereFieldsAndValues: <String, dynamic> {
         IDField : baseGameID,
       },
@@ -345,14 +340,14 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID) {
+  Stream<List<Purchase>> getPurchasesFromDLC(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: dlcEntity.dlcTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: dlcTable,
+      rightTableName: purchaseTable,
       leftResults: false,
       relationID: ID,
-      selectFields: purchaseEntity.purchaseFields,
+      selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -360,34 +355,34 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Stream<List<platformEntity.Platform>> getAllPlatforms([List<String> sortFields]) {
+  Stream<List<Platform>> getAllPlatforms([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: platformEntity.platformTable,
+      tableName: platformTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
-  Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID) {
+  Stream<List<Game>> getGamesFromPlatform(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: platformEntity.platformTable,
+      leftTableName: gameTable,
+      rightTableName: platformTable,
       leftResults: true,
       relationID: ID,
-      selectFields: gameEntity.gameFields,
+      selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID) {
+  Stream<List<System>> getSystemsFromPlatform(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: platformEntity.platformTable,
-      rightTableName: systemEntity.systemTable,
+      leftTableName: platformTable,
+      rightTableName: systemTable,
       leftResults: false,
       relationID: ID,
     ).asStream().map( _dynamicToListSystem );
@@ -397,20 +392,20 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Purchase
   @override
-  Stream<List<purchaseEntity.Purchase>> getAllPurchases([List<String> sortFields]) {
+  Stream<List<Purchase>> getAllPurchases([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: purchaseEntity.purchaseTable,
-      selectFields: purchaseEntity.purchaseFields,
+      tableName: purchaseTable,
+      selectFields: purchaseFields,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
 
-  Stream<storeEntity.Store> getStoreFromPurchase(int storeID) {
+  Stream<Store> getStoreFromPurchase(int storeID) {
 
     return _dbConnector.readTable(
-      tableName: storeEntity.storeTable,
+      tableName: storeTable,
       whereFieldsAndValues: <String, dynamic> {
         IDField : storeID,
       },
@@ -419,24 +414,24 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID) {
+  Stream<List<Game>> getGamesFromPurchase(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: gameTable,
+      rightTableName: purchaseTable,
       leftResults: true,
       relationID: ID,
-      selectFields: gameEntity.gameFields,
+      selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID) {
+  Stream<List<DLC>> getDLCsFromPurchase(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: dlcEntity.dlcTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: dlcTable,
+      rightTableName: purchaseTable,
       leftResults: true,
       relationID: ID,
     ).asStream().map( _dynamicToListDLC );
@@ -444,11 +439,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID) {
+  Stream<List<PurchaseType>> getTypesFromPurchase(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: purchaseEntity.purchaseTable,
-      rightTableName: typeEntity.typeTable,
+      leftTableName: purchaseTable,
+      rightTableName: typeTable,
       leftResults: false,
       relationID: ID,
     ).asStream().map( _dynamicToListType );
@@ -458,24 +453,24 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Purchase
   @override
-  Stream<List<storeEntity.Store>> getAllStores([List<String> sortFields]) {
+  Stream<List<Store>> getAllStores([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: storeEntity.storeTable,
+      tableName: storeTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListStore );
 
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromStore(int ID) {
+  Stream<List<Purchase>> getPurchasesFromStore(int ID) {
 
     return _dbConnector.readWeakRelation(
-      primaryTable: storeEntity.storeTable,
-      subordinateTable: purchaseEntity.purchaseTable,
-      relationField: purchaseEntity.storeField,
+      primaryTable: storeTable,
+      subordinateTable: purchaseTable,
+      relationField: purc_storeField,
       relationID: ID,
-      selectFields: purchaseEntity.purchaseFields,
+      selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -483,21 +478,21 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Stream<List<systemEntity.System>> getAllSystems([List<String> sortFields]) {
+  Stream<List<System>> getAllSystems([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: systemEntity.systemTable,
+      tableName: systemTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListSystem );
 
   }
 
   @override
-  Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID) {
+  Stream<List<Platform>> getPlatformsFromSystem(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: platformEntity.platformTable,
-      rightTableName: systemEntity.systemTable,
+      leftTableName: platformTable,
+      rightTableName: systemTable,
       leftResults: true,
       relationID: ID,
     ).asStream().map( _dynamicToListPlatform );
@@ -507,24 +502,24 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Tag
   @override
-  Stream<List<tagEntity.Tag>> getAllTags([List<String> sortFields]) {
+  Stream<List<Tag>> getAllTags([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: tagEntity.tagTable,
+      tableName: tagTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListTag );
 
   }
 
   @override
-  Stream<List<gameEntity.Game>> getGamesFromTag(int ID) {
+  Stream<List<Game>> getGamesFromTag(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: tagEntity.tagTable,
+      leftTableName: gameTable,
+      rightTableName: tagTable,
       leftResults: true,
       relationID: ID,
-      selectFields: gameEntity.gameFields,
+      selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -532,24 +527,24 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Type
   @override
-  Stream<List<typeEntity.PurchaseType>> getAllTypes([List<String> sortFields]) {
+  Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]) {
 
     return _dbConnector.readTable(
-      tableName: typeEntity.typeTable,
+      tableName: typeTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListType );
 
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID) {
+  Stream<List<Purchase>> getPurchasesFromType(int ID) {
 
     return _dbConnector.readRelation(
-      leftTableName: purchaseEntity.purchaseTable,
-      rightTableName: typeEntity.typeTable,
+      leftTableName: purchaseTable,
+      rightTableName: typeTable,
       leftResults: true,
       relationID: ID,
-      selectFields: purchaseEntity.purchaseFields,
+      selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -561,7 +556,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: gameEntity.gameTable,
+      tableName: gameTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -573,7 +568,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateDLC<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -585,7 +580,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: platformEntity.platformTable,
+      tableName: platformTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -597,7 +592,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updatePurchase<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: purchaseEntity.purchaseTable,
+      tableName: purchaseTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -609,7 +604,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateStore<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: storeEntity.storeTable,
+      tableName: storeTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -621,7 +616,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateSystem<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: systemEntity.systemTable,
+      tableName: systemTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -633,7 +628,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateTag<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: tagEntity.tagTable,
+      tableName: tagTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -645,7 +640,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> updateType<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
-      tableName: typeEntity.typeTable,
+      tableName: typeTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
@@ -660,7 +655,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteGame(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: gameEntity.gameTable,
+      tableName: gameTable,
       ID: ID,
     );
 
@@ -670,8 +665,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteGamePlatform(int gameID, int platformID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: platformEntity.platformTable,
+      leftTableName: gameTable,
+      rightTableName: platformTable,
       leftID: gameID,
       rightID: platformID,
     );
@@ -682,8 +677,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: gameTable,
+      rightTableName: purchaseTable,
       leftID: gameID,
       rightID: purchaseID,
     );
@@ -694,9 +689,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteGameDLC(int dlcID) {
 
     return _dbConnector.updateTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       ID: dlcID,
-      fieldName: dlcEntity.baseGameField,
+      fieldName: dlc_baseGameField,
       newValue: null,
     );
 
@@ -706,8 +701,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteGameTag(int gameID, int tagID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: gameEntity.gameTable,
-      rightTableName: tagEntity.tagTable,
+      leftTableName: gameTable,
+      rightTableName: tagTable,
       leftID: gameID,
       rightID: tagID,
     );
@@ -720,7 +715,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteDLC(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: dlcEntity.dlcTable,
+      tableName: dlcTable,
       ID: ID,
     );
 
@@ -730,8 +725,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: dlcEntity.dlcTable,
-      rightTableName: purchaseEntity.purchaseTable,
+      leftTableName: dlcTable,
+      rightTableName: purchaseTable,
       leftID: dlcID,
       rightID: purchaseID,
     );
@@ -744,7 +739,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deletePlatform(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: platformEntity.platformTable,
+      tableName: platformTable,
       ID: ID,
     );
 
@@ -754,8 +749,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deletePlatformSystem(int platformID, int systemID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: platformEntity.platformTable,
-      rightTableName: systemEntity.systemTable,
+      leftTableName: platformTable,
+      rightTableName: systemTable,
       leftID: platformID,
       rightID: systemID,
     );
@@ -768,7 +763,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deletePurchase(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: purchaseEntity.purchaseTable,
+      tableName: purchaseTable,
       ID: ID,
     );
 
@@ -778,8 +773,8 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deletePurchaseType(int purchaseID, int typeID) {
 
     return _dbConnector.deleteRelation(
-      leftTableName: purchaseEntity.purchaseTable,
-      rightTableName: typeEntity.typeTable,
+      leftTableName: purchaseTable,
+      rightTableName: typeTable,
       leftID: purchaseID,
       rightID: typeID,
     );
@@ -792,7 +787,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteStore(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: storeEntity.storeTable,
+      tableName: storeTable,
       ID: ID,
     );
 
@@ -802,9 +797,9 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteStorePurchase(int purchaseID) {
 
     return _dbConnector.updateTable(
-      tableName: purchaseEntity.purchaseTable,
+      tableName: purchaseTable,
       ID: purchaseID,
-      fieldName: purchaseEntity.storeField,
+      fieldName: purc_storeField,
       newValue: null,
     );
 
@@ -816,7 +811,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteSystem(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: systemEntity.systemTable,
+      tableName: systemTable,
       ID: ID,
     );
 
@@ -828,7 +823,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteTag(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: tagEntity.tagTable,
+      tableName: tagTable,
       ID: ID,
     );
 
@@ -840,7 +835,7 @@ class CollectionRepository implements ICollectionRepository {
   Future<dynamic> deleteType(int ID) {
 
     return _dbConnector.deleteTable(
-      tableName: typeEntity.typeTable,
+      tableName: typeTable,
       ID: ID,
     );
 
@@ -849,24 +844,24 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<Entity>> getSearchStream(String tableName, String query, int maxResults) {
+  Stream<List<CollectionItem>> getSearchStream(String tableName, String query, int maxResults) {
 
     switch(tableName) {
-      case gameEntity.gameTable:
+      case gameTable:
         return getGamesWithName(query, maxResults);
-      case dlcEntity.dlcTable:
+      case dlcTable:
         return getDLCsWithName(query, maxResults);
-      case platformEntity.platformTable:
+      case platformTable:
         return getPlatformsWithName(query, maxResults);
-      case purchaseEntity.purchaseTable:
+      case purchaseTable:
         return getPurchasesWithDescription(query, maxResults);
-      case storeEntity.storeTable:
+      case storeTable:
         return getStoresWithName(query, maxResults);
-      case systemEntity.systemTable:
+      case systemTable:
         return getSystemsWithName(query, maxResults);
-      case tagEntity.tagTable:
+      case tagTable:
         return getTagsWithName(query, maxResults);
-      case typeEntity.typeTable:
+      case typeTable:
         return getTypesWithName(query, maxResults);
     }
     return null;
@@ -874,24 +869,24 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<gameEntity.Game>> getGamesWithName(String nameQuery, int maxResults) {
+  Stream<List<Game>> getGamesWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: gameEntity.gameTable,
-      searchField: gameEntity.nameField,
+      tableName: gameTable,
+      searchField: game_nameField,
       query: nameQuery,
-      fieldNames: gameEntity.gameFields,
+      fieldNames: gameFields,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<dlcEntity.DLC>> getDLCsWithName(String nameQuery, int maxResults) {
+  Stream<List<DLC>> getDLCsWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: dlcEntity.dlcTable,
-      searchField: dlcEntity.nameField,
+      tableName: dlcTable,
+      searchField: dlc_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListDLC );
@@ -899,11 +894,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<platformEntity.Platform>> getPlatformsWithName(String nameQuery, int maxResults) {
+  Stream<List<Platform>> getPlatformsWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: platformEntity.platformTable,
-      searchField: platformEntity.nameField,
+      tableName: platformTable,
+      searchField: plat_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListPlatform );
@@ -911,24 +906,24 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String descQuery, int maxResults) {
+  Stream<List<Purchase>> getPurchasesWithDescription(String descQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: purchaseEntity.purchaseTable,
-      searchField: purchaseEntity.descriptionField,
+      tableName: purchaseTable,
+      searchField: purc_descriptionField,
       query: descQuery,
-      fieldNames: purchaseEntity.purchaseFields,
+      fieldNames: purchaseFields,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
-  Stream<List<storeEntity.Store>> getStoresWithName(String nameQuery, int maxResults) {
+  Stream<List<Store>> getStoresWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: storeEntity.storeTable,
-      searchField: storeEntity.nameField,
+      tableName: storeTable,
+      searchField: stor_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListStore );
@@ -936,11 +931,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<systemEntity.System>> getSystemsWithName(String nameQuery, int maxResults) {
+  Stream<List<System>> getSystemsWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: systemEntity.systemTable,
-      searchField: systemEntity.nameField,
+      tableName: systemTable,
+      searchField: sys_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListSystem );
@@ -948,11 +943,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<tagEntity.Tag>> getTagsWithName(String nameQuery, int maxResults) {
+  Stream<List<Tag>> getTagsWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: tagEntity.tagTable,
-      searchField: tagEntity.nameField,
+      tableName: tagTable,
+      searchField: tag_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListTag );
@@ -960,11 +955,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String nameQuery, int maxResults) {
+  Stream<List<PurchaseType>> getTypesWithName(String nameQuery, int maxResults) {
 
     return _dbConnector.readTableSearch(
-      tableName: typeEntity.typeTable,
-      searchField: typeEntity.nameField,
+      tableName: typeTable,
+      searchField: type_nameField,
       query: nameQuery,
       limitResults: maxResults,
     ).asStream().map( _dynamicToListType );
@@ -978,7 +973,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return _imageConnector.uploadImage(
       imagePath: uploadImagePath,
-      tableName: gameEntity.gameTable,
+      tableName: gameTable,
       imageName: gameID.toString(),
     );
 
@@ -990,7 +985,7 @@ class CollectionRepository implements ICollectionRepository {
   String getGameCoverURL(int gameID) {
 
     return _imageConnector.getDownloadURL(
-      tableName: gameEntity.gameTable,
+      tableName: gameTable,
       imageName: gameID.toString(),
     );
 
@@ -998,60 +993,76 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DOWNLOAD
 
   //#region Dynamic Map to List
-  List<gameEntity.Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
+  List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
 
-    return gameEntity.Game.fromDynamicMapList(results);
-
-  }
-
-  List<dlcEntity.DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
-
-    return dlcEntity.DLC.fromDynamicMapList(results);
+    return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
+      return Game.fromEntity(gameEntity);
+    }).toList();
 
   }
 
-  List<platformEntity.Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
+  List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
 
-    return platformEntity.Platform.fromDynamicMapList(results);
-
-  }
-
-  List<purchaseEntity.Purchase> _dynamicToListPurchase(List<Map<String, Map<String, dynamic>>> results) {
-
-    return purchaseEntity.Purchase.fromDynamicMapList(results);
+    return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
+      return DLC.fromEntity(dlcEntity);
+    }).toList();
 
   }
 
-  List<storeEntity.Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
+  List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
 
-    return storeEntity.Store.fromDynamicMapList(results);
-
-  }
-
-  List<systemEntity.System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
-
-    return systemEntity.System.fromDynamicMapList(results);
+    return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
+      return Platform.fromEntity(platformEntity);
+    }).toList();
 
   }
 
-  List<tagEntity.Tag> _dynamicToListTag(List<Map<String, Map<String, dynamic>>> results) {
+  List<Purchase> _dynamicToListPurchase(List<Map<String, Map<String, dynamic>>> results) {
 
-    return tagEntity.Tag.fromDynamicMapList(results);
-
-  }
-
-  List<typeEntity.PurchaseType> _dynamicToListType(List<Map<String, Map<String, dynamic>>> results) {
-
-    return typeEntity.PurchaseType.fromDynamicMapList(results);
+    return PurchaseEntity.fromDynamicMapList(results).map( (PurchaseEntity purchaseEntity) {
+      return Purchase.fromEntity(purchaseEntity);
+    }).toList();
 
   }
 
-  gameEntity.Game _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
+  List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
 
-    gameEntity.Game singleGame;
+    return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
+      return Store.fromEntity(storeEntity);
+    }).toList();
+
+  }
+
+  List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
+
+    return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
+      return System.fromEntity(systemEntity);
+    }).toList();
+
+  }
+
+  List<Tag> _dynamicToListTag(List<Map<String, Map<String, dynamic>>> results) {
+
+    return TagEntity.fromDynamicMapList(results).map( (TagEntity tagEntity) {
+      return Tag.fromEntity(tagEntity);
+    }).toList();
+
+  }
+
+  List<PurchaseType> _dynamicToListType(List<Map<String, Map<String, dynamic>>> results) {
+
+    return PurchaseTypeEntity.fromDynamicMapList(results).map( (PurchaseTypeEntity typeEntity) {
+      return PurchaseType.fromEntity(typeEntity);
+    }).toList();
+
+  }
+
+  Game _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
+
+    Game singleGame;
 
     if(results.isEmpty) {
-      singleGame = gameEntity.Game(ID: -1);
+      singleGame = Game(ID: -1);
     } else {
       singleGame = _dynamicToListGame(results).first;
     }
@@ -1060,12 +1071,26 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  storeEntity.Store _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
+  DLC _dynamicToSingleDLC(List<Map<String, Map<String, dynamic>>> results) {
 
-    storeEntity.Store singleStore;
+    DLC singleDLC;
 
     if(results.isEmpty) {
-      singleStore = storeEntity.Store(ID: -1);
+      singleDLC = DLC(ID: -1);
+    } else {
+      singleDLC = _dynamicToListDLC(results).first;
+    }
+
+    return singleDLC;
+
+  }
+
+  Store _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
+
+    Store singleStore;
+
+    if(results.isEmpty) {
+      singleStore = Store(ID: -1);
     } else {
       singleStore = _dynamicToListStore(results).first;
     }

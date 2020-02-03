@@ -1,36 +1,12 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/purchase_entity.dart';
 
-const purchaseTable = "Purchase";
+import 'collection_item.dart';
 
-const List<String> purchaseFields = [
-  IDField,
-  descriptionField,
-  priceField,
-  externalCreditField,
-  dateField,
-  originalPriceField,
-  storeField,
-];
 
-const String descriptionField = 'Description';
-const String priceField = 'Price';
-const String externalCreditField = 'External Credit';
-const String dateField = 'Date';
-const String originalPriceField = 'Original Price';
-
-const String storeField = 'Store';
-
-class Purchase extends Entity {
-
-  final String description;
-  final double price;
-  final double externalCredit;
-  final DateTime date;
-  final double originalPrice;
-
-  final int store;
+class Purchase extends CollectionItem {
 
   Purchase({
     @required int ID,
@@ -42,6 +18,45 @@ class Purchase extends Entity {
 
     this.store,
   }) : super(ID: ID);
+
+  final String description;
+  final double price;
+  final double externalCredit;
+  final DateTime date;
+  final double originalPrice;
+
+  final int store;
+
+  static Purchase fromEntity(PurchaseEntity entity) {
+
+    return Purchase(
+      ID: entity.ID,
+      description: entity.description,
+      price: entity.price,
+      externalCredit: entity.externalCredit,
+      date: entity.date,
+      originalPrice: entity.originalPrice,
+
+      store: entity.store,
+    );
+
+  }
+
+  @override
+  PurchaseEntity toEntity() {
+
+    return PurchaseEntity(
+      ID: this.ID,
+      description: this.description,
+      price: this.price,
+      externalCredit: this.externalCredit,
+      date: this.date,
+      originalPrice: this.originalPrice,
+
+      store: this.store,
+    );
+
+  }
 
   @override
   Purchase copyWith({
@@ -88,41 +103,6 @@ class Purchase extends Entity {
 
   }
 
-  static Purchase fromDynamicMap(Map<String, dynamic> map) {
-
-    return Purchase(
-      ID: map[IDField],
-      description: map[descriptionField],
-      price: map[priceField],
-      externalCredit: map[externalCreditField],
-      date: map[dateField],
-      originalPrice: map[originalPriceField],
-
-      store: map[storeField],
-    );
-
-  }
-
-  static List<Purchase> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<Purchase> purchasesList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Map<String, dynamic> _tempFixMap = Map.from(map[purchaseTable]);
-      _tempFixMap.addAll(
-        map[null],
-      );
-
-      Purchase purchase = Purchase.fromDynamicMap(_tempFixMap);
-      //Purchase purchase = Purchase.fromDynamicMap(map[purchaseTable]);
-
-      purchasesList.add(purchase);
-    });
-
-    return purchasesList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -138,11 +118,11 @@ class Purchase extends Entity {
 
     return '$purchaseTable { '
         '$IDField: $ID, '
-        '$descriptionField: $description, '
-        '$priceField: $price, '
-        '$externalCreditField: $externalCredit, '
-        '$dateField: $date, '
-        '$originalPriceField: $originalPrice'
+        '$purc_descriptionField: $description, '
+        '$purc_priceField: $price, '
+        '$purc_externalCreditField: $externalCredit, '
+        '$purc_dateField: $date, '
+        '$purc_originalPriceField: $originalPrice'
         ' }';
 
   }

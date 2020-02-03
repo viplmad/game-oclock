@@ -1,4 +1,4 @@
-import 'package:game_collection/model/entity.dart';
+import 'package:game_collection/model/collection_item.dart';
 import 'package:game_collection/model/game.dart' as gameEntity;
 import 'package:game_collection/model/dlc.dart' as dlcEntity;
 import 'package:game_collection/model/purchase.dart' as purchaseEntity;
@@ -15,14 +15,14 @@ abstract class ICollectionRepository {
 
   //#region CREATE
     //Game
-  Future<dynamic> insertGame(String name, String edition);
+  Future<gameEntity.Game> insertGame(String name, String edition);
   Future<dynamic> insertGamePlatform(int gameID, int platformID);
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
   Future<dynamic> insertGameDLC(int gameID, int dlcID);
   Future<dynamic> insertGameTag(int gameID, int tagID);
 
     //DLC
-  Future<dynamic> insertDLC(String name);
+  Future<dlcEntity.DLC> insertDLC(String name);
   Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID);
 
     //Platform
@@ -154,7 +154,7 @@ abstract class ICollectionRepository {
 
 
   //#region SEARCH
-  Stream<List<Entity>> getSearchStream(String tableName, String query, int maxResults);
+  Stream<List<CollectionItem>> getSearchStream(String tableName, String query, int maxResults);
   Stream<List<gameEntity.Game>> getGamesWithName(String name, int maxResults);
   Stream<List<dlcEntity.DLC>> getDLCsWithName(String name, int maxResults);
   Stream<List<platformEntity.Platform>> getPlatformsWithName(String name, int maxResults);

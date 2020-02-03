@@ -1,24 +1,38 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/type_entity.dart';
 
-const String typeTable = "Type";
+import 'collection_item.dart';
 
-const List<String> typeFields = [
-  IDField,
-  nameField,
-];
 
-const String nameField = 'Name';
-
-class PurchaseType extends Entity{
-
-  final String name;
+class PurchaseType extends CollectionItem {
 
   PurchaseType({
     @required int ID,
     this.name,
   }) : super(ID: ID);
+
+  final String name;
+
+  static PurchaseType fromEntity(PurchaseTypeEntity entity) {
+
+    return PurchaseType(
+      ID: entity.ID,
+      name: entity.name,
+    );
+
+  }
+
+  @override
+  PurchaseTypeEntity toEntity() {
+
+    return PurchaseTypeEntity(
+      ID: this.ID,
+      name: this.name,
+    );
+
+  }
 
   @override
   PurchaseType copyWith({
@@ -46,29 +60,6 @@ class PurchaseType extends Entity{
 
   }
 
-  static PurchaseType fromDynamicMap(Map<String, dynamic> map) {
-
-    return PurchaseType(
-      ID: map[IDField],
-      name: map[nameField],
-    );
-
-  }
-
-  static List<PurchaseType> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<PurchaseType> typesList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      PurchaseType type = PurchaseType.fromDynamicMap(map[typeTable]);
-
-      typesList.add(type);
-    });
-
-    return typesList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -80,7 +71,7 @@ class PurchaseType extends Entity{
 
     return '$typeTable { '
         '$IDField: $ID, '
-        '$nameField: $name'
+        '$type_nameField: $name'
         ' }';
 
   }

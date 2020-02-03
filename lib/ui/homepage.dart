@@ -1,21 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/entity.dart';
 import 'package:game_collection/model/bar_item.dart';
 import 'package:game_collection/model/app_tab.dart';
 
-
-import 'package:game_collection/bloc/entity_list/entity_list.dart';
+import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
 
 import 'package:game_collection/ui/helpers/loading_icon.dart';
 import 'package:game_collection/ui/helpers/show_snackbar.dart';
-import 'package:game_collection/ui/helpers/entity_view.dart';
 
 import 'bar_items.dart';
+import 'item_list.dart';
 
 class HomePage extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GameListBloc>(
+          create: (BuildContext context) {
+            return GameListBloc(
+              itemBloc: BlocProvider.of<GameBloc>(context),
+            )..add(LoadItemList());
+          },
+        ),
+        BlocProvider<DLCListBloc>(
+          create: (BuildContext context) {
+            return DLCListBloc(
+              itemBloc: BlocProvider.of<DLCBloc>(context),
+            )..add(LoadItemList());
+          },
+        ),
+      ],
+      child: TabHomepage(),
+    );
+
+  }
+
+}
+
+class TabHomepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +52,31 @@ class HomePage extends StatelessWidget {
       builder: (BuildContext context, AppTab state) {
         BarItem barItem = barItems.elementAt(AppTab.values.indexOf(state));
 
-        EntityListBloc selectedBloc;
+        ItemBloc selectedItemBloc;
+        ItemListBloc selectedItemListBloc;
         switch(state) {
           case AppTab.game:
-            selectedBloc = BlocProvider.of<GameListBloc>(context);
+            selectedItemBloc = BlocProvider.of<GameBloc>(context);
+            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
             break;
           case AppTab.dlc:
-            selectedBloc = BlocProvider.of<DLCListBloc>(context);
+            selectedItemBloc = BlocProvider.of<DLCBloc>(context);
+            selectedItemListBloc = BlocProvider.of<DLCListBloc>(context);
             break;
           case AppTab.purchase:
-          // TODO: Handle this case.
-            selectedBloc = BlocProvider.of<GameListBloc>(context);
+            //TODO: Handle this case.
+            selectedItemBloc = BlocProvider.of<GameBloc>(context);
+            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
             break;
           case AppTab.store:
-          // TODO: Handle this case.
-            selectedBloc = BlocProvider.of<GameListBloc>(context);
+            //TODO: Handle this case.
+            selectedItemBloc = BlocProvider.of<GameBloc>(context);
+            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
             break;
           case AppTab.platform:
-          // TODO: Handle this case.
-            selectedBloc = BlocProvider.of<GameListBloc>(context);
+            //TODO: Handle this case.
+            selectedItemBloc = BlocProvider.of<GameBloc>(context);
+            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
             break;
         }
 
@@ -53,7 +87,8 @@ class HomePage extends StatelessWidget {
           ),
           body: BodySelector(
             activeTab: state,
-            bloc: selectedBloc,
+            itemBloc: selectedItemBloc,
+            itemListBloc: selectedItemListBloc,
           ),
           bottomNavigationBar: TabSelector(
             activeTab: state,
@@ -64,7 +99,7 @@ class HomePage extends StatelessWidget {
           floatingActionButton: FABSelector(
             activeTab: state,
             onTap: () {
-              selectedBloc.add(AddEntity(null));
+              selectedItemBloc.add(AddItem(null));
             },
           ),
         );
@@ -128,120 +163,73 @@ class FABSelector extends StatelessWidget {
 class BodySelector extends StatelessWidget {
 
   final AppTab activeTab;
-  final EntityListBloc bloc;
+  final ItemBloc itemBloc;
+  final ItemListBloc itemListBloc;
 
-  const BodySelector({Key key, @required this.activeTab, @required this.bloc}) : super(key: key);
+  const BodySelector({Key key, @required this.activeTab, @required this.itemBloc, @required this.itemListBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<EntityListBloc, EntityListState>(
-      bloc: bloc,
-      builder: (BuildContext context, EntityListState state) {
-
-        if(state is EntityListLoaded) {
-          return EntityList(
-            entities: state.entities,
-            bloc: bloc,
+    return BlocListener<ItemBloc, ItemState>(
+      bloc: itemBloc,
+      listener: (BuildContext context, ItemState state) {
+        if(state is ItemAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Added",
           );
         }
-        //else EntityListLoading
-        return Center(
-          child: LoadingIcon(),
-        );
-
+        if(state is ItemNotAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to add",
+            snackBarAction: dialogSnackBarAction(
+                context,
+                label: "More",
+                title: "Unable to add",
+                content: state.error,
+            ),
+          );
+        }
+        if(state is ItemDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Deleted",
+          );
+        }
+        if(state is ItemNotDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to delete",
+            snackBarAction: dialogSnackBarAction(
+                context,
+                label: "More",
+                title: "Unable to delete",
+                content: state.error,
+            ),
+          );
+        }
       },
-    );
+      child: BlocBuilder<ItemListBloc, ItemListState>(
+        bloc: itemListBloc,
+        builder: (BuildContext context, ItemListState state) {
 
-  }
-
-}
-
-class EntityList extends StatelessWidget {
-  final List<Entity> entities;
-  final EntityListBloc bloc;
-
-  EntityList({Key key, @required this.entities, @required this.bloc}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    return BlocListener<EntityListBloc, EntityListState>(
-      bloc: bloc,
-      listener: (BuildContext context, EntityListState state) {
-        if(state is EntityListNotLoaded)
-        showSnackBar(
-          scaffoldState: Scaffold.of(context),
-          message: state.error,
-        );
-      },
-      child: Scrollbar(
-        child: ListView.builder(
-          itemCount: entities.length,
-          itemBuilder: (BuildContext context, int index) {
-            Entity result = entities[index];
-
-            return DismissibleEntity(
-              entity: result,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text("Hero"),
-                        ),
-                        body: Center(),
-                      );
-                    },
-                  ),
-                );
-              },
-              onDismissed: (DismissDirection direction) {
-                bloc.add(DeleteEntity(result));
-              },
-              confirmDismiss: (DismissDirection direction) {
-
-                return showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return confirmDelete(context, result);
-                  },
-                );
-
-              },
+          if(state is ItemListLoaded) {
+            return ItemList(
+              items: state.items,
+              itemBloc: itemBloc,
             );
-          },
-        ),
+          }
+          //else EntityListLoading
+          return Center(
+            child: LoadingIcon(),
+          );
+
+        },
       ),
     );
 
-  }
-
-  Widget confirmDelete(BuildContext context, Entity entity) {
-    return AlertDialog(
-      title: Text("Delete"),
-      content: ListTile(
-        title: Text("Are you sure you want to delete " + entity.getTitle() + "?"),
-        subtitle: Text("This action cannot be undone"),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            Navigator.maybePop(context);
-          },
-        ),
-        RaisedButton(
-          child: Text("Delete", style: TextStyle(color: Colors.white),),
-          onPressed: () {
-            Navigator.maybePop(context, true);
-          },
-          color: Colors.red,
-        )
-      ],
-    );
   }
 
 }

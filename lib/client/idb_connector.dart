@@ -10,7 +10,7 @@ abstract class IDBConnector {
   bool isUpdating();
 
   //#region CREATE
-  Future<dynamic> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues});
+  Future<List<Map<String, Map<String, dynamic>>>> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields});
   Future<dynamic> insertRelation({@required String leftTableName, @required String rightTableName, @required int leftTableID, @required int rightTableID});
   //#endregion CREATE
 

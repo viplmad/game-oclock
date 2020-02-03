@@ -1,32 +1,12 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/dlc_entity.dart';
 
-const String dlcTable = "DLC";
+import 'collection_item.dart';
 
-const List<String> dlcFields = [
-  IDField,
-  nameField,
-  releaseYearField,
-  coverField,
-  finishDateField,
-  baseGameField,
-];
 
-const String nameField = 'Name';
-const String releaseYearField = 'Release Year';
-const String coverField = 'Cover';
-const String finishDateField = 'Finish Date';
-
-const String baseGameField = 'Base Game';
-
-class DLC extends Entity {
-
-  final String name;
-  final int releaseYear;
-  final DateTime finishDate;
-
-  final int baseGame;
+class DLC extends CollectionItem {
 
   DLC({
     @required int ID,
@@ -36,6 +16,39 @@ class DLC extends Entity {
 
     this.baseGame,
   }) : super(ID: ID);
+
+  final String name;
+  final int releaseYear;
+  final DateTime finishDate;
+
+  final int baseGame;
+
+  static DLC fromEntity(DLCEntity entity) {
+
+    return DLC(
+      ID: entity.ID,
+      name: entity.name,
+      releaseYear: entity.releaseYear,
+      finishDate: entity.finishDate,
+
+      baseGame: entity.baseGame,
+    );
+
+  }
+
+  @override
+  DLCEntity toEntity() {
+
+    return DLCEntity(
+      ID: this.ID,
+      name: this.name,
+      releaseYear: this.releaseYear,
+      finishDate: this.finishDate,
+
+      baseGame: this.baseGame,
+    );
+
+  }
 
   @override
   DLC copyWith({
@@ -67,33 +80,6 @@ class DLC extends Entity {
   @override
   String getTitle() => this.name;
 
-  static DLC fromDynamicMap(Map<String, dynamic> map) {
-
-    return DLC(
-      ID: map[IDField],
-      name: map[nameField],
-      releaseYear: map[releaseYearField],
-      finishDate: map[finishDateField],
-
-      baseGame: map[baseGameField],
-    );
-
-  }
-
-  static List<DLC> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<DLC> dlcsList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      DLC dlc = DLC.fromDynamicMap(map[dlcTable]);
-
-      dlcsList.add(dlc);
-    });
-
-    return dlcsList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -107,9 +93,9 @@ class DLC extends Entity {
 
     return '$dlcTable { '
         '$IDField: $ID, '
-        '$nameField: $name, '
-        '$releaseYearField: $releaseYear, '
-        '$finishDateField: $finishDate'
+        '$dlc_nameField: $name, '
+        '$dlc_releaseYearField: $releaseYear, '
+        '$dlc_finishDateField: $finishDate'
         ' }';
 
   }

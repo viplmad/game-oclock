@@ -1,21 +1,10 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/system_entity.dart';
 
-const String systemTable = "System";
+import 'collection_item.dart';
 
-const List<String> systemTables = [
-  IDField,
-  nameField,
-  iconField,
-  generationField,
-  manufacturerField,
-];
-
-const String nameField = 'Name';
-const String iconField = 'Icon';
-const String generationField = 'Generation';
-const String manufacturerField = 'Manufacturer';
 
 List<String> manufacturers = [
   "Nintendo",
@@ -24,11 +13,7 @@ List<String> manufacturers = [
   "Sega",
 ];
 
-class System extends Entity {
-
-  final String name;
-  final int generation;
-  final String manufacturer;
+class System extends CollectionItem {
 
   System({
     @required int ID,
@@ -36,6 +21,33 @@ class System extends Entity {
     this.generation,
     this.manufacturer
   }) : super(ID: ID);
+
+  final String name;
+  final int generation;
+  final String manufacturer;
+
+  static System fromEntity(SystemEntity entity) {
+
+    return System(
+      ID: entity.ID,
+      name: entity.name,
+      generation: entity.generation,
+      manufacturer: entity.manufacturer,
+    );
+
+  }
+
+  @override
+  SystemEntity toEntity() {
+
+    return SystemEntity(
+      ID: this.ID,
+      name: this.name,
+      generation: this.generation,
+      manufacturer: this.manufacturer,
+    );
+
+  }
 
   @override
   System copyWith({
@@ -74,30 +86,7 @@ class System extends Entity {
 
   }
 
-  static System fromDynamicMap(Map<String, dynamic> map) {
-
-    return System(
-      ID: map[IDField],
-      name: map[nameField],
-      generation: map[generationField],
-      manufacturer: map[manufacturerField],
-    );
-
-  }
-
-  static List<System> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<System> systemsList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      System system = System.fromDynamicMap(map[systemTable]);
-
-      systemsList.add(system);
-    });
-
-    return systemsList;
-
-  }@override
+  @override
   List<Object> get props => [
     ID,
     name,
@@ -110,9 +99,9 @@ class System extends Entity {
 
     return '$systemTable { '
         '$IDField: $ID, '
-        '$nameField: $name, '
-        '$generationField: $generation, '
-        '$manufacturerField: $manufacturer'
+        '$sys_nameField: $name, '
+        '$sys_generationField: $generation, '
+        '$sys_manufacturerField: $manufacturer'
         ' }';
 
   }

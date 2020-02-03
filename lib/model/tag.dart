@@ -1,24 +1,38 @@
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/tag_entity.dart';
 
-const String tagTable = "Tag";
+import 'collection_item.dart';
 
-const tagFields = [
-  IDField,
-  nameField,
-];
 
-const nameField = 'Name';
-
-class Tag extends Entity {
-
-  final String name;
+class Tag extends CollectionItem {
 
   Tag({
     @required int ID,
     this.name
   }) : super(ID: ID);
+
+  final String name;
+
+  static Tag fromEntity(TagEntity entity) {
+
+    return Tag(
+      ID: entity.ID,
+      name: entity.name,
+    );
+
+  }
+
+  @override
+  TagEntity toEntity() {
+
+    return TagEntity(
+      ID: this.ID,
+      name: this.name,
+    );
+
+  }
 
   @override
   Tag copyWith({
@@ -46,29 +60,6 @@ class Tag extends Entity {
 
   }
 
-  static Tag fromDynamicMap(Map<String, dynamic> map) {
-
-    return Tag(
-      ID: map[IDField],
-      name: map[nameField],
-    );
-
-  }
-
-  static List<Tag> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    List<Tag> tagsList = [];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Tag tag = Tag.fromDynamicMap(map[tagTable]);
-
-      tagsList.add(tag);
-    });
-
-    return tagsList;
-
-  }
-
   @override
   List<Object> get props => [
     ID,
@@ -80,7 +71,7 @@ class Tag extends Entity {
 
     return '$tagTable { '
         '$IDField: $ID, '
-        '$nameField: $name'
+        '$tag_nameField: $name'
         ' }';
 
   }
