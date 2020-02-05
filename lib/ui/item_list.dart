@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/ui/helpers/item_view.dart';
+import 'package:game_collection/ui/common/item_view.dart';
 
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
+
+import 'dlc_detail.dart';
 
 class ItemList extends StatelessWidget {
 
@@ -29,12 +31,7 @@ class ItemList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: Text(result.getTitle()),
-                      ),
-                      body: Center(),
-                    );
+                    return DLCDetail();
                   },
                 ),
               );

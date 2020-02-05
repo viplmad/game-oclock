@@ -5,35 +5,28 @@ import 'package:meta/meta.dart';
 import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/model/collection_item.dart';
-import 'package:game_collection/model/dlc.dart';
+import 'package:game_collection/model/system.dart';
 
 import 'item.dart';
 
 
-class DLCBloc extends ItemBloc {
+class SystemBloc extends ItemBloc {
 
-  DLCBloc({
+  SystemBloc({
     @required ICollectionRepository collectionRepository,
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<DLC> createFuture() {
+  Future<System> createFuture() {
 
-    return collectionRepository.insertDLC('');
+    return collectionRepository.insertSystem('');
 
   }
 
   @override
   Future<dynamic> deleteFuture(CollectionItem item) {
 
-    return collectionRepository.deleteDLC(item.ID);
-
-  }
-
-  @override
-  Future<DLC> updateFuture(UpdateItemField event) {
-
-    return collectionRepository.updateDLC(event.item.ID, event.field, event.value);
+    return collectionRepository.deleteSystem(item.ID);
 
   }
 

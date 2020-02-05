@@ -1,12 +1,5 @@
-import 'package:game_collection/model/collection_item.dart';
-import 'package:game_collection/model/game.dart' as gameEntity;
-import 'package:game_collection/model/dlc.dart' as dlcEntity;
-import 'package:game_collection/model/purchase.dart' as purchaseEntity;
-import 'package:game_collection/model/platform.dart' as platformEntity;
-import 'package:game_collection/model/store.dart' as storeEntity;
-import 'package:game_collection/model/system.dart' as systemEntity;
-import 'package:game_collection/model/tag.dart' as tagEntity;
-import 'package:game_collection/model/type.dart' as typeEntity;
+import 'package:game_collection/model/model.dart';
+
 
 abstract class ICollectionRepository {
 
@@ -15,14 +8,14 @@ abstract class ICollectionRepository {
 
   //#region CREATE
     //Game
-  Future<gameEntity.Game> insertGame(String name, String edition);
+  Future<Game> insertGame(String name, String edition);
   Future<dynamic> insertGamePlatform(int gameID, int platformID);
   Future<dynamic> insertGamePurchase(int gameID, int purchaseID);
   Future<dynamic> insertGameDLC(int gameID, int dlcID);
   Future<dynamic> insertGameTag(int gameID, int tagID);
 
     //DLC
-  Future<dlcEntity.DLC> insertDLC(String name);
+  Future<DLC> insertDLC(String name);
   Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID);
 
     //Platform
@@ -50,44 +43,46 @@ abstract class ICollectionRepository {
 
   //#region READ
     //Game
-  Stream<List<gameEntity.Game>> getAllGames([List<String> sortFields]);
-  Stream<List<platformEntity.Platform>> getPlatformsFromGame(int ID);
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromGame(int ID);
-  Stream<List<dlcEntity.DLC>> getDLCsFromGame(int ID);
-  Stream<List<tagEntity.Tag>> getTagsFromGame(int ID);
+  Stream<List<Game>> getAllGames([List<String> sortFields]);
+  Stream<Game> getGameWithID(int ID);
+  Stream<List<Platform>> getPlatformsFromGame(int ID);
+  Stream<List<Purchase>> getPurchasesFromGame(int ID);
+  Stream<List<DLC>> getDLCsFromGame(int ID);
+  Stream<List<Tag>> getTagsFromGame(int ID);
 
     //DLC
-  Stream<List<dlcEntity.DLC>> getAllDLCs([List<String> sortFields]);
-  Stream<gameEntity.Game> getBaseGameFromDLC(int baseGameID);
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromDLC(int ID);
+  Stream<List<DLC>> getAllDLCs([List<String> sortFields]);
+  Stream<DLC> getDLCWithID(int ID);
+  Stream<Game> getBaseGameFromDLC(int baseGameID);
+  Stream<List<Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
-  Stream<List<platformEntity.Platform>> getAllPlatforms([List<String> sortFields]);
-  Stream<List<gameEntity.Game>> getGamesFromPlatform(int ID);
-  Stream<List<systemEntity.System>> getSystemsFromPlatform(int ID);
+  Stream<List<Platform>> getAllPlatforms([List<String> sortFields]);
+  Stream<List<Game>> getGamesFromPlatform(int ID);
+  Stream<List<System>> getSystemsFromPlatform(int ID);
 
     //Purchase
-  Stream<List<purchaseEntity.Purchase>> getAllPurchases([List<String> sortFields]);
-  Stream<storeEntity.Store> getStoreFromPurchase(int storeID);
-  Stream<List<gameEntity.Game>> getGamesFromPurchase(int ID);
-  Stream<List<dlcEntity.DLC>> getDLCsFromPurchase(int ID);
-  Stream<List<typeEntity.PurchaseType>> getTypesFromPurchase(int ID);
+  Stream<List<Purchase>> getAllPurchases([List<String> sortFields]);
+  Stream<Store> getStoreFromPurchase(int storeID);
+  Stream<List<Game>> getGamesFromPurchase(int ID);
+  Stream<List<DLC>> getDLCsFromPurchase(int ID);
+  Stream<List<PurchaseType>> getTypesFromPurchase(int ID);
 
     //Store
-  Stream<List<storeEntity.Store>> getAllStores([List<String> sortFields]);
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromStore(int ID);
+  Stream<List<Store>> getAllStores([List<String> sortFields]);
+  Stream<List<Purchase>> getPurchasesFromStore(int ID);
 
     //System
-  Stream<List<systemEntity.System>> getAllSystems([List<String> sortFields]);
-  Stream<List<platformEntity.Platform>> getPlatformsFromSystem(int ID);
+  Stream<List<System>> getAllSystems([List<String> sortFields]);
+  Stream<List<Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
-  Stream<List<tagEntity.Tag>> getAllTags([List<String> sortFields]);
-  Stream<List<gameEntity.Game>> getGamesFromTag(int ID);
+  Stream<List<Tag>> getAllTags([List<String> sortFields]);
+  Stream<List<Game>> getGamesFromTag(int ID);
 
     //Type
-  Stream<List<typeEntity.PurchaseType>> getAllTypes([List<String> sortFields]);
-  Stream<List<purchaseEntity.Purchase>> getPurchasesFromType(int ID);
+  Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]);
+  Stream<List<Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
 
 
@@ -96,7 +91,7 @@ abstract class ICollectionRepository {
   Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue);
 
     //DLC
-  Future<dynamic> updateDLC<T>(int ID, String fieldName, T newValue);
+  Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue);
 
     //Platform
   Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue);
@@ -155,25 +150,25 @@ abstract class ICollectionRepository {
 
   //#region SEARCH
   Stream<List<CollectionItem>> getSearchStream(String tableName, String query, int maxResults);
-  Stream<List<gameEntity.Game>> getGamesWithName(String name, int maxResults);
-  Stream<List<dlcEntity.DLC>> getDLCsWithName(String name, int maxResults);
-  Stream<List<platformEntity.Platform>> getPlatformsWithName(String name, int maxResults);
-  Stream<List<purchaseEntity.Purchase>> getPurchasesWithDescription(String description, int maxResults);
-  Stream<List<storeEntity.Store>> getStoresWithName(String name, int maxResults);
-  Stream<List<systemEntity.System>> getSystemsWithName(String name, int maxResults);
-  Stream<List<tagEntity.Tag>> getTagsWithName(String name, int maxResults);
-  Stream<List<typeEntity.PurchaseType>> getTypesWithName(String name, int maxResults);
+  Stream<List<Game>> getGamesWithName(String name, int maxResults);
+  Stream<List<DLC>> getDLCsWithName(String name, int maxResults);
+  Stream<List<Platform>> getPlatformsWithName(String name, int maxResults);
+  Stream<List<Purchase>> getPurchasesWithDescription(String description, int maxResults);
+  Stream<List<Store>> getStoresWithName(String name, int maxResults);
+  Stream<List<System>> getSystemsWithName(String name, int maxResults);
+  Stream<List<Tag>> getTagsWithName(String name, int maxResults);
+  Stream<List<PurchaseType>> getTypesWithName(String name, int maxResults);
   //#endregion SEARCH
 
   //#region UPLOAD
     //Game
   Future<dynamic> uploadGameCover(int gameID, String uploadImage);
-  //TODO add more
+  //TODO: add more
   //#endregion UPLOAD
 
   //#region DOWNLOAD
     //Game
   String getGameCoverURL(int gameID);
-  //TODO add more
+  //TODO: add more
   //#ENDregion DOWNLOAD
 }

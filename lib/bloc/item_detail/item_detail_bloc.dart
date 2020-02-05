@@ -14,9 +14,7 @@ import 'item_detail.dart';
 abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   ItemDetailBloc({@required this.itemBloc}) {
-    itemSubscription = itemBloc.listen( (ItemState state) {
-      //TODO
-    });
+    itemSubscription = itemBloc.listen( mapItemStateToEvent );
   }
 
   final ItemBloc itemBloc;
@@ -32,6 +30,14 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
     if(event is LoadItem) {
 
       yield* _mapLoadToState(event);
+
+    } else if(event is LoadItemRelation) {
+
+      yield* _mapLoadRelationToState(event);
+
+    } else if(event is UpdateItem) {
+
+      yield* _mapUpdateToState(event);
 
     }
 
@@ -50,6 +56,36 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
       yield ItemNotLoaded(e.toString());
 
+    }
+
+  }
+
+  Stream<ItemDetailState> _mapLoadRelationToState(LoadItemRelation event) async* {
+
+  }
+
+  Stream<ItemDetailState> _mapUpdateToState(UpdateItem event) async* {
+
+    yield ItemLoaded(event.item);
+
+  }
+
+  void mapItemStateToEvent(ItemState itemState) {
+
+    if(itemState is ItemFieldUpdated) {
+
+      _mapUpdatedToEvent(itemState);
+
+    }
+
+  }
+
+  void _mapUpdatedToEvent(ItemFieldUpdated itemState) {
+
+    if(state is ItemLoaded) {
+      final itemUpdated = itemState.item;
+
+      add(UpdateItem(itemUpdated));
     }
 
   }

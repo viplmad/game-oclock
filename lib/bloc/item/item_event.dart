@@ -38,25 +38,11 @@ class DeleteItem extends ItemEvent {
       ' }';
 }
 
-abstract class UpdateItem extends ItemEvent {
-  const UpdateItem(this.item, this.field);
+class UpdateItemField extends ItemEvent {
+  const UpdateItemField(this.item, this.field, this.value);
 
   final CollectionItem item;
   final String field;
-
-  @override
-  List<Object> get props => [item, field];
-
-  @override
-  String toString() => 'UpdateItem { '
-      'item: $item, '
-      'item: $field'
-      ' }';
-}
-
-class UpdateItemField extends UpdateItem {
-  const UpdateItemField(CollectionItem item, String field, this.value) : super(item, field);
-
   final dynamic value;
 
   @override
@@ -70,9 +56,11 @@ class UpdateItemField extends UpdateItem {
       ' }';
 }
 
-class UpdateItemRelation extends UpdateItem {
-  const UpdateItemRelation(CollectionItem item, String field, this.otherItem) : super(item, field);
+class UpdateItemRelation extends ItemEvent {
+  const UpdateItemRelation(this.item, this.field, this.otherItem);
 
+  final CollectionItem item;
+  final String field;
   final CollectionItem otherItem;
 
   @override

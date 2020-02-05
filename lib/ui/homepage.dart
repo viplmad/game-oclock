@@ -8,8 +8,8 @@ import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
 
-import 'package:game_collection/ui/helpers/loading_icon.dart';
-import 'package:game_collection/ui/helpers/show_snackbar.dart';
+import 'package:game_collection/ui/common/loading_icon.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
 
 import 'bar_items.dart';
 import 'item_list.dart';
@@ -32,6 +32,27 @@ class HomePage extends StatelessWidget {
           create: (BuildContext context) {
             return DLCListBloc(
               itemBloc: BlocProvider.of<DLCBloc>(context),
+            )..add(LoadItemList());
+          },
+        ),
+        BlocProvider<PlatformListBloc>(
+          create: (BuildContext context) {
+            return PlatformListBloc(
+              itemBloc: BlocProvider.of<PlatformBloc>(context),
+            )..add(LoadItemList());
+          },
+        ),
+        BlocProvider<PurchaseListBloc>(
+          create: (BuildContext context) {
+            return PurchaseListBloc(
+              itemBloc: BlocProvider.of<PurchaseBloc>(context),
+            )..add(LoadItemList());
+          },
+        ),
+        BlocProvider<StoreListBloc>(
+          create: (BuildContext context) {
+            return StoreListBloc(
+              itemBloc: BlocProvider.of<StoreBloc>(context),
             )..add(LoadItemList());
           },
         ),
@@ -64,19 +85,16 @@ class TabHomepage extends StatelessWidget {
             selectedItemListBloc = BlocProvider.of<DLCListBloc>(context);
             break;
           case AppTab.purchase:
-            //TODO: Handle this case.
-            selectedItemBloc = BlocProvider.of<GameBloc>(context);
-            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
+            selectedItemBloc = BlocProvider.of<PurchaseBloc>(context);
+            selectedItemListBloc = BlocProvider.of<PurchaseListBloc>(context);
             break;
           case AppTab.store:
-            //TODO: Handle this case.
-            selectedItemBloc = BlocProvider.of<GameBloc>(context);
-            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
+            selectedItemBloc = BlocProvider.of<StoreBloc>(context);
+            selectedItemListBloc = BlocProvider.of<StoreListBloc>(context);
             break;
           case AppTab.platform:
-            //TODO: Handle this case.
-            selectedItemBloc = BlocProvider.of<GameBloc>(context);
-            selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
+            selectedItemBloc = BlocProvider.of<PlatformBloc>(context);
+            selectedItemListBloc = BlocProvider.of<PlatformListBloc>(context);
             break;
         }
 
@@ -222,9 +240,7 @@ class BodySelector extends StatelessWidget {
             );
           }
           //else EntityListLoading
-          return Center(
-            child: LoadingIcon(),
-          );
+          return LoadingIcon();
 
         },
       ),

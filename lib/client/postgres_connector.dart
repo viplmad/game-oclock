@@ -171,19 +171,20 @@ class PostgresConnector extends IDBConnector {
 
   //#region UPDATE
   @override
-  Future<dynamic> updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue}) {
+  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue, List<String> returningFields}) {
 
     if(newValue == null) {
       return _updateTableToNull(
         tableName: tableName,
         ID: ID,
         fieldName: fieldName,
+        returningFields: returningFields,
       );
     }
 
     String sql = _updateStatement(tableName);
 
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID " +  _returningStatement(returningFields), substitutionValues: {
       "newValue" : !(newValue is Duration)?
       newValue
           :
@@ -194,11 +195,11 @@ class PostgresConnector extends IDBConnector {
 
   }
 
-  Future<dynamic> _updateTableToNull({@required String tableName, @required int ID, @required String fieldName}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _updateTableToNull({@required String tableName, @required int ID, @required String fieldName, List<String> returningFields}) {
 
     String sql = _updateStatement(tableName);
 
-    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @tableID ", substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @tableID " +  _returningStatement(returningFields), substitutionValues: {
       "tableID" : ID,
     });
 

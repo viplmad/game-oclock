@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/repository/collection_repository.dart';
 
-import 'package:game_collection/ui/helpers/loading_icon.dart';
-import 'package:game_collection/ui/helpers/show_snackbar.dart';
+import 'package:game_collection/ui/common/loading_icon.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
 
 import 'package:game_collection/model/app_tab.dart';
 
@@ -59,6 +59,48 @@ class ConnectPage extends StatelessWidget {
                     BlocProvider<DLCBloc>(
                       create: (BuildContext context) {
                         return DLCBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<PlatformBloc>(
+                      create: (BuildContext context) {
+                        return PlatformBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<PurchaseBloc>(
+                      create: (BuildContext context) {
+                        return PurchaseBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<StoreBloc>(
+                      create: (BuildContext context) {
+                        return StoreBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<SystemBloc>(
+                      create: (BuildContext context) {
+                        return SystemBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<TagBloc>(
+                      create: (BuildContext context) {
+                        return TagBloc(
+                          collectionRepository: CollectionRepository(),
+                        );
+                      },
+                    ),
+                    BlocProvider<TypeBloc>(
+                      create: (BuildContext context) {
+                        return TypeBloc(
                           collectionRepository: CollectionRepository(),
                         );
                       },

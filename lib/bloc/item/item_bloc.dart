@@ -29,9 +29,13 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
       yield* _mapDeleteToState(event);
 
-    } else if(event is UpdateItem) {
+    } else if(event is UpdateItemField) {
 
-      yield* _mapUpdateToState(event);
+      yield* _mapUpdateFieldToState(event);
+
+    } else if(event is UpdateItemRelation) {
+
+      yield* _mapUpdateRelationToState(event);
 
     }
 
@@ -69,7 +73,21 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
   }
 
-  Stream<ItemState> _mapUpdateToState(UpdateItem event) async* {
+  Stream<ItemState> _mapUpdateFieldToState(UpdateItemField event) async* {
+
+    try {
+
+      final CollectionItem item = await updateFuture(event);
+      yield ItemFieldUpdated(item);
+
+    } catch(e) {
+
+      yield ItemFieldNotUpdated(e.toString());
+
+    }
+  }
+
+  Stream<ItemState> _mapUpdateRelationToState(UpdateItemRelation event) async* {
 
   }
 
@@ -82,6 +100,6 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
   external Future<CollectionItem> createFuture();
   external Future<dynamic> deleteFuture(CollectionItem item);
-  external Future<dynamic> updateFuture();
+  external Future<dynamic> updateFuture(UpdateItemField event);
 
 }

@@ -266,6 +266,19 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<Game> getGameWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: gameTable,
+      selectFields: gameFields,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSingleGame );
+
+  }
+
+  @override
   Stream<List<Platform>> getPlatformsFromGame(int ID) {
 
     return _dbConnector.readRelation(
@@ -327,15 +340,21 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getBaseGameFromDLC(int baseGameID) {
+  Stream<DLC> getDLCWithID(int ID) {
 
     return _dbConnector.readTable(
-      tableName: gameTable,
-      selectFields: gameFields,
-      whereFieldsAndValues: <String, dynamic> {
-        IDField : baseGameID,
+      tableName: dlcTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
       },
-    ).asStream().map( _dynamicToSingleGame );
+    ).asStream().map( _dynamicToSingleDLC );
+
+  }
+
+  @override
+  Stream<Game> getBaseGameFromDLC(int baseGameID) {
+
+    return getGameWithID(baseGameID);
 
   }
 
@@ -565,14 +584,14 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> updateDLC<T>(int ID, String fieldName, T newValue) {
+  Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: dlcTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSingleDLC ).first;
 
   }
 

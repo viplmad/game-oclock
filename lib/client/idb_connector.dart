@@ -22,7 +22,7 @@ abstract class IDBConnector {
   //#endregion READ
 
   //#region UPDATE
-  Future<dynamic> updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue});
+  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue, List<String> returningFields});
   //#endregion UPDATE
 
   //#region DELETE

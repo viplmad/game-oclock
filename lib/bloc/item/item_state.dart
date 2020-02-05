@@ -70,8 +70,8 @@ class ItemNotDeleted extends ItemState {
 
 class ItemUpdating extends ItemState {}
 
-class ItemUpdated extends ItemState {
-  const ItemUpdated(this.item);
+class ItemFieldUpdated extends ItemState {
+  const ItemFieldUpdated(this.item);
 
   final CollectionItem item;
 
@@ -79,13 +79,13 @@ class ItemUpdated extends ItemState {
   List<Object> get props => [item];
 
   @override
-  String toString() => 'ItemUpdated { '
+  String toString() => 'ItemFieldUpdated { '
       'item: $item'
       ' }';
 }
 
-class ItemNotUpdated extends ItemState {
-  const ItemNotUpdated(this.error);
+class ItemFieldNotUpdated extends ItemState {
+  const ItemFieldNotUpdated(this.error);
 
   final String error;
 
@@ -93,7 +93,7 @@ class ItemNotUpdated extends ItemState {
   List<Object> get props => [error];
 
   @override
-  String toString() => 'ItemNotUpdated { '
+  String toString() => 'ItemFieldNotUpdated { '
       'error: $error'
       ' }';
 }

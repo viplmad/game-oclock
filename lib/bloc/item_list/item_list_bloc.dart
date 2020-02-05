@@ -14,19 +14,9 @@ import 'item_list.dart';
 abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   ItemListBloc({@required this.itemBloc}) {
-    itemSubscription = itemBloc.listen( (ItemState state) {
 
-      if(state is ItemAdded) {
+    itemSubscription = itemBloc.listen( mapItemStateToEvent );
 
-        _mapAddedToEvent(state);
-
-      } else if(state is ItemDeleted) {
-
-        _mapDeletedToEvent(state);
-
-      }
-
-    });
   }
 
   final ItemBloc itemBloc;
@@ -87,6 +77,20 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
   }
 
   Stream<ItemListState> _mapUpdateSortOrderToState(UpdateSortOrder event) async* {
+
+  }
+
+  void mapItemStateToEvent(ItemState itemState) {
+
+    if(state is ItemAdded) {
+
+      _mapAddedToEvent(itemState);
+
+    } else if(state is ItemDeleted) {
+
+      _mapDeletedToEvent(itemState);
+
+    }
 
   }
 
