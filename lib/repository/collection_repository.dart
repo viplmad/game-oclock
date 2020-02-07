@@ -1,27 +1,29 @@
 import 'package:game_collection/client/idb_connector.dart';
 import 'package:game_collection/client/iimage_connector.dart';
-import 'package:game_collection/client/postgres_connector.dart';
-import 'package:game_collection/client/cloudinary_connector.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'icollection_repository.dart';
 
+
 class CollectionRepository implements ICollectionRepository {
 
-  CollectionRepository._() {
-    _dbConnector = PostgresConnector();
-    _imageConnector = CloudinaryConnector();
+  CollectionRepository._(IDBConnector idbConnector, IImageConnector iImageConnector) {
+    _dbConnector = idbConnector;
+    _imageConnector = iImageConnector;
   }
 
   IDBConnector _dbConnector;
   IImageConnector _imageConnector;
 
   static CollectionRepository _singleton;
-  factory CollectionRepository() {
+  factory CollectionRepository({IDBConnector idbConnector, IImageConnector iImageConnector}) {
     if(_singleton == null) {
-      _singleton = CollectionRepository._();
+      _singleton = CollectionRepository._(
+        idbConnector,
+        iImageConnector,
+      );
     }
 
     return _singleton;
@@ -572,14 +574,15 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region UPDATE
   @override
-  Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue) {
+  Future<Game> updateGame<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: gameTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+      returningFields: gameFields,
+    ).asStream().map( _dynamicToSingleGame ).first;
 
   }
 

@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection/model/bar_item.dart';
 import 'package:game_collection/model/app_tab.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
+import 'package:game_collection/ui/bloc_provider_route.dart';
 
 import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
@@ -14,57 +16,8 @@ import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'bar_items.dart';
 import 'item_list.dart';
 
-class HomePage extends StatelessWidget {
 
-  @override
-  Widget build(BuildContext context) {
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<GameListBloc>(
-          create: (BuildContext context) {
-            return GameListBloc(
-              itemBloc: BlocProvider.of<GameBloc>(context),
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<DLCListBloc>(
-          create: (BuildContext context) {
-            return DLCListBloc(
-              itemBloc: BlocProvider.of<DLCBloc>(context),
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<PlatformListBloc>(
-          create: (BuildContext context) {
-            return PlatformListBloc(
-              itemBloc: BlocProvider.of<PlatformBloc>(context),
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<PurchaseListBloc>(
-          create: (BuildContext context) {
-            return PurchaseListBloc(
-              itemBloc: BlocProvider.of<PurchaseBloc>(context),
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<StoreListBloc>(
-          create: (BuildContext context) {
-            return StoreListBloc(
-              itemBloc: BlocProvider.of<StoreBloc>(context),
-            )..add(LoadItemList());
-          },
-        ),
-      ],
-      child: TabHomepage(),
-    );
-
-  }
-
-}
-
-class TabHomepage extends StatelessWidget {
+class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -73,28 +26,28 @@ class TabHomepage extends StatelessWidget {
       builder: (BuildContext context, AppTab state) {
         BarItem barItem = barItems.elementAt(AppTab.values.indexOf(state));
 
-        ItemBloc selectedItemBloc;
         ItemListBloc selectedItemListBloc;
+        ItemDetailBloc itemDetailBloc;
         switch(state) {
           case AppTab.game:
-            selectedItemBloc = BlocProvider.of<GameBloc>(context);
             selectedItemListBloc = BlocProvider.of<GameListBloc>(context);
+            itemDetailBloc = BlocProvider.of<GameDetailBloc>(context);
             break;
           case AppTab.dlc:
-            selectedItemBloc = BlocProvider.of<DLCBloc>(context);
             selectedItemListBloc = BlocProvider.of<DLCListBloc>(context);
+            itemDetailBloc = BlocProvider.of<DLCDetailBloc>(context);
             break;
           case AppTab.purchase:
-            selectedItemBloc = BlocProvider.of<PurchaseBloc>(context);
             selectedItemListBloc = BlocProvider.of<PurchaseListBloc>(context);
+            //itemDetailBloc = BlocProvider.of<PurchaseDetailBloc>(context);
             break;
           case AppTab.store:
-            selectedItemBloc = BlocProvider.of<StoreBloc>(context);
             selectedItemListBloc = BlocProvider.of<StoreListBloc>(context);
+            //itemDetailBloc = BlocProvider.of<StoreDetailBloc>(context);
             break;
           case AppTab.platform:
-            selectedItemBloc = BlocProvider.of<PlatformBloc>(context);
             selectedItemListBloc = BlocProvider.of<PlatformListBloc>(context);
+            //itemDetailBloc = BlocProvider.of<PlatformDetailBloc>(context);
             break;
         }
 
@@ -103,21 +56,21 @@ class TabHomepage extends StatelessWidget {
             title: Text(barItem.title + 's'),
             backgroundColor: barItem.color,
           ),
-          body: BodySelector(
+          body: _HomepageBody(
             activeTab: state,
-            itemBloc: selectedItemBloc,
             itemListBloc: selectedItemListBloc,
+            itemDetailBloc: itemDetailBloc,
           ),
-          bottomNavigationBar: TabSelector(
+          bottomNavigationBar: _HomepageTab(
             activeTab: state,
             onTap: (tab) {
               BlocProvider.of<TabBloc>(context).add(UpdateTab(tab));
             },
           ),
-          floatingActionButton: FABSelector(
+          floatingActionButton: _HomepageFAB(
             activeTab: state,
             onTap: () {
-              selectedItemBloc.add(AddItem(null));
+              selectedItemListBloc.itemBloc.add(AddItem(null));
             },
           ),
         );
@@ -128,11 +81,12 @@ class TabHomepage extends StatelessWidget {
 
 }
 
-class TabSelector extends StatelessWidget {
+class _HomepageTab extends StatelessWidget {
+
+  _HomepageTab({Key key, @required this.activeTab, @required this.onTap}) : super(key: key);
+
   final AppTab activeTab;
   final Function(AppTab) onTap;
-
-  TabSelector({Key key, @required this.activeTab, @required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,11 +110,12 @@ class TabSelector extends StatelessWidget {
 
 }
 
-class FABSelector extends StatelessWidget {
+class _HomepageFAB extends StatelessWidget {
+
+  _HomepageFAB({Key key, @required this.activeTab, @required this.onTap}) : super(key: key);
+
   final AppTab activeTab;
   final Function() onTap;
-
-  FABSelector({Key key, @required this.activeTab, @required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -178,13 +133,15 @@ class FABSelector extends StatelessWidget {
   }
 }
 
-class BodySelector extends StatelessWidget {
+class _HomepageBody extends StatelessWidget {
+
+  const _HomepageBody({Key key, @required this.activeTab, @required this.itemListBloc, @required this.itemDetailBloc}) : super(key: key);
 
   final AppTab activeTab;
-  final ItemBloc itemBloc;
   final ItemListBloc itemListBloc;
+  final ItemDetailBloc itemDetailBloc;
 
-  const BodySelector({Key key, @required this.activeTab, @required this.itemBloc, @required this.itemListBloc}) : super(key: key);
+  ItemBloc get itemBloc => itemListBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +193,8 @@ class BodySelector extends StatelessWidget {
           if(state is ItemListLoaded) {
             return ItemList(
               items: state.items,
-              itemBloc: itemBloc,
+              itemDetailBloc: itemDetailBloc,
+              activeTab: activeTab,
             );
           }
           //else EntityListLoading

@@ -100,6 +100,6 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
   external Future<CollectionItem> createFuture();
   external Future<dynamic> deleteFuture(CollectionItem item);
-  external Future<dynamic> updateFuture(UpdateItemField event);
+  external Future<CollectionItem> updateFuture(UpdateItemField event);
 
 }

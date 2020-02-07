@@ -88,7 +88,7 @@ abstract class ICollectionRepository {
 
   //#region UPDATE
     //Game
-  Future<dynamic> updateGame<T>(int ID, String fieldName, T newValue);
+  Future<Game> updateGame<T>(int ID, String fieldName, T newValue);
 
     //DLC
   Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue);

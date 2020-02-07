@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_collection/ui/bloc_provider_route.dart';
 
-import 'package:game_collection/ui/start.dart';
-import 'package:game_collection/bloc/connection/connection.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
-void main() => runApp(GameCollection());
+import 'package:game_collection/client/postgres_connector.dart';
+import 'package:game_collection/client/cloudinary_connector.dart';
 
+
+void main() => runApp(GameCollection());
 
 class GameCollection extends StatelessWidget {
 
@@ -19,19 +20,17 @@ class GameCollection extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return BlocProvider<ConnectionBloc>(
-      create: (BuildContext context) {
-        return ConnectionBloc(
-          collectionRepository: CollectionRepository(),
-        )..add(AppStarted());
-      },
-      child: MaterialApp(
-        title: 'Game Collection',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: StartPage(),
+    CollectionRepository(
+      idbConnector: PostgresConnector(),
+      iImageConnector: CloudinaryConnector(),
+    );
+
+    return MaterialApp(
+      title: 'Game Collection',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: StartBlocProvider(),
     );
 
   }

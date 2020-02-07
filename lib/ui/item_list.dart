@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/ui/common/item_view.dart';
 
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/app_tab.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
-import 'dlc_detail.dart';
+import 'detail/detail.dart';
 
 class ItemList extends StatelessWidget {
 
-  ItemList({Key key, @required this.items, @required this.itemBloc}) : super(key: key);
+  ItemList({Key key, @required this.items, @required this.itemDetailBloc, @required this.activeTab}) : super(key: key);
 
   final List<CollectionItem> items;
-  final ItemBloc itemBloc;
+  final ItemDetailBloc itemDetailBloc;
+  final AppTab activeTab;
+
+  ItemBloc get itemBloc => itemDetailBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,34 @@ class ItemList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return DLCDetail();
+                    switch(activeTab) {
+                      case AppTab.game:
+                        return GameDetail(
+                          ID: result.ID,
+                          itemDetailBloc: itemDetailBloc,
+                        );
+                      case AppTab.dlc:
+                        return DLCDetail(
+                          ID: result.ID,
+                          itemDetailBloc: itemDetailBloc,
+                        );
+                      case AppTab.purchase:
+                        /*return PurchaseDetail(
+                          ID: result.ID,
+                          itemDetailBloc: itemDetailBloc,
+                        );*/
+                      case AppTab.store:
+                        /*return StoreDetail(
+                          ID: result.ID,
+                          itemDetailBloc: itemDetailBloc,
+                        );*/
+                      case AppTab.platform:
+                        /*return PlatformDetail(
+                          ID: result.ID,
+                          itemDetailBloc: itemDetailBloc,
+                        );*/
+                    }
+                    return Center();
                   },
                 ),
               );

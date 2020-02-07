@@ -90,6 +90,10 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
       _mapDeletedToEvent(itemState);
 
+    } else if(state is ItemFieldUpdated) {
+
+      _mapUpdatedFieldToEvent(itemState);
+
     }
 
   }
@@ -114,6 +118,25 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
           .items
           .where((CollectionItem item) => item.ID != itemDeleted.ID)
           .toList();
+
+      add(UpdateItemList(updatedItems));
+    }
+
+  }
+
+  void _mapUpdatedFieldToEvent(ItemFieldUpdated itemState) {
+
+    if(state is ItemListLoaded) {
+      final itemUpdated = itemState.item;
+      final List<CollectionItem> updatedItems = (state as ItemListLoaded)
+          .items
+          .map((CollectionItem item) {
+            if(item.ID == itemUpdated.ID) {
+              return itemUpdated;
+            }
+
+            return item;
+          }).toList();
 
       add(UpdateItemList(updatedItems));
     }

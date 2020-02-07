@@ -186,10 +186,10 @@ class PostgresConnector extends IDBConnector {
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue WHERE " + _forceDoubleQuotes(IDField) + " = @tableID " +  _returningStatement(returningFields), substitutionValues: {
       "newValue" : !(newValue is Duration)?
-      newValue
+          newValue
           :
-      //Duration is not supported, special case
-      (newValue as Duration).inSeconds,
+          //Duration is not supported, special case
+          (newValue as Duration).inSeconds,
       "tableID" : ID,
     });
 
@@ -270,7 +270,7 @@ class PostgresConnector extends IDBConnector {
 
     if(filterFields != null) {
 
-      String filterForSQL;
+      String filterForSQL = "";
       filterFields.forEach( (String fieldName) {
 
         filterForSQL += _forceDoubleQuotes(fieldName) + " = @" + fieldName + " AND ";

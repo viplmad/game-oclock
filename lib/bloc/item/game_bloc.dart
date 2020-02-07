@@ -30,4 +30,11 @@ class GameBloc extends ItemBloc {
 
   }
 
+  @override
+  Future<Game> updateFuture(UpdateItemField event) {
+
+    return collectionRepository.updateGame(event.item.ID, event.field, event.value);
+
+  }
+
 }
