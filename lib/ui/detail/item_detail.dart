@@ -7,9 +7,11 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/ui/item_search.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
 import 'package:game_collection/model/model.dart';
 
@@ -43,6 +45,42 @@ abstract class ItemDetailBody extends StatelessWidget {
               context,
               label: "More",
               title: "Unable to update",
+              content: state.error,
+            ),
+          );
+        }
+        if(state is ItemRelationAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Linked",
+          );
+        }
+        if(state is ItemRelationNotAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to link",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to link",
+              content: state.error,
+            ),
+          );
+        }
+        if(state is ItemRelationDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unlinked",
+          );
+        }
+        if(state is ItemRelationNotDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to unlink",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to unlink",
               content: state.error,
             ),
           );
@@ -107,7 +145,187 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
+  Function(T) updateFieldFunction<T>(String fieldName) {
+
+    return (T newValue) {
+      itemBloc.add(
+        UpdateItemField(
+          item,
+          fieldName,
+          newValue,
+        ),
+      );
+    };
+
+  }
+
+  Function(CollectionItem) addRelationFunction(String tableName) {
+
+    return (CollectionItem addedItem) {
+      itemBloc.add(
+        AddItemRelation(
+          item,
+          tableName,
+          addedItem,
+        ),
+      );
+    };
+
+  }
+
+  Function(CollectionItem) deleteRelationFunction(String tableName) {
+
+    return (CollectionItem deletedItem) {
+      itemBloc.add(
+        DeleteItemRelation(
+          item,
+          tableName,
+          deletedItem,
+        ),
+      );
+    };
+
+  }
+
+  Widget itemTextField({@required String fieldName, @required String value}) {
+
+    return ItemTextField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<String>(fieldName),
+    );
+
+  }
+
+  Widget itemIntField({@required String fieldName, @required int value}) {
+
+    return ItemIntField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<int>(fieldName),
+    );
+
+  }
+
+  Widget itemMoneyField({@required String fieldName, @required double value}) {
+
+    return ItemDoubleField(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+          value.toString() + ' €'
+          :
+          null,
+      update: updateFieldFunction<double>(fieldName),
+    );
+
+  }
+
+  Widget itemYearField({@required String fieldName, @required int value}) {
+
+    return ItemYearField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<int>(fieldName),
+    );
+
+  }
+
+  Widget itemDateTimeField({@required String fieldName, @required DateTime value}) {
+
+    return ItemDateTimeField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<DateTime>(fieldName),
+    );
+
+  }
+
+  Widget itemDurationField({@required String fieldName, @required Duration value}) {
+
+    return ItemDurationField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<Duration>(fieldName),
+    );
+
+  }
+
+  Widget itemRatingField({@required String fieldName, @required int value}) {
+
+    return RatingField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<int>(fieldName),
+    );
+
+  }
+
+  Widget itemBoolField({@required String fieldName, @required bool value}) {
+
+    return BoolField(
+      fieldName: fieldName,
+      value: value,
+      update: updateFieldFunction<bool>(fieldName),
+    );
+
+  }
+
+  Widget itemsSingleRelation({@required ItemRelationBloc Function(String tableName) itemRelationBloc, @required String tableName, String shownValue}) {
+
+    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
+      bloc: itemRelationBloc(tableName)..add(LoadItemRelation()),
+      builder: (BuildContext context, ItemRelationState state) {
+
+        if(state is ItemRelationLoaded) {
+          print("stateloaded changed " + state.items.toString());
+          return ResultsListSingle(
+            items: state.items,
+            tableName: tableName,
+            shownName: shownValue,
+            onTap: (CollectionItem item) {
+              //TODO
+            },
+            updateAdd: addRelationFunction(tableName),
+            updateDelete: deleteRelationFunction(tableName),
+          );
+        }
+
+        return LoadingIcon();
+
+      },
+    );
+
+  }
+
+  Widget itemsManyRelation({@required ItemRelationBloc Function(String tableName) itemRelationBloc, @required String tableName}) {
+
+    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
+      bloc: itemRelationBloc(tableName)..add(LoadItemRelation()),
+      builder: (BuildContext context, ItemRelationState state) {
+
+        if(state is ItemRelationLoaded) {
+          return ResultsListMany(
+            items: state.items,
+            tableName: tableName,
+            onTap: (CollectionItem item) {
+              //TODO
+            },
+            updateAdd: addRelationFunction(tableName),
+            updateDelete: deleteRelationFunction(tableName),
+          );
+        }
+
+        return LoadingIcon();
+
+      },
+    );
+
+  }
+
   external List<Widget> itemDetailFields(BuildContext context);
+
+  external ItemRelationBloc itemRelationBlocFunction(String tableName);
 
 }
 
@@ -239,12 +457,13 @@ class ItemIntField extends StatelessWidget {
   }
 
 }
-class ItemMoneyField extends StatelessWidget {
+class ItemDoubleField extends StatelessWidget {
 
-  ItemMoneyField({@required this.fieldName, @required this.value, @required this.update});
+  ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, @required this.update});
 
   final String fieldName;
   final double value;
+  final String shownValue;
   final Function(double) update;
 
   @override
@@ -253,10 +472,7 @@ class ItemMoneyField extends StatelessWidget {
     return ItemGenericField(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null?
-          value.toString() + ' €'
-          :
-          null,
+      shownValue: shownValue,
       update: update,
       onTap: () {
         return showDialog<double>(
@@ -447,12 +663,97 @@ class BoolField extends StatelessWidget {
 
 }
 
+class _HeaderText extends StatelessWidget {
+
+  const _HeaderText({Key key, this.text}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+      child: Text(text, style: Theme.of(context).textTheme.subhead),
+    );
+
+  }
+
+}
+
+class _ResultsListHeader extends StatelessWidget {
+
+  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList}) : super(key: key);
+
+  final String headerText;
+  final Widget resultList;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Divider(),
+        _HeaderText(
+          text: headerText,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: resultList,
+        ),
+      ],
+    );
+
+  }
+
+}
+class _LinkButton extends StatelessWidget {
+
+  const _LinkButton({Key key, @required this.tableName, @required this.updateAdd}) : super(key: key);
+
+  final String tableName;
+  final Function(CollectionItem) updateAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+      child: RaisedButton.icon(
+        label: Text("Link " + tableName),
+        icon: Icon(Icons.link),
+        elevation: 1.0,
+        highlightElevation: 2.0,
+        onPressed: () {
+
+          Navigator.push<CollectionItem>(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return ItemSearch(
+                  searchTable: tableName,
+                );
+              }
+            ),
+          ).then( (CollectionItem result) {
+            if (result != null) {
+              updateAdd(result);
+            }
+          });
+
+        },
+      ),
+    );
+  }
+
+}
 class ResultsListSingle extends StatelessWidget {
 
-  ResultsListSingle({this.items, this.tableName, this.onTap, this.updateAdd, this.updateDelete});
+  ResultsListSingle({@required this.items, @required this.tableName, this.shownName, @required this.onTap, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
   final String tableName;
+  final String shownName;
   final Function(CollectionItem) onTap;
   final Function(CollectionItem) updateAdd;
   final Function(CollectionItem) updateDelete;
@@ -460,50 +761,36 @@ class ResultsListSingle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      itemCount: 1,
-      itemBuilder: (BuildContext context, int index) {
+    return _ResultsListHeader(
+      headerText: shownName?? tableName,
+      resultList: ListView.builder(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) {
 
-        if(items.isEmpty) {
+          if(items.isEmpty) {
 
-          return Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton.icon(
-              label: Text("Link " + tableName),
-              icon: Icon(Icons.link),
-              elevation: 1.0,
-              highlightElevation: 2.0,
-              onPressed: () {
-                /*showSearch<CollectionItem>(
-                  context: context,
-                  delegate: EntitySearch(
-                    searchTable: tableName,
-                  ),
-                ).then( (CollectionItem result) {
-                  if (result != null) {
-                    updateAdd(result);
-                  }
-                });*/
+            return _LinkButton(
+              tableName: tableName,
+              updateAdd: updateAdd,
+            );
+
+          } else {
+            CollectionItem result = items[index];
+
+            return DismissibleItem(
+              item: result,
+              dismissIcon: Icons.link_off,
+              onDismissed: (DismissDirection direction) {
+                updateDelete(result);
               },
-            ),
-          );
+              onTap: onTap(result),
+            );
 
-        } else {
-          CollectionItem result = items[index];
-
-          return DismissibleItem(
-            item: result,
-            dismissIcon: Icons.link_off,
-            onDismissed: (DismissDirection direction) {
-              updateDelete(result);
-            },
-            onTap: onTap(result),
-          );
-
-        }
-      },
+          }
+        },
+      ),
     );
 
   }
@@ -511,7 +798,7 @@ class ResultsListSingle extends StatelessWidget {
 }
 class ResultsListMany extends StatelessWidget {
 
-  ResultsListMany({this.items, this.tableName, this.onTap, this.updateAdd, this.updateDelete});
+  ResultsListMany({@required this.items, @required this.tableName, @required this.onTap, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
   final String tableName;
@@ -522,50 +809,36 @@ class ResultsListMany extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      itemCount: items.length + 1,
-      itemBuilder: (BuildContext context, int index) {
+    return _ResultsListHeader(
+      headerText: tableName + 's',
+      resultList: ListView.builder(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: items.length + 1,
+        itemBuilder: (BuildContext context, int index) {
 
-        if(index == items.length) {
+          if(index == items.length) {
 
-          return Padding(
-            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: RaisedButton.icon(
-              label: Text("Link " + tableName),
-              icon: Icon(Icons.link),
-              elevation: 1.0,
-              highlightElevation: 2.0,
-              onPressed: () {
-                /*showSearch<CollectionItem>(
-                  context: context,
-                  delegate: EntitySearch(
-                    searchTable: tableName,
-                  ),
-                ).then( (CollectionItem result) {
-                  if (result != null) {
-                    updateAdd(result);
-                  }
-                });*/
+            return _LinkButton(
+              tableName: tableName,
+              updateAdd: updateAdd,
+            );
+
+          } else {
+            CollectionItem result = items[index];
+
+            return DismissibleItem(
+              item: result,
+              dismissIcon: Icons.link_off,
+              onDismissed: (DismissDirection direction) {
+                updateDelete(result);
               },
-            ),
-          );
+              onTap: onTap(result),
+            );
 
-        } else {
-          CollectionItem result = items[index];
-
-          return DismissibleItem(
-            item: result,
-            dismissIcon: Icons.link_off,
-            onDismissed: (DismissDirection direction) {
-              updateDelete(result);
-            },
-            onTap: onTap(result),
-          );
-
-        }
-      },
+          }
+        },
+      ),
     );
 
   }

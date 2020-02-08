@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
@@ -52,150 +53,78 @@ class _GameDetailBody extends ItemDetailBody {
     Game game = (item as Game);
 
     return [
-      ItemTextField(
+      itemTextField(
         fieldName: game_nameField,
         value: game.name,
-        update: (String newName) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_nameField,
-              newName,
-            ),
-          );
-        },
       ),
-      ItemTextField(
+      itemTextField(
         fieldName: game_editionField,
         value: game.edition,
-        update: (String newName) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_editionField,
-              newName,
-            ),
-          );
-        },
       ),
-      ItemYearField(
+      itemYearField(
         fieldName: game_releaseYearField,
         value: game.releaseYear,
-        update: (int newYear) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_releaseYearField,
-              newYear,
-            ),
-          );
-        },
       ),
-      ItemTextField( //TODO: EnumField
+      itemTextField( //TODO: EnumField
         fieldName: game_statusField,
         value: game.status,
-        update: (String newStatus) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_statusField,
-              newStatus,
-            ),
-          );
-        },
       ),
-      RatingField(
+      itemRatingField(
         fieldName: game_ratingField,
         value: game.rating,
-        update: (int newRating) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_ratingField,
-              newRating,
-            ),
-          );
-        },
       ),
-      ItemTextField(
+      itemTextField(
         fieldName: game_thoughtsField,
         value: game.thoughts,
-        update: (String newThoughts) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_thoughtsField,
-              newThoughts,
-            ),
-          );
-        },
       ),
-      ItemDurationField(
+      itemDurationField(
         fieldName: game_timeField,
         value: game.time,
-        update: (Duration newTime) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_timeField,
-              newTime,
-            ),
-          );
-        },
       ),
-      ItemTextField(
+      itemTextField(
         fieldName: game_saveFolderField,
         value: game.saveFolder,
-        update: (String newFolder) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_saveFolderField,
-              newFolder,
-            ),
-          );
-        },
       ),
-      ItemTextField(
+      itemTextField(
         fieldName: game_screenshotFolderField,
         value: game.screenshotFolder,
-        update: (String newFolder) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_screenshotFolderField,
-              newFolder,
-            ),
-          );
-        },
       ),
-      ItemDateTimeField(
+      itemDateTimeField(
         fieldName: game_finishDateField,
         value: game.finishDate,
-        update: (DateTime newDate) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_finishDateField,
-              newDate,
-            ),
-          );
-        },
       ),
-      BoolField(
+      itemBoolField(
         fieldName: game_backupField,
         value: game.isBackup,
-        update: (bool newBackup) {
-          itemBloc.add(
-            UpdateItemField(
-              game,
-              game_backupField,
-              newBackup,
-            ),
-          );
-        },
+      ),
+      itemsManyRelation(
+        itemRelationBloc: itemRelationBlocFunction,
+        tableName: platformTable,
+      ),
+      itemsManyRelation(
+        itemRelationBloc: itemRelationBlocFunction,
+        tableName: purchaseTable,
+      ),
+      itemsManyRelation(
+        itemRelationBloc: itemRelationBlocFunction,
+        tableName: dlcTable,
+      ),
+      itemsManyRelation(
+        itemRelationBloc: itemRelationBlocFunction,
+        tableName: tagTable,
       ),
     ];
+
+  }
+
+  @override
+  GameRelationBloc itemRelationBlocFunction(String tableName) {
+
+    return GameRelationBloc(
+      gameID: itemID,
+      relationField: tableName,
+      itemBloc: itemBloc,
+    );
 
   }
 

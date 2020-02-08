@@ -41,11 +41,14 @@ class DLCBloc extends ItemBloc {
   @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
+    int dlcID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
     switch(event.field) {
       case gameTable:
-        return collectionRepository.insertGameDLC(event.otherItem.ID, event.item.ID);
+        return collectionRepository.insertGameDLC(otherID, dlcID);
       case purchaseTable:
-        return collectionRepository.insertDLCPurchase(event.item.ID, event.otherItem.ID);
+        return collectionRepository.insertDLCPurchase(dlcID, otherID);
     }
 
   }
@@ -53,11 +56,14 @@ class DLCBloc extends ItemBloc {
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
 
+    int dlcID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
     switch(event.field) {
       case gameTable:
-        return collectionRepository.deleteGameDLC(event.item.ID);
+        return collectionRepository.deleteGameDLC(dlcID);
       case purchaseTable:
-        return collectionRepository.deleteDLCPurchase(event.item.ID, event.otherItem.ID);
+        return collectionRepository.deleteDLCPurchase(dlcID, otherID);
     }
 
   }

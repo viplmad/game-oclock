@@ -82,15 +82,15 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   void mapItemStateToEvent(ItemState itemState) {
 
-    if(state is ItemAdded) {
+    if(itemState is ItemAdded) {
 
       _mapAddedToEvent(itemState);
 
-    } else if(state is ItemDeleted) {
+    } else if(itemState is ItemDeleted) {
 
       _mapDeletedToEvent(itemState);
 
-    } else if(state is ItemFieldUpdated) {
+    } else if(itemState is ItemFieldUpdated) {
 
       _mapUpdatedFieldToEvent(itemState);
 

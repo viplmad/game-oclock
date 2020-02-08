@@ -55,8 +55,8 @@ class ItemCard extends StatelessWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
-        child: EntityListTile(
-          entity: item,
+        child: ItemListTile(
+          item: item,
         ),
         onTap: onTap,
       ),
@@ -65,19 +65,19 @@ class ItemCard extends StatelessWidget {
 
 }
 
-class EntityListTile extends StatelessWidget {
+class ItemListTile extends StatelessWidget {
 
-  final CollectionItem entity;
+  final CollectionItem item;
 
-  const EntityListTile({Key key, this.entity}) : super(key: key);
+  const ItemListTile({Key key, this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return ListTile(
       title: Hero(
-        tag: entity.getUniqueID() + '_text',
-        child: Text(entity.getTitle()),
+        tag: item.getUniqueID() + '_text',
+        child: Text(item.getTitle()),
         flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
           return DefaultTextStyle(
             style: DefaultTextStyle.of(toHeroContext).style,
@@ -85,8 +85,8 @@ class EntityListTile extends StatelessWidget {
           );
         },
       ),
-      subtitle: entity.getSubtitle() != null?
-      Text(entity.getSubtitle())
+      subtitle: item.getSubtitle() != null?
+      Text(item.getSubtitle())
           : null,
     );
 

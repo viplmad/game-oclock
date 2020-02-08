@@ -142,14 +142,14 @@ class PostgresConnector extends IDBConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID, List<String> selectFields, List<String> sortFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({@required String primaryTable, @required String subordinateTable, @required String relationField, @required int relationID, bool primaryResults = false, List<String> selectFields, List<String> sortFields}) {
 
-    String sql = _selectStatement(selectFields, 'b');
+    String sql = _selectStatement(selectFields, (primaryResults? 'a' : 'b'));
 
     sql += " FROM " + _forceDoubleQuotes(subordinateTable) + " b JOIN " + _forceDoubleQuotes(primaryTable) + " a "
         + " ON b." + _forceDoubleQuotes(relationField) + " = a." + _forceDoubleQuotes(IDField) + " ";
 
-    return _connection.mappedResultsQuery(sql + " WHERE a." + _forceDoubleQuotes(IDField) + " = @relationID" + _orderByStatement(sortFields), substitutionValues: {
+    return _connection.mappedResultsQuery(sql + " WHERE " + (primaryResults? "b" : "a") + "." + _forceDoubleQuotes(IDField) + " = @relationID" + _orderByStatement(sortFields), substitutionValues: {
       "relationID" : relationID,
     });
 
@@ -317,7 +317,7 @@ class PostgresConnector extends IDBConnector {
 
   String _searchableQuery(String query) {
 
-    return " %" + query + "% ";
+    return "%" + query + "%";
 
   }
 
@@ -350,7 +350,7 @@ class PostgresConnector extends IDBConnector {
 
       } else if(fieldName == game_timeField) {
 
-        fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _formattedField;
+        fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _forceDoubleQuotes(fieldName);
 
       } else {
 

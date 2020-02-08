@@ -23,7 +23,7 @@ class DLCRelationBloc extends ItemRelationBloc {
 
     switch(relationField) {
       case gameTable:
-        return collectionRepository.getBaseGameFromDLC(itemID).map( (CollectionItem game) => [game] );
+        return collectionRepository.getBaseGameFromDLC(itemID).map( (CollectionItem game) => game != null? [game] : [] );
       case purchaseTable:
         return collectionRepository.getPurchasesFromDLC(itemID);
     }

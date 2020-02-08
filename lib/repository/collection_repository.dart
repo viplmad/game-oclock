@@ -354,9 +354,17 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getBaseGameFromDLC(int baseGameID) {
+  Stream<Game> getBaseGameFromDLC(int ID) {
 
-    return getGameWithID(baseGameID);
+    return _dbConnector.readWeakRelation(
+      primaryTable: gameTable,
+      subordinateTable: dlcTable,
+      relationField: dlc_baseGameField,
+      relationID: ID,
+      primaryResults: true,
+      selectFields: gameFields,
+    ).asStream().map( _dynamicToSingleGame );
+    //return getGameWithID(baseGameID);
 
   }
 
@@ -1083,9 +1091,7 @@ class CollectionRepository implements ICollectionRepository {
 
     Game singleGame;
 
-    if(results.isEmpty) {
-      singleGame = Game(ID: -1);
-    } else {
+    if(results.isNotEmpty) {
       singleGame = _dynamicToListGame(results).first;
     }
 

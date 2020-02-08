@@ -37,6 +37,8 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
     } else if(event is UpdateItemRelation) {
 
+      yield* _mapUpdateToState(event);
+
     }
 
   }
@@ -58,7 +60,7 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
   }
 
-  Stream<ItemRelationState> _mapListUpdateToState(UpdateItemRelation event) async* {
+  Stream<ItemRelationState> _mapUpdateToState(UpdateItemRelation event) async* {
 
     yield ItemRelationLoaded(event.items);
 
@@ -66,11 +68,11 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
   void mapItemStateToEvent(ItemState itemState) {
 
-    if(state is ItemRelationAdded) {
+    if(itemState is ItemRelationAdded) {
 
       _mapRelationAddedToEvent(itemState);
 
-    } else if(state is ItemRelationDeleted) {
+    } else if(itemState is ItemRelationDeleted) {
 
       _mapRelationDeletedToEvent(itemState);
 

@@ -53,7 +53,7 @@ abstract class ICollectionRepository {
     //DLC
   Stream<List<DLC>> getAllDLCs([List<String> sortFields]);
   Stream<DLC> getDLCWithID(int ID);
-  Stream<Game> getBaseGameFromDLC(int baseGameID);
+  Stream<Game> getBaseGameFromDLC(int ID);
   Stream<List<Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
