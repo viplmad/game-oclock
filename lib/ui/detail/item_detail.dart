@@ -6,6 +6,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/common/item_view.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
@@ -440,6 +441,131 @@ class BoolField extends StatelessWidget {
       title: Text(fieldName),
       value: value,
       onChanged: update,
+    );
+
+  }
+
+}
+
+class ResultsListSingle extends StatelessWidget {
+
+  ResultsListSingle({this.items, this.tableName, this.onTap, this.updateAdd, this.updateDelete});
+
+  final List<CollectionItem> items;
+  final String tableName;
+  final Function(CollectionItem) onTap;
+  final Function(CollectionItem) updateAdd;
+  final Function(CollectionItem) updateDelete;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemCount: 1,
+      itemBuilder: (BuildContext context, int index) {
+
+        if(items.isEmpty) {
+
+          return Padding(
+            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+            child: RaisedButton.icon(
+              label: Text("Link " + tableName),
+              icon: Icon(Icons.link),
+              elevation: 1.0,
+              highlightElevation: 2.0,
+              onPressed: () {
+                /*showSearch<CollectionItem>(
+                  context: context,
+                  delegate: EntitySearch(
+                    searchTable: tableName,
+                  ),
+                ).then( (CollectionItem result) {
+                  if (result != null) {
+                    updateAdd(result);
+                  }
+                });*/
+              },
+            ),
+          );
+
+        } else {
+          CollectionItem result = items[index];
+
+          return DismissibleItem(
+            item: result,
+            dismissIcon: Icons.link_off,
+            onDismissed: (DismissDirection direction) {
+              updateDelete(result);
+            },
+            onTap: onTap(result),
+          );
+
+        }
+      },
+    );
+
+  }
+
+}
+class ResultsListMany extends StatelessWidget {
+
+  ResultsListMany({this.items, this.tableName, this.onTap, this.updateAdd, this.updateDelete});
+
+  final List<CollectionItem> items;
+  final String tableName;
+  final Function(CollectionItem) onTap;
+  final Function(CollectionItem) updateAdd;
+  final Function(CollectionItem) updateDelete;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemCount: items.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+
+        if(index == items.length) {
+
+          return Padding(
+            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+            child: RaisedButton.icon(
+              label: Text("Link " + tableName),
+              icon: Icon(Icons.link),
+              elevation: 1.0,
+              highlightElevation: 2.0,
+              onPressed: () {
+                /*showSearch<CollectionItem>(
+                  context: context,
+                  delegate: EntitySearch(
+                    searchTable: tableName,
+                  ),
+                ).then( (CollectionItem result) {
+                  if (result != null) {
+                    updateAdd(result);
+                  }
+                });*/
+              },
+            ),
+          );
+
+        } else {
+          CollectionItem result = items[index];
+
+          return DismissibleItem(
+            item: result,
+            dismissIcon: Icons.link_off,
+            onDismissed: (DismissDirection direction) {
+              updateDelete(result);
+            },
+            onTap: onTap(result),
+          );
+
+        }
+      },
     );
 
   }

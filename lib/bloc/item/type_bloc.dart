@@ -24,9 +24,9 @@ class TypeBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deleteType(item.ID);
+    return collectionRepository.deleteType(event.item.ID);
 
   }
 

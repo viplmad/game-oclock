@@ -24,9 +24,9 @@ class TagBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deleteTag(item.ID);
+    return collectionRepository.deleteTag(event.item.ID);
 
   }
 

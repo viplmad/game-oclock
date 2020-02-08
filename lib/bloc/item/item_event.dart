@@ -56,8 +56,8 @@ class UpdateItemField extends ItemEvent {
       ' }';
 }
 
-class UpdateItemRelation extends ItemEvent {
-  const UpdateItemRelation(this.item, this.field, this.otherItem);
+class AddItemRelation extends ItemEvent {
+  const AddItemRelation(this.item, this.field, this.otherItem);
 
   final CollectionItem item;
   final String field;
@@ -67,7 +67,25 @@ class UpdateItemRelation extends ItemEvent {
   List<Object> get props => [item, field, otherItem];
 
   @override
-  String toString() => 'UpdateItemRelation { '
+  String toString() => 'AddItemRelation { '
+      'item: $item, '
+      'field: $field, '
+      'other item: $otherItem'
+      ' }';
+}
+
+class DeleteItemRelation extends ItemEvent {
+  const DeleteItemRelation(this.item, this.field, this.otherItem);
+
+  final CollectionItem item;
+  final String field;
+  final CollectionItem otherItem;
+
+  @override
+  List<Object> get props => [item, field, otherItem];
+
+  @override
+  String toString() => 'DeleteItemRelation { '
       'item: $item, '
       'field: $field, '
       'other item: $otherItem'

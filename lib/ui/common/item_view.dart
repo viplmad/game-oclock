@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/collection_item.dart';
 
-class DismissibleEntity extends StatelessWidget {
+class DismissibleItem extends StatelessWidget {
 
-  final CollectionItem entity;
+  final CollectionItem item;
   final void Function(DismissDirection direction) onDismissed;
   final void Function() onTap;
   final Future<bool> Function(DismissDirection direction) confirmDismiss;
   final IconData dismissIcon;
 
-  DismissibleEntity({Key key, @required this.entity, @required this.onTap, @required this.onDismissed, this.dismissIcon = Icons.delete, this.confirmDismiss}) : super(key: key);
+  DismissibleItem({Key key, @required this.item, @required this.onTap, @required this.onDismissed, this.dismissIcon = Icons.delete, this.confirmDismiss}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return Dismissible(
-      key: ValueKey(entity.ID),
+      key: ValueKey(item.ID),
       background: Container(
           color: Colors.red,
           child: Padding(
@@ -31,8 +31,8 @@ class DismissibleEntity extends StatelessWidget {
             ),
           )
       ),
-      child: EntityCard(
-        entity: entity,
+      child: ItemCard(
+        item: item,
         onTap: onTap,
       ),
       onDismissed: onDismissed,
@@ -43,12 +43,12 @@ class DismissibleEntity extends StatelessWidget {
 
 }
 
-class EntityCard extends StatelessWidget {
+class ItemCard extends StatelessWidget {
 
-  final CollectionItem entity;
+  final CollectionItem item;
   final void Function() onTap;
 
-  const EntityCard({Key key, @required this.entity, @required this.onTap}) : super(key: key);
+  const ItemCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class EntityCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
         child: EntityListTile(
-          entity: entity,
+          entity: item,
         ),
         onTap: onTap,
       ),

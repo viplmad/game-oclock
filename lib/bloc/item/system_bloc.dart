@@ -24,9 +24,9 @@ class SystemBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deleteSystem(item.ID);
+    return collectionRepository.deleteSystem(event.item.ID);
 
   }
 

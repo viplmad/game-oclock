@@ -31,10 +31,6 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
       yield* _mapLoadToState(event);
 
-    } else if(event is LoadItemRelation) {
-
-      yield* _mapLoadRelationToState(event);
-
     } else if(event is UpdateItem) {
 
       yield* _mapUpdateToState(event);
@@ -57,10 +53,6 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
       yield ItemNotLoaded(e.toString());
 
     }
-
-  }
-
-  Stream<ItemDetailState> _mapLoadRelationToState(LoadItemRelation event) async* {
 
   }
 

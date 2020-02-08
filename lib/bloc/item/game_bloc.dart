@@ -24,9 +24,9 @@ class GameBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deleteGame(item.ID);
+    return collectionRepository.deleteGame(event.item.ID);
 
   }
 

@@ -30,8 +30,8 @@ class ItemList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           CollectionItem result = items[index];
 
-          return DismissibleEntity(
-            entity: result,
+          return DismissibleItem(
+            item: result,
             onTap: () {
               Navigator.push(
                 context,

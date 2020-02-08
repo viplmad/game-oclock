@@ -97,3 +97,63 @@ class ItemFieldNotUpdated extends ItemState {
       'error: $error'
       ' }';
 }
+
+class ItemRelationAdded extends ItemState {
+  const ItemRelationAdded(this.item, this.field);
+
+  final CollectionItem item;
+  final String field;
+
+  @override
+  List<Object> get props => [item, field];
+
+  @override
+  String toString() => 'ItemRelationAdded { '
+      'item: $item, '
+      'field: $field'
+      ' }';
+}
+
+class ItemRelationNotAdded extends ItemState {
+  const ItemRelationNotAdded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ItemRelationNotAdded { '
+      'error: $error'
+      ' }';
+}
+
+class ItemRelationDeleted extends ItemState {
+  const ItemRelationDeleted(this.item, this.field);
+
+  final CollectionItem item;
+  final String field;
+
+  @override
+  List<Object> get props => [item, field];
+
+  @override
+  String toString() => 'ItemRelationDeleted { '
+      'item: $item, '
+      'field: $field'
+      ' }';
+}
+
+class ItemRelationNotDeleted extends ItemState {
+  const ItemRelationNotDeleted(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ItemRelationNotDeleted { '
+      'error: $error'
+      ' }';
+}

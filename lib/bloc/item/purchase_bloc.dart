@@ -24,9 +24,9 @@ class PurchaseBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deletePurchase(item.ID);
+    return collectionRepository.deletePurchase(event.item.ID);
 
   }
 

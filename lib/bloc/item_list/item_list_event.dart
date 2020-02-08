@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_collection/model/collection_item.dart';
 
+import 'package:game_collection/model/collection_item.dart';
 import 'package:game_collection/model/sort_order.dart';
 
 
@@ -22,7 +22,7 @@ class UpdateItemList extends ItemListEvent {
   List<Object> get props => [items];
 
   @override
-  String toString() => 'ItemListUpdated { '
+  String toString() => 'UpdateItemList { '
       'items: $items'
       ' }';
 }

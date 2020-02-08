@@ -33,9 +33,13 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
       yield* _mapUpdateFieldToState(event);
 
-    } else if(event is UpdateItemRelation) {
+    } else if(event is AddItemRelation) {
 
-      yield* _mapUpdateRelationToState(event);
+      yield* _mapAddRelationToState(event);
+
+    } else if(event is DeleteItemRelation) {
+
+      yield* _mapDeleteRelationToState(event);
 
     }
 
@@ -62,7 +66,7 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
     try {
 
-      await deleteFuture(event.item);
+      await deleteFuture(event);
       yield ItemDeleted(event.item);
 
     } catch (e) {
@@ -87,7 +91,39 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
     }
   }
 
-  Stream<ItemState> _mapUpdateRelationToState(UpdateItemRelation event) async* {
+  Stream<ItemState> _mapAddRelationToState(AddItemRelation event) async* {
+
+    try{
+
+      await addRelationFuture(event);
+      yield ItemRelationAdded(
+        event.otherItem,
+        event.field,
+      );
+
+    } catch(e) {
+
+      yield ItemRelationNotAdded(e);
+
+    }
+
+  }
+
+  Stream<ItemState> _mapDeleteRelationToState(DeleteItemRelation event) async* {
+
+    try{
+
+      await deleteRelationFuture(event);
+      yield ItemRelationDeleted(
+        event.otherItem,
+        event.field,
+      );
+
+    } catch(e) {
+
+      yield ItemRelationNotDeleted(e);
+
+    }
 
   }
 
@@ -99,7 +135,9 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
   }
 
   external Future<CollectionItem> createFuture();
-  external Future<dynamic> deleteFuture(CollectionItem item);
+  external Future<dynamic> deleteFuture(DeleteItem event);
   external Future<CollectionItem> updateFuture(UpdateItemField event);
+  external Future<dynamic> addRelationFuture(AddItemRelation event);
+  external Future<dynamic> deleteRelationFuture(DeleteItemRelation event);
 
 }

@@ -13,7 +13,7 @@ import 'item_list.dart';
 class DLCListBloc extends ItemListBloc {
 
   DLCListBloc({
-    @required ItemBloc itemBloc
+    @required ItemBloc itemBloc,
   }) : super(itemBloc: itemBloc);
 
   @override

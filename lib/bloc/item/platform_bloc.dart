@@ -24,9 +24,9 @@ class PlatformBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deletePlatform(item.ID);
+    return collectionRepository.deletePlatform(event.item.ID);
 
   }
 

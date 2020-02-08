@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/ui/common/loading_icon.dart';
 
 import 'item_detail.dart';
 
@@ -23,10 +27,32 @@ class DLCDetail extends StatelessWidget {
 
     itemDetailBloc.add(LoadItem(ID));
 
-    return Scaffold(
-      body: _DLCDetailBody(
-        itemID: ID,
-        itemDetailBloc: itemDetailBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DLCRelationBloc>(
+          create: (BuildContext context) {
+            return DLCRelationBloc(
+              dlcID: ID,
+              relationField: gameTable,
+              itemBloc: itemBloc,
+            )..add(LoadItemRelation());
+          },
+        ),
+        BlocProvider<DLCRelationBloc>(
+          create: (BuildContext context) {
+            return DLCRelationBloc(
+              dlcID: ID,
+              relationField: purchaseTable,
+              itemBloc: itemBloc,
+            )..add(LoadItemRelation());
+          },
+        ),
+      ],
+      child: Scaffold(
+        body: _DLCDetailBody(
+          itemID: ID,
+          itemDetailBloc: itemDetailBloc,
+        ),
       ),
     );
 
@@ -89,6 +115,28 @@ class _DLCDetailBody extends ItemDetailBody {
               newDate,
             ),
           );
+        },
+      ),
+      BlocBuilder<ItemRelationBloc, ItemRelationState>(
+        bloc: BlocProvider.of<DLCRelationBloc>(context),
+        builder: (BuildContext context, ItemRelationState state) {
+
+          if(state is ItemRelationLoaded) {
+            return ResultsListSingle(
+              items: state.items,
+              tableName: gameTable,
+              updateDelete: (CollectionItem deletedItem) {
+                itemBloc.add(DeleteItemRelation(
+                  item,
+                  gameTable,
+                  deletedItem,
+                ));
+              },
+            );
+          }
+
+          return LoadingIcon();
+
         },
       ),
     ];

@@ -24,9 +24,9 @@ class StoreBloc extends ItemBloc {
   }
 
   @override
-  Future<dynamic> deleteFuture(CollectionItem item) {
+  Future<dynamic> deleteFuture(DeleteItem event) {
 
-    return collectionRepository.deleteStore(item.ID);
+    return collectionRepository.deleteStore(event.item.ID);
 
   }
 

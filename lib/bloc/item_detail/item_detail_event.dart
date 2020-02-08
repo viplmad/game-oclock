@@ -24,20 +24,6 @@ class LoadItem extends ItemDetailEvent {
       ' }';
 }
 
-class LoadItemRelation extends ItemDetailEvent {
-  const LoadItemRelation(this.field);
-
-  final String field;
-
-  @override
-  List<Object> get props => [field];
-
-  @override
-  String toString() => 'LoadItemRelation { '
-      'field: $field'
-      ' }';
-}
-
 class UpdateItem extends ItemDetailEvent {
   const UpdateItem(this.item);
 
