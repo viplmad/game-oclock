@@ -10,7 +10,6 @@ const List<String> gameFields = [
   game_nameField,
   game_editionField,
   game_releaseYearField,
-  game_coverField,
   game_statusField,
   game_ratingField,
   game_thoughtsField,
@@ -24,7 +23,6 @@ const List<String> gameFields = [
 const String game_nameField = 'Name';
 const String game_editionField = 'Edition';
 const String game_releaseYearField = 'Release Year';
-const String game_coverField = 'Cover';
 const String game_statusField = 'Status';
 const String game_ratingField = 'Rating';
 const String game_thoughtsField = 'Thoughts';

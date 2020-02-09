@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-
 import 'cloudinary_response.dart';
 import 'image_client.dart';
 

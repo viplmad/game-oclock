@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:http/http.dart';
 
 import 'cloudinary_connection//cloudinary_client.dart';
 import 'cloudinary_connection//cloudinary_response.dart';

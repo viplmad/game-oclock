@@ -1,4 +1,5 @@
 export 'collection_item_entity.dart';
+
 export 'game_entity.dart';
 export 'dlc_entity.dart';
 export 'platform_entity.dart';

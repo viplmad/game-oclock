@@ -447,6 +447,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return _dbConnector.readTable(
       tableName: purchaseTable,
+      selectFields: purchaseFields,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
       },
@@ -686,7 +687,7 @@ class CollectionRepository implements ICollectionRepository {
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSinglePlatform ).first;;
+    ).asStream().map( _dynamicToSinglePlatform ).first;
 
   }
 
@@ -699,7 +700,7 @@ class CollectionRepository implements ICollectionRepository {
       fieldName: fieldName,
       newValue: newValue,
       returningFields: purchaseFields,
-    ).asStream().map( _dynamicToSinglePurchase ).first;;
+    ).asStream().map( _dynamicToSinglePurchase ).first;
 
   }
 
@@ -711,7 +712,7 @@ class CollectionRepository implements ICollectionRepository {
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleStore ).first;;
+    ).asStream().map( _dynamicToSingleStore ).first;
 
   }
 
@@ -723,7 +724,7 @@ class CollectionRepository implements ICollectionRepository {
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleSystem ).first;;
+    ).asStream().map( _dynamicToSingleSystem ).first;
 
   }
 
@@ -735,7 +736,7 @@ class CollectionRepository implements ICollectionRepository {
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleTag ).first;;
+    ).asStream().map( _dynamicToSingleTag ).first;
 
   }
 
@@ -747,7 +748,7 @@ class CollectionRepository implements ICollectionRepository {
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleType ).first;;
+    ).asStream().map( _dynamicToSingleType ).first;
 
   }
   //#endregion UPDATE

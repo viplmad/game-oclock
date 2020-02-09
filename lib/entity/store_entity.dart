@@ -8,11 +8,9 @@ const String storeTable = "Store";
 const List<String> storeFields = [
   IDField,
   stor_nameField,
-  stor_iconField,
 ];
 
 const String stor_nameField = 'Name';
-const String stor_iconField = 'Icon';
 
 class StoreEntity extends CollectionItemEntity {
 

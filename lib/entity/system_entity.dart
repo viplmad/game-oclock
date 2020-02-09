@@ -8,13 +8,11 @@ const String systemTable = "System";
 const List<String> systemTables = [
   IDField,
   sys_nameField,
-  sys_iconField,
   sys_generationField,
   sys_manufacturerField,
 ];
 
 const String sys_nameField = 'Name';
-const String sys_iconField = 'Icon';
 const String sys_generationField = 'Generation';
 const String sys_manufacturerField = 'Manufacturer';
 

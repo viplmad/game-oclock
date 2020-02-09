@@ -9,14 +9,12 @@ const List<String> dlcFields = [
   IDField,
   dlc_nameField,
   dlc_releaseYearField,
-  dlc_coverField,
   dlc_finishDateField,
   dlc_baseGameField,
 ];
 
 const String dlc_nameField = 'Name';
 const String dlc_releaseYearField = 'Release Year';
-const String dlc_coverField = 'Cover';
 const String dlc_finishDateField = 'Finish Date';
 
 const String dlc_baseGameField = 'Base Game';

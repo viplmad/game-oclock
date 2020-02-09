@@ -152,6 +152,27 @@ Widget HomepageProvider() {
           );
         },
       ),
+      BlocProvider<PlatformDetailBloc>(
+        create: (BuildContext context) {
+          return PlatformDetailBloc(
+            itemBloc: BlocProvider.of<PlatformBloc>(context),
+          );
+        },
+      ),
+      BlocProvider<PurchaseDetailBloc>(
+        create: (BuildContext context) {
+          return PurchaseDetailBloc(
+            itemBloc: BlocProvider.of<PurchaseBloc>(context),
+          );
+        },
+      ),
+      BlocProvider<StoreDetailBloc>(
+        create: (BuildContext context) {
+          return StoreDetailBloc(
+            itemBloc: BlocProvider.of<StoreBloc>(context),
+          );
+        },
+      ),
     ],
     child: Homepage(),
   );

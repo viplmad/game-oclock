@@ -53,15 +53,15 @@ class ItemList extends StatelessWidget {
                           itemDetailBloc: itemDetailBloc,
                         );
                       case AppTab.store:
-                        /*return StoreDetail(
+                        return StoreDetail(
                           ID: result.ID,
                           itemDetailBloc: itemDetailBloc,
-                        );*/
+                        );
                       case AppTab.platform:
-                        /*return PlatformDetail(
+                        return PlatformDetail(
                           ID: result.ID,
                           itemDetailBloc: itemDetailBloc,
-                        );*/
+                        );
                     }
                     return Center();
                   },

@@ -8,12 +8,10 @@ const String platformTable = "Platform";
 const List<String> platformFields = [
   IDField,
   plat_nameField,
-  plat_iconField,
   plat_typeField,
 ];
 
 const String plat_nameField = "Name";
-const String plat_iconField = "Icon";
 const String plat_typeField = "Type";
 
 List<String> types = [

@@ -10,9 +10,9 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'item_detail.dart';
 
 
-class PurchaseDetail extends StatelessWidget {
+class PlatformDetail extends StatelessWidget {
 
-  const PurchaseDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
+  const PlatformDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
 
   final int ID;
   final ItemDetailBloc itemDetailBloc;
@@ -25,7 +25,7 @@ class PurchaseDetail extends StatelessWidget {
     itemDetailBloc.add(LoadItem(ID));
 
     return Scaffold(
-      body: _PurchaseDetailBody(
+      body: _PlatformDetailBody(
         itemID: ID,
         itemDetailBloc: itemDetailBloc,
       ),
@@ -35,9 +35,9 @@ class PurchaseDetail extends StatelessWidget {
 
 }
 
-class _PurchaseDetailBody extends ItemDetailBody {
+class _PlatformDetailBody extends ItemDetailBody {
 
-  _PurchaseDetailBody({
+  _PlatformDetailBody({
     Key key,
     @required int itemID,
     @required ItemDetailBloc itemDetailBloc,
@@ -50,49 +50,32 @@ class _PurchaseDetailBody extends ItemDetailBody {
   @override
   List<Widget> itemFieldsBuilder(BuildContext context) {
 
-    Purchase purchase = (item as Purchase);
+    Platform platform = (item as Platform);
 
     return [
       itemTextField(
-        fieldName: purc_descriptionField,
-        value: purchase.description,
+        fieldName: plat_nameField,
+        value: platform.name,
       ),
-      itemMoneyField(
-        fieldName: purc_priceField,
-        value: purchase.price,
-      ),
-      itemMoneyField(
-        fieldName: purc_externalCreditField,
-        value: purchase.externalCredit,
-      ),
-      itemDateTimeField(
-        fieldName: purc_dateField,
-        value: purchase.date,
-      ),
-      itemMoneyField(
-        fieldName: purc_originalPriceField,
-        value: purchase.originalPrice,
-      ),
-      itemsSingleRelation(
-        tableName: storeTable,
+      itemTextField( //TODO: enum field
+        fieldName: plat_typeField,
+        value: platform.type,
       ),
       itemsManyRelation(
         tableName: gameTable,
       ),
-      itemsManyRelation(
-        tableName: dlcTable,
-      ),
       itemsManyRelation( //TODO: show as chips
-        tableName: typeTable,
+        tableName: systemTable,
       ),
     ];
+
   }
 
   @override
-  PurchaseRelationBloc itemRelationBlocFunction(String tableName) {
+  PlatformRelationBloc itemRelationBlocFunction(String tableName) {
 
-    return PurchaseRelationBloc(
-      purchaseID: itemID,
+    return PlatformRelationBloc(
+      platformID: itemID,
       relationField: tableName,
       itemBloc: itemBloc,
     );

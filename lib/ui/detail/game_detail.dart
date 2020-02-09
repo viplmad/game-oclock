@@ -106,7 +106,7 @@ class _GameDetailBody extends ItemDetailBody {
       itemsManyRelation(
         tableName: dlcTable,
       ),
-      itemsManyRelation(
+      itemsManyRelation( //TODO: show as chips
         tableName: tagTable,
       ),
     ];
