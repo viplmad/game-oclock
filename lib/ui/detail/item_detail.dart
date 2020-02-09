@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import 'package:game_collection/ui/common/loading_icon.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/item_search.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/ui/item_search.dart';
+import 'package:game_collection/ui/common/loading_icon.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/common/item_view.dart';
+
 
 abstract class ItemDetailBody extends StatelessWidget {
 
@@ -139,7 +140,7 @@ abstract class ItemDetailBody extends StatelessWidget {
         ];
       },
       body: ListView(
-        children: itemDetailFields(context),
+        children: itemFieldsBuilder(context),
       ),
     );
 
@@ -271,14 +272,13 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemsSingleRelation({@required ItemRelationBloc Function(String tableName) itemRelationBloc, @required String tableName, String shownValue}) {
+  Widget itemsSingleRelation({@required String tableName, String shownValue}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBloc(tableName)..add(LoadItemRelation()),
+      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
         if(state is ItemRelationLoaded) {
-          print("stateloaded changed " + state.items.toString());
           return ResultsListSingle(
             items: state.items,
             tableName: tableName,
@@ -298,10 +298,10 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemsManyRelation({@required ItemRelationBloc Function(String tableName) itemRelationBloc, @required String tableName}) {
+  Widget itemsManyRelation({@required String tableName}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBloc(tableName)..add(LoadItemRelation()),
+      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
         if(state is ItemRelationLoaded) {
@@ -323,7 +323,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  external List<Widget> itemDetailFields(BuildContext context);
+  external List<Widget> itemFieldsBuilder(BuildContext context);
 
   external ItemRelationBloc itemRelationBlocFunction(String tableName);
 

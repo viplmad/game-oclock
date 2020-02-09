@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/model/model.dart';
+
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
-
-import 'package:game_collection/entity/entity.dart';
-import 'package:game_collection/model/model.dart';
 
 import 'item_detail.dart';
 
@@ -48,7 +48,7 @@ class _GameDetailBody extends ItemDetailBody {
   );
 
   @override
-  List<Widget> itemDetailFields(BuildContext context) {
+  List<Widget> itemFieldsBuilder(BuildContext context) {
 
     Game game = (item as Game);
 
@@ -98,19 +98,15 @@ class _GameDetailBody extends ItemDetailBody {
         value: game.isBackup,
       ),
       itemsManyRelation(
-        itemRelationBloc: itemRelationBlocFunction,
         tableName: platformTable,
       ),
       itemsManyRelation(
-        itemRelationBloc: itemRelationBlocFunction,
         tableName: purchaseTable,
       ),
       itemsManyRelation(
-        itemRelationBloc: itemRelationBlocFunction,
         tableName: dlcTable,
       ),
       itemsManyRelation(
-        itemRelationBloc: itemRelationBlocFunction,
         tableName: tagTable,
       ),
     ];

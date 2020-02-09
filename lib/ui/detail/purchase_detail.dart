@@ -10,9 +10,9 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'item_detail.dart';
 
 
-class DLCDetail extends StatelessWidget {
+class PurchaseDetail extends StatelessWidget {
 
-  const DLCDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
+  const PurchaseDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
 
   final int ID;
   final ItemDetailBloc itemDetailBloc;
@@ -25,7 +25,7 @@ class DLCDetail extends StatelessWidget {
     itemDetailBloc.add(LoadItem(ID));
 
     return Scaffold(
-      body: _DLCDetailBody(
+      body: _PurchaseDetailBody(
         itemID: ID,
         itemDetailBloc: itemDetailBloc,
       ),
@@ -35,9 +35,9 @@ class DLCDetail extends StatelessWidget {
 
 }
 
-class _DLCDetailBody extends ItemDetailBody {
+class _PurchaseDetailBody extends ItemDetailBody {
 
-  _DLCDetailBody({
+  _PurchaseDetailBody({
     Key key,
     @required int itemID,
     @required ItemDetailBloc itemDetailBloc,
@@ -50,37 +50,49 @@ class _DLCDetailBody extends ItemDetailBody {
   @override
   List<Widget> itemFieldsBuilder(BuildContext context) {
 
-    DLC dlc = (item as DLC);
+    Purchase purchase = (item as Purchase);
 
     return [
       itemTextField(
-        fieldName: dlc_nameField,
-        value: dlc.name,
+        fieldName: purc_descriptionField,
+        value: purchase.description,
       ),
-      itemYearField(
-        fieldName: dlc_releaseYearField,
-        value: dlc.releaseYear,
+      itemMoneyField(
+        fieldName: purc_priceField,
+        value: purchase.price,
+      ),
+      itemMoneyField(
+        fieldName: purc_externalCreditField,
+        value: purchase.externalCredit,
       ),
       itemDateTimeField(
-        fieldName: dlc_finishDateField,
-        value: dlc.finishDate,
+        fieldName: purc_dateField,
+        value: purchase.date,
+      ),
+      itemMoneyField(
+        fieldName: purc_originalPriceField,
+        value: purchase.originalPrice,
       ),
       itemsSingleRelation(
-        tableName: gameTable,
-        shownValue: dlc_baseGameField,
+        tableName: storeTable,
       ),
       itemsManyRelation(
-        tableName: purchaseTable,
+        tableName: gameTable,
+      ),
+      itemsManyRelation(
+        tableName: dlcTable,
+      ),
+      itemsManyRelation(
+        tableName: typeTable,
       ),
     ];
-
   }
 
   @override
-  DLCRelationBloc itemRelationBlocFunction(String tableName) {
+  PurchaseRelationBloc itemRelationBlocFunction(String tableName) {
 
-    return DLCRelationBloc(
-      dlcID: itemID,
+    return PurchaseRelationBloc(
+      purchaseID: itemID,
       relationField: tableName,
       itemBloc: itemBloc,
     );

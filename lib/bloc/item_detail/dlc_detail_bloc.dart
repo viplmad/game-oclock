@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/collection_item.dart';
-import 'package:game_collection/model/dlc.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 
@@ -17,9 +16,9 @@ class DLCDetailBloc extends ItemDetailBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<DLC> getReadIDStream(int ID) {
+  Stream<DLC> getReadIDStream(LoadItem event) {
 
-    return collectionRepository.getDLCWithID(ID);
+    return collectionRepository.getDLCWithID(event.ID);
 
   }
 

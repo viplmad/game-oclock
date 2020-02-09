@@ -8,11 +8,9 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/ui/bloc_provider_route.dart';
 
-import 'package:game_collection/ui/common/loading_icon.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-
+import 'common/loading_icon.dart';
+import 'common/show_snackbar.dart';
 import 'bar_items.dart';
 import 'item_list.dart';
 
@@ -39,15 +37,15 @@ class Homepage extends StatelessWidget {
             break;
           case AppTab.purchase:
             selectedItemListBloc = BlocProvider.of<PurchaseListBloc>(context);
-            //itemDetailBloc = BlocProvider.of<PurchaseDetailBloc>(context);
+            itemDetailBloc = BlocProvider.of<PurchaseDetailBloc>(context);
             break;
           case AppTab.store:
             selectedItemListBloc = BlocProvider.of<StoreListBloc>(context);
-            //itemDetailBloc = BlocProvider.of<StoreDetailBloc>(context);
+            itemDetailBloc = BlocProvider.of<StoreDetailBloc>(context);
             break;
           case AppTab.platform:
             selectedItemListBloc = BlocProvider.of<PlatformListBloc>(context);
-            //itemDetailBloc = BlocProvider.of<PlatformDetailBloc>(context);
+            itemDetailBloc = BlocProvider.of<PlatformDetailBloc>(context);
             break;
         }
 

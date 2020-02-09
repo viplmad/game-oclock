@@ -135,14 +135,14 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Future<dynamic> insertPlatform(String name) {
+  Future<Platform> insertPlatform(String name) {
 
     return _dbConnector.insertTable(
       tableName: platformTable,
       fieldAndValues: <String, dynamic> {
         plat_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSinglePlatform ).first;
 
   }
 
@@ -160,7 +160,7 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion Platform
 
   //#region Purchase
-  Future<dynamic> insertPurchase(String description) {
+  Future<Purchase> insertPurchase(String description) {
 
     return _dbConnector.insertTable(
       tableName: purchaseTable,
@@ -168,7 +168,7 @@ class CollectionRepository implements ICollectionRepository {
         purc_descriptionField : description,
       },
       returningFields: purchaseFields,
-    );
+    ).asStream().map( _dynamicToSinglePurchase ).first;
 
   }
 
@@ -187,14 +187,14 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Future<dynamic> insertStore(String name) {
+  Future<Store> insertStore(String name) {
 
     return _dbConnector.insertTable(
       tableName: storeTable,
       fieldAndValues: <String, dynamic> {
         stor_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSingleStore ).first;
 
   }
 
@@ -213,42 +213,42 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Future<dynamic> insertSystem(String name) {
+  Future<System> insertSystem(String name) {
 
     return _dbConnector.insertTable(
       tableName: systemTable,
       fieldAndValues: <String, dynamic> {
         sys_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSingleSystem ).first;
 
   }
   //#endregion System
 
   //#region Tag
   @override
-  Future<dynamic> insertTag(String name) {
+  Future<Tag> insertTag(String name) {
 
     return _dbConnector.insertTable(
       tableName: tagTable,
       fieldAndValues: <String, dynamic> {
         tag_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSingleTag ).first;
 
   }
   //#endregion Tag
 
   //#region Type
   @override
-  Future<dynamic> insertType(String name) {
+  Future<PurchaseType> insertType(String name) {
 
     return _dbConnector.insertTable(
       tableName: typeTable,
       fieldAndValues: <String, dynamic> {
         type_nameField : name,
       },
-    );
+    ).asStream().map( _dynamicToSingleType ).first;
 
   }
   //#endregion Type
@@ -364,7 +364,6 @@ class CollectionRepository implements ICollectionRepository {
       primaryResults: true,
       selectFields: gameFields,
     ).asStream().map( _dynamicToSingleGame );
-    //return getGameWithID(baseGameID);
 
   }
 
@@ -390,6 +389,18 @@ class CollectionRepository implements ICollectionRepository {
       tableName: platformTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListPlatform );
+
+  }
+
+  @override
+  Stream<Platform> getPlatformWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: platformTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSinglePlatform );
 
   }
 
@@ -431,13 +442,26 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  Stream<Store> getStoreFromPurchase(int storeID) {
+  @override
+  Stream<Purchase> getPurchaseWithID(int ID) {
 
     return _dbConnector.readTable(
-      tableName: storeTable,
-      whereFieldsAndValues: <String, dynamic> {
-        IDField : storeID,
+      tableName: purchaseTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
       },
+    ).asStream().map( _dynamicToSinglePurchase );
+
+  }
+
+  Stream<Store> getStoreFromPurchase(int ID) {
+
+    return _dbConnector.readWeakRelation(
+      primaryTable: storeTable,
+      subordinateTable: purchaseTable,
+      relationField: purc_storeField,
+      relationID: ID,
+      primaryResults: true,
     ).asStream().map( _dynamicToSingleStore );
 
   }
@@ -492,6 +516,18 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<Store> getStoreWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: storeTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSingleStore );
+
+  }
+
+  @override
   Stream<List<Purchase>> getPurchasesFromStore(int ID) {
 
     return _dbConnector.readWeakRelation(
@@ -513,6 +549,18 @@ class CollectionRepository implements ICollectionRepository {
       tableName: systemTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListSystem );
+
+  }
+
+  @override
+  Stream<System> getSystemWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: systemTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSingleSystem );
 
   }
 
@@ -541,6 +589,18 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<Tag> getTagWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: tagTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSingleTag );
+
+  }
+
+  @override
   Stream<List<Game>> getGamesFromTag(int ID) {
 
     return _dbConnector.readRelation(
@@ -562,6 +622,18 @@ class CollectionRepository implements ICollectionRepository {
       tableName: typeTable,
       sortFields: sortFields,
     ).asStream().map( _dynamicToListType );
+
+  }
+
+  @override
+  Stream<PurchaseType> getTypeWithID(int ID) {
+
+    return _dbConnector.readTable(
+      tableName: typeTable,
+      whereFieldsAndValues: <String, int> {
+        IDField : ID,
+      },
+    ).asStream().map( _dynamicToSingleType );
 
   }
 
@@ -607,74 +679,75 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue) {
+  Future<Platform> updatePlatform<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: platformTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSinglePlatform ).first;;
 
   }
 
   @override
-  Future<dynamic> updatePurchase<T>(int ID, String fieldName, T newValue) {
+  Future<Purchase> updatePurchase<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: purchaseTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+      returningFields: purchaseFields,
+    ).asStream().map( _dynamicToSinglePurchase ).first;;
 
   }
 
   @override
-  Future<dynamic> updateStore<T>(int ID, String fieldName, T newValue) {
+  Future<Store> updateStore<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: storeTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSingleStore ).first;;
 
   }
 
   @override
-  Future<dynamic> updateSystem<T>(int ID, String fieldName, T newValue) {
+  Future<System> updateSystem<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: systemTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSingleSystem ).first;;
 
   }
 
   @override
-  Future<dynamic> updateTag<T>(int ID, String fieldName, T newValue) {
+  Future<Tag> updateTag<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: tagTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSingleTag ).first;;
 
   }
 
   @override
-  Future<dynamic> updateType<T>(int ID, String fieldName, T newValue) {
+  Future<PurchaseType> updateType<T>(int ID, String fieldName, T newValue) {
 
     return _dbConnector.updateTable(
       tableName: typeTable,
       ID: ID,
       fieldName: fieldName,
       newValue: newValue,
-    );
+    ).asStream().map( _dynamicToSingleType ).first;;
 
   }
   //#endregion UPDATE
@@ -1103,9 +1176,7 @@ class CollectionRepository implements ICollectionRepository {
 
     DLC singleDLC;
 
-    if(results.isEmpty) {
-      singleDLC = DLC(ID: -1);
-    } else {
+    if(results.isNotEmpty) {
       singleDLC = _dynamicToListDLC(results).first;
     }
 
@@ -1113,17 +1184,75 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
+  Platform _dynamicToSinglePlatform(List<Map<String, Map<String, dynamic>>> results) {
+
+    Platform singlePlatform;
+
+    if(results.isNotEmpty) {
+      singlePlatform = _dynamicToListPlatform(results).first;
+    }
+
+    return singlePlatform;
+
+  }
+
+  Purchase _dynamicToSinglePurchase(List<Map<String, Map<String, dynamic>>> results) {
+
+    Purchase singlePurchase;
+
+    if(results.isNotEmpty) {
+      singlePurchase = _dynamicToListPurchase(results).first;
+    }
+
+    return singlePurchase;
+
+  }
+
   Store _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
 
     Store singleStore;
 
-    if(results.isEmpty) {
-      singleStore = Store(ID: -1);
-    } else {
+    if(results.isNotEmpty) {
       singleStore = _dynamicToListStore(results).first;
     }
 
     return singleStore;
+
+  }
+
+  System _dynamicToSingleSystem(List<Map<String, Map<String, dynamic>>> results) {
+
+    System singleSystem;
+
+    if(results.isNotEmpty) {
+      singleSystem = _dynamicToListSystem(results).first;
+    }
+
+    return singleSystem;
+
+  }
+
+  Tag _dynamicToSingleTag(List<Map<String, Map<String, dynamic>>> results) {
+
+    Tag singleTag;
+
+    if(results.isNotEmpty) {
+      singleTag = _dynamicToListTag(results).first;
+    }
+
+    return singleTag;
+
+  }
+
+  PurchaseType _dynamicToSingleType(List<Map<String, Map<String, dynamic>>> results) {
+
+    PurchaseType singleType;
+
+    if(results.isNotEmpty) {
+      singleType = _dynamicToListType(results).first;
+    }
+
+    return singleType;
 
   }
   //#endregion Dynamic Map to List

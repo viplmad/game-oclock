@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+
+import 'package:game_collection/model/app_tab.dart';
 
 import 'tab.dart';
-import 'package:game_collection/model/app_tab.dart';
 
 
 class TabBloc extends Bloc<TabEvent, AppTab> {

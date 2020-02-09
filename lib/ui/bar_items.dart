@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/bar_item.dart';
 
-import 'package:game_collection/entity/entity.dart';
 
 const List<BarItem> barItems = [
   gameBarItem,

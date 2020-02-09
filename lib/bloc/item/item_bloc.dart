@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/model/collection_item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
+
 
 abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 

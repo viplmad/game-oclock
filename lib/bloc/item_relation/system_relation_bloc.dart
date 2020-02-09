@@ -10,22 +10,20 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_relation.dart';
 
 
-class DLCRelationBloc extends ItemRelationBloc {
+class SystemRelationBloc extends ItemRelationBloc {
 
-  DLCRelationBloc({
-    @required int dlcID,
+  SystemRelationBloc({
+    @required int systemID,
     @required String relationField,
     @required ItemBloc itemBloc,
-  }) : super(itemID: dlcID, relationField: relationField, itemBloc: itemBloc);
+  }) : super(itemID: systemID, relationField: relationField, itemBloc: itemBloc);
 
   @override
   Stream<List<CollectionItem>> getRelationStream() {
 
     switch(relationField) {
-      case gameTable:
-        return collectionRepository.getBaseGameFromDLC(itemID).map( (CollectionItem game) => game != null? [game] : [] );
-      case purchaseTable:
-        return collectionRepository.getPurchasesFromDLC(itemID);
+      case platformTable:
+        return collectionRepository.getPlatformsFromSystem(itemID);
     }
 
   }

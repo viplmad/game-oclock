@@ -5,11 +5,12 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/model/collection_item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 
 import 'item_detail.dart';
+
 
 abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
@@ -45,7 +46,7 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
     try {
 
-      final CollectionItem item = await getReadIDStream(event.ID).first;
+      final CollectionItem item = await getReadIDStream(event).first;
       yield ItemLoaded(item);
 
     } catch (e) {
@@ -90,6 +91,6 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   }
 
-  external Stream<CollectionItem> getReadIDStream(int ID);
+  external Stream<CollectionItem> getReadIDStream(LoadItem event);
 
 }

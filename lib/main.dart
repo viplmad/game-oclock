@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:game_collection/ui/bloc_provider_route.dart';
-
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/client/postgres_connector.dart';
 import 'package:game_collection/client/cloudinary_connector.dart';
+
+import 'package:game_collection/ui/bloc_provider_route.dart';
 
 
 void main() => runApp(GameCollection());
@@ -20,6 +20,7 @@ class GameCollection extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
+    //Initial set of backend providers
     CollectionRepository(
       idbConnector: PostgresConnector(),
       iImageConnector: CloudinaryConnector(),

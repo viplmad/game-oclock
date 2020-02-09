@@ -19,25 +19,25 @@ abstract class ICollectionRepository {
   Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID);
 
     //Platform
-  Future<dynamic> insertPlatform(String name);
+  Future<Platform> insertPlatform(String name);
   Future<dynamic> insertPlatformSystem(int platformID, int systemID);
 
     //Purchase
-  Future<dynamic> insertPurchase(String description);
+  Future<Purchase> insertPurchase(String description);
   Future<dynamic> insertPurchaseType(int purchaseID, int typeID);
 
     //Store
-  Future<dynamic> insertStore(String name);
+  Future<Store> insertStore(String name);
   Future<dynamic> insertStorePurchase(int storeID, int purchaseID);
 
     //System
-  Future<dynamic> insertSystem(String name);
+  Future<System> insertSystem(String name);
 
     //Tag
-  Future<dynamic> insertTag(String name);
+  Future<Tag> insertTag(String name);
 
     //Type
-  Future<dynamic> insertType(String name);
+  Future<PurchaseType> insertType(String name);
   //#endregion CREATE
 
 
@@ -58,11 +58,13 @@ abstract class ICollectionRepository {
 
     //Platform
   Stream<List<Platform>> getAllPlatforms([List<String> sortFields]);
+  Stream<Platform> getPlatformWithID(int ID);
   Stream<List<Game>> getGamesFromPlatform(int ID);
   Stream<List<System>> getSystemsFromPlatform(int ID);
 
     //Purchase
   Stream<List<Purchase>> getAllPurchases([List<String> sortFields]);
+  Stream<Purchase> getPurchaseWithID(int ID);
   Stream<Store> getStoreFromPurchase(int storeID);
   Stream<List<Game>> getGamesFromPurchase(int ID);
   Stream<List<DLC>> getDLCsFromPurchase(int ID);
@@ -70,18 +72,22 @@ abstract class ICollectionRepository {
 
     //Store
   Stream<List<Store>> getAllStores([List<String> sortFields]);
+  Stream<Store> getStoreWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromStore(int ID);
 
     //System
   Stream<List<System>> getAllSystems([List<String> sortFields]);
+  Stream<System> getSystemWithID(int ID);
   Stream<List<Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
   Stream<List<Tag>> getAllTags([List<String> sortFields]);
+  Stream<Tag> getTagWithID(int ID);
   Stream<List<Game>> getGamesFromTag(int ID);
 
     //Type
   Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]);
+  Stream<PurchaseType> getTypeWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
 
@@ -94,22 +100,22 @@ abstract class ICollectionRepository {
   Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue);
 
     //Platform
-  Future<dynamic> updatePlatform<T>(int ID, String fieldName, T newValue);
+  Future<Platform> updatePlatform<T>(int ID, String fieldName, T newValue);
 
     //Purchase
-  Future<dynamic> updatePurchase<T>(int ID, String fieldName, T newValue);
+  Future<Purchase> updatePurchase<T>(int ID, String fieldName, T newValue);
 
     //Store
-  Future<dynamic> updateStore<T>(int ID, String fieldName, T newValue);
+  Future<Store> updateStore<T>(int ID, String fieldName, T newValue);
 
     //System
-  Future<dynamic> updateSystem<T>(int ID, String fieldName, T newValue);
+  Future<System> updateSystem<T>(int ID, String fieldName, T newValue);
 
     //Tag
-  Future<dynamic> updateTag<T>(int ID, String fieldName, T newValue);
+  Future<Tag> updateTag<T>(int ID, String fieldName, T newValue);
 
     //Type
-  Future<dynamic> updateType<T>(int ID, String fieldName, T newValue);
+  Future<PurchaseType> updateType<T>(int ID, String fieldName, T newValue);
   //#endregion UPDATE
 
 

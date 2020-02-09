@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/repository/collection_repository.dart';
 
-import 'package:game_collection/ui/common/loading_icon.dart';
-import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'common/loading_icon.dart';
+import 'common/item_view.dart';
+
 
 class ItemSearch extends StatefulWidget {
   const ItemSearch({Key key, @required this.searchTable}) : super(key: key);

@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'connection_event.dart';
-import 'connection_state.dart';
+import 'connection.dart';
+
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
-  final ICollectionRepository collectionRepository;
-
   ConnectionBloc({@required this.collectionRepository});
+
+  final ICollectionRepository collectionRepository;
 
   @override
   ConnectState get initialState => Uninitialised();

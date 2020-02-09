@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/ui/common/loading_icon.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-
 import 'package:game_collection/bloc/connection/connection.dart';
 
+import 'common/loading_icon.dart';
+import 'common/show_snackbar.dart';
 import 'bloc_provider_route.dart';
 
 

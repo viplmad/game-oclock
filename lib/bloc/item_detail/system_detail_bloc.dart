@@ -9,16 +9,16 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_detail.dart';
 
 
-class GameDetailBloc extends ItemDetailBloc {
+class SystemDetailBloc extends ItemDetailBloc {
 
-  GameDetailBloc({
+  SystemDetailBloc({
     @required ItemBloc itemBloc
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<Game> getReadIDStream(LoadItem event) {
+  Stream<System> getReadIDStream(LoadItem event) {
 
-    return collectionRepository.getGameWithID(event.ID);
+    return collectionRepository.getSystemWithID(event.ID);
 
   }
 

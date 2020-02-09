@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:game_collection/ui/common/item_view.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/app_tab.dart';
@@ -9,7 +6,9 @@ import 'package:game_collection/model/app_tab.dart';
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
+import 'common/item_view.dart';
 import 'detail/detail.dart';
+
 
 class ItemList extends StatelessWidget {
 
@@ -49,10 +48,10 @@ class ItemList extends StatelessWidget {
                           itemDetailBloc: itemDetailBloc,
                         );
                       case AppTab.purchase:
-                        /*return PurchaseDetail(
+                        return PurchaseDetail(
                           ID: result.ID,
                           itemDetailBloc: itemDetailBloc,
-                        );*/
+                        );
                       case AppTab.store:
                         /*return StoreDetail(
                           ID: result.ID,

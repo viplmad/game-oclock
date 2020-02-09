@@ -4,8 +4,8 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/model/collection_item.dart';
-import 'package:game_collection/model/store.dart';
+import 'package:game_collection/entity/entity.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
 
@@ -27,6 +27,39 @@ class StoreBloc extends ItemBloc {
   Future<dynamic> deleteFuture(DeleteItem event) {
 
     return collectionRepository.deleteStore(event.item.ID);
+
+  }
+
+  @override
+  Future<Store> updateFuture(UpdateItemField event) {
+
+    return collectionRepository.updateStore(event.item.ID, event.field, event.value);
+
+  }
+
+  @override
+  Future<dynamic> addRelationFuture(AddItemRelation event) {
+
+    int storeID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(event.field) {
+      case purchaseTable:
+        return collectionRepository.insertStorePurchase(storeID, otherID);
+    }
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+
+    int storeID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(event.field) {
+      case purchaseTable:
+        return collectionRepository.deleteStorePurchase(otherID);
+    }
 
   }
 
