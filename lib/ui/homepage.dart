@@ -53,6 +53,22 @@ class Homepage extends StatelessWidget {
           appBar: AppBar(
             title: Text(barItem.title + 's'),
             backgroundColor: barItem.color,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.sort_by_alpha),
+                tooltip: "Change Order",
+                onPressed: () {
+                  //Use enum
+                  selectedItemListBloc.add(UpdateSortOrder(null));
+                },
+              ),
+              _HomepageAction(
+                activeTab: state,
+                onSelected: (String selectedView) {
+                  selectedItemListBloc.add(UpdateView(selectedView));
+                },
+              ),
+            ],
           ),
           body: _HomepageBody(
             activeTab: state,
@@ -68,11 +84,43 @@ class Homepage extends StatelessWidget {
           floatingActionButton: _HomepageFAB(
             activeTab: state,
             onTap: () {
+              //TODO use values or remove object from constructor
               selectedItemListBloc.itemBloc.add(AddItem(null));
             },
           ),
         );
       },
+    );
+
+  }
+
+}
+
+class _HomepageAction extends StatelessWidget {
+
+  const _HomepageAction({Key key, this.activeTab, this.onSelected}) : super(key: key);
+
+  final AppTab activeTab;
+  final Function(String) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    BarItem barItem = barItems.elementAt(AppTab.values.indexOf(activeTab));
+
+    return PopupMenuButton(
+      icon: Icon(Icons.view_carousel),
+      tooltip: "Change View",
+      itemBuilder: (BuildContext context) {
+        return barItem.views.map((String view) {
+          return PopupMenuItem(
+            child: ListTile(
+              title: Text(view),
+            ),
+            value: view,
+          );
+        }).toList();
+      },
+      onSelected: onSelected,
     );
 
   }

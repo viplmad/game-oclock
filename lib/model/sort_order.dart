@@ -1,4 +1,11 @@
 enum SortOrder {
-  ascending,
-  descending,
+  Ascending,
+  Descending,
 }
+
+const List<String> GameViews = [
+  "Main",
+  "Playing",
+  "Last Finished",
+  "2019 in Review",
+];

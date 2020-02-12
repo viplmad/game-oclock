@@ -16,7 +16,7 @@ class PurchaseListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<Purchase>> getReadStream() {
+  Stream<List<Purchase>> getReadAllStream() {
 
     return collectionRepository.getAllPurchases();
 

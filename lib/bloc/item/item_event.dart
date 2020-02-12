@@ -11,7 +11,7 @@ abstract class ItemEvent extends Equatable {
 }
 
 class AddItem extends ItemEvent {
-  const AddItem(this.item);
+  const AddItem([this.item]);
 
   final CollectionItem item;
 

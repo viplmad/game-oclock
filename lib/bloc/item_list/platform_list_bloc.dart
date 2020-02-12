@@ -16,7 +16,7 @@ class PlatformListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<Platform>> getReadStream() {
+  Stream<List<Platform>> getReadAllStream() {
 
     return collectionRepository.getAllPlatforms();
 

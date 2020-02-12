@@ -37,9 +37,9 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
       yield* _mapListUpdateToState(event);
 
-    } else if(event is UpdateSort) {
+    } else if(event is UpdateView) {
 
-      yield* _mapUpdateSortToState(event);
+      yield* _mapUpdateViewToState(event);
 
     } else if(event is UpdateSortOrder) {
 
@@ -55,7 +55,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     try {
 
-      final List<CollectionItem> items = await getReadStream().first;
+      final List<CollectionItem> items = await getReadAllStream().first;
       yield ItemListLoaded(items);
 
     } catch (e) {
@@ -72,11 +72,27 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  Stream<ItemListState> _mapUpdateSortToState(UpdateSort event) async* {
+  Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
+
+    try {
+
+      final List<CollectionItem> items = await getReadViewStream(event).first;
+      yield ItemListLoaded(items);
+
+    } catch(e) {
+
+      yield ItemListNotLoaded(e.toString());
+
+    }
 
   }
 
   Stream<ItemListState> _mapUpdateSortOrderToState(UpdateSortOrder event) async* {
+
+    if(state is ItemListLoaded) {
+      final List<CollectionItem> reversedItems = (state as ItemListLoaded).items.reversed.toList();
+      yield ItemListLoaded(reversedItems);
+    }
 
   }
 
@@ -151,6 +167,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  external Stream<List<CollectionItem>> getReadStream();
+  external Stream<List<CollectionItem>> getReadAllStream();
+  external Stream<List<CollectionItem>> getReadViewStream(UpdateView event);
 
 }

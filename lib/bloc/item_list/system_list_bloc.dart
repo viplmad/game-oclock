@@ -16,7 +16,7 @@ class SystemListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<System>> getReadStream() {
+  Stream<List<System>> getReadAllStream() {
 
     return collectionRepository.getAllSystems();
 

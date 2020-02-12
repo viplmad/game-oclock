@@ -16,7 +16,7 @@ class StoreListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<Store>> getReadStream() {
+  Stream<List<Store>> getReadAllStream() {
 
     return collectionRepository.getAllStores();
 

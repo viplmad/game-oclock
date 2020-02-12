@@ -16,7 +16,7 @@ class TagListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<Tag>> getReadStream() {
+  Stream<List<Tag>> getReadAllStream() {
 
     return collectionRepository.getAllTags();
 

@@ -106,6 +106,14 @@ class _GameDetailBody extends ItemDetailBody {
         fieldName: game_backupField,
         value: game.isBackup,
       ),
+    ];
+
+  }
+
+  @override
+  List<Widget> itemRelationsBuilder(BuildContext context) {
+
+    return [
       itemListManyRelation(
         tableName: platformTable,
       ),

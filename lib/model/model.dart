@@ -8,3 +8,5 @@ export 'store.dart';
 export 'system.dart';
 export 'tag.dart';
 export 'type.dart';
+
+export 'sort_order.dart';

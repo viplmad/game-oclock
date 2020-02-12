@@ -268,6 +268,18 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<List<Game>> getGames([Map<String, dynamic> whereFieldsAndValues, List<String> sortFields]) {
+    
+    return _dbConnector.readTable(
+      tableName: gameTable,
+      selectFields: gameFields,
+      whereFieldsAndValues: whereFieldsAndValues,
+      sortFields: sortFields,
+    ).asStream().map( _dynamicToListGame );
+    
+  }
+
+  @override
   Stream<Game> getGameWithID(int ID) {
 
     return _dbConnector.readTable(

@@ -6,11 +6,12 @@ import 'package:equatable/equatable.dart';
 
 class BarItem extends Equatable {
 
+  const BarItem({@required this.title, this.color, @required this.icon, this.views});
+
   final String title;
   final IconData icon;
   final Color color;
-
-  const BarItem({@required this.title, this.color, @required this.icon});
+  final List<String> views;
 
   @override
   List<Object> get props => [title, icon, color];

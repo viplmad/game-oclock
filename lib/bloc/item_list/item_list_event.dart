@@ -27,17 +27,17 @@ class UpdateItemList extends ItemListEvent {
       ' }';
 }
 
-class UpdateSort extends ItemListEvent {
-  const UpdateSort(this.fields);
+class UpdateView extends ItemListEvent {
+  const UpdateView(this.view);
 
-  final List<String> fields;
-
-  @override
-  List<Object> get props => [fields];
+  final String view;
 
   @override
-  String toString() => 'UpdateSort { '
-      'fields: $fields'
+  List<Object> get props => [view];
+
+  @override
+  String toString() => 'UpdateView { '
+      'view: $view'
       ' }';
 }
 
@@ -55,7 +55,22 @@ class UpdateSortOrder extends ItemListEvent {
       ' }';
 }
 
-/*class UpdateFilter extends ItemListEvent {
+/*
+class UpdateSort extends ItemListEvent {
+  const UpdateSort(this.fields);
+
+  final List<String> fields;
+
+  @override
+  List<Object> get props => [fields];
+
+  @override
+  String toString() => 'UpdateSort { '
+      'fields: $fields'
+      ' }';
+}
+
+class UpdateFilter extends ItemListEvent {
   const UpdateFilter(this.filter);
 
   final FilterEnum filter;
@@ -67,4 +82,5 @@ class UpdateSortOrder extends ItemListEvent {
   String toString() => 'UpdateFilter { '
       'filter: $filter'
       ' }';
-}*/
+}
+*/

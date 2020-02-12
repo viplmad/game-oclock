@@ -88,27 +88,54 @@ abstract class ItemDetailBody extends StatelessWidget {
           );
         }
       },
-      child: BlocBuilder<ItemDetailBloc, ItemDetailState> (
-        bloc: itemDetailBloc,
-        builder: (BuildContext context, ItemDetailState state) {
-
-          if(state is ItemLoaded) {
-
-            item = state.item;
-            return listHolder(context);
-
-          }
-          if(state is ItemNotLoaded) {
-
-            return Center(
-              child: Text(state.error),
-            );
-
-          }
-
-          return LoadingIcon();
-
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 300.0,
+              floating: false,
+              pinned: true,
+              snap: false,
+              flexibleSpace: GestureDetector(
+                child: FlexibleSpaceBar(
+                  title: Text(""),
+                  collapseMode: CollapseMode.parallax,
+                ),
+              ),
+            ),
+          ];
         },
+        body: ListView(
+          children: [
+            BlocBuilder<ItemDetailBloc, ItemDetailState> (
+              bloc: itemDetailBloc,
+              builder: (BuildContext context, ItemDetailState state) {
+
+                if(state is ItemLoaded) {
+
+                  item = state.item;
+                  return Column(
+                    children: itemFieldsBuilder(context),
+                  );
+
+                }
+                if(state is ItemNotLoaded) {
+
+                  return Center(
+                    child: Text(state.error),
+                  );
+
+                }
+
+                return LoadingIcon();
+
+              },
+            ),
+            Column(
+              children: itemRelationsBuilder(context),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -353,6 +380,8 @@ abstract class ItemDetailBody extends StatelessWidget {
   }
 
   external List<Widget> itemFieldsBuilder(BuildContext context);
+
+  external List<Widget> itemRelationsBuilder(BuildContext context);
 
   external ItemRelationBloc itemRelationBlocFunction(String tableName);
 

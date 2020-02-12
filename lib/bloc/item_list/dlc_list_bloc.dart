@@ -16,7 +16,7 @@ class DLCListBloc extends ItemListBloc {
   }) : super(itemBloc: itemBloc);
 
   @override
-  Stream<List<DLC>> getReadStream() {
+  Stream<List<DLC>> getReadAllStream() {
 
     return collectionRepository.getAllDLCs();
 

@@ -43,7 +43,8 @@ abstract class ICollectionRepository {
 
   //#region READ
     //Game
-  Stream<List<Game>> getAllGames([List<String> sortFields]);
+  Stream<List<Game>> getAllGames();
+  Stream<List<Game>> getGames([Map<String, dynamic> whereFieldsAndValues, List<String> sortFields]);
   Stream<Game> getGameWithID(int ID);
   Stream<List<Platform>> getPlatformsFromGame(int ID);
   Stream<List<Purchase>> getPurchasesFromGame(int ID);
@@ -51,19 +52,19 @@ abstract class ICollectionRepository {
   Stream<List<Tag>> getTagsFromGame(int ID);
 
     //DLC
-  Stream<List<DLC>> getAllDLCs([List<String> sortFields]);
+  Stream<List<DLC>> getAllDLCs();
   Stream<DLC> getDLCWithID(int ID);
   Stream<Game> getBaseGameFromDLC(int ID);
   Stream<List<Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
-  Stream<List<Platform>> getAllPlatforms([List<String> sortFields]);
+  Stream<List<Platform>> getAllPlatforms();
   Stream<Platform> getPlatformWithID(int ID);
   Stream<List<Game>> getGamesFromPlatform(int ID);
   Stream<List<System>> getSystemsFromPlatform(int ID);
 
     //Purchase
-  Stream<List<Purchase>> getAllPurchases([List<String> sortFields]);
+  Stream<List<Purchase>> getAllPurchases();
   Stream<Purchase> getPurchaseWithID(int ID);
   Stream<Store> getStoreFromPurchase(int storeID);
   Stream<List<Game>> getGamesFromPurchase(int ID);
@@ -71,22 +72,22 @@ abstract class ICollectionRepository {
   Stream<List<PurchaseType>> getTypesFromPurchase(int ID);
 
     //Store
-  Stream<List<Store>> getAllStores([List<String> sortFields]);
+  Stream<List<Store>> getAllStores();
   Stream<Store> getStoreWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromStore(int ID);
 
     //System
-  Stream<List<System>> getAllSystems([List<String> sortFields]);
+  Stream<List<System>> getAllSystems();
   Stream<System> getSystemWithID(int ID);
   Stream<List<Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
-  Stream<List<Tag>> getAllTags([List<String> sortFields]);
+  Stream<List<Tag>> getAllTags();
   Stream<Tag> getTagWithID(int ID);
   Stream<List<Game>> getGamesFromTag(int ID);
 
     //Type
-  Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]);
+  Stream<List<PurchaseType>> getAllTypes();
   Stream<PurchaseType> getTypeWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
