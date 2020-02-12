@@ -35,6 +35,13 @@ class GameDetail extends StatelessWidget {
 
 }
 
+const List<Color> statusColours = [
+  Colors.grey,
+  Colors.redAccent,
+  Colors.blueAccent,
+  Colors.greenAccent,
+];
+
 class _GameDetailBody extends ItemDetailBody {
 
   _GameDetailBody({
@@ -65,9 +72,11 @@ class _GameDetailBody extends ItemDetailBody {
         fieldName: game_releaseYearField,
         value: game.releaseYear,
       ),
-      itemTextField( //TODO: EnumField
+      itemChipField(
         fieldName: game_statusField,
         value: game.status,
+        possibleValues: statuses,
+        possibleValuesColours: statusColours,
       ),
       itemRatingField(
         fieldName: game_ratingField,
@@ -97,16 +106,16 @@ class _GameDetailBody extends ItemDetailBody {
         fieldName: game_backupField,
         value: game.isBackup,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: platformTable,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: purchaseTable,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: dlcTable,
       ),
-      itemsManyRelation( //TODO: show as chips
+      itemListManyRelation( //TODO: show as chips
         tableName: tagTable,
       ),
     ];

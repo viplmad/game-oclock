@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -98,9 +99,11 @@ abstract class ItemDetailBody extends StatelessWidget {
 
           }
           if(state is ItemNotLoaded) {
+
             return Center(
               child: Text(state.error),
             );
+
           }
 
           return LoadingIcon();
@@ -123,16 +126,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             snap: false,
             flexibleSpace: GestureDetector(
               child: FlexibleSpaceBar(
-                title: Hero(
-                  tag: item.getUniqueID() + 'text',
-                  child: Text(item.getTitle()),
-                  flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
-                    return DefaultTextStyle(
-                      style: DefaultTextStyle.of(toHeroContext).style,
-                      child: toHeroContext.widget,
-                    );
-                  },
-                ),
+                title: Text(item.getTitle()),
                 collapseMode: CollapseMode.parallax,
               ),
             ),
@@ -272,7 +266,19 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemsSingleRelation({@required String tableName, String shownValue}) {
+  Widget itemChipField({@required String fieldName, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
+
+    return EnumField(
+      fieldName: fieldName,
+      value: value,
+      enumValues: possibleValues,
+      enumColours: possibleValuesColours,
+      update: updateFieldFunction<String>(fieldName),
+    );
+
+  }
+
+  Widget itemListSingleRelation({@required String tableName, String shownValue}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
       bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
@@ -298,7 +304,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemsManyRelation({@required String tableName}) {
+  Widget itemListManyRelation({@required String tableName}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
       bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
@@ -311,6 +317,29 @@ abstract class ItemDetailBody extends StatelessWidget {
             onTap: (CollectionItem item) {
               //TODO
             },
+            updateAdd: addRelationFunction(tableName),
+            updateDelete: deleteRelationFunction(tableName),
+          );
+        }
+
+        return LoadingIcon();
+
+      },
+    );
+
+  }
+
+  Widget itemChipRelation({@required String tableName, String shownValue}) {
+
+    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
+      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
+      builder: (BuildContext context, ItemRelationState state) {
+
+        if(state is ItemRelationLoaded) {
+          return ResultsChipMany(
+            selectedItems: state.items,
+            items: state.items,
+            tableName: tableName,
             updateAdd: addRelationFunction(tableName),
             updateDelete: deleteRelationFunction(tableName),
           );
@@ -662,6 +691,53 @@ class BoolField extends StatelessWidget {
   }
 
 }
+class EnumField extends StatelessWidget {
+
+  const EnumField({Key key, @required this.fieldName, @required this.value, @required this.enumValues, this.enumColours, @required this.update}) : super(key: key);
+
+  final String fieldName;
+  final String value;
+  final List<String> enumValues;
+  final List<Color> enumColours;
+  final Function(String) update;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListTileTheme.merge(
+      child: ListTile(
+        title: Text(fieldName),
+        trailing: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.spaceAround,
+          children: List<Widget>.generate(
+            enumValues.length,
+            (int index) {
+              String option = enumValues[index];
+              Color optionColour = enumColours?.elementAt(index);
+
+              return ChoiceChip(
+                label: Text(option),
+                labelStyle: TextStyle(color: Colors.black87),
+                selected: value == option,
+                selectedColor: optionColour.withOpacity(0.5),
+                pressElevation: 2.0,
+                onSelected: (bool newChoice) {
+                  if(newChoice) {
+                    update(option);
+                  }
+                },
+              );
+
+            },
+          ).toList(),
+        ),
+      ),
+    );
+
+  }
+
+}
 
 class _HeaderText extends StatelessWidget {
 
@@ -838,6 +914,86 @@ class ResultsListMany extends StatelessWidget {
 
           }
         },
+      ),
+    );
+
+  }
+
+}
+class ResultsChipMany extends StatelessWidget {
+
+  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, @required this.tableName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
+
+  final List<CollectionItem> items;
+  final List<CollectionItem> selectedItems;
+  final String tableName;
+  final Function(CollectionItem) updateAdd;
+  final Function(CollectionItem) updateDelete;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return _ResultsListHeader(
+      headerText: tableName + 's',
+      resultList: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.spaceEvenly,
+        children: List<Widget>.generate(
+          selectedItems.length + 1,
+              (int index) {
+
+            if(index == items.length) {
+
+              return FilterChip(
+                label: Text("Add more"),
+                selected: true,
+                onSelected: (bool selected) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: 200,
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          alignment: WrapAlignment.spaceEvenly,
+                          children: List<Widget>.generate(
+                            items.length,
+                            (int index) {
+                              CollectionItem option = items[index];
+
+                              return FilterChip(
+                                label: Text(option.getTitle()),
+                                selected: selectedItems.contains(option),
+                                onSelected: (bool selected) {
+
+                                  if(selected) {
+                                    updateAdd(option);
+                                  } else {
+                                    updateDelete(option);
+                                  }
+
+                                },
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+
+            }
+
+            CollectionItem selection = selectedItems[index];
+
+            return ChoiceChip(
+              label: Text(selection.getTitle()),
+              selected: true,
+            );
+
+          },
+        ).toList(),
       ),
     );
 

@@ -65,11 +65,11 @@ class _DLCDetailBody extends ItemDetailBody {
         fieldName: dlc_finishDateField,
         value: dlc.finishDate,
       ),
-      itemsSingleRelation(
+      itemListSingleRelation(
         tableName: gameTable,
         shownValue: dlc_baseGameField,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: purchaseTable,
       ),
     ];

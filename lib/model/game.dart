@@ -6,13 +6,6 @@ import 'package:game_collection/entity/game_entity.dart';
 import 'collection_item.dart';
 
 
-const List<String> statuses = [
-  "Low Priority",
-  "Next Up",
-  "Playing",
-  "Played",
-];
-
 class Game extends CollectionItem {
 
   Game({

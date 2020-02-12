@@ -4,13 +4,13 @@ import 'package:game_collection/model/collection_item.dart';
 
 class DismissibleItem extends StatelessWidget {
 
+  DismissibleItem({Key key, @required this.item, @required this.onTap, @required this.onDismissed, this.dismissIcon = Icons.delete, this.confirmDismiss}) : super(key: key);
+
   final CollectionItem item;
   final void Function(DismissDirection direction) onDismissed;
   final void Function() onTap;
   final Future<bool> Function(DismissDirection direction) confirmDismiss;
   final IconData dismissIcon;
-
-  DismissibleItem({Key key, @required this.item, @required this.onTap, @required this.onDismissed, this.dismissIcon = Icons.delete, this.confirmDismiss}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +45,10 @@ class DismissibleItem extends StatelessWidget {
 
 class ItemCard extends StatelessWidget {
 
+  const ItemCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
+
   final CollectionItem item;
   final void Function() onTap;
-
-  const ItemCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,19 +75,31 @@ class ItemListTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return ListTile(
-      title: Hero(
-        tag: item.getUniqueID() + '_text',
-        child: Text(item.getTitle()),
-        flightShuttleBuilder: (BuildContext flightContext, Animation<double> animation, HeroFlightDirection flightDirection, BuildContext fromHeroContext, BuildContext toHeroContext) {
-          return DefaultTextStyle(
-            style: DefaultTextStyle.of(toHeroContext).style,
-            child: toHeroContext.widget,
-          );
-        },
-      ),
+      title: Text(item.getTitle()),
       subtitle: item.getSubtitle() != null?
       Text(item.getSubtitle())
           : null,
+    );
+
+  }
+
+}
+
+class FilterChipItem extends StatelessWidget {
+
+  const FilterChipItem({Key key, this.item, this.selected = true, this.onTap}) : super(key: key);
+
+  final CollectionItem item;
+  final bool selected;
+  final Function(bool) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return FilterChip(
+      label: Text(item.getTitle()),
+      selected: selected,
+      onSelected: onTap,
     );
 
   }

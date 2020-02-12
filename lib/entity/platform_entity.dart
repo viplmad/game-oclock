@@ -14,7 +14,7 @@ const List<String> platformFields = [
 const String plat_nameField = "Name";
 const String plat_typeField = "Type";
 
-List<String> types = [
+const List<String> types = [
   "Physical",
   "Digital",
 ];

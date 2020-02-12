@@ -57,7 +57,7 @@ class _StoreDetailBody extends ItemDetailBody {
         fieldName: stor_nameField,
         value: store.name,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: purchaseTable,
       ),
     ];

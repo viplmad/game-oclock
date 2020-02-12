@@ -73,16 +73,16 @@ class _PurchaseDetailBody extends ItemDetailBody {
         fieldName: purc_originalPriceField,
         value: purchase.originalPrice,
       ),
-      itemsSingleRelation(
+      itemListSingleRelation(
         tableName: storeTable,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: gameTable,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: dlcTable,
       ),
-      itemsManyRelation( //TODO: show as chips
+      itemListManyRelation( //TODO: show as chips
         tableName: typeTable,
       ),
     ];

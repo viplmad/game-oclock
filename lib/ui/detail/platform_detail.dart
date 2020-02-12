@@ -35,6 +35,11 @@ class PlatformDetail extends StatelessWidget {
 
 }
 
+const List<Color> typeColours = [
+  Colors.blueAccent,
+  Colors.deepPurpleAccent,
+];
+
 class _PlatformDetailBody extends ItemDetailBody {
 
   _PlatformDetailBody({
@@ -57,14 +62,16 @@ class _PlatformDetailBody extends ItemDetailBody {
         fieldName: plat_nameField,
         value: platform.name,
       ),
-      itemTextField( //TODO: enum field
+      itemChipField(
         fieldName: plat_typeField,
         value: platform.type,
+        possibleValues: types,
+        possibleValuesColours: typeColours,
       ),
-      itemsManyRelation(
+      itemListManyRelation(
         tableName: gameTable,
       ),
-      itemsManyRelation( //TODO: show as chips
+      itemListManyRelation( //TODO: show as chips
         tableName: systemTable,
       ),
     ];
