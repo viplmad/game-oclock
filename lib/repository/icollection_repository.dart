@@ -44,7 +44,7 @@ abstract class ICollectionRepository {
   //#region READ
     //Game
   Stream<List<Game>> getAllGames();
-  Stream<List<Game>> getGames([Map<String, dynamic> whereFieldsAndValues, List<String> sortFields]);
+  Stream<List<Game>> getGamesWithView(GameView gameView);
   Stream<Game> getGameWithID(int ID);
   Stream<List<Platform>> getPlatformsFromGame(int ID);
   Stream<List<Purchase>> getPurchasesFromGame(int ID);
@@ -53,18 +53,21 @@ abstract class ICollectionRepository {
 
     //DLC
   Stream<List<DLC>> getAllDLCs();
+  Stream<List<DLC>> getDLCsWithView(DLCView dlcView);
   Stream<DLC> getDLCWithID(int ID);
   Stream<Game> getBaseGameFromDLC(int ID);
   Stream<List<Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
   Stream<List<Platform>> getAllPlatforms();
+  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView);
   Stream<Platform> getPlatformWithID(int ID);
   Stream<List<Game>> getGamesFromPlatform(int ID);
   Stream<List<System>> getSystemsFromPlatform(int ID);
 
     //Purchase
   Stream<List<Purchase>> getAllPurchases();
+  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView);
   Stream<Purchase> getPurchaseWithID(int ID);
   Stream<Store> getStoreFromPurchase(int storeID);
   Stream<List<Game>> getGamesFromPurchase(int ID);
@@ -73,21 +76,25 @@ abstract class ICollectionRepository {
 
     //Store
   Stream<List<Store>> getAllStores();
+  Stream<List<Store>> getStoresWithView(StoreView storeView);
   Stream<Store> getStoreWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromStore(int ID);
 
     //System
   Stream<List<System>> getAllSystems();
+  Stream<List<System>> getSystemsWithView(SystemView systemView);
   Stream<System> getSystemWithID(int ID);
   Stream<List<Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
   Stream<List<Tag>> getAllTags();
+  Stream<List<Tag>> getTagsWithView(TagView tagView);
   Stream<Tag> getTagWithID(int ID);
   Stream<List<Game>> getGamesFromTag(int ID);
 
     //Type
   Stream<List<PurchaseType>> getAllTypes();
+  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView);
   Stream<PurchaseType> getTypeWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
@@ -177,5 +184,6 @@ abstract class ICollectionRepository {
     //Game
   String getGameCoverURL(int gameID);
   //TODO: add more
-  //#ENDregion DOWNLOAD
+  //#endregion DOWNLOAD
+
 }

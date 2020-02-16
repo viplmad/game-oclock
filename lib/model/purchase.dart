@@ -6,6 +6,21 @@ import 'package:game_collection/entity/purchase_entity.dart';
 import 'collection_item.dart';
 
 
+enum PurchaseView {
+  Main,
+  Pending,
+  LastPurchased,
+  Review2019,
+}
+
+const List<String> purchaseViews = [
+  "Main",
+  "Pending",
+  "Last Purchased",
+  "2019 in Review",
+];
+
+
 class Purchase extends CollectionItem {
 
   Purchase({

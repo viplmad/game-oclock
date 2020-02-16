@@ -79,14 +79,8 @@ class PurchaseEntity extends CollectionItemEntity {
 
     List<PurchaseEntity> purchasesList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Map<String, dynamic> _tempFixMap = Map.from(map[purchaseTable]);
-      _tempFixMap.addAll(
-        map[null],
-      );
-
-      PurchaseEntity purchase = PurchaseEntity.fromDynamicMap(_tempFixMap);
-      //Purchase purchase = Purchase.fromDynamicMap(map[purchaseTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       purchasesList.add(purchase);
     });

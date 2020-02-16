@@ -6,11 +6,12 @@ import 'package:game_collection/entity/system_entity.dart';
 import 'collection_item.dart';
 
 
-List<String> manufacturers = [
-  "Nintendo",
-  "Sony",
-  "Microsoft",
-  "Sega",
+enum SystemView {
+  Main,
+}
+
+const List<String> systemViews = [
+  "Main",
 ];
 
 class System extends CollectionItem {

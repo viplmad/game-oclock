@@ -44,8 +44,8 @@ class StoreEntity extends CollectionItemEntity {
 
     List<StoreEntity> storesList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      StoreEntity store = StoreEntity.fromDynamicMap(map[storeTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       storesList.add(store);
     });

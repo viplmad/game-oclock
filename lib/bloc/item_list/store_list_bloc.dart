@@ -22,4 +22,14 @@ class StoreListBloc extends ItemListBloc {
 
   }
 
+  @override
+  Stream<List<Store>> getReadViewStream(UpdateView event) {
+
+    int viewIndex = storeViews.indexOf(event.view);
+    StoreView storeView = StoreView.values[viewIndex];
+
+    return collectionRepository.getStoresWithView(storeView);
+
+  }
+
 }

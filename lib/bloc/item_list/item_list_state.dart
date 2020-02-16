@@ -23,7 +23,8 @@ class ItemListLoaded extends ItemListState {
 
   @override
   String toString() => 'ItemListLoaded { '
-      'items: $items'
+      'items: $items, '
+      'view: $view'
       ' }';
 }
 

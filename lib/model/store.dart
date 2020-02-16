@@ -6,6 +6,14 @@ import 'package:game_collection/entity/store_entity.dart';
 import 'collection_item.dart';
 
 
+enum StoreView {
+  Main,
+}
+
+const List<String> storeViews = [
+  "Main",
+];
+
 class Store extends CollectionItem {
 
   Store({

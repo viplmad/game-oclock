@@ -111,13 +111,8 @@ class GameEntity extends CollectionItemEntity {
 
     List<GameEntity> gamesList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      Map<String, dynamic> _tempFixMap = Map.from(map[gameTable]);
-      _tempFixMap.addAll(
-        map[null],
-      );
-
-      GameEntity game = GameEntity.fromDynamicMap(_tempFixMap);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       gamesList.add(game);
     });

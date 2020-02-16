@@ -6,6 +6,23 @@ import 'package:game_collection/entity/game_entity.dart';
 import 'collection_item.dart';
 
 
+
+enum GameView {
+  Main,
+  Playing,
+  NextUp,
+  LastFinished,
+  Review2019,
+}
+
+const List<String> gameViews = [
+  "Main",
+  "Playing",
+  "Next Up",
+  "Last Finished",
+  "2019 in Review",
+];
+
 class Game extends CollectionItem {
 
   Game({

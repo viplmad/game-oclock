@@ -22,4 +22,14 @@ class DLCListBloc extends ItemListBloc {
 
   }
 
+  @override
+  Stream<List<DLC>> getReadViewStream(UpdateView event) {
+
+    int viewIndex = dlcViews.indexOf(event.view);
+    DLCView dlcView = DLCView.values[viewIndex];
+
+    return collectionRepository.getDLCsWithView(dlcView);
+
+  }
+
 }

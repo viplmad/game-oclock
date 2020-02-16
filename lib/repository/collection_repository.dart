@@ -257,26 +257,20 @@ class CollectionRepository implements ICollectionRepository {
   //#region READ
   //#region Game
   @override
-  Stream<List<Game>> getAllGames([List<String> sortFields]) {
+  Stream<List<Game>> getAllGames() {
 
-    return _dbConnector.readTable(
-      tableName: gameTable,
-      selectFields: gameFields,
-      sortFields: sortFields,
-    ).asStream().map( _dynamicToListGame );
+    return getGamesWithView(GameView.Main);
 
   }
 
   @override
-  Stream<List<Game>> getGames([Map<String, dynamic> whereFieldsAndValues, List<String> sortFields]) {
-    
+  Stream<List<Game>> getGamesWithView(GameView gameView) {
+
     return _dbConnector.readTable(
-      tableName: gameTable,
+      tableName: gameViewToTable[gameView],
       selectFields: gameFields,
-      whereFieldsAndValues: whereFieldsAndValues,
-      sortFields: sortFields,
     ).asStream().map( _dynamicToListGame );
-    
+
   }
 
   @override
@@ -346,9 +340,15 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<DLC>> getAllDLCs([List<String> sortFields]) {
 
+    return getDLCsWithView(DLCView.Main);
+
+  }
+
+  @override
+  Stream<List<DLC>> getDLCsWithView(DLCView dlcView) {
+
     return _dbConnector.readTable(
-      tableName: dlcTable,
-      sortFields: sortFields,
+      tableName: dlcViewToTable[dlcView],
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -395,11 +395,17 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Stream<List<Platform>> getAllPlatforms([List<String> sortFields]) {
+  Stream<List<Platform>> getAllPlatforms() {
+
+    return getPlatformsWithView(PlatformView.Main);
+
+  }
+
+  @override
+  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView) {
 
     return _dbConnector.readTable(
-      tableName: platformTable,
-      sortFields: sortFields,
+      tableName: platformViewToTable[platformView],
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -446,10 +452,16 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getAllPurchases([List<String> sortFields]) {
 
+    return getPurchasesWithView(PurchaseView.Main);
+
+  }
+
+  @override
+  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView) {
+
     return _dbConnector.readTable(
-      tableName: purchaseTable,
+      tableName: purchaseViewToTable[purchaseView],
       selectFields: purchaseFields,
-      sortFields: sortFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -517,13 +529,19 @@ class CollectionRepository implements ICollectionRepository {
   }
   //#endregion Purchase
 
-  //#region Purchase
+  //#region Store
   @override
   Stream<List<Store>> getAllStores([List<String> sortFields]) {
 
+    return getStoresWithView(StoreView.Main);
+
+  }
+
+  @override
+  Stream<List<Store>> getStoresWithView(StoreView storeView) {
+
     return _dbConnector.readTable(
-      tableName: storeTable,
-      sortFields: sortFields,
+      tableName: storeViewToTable[storeView],
     ).asStream().map( _dynamicToListStore );
 
   }
@@ -558,9 +576,15 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<System>> getAllSystems([List<String> sortFields]) {
 
+    return getSystemsWithView(SystemView.Main);
+
+  }
+
+  @override
+  Stream<List<System>> getSystemsWithView(SystemView systemView) {
+
     return _dbConnector.readTable(
-      tableName: systemTable,
-      sortFields: sortFields,
+      tableName: systemViewToTable[systemView],
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -594,9 +618,15 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Tag>> getAllTags([List<String> sortFields]) {
 
+    return getTagsWithView(TagView.Main);
+
+  }
+
+  @override
+  Stream<List<Tag>> getTagsWithView(TagView tagView) {
+
     return _dbConnector.readTable(
-      tableName: tagTable,
-      sortFields: sortFields,
+      tableName: tagViewToTable[tagView],
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -631,9 +661,15 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]) {
 
+    return getTypesWithView(TypeView.Main);
+
+  }
+
+  @override
+  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView) {
+
     return _dbConnector.readTable(
-      tableName: typeTable,
-      sortFields: sortFields,
+      tableName: typeViewToTable[typeView],
     ).asStream().map( _dynamicToListType );
 
   }
@@ -1271,3 +1307,42 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion Dynamic Map to List
 
 }
+
+Map<GameView, String> gameViewToTable = {
+  GameView.Main : "Game-Main",
+  GameView.Playing : "Game-Playing",
+  GameView.NextUp : "Game-Next Up",
+  GameView.LastFinished : "Game-Last Finished",
+  GameView.Review2019 : "Game-2019 In Review",
+};
+
+Map<DLCView, String> dlcViewToTable = {
+  DLCView.Main : "DLC-Main",
+};
+
+Map<PlatformView, String> platformViewToTable = {
+  PlatformView.Main : "Platform-Main",
+};
+
+Map<PurchaseView, String> purchaseViewToTable = {
+  PurchaseView.Main : "Purchase-Main",
+  PurchaseView.Pending : "Purchase-Pending",
+  PurchaseView.LastPurchased : "Purchase-Last Purchased",
+  PurchaseView.Review2019 : "Purchase-2019 In Review",
+};
+
+Map<StoreView, String> storeViewToTable = {
+  StoreView.Main : "Store-Main",
+};
+
+Map<SystemView, String> systemViewToTable = {
+  SystemView.Main : "System-Main",
+};
+
+Map<TagView, String> tagViewToTable = {
+  TagView.Main : "Tag-Main",
+};
+
+Map<TypeView, String> typeViewToTable = {
+  TypeView.Main : "Type-Main",
+};

@@ -44,8 +44,8 @@ class TagEntity extends CollectionItemEntity {
 
     List<TagEntity> tagsList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      TagEntity tag = TagEntity.fromDynamicMap(map[tagTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      TagEntity tag = TagEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       tagsList.add(tag);
     });

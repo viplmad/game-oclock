@@ -22,4 +22,14 @@ class SystemListBloc extends ItemListBloc {
 
   }
 
+  @override
+  Stream<List<System>> getReadViewStream(UpdateView event) {
+
+    int viewIndex = systemViews.indexOf(event.view);
+    SystemView systemView = SystemView.values[viewIndex];
+
+    return collectionRepository.getSystemsWithView(systemView);
+
+  }
+
 }

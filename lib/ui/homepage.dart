@@ -106,7 +106,7 @@ class _HomepageAction extends StatelessWidget {
       icon: Icon(Icons.view_carousel),
       tooltip: "Change View",
       itemBuilder: (BuildContext context) {
-        return barItem.views.map((String view) {
+        return barItem.views.map( (String view) {
           return PopupMenuItem(
             child: ListTile(
               title: Text(view),
@@ -231,13 +231,22 @@ class _HomepageBody extends StatelessWidget {
         builder: (BuildContext context, ItemListState state) {
 
           if(state is ItemListLoaded) {
+
             return ItemList(
               items: state.items,
               activeView: state.view,
               onDismiss: onDismiss,
             );
+
           }
-          //else ItemListLoading
+          if(state is ItemListNotLoaded) {
+
+            return Center(
+              child: Text(state.error),
+            );
+
+          }
+
           return LoadingIcon();
 
         },

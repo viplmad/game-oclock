@@ -57,7 +57,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     try {
 
       final List<CollectionItem> items = await getReadAllStream().first;
-      yield ItemListLoaded(items, "Main");
+      yield ItemListLoaded(items);
 
     } catch (e) {
 

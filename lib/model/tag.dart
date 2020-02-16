@@ -6,6 +6,14 @@ import 'package:game_collection/entity/tag_entity.dart';
 import 'collection_item.dart';
 
 
+enum TagView {
+  Main,
+}
+
+const List<String> tagViews = [
+  "Main",
+];
+
 class Tag extends CollectionItem {
 
   Tag({

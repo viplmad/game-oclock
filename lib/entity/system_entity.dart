@@ -63,8 +63,8 @@ class SystemEntity extends CollectionItemEntity {
 
     List<SystemEntity> systemsList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      SystemEntity system = SystemEntity.fromDynamicMap(map[systemTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       systemsList.add(system);
     });

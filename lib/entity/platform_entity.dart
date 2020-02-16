@@ -54,8 +54,8 @@ class PlatformEntity extends CollectionItemEntity {
 
     List<PlatformEntity> platformsList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      PlatformEntity platform = PlatformEntity.fromDynamicMap(map[platformTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      PlatformEntity platform = PlatformEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       platformsList.add(platform);
     });

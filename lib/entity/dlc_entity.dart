@@ -67,8 +67,8 @@ class DLCEntity extends CollectionItemEntity {
 
     List<DLCEntity> dlcsList = [];
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> map) {
-      DLCEntity dlc = DLCEntity.fromDynamicMap(map[dlcTable]);
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      DLCEntity dlc = DLCEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
 
       dlcsList.add(dlc);
     });

@@ -6,6 +6,14 @@ import 'package:game_collection/entity/platform_entity.dart';
 import 'collection_item.dart';
 
 
+enum PlatformView {
+  Main,
+}
+
+const List<String> platformViews = [
+  "Main",
+];
+
 class Platform extends CollectionItem {
 
   Platform({

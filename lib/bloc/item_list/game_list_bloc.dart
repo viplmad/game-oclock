@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:meta/meta.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -26,49 +25,10 @@ class GameListBloc extends ItemListBloc {
   @override
   Stream<List<Game>> getReadViewStream(UpdateView event) {
 
-    if(event.view == GameViews[0]) {
+    int viewIndex = gameViews.indexOf(event.view);
+    GameView gameView = GameView.values[viewIndex];
 
-      return getReadAllStream();
-
-    } else if(event.view == GameViews[1]) {
-
-      return collectionRepository.getGames(
-        <String, dynamic>{
-          game_statusField: statuses[2],
-        },
-        [
-          game_releaseYearField,
-          game_nameField,
-        ],
-      );
-
-    } else if(event.view == GameViews[2]) {
-
-      return collectionRepository.getGames(
-        <String, dynamic>{
-          game_statusField: statuses[3],
-        },
-        [
-          game_releaseYearField,
-          game_nameField,
-        ],
-      );
-
-    } else if(event.view == GameViews[3]) {
-
-      // TODO: Handle this case.
-      return collectionRepository.getGames(
-        <String, dynamic>{
-          game_statusField: statuses[3],
-          game_backupField: true,
-        },
-        [
-          game_releaseYearField,
-          game_nameField,
-        ],
-      );
-
-    }
+    return collectionRepository.getGamesWithView(gameView);
 
   }
 

@@ -22,4 +22,14 @@ class PurchaseListBloc extends ItemListBloc {
 
   }
 
+  @override
+  Stream<List<Purchase>> getReadViewStream(UpdateView event) {
+
+    int viewIndex = purchaseViews.indexOf(event.view);
+    PurchaseView purchaseView = PurchaseView.values[viewIndex];
+
+    return collectionRepository.getPurchasesWithView(purchaseView);
+
+  }
+
 }

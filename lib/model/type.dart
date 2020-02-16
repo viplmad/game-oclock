@@ -6,6 +6,14 @@ import 'package:game_collection/entity/type_entity.dart';
 import 'collection_item.dart';
 
 
+enum TypeView {
+  Main,
+}
+
+const List<String> typeViews = [
+  "Main",
+];
+
 class PurchaseType extends CollectionItem {
 
   PurchaseType({

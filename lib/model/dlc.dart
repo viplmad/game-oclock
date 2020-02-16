@@ -6,6 +6,14 @@ import 'package:game_collection/entity/dlc_entity.dart';
 import 'collection_item.dart';
 
 
+enum DLCView {
+  Main,
+}
+
+const List<String> dlcViews = [
+  "Main",
+];
+
 class DLC extends CollectionItem {
 
   DLC({
