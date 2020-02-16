@@ -26,6 +26,8 @@ class SystemRelationBloc extends ItemRelationBloc {
         return collectionRepository.getPlatformsFromSystem(itemID);
     }
 
+    return super.getRelationStream();
+
   }
 
 }

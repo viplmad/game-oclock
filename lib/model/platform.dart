@@ -22,6 +22,7 @@ class Platform extends CollectionItem {
     return Platform(
       ID: entity.ID,
       name: entity.name,
+      type: entity.type,
     );
 
   }
@@ -32,6 +33,7 @@ class Platform extends CollectionItem {
     return PlatformEntity(
       ID: this.ID,
       name: this.name,
+      type: this.type,
     );
 
   }

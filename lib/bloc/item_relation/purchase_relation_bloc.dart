@@ -32,6 +32,8 @@ class PurchaseRelationBloc extends ItemRelationBloc {
         return collectionRepository.getTypesFromPurchase(itemID);
     }
 
+    return super.getRelationStream();
+
   }
 
 }

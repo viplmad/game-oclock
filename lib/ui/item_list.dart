@@ -1,98 +1,83 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/app_tab.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/ui/bloc_provider_route.dart';
 
 import 'common/item_view.dart';
-import 'detail/detail.dart';
 
 
 class ItemList extends StatelessWidget {
 
-  ItemList({Key key, @required this.items, @required this.itemDetailBloc, @required this.activeTab}) : super(key: key);
+  ItemList({Key key, @required this.items, @required this.activeView, @required this.onDismiss}) : super(key: key);
 
   final List<CollectionItem> items;
-  final ItemDetailBloc itemDetailBloc;
-  final AppTab activeTab;
-
-  ItemBloc get itemBloc => itemDetailBloc.itemBloc;
+  final String activeView;
+  final Function(CollectionItem) onDismiss;
 
   @override
   Widget build(BuildContext context) {
 
     return Scrollbar(
-      child: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          CollectionItem result = items[index];
-
-          return DismissibleItem(
-            item: result,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    switch(activeTab) {
-                      case AppTab.game:
-                        return GameDetail(
-                          ID: result.ID,
-                          itemDetailBloc: itemDetailBloc,
-                        );
-                      case AppTab.dlc:
-                        return DLCDetail(
-                          ID: result.ID,
-                          itemDetailBloc: itemDetailBloc,
-                        );
-                      case AppTab.purchase:
-                        return PurchaseDetail(
-                          ID: result.ID,
-                          itemDetailBloc: itemDetailBloc,
-                        );
-                      case AppTab.store:
-                        return StoreDetail(
-                          ID: result.ID,
-                          itemDetailBloc: itemDetailBloc,
-                        );
-                      case AppTab.platform:
-                        return PlatformDetail(
-                          ID: result.ID,
-                          itemDetailBloc: itemDetailBloc,
-                        );
-                    }
-                    return Center();
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverAppBarDelegate(
+              minHeight: 40.0,
+              maxHeight: 40.0,
+              child: Container(
+                child: Text(activeView),
+                color: Theme.of(context).primaryColor,
+              )
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              items.map( (CollectionItem item) {
+                return DismissibleItem(
+                  item: item,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return ItemDetailBuilder(item);
+                        },
+                      ),
+                    );
                   },
-                ),
-              );
-            },
-            onDismissed: (DismissDirection direction) {
-              itemBloc.add(DeleteItem(result));
-            },
-            confirmDismiss: (DismissDirection direction) {
+                  onDismissed: (DismissDirection direction) {
+                    onDismiss(item);
+                  },
+                  confirmDismiss: (DismissDirection direction) {
 
-              return showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return confirmDelete(context, result);
-                },
-              );
+                    return showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return confirmDelete(context, item);
+                      },
+                    );
 
-            },
-          );
-        },
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
 
   }
 
-  Widget confirmDelete(BuildContext context, CollectionItem entity) {
+  Widget confirmDelete(BuildContext context, CollectionItem item) {
+
     return AlertDialog(
       title: Text("Delete"),
       content: ListTile(
-        title: Text("Are you sure you want to delete " + entity.getTitle() + "?"),
+        title: Text("Are you sure you want to delete " + item.getTitle() + "?"),
         subtitle: Text("This action cannot be undone"),
       ),
       actions: <Widget>[
@@ -111,6 +96,41 @@ class ItemList extends StatelessWidget {
         )
       ],
     );
+
   }
 
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  
+  _SliverAppBarDelegate({
+    @required this.minHeight,
+    @required this.maxHeight,
+    @required this.child,
+  });
+  
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+  
+  @override
+  double get minExtent => minHeight;
+  
+  @override
+  double get maxExtent => max(maxHeight, minHeight);
+  
+  @override
+  Widget build(
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent)
+  {
+    return new SizedBox.expand(child: child);
+  }  @override
+  
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
+  }
 }

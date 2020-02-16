@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
@@ -12,22 +12,17 @@ import 'item_detail.dart';
 
 class PlatformDetail extends StatelessWidget {
 
-  const PlatformDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
+  const PlatformDetail({Key key, @required this.ID}) : super(key: key);
 
   final int ID;
-  final ItemDetailBloc itemDetailBloc;
-
-  ItemBloc get itemBloc => itemDetailBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    itemDetailBloc.add(LoadItem(ID));
-
     return Scaffold(
       body: _PlatformDetailBody(
         itemID: ID,
-        itemDetailBloc: itemDetailBloc,
+        itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(ID)),
       ),
     );
 
@@ -53,7 +48,7 @@ class _PlatformDetailBody extends ItemDetailBody {
   );
 
   @override
-  List<Widget> itemFieldsBuilder(BuildContext context) {
+  List<Widget> itemFieldsBuilder(CollectionItem item) {
 
     Platform platform = (item as Platform);
 
@@ -68,6 +63,14 @@ class _PlatformDetailBody extends ItemDetailBody {
         possibleValues: types,
         possibleValuesColours: typeColours,
       ),
+    ];
+
+  }
+
+  @override
+  List<Widget> itemRelationsBuilder() {
+
+    return [
       itemListManyRelation(
         tableName: gameTable,
       ),

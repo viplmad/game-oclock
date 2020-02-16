@@ -50,6 +50,8 @@ class PlatformBloc extends ItemBloc {
         return collectionRepository.insertPlatformSystem(platformID, otherID);
     }
 
+    return super.addRelationFuture(event);
+
   }
 
   @override
@@ -64,6 +66,8 @@ class PlatformBloc extends ItemBloc {
       case systemTable:
         return collectionRepository.deletePlatformSystem(platformID, otherID);
     }
+
+    return super.deleteRelationFuture(event);
 
   }
 

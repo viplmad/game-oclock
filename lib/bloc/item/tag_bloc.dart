@@ -48,6 +48,8 @@ class TagBloc extends ItemBloc {
         return collectionRepository.insertGameTag(otherID, tagID);
     }
 
+    return super.addRelationFuture(event);
+
   }
 
   @override
@@ -60,6 +62,8 @@ class TagBloc extends ItemBloc {
       case gameTable:
         return collectionRepository.deleteGameTag(otherID, tagID);
     }
+
+    return super.deleteRelationFuture(event);
 
   }
 

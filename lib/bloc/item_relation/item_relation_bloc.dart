@@ -117,6 +117,11 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
   }
 
-  external Stream<List<CollectionItem>> getRelationStream();
+  @mustCallSuper
+  Stream<List<CollectionItem>> getRelationStream() {
+
+    return Stream.error("Relation does not exist");
+
+  }
 
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
@@ -12,22 +12,17 @@ import 'item_detail.dart';
 
 class PurchaseDetail extends StatelessWidget {
 
-  const PurchaseDetail({Key key, @required this.ID, @required this.itemDetailBloc}) : super(key: key);
+  const PurchaseDetail({Key key, @required this.ID}) : super(key: key);
 
   final int ID;
-  final ItemDetailBloc itemDetailBloc;
-
-  ItemBloc get itemBloc => itemDetailBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    itemDetailBloc.add(LoadItem(ID));
-
     return Scaffold(
       body: _PurchaseDetailBody(
         itemID: ID,
-        itemDetailBloc: itemDetailBloc,
+        itemDetailBloc: BlocProvider.of<PurchaseDetailBloc>(context)..add(LoadItem(ID)),
       ),
     );
 
@@ -48,7 +43,7 @@ class _PurchaseDetailBody extends ItemDetailBody {
   );
 
   @override
-  List<Widget> itemFieldsBuilder(BuildContext context) {
+  List<Widget> itemFieldsBuilder(CollectionItem item) {
 
     Purchase purchase = (item as Purchase);
 
@@ -73,6 +68,13 @@ class _PurchaseDetailBody extends ItemDetailBody {
         fieldName: purc_originalPriceField,
         value: purchase.originalPrice,
       ),
+    ];
+  }
+
+  @override
+  List<Widget> itemRelationsBuilder() {
+
+    return [
       itemListSingleRelation(
         tableName: storeTable,
       ),
@@ -86,6 +88,7 @@ class _PurchaseDetailBody extends ItemDetailBody {
         tableName: typeTable,
       ),
     ];
+
   }
 
   @override

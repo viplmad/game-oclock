@@ -138,7 +138,17 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
   external Future<CollectionItem> createFuture();
   external Future<dynamic> deleteFuture(DeleteItem event);
   external Future<CollectionItem> updateFuture(UpdateItemField event);
-  external Future<dynamic> addRelationFuture(AddItemRelation event);
-  external Future<dynamic> deleteRelationFuture(DeleteItemRelation event);
+  @mustCallSuper
+  Future<dynamic> addRelationFuture(AddItemRelation event) {
+
+    return Future.error("Relation does not exist");
+
+  }
+  @mustCallSuper
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+
+    return Future.error("Relation does not exist");
+
+  }
 
 }

@@ -28,6 +28,8 @@ class DLCRelationBloc extends ItemRelationBloc {
         return collectionRepository.getPurchasesFromDLC(itemID);
     }
 
+    return super.getRelationStream();
+
   }
 
 }

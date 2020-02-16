@@ -11,6 +11,7 @@ import 'package:game_collection/bloc/item/item.dart';
 
 import 'item_list.dart';
 
+
 abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   ItemListBloc({@required this.itemBloc}) {
@@ -56,7 +57,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     try {
 
       final List<CollectionItem> items = await getReadAllStream().first;
-      yield ItemListLoaded(items);
+      yield ItemListLoaded(items, "Main");
 
     } catch (e) {
 
@@ -68,7 +69,10 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   Stream<ItemListState> _mapListUpdateToState(UpdateItemList event) async* {
 
-    yield ItemListLoaded(event.items);
+    if(state is ItemListLoaded) {
+      final String activeView = (state as ItemListLoaded).view;
+      yield ItemListLoaded(event.items, activeView);
+    }
 
   }
 
@@ -77,7 +81,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
     try {
 
       final List<CollectionItem> items = await getReadViewStream(event).first;
-      yield ItemListLoaded(items);
+      yield ItemListLoaded(items, event.view);
 
     } catch(e) {
 
@@ -91,7 +95,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     if(state is ItemListLoaded) {
       final List<CollectionItem> reversedItems = (state as ItemListLoaded).items.reversed.toList();
-      yield ItemListLoaded(reversedItems);
+      final String activeView = (state as ItemListLoaded).view;
+      yield ItemListLoaded(reversedItems, activeView);
     }
 
   }

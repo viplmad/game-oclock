@@ -26,6 +26,8 @@ class StoreRelationBloc extends ItemRelationBloc {
         return collectionRepository.getPurchasesFromStore(itemID);
     }
 
+    return super.getRelationStream();
+
   }
 
 }

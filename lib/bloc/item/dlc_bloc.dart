@@ -50,6 +50,8 @@ class DLCBloc extends ItemBloc {
         return collectionRepository.insertDLCPurchase(dlcID, otherID);
     }
 
+    return super.addRelationFuture(event);
+
   }
 
   @override
@@ -64,6 +66,8 @@ class DLCBloc extends ItemBloc {
       case purchaseTable:
         return collectionRepository.deleteDLCPurchase(dlcID, otherID);
     }
+
+    return super.deleteRelationFuture(event);
 
   }
 

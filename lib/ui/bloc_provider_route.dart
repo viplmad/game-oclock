@@ -13,6 +13,11 @@ import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'homepage.dart';
 
+import 'package:game_collection/model/model.dart';
+import 'detail/detail.dart';
+
+
+Map<Type, ItemBloc> itemBlocs;
 
 Widget StartBlocProvider() {
 
@@ -29,67 +34,34 @@ Widget StartBlocProvider() {
 
 Widget EssentialProvider() {
 
-  return MultiBlocProvider(
-    providers: [
-      BlocProvider<GameBloc>(
-        create: (BuildContext context) {
-          return GameBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<DLCBloc>(
-        create: (BuildContext context) {
-          return DLCBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<PlatformBloc>(
-        create: (BuildContext context) {
-          return PlatformBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<PurchaseBloc>(
-        create: (BuildContext context) {
-          return PurchaseBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<StoreBloc>(
-        create: (BuildContext context) {
-          return StoreBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<SystemBloc>(
-        create: (BuildContext context) {
-          return SystemBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<TagBloc>(
-        create: (BuildContext context) {
-          return TagBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-      BlocProvider<TypeBloc>(
-        create: (BuildContext context) {
-          return TypeBloc(
-            collectionRepository: CollectionRepository(),
-          );
-        },
-      ),
-    ],
-    child: HomepageProvider(),
-  );
+  itemBlocs = {
+    Game : GameBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    DLC : DLCBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    Platform : PlatformBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    Purchase : PurchaseBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    Store : StoreBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    System : SystemBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    Tag : TagBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+    PurchaseType : TypeBloc(
+      collectionRepository: CollectionRepository(),
+    ),
+  };
+
+  return HomepageProvider();
 
 }
 
@@ -102,49 +74,43 @@ Widget HomepageProvider() {
           return TabBloc()..add(UpdateTab(AppTab.game));
         },
       ),
+
       BlocProvider<GameListBloc>(
         create: (BuildContext context) {
           return GameListBloc(
-            itemBloc: BlocProvider.of<GameBloc>(context),
+            itemBloc: itemBlocs[Game],
           )..add(LoadItemList());
         },
       ),
       BlocProvider<DLCListBloc>(
         create: (BuildContext context) {
           return DLCListBloc(
-            itemBloc: BlocProvider.of<DLCBloc>(context),
+            itemBloc: itemBlocs[DLC],
           )..add(LoadItemList());
         },
       ),
       BlocProvider<PlatformListBloc>(
         create: (BuildContext context) {
           return PlatformListBloc(
-            itemBloc: BlocProvider.of<PlatformBloc>(context),
+            itemBloc: itemBlocs[Platform],
           )..add(LoadItemList());
         },
       ),
       BlocProvider<PurchaseListBloc>(
         create: (BuildContext context) {
           return PurchaseListBloc(
-            itemBloc: BlocProvider.of<PurchaseBloc>(context),
+            itemBloc: itemBlocs[Purchase],
           )..add(LoadItemList());
         },
       ),
       BlocProvider<StoreListBloc>(
         create: (BuildContext context) {
           return StoreListBloc(
-            itemBloc: BlocProvider.of<StoreBloc>(context),
+            itemBloc: itemBlocs[Store],
           )..add(LoadItemList());
         },
       ),
 
-      BlocProvider<GameDetailBloc>(
-        create: (BuildContext context) {
-          return GameDetailBloc(
-            itemBloc: BlocProvider.of<GameBloc>(context),
-          );
-        },
-      ),
       BlocProvider<DLCDetailBloc>(
         create: (BuildContext context) {
           return DLCDetailBloc(
@@ -179,7 +145,79 @@ Widget HomepageProvider() {
 
 }
 
-Widget SearchProvider() {
+Widget ItemDetailBuilder(CollectionItem item) {
+
+  int itemID = item.ID;
+
+  switch(item.runtimeType) {
+    case Game:
+      return BlocProvider<GameDetailBloc>(
+        create: (BuildContext context) {
+          return GameDetailBloc(
+            itemBloc: itemBlocs[Game],
+          );
+        },
+        child: GameDetail(
+          ID: itemID,
+        ),
+      );
+    case DLC:
+      return BlocProvider<DLCDetailBloc>(
+        create: (BuildContext context) {
+          return DLCDetailBloc(
+            itemBloc: itemBlocs[DLC],
+          );
+        },
+        child: DLCDetail(
+          ID: itemID,
+        ),
+      );
+    case Platform:
+      return BlocProvider<PlatformDetailBloc>(
+        create: (BuildContext context) {
+          return PlatformDetailBloc(
+            itemBloc: itemBlocs[Platform],
+          );
+        },
+        child: PlatformDetail(
+          ID: itemID,
+        ),
+      );
+    case Purchase:
+      return BlocProvider<PurchaseDetailBloc>(
+        create: (BuildContext context) {
+          return PurchaseDetailBloc(
+            itemBloc: itemBlocs[Purchase],
+          );
+        },
+        child: PurchaseDetail(
+          ID: itemID,
+        ),
+      );
+    case Store:
+      return BlocProvider<StoreDetailBloc>(
+        create: (BuildContext context) {
+          return StoreDetailBloc(
+            itemBloc: itemBlocs[Store],
+          );
+        },
+        child: StoreDetail(
+          ID: itemID,
+        ),
+      );
+    case System:
+      return Center(
+        child: Text("This is a System"),
+      );
+    case Tag:
+      return Center(
+        child: Text("This is a Tag"),
+      );
+    case PurchaseType:
+      return Center(
+        child: Text("This is a Type"),
+      );
+  }
 
   return Center();
 

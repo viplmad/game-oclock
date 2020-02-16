@@ -48,6 +48,8 @@ class StoreBloc extends ItemBloc {
         return collectionRepository.insertStorePurchase(storeID, otherID);
     }
 
+    return super.addRelationFuture(event);
+
   }
 
   @override
@@ -60,6 +62,8 @@ class StoreBloc extends ItemBloc {
       case purchaseTable:
         return collectionRepository.deleteStorePurchase(otherID);
     }
+
+    return super.deleteRelationFuture(event);
 
   }
 

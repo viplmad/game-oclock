@@ -32,6 +32,8 @@ class GameRelationBloc extends ItemRelationBloc {
         return collectionRepository.getTagsFromGame(itemID);
     }
 
+    return super.getRelationStream();
+
   }
 
 }

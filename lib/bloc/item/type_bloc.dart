@@ -48,6 +48,8 @@ class TypeBloc extends ItemBloc {
         return collectionRepository.insertPurchaseType(otherID, typeID);
     }
 
+    return super.addRelationFuture(event);
+
   }
 
   @override
@@ -60,6 +62,8 @@ class TypeBloc extends ItemBloc {
       case purchaseTable:
         return collectionRepository.deletePurchaseType(otherID, typeID);
     }
+
+    return super.deleteRelationFuture(event);
 
   }
 

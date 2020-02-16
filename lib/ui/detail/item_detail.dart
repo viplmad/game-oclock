@@ -12,6 +12,7 @@ import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
 import 'package:game_collection/ui/item_search.dart';
+import 'package:game_collection/ui/bloc_provider_route.dart';
 import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/item_view.dart';
@@ -23,7 +24,8 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   final int itemID;
   final ItemDetailBloc itemDetailBloc;
-  CollectionItem item;
+
+  CollectionItem get item => DLC(ID: itemID);
 
   ItemBloc get itemBloc => itemDetailBloc.itemBloc;
 
@@ -98,7 +100,18 @@ abstract class ItemDetailBody extends StatelessWidget {
               snap: false,
               flexibleSpace: GestureDetector(
                 child: FlexibleSpaceBar(
-                  title: Text(""),
+                  title: BlocBuilder<ItemDetailBloc, ItemDetailState> (
+                      bloc: itemDetailBloc,
+                      builder: (BuildContext context, ItemDetailState state) {
+                        String title = "";
+
+                        if(state is ItemLoaded) {
+                          title = state.item.getTitle();
+                        }
+
+                        return Text(title);
+                      }
+                  ),
                   collapseMode: CollapseMode.parallax,
                 ),
               ),
@@ -113,9 +126,8 @@ abstract class ItemDetailBody extends StatelessWidget {
 
                 if(state is ItemLoaded) {
 
-                  item = state.item;
                   return Column(
-                    children: itemFieldsBuilder(context),
+                    children: itemFieldsBuilder(state.item),
                   );
 
                 }
@@ -132,36 +144,10 @@ abstract class ItemDetailBody extends StatelessWidget {
               },
             ),
             Column(
-              children: itemRelationsBuilder(context),
+              children: itemRelationsBuilder(),
             ),
           ],
         ),
-      ),
-    );
-
-  }
-
-  Widget listHolder(BuildContext context) {
-
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            expandedHeight: 300.0,
-            floating: false,
-            pinned: true,
-            snap: false,
-            flexibleSpace: GestureDetector(
-              child: FlexibleSpaceBar(
-                title: Text(item.getTitle()),
-                collapseMode: CollapseMode.parallax,
-              ),
-            ),
-          ),
-        ];
-      },
-      body: ListView(
-        children: itemFieldsBuilder(context),
       ),
     );
 
@@ -203,6 +189,21 @@ abstract class ItemDetailBody extends StatelessWidget {
           item,
           tableName,
           deletedItem,
+        ),
+      );
+    };
+
+  }
+
+  Function(CollectionItem) onTapFunction(BuildContext context) {
+
+    return (CollectionItem item) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ItemDetailBuilder(item);
+            }
         ),
       );
     };
@@ -316,9 +317,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             items: state.items,
             tableName: tableName,
             shownName: shownValue,
-            onTap: (CollectionItem item) {
-              //TODO
-            },
+            onTap: onTapFunction(context),
             updateAdd: addRelationFunction(tableName),
             updateDelete: deleteRelationFunction(tableName),
           );
@@ -341,9 +340,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           return ResultsListMany(
             items: state.items,
             tableName: tableName,
-            onTap: (CollectionItem item) {
-              //TODO
-            },
+            onTap: onTapFunction(context),
             updateAdd: addRelationFunction(tableName),
             updateDelete: deleteRelationFunction(tableName),
           );
@@ -379,9 +376,9 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  external List<Widget> itemFieldsBuilder(BuildContext context);
+  external List<Widget> itemFieldsBuilder(CollectionItem item);
 
-  external List<Widget> itemRelationsBuilder(BuildContext context);
+  external List<Widget> itemRelationsBuilder();
 
   external ItemRelationBloc itemRelationBlocFunction(String tableName);
 
@@ -938,7 +935,9 @@ class ResultsListMany extends StatelessWidget {
               onDismissed: (DismissDirection direction) {
                 updateDelete(result);
               },
-              onTap: onTap(result),
+              onTap: () {
+                onTap(result);
+              },
             );
 
           }

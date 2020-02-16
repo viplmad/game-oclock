@@ -13,12 +13,13 @@ abstract class ItemListState extends Equatable {
 class ItemListLoading extends ItemListState {}
 
 class ItemListLoaded extends ItemListState {
-  const ItemListLoaded([this.items = const []]);
+  const ItemListLoaded([this.items = const [], this.view = "Main"]);
 
   final List<CollectionItem> items;
+  final String view;
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [items, view];
 
   @override
   String toString() => 'ItemListLoaded { '

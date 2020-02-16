@@ -36,6 +36,10 @@ class GameListBloc extends ItemListBloc {
         <String, dynamic>{
           game_statusField: statuses[2],
         },
+        [
+          game_releaseYearField,
+          game_nameField,
+        ],
       );
 
     } else if(event.view == GameViews[2]) {
@@ -45,14 +49,24 @@ class GameListBloc extends ItemListBloc {
           game_statusField: statuses[3],
         },
         [
-          game_finishDateField,
+          game_releaseYearField,
+          game_nameField,
         ],
       );
 
     } else if(event.view == GameViews[3]) {
 
       // TODO: Handle this case.
-      return getReadAllStream();
+      return collectionRepository.getGames(
+        <String, dynamic>{
+          game_statusField: statuses[3],
+          game_backupField: true,
+        },
+        [
+          game_releaseYearField,
+          game_nameField,
+        ],
+      );
 
     }
 
