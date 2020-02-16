@@ -29,8 +29,10 @@ class ItemList extends StatelessWidget {
               minHeight: 40.0,
               maxHeight: 40.0,
               child: Container(
-                child: Text(activeView),
-                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Text(activeView, style: Theme.of(context).textTheme.subhead,),
+                ),
+                color: Colors.grey,
               )
             ),
           ),

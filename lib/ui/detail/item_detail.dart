@@ -201,9 +201,9 @@ abstract class ItemDetailBody extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) {
-              return ItemDetailBuilder(item);
-            }
+          builder: (BuildContext context) {
+            return ItemDetailBuilder(item);
+          }
         ),
       );
     };
@@ -323,7 +323,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           );
         }
 
-        return LoadingIcon();
+        return Divider();
 
       },
     );
@@ -346,7 +346,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           );
         }
 
-        return LoadingIcon();
+        return Divider();
 
       },
     );
@@ -369,7 +369,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           );
         }
 
-        return LoadingIcon();
+        return Divider();
 
       },
     );
@@ -887,7 +887,9 @@ class ResultsListSingle extends StatelessWidget {
               onDismissed: (DismissDirection direction) {
                 updateDelete(result);
               },
-              onTap: onTap(result),
+              onTap: () {
+                onTap(result);
+              }
             );
 
           }
