@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/bar_item.dart';
 import 'package:game_collection/model/app_tab.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/model/collection_item.dart';
 
 import 'common/loading_icon.dart';
 import 'common/show_snackbar.dart';
 import 'bar_items.dart';
 import 'item_list.dart';
+import 'bloc_provider_route.dart';
 
 
 class Homepage extends StatelessWidget {
@@ -193,6 +194,19 @@ class _HomepageBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Added",
+            snackBarAction: SnackBarAction(
+              label: "Open",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ItemDetailBuilder(state.item);
+                    },
+                  ),
+                );
+              },
+            ),
           );
         }
         if(state is ItemNotAdded) {

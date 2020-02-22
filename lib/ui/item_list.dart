@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -20,25 +18,22 @@ class ItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Scrollbar(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _SliverAppBarDelegate(
-              minHeight: 40.0,
-              maxHeight: 40.0,
-              child: Container(
-                child: Center(
-                  child: Text(activeView, style: Theme.of(context).textTheme.subhead,),
-                ),
-                color: Colors.grey,
-              )
-            ),
+    return Column(
+      children: <Widget>[
+        Container(
+          child: ListTile(
+            title: Text(activeView),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              items.map( (CollectionItem item) {
+          color: Colors.grey,
+        ),
+        Expanded(
+          child: Scrollbar(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: items.length,
+              itemBuilder: (BuildContext context, int index) {
+                CollectionItem item = items[index];
+
                 return DismissibleItem(
                   item: item,
                   onTap: () {
@@ -65,11 +60,12 @@ class ItemList extends StatelessWidget {
 
                   },
                 );
-              }).toList(),
+
+              },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
 
   }
@@ -101,38 +97,4 @@ class ItemList extends StatelessWidget {
 
   }
 
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  
-  _SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-  
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-  
-  @override
-  double get minExtent => minHeight;
-  
-  @override
-  double get maxExtent => max(maxHeight, minHeight);
-  
-  @override
-  Widget build(
-      BuildContext context,
-      double shrinkOffset,
-      bool overlapsContent)
-  {
-    return new SizedBox.expand(child: child);
-  }  @override
-  
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
-  }
 }

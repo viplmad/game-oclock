@@ -36,7 +36,24 @@ class _ItemSearchState extends State<ItemSearch> {
     _itemSearchBloc = ItemSearchBloc(
       collectionRepository: CollectionRepository(),
       tableSearch: widget.searchTable,
-    );
+    )..add(SearchTextChanged("")); //put empty string first, so suggestions will be shown
+  }
+
+  List<Widget> buildActions() {
+
+    return <Widget> [
+      IconButton(
+        icon: Icon(Icons.clear),
+        tooltip: 'Clear',
+        onPressed: () {
+          _textEditingController.clear();
+          _itemSearchBloc.add(
+            SearchTextChanged(query),
+          );
+        },
+      ),
+    ];
+
   }
 
   @override
@@ -44,15 +61,7 @@ class _ItemSearchState extends State<ItemSearch> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.clear),
-            tooltip: 'Clear',
-            onPressed: () {
-              query = '';
-            },
-          ),
-        ],
+        actions: buildActions(),
         title: TextField(
           controller: _textEditingController,
           keyboardType: TextInputType.text,
@@ -67,31 +76,41 @@ class _ItemSearchState extends State<ItemSearch> {
           ),
         ),
       ),
-      body: BlocBuilder<ItemSearchBloc, ItemSearchState>(
-        bloc: _itemSearchBloc,
-        builder: (BuildContext context, ItemSearchState state) {
+      body: Column(
+        children: <Widget>[
+          Container(
+            child: Center(
+              child: Text("New " + widget.searchTable, style: Theme.of(context).textTheme.subhead,),
+            ),
+            color: Colors.grey,
+          ),
+          BlocBuilder<ItemSearchBloc, ItemSearchState>(
+            bloc: _itemSearchBloc,
+            builder: (BuildContext context, ItemSearchState state) {
 
-          if(state is ItemSearchEmpty) {
+              if(state is ItemSearchEmpty) {
 
-            return listItems(state.suggestions);
+                return listItems(state.suggestions);
 
-          }
-          if(state is ItemSearchSuccess) {
+              }
+              if(state is ItemSearchSuccess) {
 
-            return listItems(state.results);
+                return listItems(state.results);
 
-          }
-          if(state is ItemSearchError) {
+              }
+              if(state is ItemSearchError) {
 
-            return Center(
-              child: Text("Error during search\n" + state.error),
-            );
+                return Center(
+                  child: Text("Error during search\n" + state.error),
+                );
 
-          }
+              }
 
-          return LoadingIcon();
+              return LoadingIcon();
 
-        },
+            },
+          ),
+        ],
       ),
     );
 
@@ -105,20 +124,25 @@ class _ItemSearchState extends State<ItemSearch> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(8.0),
-      itemCount: results.length,
-      itemBuilder: (BuildContext context, int index) {
-        CollectionItem result = results[index];
+    return Expanded(
+      child: Scrollbar(
+        child: ListView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8.0),
+          itemCount: results.length,
+          itemBuilder: (BuildContext context, int index) {
+            CollectionItem result = results[index];
 
-        return ItemCard(
-          item: result,
-          onTap: () {
-            Navigator.maybePop(context, result);
+            return ItemCard(
+              item: result,
+              onTap: () {
+                Navigator.maybePop(context, result);
+              },
+            );
+
           },
-        );
-
-      },
+        ),
+      ),
     );
 
   }

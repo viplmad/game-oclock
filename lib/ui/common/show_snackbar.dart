@@ -8,6 +8,7 @@ void showSnackBar({@required ScaffoldState scaffoldState, @required String messa
     action: snackBarAction,
   );
 
+  scaffoldState.hideCurrentSnackBar();
   scaffoldState.showSnackBar(snackBar);
 
 }
