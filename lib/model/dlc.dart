@@ -8,10 +8,12 @@ import 'collection_item.dart';
 
 enum DLCView {
   Main,
+  LastCreated,
 }
 
 const List<String> dlcViews = [
   "Main",
+  "Last Created",
 ];
 
 class DLC extends CollectionItem {

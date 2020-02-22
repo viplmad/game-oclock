@@ -8,10 +8,12 @@ import 'collection_item.dart';
 
 enum PlatformView {
   Main,
+  LastCreated,
 }
 
 const List<String> platformViews = [
   "Main",
+  "Last Created",
 ];
 
 class Platform extends CollectionItem {

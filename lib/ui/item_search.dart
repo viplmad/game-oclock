@@ -72,18 +72,23 @@ class _ItemSearchState extends State<ItemSearch> {
         builder: (BuildContext context, ItemSearchState state) {
 
           if(state is ItemSearchEmpty) {
-            return Center(
-              child: Text("Try with more words"),
-            );
+
+            return listItems(state.suggestions);
+
+          }
+          if(state is ItemSearchSuccess) {
+
+            return listItems(state.results);
+
           }
           if(state is ItemSearchError) {
+
             return Center(
               child: Text("Error during search\n" + state.error),
             );
+
           }
-          if(state is ItemSearchSuccess) {
-            return listResults(state.results);
-          }
+
           return LoadingIcon();
 
         },
@@ -92,7 +97,7 @@ class _ItemSearchState extends State<ItemSearch> {
 
   }
 
-  Widget listResults(List<CollectionItem> results) {
+  Widget listItems(List<CollectionItem> results) {
 
     if(results.isEmpty) {
       return Center(
@@ -122,7 +127,6 @@ class _ItemSearchState extends State<ItemSearch> {
   void dispose() {
 
     _itemSearchBloc.close();
-
     super.dispose();
 
   }

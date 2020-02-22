@@ -6,9 +6,9 @@ import 'package:game_collection/entity/game_entity.dart';
 import 'collection_item.dart';
 
 
-
 enum GameView {
   Main,
+  LastCreated,
   Playing,
   NextUp,
   LastFinished,
@@ -17,6 +17,7 @@ enum GameView {
 
 const List<String> gameViews = [
   "Main",
+  "Last Created",
   "Playing",
   "Next Up",
   "Last Finished",

@@ -255,6 +255,28 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion CREATE
 
   //#region READ
+  @override
+  Stream<List<CollectionItem>> getItemsWithView(String tableName, int viewIndex, [int limit]) {
+    switch(tableName) {
+      case gameTable:
+        return getGamesWithView(GameView.values[viewIndex], limit);
+      case dlcTable:
+        return getDLCsWithView(DLCView.values[viewIndex], limit);
+      case platformTable:
+        return getPlatformsWithView(PlatformView.values[viewIndex], limit);
+      case purchaseTable:
+        return getPurchasesWithView(PurchaseView.values[viewIndex], limit);
+      case storeTable:
+        return getStoresWithView(StoreView.values[viewIndex], limit);
+      case systemTable:
+        return getSystemsWithView(SystemView.values[viewIndex], limit);
+      case tagTable:
+        return getTagsWithView(TagView.values[viewIndex], limit);
+      case typeTable:
+        return getTypesWithView(TypeView.values[viewIndex], limit);
+    }
+    return null;
+  }
   //#region Game
   @override
   Stream<List<Game>> getAllGames() {
@@ -264,11 +286,12 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getGamesWithView(GameView gameView) {
+  Stream<List<Game>> getGamesWithView(GameView gameView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: gameViewToTable[gameView],
       selectFields: gameFields,
+      limitResults: limit,
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -345,10 +368,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<DLC>> getDLCsWithView(DLCView dlcView) {
+  Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: dlcViewToTable[dlcView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -402,10 +426,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView) {
+  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: platformViewToTable[platformView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -457,11 +482,12 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView) {
+  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: purchaseViewToTable[purchaseView],
       selectFields: purchaseFields,
+      limitResults: limit,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -538,10 +564,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Store>> getStoresWithView(StoreView storeView) {
+  Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: storeViewToTable[storeView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListStore );
 
   }
@@ -581,10 +608,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<System>> getSystemsWithView(SystemView systemView) {
+  Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: systemViewToTable[systemView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -623,10 +651,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Tag>> getTagsWithView(TagView tagView) {
+  Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: tagViewToTable[tagView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -666,10 +695,11 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView) {
+  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]) {
 
     return _dbConnector.readTable(
       tableName: typeViewToTable[typeView],
+      limitResults: limit,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -996,7 +1026,7 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<CollectionItem>> getSearchStream(String tableName, String query, int maxResults) {
+  Stream<List<CollectionItem>> getSearchItem(String tableName, String query, int maxResults) {
 
     switch(tableName) {
       case gameTable:
@@ -1310,6 +1340,7 @@ class CollectionRepository implements ICollectionRepository {
 
 Map<GameView, String> gameViewToTable = {
   GameView.Main : "Game-Main",
+  GameView.LastCreated : "Game-Last Created",
   GameView.Playing : "Game-Playing",
   GameView.NextUp : "Game-Next Up",
   GameView.LastFinished : "Game-Last Finished",
@@ -1318,14 +1349,17 @@ Map<GameView, String> gameViewToTable = {
 
 Map<DLCView, String> dlcViewToTable = {
   DLCView.Main : "DLC-Main",
+  DLCView.LastCreated : "DLC-Last Created",
 };
 
 Map<PlatformView, String> platformViewToTable = {
   PlatformView.Main : "Platform-Main",
+  PlatformView.LastCreated : "Platform-Last Created",
 };
 
 Map<PurchaseView, String> purchaseViewToTable = {
   PurchaseView.Main : "Purchase-Main",
+  PurchaseView.LastCreated : "Purchase-Last Created",
   PurchaseView.Pending : "Purchase-Pending",
   PurchaseView.LastPurchased : "Purchase-Last Purchased",
   PurchaseView.Review2019 : "Purchase-2019 In Review",
@@ -1333,16 +1367,20 @@ Map<PurchaseView, String> purchaseViewToTable = {
 
 Map<StoreView, String> storeViewToTable = {
   StoreView.Main : "Store-Main",
+  StoreView.LastCreated : "Store-Last Created",
 };
 
 Map<SystemView, String> systemViewToTable = {
   SystemView.Main : "System-Main",
+  SystemView.LastCreated : "System-Last Created",
 };
 
 Map<TagView, String> tagViewToTable = {
   TagView.Main : "Tag-Main",
+  TagView.LastCreated : "Tag-Last Created",
 };
 
 Map<TypeView, String> typeViewToTable = {
   TypeView.Main : "Type-Main",
+  TypeView.LastCreated : "Type-Last Created",
 };

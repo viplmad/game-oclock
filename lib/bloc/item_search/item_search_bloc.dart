@@ -18,6 +18,7 @@ class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
   final String tableSearch;
 
   final int _maxResults = 10;
+  final int _maxSuggestions = 6;
 
   @override
   ItemSearchState get initialState => ItemSearchEmpty();
@@ -42,12 +43,12 @@ class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
       final query = event.query;
       if(query.isEmpty) {
 
-        yield ItemSearchEmpty();
+        final List<CollectionItem> items = await collectionRepository.getItemsWithView(tableSearch, 1, _maxSuggestions).first;
+        yield ItemSearchEmpty(items);
 
       } else {
 
-        final List<CollectionItem> items = await collectionRepository.getSearchStream(tableSearch, query, _maxResults).first;
-
+        final List<CollectionItem> items = await collectionRepository.getSearchItem(tableSearch, query, _maxResults).first;
         yield ItemSearchSuccess(items);
 
       }

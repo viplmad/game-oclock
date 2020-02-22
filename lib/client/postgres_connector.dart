@@ -112,9 +112,9 @@ class PostgresConnector extends IDBConnector {
 
   //#region READ
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readTable({@required String tableName, List<String> selectFields, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readTable({@required String tableName, List<String> selectFields, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields, int limitResults}) {
 
-    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList()?? null) + _orderByStatement(sortFields);
+    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList()?? null) + _orderByStatement(sortFields) + _limitStatement(limitResults);
 
     return _connection.mappedResultsQuery(sql, substitutionValues: whereFieldsAndValues);
 
@@ -263,6 +263,12 @@ class PostgresConnector extends IDBConnector {
   String _orderByStatement(List<String> sortFields) {
 
     return sortFields != null? " ORDER BY " + _forceFieldsDoubleQuotes(sortFields).join(", ") : "";
+
+  }
+
+  String _limitStatement(int limit) {
+
+    return limit != null? " LIMIT " + limit.toString() : "";
 
   }
 

@@ -8,10 +8,12 @@ import 'collection_item.dart';
 
 enum TagView {
   Main,
+  LastCreated,
 }
 
 const List<String> tagViews = [
   "Main",
+  "Last Created",
 ];
 
 class Tag extends CollectionItem {

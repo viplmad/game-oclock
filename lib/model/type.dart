@@ -8,10 +8,12 @@ import 'collection_item.dart';
 
 enum TypeView {
   Main,
+  LastCreated,
 }
 
 const List<String> typeViews = [
   "Main",
+  "Last Created",
 ];
 
 class PurchaseType extends CollectionItem {

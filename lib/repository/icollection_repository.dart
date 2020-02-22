@@ -42,9 +42,10 @@ abstract class ICollectionRepository {
 
 
   //#region READ
+  Stream<List<CollectionItem>> getItemsWithView(String tableName, int viewIndex, [int limit]);
     //Game
   Stream<List<Game>> getAllGames();
-  Stream<List<Game>> getGamesWithView(GameView gameView);
+  Stream<List<Game>> getGamesWithView(GameView gameView, [int limit]);
   Stream<Game> getGameWithID(int ID);
   Stream<List<Platform>> getPlatformsFromGame(int ID);
   Stream<List<Purchase>> getPurchasesFromGame(int ID);
@@ -53,21 +54,21 @@ abstract class ICollectionRepository {
 
     //DLC
   Stream<List<DLC>> getAllDLCs();
-  Stream<List<DLC>> getDLCsWithView(DLCView dlcView);
+  Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]);
   Stream<DLC> getDLCWithID(int ID);
   Stream<Game> getBaseGameFromDLC(int ID);
   Stream<List<Purchase>> getPurchasesFromDLC(int ID);
 
     //Platform
   Stream<List<Platform>> getAllPlatforms();
-  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView);
+  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]);
   Stream<Platform> getPlatformWithID(int ID);
   Stream<List<Game>> getGamesFromPlatform(int ID);
   Stream<List<System>> getSystemsFromPlatform(int ID);
 
     //Purchase
   Stream<List<Purchase>> getAllPurchases();
-  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView);
+  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]);
   Stream<Purchase> getPurchaseWithID(int ID);
   Stream<Store> getStoreFromPurchase(int storeID);
   Stream<List<Game>> getGamesFromPurchase(int ID);
@@ -76,25 +77,25 @@ abstract class ICollectionRepository {
 
     //Store
   Stream<List<Store>> getAllStores();
-  Stream<List<Store>> getStoresWithView(StoreView storeView);
+  Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]);
   Stream<Store> getStoreWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromStore(int ID);
 
     //System
   Stream<List<System>> getAllSystems();
-  Stream<List<System>> getSystemsWithView(SystemView systemView);
+  Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]);
   Stream<System> getSystemWithID(int ID);
   Stream<List<Platform>> getPlatformsFromSystem(int ID);
 
     //Tag
   Stream<List<Tag>> getAllTags();
-  Stream<List<Tag>> getTagsWithView(TagView tagView);
+  Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]);
   Stream<Tag> getTagWithID(int ID);
   Stream<List<Game>> getGamesFromTag(int ID);
 
     //Type
   Stream<List<PurchaseType>> getAllTypes();
-  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView);
+  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]);
   Stream<PurchaseType> getTypeWithID(int ID);
   Stream<List<Purchase>> getPurchasesFromType(int ID);
   //#endregion READ
@@ -163,7 +164,7 @@ abstract class ICollectionRepository {
 
 
   //#region SEARCH
-  Stream<List<CollectionItem>> getSearchStream(String tableName, String query, int maxResults);
+  Stream<List<CollectionItem>> getSearchItem(String tableName, String query, int maxResults);
   Stream<List<Game>> getGamesWithName(String name, int maxResults);
   Stream<List<DLC>> getDLCsWithName(String name, int maxResults);
   Stream<List<Platform>> getPlatformsWithName(String name, int maxResults);

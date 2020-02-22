@@ -10,7 +10,19 @@ abstract class ItemSearchState extends Equatable {
   List<Object> get props => [];
 }
 
-class ItemSearchEmpty extends ItemSearchState {}
+class ItemSearchEmpty extends ItemSearchState {
+  ItemSearchEmpty([this.suggestions = const []]);
+
+  final List<CollectionItem> suggestions;
+
+  @override
+  List<Object> get props => [suggestions];
+
+  @override
+  String toString() => 'ItemSearchEmpty { '
+      'suggestions: $suggestions'
+      ' }';
+}
 
 class ItemSearchLoading extends ItemSearchState {}
 

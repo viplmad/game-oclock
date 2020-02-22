@@ -8,10 +8,12 @@ import 'collection_item.dart';
 
 enum StoreView {
   Main,
+  LastCreated,
 }
 
 const List<String> storeViews = [
   "Main",
+  "Last Created",
 ];
 
 class Store extends CollectionItem {

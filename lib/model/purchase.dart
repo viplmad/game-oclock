@@ -8,6 +8,7 @@ import 'collection_item.dart';
 
 enum PurchaseView {
   Main,
+  LastCreated,
   Pending,
   LastPurchased,
   Review2019,
@@ -15,6 +16,7 @@ enum PurchaseView {
 
 const List<String> purchaseViews = [
   "Main",
+  "Last Created",
   "Pending",
   "Last Purchased",
   "2019 in Review",
