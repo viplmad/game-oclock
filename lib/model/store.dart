@@ -21,15 +21,18 @@ class Store extends CollectionItem {
   Store({
     @required int ID,
     this.name,
+    this.iconURL,
   }) : super(ID: ID);
 
   final String name;
+  final String iconURL;
 
-  static Store fromEntity(StoreEntity entity) {
+  static Store fromEntity(StoreEntity entity, [String iconURL]) {
 
     return Store(
       ID: entity.ID,
       name: entity.name,
+      iconURL: iconURL,
     );
 
   }
@@ -47,11 +50,13 @@ class Store extends CollectionItem {
   @override
   Store copyWith({
     String name,
+    String iconURL,
   }) {
 
     return Store(
       ID: ID,
       name: name?? this.name,
+      iconURL: iconURL?? this.iconURL,
     );
 
   }
@@ -71,9 +76,17 @@ class Store extends CollectionItem {
   }
 
   @override
+  String getImageURL() {
+
+    return this.iconURL;
+
+  }
+
+  @override
   List<Object> get props => [
     ID,
     name,
+    iconURL,
   ];
 
   @override
@@ -81,7 +94,8 @@ class Store extends CollectionItem {
 
     return '$storeTable { '
         '$IDField: $ID, '
-        '$stor_nameField: $name'
+        '$stor_nameField: $name, '
+        '$stor_iconField: $iconURL'
         ' }';
 
   }

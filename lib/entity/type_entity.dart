@@ -45,7 +45,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
     List<PurchaseTypeEntity> typesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      PurchaseTypeEntity type = PurchaseTypeEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
+      PurchaseTypeEntity type = PurchaseTypeEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, typeTable) );
 
       typesList.add(type);
     });

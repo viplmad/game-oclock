@@ -22,6 +22,7 @@ class DLC extends CollectionItem {
     @required int ID,
     this.name,
     this.releaseYear,
+    this.coverURL,
     this.finishDate,
 
     this.baseGame,
@@ -29,16 +30,18 @@ class DLC extends CollectionItem {
 
   final String name;
   final int releaseYear;
+  final String coverURL;
   final DateTime finishDate;
 
   final int baseGame;
 
-  static DLC fromEntity(DLCEntity entity) {
+  static DLC fromEntity(DLCEntity entity, [String coverURL]) {
 
     return DLC(
       ID: entity.ID,
       name: entity.name,
       releaseYear: entity.releaseYear,
+      coverURL: coverURL,
       finishDate: entity.finishDate,
 
       baseGame: entity.baseGame,
@@ -64,6 +67,7 @@ class DLC extends CollectionItem {
   DLC copyWith({
     String name,
     int releaseYear,
+    String coverURL,
     DateTime finishDate,
 
     int baseGame,
@@ -73,6 +77,7 @@ class DLC extends CollectionItem {
       ID: ID,
       name: name?? this.name,
       releaseYear: releaseYear?? this.releaseYear,
+      coverURL: coverURL?? this.coverURL,
       finishDate: finishDate?? this.finishDate,
 
       baseGame: baseGame?? this.baseGame,
@@ -88,13 +93,25 @@ class DLC extends CollectionItem {
   }
 
   @override
-  String getTitle() => this.name;
+  String getTitle() {
+
+    return this.name;
+
+  }
+
+  @override
+  String getImageURL() {
+
+    return this.coverURL;
+
+  }
 
   @override
   List<Object> get props => [
     ID,
     name,
     releaseYear,
+    coverURL,
     finishDate,
   ];
 
@@ -105,6 +122,7 @@ class DLC extends CollectionItem {
         '$IDField: $ID, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
+        '$dlc_coverField: $coverURL, '
         '$dlc_finishDateField: $finishDate'
         ' }';
 

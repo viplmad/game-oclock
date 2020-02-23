@@ -8,24 +8,29 @@ const String storeTable = "Store";
 const List<String> storeFields = [
   IDField,
   stor_nameField,
+  stor_iconField,
 ];
 
 const String stor_nameField = 'Name';
+const String stor_iconField = 'Icon';
 
 class StoreEntity extends CollectionItemEntity {
 
   StoreEntity({
     @required int ID,
     this.name,
+    this.iconName,
   }) : super(ID: ID);
 
   final String name;
+  final String iconName;
 
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
       ID: map[IDField],
       name: map[stor_nameField],
+      iconName: map[stor_iconField],
     );
 
   }
@@ -36,6 +41,7 @@ class StoreEntity extends CollectionItemEntity {
     return <String, dynamic> {
       IDField : ID,
       stor_nameField : name,
+      stor_iconField : iconName,
     };
 
   }
@@ -45,7 +51,7 @@ class StoreEntity extends CollectionItemEntity {
     List<StoreEntity> storesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
+      StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, storeTable) );
 
       storesList.add(store);
     });
@@ -65,7 +71,8 @@ class StoreEntity extends CollectionItemEntity {
 
     return '{$storeTable}Entity { '
         '$IDField: $ID, '
-        '$stor_nameField: $name'
+        '$stor_nameField: $name, '
+        '$stor_iconField: $iconName'
         ' }';
 
   }

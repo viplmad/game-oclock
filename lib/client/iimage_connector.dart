@@ -11,7 +11,7 @@ abstract class IImageConnector {
 
 
   //#region UPLOAD
-  Future<dynamic> uploadImage({@required String imagePath, @required String tableName, @required String imageName});
+  Future<String> uploadImage({@required String imagePath, @required String tableName, @required String imageName});
   //#endregion UPLOAD
 
   //#region DOWNLOAD

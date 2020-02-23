@@ -38,6 +38,13 @@ class StoreBloc extends ItemBloc {
   }
 
   @override
+  Future<Store> updateImage(UpdateItemImage event) {
+
+    return collectionRepository.uploadStoreIcon(event.item.ID, event.imagePath);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int storeID = event.item.ID;

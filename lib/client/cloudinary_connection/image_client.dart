@@ -35,7 +35,7 @@ class ImageClient extends BaseApi {
     publicId = publicId.split('.')[0];
 
     if (imageFilename != null) {
-      publicId = imageFilename.split('.')[0];
+      publicId = imageFilename.split('.')[0] + '-' + timeStamp.toString();
     } else {
       imageFilename = publicId;
     }

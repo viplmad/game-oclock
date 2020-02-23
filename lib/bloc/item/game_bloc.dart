@@ -38,6 +38,13 @@ class GameBloc extends ItemBloc {
   }
 
   @override
+  Future<Game> updateImage(UpdateItemImage event) {
+
+    return collectionRepository.uploadGameCover(event.item.ID, event.imagePath);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int gameID = event.item.ID;

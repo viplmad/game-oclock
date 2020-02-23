@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'cloudinary_connection//cloudinary_client.dart';
-import 'cloudinary_connection//cloudinary_response.dart';
+import 'cloudinary_connection/cloudinary_client.dart';
+import 'cloudinary_connection/cloudinary_response.dart';
 
 import 'iimage_connector.dart';
 
@@ -72,14 +72,14 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region UPLOAD
   @override
-  Future<CloudinaryResponse> uploadImage({@required String imagePath, @required String tableName, @required String imageName}) {
+  Future<String> uploadImage({@required String imagePath, @required String tableName, @required String imageName}) {
 
     return _connection.uploadImage(
       imagePath,
       folder: tableName,
       filename: imageName,
       overwrite: true,
-    );
+    ).asStream().map( (CloudinaryResponse response) => response.public_id.split('/')[1] ).first;
 
   }
   //#endregion UPLOAD
@@ -99,7 +99,7 @@ class CloudinaryConnector extends IImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageName) {
 
-    String url = baseRESURL + _instance._cloudName + '/image/upload/' + folderName + '/' + imageName + '.jpg';
+    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageName.jpg';
 
     return url;
 

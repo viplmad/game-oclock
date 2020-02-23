@@ -24,6 +24,8 @@ abstract class CollectionItem extends Equatable {
 
   String getSubtitle() => null;
 
+  String getImageURL() => null;
+
   @override
   List<Object> get props => [
     ID

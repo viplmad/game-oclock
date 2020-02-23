@@ -21,19 +21,22 @@ class System extends CollectionItem {
   System({
     @required int ID,
     this.name,
+    this.iconURL,
     this.generation,
-    this.manufacturer
+    this.manufacturer,
   }) : super(ID: ID);
 
   final String name;
+  final String iconURL;
   final int generation;
   final String manufacturer;
 
-  static System fromEntity(SystemEntity entity) {
+  static System fromEntity(SystemEntity entity, [String iconURL]) {
 
     return System(
       ID: entity.ID,
       name: entity.name,
+      iconURL: iconURL,
       generation: entity.generation,
       manufacturer: entity.manufacturer,
     );
@@ -55,6 +58,7 @@ class System extends CollectionItem {
   @override
   System copyWith({
     String name,
+    String iconURL,
     int generation,
     String manufacturer,
   }) {
@@ -62,6 +66,7 @@ class System extends CollectionItem {
     return System(
       ID: ID,
       name: name?? this.name,
+      iconURL: iconURL?? this.iconURL,
       generation: generation?? this.generation,
       manufacturer: manufacturer?? this.manufacturer,
     );
@@ -90,9 +95,17 @@ class System extends CollectionItem {
   }
 
   @override
+  String getImageURL() {
+
+    return this.iconURL;
+
+  }
+
+  @override
   List<Object> get props => [
     ID,
     name,
+    iconURL,
     generation,
     manufacturer,
   ];
@@ -103,6 +116,7 @@ class System extends CollectionItem {
     return '$systemTable { '
         '$IDField: $ID, '
         '$sys_nameField: $name, '
+        '$sys_iconField: $iconURL, '
         '$sys_generationField: $generation, '
         '$sys_manufacturerField: $manufacturer'
         ' }';

@@ -56,6 +56,22 @@ class UpdateItemField extends ItemEvent {
       ' }';
 }
 
+class UpdateItemImage extends ItemEvent {
+  const UpdateItemImage(this.item, this.imagePath);
+
+  final CollectionItem item;
+  final String imagePath;
+
+  @override
+  List<Object> get props => [item, imagePath];
+
+  @override
+  String toString() => 'UpdateItemImage { '
+      'item: $item, '
+      'image: $imagePath'
+      ' }';
+}
+
 class AddItemRelation extends ItemEvent {
   const AddItemRelation(this.item, this.field, this.otherItem);
 

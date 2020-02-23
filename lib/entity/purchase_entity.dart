@@ -80,7 +80,7 @@ class PurchaseEntity extends CollectionItemEntity {
     List<PurchaseEntity> purchasesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
+      PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, purchaseTable) );
 
       purchasesList.add(purchase);
     });

@@ -1151,25 +1151,129 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region UPLOAD
   @override
-  Future<dynamic> uploadGameCover(int gameID, String uploadImagePath) {
+  Future<Game> uploadGameCover(int gameID, String uploadImagePath) async {
 
-    return _imageConnector.uploadImage(
+    final String coverName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: gameTable,
       imageName: gameID.toString(),
     );
+
+    return updateGame(gameID, game_coverField, coverName);
+
+  }
+
+  @override
+  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath) async {
+
+    final String coverName = await _imageConnector.uploadImage(
+      imagePath: uploadImagePath,
+      tableName: dlcTable,
+      imageName: dlcID.toString(),
+    );
+
+    return updateDLC(dlcID, dlc_coverField, coverName);
+
+  }
+
+  @override
+  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath) async {
+
+    final String iconName = await _imageConnector.uploadImage(
+      imagePath: uploadImagePath,
+      tableName: platformTable,
+      imageName: platformID.toString(),
+    );
+
+    return updatePlatform(platformID, plat_iconField, iconName);
+
+  }
+
+  @override
+  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath) async {
+
+    final String iconName = await _imageConnector.uploadImage(
+      imagePath: uploadImagePath,
+      tableName: storeTable,
+      imageName: storeID.toString(),
+    );
+
+    return updateStore(storeID, stor_iconField, iconName);
+
+  }
+
+  @override
+  Future<System> uploadSystemIcon(int systemID, String uploadImagePath) async {
+
+    final String iconName = await _imageConnector.uploadImage(
+      imagePath: uploadImagePath,
+      tableName: systemTable,
+      imageName: systemID.toString(),
+    );
+
+    return updateSystem(systemID, sys_iconField, iconName);
 
   }
   //#endregion UPLOAD
 
   //#region DOWNLOAD
   @override
-  String getGameCoverURL(int gameID) {
+  String getGameCoverURL(String gameCoverName) {
 
-    return _imageConnector.getDownloadURL(
-      tableName: gameTable,
-      imageName: gameID.toString(),
-    );
+    return gameCoverName != null?
+        _imageConnector.getDownloadURL(
+          tableName: gameTable,
+          imageName: gameCoverName,
+        )
+        : null;
+
+  }
+
+  @override
+  String getDLCCoverURL(String dlcCoverName) {
+
+    return dlcCoverName != null?
+        _imageConnector.getDownloadURL(
+          tableName: dlcTable,
+          imageName: dlcCoverName,
+        )
+        : null;
+
+  }
+
+  @override
+  String getPlatformIconURL(String platformIconName) {
+
+    return platformIconName != null?
+        _imageConnector.getDownloadURL(
+          tableName: platformTable,
+          imageName: platformIconName,
+        )
+        : null;
+
+  }
+
+  @override
+  String getStoreIconURL(String storeIconName) {
+
+    return storeIconName != null?
+        _imageConnector.getDownloadURL(
+          tableName: storeTable,
+          imageName: storeIconName,
+        )
+        : null;
+
+  }
+
+  @override
+  String getSystemIconURL(String systemIconName) {
+
+    return systemIconName != null?
+        _imageConnector.getDownloadURL(
+          tableName: systemTable,
+          imageName: systemIconName,
+        )
+        : null;
 
   }
   //#endregion DOWNLOAD
@@ -1178,7 +1282,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
 
     return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
-      return Game.fromEntity(gameEntity);
+      return Game.fromEntity(gameEntity, getGameCoverURL(gameEntity.coverName));
     }).toList();
 
   }
@@ -1186,7 +1290,7 @@ class CollectionRepository implements ICollectionRepository {
   List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
 
     return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
-      return DLC.fromEntity(dlcEntity);
+      return DLC.fromEntity(dlcEntity, getDLCCoverURL(dlcEntity.coverName));
     }).toList();
 
   }
@@ -1194,7 +1298,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
 
     return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
-      return Platform.fromEntity(platformEntity);
+      return Platform.fromEntity(platformEntity, getPlatformIconURL(platformEntity.iconName));
     }).toList();
 
   }
@@ -1210,7 +1314,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
 
     return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
-      return Store.fromEntity(storeEntity);
+      return Store.fromEntity(storeEntity, getStoreIconURL(storeEntity.iconName));
     }).toList();
 
   }
@@ -1218,7 +1322,7 @@ class CollectionRepository implements ICollectionRepository {
   List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
 
     return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
-      return System.fromEntity(systemEntity);
+      return System.fromEntity(systemEntity, getSystemIconURL(systemEntity.iconName));
     }).toList();
 
   }

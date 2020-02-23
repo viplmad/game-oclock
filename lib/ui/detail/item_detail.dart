@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:game_collection/model/model.dart';
 
@@ -53,6 +57,24 @@ abstract class ItemDetailBody extends StatelessWidget {
             ),
           );
         }
+        if(state is ItemImageUpdated) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Image successfully updated",
+          );
+        }
+        if(state is ItemImageNotUpdated) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to update image",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to update image",
+              content: state.error,
+            ),
+          );
+        }
         if(state is ItemRelationAdded) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
@@ -91,33 +113,7 @@ abstract class ItemDetailBody extends StatelessWidget {
         }
       },
       child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 300.0,
-              floating: false,
-              pinned: true,
-              snap: false,
-              flexibleSpace: GestureDetector(
-                child: FlexibleSpaceBar(
-                  title: BlocBuilder<ItemDetailBloc, ItemDetailState> (
-                      bloc: itemDetailBloc,
-                      builder: (BuildContext context, ItemDetailState state) {
-                        String title = "";
-
-                        if(state is ItemLoaded) {
-                          title = state.item.getTitle();
-                        }
-
-                        return Text(title);
-                      }
-                  ),
-                  collapseMode: CollapseMode.parallax,
-                ),
-              ),
-            ),
-          ];
-        },
+        headerSliverBuilder: _appBarBuilder,
         body: ListView(
           children: [
             BlocBuilder<ItemDetailBloc, ItemDetailState> (
@@ -153,7 +149,87 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(T) updateFieldFunction<T>(String fieldName) {
+  List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
+
+    return <Widget>[
+      SliverAppBar(
+        expandedHeight: 300.0,
+        floating: false,
+        pinned: true,
+        snap: false,
+        flexibleSpace: BlocBuilder<ItemDetailBloc, ItemDetailState> (
+          bloc: itemDetailBloc,
+          builder: (BuildContext context, ItemDetailState state) {
+            String title = "";
+            String imageURL;
+
+            if(state is ItemLoaded) {
+              title = state.item.getTitle();
+              imageURL = state.item.getImageURL();
+            }
+
+            return GestureDetector(
+              child: FlexibleSpaceBar(
+                title: Text(title),
+                collapseMode: CollapseMode.parallax,
+                background: imageURL != null?
+                    CachedNetworkImage(
+                      imageUrl: imageURL,
+                      fit: BoxFit.cover,
+                      useOldImageOnUrlChange: true,
+                      placeholder: (BuildContext context, String url) => LoadingIcon(),
+                      errorWidget: (BuildContext context, String url, Object error) => null,
+                    )
+                    : null,
+              ),
+              onTap: () {
+                showModalBottomSheet<File>(
+                  context: context,
+                  builder: (BuildContext context) {
+
+                    return _imageUploadListBuilder(context);
+
+                  },
+                ).then( (File imagePicked) {
+                  if(imagePicked != null) {
+
+                    itemBloc.add(
+                      UpdateItemImage(
+                        item,
+                        imagePicked.path,
+                      ),
+                    );
+
+                  }
+                });
+              },
+            );
+
+          },
+        ),
+      ),
+    ];
+
+  }
+
+  Widget _imageUploadListBuilder(BuildContext context) {
+
+    return Container(
+      height: 200,
+      child: FlatButton(
+        child: Text("Upload image"),
+        onPressed: () async {
+          File file = await ImagePicker.pickImage(
+            source: ImageSource.gallery,
+          );
+          Navigator.maybePop(context, file);
+        },
+      ),
+    );
+
+  }
+
+  Function(T) _updateFieldFunction<T>(String fieldName) {
 
     return (T newValue) {
       itemBloc.add(
@@ -167,7 +243,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) addRelationFunction(String tableName) {
+  Function(CollectionItem) _addRelationFunction(String tableName) {
 
     return (CollectionItem addedItem) {
       itemBloc.add(
@@ -181,7 +257,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) deleteRelationFunction(String tableName) {
+  Function(CollectionItem) _deleteRelationFunction(String tableName) {
 
     return (CollectionItem deletedItem) {
       itemBloc.add(
@@ -195,7 +271,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) onTapFunction(BuildContext context) {
+  Function(CollectionItem) _onTapFunction(BuildContext context) {
 
     return (CollectionItem item) {
       Navigator.push(
@@ -215,7 +291,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(fieldName),
     );
 
   }
@@ -225,7 +301,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return ItemIntField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(fieldName),
     );
 
   }
@@ -239,7 +315,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           value.toString() + ' €'
           :
           null,
-      update: updateFieldFunction<double>(fieldName),
+      update: _updateFieldFunction<double>(fieldName),
     );
 
   }
@@ -249,7 +325,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return ItemYearField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(fieldName),
     );
 
   }
@@ -259,7 +335,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return ItemDateTimeField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<DateTime>(fieldName),
+      update: _updateFieldFunction<DateTime>(fieldName),
     );
 
   }
@@ -269,7 +345,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return ItemDurationField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<Duration>(fieldName),
+      update: _updateFieldFunction<Duration>(fieldName),
     );
 
   }
@@ -279,7 +355,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return RatingField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(fieldName),
     );
 
   }
@@ -289,7 +365,7 @@ abstract class ItemDetailBody extends StatelessWidget {
     return BoolField(
       fieldName: fieldName,
       value: value,
-      update: updateFieldFunction<bool>(fieldName),
+      update: _updateFieldFunction<bool>(fieldName),
     );
 
   }
@@ -301,7 +377,7 @@ abstract class ItemDetailBody extends StatelessWidget {
       value: value,
       enumValues: possibleValues,
       enumColours: possibleValuesColours,
-      update: updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(fieldName),
     );
 
   }
@@ -317,9 +393,9 @@ abstract class ItemDetailBody extends StatelessWidget {
             items: state.items,
             tableName: tableName,
             shownName: shownValue,
-            onTap: onTapFunction(context),
-            updateAdd: addRelationFunction(tableName),
-            updateDelete: deleteRelationFunction(tableName),
+            onTap: _onTapFunction(context),
+            updateAdd: _addRelationFunction(tableName),
+            updateDelete: _deleteRelationFunction(tableName),
           );
         }
 
@@ -340,9 +416,9 @@ abstract class ItemDetailBody extends StatelessWidget {
           return ResultsListMany(
             items: state.items,
             tableName: tableName,
-            onTap: onTapFunction(context),
-            updateAdd: addRelationFunction(tableName),
-            updateDelete: deleteRelationFunction(tableName),
+            onTap: _onTapFunction(context),
+            updateAdd: _addRelationFunction(tableName),
+            updateDelete: _deleteRelationFunction(tableName),
           );
         }
 
@@ -364,8 +440,8 @@ abstract class ItemDetailBody extends StatelessWidget {
             selectedItems: state.items,
             items: state.items,
             tableName: tableName,
-            updateAdd: addRelationFunction(tableName),
-            updateDelete: deleteRelationFunction(tableName),
+            updateAdd: _addRelationFunction(tableName),
+            updateDelete: _deleteRelationFunction(tableName),
           );
         }
 
@@ -491,20 +567,20 @@ class ItemIntField extends StatelessWidget {
       update: update,
       onTap: () {
         return showDialog<int>(
-            context: context,
-            builder: (BuildContext context) {
+          context: context,
+          builder: (BuildContext context) {
 
-              MaterialLocalizations localizations = MaterialLocalizations.of(context);
+            MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
-              return NumberPickerDialog.integer(
-                title: Text("Edit " + fieldName),
-                initialIntegerValue: value,
-                minValue: 1,
-                maxValue: 10,
-                cancelWidget: Text(localizations.cancelButtonLabel),
-                confirmWidget: Text(localizations.okButtonLabel),
-              );
-            }
+            return NumberPickerDialog.integer(
+              title: Text("Edit " + fieldName),
+              initialIntegerValue: value,
+              minValue: 1,
+              maxValue: 10,
+              cancelWidget: Text(localizations.cancelButtonLabel),
+              confirmWidget: Text(localizations.okButtonLabel),
+            );
+          }
         );
       },
     );

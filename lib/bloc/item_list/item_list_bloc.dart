@@ -61,7 +61,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     } catch (e) {
 
-      yield ItemListNotLoaded(e.toString());
+      yield ItemListNotLoaded(e.toString() + '\n' + (e as Error).stackTrace.toString());
 
     }
 

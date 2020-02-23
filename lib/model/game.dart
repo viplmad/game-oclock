@@ -31,6 +31,7 @@ class Game extends CollectionItem {
     this.name,
     this.edition,
     this.releaseYear,
+    this.coverURL,
     this.status,
     this.rating,
     this.thoughts,
@@ -44,6 +45,7 @@ class Game extends CollectionItem {
   final String name;
   final String edition;
   final int releaseYear;
+  final String coverURL;
   final String status;
   final int rating;
   final String thoughts;
@@ -53,13 +55,14 @@ class Game extends CollectionItem {
   final DateTime finishDate;
   final bool isBackup;
 
-  static Game fromEntity(GameEntity entity) {
+  static Game fromEntity(GameEntity entity, [String coverURL]) {
 
     return Game(
       ID: entity.ID,
       name: entity.name,
       edition: entity.edition,
       releaseYear: entity.releaseYear,
+      coverURL: coverURL,
       status: entity.status,
       rating: entity.rating,
       thoughts: entity.thoughts,
@@ -97,6 +100,7 @@ class Game extends CollectionItem {
     String name,
     String edition,
     int releaseYear,
+    String coverURL,
     String status,
     int rating,
     String thoughts,
@@ -112,6 +116,7 @@ class Game extends CollectionItem {
       name: name?? this.name,
       edition: edition?? this.edition,
       releaseYear: releaseYear?? this.releaseYear,
+      coverURL: coverURL?? this.coverURL,
       status: status?? this.status,
       rating: rating?? this.rating,
       thoughts: thoughts?? this.thoughts,
@@ -150,11 +155,19 @@ class Game extends CollectionItem {
   }
 
   @override
+  String getImageURL() {
+
+    return this.coverURL;
+
+  }
+
+  @override
   List<Object> get props => [
     ID,
     name,
     edition,
     releaseYear,
+    coverURL,
     status,
     rating,
     thoughts,
@@ -173,6 +186,7 @@ class Game extends CollectionItem {
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
+        '$game_coverField: $coverURL, '
         '$game_statusField: $status, '
         '$game_ratingField: $rating, '
         '$game_thoughtsField: $thoughts, '

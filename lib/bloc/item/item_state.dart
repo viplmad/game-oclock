@@ -98,6 +98,34 @@ class ItemFieldNotUpdated extends ItemState {
       ' }';
 }
 
+class ItemImageUpdated extends ItemState {
+  const ItemImageUpdated(this.item);
+
+  final CollectionItem item;
+
+  @override
+  List<Object> get props => [item];
+
+  @override
+  String toString() => 'ItemImageUpdated { '
+      'item: $item'
+      ' }';
+}
+
+class ItemImageNotUpdated extends ItemState {
+  const ItemImageNotUpdated(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ItemImageNotUpdated { '
+      'error: $error'
+      ' }';
+}
+
 class ItemRelationAdded extends ItemState {
   const ItemRelationAdded(this.item, this.field);
 

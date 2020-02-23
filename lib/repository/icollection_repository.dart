@@ -177,14 +177,15 @@ abstract class ICollectionRepository {
 
   //#region UPLOAD
     //Game
-  Future<dynamic> uploadGameCover(int gameID, String uploadImage);
-  //TODO: add more
+  Future<Game> uploadGameCover(int gameID, String uploadImagePath);
+    //DLC
+  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath);
+    //Platform
+  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath);
+    //Store
+  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath);
+    //System
+  Future<System> uploadSystemIcon(int systemID, String uploadImagePath);
   //#endregion UPLOAD
-
-  //#region DOWNLOAD
-    //Game
-  String getGameCoverURL(int gameID);
-  //TODO: add more
-  //#endregion DOWNLOAD
 
 }

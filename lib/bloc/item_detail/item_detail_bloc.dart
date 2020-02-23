@@ -15,7 +15,7 @@ import 'item_detail.dart';
 abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   ItemDetailBloc({@required this.itemBloc}) {
-    itemSubscription = itemBloc.listen( mapItemStateToEvent );
+    itemSubscription = itemBloc.listen( _mapItemStateToEvent );
   }
 
   final ItemBloc itemBloc;
@@ -63,20 +63,34 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   }
 
-  void mapItemStateToEvent(ItemState itemState) {
+  void _mapItemStateToEvent(ItemState itemState) {
 
     if(itemState is ItemFieldUpdated) {
 
-      _mapUpdatedToEvent(itemState);
+      _mapUpdatedFieldToEvent(itemState);
+
+    } else if(itemState is ItemImageUpdated) {
+
+      _mapUpdatedImageToEvent(itemState);
 
     }
 
   }
 
-  void _mapUpdatedToEvent(ItemFieldUpdated itemState) {
+  void _mapUpdatedFieldToEvent(ItemFieldUpdated itemState) {
 
     if(state is ItemLoaded) {
-      final itemUpdated = itemState.item;
+      final CollectionItem itemUpdated = itemState.item;
+
+      add(UpdateItem(itemUpdated));
+    }
+
+  }
+
+  void _mapUpdatedImageToEvent(ItemImageUpdated itemState) {
+
+    if(state is ItemLoaded) {
+      final CollectionItem itemUpdated = itemState.item;
 
       add(UpdateItem(itemUpdated));
     }

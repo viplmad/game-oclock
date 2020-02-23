@@ -38,6 +38,13 @@ class DLCBloc extends ItemBloc {
   }
 
   @override
+  Future<DLC> updateImage(UpdateItemImage event) {
+
+    return collectionRepository.uploadDLCCover(event.item.ID, event.imagePath);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int dlcID = event.item.ID;

@@ -21,17 +21,20 @@ class Platform extends CollectionItem {
   Platform({
     @required int ID,
     this.name,
-    this.type
+    this.iconURL,
+    this.type,
   }) : super(ID: ID);
 
   final String name;
+  final String iconURL;
   final String type;
 
-  static Platform fromEntity(PlatformEntity entity) {
+  static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
 
     return Platform(
       ID: entity.ID,
       name: entity.name,
+      iconURL: iconURL,
       type: entity.type,
     );
 
@@ -51,12 +54,14 @@ class Platform extends CollectionItem {
   @override
   Platform copyWith({
     String name,
+    String iconURL,
     String type,
   }) {
 
     return Platform(
       ID: ID,
       name: name?? this.name,
+      iconURL: iconURL?? this.iconURL,
       type: type?? this.type,
     );
 
@@ -77,9 +82,17 @@ class Platform extends CollectionItem {
   }
 
   @override
+  String getImageURL() {
+
+    return this.iconURL;
+
+  }
+
+  @override
   List<Object> get props => [
     ID,
     name,
+    iconURL,
     type,
   ];
 
@@ -89,6 +102,7 @@ class Platform extends CollectionItem {
     return '$platformTable { '
         '$IDField: $ID, '
         '$plat_nameField: $name, '
+        '$plat_iconField: $iconURL, '
         '$plat_typeField: $type'
         ' }';
 

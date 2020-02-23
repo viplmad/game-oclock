@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:game_collection/model/collection_item.dart';
+
+import 'loading_icon.dart';
 
 class DismissibleItem extends StatelessWidget {
 
@@ -67,17 +71,33 @@ class ItemCard extends StatelessWidget {
 
 class ItemListTile extends StatelessWidget {
 
-  final CollectionItem item;
+  const ItemListTile({Key key, @required this.item}) : super(key: key);
 
-  const ItemListTile({Key key, this.item}) : super(key: key);
+  final CollectionItem item;
 
   @override
   Widget build(BuildContext context) {
 
     return ListTile(
+      leading: item.getImageURL() != null?
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: 100,
+              minHeight: 44,
+              maxWidth: 100,
+              maxHeight: 80,
+            ),
+            child: CachedNetworkImage(
+              imageUrl: item.getImageURL(),
+              fit: BoxFit.scaleDown,
+              placeholder: (BuildContext context, String url) => LoadingIcon(),
+              errorWidget: (BuildContext context, String url, Object error) => null,
+            ),
+          )
+          : null,
       title: Text(item.getTitle()),
       subtitle: item.getSubtitle() != null?
-      Text(item.getSubtitle())
+          Text(item.getSubtitle())
           : null,
     );
 

@@ -38,6 +38,13 @@ class PlatformBloc extends ItemBloc {
   }
 
   @override
+  Future<Platform> updateImage(UpdateItemImage event) {
+
+    return collectionRepository.uploadPlatformIcon(event.item.ID, event.imagePath);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int platformID = event.item.ID;

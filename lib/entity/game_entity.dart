@@ -10,6 +10,7 @@ const List<String> gameFields = [
   game_nameField,
   game_editionField,
   game_releaseYearField,
+  game_coverField,
   game_statusField,
   game_ratingField,
   game_thoughtsField,
@@ -23,6 +24,7 @@ const List<String> gameFields = [
 const String game_nameField = 'Name';
 const String game_editionField = 'Edition';
 const String game_releaseYearField = 'Release Year';
+const String game_coverField = 'Cover';
 const String game_statusField = 'Status';
 const String game_ratingField = 'Rating';
 const String game_thoughtsField = 'Thoughts';
@@ -46,6 +48,7 @@ class GameEntity extends CollectionItemEntity {
     this.name,
     this.edition,
     this.releaseYear,
+    this.coverName,
     this.status,
     this.rating,
     this.thoughts,
@@ -59,6 +62,7 @@ class GameEntity extends CollectionItemEntity {
   final String name;
   final String edition;
   final int releaseYear;
+  final String coverName;
   final String status;
   final int rating;
   final String thoughts;
@@ -75,6 +79,7 @@ class GameEntity extends CollectionItemEntity {
       name: map[game_nameField],
       edition: map[game_editionField],
       releaseYear: map[game_releaseYearField],
+      coverName: map[game_coverField],
       status: map[game_statusField],
       rating: map[game_ratingField],
       thoughts: map[game_thoughtsField],
@@ -95,6 +100,7 @@ class GameEntity extends CollectionItemEntity {
       game_nameField : name,
       game_editionField : edition,
       game_releaseYearField : releaseYear,
+      game_coverField: coverName,
       game_statusField : status,
       game_ratingField : rating,
       game_thoughtsField : thoughts,
@@ -112,7 +118,7 @@ class GameEntity extends CollectionItemEntity {
     List<GameEntity> gamesList = [];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap) );
+      GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameTable) );
 
       gamesList.add(game);
     });
@@ -127,6 +133,7 @@ class GameEntity extends CollectionItemEntity {
     name,
     edition,
     releaseYear,
+    coverName,
     status,
     rating,
     thoughts,
@@ -145,6 +152,7 @@ class GameEntity extends CollectionItemEntity {
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
+        '$game_coverField: $coverName, '
         '$game_statusField: $status, '
         '$game_ratingField: $rating, '
         '$game_thoughtsField: $thoughts, '

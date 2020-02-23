@@ -38,6 +38,13 @@ class SystemBloc extends ItemBloc {
   }
 
   @override
+  Future<System> updateImage(UpdateItemImage event) {
+
+    return collectionRepository.uploadSystemIcon(event.item.ID, event.imagePath);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int systemID = event.item.ID;
