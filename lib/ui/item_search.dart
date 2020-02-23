@@ -13,9 +13,9 @@ import 'common/item_view.dart';
 
 
 class ItemSearch extends StatefulWidget {
-  const ItemSearch({Key key, @required this.searchTable, @required this.itemBloc}) : super(key: key);
+  const ItemSearch({Key key, @required this.searchType, @required this.itemBloc}) : super(key: key);
 
-  final String searchTable;
+  final Type searchType;
   final ItemBloc itemBloc;
 
   @override
@@ -30,15 +30,13 @@ class _ItemSearchState extends State<ItemSearch> {
   }
 
   ItemOnlineSearchBloc _itemSearchBloc;
+  String get searchName => widget.searchType.toString();
 
   @override
   void initState() {
     super.initState();
 
-    _itemSearchBloc = ItemOnlineSearchBloc(
-      collectionRepository: CollectionRepository(),
-      tableSearch: widget.searchTable,
-    )..add(SearchTextChanged("")); //put empty string first, so suggestions will be shown
+    _itemSearchBloc = BlocProvider.of<ItemOnlineSearchBloc>(context);
   }
 
   List<Widget> buildActions() {
@@ -61,7 +59,7 @@ class _ItemSearchState extends State<ItemSearch> {
   Widget newButton() {
 
     return OutlineButton(
-      child: Text("New " + widget.searchTable + " titled '" + query + "'"),
+      child: Text("New " + searchName + " titled '" + query + "'"),
       onPressed: () {
 
         widget.itemBloc.add(AddItem(Item(ID: 0, title: query)));
@@ -87,7 +85,7 @@ class _ItemSearchState extends State<ItemSearch> {
           },
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Search ' + widget.searchTable + 's',
+            hintText: 'Search ' + searchName + 's',
           ),
         ),
       ),
@@ -101,7 +99,7 @@ class _ItemSearchState extends State<ItemSearch> {
         child: Column(
           children: <Widget>[
             Container(
-              child: Center(),//newButton(),
+              child: newButton(),
               color: Colors.grey,
             ),
             BlocBuilder<ItemOnlineSearchBloc, ItemSearchState>(
@@ -121,7 +119,7 @@ class _ItemSearchState extends State<ItemSearch> {
                 if(state is ItemSearchError) {
 
                   return Center(
-                    child: Text("Error during search"),
+                    child: Text("Error during search" + "\n" + state.error),
                   );
 
                 }

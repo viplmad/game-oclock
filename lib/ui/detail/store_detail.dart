@@ -61,18 +61,18 @@ class _StoreDetailBody extends ItemDetailBody {
 
     return [
       itemListManyRelation(
-        tableName: purchaseTable,
+        itemType: Purchase,
       ),
     ];
 
   }
 
   @override
-  StoreRelationBloc itemRelationBlocFunction(String tableName) {
+  StoreRelationBloc itemRelationBlocFunction(Type itemType) {
 
     return StoreRelationBloc(
       storeID: itemID,
-      relationField: tableName,
+      relationType: itemType,
       itemBloc: itemBloc,
     );
 

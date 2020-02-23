@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
@@ -50,8 +49,8 @@ class SystemBloc extends ItemBloc {
     int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case platformTable:
+    switch(event.type) {
+      case Platform:
         return collectionRepository.insertPlatformSystem(otherID, systemID);
     }
 
@@ -65,8 +64,8 @@ class SystemBloc extends ItemBloc {
     int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case platformTable:
+    switch(event.type) {
+      case Platform:
         return collectionRepository.deletePlatformSystem(otherID, systemID);
     }
 

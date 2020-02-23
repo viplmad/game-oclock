@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
@@ -50,10 +49,10 @@ class DLCBloc extends ItemBloc {
     int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.insertGameDLC(otherID, dlcID);
-      case purchaseTable:
+      case Purchase:
         return collectionRepository.insertDLCPurchase(dlcID, otherID);
     }
 
@@ -67,10 +66,10 @@ class DLCBloc extends ItemBloc {
     int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.deleteGameDLC(dlcID);
-      case purchaseTable:
+      case Purchase:
         return collectionRepository.deleteDLCPurchase(dlcID, otherID);
     }
 

@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
@@ -43,14 +42,14 @@ class PurchaseBloc extends ItemBloc {
     int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.insertGamePurchase(otherID, purchaseID);
-      case dlcTable:
+      case DLC:
         return collectionRepository.insertDLCPurchase(otherID, purchaseID);
-      case storeTable:
+      case Store:
         return collectionRepository.insertStorePurchase(otherID, purchaseID);
-      case typeTable:
+      case PurchaseType:
         return collectionRepository.insertPurchaseType(purchaseID, otherID);
     }
 
@@ -64,14 +63,14 @@ class PurchaseBloc extends ItemBloc {
     int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.deleteGamePurchase(otherID, purchaseID);
-      case dlcTable:
+      case DLC:
         return collectionRepository.deleteDLCPurchase(otherID, purchaseID);
-      case storeTable:
+      case Store:
         return collectionRepository.deleteStorePurchase(purchaseID);
-      case typeTable:
+      case PurchaseType:
         return collectionRepository.deletePurchaseType(purchaseID, otherID);
     }
 

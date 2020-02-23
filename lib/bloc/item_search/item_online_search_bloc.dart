@@ -12,10 +12,10 @@ import 'item_search.dart';
 
 class ItemOnlineSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemOnlineSearchBloc({@required this.collectionRepository, @required this.tableSearch});
+  ItemOnlineSearchBloc({@required this.collectionRepository, @required this.itemType});
 
   final ICollectionRepository collectionRepository;
-  final String tableSearch;
+  final Type itemType;
 
   final int _maxResults = 10;
   final int _maxSuggestions = 6;
@@ -43,12 +43,12 @@ class ItemOnlineSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
       final query = event.query;
       if(query.isEmpty) {
 
-        final List<CollectionItem> items = await collectionRepository.getItemsWithView(tableSearch, 1, _maxSuggestions).first;
+        final List<CollectionItem> items = await collectionRepository.getItemsWithView(itemType, 1, _maxSuggestions).first;
         yield ItemSearchEmpty(items);
 
       } else {
 
-        final List<CollectionItem> items = await collectionRepository.getSearchItem(tableSearch, query, _maxResults).first;
+        final List<CollectionItem> items = await collectionRepository.getSearchItem(itemType, query, _maxResults).first;
         yield ItemSearchSuccess(items);
 
       }

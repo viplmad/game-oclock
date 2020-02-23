@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
@@ -14,15 +13,15 @@ class SystemRelationBloc extends ItemRelationBloc {
 
   SystemRelationBloc({
     @required int systemID,
-    @required String relationField,
+    @required Type relationType,
     @required ItemBloc itemBloc,
-  }) : super(itemID: systemID, relationField: relationField, itemBloc: itemBloc);
+  }) : super(itemID: systemID, relationType: relationType, itemBloc: itemBloc);
 
   @override
   Stream<List<CollectionItem>> getRelationStream() {
 
-    switch(relationField) {
-      case platformTable:
+    switch(relationType) {
+      case Platform:
         return collectionRepository.getPlatformsFromSystem(itemID);
     }
 

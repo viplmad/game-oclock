@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
@@ -43,8 +42,8 @@ class TypeBloc extends ItemBloc {
     int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case purchaseTable:
+    switch(event.type) {
+      case Purchase:
         return collectionRepository.insertPurchaseType(otherID, typeID);
     }
 
@@ -58,8 +57,8 @@ class TypeBloc extends ItemBloc {
     int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case purchaseTable:
+    switch(event.type) {
+      case Purchase:
         return collectionRepository.deletePurchaseType(otherID, typeID);
     }
 

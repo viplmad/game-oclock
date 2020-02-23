@@ -14,14 +14,14 @@ import 'item_relation.dart';
 
 abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.relationField, @required this.itemBloc}) {
+  ItemRelationBloc({@required this.itemID, @required this.relationType, @required this.itemBloc}) {
 
     itemSubscription = itemBloc.listen( mapItemStateToEvent );
 
   }
 
   final int itemID;
-  final String relationField;
+  final Type relationType;
   final ItemBloc itemBloc;
   StreamSubscription<ItemState> itemSubscription;
   ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
@@ -84,7 +84,7 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
   void _mapRelationAddedToEvent(ItemRelationAdded itemState) {
 
     if(state is ItemRelationLoaded
-        && relationField == itemState.field) {
+        && relationType == itemState.type) {
       final relationItemAdded = itemState.item;
       final List<CollectionItem> updatedItems = List.from(
           (state as ItemRelationLoaded).items)..add(relationItemAdded);
@@ -97,7 +97,7 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
   void _mapRelationDeletedToEvent(ItemRelationDeleted itemState) {
 
     if(state is ItemRelationLoaded
-        && relationField == itemState.field) {
+        && relationType == itemState.type) {
       final itemDeleted = itemState.item;
       final List<CollectionItem> updatedItems = (state as ItemRelationLoaded)
           .items

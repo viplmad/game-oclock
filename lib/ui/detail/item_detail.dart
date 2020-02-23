@@ -16,7 +16,6 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
-import 'package:game_collection/ui/item_search.dart';
 import 'package:game_collection/ui/bloc_provider_route.dart';
 import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
@@ -80,6 +79,19 @@ abstract class ItemDetailBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Linked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+
+                itemBloc.add(
+                  DeleteItemRelation(
+                    item,
+                    state.item,
+                  ),
+                );
+
+              },
+            ),
           );
         }
         if(state is ItemRelationNotAdded) {
@@ -98,6 +110,19 @@ abstract class ItemDetailBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Unlinked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+
+                itemBloc.add(
+                  AddItemRelation(
+                    item,
+                    state.item,
+                  ),
+                );
+
+              },
+            ),
           );
         }
         if(state is ItemRelationNotDeleted) {
@@ -244,13 +269,12 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function(CollectionItem) _addRelationFunction(String tableName) {
+  void Function(CollectionItem) _addRelationFunction() {
 
     return (CollectionItem addedItem) {
       itemBloc.add(
         AddItemRelation(
           item,
-          tableName,
           addedItem,
         ),
       );
@@ -258,13 +282,12 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function(CollectionItem) _deleteRelationFunction(String tableName) {
+  void Function(CollectionItem) _deleteRelationFunction() {
 
     return (CollectionItem deletedItem) {
       itemBloc.add(
         DeleteItemRelation(
           item,
-          tableName,
           deletedItem,
         ),
       );
@@ -279,7 +302,7 @@ abstract class ItemDetailBody extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return ItemDetailBuilder(item);
+            return ItemDetailProvider(item);
           }
         ),
       );
@@ -287,17 +310,14 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Future<CollectionItem> Function() _searchFuture(BuildContext context, String tableName) {
+  Future<CollectionItem> Function() _searchFuture(BuildContext context, Type itemType) {
 
     return () {
       return Navigator.push<CollectionItem>(
         context,
         MaterialPageRoute(
             builder: (BuildContext context) {
-              return ItemSearch(
-                searchTable: tableName,
-                itemBloc: itemBloc,
-              );
+              return ItemSearchProvider(itemType);
             }
         ),
       );
@@ -434,21 +454,21 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemListSingleRelation({@required String tableName, String shownValue}) {
+  Widget itemListSingleRelation({@required Type itemType, String shownName}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
+      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
         if(state is ItemRelationLoaded) {
           return ResultsListSingle(
             items: state.items,
-            tableName: tableName,
-            shownName: shownValue,
+            itemType: itemType,
+            itemTypeName: shownName,
             onTap: _onTapFunction(context),
-            onSearch: _searchFuture(context, tableName),
-            updateAdd: _addRelationFunction(tableName),
-            updateDelete: _deleteRelationFunction(tableName),
+            onSearch: _searchFuture(context, itemType),
+            updateAdd: _addRelationFunction(),
+            updateDelete: _deleteRelationFunction(),
           );
         }
 
@@ -459,20 +479,21 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemListManyRelation({@required String tableName}) {
+  Widget itemListManyRelation({@required Type itemType, String shownName}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
+      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
         if(state is ItemRelationLoaded) {
           return ResultsListMany(
             items: state.items,
-            tableName: tableName,
+            itemType: itemType,
+            itemTypeName: shownName,
             onTap: _onTapFunction(context),
-            onSearch: _searchFuture(context, tableName),
-            updateAdd: _addRelationFunction(tableName),
-            updateDelete: _deleteRelationFunction(tableName),
+            onSearch: _searchFuture(context, itemType),
+            updateAdd: _addRelationFunction(),
+            updateDelete: _deleteRelationFunction(),
           );
         }
 
@@ -483,19 +504,20 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemChipRelation({@required String tableName, String shownValue}) {
+  Widget itemChipRelation({@required Type itemType, String shownName}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(tableName)..add(LoadItemRelation()),
+      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
         if(state is ItemRelationLoaded) {
           return ResultsChipMany(
             selectedItems: state.items,
             items: state.items,
-            tableName: tableName,
-            updateAdd: _addRelationFunction(tableName),
-            updateDelete: _deleteRelationFunction(tableName),
+            itemType: itemType,
+            itemTypeName: shownName,
+            updateAdd: _addRelationFunction(),
+            updateDelete: _deleteRelationFunction(),
           );
         }
 
@@ -510,13 +532,13 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   external List<Widget> itemRelationsBuilder();
 
-  external ItemRelationBloc itemRelationBlocFunction(String tableName);
+  external ItemRelationBloc itemRelationBlocFunction(Type itemType);
 
 }
 
 class ItemGenericField<T> extends StatelessWidget {
 
-  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, @required this.onTap, this.onLongPress, @required this.update});
+  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
 
   final String fieldName;
   final T value;
@@ -525,10 +547,34 @@ class ItemGenericField<T> extends StatelessWidget {
   final void Function() onLongPress;
   final void Function(T) update;
 
+  final bool extended;
+
   @override
   Widget build(BuildContext context) {
 
-    return ListTileTheme.merge(
+    return extended?
+    InkWell(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+            child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+          ),
+          Text(shownValue?? "Unknown"),
+        ],
+      ),
+      onTap: () {
+        onTap().then( (T newValue) {
+          if (newValue != null) {
+            update(newValue);
+          }
+        });
+      },
+      onLongPress: onLongPress,
+    )
+    :
+    ListTileTheme.merge(
       child: ListTile(
         title: Text(fieldName),
         trailing: Text(shownValue?? "Unknown"),
@@ -564,6 +610,7 @@ class ItemTextField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: shownValue?? value,
+      extended: isLongText,
       update: update,
       onTap: () {
         TextEditingController fieldController = TextEditingController();
@@ -808,7 +855,7 @@ class RatingField extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+                padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
                 child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
               ),
             ],
@@ -822,7 +869,13 @@ class RatingField extends StatelessWidget {
             size: 40.0,
             onRatingChanged: (double newRating) {
               if (newRating != null) {
-                update(newRating.toInt());
+
+                int updatedRating = newRating.toInt();
+                if(updatedRating == value) {
+                  updatedRating = 0;
+                }
+
+                update(updatedRating);
               }
             },
           ),
@@ -948,18 +1001,22 @@ class _ResultsListHeader extends StatelessWidget {
 }
 class _LinkButton extends StatelessWidget {
 
-  const _LinkButton({Key key, @required this.tableName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
+  const _LinkButton({Key key, @required this.itemType, this.itemTypeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
 
-  final String tableName;
+  final Type itemType;
+  final String itemTypeName;
   final Future<CollectionItem> Function() onSearch;
   final void Function(CollectionItem) updateAdd;
 
+  String get shownName => itemTypeName?? itemType.toString();
+
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: RaisedButton.icon(
-        label: Text("Link " + tableName),
+        label: Text("Link " + shownName),
         icon: Icon(Icons.link),
         elevation: 1.0,
         highlightElevation: 2.0,
@@ -974,26 +1031,29 @@ class _LinkButton extends StatelessWidget {
         },
       ),
     );
+
   }
 
 }
 class ResultsListSingle extends StatelessWidget {
 
-  ResultsListSingle({@required this.items, @required this.tableName, this.shownName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  ResultsListSingle({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
-  final String tableName;
-  final String shownName;
+  final Type itemType;
+  final String itemTypeName;
   final void Function(CollectionItem) onTap;
   final Future<CollectionItem> Function() onSearch;
   final void Function(CollectionItem) updateAdd;
   final void Function(CollectionItem) updateDelete;
 
+  String get shownName => itemTypeName?? itemType.toString();
+
   @override
   Widget build(BuildContext context) {
 
     return _ResultsListHeader(
-      headerText: shownName?? tableName,
+      headerText: shownName,
       resultList: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
@@ -1003,7 +1063,8 @@ class ResultsListSingle extends StatelessWidget {
           if(items.isEmpty) {
 
             return _LinkButton(
-              tableName: tableName,
+              itemType: itemType,
+              itemTypeName: itemTypeName,
               onSearch: onSearch,
               updateAdd: updateAdd,
             );
@@ -1032,20 +1093,23 @@ class ResultsListSingle extends StatelessWidget {
 }
 class ResultsListMany extends StatelessWidget {
 
-  ResultsListMany({@required this.items, @required this.tableName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
-  final String tableName;
+  final Type itemType;
+  final String itemTypeName;
   final void Function(CollectionItem) onTap;
   final Future<CollectionItem> Function() onSearch;
   final void Function(CollectionItem) updateAdd;
   final void Function(CollectionItem) updateDelete;
 
+  String get shownName => itemTypeName?? itemType.toString() + 's';
+
   @override
   Widget build(BuildContext context) {
 
     return _ResultsListHeader(
-      headerText: tableName + 's',
+      headerText: shownName,
       resultList: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
@@ -1055,7 +1119,8 @@ class ResultsListMany extends StatelessWidget {
           if(index == items.length) {
 
             return _LinkButton(
-              tableName: tableName,
+              itemType: itemType,
+              itemTypeName: itemTypeName,
               onSearch: onSearch,
               updateAdd: updateAdd,
             );
@@ -1084,19 +1149,22 @@ class ResultsListMany extends StatelessWidget {
 }
 class ResultsChipMany extends StatelessWidget {
 
-  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, @required this.tableName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
+  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, @required this.itemType, this.itemTypeName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
 
   final List<CollectionItem> items;
   final List<CollectionItem> selectedItems;
-  final String tableName;
+  final Type itemType;
+  final String itemTypeName;
   final Function(CollectionItem) updateAdd;
   final Function(CollectionItem) updateDelete;
+
+  String get shownName => itemTypeName?? itemType.toString() + 's';
 
   @override
   Widget build(BuildContext context) {
 
     return _ResultsListHeader(
-      headerText: tableName + 's',
+      headerText: shownName,
       resultList: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.spaceEvenly,

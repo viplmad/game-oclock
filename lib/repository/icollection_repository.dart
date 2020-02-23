@@ -42,7 +42,7 @@ abstract class ICollectionRepository {
 
 
   //#region READ
-  Stream<List<CollectionItem>> getItemsWithView(String tableName, int viewIndex, [int limit]);
+  Stream<List<CollectionItem>> getItemsWithView(Type itemType, int viewIndex, [int limit]);
     //Game
   Stream<List<Game>> getAllGames();
   Stream<List<Game>> getGamesWithView(GameView gameView, [int limit]);
@@ -164,7 +164,7 @@ abstract class ICollectionRepository {
 
 
   //#region SEARCH
-  Stream<List<CollectionItem>> getSearchItem(String tableName, String query, int maxResults);
+  Stream<List<CollectionItem>> getSearchItem(Type itemType, String query, int maxResults);
   Stream<List<Game>> getGamesWithName(String name, int maxResults);
   Stream<List<DLC>> getDLCsWithName(String name, int maxResults);
   Stream<List<Platform>> getPlatformsWithName(String name, int maxResults);

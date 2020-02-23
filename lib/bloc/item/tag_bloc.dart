@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'item.dart';
@@ -43,8 +42,8 @@ class TagBloc extends ItemBloc {
     int tagID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.insertGameTag(otherID, tagID);
     }
 
@@ -58,8 +57,8 @@ class TagBloc extends ItemBloc {
     int tagID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.field) {
-      case gameTable:
+    switch(event.type) {
+      case Game:
         return collectionRepository.deleteGameTag(otherID, tagID);
     }
 

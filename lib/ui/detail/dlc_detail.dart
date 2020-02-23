@@ -69,22 +69,22 @@ class _DLCDetailBody extends ItemDetailBody {
 
     return [
       itemListSingleRelation(
-        tableName: gameTable,
-        shownValue: dlc_baseGameField,
+        itemType: Game,
+        shownName: dlc_baseGameField,
       ),
       itemListManyRelation(
-        tableName: purchaseTable,
+        itemType: Purchase,
       ),
     ];
 
   }
 
   @override
-  DLCRelationBloc itemRelationBlocFunction(String tableName) {
+  DLCRelationBloc itemRelationBlocFunction(Type itemType) {
 
     return DLCRelationBloc(
       dlcID: itemID,
-      relationField: tableName,
+      relationType: itemType,
       itemBloc: itemBloc,
     );
 

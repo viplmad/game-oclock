@@ -72,21 +72,21 @@ class _PlatformDetailBody extends ItemDetailBody {
 
     return [
       itemListManyRelation(
-        tableName: gameTable,
+        itemType: Game,
       ),
       itemListManyRelation( //TODO: show as chips
-        tableName: systemTable,
+        itemType: System,
       ),
     ];
 
   }
 
   @override
-  PlatformRelationBloc itemRelationBlocFunction(String tableName) {
+  PlatformRelationBloc itemRelationBlocFunction(Type itemType) {
 
     return PlatformRelationBloc(
       platformID: itemID,
-      relationField: tableName,
+      relationType: itemType,
       itemBloc: itemBloc,
     );
 

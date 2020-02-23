@@ -127,18 +127,17 @@ class ItemImageNotUpdated extends ItemState {
 }
 
 class ItemRelationAdded extends ItemState {
-  const ItemRelationAdded(this.item, this.field);
+  const ItemRelationAdded(this.item);
 
   final CollectionItem item;
-  final String field;
+  Type get type => item.runtimeType;
 
   @override
-  List<Object> get props => [item, field];
+  List<Object> get props => [item];
 
   @override
   String toString() => 'ItemRelationAdded { '
-      'item: $item, '
-      'field: $field'
+      'item: $item'
       ' }';
 }
 
@@ -157,18 +156,17 @@ class ItemRelationNotAdded extends ItemState {
 }
 
 class ItemRelationDeleted extends ItemState {
-  const ItemRelationDeleted(this.item, this.field);
+  const ItemRelationDeleted(this.item);
 
   final CollectionItem item;
-  final String field;
+  Type get type => item.runtimeType;
 
   @override
-  List<Object> get props => [item, field];
+  List<Object> get props => [item];
 
   @override
   String toString() => 'ItemRelationDeleted { '
-      'item: $item, '
-      'field: $field'
+      'item: $item'
       ' }';
 }
 

@@ -110,27 +110,27 @@ class _GameDetailBody extends ItemDetailBody {
 
     return [
       itemListManyRelation(
-        tableName: platformTable,
+        itemType: Platform,
       ),
       itemListManyRelation(
-        tableName: purchaseTable,
+        itemType: Purchase,
       ),
       itemListManyRelation(
-        tableName: dlcTable,
+        itemType: DLC,
       ),
       itemListManyRelation( //TODO: show as chips
-        tableName: tagTable,
+        itemType: Tag,
       ),
     ];
 
   }
 
   @override
-  GameRelationBloc itemRelationBlocFunction(String tableName) {
+  GameRelationBloc itemRelationBlocFunction(Type itemType) {
 
     return GameRelationBloc(
       gameID: itemID,
-      relationField: tableName,
+      relationType: itemType,
       itemBloc: itemBloc,
     );
 

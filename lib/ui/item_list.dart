@@ -41,7 +41,7 @@ class ItemList extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return ItemDetailBuilder(item);
+                          return ItemDetailProvider(item);
                         },
                       ),
                     );

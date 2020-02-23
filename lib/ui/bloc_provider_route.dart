@@ -16,10 +16,13 @@ import 'homepage.dart';
 import 'package:game_collection/model/model.dart';
 import 'detail/detail.dart';
 
+import 'package:game_collection/bloc/item_search/item_search.dart';
+import 'item_search.dart';
+
 
 Map<Type, ItemBloc> itemBlocs;
 
-Widget StartBlocProvider() {
+Widget StartProvider() {
 
   return BlocProvider<ConnectionBloc>(
     create: (BuildContext context) {
@@ -145,7 +148,7 @@ Widget HomepageProvider() {
 
 }
 
-Widget ItemDetailBuilder(CollectionItem item) {
+Widget ItemDetailProvider(CollectionItem item) {
 
   int itemID = item.ID;
 
@@ -220,5 +223,22 @@ Widget ItemDetailBuilder(CollectionItem item) {
   }
 
   return Center();
+
+}
+
+Widget ItemSearchProvider(Type itemType) {
+
+  return BlocProvider<ItemOnlineSearchBloc>(
+    create: (BuildContext context) {
+      return ItemOnlineSearchBloc(
+        collectionRepository: CollectionRepository(),
+        itemType: itemType,
+      )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
+    },
+    child: ItemSearch(
+      searchType: itemType,
+      itemBloc: itemBlocs[itemType],
+    ),
+  );
 
 }

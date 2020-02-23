@@ -76,27 +76,27 @@ class _PurchaseDetailBody extends ItemDetailBody {
 
     return [
       itemListSingleRelation(
-        tableName: storeTable,
+        itemType: Store,
       ),
       itemListManyRelation(
-        tableName: gameTable,
+        itemType: Game,
       ),
       itemListManyRelation(
-        tableName: dlcTable,
+        itemType: DLC,
       ),
       itemListManyRelation( //TODO: show as chips
-        tableName: typeTable,
+        itemType: PurchaseType,
       ),
     ];
 
   }
 
   @override
-  PurchaseRelationBloc itemRelationBlocFunction(String tableName) {
+  PurchaseRelationBloc itemRelationBlocFunction(Type itemType) {
 
     return PurchaseRelationBloc(
       purchaseID: itemID,
-      relationField: tableName,
+      relationType: itemType,
       itemBloc: itemBloc,
     );
 

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item/item.dart';
@@ -14,21 +13,21 @@ class GameRelationBloc extends ItemRelationBloc {
 
   GameRelationBloc({
     @required int gameID,
-    @required String relationField,
+    @required Type relationType,
     @required ItemBloc itemBloc,
-  }) : super(itemID: gameID, relationField: relationField, itemBloc: itemBloc);
+  }) : super(itemID: gameID, relationType: relationType, itemBloc: itemBloc);
 
   @override
   Stream<List<CollectionItem>> getRelationStream() {
 
-    switch(relationField) {
-      case dlcTable:
+    switch(relationType) {
+      case DLC:
         return collectionRepository.getDLCsFromGame(itemID);
-      case purchaseTable:
+      case Purchase:
         return collectionRepository.getPurchasesFromGame(itemID);
-      case platformTable:
+      case Platform:
         return collectionRepository.getPlatformsFromGame(itemID);
-      case tagTable:
+      case Tag:
         return collectionRepository.getTagsFromGame(itemID);
     }
 

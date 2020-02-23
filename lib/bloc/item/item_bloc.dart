@@ -118,7 +118,6 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
       await addRelationFuture(event);
       yield ItemRelationAdded(
         event.otherItem,
-        event.field,
       );
 
     } catch(e) {
@@ -136,7 +135,6 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
       await deleteRelationFuture(event);
       yield ItemRelationDeleted(
         event.otherItem,
-        event.field,
       );
 
     } catch(e) {

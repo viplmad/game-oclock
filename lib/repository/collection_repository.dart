@@ -256,26 +256,28 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region READ
   @override
-  Stream<List<CollectionItem>> getItemsWithView(String tableName, int viewIndex, [int limit]) {
-    switch(tableName) {
-      case gameTable:
+  Stream<List<CollectionItem>> getItemsWithView(Type itemType, int viewIndex, [int limit]) {
+
+    switch(itemType) {
+      case Game:
         return getGamesWithView(GameView.values[viewIndex], limit);
-      case dlcTable:
+      case DLC:
         return getDLCsWithView(DLCView.values[viewIndex], limit);
-      case platformTable:
+      case Platform:
         return getPlatformsWithView(PlatformView.values[viewIndex], limit);
-      case purchaseTable:
+      case Purchase:
         return getPurchasesWithView(PurchaseView.values[viewIndex], limit);
-      case storeTable:
+      case Store:
         return getStoresWithView(StoreView.values[viewIndex], limit);
-      case systemTable:
+      case System:
         return getSystemsWithView(SystemView.values[viewIndex], limit);
-      case tagTable:
+      case Tag:
         return getTagsWithView(TagView.values[viewIndex], limit);
-      case typeTable:
+      case PurchaseType:
         return getTypesWithView(TypeView.values[viewIndex], limit);
     }
     return null;
+
   }
   //#region Game
   @override
@@ -1026,24 +1028,24 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<CollectionItem>> getSearchItem(String tableName, String query, int maxResults) {
+  Stream<List<CollectionItem>> getSearchItem(Type itemType, String query, int maxResults) {
 
-    switch(tableName) {
-      case gameTable:
+    switch(itemType) {
+      case Game:
         return getGamesWithName(query, maxResults);
-      case dlcTable:
+      case DLC:
         return getDLCsWithName(query, maxResults);
-      case platformTable:
+      case Platform:
         return getPlatformsWithName(query, maxResults);
-      case purchaseTable:
+      case Purchase:
         return getPurchasesWithDescription(query, maxResults);
-      case storeTable:
+      case Store:
         return getStoresWithName(query, maxResults);
-      case systemTable:
+      case System:
         return getSystemsWithName(query, maxResults);
-      case tagTable:
+      case Tag:
         return getTagsWithName(query, maxResults);
-      case typeTable:
+      case PurchaseType:
         return getTypesWithName(query, maxResults);
     }
     return null;

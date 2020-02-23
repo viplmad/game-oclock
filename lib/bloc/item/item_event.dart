@@ -73,37 +73,35 @@ class UpdateItemImage extends ItemEvent {
 }
 
 class AddItemRelation extends ItemEvent {
-  const AddItemRelation(this.item, this.field, this.otherItem);
+  const AddItemRelation(this.item, this.otherItem);
 
   final CollectionItem item;
-  final String field;
   final CollectionItem otherItem;
+  Type get type => otherItem.runtimeType;
 
   @override
-  List<Object> get props => [item, field, otherItem];
+  List<Object> get props => [item, otherItem];
 
   @override
   String toString() => 'AddItemRelation { '
       'item: $item, '
-      'field: $field, '
       'other item: $otherItem'
       ' }';
 }
 
 class DeleteItemRelation extends ItemEvent {
-  const DeleteItemRelation(this.item, this.field, this.otherItem);
+  const DeleteItemRelation(this.item, this.otherItem);
 
   final CollectionItem item;
-  final String field;
   final CollectionItem otherItem;
+  Type get type => otherItem.runtimeType;
 
   @override
-  List<Object> get props => [item, field, otherItem];
+  List<Object> get props => [item, otherItem];
 
   @override
   String toString() => 'DeleteItemRelation { '
       'item: $item, '
-      'field: $field, '
       'other item: $otherItem'
       ' }';
 }

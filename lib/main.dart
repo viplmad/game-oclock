@@ -31,7 +31,7 @@ class GameCollection extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StartBlocProvider(),
+      home: StartProvider(),
     );
 
   }
