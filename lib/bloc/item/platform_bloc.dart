@@ -17,9 +17,9 @@ class PlatformBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<Platform> createFuture() {
+  Future<Platform> createFuture(AddItem event) {
 
-    return collectionRepository.insertPlatform('');
+    return collectionRepository.insertPlatform(event.item != null? event.item.getTitle() : '');
 
   }
 

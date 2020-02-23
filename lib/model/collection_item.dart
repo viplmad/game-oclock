@@ -41,3 +41,17 @@ abstract class CollectionItem extends Equatable {
   }
 
 }
+
+class Item extends CollectionItem {
+
+  Item({
+    @required int ID,
+    this.title,
+  }) : super(ID: ID);
+
+  final String title;
+
+  @override
+  String getTitle() => this.title;
+
+}

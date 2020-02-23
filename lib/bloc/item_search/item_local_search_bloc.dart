@@ -10,12 +10,11 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
+class ItemLocalSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemSearchBloc({@required this.collectionRepository, @required this.tableSearch});
+  ItemLocalSearchBloc({@required this.itemList});
 
-  final ICollectionRepository collectionRepository;
-  final String tableSearch;
+  final List<CollectionItem> itemList;
 
   final int _maxResults = 10;
   final int _maxSuggestions = 6;
@@ -43,12 +42,11 @@ class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
       final query = event.query;
       if(query.isEmpty) {
 
-        final List<CollectionItem> items = await collectionRepository.getItemsWithView(tableSearch, 1, _maxSuggestions).first;
-        yield ItemSearchEmpty(items);
+        yield ItemSearchEmpty();
 
       } else {
 
-        final List<CollectionItem> items = await collectionRepository.getSearchItem(tableSearch, query, _maxResults).first;
+        final List<CollectionItem> items = itemList.where( (CollectionItem item) => item.getTitle().toLowerCase().contains(query.toLowerCase()) );
         yield ItemSearchSuccess(items);
 
       }

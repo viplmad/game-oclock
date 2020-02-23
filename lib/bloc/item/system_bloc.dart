@@ -17,9 +17,9 @@ class SystemBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<System> createFuture() {
+  Future<System> createFuture(AddItem event) {
 
-    return collectionRepository.insertSystem('');
+    return collectionRepository.insertSystem(event.item != null? event.item.getTitle() : '');
 
   }
 

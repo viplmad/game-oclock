@@ -17,9 +17,9 @@ class DLCBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<DLC> createFuture() {
+  Future<DLC> createFuture(AddItem event) {
 
-    return collectionRepository.insertDLC('');
+    return collectionRepository.insertDLC(event.item != null? event.item.getTitle() : '');
 
   }
 

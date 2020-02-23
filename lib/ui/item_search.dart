@@ -6,15 +6,17 @@ import 'package:game_collection/repository/collection_repository.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
+import 'package:game_collection/bloc/item/item.dart';
 
 import 'common/loading_icon.dart';
 import 'common/item_view.dart';
 
 
 class ItemSearch extends StatefulWidget {
-  const ItemSearch({Key key, @required this.searchTable}) : super(key: key);
+  const ItemSearch({Key key, @required this.searchTable, @required this.itemBloc}) : super(key: key);
 
   final String searchTable;
+  final ItemBloc itemBloc;
 
   @override
   State<ItemSearch> createState() => _ItemSearchState();
@@ -27,13 +29,13 @@ class _ItemSearchState extends State<ItemSearch> {
     _textEditingController.text = value;
   }
 
-  ItemSearchBloc _itemSearchBloc;
+  ItemOnlineSearchBloc _itemSearchBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _itemSearchBloc = ItemSearchBloc(
+    _itemSearchBloc = ItemOnlineSearchBloc(
       collectionRepository: CollectionRepository(),
       tableSearch: widget.searchTable,
     )..add(SearchTextChanged("")); //put empty string first, so suggestions will be shown
@@ -53,6 +55,19 @@ class _ItemSearchState extends State<ItemSearch> {
         },
       ),
     ];
+
+  }
+
+  Widget newButton() {
+
+    return OutlineButton(
+      child: Text("New " + widget.searchTable + " titled '" + query + "'"),
+      onPressed: () {
+
+        widget.itemBloc.add(AddItem(Item(ID: 0, title: query)));
+
+      },
+    );
 
   }
 
@@ -76,41 +91,47 @@ class _ItemSearchState extends State<ItemSearch> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Text("New " + widget.searchTable, style: Theme.of(context).textTheme.subhead,),
+      body: BlocListener<ItemBloc, ItemState>(
+        bloc: widget.itemBloc,
+        listener: (BuildContext context, ItemState state) {
+          if(state is ItemAdded) {
+            Navigator.maybePop(context, state.item);
+          }
+        },
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Center(),//newButton(),
+              color: Colors.grey,
             ),
-            color: Colors.grey,
-          ),
-          BlocBuilder<ItemSearchBloc, ItemSearchState>(
-            bloc: _itemSearchBloc,
-            builder: (BuildContext context, ItemSearchState state) {
+            BlocBuilder<ItemOnlineSearchBloc, ItemSearchState>(
+              bloc: _itemSearchBloc,
+              builder: (BuildContext context, ItemSearchState state) {
 
-              if(state is ItemSearchEmpty) {
+                if(state is ItemSearchEmpty) {
 
-                return listItems(state.suggestions);
+                  return listItems(state.suggestions);
 
-              }
-              if(state is ItemSearchSuccess) {
+                }
+                if(state is ItemSearchSuccess) {
 
-                return listItems(state.results);
+                  return listItems(state.results);
 
-              }
-              if(state is ItemSearchError) {
+                }
+                if(state is ItemSearchError) {
 
-                return Center(
-                  child: Text("Error during search\n" + state.error),
-                );
+                  return Center(
+                    child: Text("Error during search"),
+                  );
 
-              }
+                }
 
-              return LoadingIcon();
+                return LoadingIcon();
 
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
 

@@ -17,9 +17,9 @@ class PurchaseBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<Purchase> createFuture() {
+  Future<Purchase> createFuture(AddItem event) {
 
-    return collectionRepository.insertPurchase('');
+    return collectionRepository.insertPurchase(event.item != null? event.item.getTitle() : '');
 
   }
 

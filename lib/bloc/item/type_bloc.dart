@@ -17,9 +17,9 @@ class TypeBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<PurchaseType> createFuture() {
+  Future<PurchaseType> createFuture(AddItem event) {
 
-    return collectionRepository.insertType('');
+    return collectionRepository.insertType(event.item != null? event.item.getTitle() : '');
 
   }
 

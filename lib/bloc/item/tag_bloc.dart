@@ -17,9 +17,9 @@ class TagBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<Tag> createFuture() {
+  Future<Tag> createFuture(AddItem event) {
 
-    return collectionRepository.insertTag('');
+    return collectionRepository.insertTag(event.item != null? event.item.getTitle() : '');
 
   }
 

@@ -17,9 +17,9 @@ class GameBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<Game> createFuture() {
+  Future<Game> createFuture(AddItem event) {
 
-    return collectionRepository.insertGame('', '');
+    return collectionRepository.insertGame(event.item != null? event.item.getTitle() : '', '');
 
   }
 

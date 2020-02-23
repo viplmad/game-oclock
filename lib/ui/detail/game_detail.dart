@@ -77,7 +77,7 @@ class _GameDetailBody extends ItemDetailBody {
         fieldName: game_ratingField,
         value: game.rating,
       ),
-      itemTextField(
+      itemLongTextField(
         fieldName: game_thoughtsField,
         value: game.thoughts,
       ),
@@ -85,11 +85,11 @@ class _GameDetailBody extends ItemDetailBody {
         fieldName: game_timeField,
         value: game.time,
       ),
-      itemTextField(
+      itemURLField(
         fieldName: game_saveFolderField,
         value: game.saveFolder,
       ),
-      itemTextField(
+      itemURLField(
         fieldName: game_screenshotFolderField,
         value: game.screenshotFolder,
       ),

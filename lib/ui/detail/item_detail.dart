@@ -8,6 +8,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:game_collection/model/model.dart';
 
@@ -29,7 +30,7 @@ abstract class ItemDetailBody extends StatelessWidget {
   final int itemID;
   final ItemDetailBloc itemDetailBloc;
 
-  CollectionItem get item => DLC(ID: itemID);
+  CollectionItem get item => Item(ID: itemID);
 
   ItemBloc get itemBloc => itemDetailBloc.itemBloc;
 
@@ -229,7 +230,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(T) _updateFieldFunction<T>(String fieldName) {
+  void Function(T) _updateFieldFunction<T>(String fieldName) {
 
     return (T newValue) {
       itemBloc.add(
@@ -243,7 +244,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) _addRelationFunction(String tableName) {
+  void Function(CollectionItem) _addRelationFunction(String tableName) {
 
     return (CollectionItem addedItem) {
       itemBloc.add(
@@ -257,7 +258,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) _deleteRelationFunction(String tableName) {
+  void Function(CollectionItem) _deleteRelationFunction(String tableName) {
 
     return (CollectionItem deletedItem) {
       itemBloc.add(
@@ -271,7 +272,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Function(CollectionItem) _onTapFunction(BuildContext context) {
+  void Function(CollectionItem) _onTapFunction(BuildContext context) {
 
     return (CollectionItem item) {
       Navigator.push(
@@ -286,12 +287,63 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
+  Future<CollectionItem> Function() _searchFuture(BuildContext context, String tableName) {
+
+    return () {
+      return Navigator.push<CollectionItem>(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ItemSearch(
+                searchTable: tableName,
+                itemBloc: itemBloc,
+              );
+            }
+        ),
+      );
+    };
+
+  }
+
   Widget itemTextField({@required String fieldName, @required String value}) {
 
     return ItemTextField(
       fieldName: fieldName,
       value: value,
       update: _updateFieldFunction<String>(fieldName),
+    );
+
+  }
+
+  Widget itemURLField({@required String fieldName, @required String value}) {
+
+    return ItemTextField(
+      fieldName: fieldName,
+      value: value,
+      update: _updateFieldFunction<String>(fieldName),
+      onLongPress: () async {
+        if (await canLaunch(value)) {
+          await launch(value);
+        } else {
+          //TODO: use Snackbar
+          print('Could not launch $value');
+          /*showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: 'Could not launch $value',
+          );*/
+        }
+      }
+    );
+
+  }
+
+  Widget itemLongTextField({@required String fieldName, @required String value}) {
+
+    return ItemTextField(
+      fieldName: fieldName,
+      value: value,
+      update: _updateFieldFunction<String>(fieldName),
+      isLongText: true,
     );
 
   }
@@ -394,6 +446,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             tableName: tableName,
             shownName: shownValue,
             onTap: _onTapFunction(context),
+            onSearch: _searchFuture(context, tableName),
             updateAdd: _addRelationFunction(tableName),
             updateDelete: _deleteRelationFunction(tableName),
           );
@@ -417,6 +470,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             items: state.items,
             tableName: tableName,
             onTap: _onTapFunction(context),
+            onSearch: _searchFuture(context, tableName),
             updateAdd: _addRelationFunction(tableName),
             updateDelete: _deleteRelationFunction(tableName),
           );
@@ -462,13 +516,14 @@ abstract class ItemDetailBody extends StatelessWidget {
 
 class ItemGenericField<T> extends StatelessWidget {
 
-  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, @required this.onTap, @required this.update});
+  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, @required this.onTap, this.onLongPress, @required this.update});
 
   final String fieldName;
   final T value;
   final String shownValue;
   final Future<T> Function() onTap;
-  final Function(T) update;
+  final void Function() onLongPress;
+  final void Function(T) update;
 
   @override
   Widget build(BuildContext context) {
@@ -484,6 +539,7 @@ class ItemGenericField<T> extends StatelessWidget {
             }
           });
         },
+        onLongPress: onLongPress,
       ),
     );
 
@@ -492,12 +548,14 @@ class ItemGenericField<T> extends StatelessWidget {
 }
 class ItemTextField extends StatelessWidget {
 
-  ItemTextField({@required this.fieldName, @required this.value, this.shownValue, @required this.update});
+  ItemTextField({@required this.fieldName, @required this.value, this.shownValue, this.onLongPress, @required this.update, this.isLongText = false});
 
   final String fieldName;
   final String value;
   final String shownValue;
-  final Function(String) update;
+  final void Function() onLongPress;
+  final void Function(String) update;
+  final bool isLongText;
 
   @override
   Widget build(BuildContext context) {
@@ -521,7 +579,8 @@ class ItemTextField extends StatelessWidget {
               title: Text("Edit " + fieldName),
               content: TextField(
                 controller: fieldController,
-                keyboardType: TextInputType.text,
+                keyboardType: isLongText? TextInputType.multiline : TextInputType.text,
+                maxLines: null,
                 decoration: InputDecoration(
                   hintText: fieldName,
                 ),
@@ -536,7 +595,7 @@ class ItemTextField extends StatelessWidget {
                 FlatButton(
                   child: Text(localizations.okButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop(context, fieldController.text);
+                    Navigator.maybePop(context, fieldController.text.trim());
                   },
                 ),
               ],
@@ -544,6 +603,7 @@ class ItemTextField extends StatelessWidget {
           },
         );
       },
+      onLongPress: onLongPress,
     );
 
   }
@@ -555,7 +615,7 @@ class ItemIntField extends StatelessWidget {
 
   final String fieldName;
   final int value;
-  final Function(int) update;
+  final void Function(int) update;
 
   @override
   Widget build(BuildContext context) {
@@ -595,7 +655,7 @@ class ItemDoubleField extends StatelessWidget {
   final String fieldName;
   final double value;
   final String shownValue;
-  final Function(double) update;
+  final void Function(double) update;
 
   @override
   Widget build(BuildContext context) {
@@ -635,7 +695,7 @@ class ItemYearField extends StatelessWidget {
 
   final String fieldName;
   final int value;
-  final Function(int) update;
+  final void Function(int) update;
 
   @override
   Widget build(BuildContext context) {
@@ -667,7 +727,7 @@ class ItemDateTimeField extends StatelessWidget {
 
   final String fieldName;
   final DateTime value;
-  final Function(DateTime) update;
+  final void Function(DateTime) update;
 
   @override
   Widget build(BuildContext context) {
@@ -699,7 +759,7 @@ class ItemDurationField extends StatelessWidget {
 
   final String fieldName;
   final Duration value;
-  final Function(Duration) update;
+  final void Function(Duration) update;
 
   @override
   Widget build(BuildContext context) {
@@ -888,10 +948,11 @@ class _ResultsListHeader extends StatelessWidget {
 }
 class _LinkButton extends StatelessWidget {
 
-  const _LinkButton({Key key, @required this.tableName, @required this.updateAdd}) : super(key: key);
+  const _LinkButton({Key key, @required this.tableName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
 
   final String tableName;
-  final Function(CollectionItem) updateAdd;
+  final Future<CollectionItem> Function() onSearch;
+  final void Function(CollectionItem) updateAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -904,16 +965,7 @@ class _LinkButton extends StatelessWidget {
         highlightElevation: 2.0,
         onPressed: () {
 
-          Navigator.push<CollectionItem>(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return ItemSearch(
-                  searchTable: tableName,
-                );
-              }
-            ),
-          ).then( (CollectionItem result) {
+          onSearch().then( (CollectionItem result) {
             if (result != null) {
               updateAdd(result);
             }
@@ -927,14 +979,15 @@ class _LinkButton extends StatelessWidget {
 }
 class ResultsListSingle extends StatelessWidget {
 
-  ResultsListSingle({@required this.items, @required this.tableName, this.shownName, @required this.onTap, @required this.updateAdd, @required this.updateDelete});
+  ResultsListSingle({@required this.items, @required this.tableName, this.shownName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
   final String tableName;
   final String shownName;
-  final Function(CollectionItem) onTap;
-  final Function(CollectionItem) updateAdd;
-  final Function(CollectionItem) updateDelete;
+  final void Function(CollectionItem) onTap;
+  final Future<CollectionItem> Function() onSearch;
+  final void Function(CollectionItem) updateAdd;
+  final void Function(CollectionItem) updateDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -951,6 +1004,7 @@ class ResultsListSingle extends StatelessWidget {
 
             return _LinkButton(
               tableName: tableName,
+              onSearch: onSearch,
               updateAdd: updateAdd,
             );
 
@@ -978,13 +1032,14 @@ class ResultsListSingle extends StatelessWidget {
 }
 class ResultsListMany extends StatelessWidget {
 
-  ResultsListMany({@required this.items, @required this.tableName, @required this.onTap, @required this.updateAdd, @required this.updateDelete});
+  ResultsListMany({@required this.items, @required this.tableName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
   final List<CollectionItem> items;
   final String tableName;
-  final Function(CollectionItem) onTap;
-  final Function(CollectionItem) updateAdd;
-  final Function(CollectionItem) updateDelete;
+  final void Function(CollectionItem) onTap;
+  final Future<CollectionItem> Function() onSearch;
+  final void Function(CollectionItem) updateAdd;
+  final void Function(CollectionItem) updateDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -1001,6 +1056,7 @@ class ResultsListMany extends StatelessWidget {
 
             return _LinkButton(
               tableName: tableName,
+              onSearch: onSearch,
               updateAdd: updateAdd,
             );
 

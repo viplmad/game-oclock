@@ -56,7 +56,7 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
     try {
 
-      final CollectionItem item = await createFuture();
+      final CollectionItem item = await createFuture(event);
       yield ItemAdded(item);
 
     } catch (e) {
@@ -154,7 +154,7 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
   }
 
-  external Future<CollectionItem> createFuture();
+  external Future<CollectionItem> createFuture(AddItem event);
   external Future<dynamic> deleteFuture(DeleteItem event);
   external Future<CollectionItem> updateFuture(UpdateItemField event);
   external Future<CollectionItem> updateImage(UpdateItemImage event);

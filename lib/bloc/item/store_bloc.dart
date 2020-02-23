@@ -17,9 +17,9 @@ class StoreBloc extends ItemBloc {
   }) : super(collectionRepository: collectionRepository);
 
   @override
-  Future<Store> createFuture() {
+  Future<Store> createFuture(AddItem event) {
 
-    return collectionRepository.insertStore('');
+    return collectionRepository.insertStore(event.item != null? event.item.getTitle() : '');
 
   }
 

@@ -50,10 +50,17 @@ class Homepage extends StatelessWidget {
             backgroundColor: barItem.color,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.sort_by_alpha),
-                tooltip: "Change Order",
+                icon: Icon(Icons.search),
+                tooltip: 'Search in View',
                 onPressed: () {
-                  //Use enum
+                  //TODO
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.sort_by_alpha),
+                tooltip: 'Change Order',
+                onPressed: () {
+                  //TODO: Use enum or remove from constructor
                   selectedItemListBloc.add(UpdateSortOrder(null));
                 },
               ),
@@ -80,8 +87,7 @@ class Homepage extends StatelessWidget {
           floatingActionButton: _HomepageFAB(
             activeTab: state,
             onTap: () {
-              //TODO use values or remove object from constructor
-              selectedItemListBloc.itemBloc.add(AddItem(null));
+              selectedItemListBloc.itemBloc.add(AddItem());
             },
           ),
         );
