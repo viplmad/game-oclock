@@ -36,7 +36,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     } else if(event is UpdateItemList) {
 
-      yield* _mapListUpdateToState(event);
+      yield* _mapListUpdateListToState(event);
 
     } else if(event is UpdateView) {
 
@@ -61,13 +61,13 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     } catch (e) {
 
-      yield ItemListNotLoaded(e.toString() + '\n' + (e as Error).stackTrace.toString());
+      yield ItemListNotLoaded(e.toString());
 
     }
 
   }
 
-  Stream<ItemListState> _mapListUpdateToState(UpdateItemList event) async* {
+  Stream<ItemListState> _mapListUpdateListToState(UpdateItemList event) async* {
 
     if(state is ItemListLoaded) {
       final String activeView = (state as ItemListLoaded).view;

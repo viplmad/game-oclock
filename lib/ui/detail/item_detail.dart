@@ -161,7 +161,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
                 }
 
-                return LoadingIcon();
+                return Container();
 
               },
             ),
@@ -183,18 +183,33 @@ abstract class ItemDetailBody extends StatelessWidget {
         floating: false,
         pinned: true,
         snap: false,
+        bottom: PreferredSize(
+          preferredSize: Size(double.maxFinite, 1.0,),
+          child: BlocBuilder<ItemDetailBloc, ItemDetailState> (
+            bloc: itemDetailBloc,
+            builder: (BuildContext context, ItemDetailState state) {
+              if(state is ItemLoading) {
+                return LinearProgressIndicator();
+              }
+              return Container();
+            },
+          ),
+        ),
         flexibleSpace: BlocBuilder<ItemDetailBloc, ItemDetailState> (
           bloc: itemDetailBloc,
           builder: (BuildContext context, ItemDetailState state) {
             String title = "";
             String imageURL;
+            String imageName;
 
             if(state is ItemLoaded) {
               title = state.item.getTitle();
               imageURL = state.item.getImageURL();
+              imageName = state.item.getImageName();
             }
 
             return GestureDetector(
+              behavior: HitTestBehavior.translucent,
               child: FlexibleSpaceBar(
                 title: Text(title),
                 collapseMode: CollapseMode.parallax,
@@ -204,16 +219,16 @@ abstract class ItemDetailBody extends StatelessWidget {
                       fit: BoxFit.cover,
                       useOldImageOnUrlChange: true,
                       placeholder: (BuildContext context, String url) => LoadingIcon(),
-                      errorWidget: (BuildContext context, String url, Object error) => null,
+                      errorWidget: (BuildContext context, String url, Object error) => Container(),
                     )
-                    : null,
+                    : Container(),
               ),
-              onTap: () {
+              onTap: imageURL != null? () {
                 showModalBottomSheet<File>(
                   context: context,
                   builder: (BuildContext context) {
 
-                    return _imageUploadListBuilder(context);
+                    return _imageActionListBuilder(context, imageName: imageName);
 
                   },
                 ).then( (File imagePicked) {
@@ -228,7 +243,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
                   }
                 });
-              },
+              } : null,
             );
 
           },
@@ -238,18 +253,89 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget _imageUploadListBuilder(BuildContext context) {
+  Widget _imageActionListBuilder(BuildContext context, {String imageName}) {
 
     return Container(
-      height: 200,
-      child: FlatButton(
-        child: Text("Upload image"),
-        onPressed: () async {
-          File file = await ImagePicker.pickImage(
-            source: ImageSource.gallery,
-          );
-          Navigator.maybePop(context, file);
-        },
+      child: Wrap(
+        children: <Widget>[
+          ListTile(
+            title: Text(imageName?? 'none'),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Rename image"),
+            leading: Icon(Icons.edit),
+            enabled: imageName != null,
+            onTap: () async {
+              TextEditingController fieldController = TextEditingController();
+              fieldController.text = imageName;
+
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) {
+
+                  MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+                  return AlertDialog(
+                    title: Text("Edit Name"),
+                    content: TextField(
+                      controller: fieldController,
+                      keyboardType: TextInputType.text,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        hintText: "Name",
+                      ),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text(localizations.cancelButtonLabel),
+                        onPressed: () {
+                          Navigator.maybePop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text(localizations.okButtonLabel),
+                        onPressed: () {
+                          Navigator.maybePop(context, fieldController.text.trim());
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ).then( (String newName) {
+                if(newName != null) {
+                  itemBloc.add(
+                    UpdateItemImageName(
+                      item,
+                      imageName,
+                      newName,
+                    ),
+                  );
+                }
+
+                Navigator.maybePop(context);
+              });
+            },
+          ),
+          ListTile(
+            title: Text("Upload image"),
+            leading: Icon(Icons.file_upload),
+            onTap: () async {
+              File file = await ImagePicker.pickImage(
+                source: ImageSource.gallery,
+              );
+              Navigator.maybePop(context, file);
+            },
+          ),
+          ListTile(
+            title: Text("Remove image"),
+            leading: Icon(Icons.delete_outline),
+            enabled: imageName != null,
+            onTap: () {
+              //TODO
+            },
+          )
+        ],
       ),
     );
 
@@ -472,7 +558,13 @@ abstract class ItemDetailBody extends StatelessWidget {
           );
         }
 
-        return Divider();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(),
+            LinearProgressIndicator(),
+          ],
+        );
 
       },
     );
@@ -496,8 +588,19 @@ abstract class ItemDetailBody extends StatelessWidget {
             updateDelete: _deleteRelationFunction(),
           );
         }
+        if(state is ItemRelationNotLoaded) {
+          return Center(
+            child: Text(state.error),
+          );
+        }
 
-        return Divider();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(),
+            LinearProgressIndicator(),
+          ],
+        );
 
       },
     );

@@ -23,6 +23,7 @@ class DLC extends CollectionItem {
     this.name,
     this.releaseYear,
     this.coverURL,
+    this.coverName,
     this.finishDate,
 
     this.baseGame,
@@ -31,6 +32,7 @@ class DLC extends CollectionItem {
   final String name;
   final int releaseYear;
   final String coverURL;
+  final String coverName;
   final DateTime finishDate;
 
   final int baseGame;
@@ -42,6 +44,7 @@ class DLC extends CollectionItem {
       name: entity.name,
       releaseYear: entity.releaseYear,
       coverURL: coverURL,
+      coverName: entity.coverName,
       finishDate: entity.finishDate,
 
       baseGame: entity.baseGame,
@@ -56,6 +59,7 @@ class DLC extends CollectionItem {
       ID: this.ID,
       name: this.name,
       releaseYear: this.releaseYear,
+      coverName: this.coverName,
       finishDate: this.finishDate,
 
       baseGame: this.baseGame,
@@ -68,6 +72,7 @@ class DLC extends CollectionItem {
     String name,
     int releaseYear,
     String coverURL,
+    String coverName,
     DateTime finishDate,
 
     int baseGame,
@@ -78,6 +83,7 @@ class DLC extends CollectionItem {
       name: name?? this.name,
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
+      coverName: coverName?? this.coverName,
       finishDate: finishDate?? this.finishDate,
 
       baseGame: baseGame?? this.baseGame,
@@ -102,7 +108,14 @@ class DLC extends CollectionItem {
   @override
   String getImageURL() {
 
-    return this.coverURL;
+    return this.coverURL?? '';
+
+  }
+
+  @override
+  String getImageName() {
+
+    return this.coverName;
 
   }
 

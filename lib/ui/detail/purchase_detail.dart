@@ -86,6 +86,7 @@ class _PurchaseDetailBody extends ItemDetailBody {
       ),
       itemListManyRelation( //TODO: show as chips
         itemType: PurchaseType,
+        shownName: 'Types',
       ),
     ];
 

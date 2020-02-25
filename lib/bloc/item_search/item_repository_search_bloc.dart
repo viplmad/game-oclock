@@ -10,9 +10,9 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-class ItemOnlineSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
+class ItemRepositorySearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemOnlineSearchBloc({@required this.collectionRepository, @required this.itemType});
+  ItemRepositorySearchBloc({@required this.collectionRepository, @required this.itemType});
 
   final ICollectionRepository collectionRepository;
   final Type itemType;

@@ -60,11 +60,10 @@ class Homepage extends StatelessWidget {
                 icon: Icon(Icons.sort_by_alpha),
                 tooltip: 'Change Order',
                 onPressed: () {
-                  //TODO: Use enum or remove from constructor
-                  selectedItemListBloc.add(UpdateSortOrder(null));
+                  selectedItemListBloc.add(UpdateSortOrder());
                 },
               ),
-              _HomepageAction(
+              _HomepageViewAction(
                 activeTab: state,
                 onSelected: (String selectedView) {
                   selectedItemListBloc.add(UpdateView(selectedView));
@@ -98,9 +97,9 @@ class Homepage extends StatelessWidget {
 
 }
 
-class _HomepageAction extends StatelessWidget {
+class _HomepageViewAction extends StatelessWidget {
 
-  const _HomepageAction({Key key, this.activeTab, this.onSelected}) : super(key: key);
+  const _HomepageViewAction({Key key, this.activeTab, this.onSelected}) : super(key: key);
 
   final AppTab activeTab;
   final Function(String) onSelected;
@@ -200,6 +199,7 @@ class _HomepageBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Added",
+            seconds: 2,
             snackBarAction: SnackBarAction(
               label: "Open",
               onPressed: () {
@@ -219,6 +219,7 @@ class _HomepageBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Unable to add",
+            seconds: 2,
             snackBarAction: dialogSnackBarAction(
                 context,
                 label: "More",
@@ -231,12 +232,14 @@ class _HomepageBody extends StatelessWidget {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Deleted",
+            seconds: 2,
           );
         }
         if(state is ItemNotDeleted) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Unable to delete",
+            seconds: 2,
             snackBarAction: dialogSnackBarAction(
                 context,
                 label: "More",

@@ -1165,6 +1165,18 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
+  Future<Game> renameGameCover(int gameID, String imageName, String newImageName) async {
+
+    final String coverName = await _imageConnector.renameImage(
+      tableName: gameTable,
+      oldImageName: imageName,
+      newImageName: newImageName,
+    );
+
+    return updateGame(gameID, game_coverField, coverName);
+
+  }
+
   @override
   Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath) async {
 

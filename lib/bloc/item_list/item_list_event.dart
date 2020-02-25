@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/sort_order.dart';
 
 
 abstract class ItemListEvent extends Equatable {
@@ -41,19 +40,7 @@ class UpdateView extends ItemListEvent {
       ' }';
 }
 
-class UpdateSortOrder extends ItemListEvent {
-  const UpdateSortOrder(this.order);
-
-  final SortOrder order;
-
-  @override
-  List<Object> get props => [order];
-
-  @override
-  String toString() => 'UpdateSort { '
-      'order: $order'
-      ' }';
-}
+class UpdateSortOrder extends ItemListEvent {}
 
 /*
 class UpdateSort extends ItemListEvent {

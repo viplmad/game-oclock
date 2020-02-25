@@ -178,6 +178,7 @@ abstract class ICollectionRepository {
   //#region UPLOAD
     //Game
   Future<Game> uploadGameCover(int gameID, String uploadImagePath);
+  Future<Game> renameGameCover(int gameID, String imageName, String newImageName);
     //DLC
   Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath);
     //Platform

@@ -27,7 +27,7 @@ class PurchaseRelationBloc extends ItemRelationBloc {
         return collectionRepository.getDLCsFromPurchase(itemID);
       case Store:
         return collectionRepository.getStoreFromPurchase(itemID).map( (CollectionItem store) => store != null? [store] : [] );
-      case Type:
+      case PurchaseType:
         return collectionRepository.getTypesFromPurchase(itemID);
     }
 

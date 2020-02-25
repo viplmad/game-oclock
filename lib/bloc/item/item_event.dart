@@ -72,6 +72,23 @@ class UpdateItemImage extends ItemEvent {
       ' }';
 }
 
+class UpdateItemImageName extends ItemEvent {
+  const UpdateItemImageName(this.item, this.oldImageName, this.newImageName);
+
+  final CollectionItem item;
+  final String oldImageName;
+  final String newImageName;
+
+  @override
+  List<Object> get props => [item, item];
+
+  @override
+  String toString() => 'UpdateItemImageName { '
+      'item: $item, '
+      'newImageName: $newImageName'
+      ' }';
+}
+
 class AddItemRelation extends ItemEvent {
   const AddItemRelation(this.item, this.otherItem);
 

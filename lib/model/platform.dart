@@ -84,7 +84,7 @@ class Platform extends CollectionItem {
   @override
   String getImageURL() {
 
-    return this.iconURL;
+    return this.iconURL?? '';
 
   }
 

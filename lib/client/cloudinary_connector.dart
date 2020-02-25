@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'cloudinary_connection/cloudinary_client.dart';
+import 'cloudinary_connection/cloudinary_connection.dart';
 import 'cloudinary_connection/cloudinary_response.dart';
 
 import 'iimage_connector.dart';
@@ -14,7 +14,7 @@ const String baseRESURL = 'http://res.cloudinary.com/';
 class CloudinaryConnector extends IImageConnector {
 
   CloudinaryInstance _instance;
-  CloudinaryClient _connection;
+  CloudinaryConnection _connection;
 
   CloudinaryConnector() {
 
@@ -28,46 +28,11 @@ class CloudinaryConnector extends IImageConnector {
       this._instance = CloudinaryInstance.fromString(_tempConnectionString);
     }
 
-    _connection = new CloudinaryClient(
+    _connection = new CloudinaryConnection(
       _instance._apiKey,
       _instance._apiSecret,
       _instance._cloudName,
     );
-  }
-
-  @override
-  Future<dynamic> open() {
-
-    return null;
-
-  }
-
-  @override
-  Future<dynamic> close() {
-
-    return null;
-
-  }
-
-  @override
-  bool isClosed() {
-
-    return false;
-
-  }
-
-  @override
-  bool isOpen() {
-
-    return !this.isClosed();
-
-  }
-
-  @override
-  bool isUpdating() {
-
-    return false;
-
   }
 
   //#region UPLOAD
@@ -77,12 +42,23 @@ class CloudinaryConnector extends IImageConnector {
     return _connection.uploadImage(
       imagePath,
       folder: tableName,
-      filename: imageName,
-      overwrite: true,
-    ).asStream().map( (CloudinaryResponse response) => response.public_id.split('/')[1] ).first;
+      imageFilename: imageName,
+    ).asStream().map( getOnlyName ).first;
 
   }
   //#endregion UPLOAD
+
+  //#region RENAME
+  Future<String> renameImage({@required String tableName, @required String oldImageName, @required String newImageName}) {
+
+    return _connection.renameImage(
+      folder: tableName,
+      imageFilename: oldImageName,
+      newImageFilename: newImageName,
+    ).asStream().map( getOnlyName ).first;
+
+  }
+  //#endregion RENAME
 
   //#region DOWNLOAD
   @override
@@ -110,6 +86,12 @@ class CloudinaryConnector extends IImageConnector {
     String url = baseAPIURL + _instance._cloudName + "/image/upload";
 
     return url;
+
+  }
+
+  String getOnlyName(CloudinaryResponse response) {
+
+    return response.public_id.split('/')[1];
 
   }
   //#endregion Helpers

@@ -78,7 +78,7 @@ class Store extends CollectionItem {
   @override
   String getImageURL() {
 
-    return this.iconURL;
+    return this.iconURL?? '';
 
   }
 

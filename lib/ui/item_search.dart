@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
@@ -29,14 +27,14 @@ class _ItemSearchState extends State<ItemSearch> {
     _textEditingController.text = value;
   }
 
-  ItemOnlineSearchBloc _itemSearchBloc;
+  ItemRepositorySearchBloc _itemSearchBloc;
   String get searchName => widget.searchType.toString();
 
   @override
   void initState() {
     super.initState();
 
-    _itemSearchBloc = BlocProvider.of<ItemOnlineSearchBloc>(context);
+    _itemSearchBloc = BlocProvider.of<ItemRepositorySearchBloc>(context);
   }
 
   List<Widget> buildActions() {
@@ -58,13 +56,19 @@ class _ItemSearchState extends State<ItemSearch> {
 
   Widget newButton() {
 
-    return OutlineButton(
-      child: Text("New " + searchName + " titled '" + query + "'"),
-      onPressed: () {
+    return SizedBox(
+      width: double.maxFinite,
+      child: FlatButton(
+        child: Text("+ New " + searchName + " titled '" + query + "'"),
+        color: Colors.white,
+        onPressed: () {
 
-        widget.itemBloc.add(AddItem(Item(ID: 0, title: query)));
+          widget.itemBloc.add(
+            AddItem(Item(ID: 0, title: query)),
+          );
 
-      },
+        },
+      ),
     );
 
   }
@@ -79,12 +83,16 @@ class _ItemSearchState extends State<ItemSearch> {
           controller: _textEditingController,
           keyboardType: TextInputType.text,
           onChanged: (String newQuery) {
+            //Not sure of this fix to update button text
+            setState(() {});
             _itemSearchBloc.add(
               SearchTextChanged(query),
             );
           },
+          maxLines: 1,
           decoration: InputDecoration(
-            border: InputBorder.none,
+            border: UnderlineInputBorder(),
+            prefixIcon: Icon(Icons.search),
             hintText: 'Search ' + searchName + 's',
           ),
         ),
@@ -101,8 +109,9 @@ class _ItemSearchState extends State<ItemSearch> {
             Container(
               child: newButton(),
               color: Colors.grey,
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             ),
-            BlocBuilder<ItemOnlineSearchBloc, ItemSearchState>(
+            BlocBuilder<ItemRepositorySearchBloc, ItemSearchState>(
               bloc: _itemSearchBloc,
               builder: (BuildContext context, ItemSearchState state) {
 
@@ -124,7 +133,7 @@ class _ItemSearchState extends State<ItemSearch> {
 
                 }
 
-                return LoadingIcon();
+                return LinearProgressIndicator();
 
               },
             ),

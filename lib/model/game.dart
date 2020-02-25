@@ -32,6 +32,7 @@ class Game extends CollectionItem {
     this.edition,
     this.releaseYear,
     this.coverURL,
+    this.coverName,
     this.status,
     this.rating,
     this.thoughts,
@@ -46,6 +47,7 @@ class Game extends CollectionItem {
   final String edition;
   final int releaseYear;
   final String coverURL;
+  final String coverName;
   final String status;
   final int rating;
   final String thoughts;
@@ -63,6 +65,7 @@ class Game extends CollectionItem {
       edition: entity.edition,
       releaseYear: entity.releaseYear,
       coverURL: coverURL,
+      coverName: entity.coverName,
       status: entity.status,
       rating: entity.rating,
       thoughts: entity.thoughts,
@@ -83,6 +86,7 @@ class Game extends CollectionItem {
       name: this.name,
       edition: this.edition,
       releaseYear: this.releaseYear,
+      coverName: this.coverName,
       status: this.status,
       rating: this.rating,
       thoughts: this.thoughts,
@@ -101,6 +105,7 @@ class Game extends CollectionItem {
     String edition,
     int releaseYear,
     String coverURL,
+    String coverName,
     String status,
     int rating,
     String thoughts,
@@ -117,6 +122,7 @@ class Game extends CollectionItem {
       edition: edition?? this.edition,
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
+      coverName: coverName?? this.coverName,
       status: status?? this.status,
       rating: rating?? this.rating,
       thoughts: thoughts?? this.thoughts,
@@ -157,7 +163,14 @@ class Game extends CollectionItem {
   @override
   String getImageURL() {
 
-    return this.coverURL;
+    return this.coverURL?? '';
+
+  }
+
+  @override
+  String getImageName() {
+
+    return this.coverName;
 
   }
 

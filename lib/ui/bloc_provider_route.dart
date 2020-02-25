@@ -228,9 +228,9 @@ Widget ItemDetailProvider(CollectionItem item) {
 
 Widget ItemSearchProvider(Type itemType) {
 
-  return BlocProvider<ItemOnlineSearchBloc>(
+  return BlocProvider<ItemRepositorySearchBloc>(
     create: (BuildContext context) {
-      return ItemOnlineSearchBloc(
+      return ItemRepositorySearchBloc(
         collectionRepository: CollectionRepository(),
         itemType: itemType,
       )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
