@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
@@ -268,7 +269,8 @@ abstract class ItemDetailBody extends StatelessWidget {
             enabled: imageName != null,
             onTap: () async {
               TextEditingController fieldController = TextEditingController();
-              fieldController.text = imageName;
+              String imageNameNoExtension = imageName.split('.').first;
+              fieldController.text = imageNameNoExtension.split('-')[1];
 
               showDialog<String>(
                 context: context,
@@ -282,6 +284,9 @@ abstract class ItemDetailBody extends StatelessWidget {
                       controller: fieldController,
                       keyboardType: TextInputType.text,
                       maxLines: null,
+                      inputFormatters: <TextInputFormatter> [
+                        WhitelistingTextInputFormatter(RegExp(r'^([A-z])*$')),
+                      ],
                       decoration: InputDecoration(
                         hintText: "Name",
                       ),
@@ -307,7 +312,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                   itemBloc.add(
                     UpdateItemImageName(
                       item,
-                      imageName,
+                      imageNameNoExtension,
                       newName,
                     ),
                   );

@@ -44,8 +44,12 @@ abstract class ICollectionRepository {
   //#region READ
   Stream<List<CollectionItem>> getItemsWithView(Type itemType, int viewIndex, [int limit]);
     //Game
+  Stream<List<Game>> getAll();
   Stream<List<Game>> getAllGames();
+  Stream<List<Game>> getAllRoms();
+  Stream<List<Game>> getAllWithView(GameView gameView, [int limit]);
   Stream<List<Game>> getGamesWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]);
   Stream<Game> getGameWithID(int ID);
   Stream<List<Platform>> getPlatformsFromGame(int ID);
   Stream<List<Purchase>> getPurchasesFromGame(int ID);
@@ -175,18 +179,22 @@ abstract class ICollectionRepository {
   Stream<List<PurchaseType>> getTypesWithName(String name, int maxResults);
   //#endregion SEARCH
 
-  //#region UPLOAD
+  //#region IMAGE
     //Game
   Future<Game> uploadGameCover(int gameID, String uploadImagePath);
   Future<Game> renameGameCover(int gameID, String imageName, String newImageName);
     //DLC
   Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath);
+  Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName);
     //Platform
   Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath);
+  Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName);
     //Store
   Future<Store> uploadStoreIcon(int storeID, String uploadImagePath);
+  Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName);
     //System
   Future<System> uploadSystemIcon(int systemID, String uploadImagePath);
-  //#endregion UPLOAD
+  Future<System> renameSystemIcon(int systemID, String imageName, String newImageName);
+  //#endregion IMAGE
 
 }

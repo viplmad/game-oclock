@@ -281,9 +281,34 @@ class CollectionRepository implements ICollectionRepository {
   }
   //#region Game
   @override
+  Stream<List<Game>> getAll() {
+
+    return getAllWithView(GameView.Main);
+
+  }
+
+  @override
   Stream<List<Game>> getAllGames() {
 
     return getGamesWithView(GameView.Main);
+
+  }
+
+  @override
+  Stream<List<Game>> getAllRoms() {
+
+    return getRomsWithView(GameView.Main);
+
+  }
+
+  @override
+  Stream<List<Game>> getAllWithView(GameView gameView, [int limit]) {
+
+    return _dbConnector.readTable(
+      tableName: allViewToTable[gameView],
+      selectFields: gameFields,
+      limitResults: limit,
+    ).asStream().map( _dynamicToListGame );
 
   }
 
@@ -292,6 +317,17 @@ class CollectionRepository implements ICollectionRepository {
 
     return _dbConnector.readTable(
       tableName: gameViewToTable[gameView],
+      selectFields: gameFields,
+      limitResults: limit,
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
+  Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]) {
+
+    return _dbConnector.readTable(
+      tableName: romViewToTable[gameView],
       selectFields: gameFields,
       limitResults: limit,
     ).asStream().map( _dynamicToListGame );
@@ -1152,13 +1188,14 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion SEARCH
 
   //#region UPLOAD
+  //#region Game
   @override
   Future<Game> uploadGameCover(int gameID, String uploadImagePath) async {
 
     final String coverName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: gameTable,
-      imageName: gameID.toString(),
+      imageName: _getImageName(gameID, 'header'),
     );
 
     return updateGame(gameID, game_coverField, coverName);
@@ -1170,20 +1207,22 @@ class CollectionRepository implements ICollectionRepository {
     final String coverName = await _imageConnector.renameImage(
       tableName: gameTable,
       oldImageName: imageName,
-      newImageName: newImageName,
+      newImageName: _getImageName(gameID, newImageName),
     );
 
     return updateGame(gameID, game_coverField, coverName);
 
   }
+  //#endregion Game
 
+  //#region DLC
   @override
   Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath) async {
 
     final String coverName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: dlcTable,
-      imageName: dlcID.toString(),
+      imageName: _getImageName(dlcID, 'header'),
     );
 
     return updateDLC(dlcID, dlc_coverField, coverName);
@@ -1191,43 +1230,100 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
+  Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName) async {
+
+    final String coverName = await _imageConnector.renameImage(
+      tableName: dlcTable,
+      oldImageName: imageName,
+      newImageName: _getImageName(dlcID, newImageName),
+    );
+
+    return updateDLC(dlcID, dlc_coverField, coverName);
+
+  }
+  //#endregion DLC
+
+  //#region Platform
+  @override
   Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath) async {
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: platformTable,
-      imageName: platformID.toString(),
+      imageName: _getImageName(platformID, 'icon'),
     );
 
     return updatePlatform(platformID, plat_iconField, iconName);
 
   }
 
+  Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName) async {
+
+    final String iconName = await _imageConnector.renameImage(
+      tableName: platformTable,
+      oldImageName: imageName,
+      newImageName: _getImageName(platformID, newImageName),
+    );
+
+    return updatePlatform(platformID, plat_iconField, iconName);
+
+  }
+  //#endregion Platform
+
+  //#region Store
   @override
   Future<Store> uploadStoreIcon(int storeID, String uploadImagePath) async {
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: storeTable,
-      imageName: storeID.toString(),
+      imageName: _getImageName(storeID, 'icon'),
     );
 
     return updateStore(storeID, stor_iconField, iconName);
 
   }
 
+  Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName) async {
+
+    final String iconName = await _imageConnector.renameImage(
+      tableName: storeTable,
+      oldImageName: imageName,
+      newImageName: _getImageName(storeID, newImageName),
+    );
+
+    return updateStore(storeID, stor_iconField, iconName);
+
+  }
+  //#endregion Store
+
+  //#region System
   @override
   Future<System> uploadSystemIcon(int systemID, String uploadImagePath) async {
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
       tableName: systemTable,
-      imageName: systemID.toString(),
+      imageName: _getImageName(systemID, 'icon'),
     );
 
     return updateSystem(systemID, sys_iconField, iconName);
 
   }
+
+  @override
+  Future<System> renameSystemIcon(int systemID, String imageName, String newImageName) async {
+
+    final String iconName = await _imageConnector.renameImage(
+      tableName: systemTable,
+      oldImageName: imageName,
+      newImageName: _getImageName(systemID, newImageName),
+    );
+
+    return updateSystem(systemID, sys_iconField, iconName);
+
+  }
+  //#endregion System
   //#endregion UPLOAD
 
   //#region DOWNLOAD
@@ -1454,7 +1550,22 @@ class CollectionRepository implements ICollectionRepository {
   }
   //#endregion Dynamic Map to List
 
+  String _getImageName(int ID, String imageName) {
+
+    return ID.toString() + '-' + imageName;
+
+  }
+
 }
+
+Map<GameView, String> allViewToTable = {
+  GameView.Main : "All-Main",
+  GameView.LastCreated : "All-Last Created",
+  GameView.Playing : "All-Playing",
+  GameView.NextUp : "All-Next Up",
+  GameView.LastFinished : "All-Last Finished",
+  GameView.Review2019 : "All-2019 In Review",
+};
 
 Map<GameView, String> gameViewToTable = {
   GameView.Main : "Game-Main",
@@ -1463,6 +1574,15 @@ Map<GameView, String> gameViewToTable = {
   GameView.NextUp : "Game-Next Up",
   GameView.LastFinished : "Game-Last Finished",
   GameView.Review2019 : "Game-2019 In Review",
+};
+
+Map<GameView, String> romViewToTable = {
+  GameView.Main : "Rom-Main",
+  GameView.LastCreated : "Rom-Last Created",
+  GameView.Playing : "Rom-Playing",
+  GameView.NextUp : "Rom-Next Up",
+  GameView.LastFinished : "Rom-Last Finished",
+  GameView.Review2019 : "Rom-2019 In Review",
 };
 
 Map<DLCView, String> dlcViewToTable = {

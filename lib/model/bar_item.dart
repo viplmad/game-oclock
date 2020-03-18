@@ -19,7 +19,7 @@ class BarItem extends Equatable {
   @override
   String toString() {
 
-    return 'DLC { '
+    return 'BarItem { '
         'title: $title, '
         'icon: $icon, '
         'color: $color'

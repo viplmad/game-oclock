@@ -22,11 +22,13 @@ class Platform extends CollectionItem {
     @required int ID,
     this.name,
     this.iconURL,
+    this.iconName,
     this.type,
   }) : super(ID: ID);
 
   final String name;
   final String iconURL;
+  final String iconName;
   final String type;
 
   static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
@@ -35,6 +37,7 @@ class Platform extends CollectionItem {
       ID: entity.ID,
       name: entity.name,
       iconURL: iconURL,
+      iconName: entity.iconName,
       type: entity.type,
     );
 
@@ -46,6 +49,7 @@ class Platform extends CollectionItem {
     return PlatformEntity(
       ID: this.ID,
       name: this.name,
+      iconName: this.iconName,
       type: this.type,
     );
 
@@ -55,6 +59,7 @@ class Platform extends CollectionItem {
   Platform copyWith({
     String name,
     String iconURL,
+    String iconName,
     String type,
   }) {
 
@@ -62,6 +67,7 @@ class Platform extends CollectionItem {
       ID: ID,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
+      iconName: iconName?? this.iconName,
       type: type?? this.type,
     );
 
@@ -85,6 +91,13 @@ class Platform extends CollectionItem {
   String getImageURL() {
 
     return this.iconURL?? '';
+
+  }
+
+  @override
+  String getImageName() {
+
+    return this.iconName;
 
   }
 

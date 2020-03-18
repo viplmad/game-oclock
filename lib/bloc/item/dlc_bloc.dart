@@ -44,6 +44,13 @@ class DLCBloc extends ItemBloc {
   }
 
   @override
+  Future<DLC> updateImageName(UpdateItemImageName event) {
+
+    return collectionRepository.renameDLCCover(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int dlcID = event.item.ID;

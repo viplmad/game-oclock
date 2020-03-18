@@ -7,7 +7,7 @@ import 'package:game_collection/bloc/connection/connection.dart';
 import 'start.dart';
 
 import 'package:game_collection/model/app_tab.dart';
-import 'package:game_collection/bloc/tab/tab.dart';
+import 'package:game_collection/bloc/maintab/maintab.dart';
 import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
@@ -72,15 +72,29 @@ Widget HomepageProvider() {
 
   return MultiBlocProvider(
     providers: [
-      BlocProvider<TabBloc>(
+      BlocProvider<MainTabBloc>(
         create: (BuildContext context) {
-          return TabBloc()..add(UpdateTab(AppTab.game));
+          return MainTabBloc()..add(UpdateMainTab(MainTab.game));
         },
       ),
 
+      BlocProvider<AllListBloc>(
+        create: (BuildContext context) {
+          return AllListBloc(
+            itemBloc: itemBlocs[Game],
+          )..add(LoadItemList());
+        },
+      ),
       BlocProvider<GameListBloc>(
         create: (BuildContext context) {
           return GameListBloc(
+            itemBloc: itemBlocs[Game],
+          )..add(LoadItemList());
+        },
+      ),
+      BlocProvider<RomListBloc>(
+        create: (BuildContext context) {
+          return RomListBloc(
             itemBloc: itemBlocs[Game],
           )..add(LoadItemList());
         },
@@ -145,6 +159,32 @@ Widget HomepageProvider() {
     ],
     child: Homepage(),
   );
+
+}
+
+GameTab activeGameTab = GameTab.all;
+ItemListBloc ItemListProvider(BuildContext context, MainTab activeTab) {
+
+  switch(activeTab) {
+    case MainTab.game:
+      switch(activeGameTab) {
+        case GameTab.all:
+          return BlocProvider.of<AllListBloc>(context);
+        case GameTab.game:
+          return BlocProvider.of<GameListBloc>(context);
+        case GameTab.rom:
+          return BlocProvider.of<RomListBloc>(context);
+      }
+      return BlocProvider.of<GameListBloc>(context);
+    case MainTab.dlc:
+      return BlocProvider.of<DLCListBloc>(context);
+    case MainTab.purchase:
+      return BlocProvider.of<PurchaseListBloc>(context);
+    case MainTab.store:
+      return BlocProvider.of<StoreListBloc>(context);
+    case MainTab.platform:
+      return BlocProvider.of<PlatformListBloc>(context);
+  }
 
 }
 

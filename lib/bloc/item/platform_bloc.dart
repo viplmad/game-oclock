@@ -44,6 +44,13 @@ class PlatformBloc extends ItemBloc {
   }
 
   @override
+  Future<Platform> updateImageName(UpdateItemImageName event) {
+
+    return collectionRepository.renamePlatformIcon(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
   Future<dynamic> addRelationFuture(AddItemRelation event) {
 
     int platformID = event.item.ID;

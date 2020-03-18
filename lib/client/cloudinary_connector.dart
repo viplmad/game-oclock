@@ -75,7 +75,7 @@ class CloudinaryConnector extends IImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageName) {
 
-    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageName.jpg';
+    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageName';
 
     return url;
 
@@ -91,7 +91,7 @@ class CloudinaryConnector extends IImageConnector {
 
   String getOnlyName(CloudinaryResponse response) {
 
-    return response.public_id.split('/')[1];
+    return response.public_id.split('/').last + '.' + response.format;
 
   }
   //#endregion Helpers
