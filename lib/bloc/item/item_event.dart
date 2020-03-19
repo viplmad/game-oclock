@@ -56,17 +56,18 @@ class UpdateItemField extends ItemEvent {
       ' }';
 }
 
-class UpdateItemImage extends ItemEvent {
-  const UpdateItemImage(this.item, this.imagePath);
+class AddItemImage extends ItemEvent {
+  const AddItemImage(this.item, this.imagePath, [this.oldImageName]);
 
   final CollectionItem item;
   final String imagePath;
+  final String oldImageName;
 
   @override
   List<Object> get props => [item, imagePath];
 
   @override
-  String toString() => 'UpdateItemImage { '
+  String toString() => 'AddItemImage { '
       'item: $item, '
       'image: $imagePath'
       ' }';
@@ -86,6 +87,22 @@ class UpdateItemImageName extends ItemEvent {
   String toString() => 'UpdateItemImageName { '
       'item: $item, '
       'newImageName: $newImageName'
+      ' }';
+}
+
+class DeleteItemImage extends ItemEvent {
+  const DeleteItemImage(this.item, this.imageName);
+
+  final CollectionItem item;
+  final String imageName;
+
+  @override
+  List<Object> get props => [item, imageName];
+
+  @override
+  String toString() => 'DeleteItemImage { '
+      'item: $item, '
+      'image: $imageName'
       ' }';
 }
 

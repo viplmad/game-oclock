@@ -22,13 +22,13 @@ class Platform extends CollectionItem {
     @required int ID,
     this.name,
     this.iconURL,
-    this.iconName,
+    this.iconFilename,
     this.type,
   }) : super(ID: ID);
 
   final String name;
   final String iconURL;
-  final String iconName;
+  final String iconFilename;
   final String type;
 
   static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
@@ -37,7 +37,7 @@ class Platform extends CollectionItem {
       ID: entity.ID,
       name: entity.name,
       iconURL: iconURL,
-      iconName: entity.iconName,
+      iconFilename: entity.iconFilename,
       type: entity.type,
     );
 
@@ -49,7 +49,7 @@ class Platform extends CollectionItem {
     return PlatformEntity(
       ID: this.ID,
       name: this.name,
-      iconName: this.iconName,
+      iconFilename: this.iconFilename,
       type: this.type,
     );
 
@@ -67,7 +67,7 @@ class Platform extends CollectionItem {
       ID: ID,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
-      iconName: iconName?? this.iconName,
+      iconFilename: iconName?? this.iconFilename,
       type: type?? this.type,
     );
 
@@ -95,9 +95,9 @@ class Platform extends CollectionItem {
   }
 
   @override
-  String getImageName() {
+  String getImageFilename() {
 
-    return this.iconName;
+    return this.iconFilename;
 
   }
 

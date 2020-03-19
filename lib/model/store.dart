@@ -22,10 +22,12 @@ class Store extends CollectionItem {
     @required int ID,
     this.name,
     this.iconURL,
+    this.iconFilename,
   }) : super(ID: ID);
 
   final String name;
   final String iconURL;
+  final String iconFilename;
 
   static Store fromEntity(StoreEntity entity, [String iconURL]) {
 
@@ -33,6 +35,7 @@ class Store extends CollectionItem {
       ID: entity.ID,
       name: entity.name,
       iconURL: iconURL,
+      iconFilename: entity.iconFilename,
     );
 
   }
@@ -43,6 +46,7 @@ class Store extends CollectionItem {
     return StoreEntity(
       ID: this.ID,
       name: this.name,
+      iconFilename: this.iconFilename,
     );
 
   }
@@ -51,12 +55,14 @@ class Store extends CollectionItem {
   Store copyWith({
     String name,
     String iconURL,
+    String iconFilename,
   }) {
 
     return Store(
       ID: ID,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
+      iconFilename: iconFilename?? this.iconFilename,
     );
 
   }
@@ -79,6 +85,13 @@ class Store extends CollectionItem {
   String getImageURL() {
 
     return this.iconURL?? '';
+
+  }
+
+  @override
+  String getImageFilename() {
+
+    return this.iconFilename;
 
   }
 

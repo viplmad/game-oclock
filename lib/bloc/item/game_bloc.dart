@@ -37,9 +37,9 @@ class GameBloc extends ItemBloc {
   }
 
   @override
-  Future<Game> updateImage(UpdateItemImage event) {
+  Future<Game> addImage(AddItemImage event) {
 
-    return collectionRepository.uploadGameCover(event.item.ID, event.imagePath);
+    return collectionRepository.uploadGameCover(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
@@ -47,6 +47,13 @@ class GameBloc extends ItemBloc {
   Future<Game> updateImageName(UpdateItemImageName event) {
 
     return collectionRepository.renameGameCover(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
+  Future<Game> deleteImage(DeleteItemImage event) {
+
+    return collectionRepository.deleteGameCover(event.item.ID, event.imageName);
 
   }
 

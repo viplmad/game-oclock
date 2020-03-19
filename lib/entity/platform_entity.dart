@@ -27,12 +27,12 @@ class PlatformEntity extends CollectionItemEntity {
   PlatformEntity({
     @required int ID,
     this.name,
-    this.iconName,
+    this.iconFilename,
     this.type
   }) : super(ID: ID);
 
   final String name;
-  final String iconName;
+  final String iconFilename;
   final String type;
 
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
@@ -40,7 +40,7 @@ class PlatformEntity extends CollectionItemEntity {
     return PlatformEntity(
       ID: map[IDField],
       name: map[plat_nameField],
-      iconName: map[plat_iconField],
+      iconFilename: map[plat_iconField],
       type: map[plat_typeField],
     );
 
@@ -51,7 +51,7 @@ class PlatformEntity extends CollectionItemEntity {
     return <String, dynamic> {
       IDField : ID,
       plat_nameField : name,
-      plat_iconField : iconName,
+      plat_iconField : iconFilename,
       plat_typeField : type,
     };
 
@@ -75,7 +75,7 @@ class PlatformEntity extends CollectionItemEntity {
   List<Object> get props => [
     ID,
     name,
-    iconName,
+    iconFilename,
     type,
   ];
 
@@ -85,7 +85,7 @@ class PlatformEntity extends CollectionItemEntity {
     return '{$platformTable}Entity { '
         '$IDField: $ID, '
         '$plat_nameField: $name, '
-        '$plat_iconField: $iconName, '
+        '$plat_iconField: $iconFilename, '
         '$plat_typeField: $type'
         ' }';
 

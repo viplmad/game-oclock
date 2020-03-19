@@ -179,22 +179,28 @@ abstract class ICollectionRepository {
   Stream<List<PurchaseType>> getTypesWithName(String name, int maxResults);
   //#endregion SEARCH
 
+
   //#region IMAGE
     //Game
-  Future<Game> uploadGameCover(int gameID, String uploadImagePath);
+  Future<Game> uploadGameCover(int gameID, String uploadImagePath, [String oldImageName]);
   Future<Game> renameGameCover(int gameID, String imageName, String newImageName);
+  Future<Game> deleteGameCover(int gameID, String imageName);
     //DLC
-  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath);
+  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath, [String oldImageName]);
   Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName);
+  Future<DLC> deleteDLCCover(int dlcID, String imageName);
     //Platform
-  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath);
+  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath, [String oldImageName]);
   Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName);
+  Future<Platform> deletePlatformIcon(int platformID, String imageName);
     //Store
-  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath);
+  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath, [String oldImageName]);
   Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName);
+  Future<Store> deleteStoreIcon(int storeID, String imageName);
     //System
-  Future<System> uploadSystemIcon(int systemID, String uploadImagePath);
+  Future<System> uploadSystemIcon(int systemID, String uploadImagePath, [String oldImageName]);
   Future<System> renameSystemIcon(int systemID, String imageName, String newImageName);
+  Future<System> deleteSystemIcon(int systemID, String imageName);
   //#endregion IMAGE
 
 }

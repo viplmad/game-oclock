@@ -37,9 +37,9 @@ class StoreBloc extends ItemBloc {
   }
 
   @override
-  Future<Store> updateImage(UpdateItemImage event) {
+  Future<Store> addImage(AddItemImage event) {
 
-    return collectionRepository.uploadStoreIcon(event.item.ID, event.imagePath);
+    return collectionRepository.uploadStoreIcon(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
@@ -47,6 +47,13 @@ class StoreBloc extends ItemBloc {
   Future<Store> updateImageName(UpdateItemImageName event) {
 
     return collectionRepository.renameStoreIcon(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
+  Future<Store> deleteImage(DeleteItemImage event) {
+
+    return collectionRepository.deleteStoreIcon(event.item.ID, event.imageName);
 
   }
 

@@ -27,7 +27,7 @@ class DLCEntity extends CollectionItemEntity {
     @required int ID,
     this.name,
     this.releaseYear,
-    this.coverName,
+    this.coverFilename,
     this.finishDate,
 
     this.baseGame,
@@ -35,7 +35,7 @@ class DLCEntity extends CollectionItemEntity {
 
   final String name;
   final int releaseYear;
-  final String coverName;
+  final String coverFilename;
   final DateTime finishDate;
 
   final int baseGame;
@@ -46,7 +46,7 @@ class DLCEntity extends CollectionItemEntity {
       ID: map[IDField],
       name: map[dlc_nameField],
       releaseYear: map[dlc_releaseYearField],
-      coverName: map[dlc_coverField],
+      coverFilename: map[dlc_coverField],
       finishDate: map[dlc_finishDateField],
 
       baseGame: map[dlc_baseGameField],
@@ -61,7 +61,7 @@ class DLCEntity extends CollectionItemEntity {
       IDField : ID,
       dlc_nameField : name,
       dlc_releaseYearField : releaseYear,
-      dlc_coverField : coverName,
+      dlc_coverField : coverFilename,
       dlc_finishDateField : finishDate,
 
       dlc_baseGameField : baseGame,
@@ -88,7 +88,7 @@ class DLCEntity extends CollectionItemEntity {
     ID,
     name,
     releaseYear,
-    coverName,
+    coverFilename,
     finishDate,
   ];
 
@@ -99,7 +99,7 @@ class DLCEntity extends CollectionItemEntity {
         '$IDField: $ID, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
-        '$dlc_coverField: $coverName, '
+        '$dlc_coverField: $coverFilename, '
         '$dlc_finishDateField: $finishDate'
         ' }';
 

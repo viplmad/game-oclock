@@ -201,12 +201,12 @@ abstract class ItemDetailBody extends StatelessWidget {
           builder: (BuildContext context, ItemDetailState state) {
             String title = "";
             String imageURL;
-            String imageName;
+            String imageFilename;
 
             if(state is ItemLoaded) {
               title = state.item.getTitle();
               imageURL = state.item.getImageURL();
-              imageName = state.item.getImageName();
+              imageFilename = state.item.getImageFilename();
             }
 
             return GestureDetector(
@@ -225,25 +225,14 @@ abstract class ItemDetailBody extends StatelessWidget {
                     : Container(),
               ),
               onTap: imageURL != null? () {
-                showModalBottomSheet<File>(
+                showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
 
-                    return _imageActionListBuilder(context, imageName: imageName);
+                    return _imageActionListBuilder(context, imageFilename: imageFilename);
 
                   },
-                ).then( (File imagePicked) {
-                  if(imagePicked != null) {
-
-                    itemBloc.add(
-                      UpdateItemImage(
-                        item,
-                        imagePicked.path,
-                      ),
-                    );
-
-                  }
-                });
+                );
               } : null,
             );
 
@@ -254,23 +243,46 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget _imageActionListBuilder(BuildContext context, {String imageName}) {
+  Widget _imageActionListBuilder(BuildContext context, {String imageFilename}) {
 
     return Container(
       child: Wrap(
         children: <Widget>[
           ListTile(
-            title: Text(imageName?? 'none'),
+            title: Text(imageFilename?? 'none'),
           ),
           Divider(),
           ListTile(
+            title: imageFilename != null? Text("Replace image") : Text("Upload image"),
+            leading: Icon(Icons.file_upload),
+            onTap: () {
+              ImagePicker.pickImage(
+                source: ImageSource.gallery,
+              ).then( (File imagePicked) {
+                if(imagePicked != null) {
+
+                  itemBloc.add(
+                    AddItemImage(
+                      item,
+                      imagePicked.path,
+                      imageFilename != null? imageFilename.split('.').first : null,
+                    ),
+                  );
+
+                }
+
+                Navigator.maybePop(context);
+              });
+            },
+          ),
+          ListTile(
             title: Text("Rename image"),
             leading: Icon(Icons.edit),
-            enabled: imageName != null,
-            onTap: () async {
+            enabled: imageFilename != null,
+            onTap: () {
               TextEditingController fieldController = TextEditingController();
-              String imageNameNoExtension = imageName.split('.').first;
-              fieldController.text = imageNameNoExtension.split('-')[1];
+              String imageName = imageFilename.split('.').first;
+              fieldController.text = imageName.split('-')[1];
 
               showDialog<String>(
                 context: context,
@@ -309,13 +321,15 @@ abstract class ItemDetailBody extends StatelessWidget {
                 },
               ).then( (String newName) {
                 if(newName != null) {
+
                   itemBloc.add(
                     UpdateItemImageName(
                       item,
-                      imageNameNoExtension,
+                      imageName,
                       newName,
                     ),
                   );
+
                 }
 
                 Navigator.maybePop(context);
@@ -323,21 +337,20 @@ abstract class ItemDetailBody extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text("Upload image"),
-            leading: Icon(Icons.file_upload),
-            onTap: () async {
-              File file = await ImagePicker.pickImage(
-                source: ImageSource.gallery,
-              );
-              Navigator.maybePop(context, file);
-            },
-          ),
-          ListTile(
-            title: Text("Remove image"),
+            title: Text("Delete image"),
             leading: Icon(Icons.delete_outline),
-            enabled: imageName != null,
+            enabled: imageFilename != null,
             onTap: () {
-              //TODO
+              String imageName = imageFilename.split('.').first;
+
+              itemBloc.add(
+                DeleteItemImage(
+                  item,
+                  imageName,
+                ),
+              );
+
+              Navigator.maybePop(context);
             },
           )
         ],

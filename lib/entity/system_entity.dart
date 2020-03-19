@@ -30,13 +30,13 @@ class SystemEntity extends CollectionItemEntity {
   SystemEntity({
     @required int ID,
     this.name,
-    this.iconName,
+    this.iconFilename,
     this.generation,
     this.manufacturer
   }) : super(ID: ID);
 
   final String name;
-  final String iconName;
+  final String iconFilename;
   final int generation;
   final String manufacturer;
 
@@ -45,7 +45,7 @@ class SystemEntity extends CollectionItemEntity {
     return SystemEntity(
       ID: map[IDField],
       name: map[sys_nameField],
-      iconName: map[sys_iconField],
+      iconFilename: map[sys_iconField],
       generation: map[sys_generationField],
       manufacturer: map[sys_manufacturerField],
     );
@@ -58,7 +58,7 @@ class SystemEntity extends CollectionItemEntity {
     return <String, dynamic> {
       IDField : ID,
       sys_nameField : name,
-      sys_iconField : iconName,
+      sys_iconField : iconFilename,
       sys_generationField : generation,
       sys_manufacturerField : manufacturer,
     };
@@ -83,7 +83,7 @@ class SystemEntity extends CollectionItemEntity {
   List<Object> get props => [
     ID,
     name,
-    iconName,
+    iconFilename,
     generation,
     manufacturer,
   ];
@@ -94,7 +94,7 @@ class SystemEntity extends CollectionItemEntity {
     return '{$systemTable}Entity { '
         '$IDField: $ID, '
         '$sys_nameField: $name, '
-        '$sys_iconField: $iconName, '
+        '$sys_iconField: $iconFilename, '
         '$sys_generationField: $generation, '
         '$sys_manufacturerField: $manufacturer'
         ' }';

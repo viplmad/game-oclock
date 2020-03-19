@@ -17,7 +17,7 @@ class CloudinaryConnection extends BaseApi {
     this._cloudName = cloudName;
   }
 
-  Future<CloudinaryResponse> uploadImage(String imagePath, {String imageFilename, String folder}) async {
+  Future<CloudinaryResponse> uploadImage(String imagePath, {String imageName, String folder}) async {
     int timeStamp = new DateTime.now().millisecondsSinceEpoch;
 
     Map<String, dynamic> params = new Map();
@@ -26,10 +26,8 @@ class CloudinaryConnection extends BaseApi {
     params["timestamp"] = timeStamp;
 
     String publicId = getImageNameFromPath(imagePath);
-    if (imageFilename != null) {
-      publicId = imageFilename + '-' + timeStamp.toString();
-    } else {
-      imageFilename = publicId;
+    if (imageName != null) {
+      publicId = imageName;
     }
     params["public_id"] = publicId;
 
@@ -37,9 +35,9 @@ class CloudinaryConnection extends BaseApi {
       params["folder"] = folder;
     }
 
-    params["file"] = await MultipartFile.fromFile(imagePath, filename: imageFilename);
+    params["file"] = await MultipartFile.fromFile(imagePath, filename: imageName);
 
-    params["signature"] = getSignatureNEW(timeStamp, params);
+    params["signature"] = getSignature(timeStamp, params);
 
     FormData formData = FormData.fromMap(params);
 
@@ -58,7 +56,7 @@ class CloudinaryConnection extends BaseApi {
     }
   }
 
-  Future<CloudinaryResponse> renameImage({String imageFilename, String newImageFilename, String folder}) async {
+  Future<CloudinaryResponse> renameImage({String imageName, String newImageName, String folder}) async {
     int timeStamp = new DateTime.now().millisecondsSinceEpoch;
 
     Map<String, dynamic> params = new Map();
@@ -66,10 +64,10 @@ class CloudinaryConnection extends BaseApi {
     params["api_key"] = _apiKey;
     params["timestamp"] = timeStamp;
 
-    params["from_public_id"] = folder + "/" + imageFilename;
-    params["to_public_id"] = folder + "/" + newImageFilename;
+    params["from_public_id"] = folder + "/" + imageName;
+    params["to_public_id"] = folder + "/" + newImageName;
 
-    params["signature"] = getSignatureNEW(timeStamp, params);
+    params["signature"] = getSignature(timeStamp, params);
 
     FormData formData = FormData.fromMap(params);
 
@@ -89,7 +87,36 @@ class CloudinaryConnection extends BaseApi {
 
   }
 
-  String getSignatureNEW(int timestamp, Map<String, dynamic> paramsMap) {
+  Future<CloudinaryResponse> deleteImage({String imageName, String folder}) async {
+    int timeStamp = new DateTime.now().millisecondsSinceEpoch;
+
+    Map<String, dynamic> params = new Map();
+
+    params["api_key"] = _apiKey;
+    params["timestamp"] = timeStamp;
+
+    params["public_id"] = folder + "/" + imageName;
+
+    params["signature"] = getSignature(timeStamp, params);
+
+    FormData formData = FormData.fromMap(params);
+
+    Dio dio = await getApiClient();
+
+    try{
+
+      Response response = await dio.post(_cloudName + "/image/destroy", data: formData);
+      return CloudinaryResponse.fromJsonMap(response.data);
+
+    } catch(error, stackTrace) {
+
+      print("Exception occurred: $error stackTrace: $stackTrace");
+      return CloudinaryResponse.fromError("$error");
+
+    }
+  }
+
+  String getSignature(int timestamp, Map<String, dynamic> paramsMap) {
 
     Map<String, dynamic> cleanParamsMap = Map.from( paramsMap );
     cleanParamsMap.remove("file");

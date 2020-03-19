@@ -19,18 +19,18 @@ class StoreEntity extends CollectionItemEntity {
   StoreEntity({
     @required int ID,
     this.name,
-    this.iconName,
+    this.iconFilename,
   }) : super(ID: ID);
 
   final String name;
-  final String iconName;
+  final String iconFilename;
 
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
       ID: map[IDField],
       name: map[stor_nameField],
-      iconName: map[stor_iconField],
+      iconFilename: map[stor_iconField],
     );
 
   }
@@ -41,7 +41,7 @@ class StoreEntity extends CollectionItemEntity {
     return <String, dynamic> {
       IDField : ID,
       stor_nameField : name,
-      stor_iconField : iconName,
+      stor_iconField : iconFilename,
     };
 
   }
@@ -72,7 +72,7 @@ class StoreEntity extends CollectionItemEntity {
     return '{$storeTable}Entity { '
         '$IDField: $ID, '
         '$stor_nameField: $name, '
-        '$stor_iconField: $iconName'
+        '$stor_iconField: $iconFilename'
         ' }';
 
   }

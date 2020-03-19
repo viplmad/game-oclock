@@ -37,9 +37,9 @@ class DLCBloc extends ItemBloc {
   }
 
   @override
-  Future<DLC> updateImage(UpdateItemImage event) {
+  Future<DLC> addImage(AddItemImage event) {
 
-    return collectionRepository.uploadDLCCover(event.item.ID, event.imagePath);
+    return collectionRepository.uploadDLCCover(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
@@ -47,6 +47,13 @@ class DLCBloc extends ItemBloc {
   Future<DLC> updateImageName(UpdateItemImageName event) {
 
     return collectionRepository.renameDLCCover(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
+  Future<DLC> deleteImage(DeleteItemImage event) {
+
+    return collectionRepository.deleteDLCCover(event.item.ID, event.imageName);
 
   }
 

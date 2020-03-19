@@ -34,13 +34,17 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
 
       yield* _mapUpdateFieldToState(event);
 
-    } else if(event is UpdateItemImage) {
+    } else if(event is AddItemImage) {
 
-      yield* _mapUpdateImageToState(event);
+      yield* _mapAddImageToState(event);
 
     } else if(event is UpdateItemImageName) {
 
       yield* _mapUpdateImageNameToState(event);
+
+    } else if(event is DeleteItemImage) {
+
+      yield* _mapDeleteImageToState(event);
 
     } else if(event is AddItemRelation) {
 
@@ -100,11 +104,11 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
     }
   }
 
-  Stream<ItemState> _mapUpdateImageToState(UpdateItemImage event) async* {
+  Stream<ItemState> _mapAddImageToState(AddItemImage event) async* {
 
     try {
 
-      final CollectionItem updatedItem = await updateImage(event);
+      final CollectionItem updatedItem = await addImage(event);
       yield ItemImageUpdated(updatedItem);
 
     } catch(e) {
@@ -120,6 +124,21 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
     try {
 
       final CollectionItem updatedItem = await updateImageName(event);
+      yield ItemImageUpdated(updatedItem);
+
+    } catch(e) {
+
+      yield ItemImageNotUpdated(e.toString());
+
+    }
+
+  }
+
+  Stream<ItemState> _mapDeleteImageToState(DeleteItemImage event) async* {
+
+    try {
+
+      final CollectionItem updatedItem = await deleteImage(event);
       yield ItemImageUpdated(updatedItem);
 
     } catch(e) {
@@ -174,7 +193,8 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
   external Future<CollectionItem> createFuture(AddItem event);
   external Future<dynamic> deleteFuture(DeleteItem event);
   external Future<CollectionItem> updateFuture(UpdateItemField event);
-  external Future<CollectionItem> updateImage(UpdateItemImage event);
+  external Future<CollectionItem> addImage(AddItemImage event);
+  external Future<CollectionItem> deleteImage(DeleteItemImage event);
   external Future<CollectionItem> updateImageName(UpdateItemImageName event);
   @mustCallSuper
   Future<dynamic> addRelationFuture(AddItemRelation event) {

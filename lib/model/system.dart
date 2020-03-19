@@ -22,12 +22,14 @@ class System extends CollectionItem {
     @required int ID,
     this.name,
     this.iconURL,
+    this.iconFilename,
     this.generation,
     this.manufacturer,
   }) : super(ID: ID);
 
   final String name;
   final String iconURL;
+  final String iconFilename;
   final int generation;
   final String manufacturer;
 
@@ -37,6 +39,7 @@ class System extends CollectionItem {
       ID: entity.ID,
       name: entity.name,
       iconURL: iconURL,
+      iconFilename: entity.iconFilename,
       generation: entity.generation,
       manufacturer: entity.manufacturer,
     );
@@ -49,6 +52,7 @@ class System extends CollectionItem {
     return SystemEntity(
       ID: this.ID,
       name: this.name,
+      iconFilename: this.iconFilename,
       generation: this.generation,
       manufacturer: this.manufacturer,
     );
@@ -59,6 +63,7 @@ class System extends CollectionItem {
   System copyWith({
     String name,
     String iconURL,
+    String iconFilename,
     int generation,
     String manufacturer,
   }) {
@@ -67,6 +72,7 @@ class System extends CollectionItem {
       ID: ID,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
+      iconFilename: iconFilename?? this.iconFilename,
       generation: generation?? this.generation,
       manufacturer: manufacturer?? this.manufacturer,
     );
@@ -98,6 +104,13 @@ class System extends CollectionItem {
   String getImageURL() {
 
     return this.iconURL?? '';
+
+  }
+
+  @override
+  String getImageFilename() {
+
+    return this.iconFilename;
 
   }
 

@@ -48,7 +48,7 @@ class GameEntity extends CollectionItemEntity {
     this.name,
     this.edition,
     this.releaseYear,
-    this.coverName,
+    this.coverFilename,
     this.status,
     this.rating,
     this.thoughts,
@@ -62,7 +62,7 @@ class GameEntity extends CollectionItemEntity {
   final String name;
   final String edition;
   final int releaseYear;
-  final String coverName;
+  final String coverFilename;
   final String status;
   final int rating;
   final String thoughts;
@@ -79,7 +79,7 @@ class GameEntity extends CollectionItemEntity {
       name: map[game_nameField],
       edition: map[game_editionField],
       releaseYear: map[game_releaseYearField],
-      coverName: map[game_coverField],
+      coverFilename: map[game_coverField],
       status: map[game_statusField],
       rating: map[game_ratingField],
       thoughts: map[game_thoughtsField],
@@ -100,7 +100,7 @@ class GameEntity extends CollectionItemEntity {
       game_nameField : name,
       game_editionField : edition,
       game_releaseYearField : releaseYear,
-      game_coverField: coverName,
+      game_coverField: coverFilename,
       game_statusField : status,
       game_ratingField : rating,
       game_thoughtsField : thoughts,
@@ -133,7 +133,7 @@ class GameEntity extends CollectionItemEntity {
     name,
     edition,
     releaseYear,
-    coverName,
+    coverFilename,
     status,
     rating,
     thoughts,
@@ -152,7 +152,7 @@ class GameEntity extends CollectionItemEntity {
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
-        '$game_coverField: $coverName, '
+        '$game_coverField: $coverFilename, '
         '$game_statusField: $status, '
         '$game_ratingField: $rating, '
         '$game_thoughtsField: $thoughts, '

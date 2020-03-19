@@ -1187,10 +1187,17 @@ class CollectionRepository implements ICollectionRepository {
   }
   //#endregion SEARCH
 
-  //#region UPLOAD
+  //#region IMAGE
   //#region Game
   @override
-  Future<Game> uploadGameCover(int gameID, String uploadImagePath) async {
+  Future<Game> uploadGameCover(int gameID, String uploadImagePath, [String oldImageName]) async {
+
+    if(oldImageName != null) {
+      await _imageConnector.deleteImage(
+        tableName: gameTable,
+        imageName: oldImageName,
+      );
+    }
 
     final String coverName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
@@ -1202,6 +1209,7 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
+  @override
   Future<Game> renameGameCover(int gameID, String imageName, String newImageName) async {
 
     final String coverName = await _imageConnector.renameImage(
@@ -1213,11 +1221,30 @@ class CollectionRepository implements ICollectionRepository {
     return updateGame(gameID, game_coverField, coverName);
 
   }
+
+  @override
+  Future<Game> deleteGameCover(int gameID, String imageName) async {
+
+    await _imageConnector.deleteImage(
+      tableName: gameTable,
+      imageName: imageName,
+    );
+
+    return updateGame(gameID, game_coverField, null);
+
+  }
   //#endregion Game
 
   //#region DLC
   @override
-  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath) async {
+  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath, [String oldImageName]) async {
+
+    if(oldImageName != null) {
+      await _imageConnector.deleteImage(
+        tableName: dlcTable,
+        imageName: oldImageName,
+      );
+    }
 
     final String coverName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
@@ -1241,11 +1268,30 @@ class CollectionRepository implements ICollectionRepository {
     return updateDLC(dlcID, dlc_coverField, coverName);
 
   }
+
+  @override
+  Future<DLC> deleteDLCCover(int dlcID, String imageName) async {
+
+    await _imageConnector.deleteImage(
+      tableName: dlcTable,
+      imageName: imageName,
+    );
+
+    return updateDLC(dlcID, dlc_coverField, null);
+
+  }
   //#endregion DLC
 
   //#region Platform
   @override
-  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath) async {
+  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath, [String oldImageName]) async {
+
+    if(oldImageName != null) {
+      await _imageConnector.deleteImage(
+        tableName: platformTable,
+        imageName: oldImageName,
+      );
+    }
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
@@ -1257,6 +1303,7 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
+  @override
   Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName) async {
 
     final String iconName = await _imageConnector.renameImage(
@@ -1268,11 +1315,30 @@ class CollectionRepository implements ICollectionRepository {
     return updatePlatform(platformID, plat_iconField, iconName);
 
   }
+
+  @override
+  Future<Platform> deletePlatformIcon(int platformID, String imageName) async {
+
+    await _imageConnector.deleteImage(
+      tableName: platformTable,
+      imageName: imageName,
+    );
+
+    return updatePlatform(platformID, plat_iconField, null);
+
+  }
   //#endregion Platform
 
   //#region Store
   @override
-  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath) async {
+  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath, [String oldImageName]) async {
+
+    if(oldImageName != null) {
+      await _imageConnector.deleteImage(
+        tableName: storeTable,
+        imageName: oldImageName,
+      );
+    }
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
@@ -1295,11 +1361,30 @@ class CollectionRepository implements ICollectionRepository {
     return updateStore(storeID, stor_iconField, iconName);
 
   }
+
+  @override
+  Future<Store> deleteStoreIcon(int storeID, String imageName) async {
+
+    await _imageConnector.deleteImage(
+      tableName: storeTable,
+      imageName: imageName,
+    );
+
+    return updateStore(storeID, stor_iconField, null);
+
+  }
   //#endregion Store
 
   //#region System
   @override
-  Future<System> uploadSystemIcon(int systemID, String uploadImagePath) async {
+  Future<System> uploadSystemIcon(int systemID, String uploadImagePath, [String oldImageName]) async {
+
+    if(oldImageName != null) {
+      await _imageConnector.deleteImage(
+        tableName: systemTable,
+        imageName: oldImageName,
+      );
+    }
 
     final String iconName = await _imageConnector.uploadImage(
       imagePath: uploadImagePath,
@@ -1323,8 +1408,20 @@ class CollectionRepository implements ICollectionRepository {
     return updateSystem(systemID, sys_iconField, iconName);
 
   }
+
+  @override
+  Future<System> deleteSystemIcon(int systemID, String imageName) async {
+
+    await _imageConnector.deleteImage(
+      tableName: systemTable,
+      imageName: imageName,
+    );
+
+    return updateSystem(systemID, sys_iconField, null);
+
+  }
   //#endregion System
-  //#endregion UPLOAD
+  //#endregion IMAGE
 
   //#region DOWNLOAD
   @override
@@ -1333,7 +1430,7 @@ class CollectionRepository implements ICollectionRepository {
     return gameCoverName != null?
         _imageConnector.getDownloadURL(
           tableName: gameTable,
-          imageName: gameCoverName,
+          imageFilename: gameCoverName,
         )
         : null;
 
@@ -1345,7 +1442,7 @@ class CollectionRepository implements ICollectionRepository {
     return dlcCoverName != null?
         _imageConnector.getDownloadURL(
           tableName: dlcTable,
-          imageName: dlcCoverName,
+          imageFilename: dlcCoverName,
         )
         : null;
 
@@ -1357,7 +1454,7 @@ class CollectionRepository implements ICollectionRepository {
     return platformIconName != null?
         _imageConnector.getDownloadURL(
           tableName: platformTable,
-          imageName: platformIconName,
+          imageFilename: platformIconName,
         )
         : null;
 
@@ -1369,7 +1466,7 @@ class CollectionRepository implements ICollectionRepository {
     return storeIconName != null?
         _imageConnector.getDownloadURL(
           tableName: storeTable,
-          imageName: storeIconName,
+          imageFilename: storeIconName,
         )
         : null;
 
@@ -1381,7 +1478,7 @@ class CollectionRepository implements ICollectionRepository {
     return systemIconName != null?
         _imageConnector.getDownloadURL(
           tableName: systemTable,
-          imageName: systemIconName,
+          imageFilename: systemIconName,
         )
         : null;
 
@@ -1392,7 +1489,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
 
     return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
-      return Game.fromEntity(gameEntity, getGameCoverURL(gameEntity.coverName));
+      return Game.fromEntity(gameEntity, getGameCoverURL(gameEntity.coverFilename));
     }).toList();
 
   }
@@ -1400,7 +1497,7 @@ class CollectionRepository implements ICollectionRepository {
   List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
 
     return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
-      return DLC.fromEntity(dlcEntity, getDLCCoverURL(dlcEntity.coverName));
+      return DLC.fromEntity(dlcEntity, getDLCCoverURL(dlcEntity.coverFilename));
     }).toList();
 
   }
@@ -1408,7 +1505,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
 
     return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
-      return Platform.fromEntity(platformEntity, getPlatformIconURL(platformEntity.iconName));
+      return Platform.fromEntity(platformEntity, getPlatformIconURL(platformEntity.iconFilename));
     }).toList();
 
   }
@@ -1424,7 +1521,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
 
     return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
-      return Store.fromEntity(storeEntity, getStoreIconURL(storeEntity.iconName));
+      return Store.fromEntity(storeEntity, getStoreIconURL(storeEntity.iconFilename));
     }).toList();
 
   }
@@ -1432,7 +1529,7 @@ class CollectionRepository implements ICollectionRepository {
   List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
 
     return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
-      return System.fromEntity(systemEntity, getSystemIconURL(systemEntity.iconName));
+      return System.fromEntity(systemEntity, getSystemIconURL(systemEntity.iconFilename));
     }).toList();
 
   }

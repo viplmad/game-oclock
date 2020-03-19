@@ -11,8 +11,12 @@ abstract class IImageConnector {
   Future<String> renameImage({@required String tableName, @required String oldImageName, @required String newImageName});
   //#endregion RENAME
 
+  //#region DELETE
+  Future<dynamic> deleteImage({@required String tableName, @required String imageName});
+  //#endregion DELETE
+
   //#region DOWNLOAD
-  String getDownloadURL({@required String tableName, @required String imageName});
+  String getDownloadURL({@required String tableName, @required String imageFilename});
   //#ENDregion DOWNLOAD
 
 

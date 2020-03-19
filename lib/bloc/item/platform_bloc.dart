@@ -37,9 +37,9 @@ class PlatformBloc extends ItemBloc {
   }
 
   @override
-  Future<Platform> updateImage(UpdateItemImage event) {
+  Future<Platform> addImage(AddItemImage event) {
 
-    return collectionRepository.uploadPlatformIcon(event.item.ID, event.imagePath);
+    return collectionRepository.uploadPlatformIcon(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
@@ -47,6 +47,13 @@ class PlatformBloc extends ItemBloc {
   Future<Platform> updateImageName(UpdateItemImageName event) {
 
     return collectionRepository.renamePlatformIcon(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
+  Future<Platform> deleteImage(DeleteItemImage event) {
+
+    return collectionRepository.deletePlatformIcon(event.item.ID, event.imageName);
 
   }
 

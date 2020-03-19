@@ -37,9 +37,9 @@ class SystemBloc extends ItemBloc {
   }
 
   @override
-  Future<System> updateImage(UpdateItemImage event) {
+  Future<System> addImage(AddItemImage event) {
 
-    return collectionRepository.uploadSystemIcon(event.item.ID, event.imagePath);
+    return collectionRepository.uploadSystemIcon(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
@@ -47,6 +47,13 @@ class SystemBloc extends ItemBloc {
   Future<System> updateImageName(UpdateItemImageName event) {
 
     return collectionRepository.renameSystemIcon(event.item.ID, event.oldImageName, event.newImageName);
+
+  }
+
+  @override
+  Future<System> deleteImage(DeleteItemImage event) {
+
+    return collectionRepository.deleteSystemIcon(event.item.ID, event.imageName);
 
   }
 

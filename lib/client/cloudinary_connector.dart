@@ -42,29 +42,42 @@ class CloudinaryConnector extends IImageConnector {
     return _connection.uploadImage(
       imagePath,
       folder: tableName,
-      imageFilename: imageName,
-    ).asStream().map( getOnlyName ).first;
+      imageName: imageName,
+    ).asStream().map( getFilename ).first;
 
   }
   //#endregion UPLOAD
 
   //#region RENAME
+  @override
   Future<String> renameImage({@required String tableName, @required String oldImageName, @required String newImageName}) {
 
     return _connection.renameImage(
       folder: tableName,
-      imageFilename: oldImageName,
-      newImageFilename: newImageName,
-    ).asStream().map( getOnlyName ).first;
+      imageName: oldImageName,
+      newImageName: newImageName,
+    ).asStream().map( getFilename ).first;
 
   }
   //#endregion RENAME
 
+  //#region DELETE
+  @override
+  Future<dynamic> deleteImage({@required String tableName, @required String imageName}) {
+
+    return _connection.deleteImage(
+      folder: tableName,
+      imageName: imageName,
+    ).asStream().first;
+
+  }
+  //#endregion DELETE
+
   //#region DOWNLOAD
   @override
-  String getDownloadURL({@required String tableName, @required String imageName}) {
+  String getDownloadURL({@required String tableName, @required String imageFilename}) {
 
-    String baseURL = getCompleteResURL(tableName, imageName);
+    String baseURL = getCompleteResURL(tableName, imageFilename);
 
     return baseURL;
 
@@ -73,9 +86,9 @@ class CloudinaryConnector extends IImageConnector {
 
 
   //#region Helpers
-  String getCompleteResURL(String folderName, String imageName) {
+  String getCompleteResURL(String folderName, String imageFilename) {
 
-    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageName';
+    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageFilename';
 
     return url;
 
@@ -89,7 +102,7 @@ class CloudinaryConnector extends IImageConnector {
 
   }
 
-  String getOnlyName(CloudinaryResponse response) {
+  String getFilename(CloudinaryResponse response) {
 
     return response.public_id.split('/').last + '.' + response.format;
 
