@@ -282,7 +282,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             onTap: () {
               TextEditingController fieldController = TextEditingController();
               String imageName = imageFilename.split('.').first;
-              fieldController.text = imageName.split('-')[1];
+              fieldController.text = imageName.split('-').last.split('_').first;
 
               showDialog<String>(
                 context: context,

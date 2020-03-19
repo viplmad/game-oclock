@@ -88,9 +88,7 @@ class CloudinaryConnector extends IImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageFilename) {
 
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
-
-    String url = baseRESURL + _instance._cloudName + '/image/upload/v$timeStamp/$folderName/$imageFilename';
+    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageFilename';
 
     return url;
 

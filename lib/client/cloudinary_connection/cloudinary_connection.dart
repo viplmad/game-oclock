@@ -27,7 +27,7 @@ class CloudinaryConnection extends BaseApi {
 
     String publicId = getImageNameFromPath(imagePath);
     if (imageName != null) {
-      publicId = imageName;
+      publicId = imageName + '_' + timeStamp.toString();
     }
     params["public_id"] = publicId;
 
@@ -65,7 +65,7 @@ class CloudinaryConnection extends BaseApi {
     params["timestamp"] = timeStamp;
 
     params["from_public_id"] = folder + "/" + imageName;
-    params["to_public_id"] = folder + "/" + newImageName;
+    params["to_public_id"] = folder + "/" + newImageName + '_' + timeStamp.toString();
 
     params["signature"] = getSignature(timeStamp, params);
 
