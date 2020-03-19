@@ -18,7 +18,7 @@ class CloudinaryConnection extends BaseApi {
   }
 
   Future<CloudinaryResponse> uploadImage(String imagePath, {String imageName, String folder}) async {
-    int timeStamp = new DateTime.now().millisecondsSinceEpoch;
+    int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
     Map<String, dynamic> params = new Map();
 
@@ -57,7 +57,7 @@ class CloudinaryConnection extends BaseApi {
   }
 
   Future<CloudinaryResponse> renameImage({String imageName, String newImageName, String folder}) async {
-    int timeStamp = new DateTime.now().millisecondsSinceEpoch;
+    int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
     Map<String, dynamic> params = new Map();
 
@@ -88,7 +88,7 @@ class CloudinaryConnection extends BaseApi {
   }
 
   Future<CloudinaryResponse> deleteImage({String imageName, String folder}) async {
-    int timeStamp = new DateTime.now().millisecondsSinceEpoch;
+    int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
     Map<String, dynamic> params = new Map();
 
