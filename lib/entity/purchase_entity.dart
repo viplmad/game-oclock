@@ -20,6 +20,7 @@ const String purc_priceField = 'Price';
 const String purc_externalCreditField = 'External Credit';
 const String purc_dateField = 'Date';
 const String purc_originalPriceField = 'Original Price';
+const String purc_discountField = 'Discount';
 
 const String purc_storeField = 'Store';
 

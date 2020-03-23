@@ -87,12 +87,10 @@ class ItemListTile extends StatelessWidget {
               maxWidth: 100,
               maxHeight: 80,
             ),
-            child: CachedNetworkImage(
-              imageUrl: item.getImageURL(),
+            child: CachedImage(
+              imageURL: item.getImageURL(),
               fit: BoxFit.scaleDown,
-              placeholder: (BuildContext context, String url) => LoadingIcon(),
-              errorWidget: (BuildContext context, String url, Object error) => null,
-            ),
+            ),//CachedNetworkImage(
           )
           : null,
       title: Text(item.getTitle()),
@@ -105,9 +103,54 @@ class ItemListTile extends StatelessWidget {
 
 }
 
-class FilterChipItem extends StatelessWidget {
+class CachedImage extends StatelessWidget {
 
-  const FilterChipItem({Key key, this.item, this.selected = true, this.onTap}) : super(key: key);
+  const CachedImage({Key key, @required this.imageURL, @required this.fit}) : super(key: key);
+
+  final String imageURL;
+  final BoxFit fit;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return imageURL != null?
+      CachedNetworkImage(
+        imageUrl: imageURL,
+        fit: fit,
+        useOldImageOnUrlChange: true,
+        placeholder: (BuildContext context, String url) => LoadingIcon(),
+        errorWidget: (BuildContext context, String url, Object error) => Container(),
+      )
+      : Container();
+
+  }
+
+}
+
+class ItemGridTile extends StatelessWidget {
+
+  const ItemGridTile({Key key, @required this.item}) : super(key: key);
+
+  final CollectionItem item;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GridTile(
+      child: CachedImage(
+        imageURL: item.getImageURL(),
+        fit: BoxFit.cover,
+      ),
+      footer: Text(item.getTitle()),
+    );
+
+  }
+
+}
+
+class ItemChip extends StatelessWidget {
+
+  const ItemChip({Key key, this.item, this.selected = true, this.onTap}) : super(key: key);
 
   final CollectionItem item;
   final bool selected;

@@ -68,6 +68,10 @@ class _PurchaseDetailBody extends ItemDetailBody {
         fieldName: purc_originalPriceField,
         value: purchase.originalPrice,
       ),
+      itemPercentageField(
+        fieldName: purc_discountField,
+        value: purchase.discount,
+      ),
     ];
   }
 

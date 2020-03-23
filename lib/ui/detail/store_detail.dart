@@ -62,6 +62,38 @@ class _StoreDetailBody extends ItemDetailBody {
     return [
       itemListManyRelation(
         itemType: Purchase,
+        trailingBuilder: (List<CollectionItem> items) {
+          List<Purchase> purchases = items.cast<Purchase>();
+
+          double totalSpent = 0.0;
+          double totalValue = 0.0;
+          purchases.forEach( (Purchase purchase) {
+            totalSpent += purchase.price;
+            totalValue += purchase.originalPrice;
+          });
+
+          double totalSaved = totalValue - totalSpent;
+          double totalPercentageSaved = totalValue > 0.0? (1 - totalSpent / totalValue) * 100 : 0.0;
+
+          return [
+            itemMoneySumField(
+              fieldName: "Total Money Spent",
+              value: totalSpent,
+            ),
+            itemMoneySumField(
+              fieldName: "Total Money Saved",
+              value: totalSaved,
+            ),
+            itemMoneySumField(
+              fieldName: "Real Value",
+              value: totalValue,
+            ),
+            itemPercentageField(
+              fieldName: "Percentage Saved",
+              value: totalPercentageSaved,
+            ),
+          ];
+        },
       ),
     ];
 

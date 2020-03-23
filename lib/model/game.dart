@@ -156,7 +156,7 @@ class Game extends CollectionItem {
   @override
   String getSubtitle() {
 
-    return this.status?? "";
+    return (this.status?? "") + " · " + this.releaseYear.toString();
 
   }
 

@@ -78,6 +78,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
 
+    yield ItemListLoading();
+
     try {
 
       final List<CollectionItem> items = await getReadViewStream(event).first;

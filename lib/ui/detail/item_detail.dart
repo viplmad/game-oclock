@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -180,7 +178,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
     return <Widget>[
       SliverAppBar(
-        expandedHeight: 300.0,
+        expandedHeight: MediaQuery.of(context).size.height / 3, //Third part of height of screen
         floating: false,
         pinned: true,
         snap: false,
@@ -214,15 +212,10 @@ abstract class ItemDetailBody extends StatelessWidget {
               child: FlexibleSpaceBar(
                 title: Text(title),
                 collapseMode: CollapseMode.parallax,
-                background: imageURL != null?
-                    CachedNetworkImage(
-                      imageUrl: imageURL,
-                      fit: BoxFit.cover,
-                      useOldImageOnUrlChange: true,
-                      placeholder: (BuildContext context, String url) => LoadingIcon(),
-                      errorWidget: (BuildContext context, String url, Object error) => Container(),
-                    )
-                    : Container(),
+                background: CachedImage(
+                  imageURL: imageURL,
+                  fit: BoxFit.cover,
+                ),
               ),
               onTap: imageURL != null? () {
                 showModalBottomSheet(
@@ -488,10 +481,38 @@ abstract class ItemDetailBody extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.toString() + ' €'
+          value.toStringAsFixed(2) + ' €'
           :
           null,
       update: _updateFieldFunction<double>(fieldName),
+    );
+
+  }
+
+  Widget itemMoneySumField({@required String fieldName, @required double value}) {
+
+    return ItemDoubleField(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+          value.toStringAsFixed(2) + ' €'
+          :
+          null,
+      editable: false,
+    );
+
+  }
+
+  Widget itemPercentageField({@required String fieldName, @required double value}) {
+
+    return ItemDoubleField(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+          value.toStringAsFixed(2) + ' %'
+          :
+          null,
+      editable: false,
     );
 
   }
@@ -589,7 +610,7 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemListManyRelation({@required Type itemType, String shownName}) {
+  Widget itemListManyRelation({@required Type itemType, String shownName, List<Widget> Function(List<CollectionItem>) trailingBuilder}) {
 
     return BlocBuilder<ItemRelationBloc, ItemRelationState>(
       bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
@@ -604,6 +625,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             onSearch: _searchFuture(context, itemType),
             updateAdd: _addRelationFunction(),
             updateDelete: _deleteRelationFunction(),
+            trailingBuilder: trailingBuilder,
           );
         }
         if(state is ItemRelationNotLoaded) {
@@ -659,11 +681,12 @@ abstract class ItemDetailBody extends StatelessWidget {
 
 class ItemGenericField<T> extends StatelessWidget {
 
-  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
+  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
 
   final String fieldName;
   final T value;
   final String shownValue;
+  final bool editable;
   final Future<T> Function() onTap;
   final void Function() onLongPress;
   final void Function(T) update;
@@ -685,13 +708,14 @@ class ItemGenericField<T> extends StatelessWidget {
           Text(shownValue?? "Unknown"),
         ],
       ),
-      onTap: () {
-        onTap().then( (T newValue) {
-          if (newValue != null) {
-            update(newValue);
-          }
-        });
-      },
+      onTap: editable?
+        () {
+          onTap().then( (T newValue) {
+            if (newValue != null) {
+              update(newValue);
+            }
+          });
+        } : null,
       onLongPress: onLongPress,
     )
     :
@@ -699,13 +723,14 @@ class ItemGenericField<T> extends StatelessWidget {
       child: ListTile(
         title: Text(fieldName),
         trailing: Text(shownValue?? "Unknown"),
-        onTap: () {
-          onTap().then( (T newValue) {
-            if (newValue != null) {
-              update(newValue);
-            }
-          });
-        },
+        onTap: editable?
+          () {
+            onTap().then( (T newValue) {
+              if (newValue != null) {
+                update(newValue);
+              }
+            });
+          } : null,
         onLongPress: onLongPress,
       ),
     );
@@ -818,11 +843,12 @@ class ItemIntField extends StatelessWidget {
 }
 class ItemDoubleField extends StatelessWidget {
 
-  ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, @required this.update});
+  ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.update});
 
   final String fieldName;
   final double value;
   final String shownValue;
+  final bool editable;
   final void Function(double) update;
 
   @override
@@ -832,6 +858,7 @@ class ItemDoubleField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: shownValue,
+      editable: editable,
       update: update,
       onTap: () {
         return showDialog<double>(
@@ -1095,10 +1122,11 @@ class _HeaderText extends StatelessWidget {
 
 class _ResultsListHeader extends StatelessWidget {
 
-  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList}) : super(key: key);
+  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList, this.trailingWidget}) : super(key: key);
 
   final String headerText;
   final Widget resultList;
+  final Widget trailingWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -1114,6 +1142,7 @@ class _ResultsListHeader extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: resultList,
         ),
+        trailingWidget?? Container(),
       ],
     );
 
@@ -1214,7 +1243,7 @@ class ResultsListSingle extends StatelessWidget {
 }
 class ResultsListMany extends StatelessWidget {
 
-  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder});
 
   final List<CollectionItem> items;
   final Type itemType;
@@ -1223,6 +1252,7 @@ class ResultsListMany extends StatelessWidget {
   final Future<CollectionItem> Function() onSearch;
   final void Function(CollectionItem) updateAdd;
   final void Function(CollectionItem) updateDelete;
+  final List<Widget> Function(List<CollectionItem>) trailingBuilder;
 
   String get shownName => itemTypeName?? itemType.toString() + 's';
 
@@ -1230,7 +1260,7 @@ class ResultsListMany extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return _ResultsListHeader(
-      headerText: shownName,
+      headerText: shownName + " (" + items.length.toString() + ")",
       resultList: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
@@ -1263,6 +1293,10 @@ class ResultsListMany extends StatelessWidget {
           }
         },
       ),
+      trailingWidget: trailingBuilder != null?
+        Column(
+          children: trailingBuilder(items),
+        ) : null,
     );
 
   }

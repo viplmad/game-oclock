@@ -22,7 +22,6 @@ const List<String> purchaseViews = [
   "2019 in Review",
 ];
 
-
 class Purchase extends CollectionItem {
 
   Purchase({
@@ -34,13 +33,16 @@ class Purchase extends CollectionItem {
     this.originalPrice,
 
     this.store,
-  }) : super(ID: ID);
+  }) : super(ID: ID) {
+    this.discount = this.originalPrice > 0.0? (1 - (this.price + this.externalCredit) / this.originalPrice) * 100 : 0.0;
+  }
 
   final String description;
   final double price;
   final double externalCredit;
   final DateTime date;
   final double originalPrice;
+  double discount;
 
   final int store;
 
@@ -116,7 +118,7 @@ class Purchase extends CollectionItem {
   @override
   String getSubtitle() {
 
-    return this.price.toString();
+    return this.price.toStringAsFixed(2) + " €" + " · " + this.discount.toStringAsFixed(2) + " %";
 
   }
 
