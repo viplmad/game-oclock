@@ -6,20 +6,21 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item/item.dart';
 
-import 'common/loading_icon.dart';
 import 'common/item_view.dart';
 
 
-class ItemSearch extends StatefulWidget {
-  const ItemSearch({Key key, @required this.searchType, @required this.itemBloc}) : super(key: key);
+class ItemSearch<T extends ItemSearchBloc> extends StatefulWidget {
+  const ItemSearch({Key key, @required this.searchType, @required this.itemBloc, @required this.onTapBehaviour, this.allowNewButton = false}) : super(key: key);
 
   final Type searchType;
   final ItemBloc itemBloc;
+  final Function() Function(BuildContext, CollectionItem) onTapBehaviour;
+  final bool allowNewButton;
 
   @override
-  State<ItemSearch> createState() => _ItemSearchState();
+  State<ItemSearch> createState() => _ItemSearchState<T>();
 }
-class _ItemSearchState extends State<ItemSearch> {
+class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -27,14 +28,14 @@ class _ItemSearchState extends State<ItemSearch> {
     _textEditingController.text = value;
   }
 
-  ItemRepositorySearchBloc _itemSearchBloc;
+  ItemSearchBloc _itemSearchBloc;
   String get searchName => widget.searchType.toString();
 
   @override
   void initState() {
     super.initState();
 
-    _itemSearchBloc = BlocProvider.of<ItemRepositorySearchBloc>(context);
+    _itemSearchBloc = BlocProvider.of<T>(context);
   }
 
   List<Widget> buildActions() {
@@ -106,12 +107,13 @@ class _ItemSearchState extends State<ItemSearch> {
         },
         child: Column(
           children: <Widget>[
-            Container(
-              child: newButton(),
-              color: Colors.grey,
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            ),
-            BlocBuilder<ItemRepositorySearchBloc, ItemSearchState>(
+            widget.allowNewButton?
+              Container(
+                child: newButton(),
+                color: Colors.grey,
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              ) : Container(),
+            BlocBuilder<ItemSearchBloc, ItemSearchState>(
               bloc: _itemSearchBloc,
               builder: (BuildContext context, ItemSearchState state) {
 
@@ -163,9 +165,7 @@ class _ItemSearchState extends State<ItemSearch> {
 
             return ItemCard(
               item: result,
-              onTap: () {
-                Navigator.maybePop(context, result);
-              },
+              onTap: widget.onTapBehaviour(context, result),
             );
 
           },
@@ -183,4 +183,16 @@ class _ItemSearchState extends State<ItemSearch> {
 
   }
 
+}
+
+class ItemLocalSearch extends ItemSearch
+{
+
+}
+class ItemLocalSearchState extends _ItemSearchState
+{
+  @override
+  ItemSearchBloc getSearchBloc() {
+    BlocProvider.of<ItemLocalSearchBloc>(context);
+  }
 }

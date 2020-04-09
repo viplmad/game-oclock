@@ -23,6 +23,20 @@ class ItemList extends StatelessWidget {
         Container(
           child: ListTile(
             title: Text(activeView),
+            trailing: IconButton(
+              icon: Icon(Icons.search),
+              tooltip: 'Search in View',
+              onPressed: items.isNotEmpty? () {
+                Navigator.push<CollectionItem>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ItemLocalSearchProvider(items);
+                    }
+                  ),
+                );
+              } : null,
+            ),
           ),
           color: Colors.grey,
         ),

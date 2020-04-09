@@ -275,9 +275,47 @@ Widget ItemSearchProvider(Type itemType) {
         itemType: itemType,
       )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
     },
-    child: ItemSearch(
+    child: ItemSearch<ItemRepositorySearchBloc>(
       searchType: itemType,
       itemBloc: itemBlocs[itemType],
+      allowNewButton: true,
+      onTapBehaviour: (BuildContext context, CollectionItem result) {
+        return () {
+          Navigator.maybePop(context, result);
+        };
+      },
+    ),
+  );
+
+}
+
+Widget ItemLocalSearchProvider(List<CollectionItem> itemList) {
+
+  Type itemType = itemList.first.runtimeType;
+
+  return BlocProvider<ItemLocalSearchBloc>(
+    create: (BuildContext context) {
+      return ItemLocalSearchBloc(
+        itemType: itemType,
+        itemList: itemList,
+      )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
+    },
+    child: ItemSearch<ItemLocalSearchBloc>(
+      searchType: itemType,
+      itemBloc: itemBlocs[itemType],
+      allowNewButton: false,
+      onTapBehaviour: (BuildContext context, CollectionItem result) {
+        return () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ItemDetailProvider(result);
+                }
+            ),
+          );
+        };
+      },
     ),
   );
 

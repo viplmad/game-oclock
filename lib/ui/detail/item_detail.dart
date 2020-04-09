@@ -16,7 +16,6 @@ import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
 import 'package:game_collection/ui/bloc_provider_route.dart';
-import 'package:game_collection/ui/common/loading_icon.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 
@@ -413,9 +412,9 @@ abstract class ItemDetailBody extends StatelessWidget {
       return Navigator.push<CollectionItem>(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) {
-              return ItemSearchProvider(itemType);
-            }
+          builder: (BuildContext context) {
+            return ItemSearchProvider(itemType);
+          }
         ),
       );
     };

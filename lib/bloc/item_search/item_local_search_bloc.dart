@@ -1,66 +1,33 @@
-import 'dart:async';
-
 import 'package:meta/meta.dart';
-import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
 
 import 'item_search.dart';
 
 
-class ItemLocalSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
+class ItemLocalSearchBloc extends ItemSearchBloc {
 
-  ItemLocalSearchBloc({@required this.itemList});
+  ItemLocalSearchBloc({
+    @required Type itemType,
+    @required this.itemList,
+  }) : super(itemType: itemType);
 
   final List<CollectionItem> itemList;
 
-  final int _maxResults = 10;
-  final int _maxSuggestions = 6;
-
   @override
-  ItemSearchState get initialState => ItemSearchEmpty();
+  Future<List<CollectionItem>> getInitialItems() {
 
-  @override
-  Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
-
-    if(event is SearchTextChanged) {
-
-      yield* _mapTextChangedToState(event);
-
-    }
-
-  }
-
-  Stream<ItemSearchState> _mapTextChangedToState(SearchTextChanged event) async* {
-
-    yield ItemSearchLoading();
-
-    try {
-
-      final query = event.query;
-      if(query.isEmpty) {
-
-        yield ItemSearchEmpty();
-
-      } else {
-
-        final List<CollectionItem> items = itemList.where( (CollectionItem item) => item.getTitle().toLowerCase().contains(query.toLowerCase()) );
-        yield ItemSearchSuccess(items);
-
-      }
-
-    } catch(e) {
-
-      yield ItemSearchError(e.toString());
-
-    }
+    return Future<List<CollectionItem>>.value([]);
 
   }
 
   @override
-  Future<void> close() {
+  Future<List<CollectionItem>> getSearchItems(String query) {
 
-    return super.close();
+    final List<CollectionItem> items = itemList.where( (CollectionItem item) {
+      return item.getTitle().toLowerCase().contains(query.toLowerCase());
+    }).take(super.maxResults).toList();
+    return Future<List<CollectionItem>>.value(items);
 
   }
 

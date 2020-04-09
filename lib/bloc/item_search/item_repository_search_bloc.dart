@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:meta/meta.dart';
-import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
@@ -10,61 +7,26 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-class ItemRepositorySearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
+class ItemRepositorySearchBloc extends ItemSearchBloc {
 
-  ItemRepositorySearchBloc({@required this.collectionRepository, @required this.itemType});
+  ItemRepositorySearchBloc({
+    @required Type itemType,
+    @required this.collectionRepository,
+  }) : super(itemType: itemType);
 
   final ICollectionRepository collectionRepository;
-  final Type itemType;
-
-  final int _maxResults = 10;
-  final int _maxSuggestions = 6;
 
   @override
-  ItemSearchState get initialState => ItemSearchEmpty();
+  Future<List<CollectionItem>> getInitialItems() {
 
-  @override
-  Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
-
-    if(event is SearchTextChanged) {
-
-      yield* _mapTextChangedToState(event);
-
-    }
-
-  }
-
-  Stream<ItemSearchState> _mapTextChangedToState(SearchTextChanged event) async* {
-
-    yield ItemSearchLoading();
-
-    try {
-
-      final query = event.query;
-      if(query.isEmpty) {
-
-        final List<CollectionItem> items = await collectionRepository.getItemsWithView(itemType, 1, _maxSuggestions).first;
-        yield ItemSearchEmpty(items);
-
-      } else {
-
-        final List<CollectionItem> items = await collectionRepository.getSearchItem(itemType, query, _maxResults).first;
-        yield ItemSearchSuccess(items);
-
-      }
-
-    } catch(e) {
-
-      yield ItemSearchError(e.toString());
-
-    }
+    return collectionRepository.getItemsWithView(itemType, 1, super.maxSuggestions).first;
 
   }
 
   @override
-  Future<void> close() {
+  Future<List<CollectionItem>> getSearchItems(String query) {
 
-    return super.close();
+    return collectionRepository.getSearchItem(itemType, query, super.maxResults).first;
 
   }
 

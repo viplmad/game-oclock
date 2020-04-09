@@ -32,13 +32,6 @@ class Homepage extends StatelessWidget {
             backgroundColor: barItem.color,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.search),
-                tooltip: 'Search in View',
-                onPressed: () {
-                  //TODO
-                },
-              ),
-              IconButton(
                 icon: Icon(Icons.sort_by_alpha),
                 tooltip: 'Change Order',
                 onPressed: () {

@@ -1,3 +1,4 @@
+export 'item_search_bloc.dart';
 export 'item_repository_search_bloc.dart';
 export 'item_local_search_bloc.dart';
 export 'item_search_event.dart';
