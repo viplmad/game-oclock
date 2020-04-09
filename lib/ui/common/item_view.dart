@@ -90,6 +90,7 @@ class ItemListTile extends StatelessWidget {
             child: CachedImage(
               imageURL: item.getImageURL(),
               fit: BoxFit.scaleDown,
+              applyGradient: false,
             ),//CachedNetworkImage(
           )
           : null,
@@ -105,23 +106,37 @@ class ItemListTile extends StatelessWidget {
 
 class CachedImage extends StatelessWidget {
 
-  const CachedImage({Key key, @required this.imageURL, @required this.fit}) : super(key: key);
+  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.applyGradient = false}) : super(key: key);
 
   final String imageURL;
   final BoxFit fit;
+  final bool applyGradient;
 
   @override
   Widget build(BuildContext context) {
 
     return imageURL != null?
-      CachedNetworkImage(
-        imageUrl: imageURL,
-        fit: fit,
-        useOldImageOnUrlChange: true,
-        placeholder: (BuildContext context, String url) => LoadingIcon(),
-        errorWidget: (BuildContext context, String url, Object error) => Container(),
-      )
+      applyGradient?
+        Container(
+          color: Colors.black,
+          child: Opacity(
+            opacity: 0.75,
+            child: _getCachedImage(),
+          ),
+        ) : _getCachedImage()
       : Container();
+
+  }
+
+  CachedNetworkImage _getCachedImage() {
+
+    return CachedNetworkImage(
+      imageUrl: imageURL,
+      fit: fit,
+      useOldImageOnUrlChange: true,
+      placeholder: (BuildContext context, String url) => LoadingIcon(),
+      errorWidget: (BuildContext context, String url, Object error) => Container(),
+    );
 
   }
 
@@ -140,6 +155,7 @@ class ItemGridTile extends StatelessWidget {
       child: CachedImage(
         imageURL: item.getImageURL(),
         fit: BoxFit.cover,
+        applyGradient: false,
       ),
       footer: Text(item.getTitle()),
     );

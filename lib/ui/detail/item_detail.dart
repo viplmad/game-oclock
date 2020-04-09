@@ -214,6 +214,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                 background: CachedImage(
                   imageURL: imageURL,
                   fit: BoxFit.cover,
+                  applyGradient: true,
                 ),
               ),
               onTap: imageURL != null? () {
@@ -698,13 +699,16 @@ class ItemGenericField<T> extends StatelessWidget {
     return extended?
     InkWell(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
           ),
-          Text(shownValue?? "Unknown"),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+            child: Text(shownValue?? "Unknown",),
+          ),
         ],
       ),
       onTap: editable?
@@ -1013,7 +1017,7 @@ class RatingField extends StatelessWidget {
             rating: value.roundToDouble(),
             color: Colors.yellow,
             borderColor: Colors.orangeAccent,
-            size: 40.0,
+            size: 35.0,
             onRatingChanged: (double newRating) {
               if (newRating != null) {
 
@@ -1066,15 +1070,19 @@ class EnumField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ListTileTheme.merge(
-      child: ListTile(
-        title: Text(fieldName),
-        trailing: Wrap(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+          child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+        ),
+        Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
-          alignment: WrapAlignment.spaceAround,
+          alignment: WrapAlignment.spaceEvenly,
           children: List<Widget>.generate(
             enumValues.length,
-            (int index) {
+                (int index) {
               String option = enumValues[index];
               Color optionColour = enumColours?.elementAt(index);
 
@@ -1094,7 +1102,7 @@ class EnumField extends StatelessWidget {
             },
           ).toList(),
         ),
-      ),
+      ],
     );
 
   }
