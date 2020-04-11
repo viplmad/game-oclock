@@ -18,10 +18,10 @@ class CollectionRepository implements ICollectionRepository {
   IImageConnector _imageConnector;
 
   static CollectionRepository _singleton;
-  factory CollectionRepository({IDBConnector idbConnector, IImageConnector iImageConnector}) {
+  factory CollectionRepository({IDBConnector iDbConnector, IImageConnector iImageConnector}) {
     if(_singleton == null) {
       _singleton = CollectionRepository._(
-        idbConnector,
+        iDbConnector,
         iImageConnector,
       );
     }

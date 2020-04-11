@@ -22,7 +22,7 @@ class GameCollection extends StatelessWidget {
 
     //Initial set of backend providers
     CollectionRepository(
-      idbConnector: PostgresConnector(),
+      iDbConnector: PostgresConnector(),
       iImageConnector: CloudinaryConnector(),
     );
 

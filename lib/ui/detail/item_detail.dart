@@ -1268,37 +1268,42 @@ class ResultsListMany extends StatelessWidget {
 
     return _ResultsListHeader(
       headerText: shownName + " (" + items.length.toString() + ")",
-      resultList: ListView.builder(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemCount: items.length + 1,
-        itemBuilder: (BuildContext context, int index) {
+      resultList: Container(
+        constraints: BoxConstraints.loose(
+          Size.fromHeight( (MediaQuery.of(context).size.height / 3), ),
+        ),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          itemCount: items.length + 1,
+          itemBuilder: (BuildContext context, int index) {
 
-          if(index == items.length) {
+            if(index == items.length) {
 
-            return _LinkButton(
-              itemType: itemType,
-              itemTypeName: itemTypeName,
-              onSearch: onSearch,
-              updateAdd: updateAdd,
-            );
+              return _LinkButton(
+                itemType: itemType,
+                itemTypeName: itemTypeName,
+                onSearch: onSearch,
+                updateAdd: updateAdd,
+              );
 
-          } else {
-            CollectionItem result = items[index];
+            } else {
+              CollectionItem result = items[index];
 
-            return DismissibleItem(
-              item: result,
-              dismissIcon: Icons.link_off,
-              onDismissed: (DismissDirection direction) {
-                updateDelete(result);
-              },
-              onTap: () {
-                onTap(result);
-              },
-            );
+              return DismissibleItem(
+                item: result,
+                dismissIcon: Icons.link_off,
+                onDismissed: (DismissDirection direction) {
+                  updateDelete(result);
+                },
+                onTap: () {
+                  onTap(result);
+                },
+              );
 
-          }
-        },
+            }
+          },
+        ),
       ),
       trailingWidget: trailingBuilder != null?
         Column(
