@@ -266,7 +266,7 @@ Widget ItemDetailProvider(CollectionItem item) {
 
 }
 
-Widget ItemSearchProvider(Type itemType) {
+Widget ItemRepositorySearchProvider(Type itemType) {
 
   return BlocProvider<ItemRepositorySearchBloc>(
     create: (BuildContext context) {

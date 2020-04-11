@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_collection/entity/collection_item_entity.dart';
 
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -407,15 +408,30 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Future<CollectionItem> Function() _searchFuture(BuildContext context, Type itemType) {
+  Future<CollectionItem> Function() _repositorySearchFuture(BuildContext context, Type itemType) {
 
     return () {
       return Navigator.push<CollectionItem>(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return ItemSearchProvider(itemType);
+            return ItemRepositorySearchProvider(itemType);
           }
+        ),
+      );
+    };
+
+  }
+
+  void Function() _localSearchFuture(BuildContext context, List<CollectionItem> items) {
+
+    return () {
+      return Navigator.push<CollectionItem>(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ItemLocalSearchProvider(items);
+            }
         ),
       );
     };
@@ -591,7 +607,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             itemType: itemType,
             itemTypeName: shownName,
             onTap: _onTapFunction(context),
-            onSearch: _searchFuture(context, itemType),
+            onSearch: _repositorySearchFuture(context, itemType),
             updateAdd: _addRelationFunction(),
             updateDelete: _deleteRelationFunction(),
           );
@@ -622,10 +638,11 @@ abstract class ItemDetailBody extends StatelessWidget {
             itemType: itemType,
             itemTypeName: shownName,
             onTap: _onTapFunction(context),
-            onSearch: _searchFuture(context, itemType),
+            onSearch: _repositorySearchFuture(context, itemType),
             updateAdd: _addRelationFunction(),
             updateDelete: _deleteRelationFunction(),
             trailingBuilder: trailingBuilder,
+            onListSearch: state.items.isNotEmpty? _localSearchFuture(context, state.items) : null,
           );
         }
         if(state is ItemRelationNotLoaded) {
@@ -1111,17 +1128,23 @@ class EnumField extends StatelessWidget {
 
 class _HeaderText extends StatelessWidget {
 
-  const _HeaderText({Key key, this.text}) : super(key: key);
+  const _HeaderText({Key key, this.text, this.trailingWidget}) : super(key: key);
 
   final String text;
+  final Widget trailingWidget;
 
   @override
   Widget build(BuildContext context) {
 
-    return Padding(
+    return ListTile(
+      title: Text(text, style: Theme.of(context).textTheme.subhead),
+      trailing: trailingWidget,
+    );
+
+    /*return Padding(
       padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
       child: Text(text, style: Theme.of(context).textTheme.subhead),
-    );
+    );*/
 
   }
 
@@ -1129,11 +1152,12 @@ class _HeaderText extends StatelessWidget {
 
 class _ResultsListHeader extends StatelessWidget {
 
-  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList, this.trailingWidget}) : super(key: key);
+  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList, this.trailingWidget, this.onListSearch}) : super(key: key);
 
   final String headerText;
   final Widget resultList;
   final Widget trailingWidget;
+  final void Function() onListSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -1144,6 +1168,12 @@ class _ResultsListHeader extends StatelessWidget {
         Divider(),
         _HeaderText(
           text: headerText,
+          trailingWidget: onListSearch != null?
+            IconButton(
+              icon: Icon(Icons.search),
+              tooltip: "Seach in List",
+              onPressed: onListSearch,
+            ) : null,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -1250,7 +1280,7 @@ class ResultsListSingle extends StatelessWidget {
 }
 class ResultsListMany extends StatelessWidget {
 
-  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder});
+  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
 
   final List<CollectionItem> items;
   final Type itemType;
@@ -1260,6 +1290,7 @@ class ResultsListMany extends StatelessWidget {
   final void Function(CollectionItem) updateAdd;
   final void Function(CollectionItem) updateDelete;
   final List<Widget> Function(List<CollectionItem>) trailingBuilder;
+  final void Function() onListSearch;
 
   String get shownName => itemTypeName?? itemType.toString() + 's';
 
@@ -1309,6 +1340,7 @@ class ResultsListMany extends StatelessWidget {
         Column(
           children: trailingBuilder(items),
         ) : null,
+      onListSearch: onListSearch,
     );
 
   }

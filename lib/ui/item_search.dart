@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -150,7 +151,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
 
     if(results.isEmpty) {
       return Center(
-        child: Text("No results found"),
+        child: Text("No results found", textAlign: TextAlign.center,),
       );
     }
 
