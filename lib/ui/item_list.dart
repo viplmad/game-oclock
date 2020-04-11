@@ -9,11 +9,12 @@ import 'common/item_view.dart';
 
 class ItemList extends StatelessWidget {
 
-  ItemList({Key key, @required this.items, @required this.activeView, @required this.onDismiss}) : super(key: key);
+  ItemList({Key key, @required this.items, @required this.activeView, @required this.onDismiss, this.isGridView = true}) : super(key: key);
 
   final List<CollectionItem> items;
   final String activeView;
   final Function(CollectionItem) onDismiss;
+  final bool isGridView;
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +43,11 @@ class ItemList extends StatelessWidget {
         ),
         Expanded(
           child: Scrollbar(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                CollectionItem item = items[index];
-
-                return DismissibleItem(
-                  item: item,
-                  onTap: () {
+            child: isGridView?
+              ItemGridView(
+                items: items,
+                onTap: (CollectionItem item) {
+                  return () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -59,24 +56,27 @@ class ItemList extends StatelessWidget {
                         },
                       ),
                     );
-                  },
-                  onDismissed: (DismissDirection direction) {
-                    onDismiss(item);
-                  },
-                  confirmDismiss: (DismissDirection direction) {
-
-                    return showDialog<bool>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return confirmDelete(context, item);
-                      },
+                  };
+                },
+              )
+              :
+              ItemListView(
+                items: items,
+                onTap: (CollectionItem item) {
+                  return () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return ItemDetailProvider(item);
+                        },
+                      ),
                     );
-
-                  },
-                );
-
-              },
-            ),
+                  };
+                },
+                onDismiss: onDismiss,
+                confirmDelete: confirmDelete,
+              ),
           ),
         ),
       ],
@@ -111,4 +111,76 @@ class ItemList extends StatelessWidget {
 
   }
 
+}
+
+class ItemListView extends StatelessWidget {
+
+  const ItemListView({Key key, @required this.items, @required this.onTap, @required this.onDismiss, @required this.confirmDelete}) : super(key: key);
+
+  final List<CollectionItem> items;
+  final Function() Function(CollectionItem item) onTap;
+  final void Function(CollectionItem item) onDismiss;
+  final Widget Function(BuildContext, CollectionItem) confirmDelete;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        CollectionItem item = items[index];
+
+        return DismissibleItem(
+          item: item,
+          onTap: onTap(item),
+          onDismissed: (DismissDirection direction) {
+            onDismiss(item);
+          },
+          confirmDismiss: (DismissDirection direction) {
+
+            return showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return confirmDelete(context, item);
+              },
+            );
+
+          },
+        );
+
+      },
+    );
+
+  }
+}
+
+class ItemGridView extends StatelessWidget {
+
+  const ItemGridView({Key key, @required this.items, @required this.onTap}) : super(key: key);
+
+  final List<CollectionItem> items;
+  final Function() Function(CollectionItem item) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: items.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        CollectionItem item = items[index];
+
+        return ItemGridCard(
+          item: item,
+          onTap: onTap(item),
+        );
+
+      },
+    );
+
+  }
 }

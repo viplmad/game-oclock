@@ -42,6 +42,8 @@ class UpdateView extends ItemListEvent {
 
 class UpdateSortOrder extends ItemListEvent {}
 
+class UpdateIsGrid extends ItemListEvent {}
+
 /*
 class UpdateSort extends ItemListEvent {
   const UpdateSort(this.fields);

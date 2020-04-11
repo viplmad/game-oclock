@@ -38,6 +38,13 @@ class Homepage extends StatelessWidget {
                   ItemListProvider(context, state).add(UpdateSortOrder());
                 },
               ),
+              IconButton(
+                icon: Icon(Icons.grid_on),
+                tooltip: 'Change View',
+                onPressed: () {
+                  ItemListProvider(context, state).add(UpdateIsGrid());
+                },
+              ),
               _HomepageViewAction(
                 activeTab: state,
                 onSelected: (String selectedView) {
@@ -86,7 +93,7 @@ class _HomepageViewAction extends StatelessWidget {
 
     return PopupMenuButton(
       icon: Icon(Icons.view_carousel),
-      tooltip: "Change View",
+      tooltip: "Change Filter",
       itemBuilder: (BuildContext context) {
         return barItem.views.map( (String view) {
           return PopupMenuItem(
@@ -239,6 +246,7 @@ class _HomepageBody extends StatelessWidget {
               items: state.items,
               activeView: state.view,
               onDismiss: onDismiss,
+              isGridView: state.isGrid,
             );
 
           }
@@ -336,6 +344,7 @@ class ItemListBlocBuilder extends StatelessWidget {
             onDismiss: (CollectionItem item) {
               itemListBloc.itemBloc.add(DeleteItem(item));
             },
+            isGridView: state.isGrid,
           );
 
         }

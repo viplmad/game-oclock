@@ -35,7 +35,7 @@ class DismissibleItem extends StatelessWidget {
             ),
           )
       ),
-      child: ItemCard(
+      child: ItemListCard(
         item: item,
         onTap: onTap,
       ),
@@ -47,9 +47,9 @@ class DismissibleItem extends StatelessWidget {
 
 }
 
-class ItemCard extends StatelessWidget {
+class ItemListCard extends StatelessWidget {
 
-  const ItemCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
+  const ItemListCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
 
   final CollectionItem item;
   final void Function() onTap;
@@ -59,7 +59,7 @@ class ItemCard extends StatelessWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
-        child: ItemListTile(
+        child: _ItemListTile(
           item: item,
         ),
         onTap: onTap,
@@ -69,9 +69,9 @@ class ItemCard extends StatelessWidget {
 
 }
 
-class ItemListTile extends StatelessWidget {
+class _ItemListTile extends StatelessWidget {
 
-  const ItemListTile({Key key, @required this.item}) : super(key: key);
+  const _ItemListTile({Key key, @required this.item}) : super(key: key);
 
   final CollectionItem item;
 
@@ -104,47 +104,31 @@ class ItemListTile extends StatelessWidget {
 
 }
 
-class CachedImage extends StatelessWidget {
+class ItemGridCard extends StatelessWidget {
 
-  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.applyGradient = false}) : super(key: key);
+  const ItemGridCard({Key key, @required this.item, @required this.onTap}) : super(key: key);
 
-  final String imageURL;
-  final BoxFit fit;
-  final bool applyGradient;
+  final CollectionItem item;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-
-    return imageURL != null?
-      applyGradient?
-        Container(
-          color: Colors.black,
-          child: Opacity(
-            opacity: 0.75,
-            child: _getCachedImage(),
-          ),
-        ) : _getCachedImage()
-      : Container();
-
-  }
-
-  CachedNetworkImage _getCachedImage() {
-
-    return CachedNetworkImage(
-      imageUrl: imageURL,
-      fit: fit,
-      useOldImageOnUrlChange: true,
-      placeholder: (BuildContext context, String url) => LoadingIcon(),
-      errorWidget: (BuildContext context, String url, Object error) => Container(),
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.all(Radius.circular(4.0),),
+        child: _ItemGridTile(
+          item: item,
+        ),
+        onTap: onTap,
+      ),
     );
-
   }
 
 }
 
-class ItemGridTile extends StatelessWidget {
+class _ItemGridTile extends StatelessWidget {
 
-  const ItemGridTile({Key key, @required this.item}) : super(key: key);
+  const _ItemGridTile({Key key, @required this.item}) : super(key: key);
 
   final CollectionItem item;
 
@@ -157,7 +141,48 @@ class ItemGridTile extends StatelessWidget {
         fit: BoxFit.cover,
         applyGradient: false,
       ),
-      footer: Text(item.getTitle()),
+      footer: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Text(item.getTitle(), style: TextStyle(fontSize: 18.0, color: Colors.white),),
+      ),
+    );
+
+  }
+
+}
+
+class CachedImage extends StatelessWidget {
+
+  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.applyGradient = false}) : super(key: key);
+
+  final String imageURL;
+  final BoxFit fit;
+  final bool applyGradient;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return imageURL != null?
+    applyGradient?
+    Container(
+      color: Colors.black,
+      child: Opacity(
+        opacity: 0.75,
+        child: _getCachedImage(),
+      ),
+    ) : _getCachedImage()
+        : Container();
+
+  }
+
+  CachedNetworkImage _getCachedImage() {
+
+    return CachedNetworkImage(
+      imageUrl: imageURL,
+      fit: fit,
+      useOldImageOnUrlChange: true,
+      placeholder: (BuildContext context, String url) => LoadingIcon(),
+      errorWidget: (BuildContext context, String url, Object error) => Container(),
     );
 
   }

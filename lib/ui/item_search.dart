@@ -164,7 +164,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
           itemBuilder: (BuildContext context, int index) {
             CollectionItem result = results[index];
 
-            return ItemCard(
+            return ItemListCard(
               item: result,
               onTap: widget.onTapBehaviour(context, result),
             );

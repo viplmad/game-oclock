@@ -46,6 +46,10 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
       yield* _mapUpdateSortOrderToState(event);
 
+    } else if(event is UpdateIsGrid) {
+
+      yield* _mapUpdateIsGridToState(event);
+
     }
 
   }
@@ -71,7 +75,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     if(state is ItemListLoaded) {
       final String activeView = (state as ItemListLoaded).view;
-      yield ItemListLoaded(event.items, activeView);
+      final bool isGrid = (state as ItemListLoaded).isGrid;
+      yield ItemListLoaded(event.items, activeView, isGrid);
     }
 
   }
@@ -97,8 +102,24 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     if(state is ItemListLoaded) {
       final List<CollectionItem> reversedItems = (state as ItemListLoaded).items.reversed.toList();
+
       final String activeView = (state as ItemListLoaded).view;
-      yield ItemListLoaded(reversedItems, activeView);
+      final bool isGrid = (state as ItemListLoaded).isGrid;
+
+      yield ItemListLoaded(reversedItems, activeView, isGrid);
+    }
+
+  }
+
+  Stream<ItemListState> _mapUpdateIsGridToState(UpdateIsGrid event) async* {
+
+    if(state is ItemListLoaded) {
+      final bool isGrid = !((state as ItemListLoaded).isGrid);
+
+      final List<CollectionItem> items = (state as ItemListLoaded).items;
+      final String activeView = (state as ItemListLoaded).view;
+
+      yield ItemListLoaded(items, activeView, isGrid);
     }
 
   }
