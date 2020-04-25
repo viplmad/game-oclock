@@ -57,9 +57,6 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
         await collectionRepository.open();
 
       } catch(e) {
-
-        yield ItemRelationNotLoaded("Connection lost. Reopen app");
-
       }
     }
 

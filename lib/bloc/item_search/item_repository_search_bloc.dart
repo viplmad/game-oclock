@@ -28,9 +28,6 @@ class ItemRepositorySearchBloc extends ItemSearchBloc {
         await collectionRepository.open();
 
       } catch(e) {
-
-        yield ItemSearchError("Connection lost. Reopen app");
-
       }
     }
 

@@ -22,40 +22,18 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     if(event is Connect) {
 
-      yield* _mapStartToState();
-
-    } else if(event is Reconnect) {
-
-      yield* _mapReconnectToState();
+      yield* _mapConnectToState();
 
     }
 
   }
 
-  Stream<ConnectState> _mapStartToState() async* {
+  Stream<ConnectState> _mapConnectToState() async* {
 
     yield Connecting();
 
     try {
 
-      await collectionRepository.open();
-      yield Connected();
-
-    } catch(e) {
-
-      yield FailedConnection(e.toString());
-
-    }
-
-  }
-
-  Stream<ConnectState> _mapReconnectToState() async* {
-
-    yield Reconnecting();
-
-    try {
-
-      collectionRepository.reconnect();
       await collectionRepository.open();
       yield Connected();
 

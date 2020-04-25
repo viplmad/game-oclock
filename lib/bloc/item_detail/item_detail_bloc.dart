@@ -53,9 +53,6 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
         await collectionRepository.open();
 
       } catch(e) {
-
-        yield ItemNotLoaded("Connection lost. Reopen app");
-
       }
     }
 

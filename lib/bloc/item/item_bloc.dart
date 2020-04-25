@@ -22,7 +22,7 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
   @override
   Stream<ItemState> mapEventToState(ItemEvent event) async* {
 
-    _checkConnection();
+    yield* _checkConnection();
 
     if(event is AddItem) {
 
@@ -65,7 +65,6 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
   Stream<ItemState> _checkConnection() async* {
 
     if(collectionRepository.isClosed()) {
-      yield ItemNotAdded("Connection lost. Trying to reconnect");
 
       try {
 
@@ -73,10 +72,8 @@ abstract class ItemBloc extends Bloc<ItemEvent, ItemState> {
         await collectionRepository.open();
 
       } catch(e) {
-
-        yield ItemNotAdded("Connection lost. Reopen app");
-
       }
+
     }
 
   }
