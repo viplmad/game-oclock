@@ -10,6 +10,8 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'item_detail.dart';
 
 
+const Color dlcColour = Colors.deepPurple;
+
 class DLCDetail extends StatelessWidget {
 
   const DLCDetail({Key key, @required this.ID}) : super(key: key);
@@ -19,10 +21,19 @@ class DLCDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final ThemeData contextTheme = Theme.of(context);
+    final ThemeData dlcTheme = contextTheme.copyWith(
+      primaryColor: dlcColour,
+      accentColor: Colors.deepPurpleAccent,
+    );
+
     return Scaffold(
-      body: _DLCDetailBody(
-        itemID: ID,
-        itemDetailBloc: BlocProvider.of<DLCDetailBloc>(context)..add(LoadItem(ID)),
+      body: Theme(
+        data: dlcTheme,
+        child: _DLCDetailBody(
+          itemID: ID,
+          itemDetailBloc: BlocProvider.of<DLCDetailBloc>(context)..add(LoadItem(ID)),
+        ),
       ),
     );
 

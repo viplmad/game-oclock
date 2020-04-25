@@ -10,6 +10,8 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'item_detail.dart';
 
 
+const Color storeColour = Colors.blueGrey;
+
 class StoreDetail extends StatelessWidget {
 
   const StoreDetail({Key key, @required this.ID}) : super(key: key);
@@ -19,10 +21,19 @@ class StoreDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final ThemeData contextTheme = Theme.of(context);
+    final ThemeData storeTheme = contextTheme.copyWith(
+      primaryColor: storeColour,
+      accentColor: Colors.grey,
+    );
+
     return Scaffold(
-      body: _StoreDetailBody(
-        itemID: ID,
-        itemDetailBloc: BlocProvider.of<StoreDetailBloc>(context)..add(LoadItem(ID)),
+      body: Theme(
+        data: storeTheme,
+        child: _StoreDetailBody(
+          itemID: ID,
+          itemDetailBloc: BlocProvider.of<StoreDetailBloc>(context)..add(LoadItem(ID)),
+        ),
       ),
     );
 

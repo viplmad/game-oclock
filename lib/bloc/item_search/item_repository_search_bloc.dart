@@ -17,6 +17,26 @@ class ItemRepositorySearchBloc extends ItemSearchBloc {
   final ICollectionRepository collectionRepository;
 
   @override
+  Stream<ItemSearchState> checkConnection() async* {
+
+    if(collectionRepository.isClosed()) {
+      yield ItemSearchError("Connection lost. Trying to reconnect");
+
+      try {
+
+        collectionRepository.reconnect();
+        await collectionRepository.open();
+
+      } catch(e) {
+
+        yield ItemSearchError("Connection lost. Reopen app");
+
+      }
+    }
+
+  }
+
+  @override
   Future<List<CollectionItem>> getInitialItems() {
 
     return collectionRepository.getItemsWithView(itemType, 1, super.maxSuggestions).first;

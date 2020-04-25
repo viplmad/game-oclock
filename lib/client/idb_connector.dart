@@ -9,8 +9,10 @@ abstract class IDBConnector {
   bool isClosed();
   bool isUpdating();
 
+  void reconnect();
+
   //#region CREATE
-  Future<List<Map<String, Map<String, dynamic>>>> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields});
+  Future<List<Map<String, Map<String, dynamic>>>> insertRecord({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields});
   Future<dynamic> insertRelation({@required String leftTableName, @required String rightTableName, @required int leftTableID, @required int rightTableID});
   //#endregion CREATE
 

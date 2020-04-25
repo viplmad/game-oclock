@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_collection/entity/collection_item_entity.dart';
 
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -188,7 +187,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             bloc: itemDetailBloc,
             builder: (BuildContext context, ItemDetailState state) {
               if(state is ItemLoading) {
-                return LinearProgressIndicator();
+                return loadingBar();
               }
               return Container();
             },
@@ -216,6 +215,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                   imageURL: imageURL,
                   fit: BoxFit.cover,
                   applyGradient: true,
+                  backgroundColour: Theme.of(context).primaryColor,
                 ),
               ),
               onTap: imageURL != null? () {
@@ -351,6 +351,11 @@ abstract class ItemDetailBody extends StatelessWidget {
       ),
     );
 
+  }
+
+  Widget loadingBar()
+  {
+    return LinearProgressIndicator();
   }
 
   void Function(T) _updateFieldFunction<T>(String fieldName) {
@@ -617,7 +622,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Divider(),
-            LinearProgressIndicator(),
+            loadingBar(),
           ],
         );
 
@@ -655,7 +660,7 @@ abstract class ItemDetailBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Divider(),
-            LinearProgressIndicator(),
+            loadingBar(),
           ],
         );
 
@@ -983,7 +988,7 @@ class ItemDurationField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString()
+          value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0')
           :
           null,
       update: update,
@@ -1136,26 +1141,25 @@ class _HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ListTile(
-      title: Text(text, style: Theme.of(context).textTheme.subhead),
-      trailing: trailingWidget,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(text, style: Theme.of(context).textTheme.subhead),
+        trailingWidget?? Container(),
+      ],
     );
-
-    /*return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
-      child: Text(text, style: Theme.of(context).textTheme.subhead),
-    );*/
 
   }
 
 }
 
-class _ResultsListHeader extends StatelessWidget {
+class _ResultsList extends StatelessWidget {
 
-  const _ResultsListHeader({Key key, @required this.headerText, @required this.resultList, this.trailingWidget, this.onListSearch}) : super(key: key);
+  const _ResultsList({Key key, @required this.headerText, @required this.resultList, this.linkWidget, this.trailingWidget, this.onListSearch}) : super(key: key);
 
   final String headerText;
   final Widget resultList;
+  final Widget linkWidget;
   final Widget trailingWidget;
   final void Function() onListSearch;
 
@@ -1166,20 +1170,31 @@ class _ResultsListHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Divider(),
-        _HeaderText(
-          text: headerText,
-          trailingWidget: onListSearch != null?
-            IconButton(
-              icon: Icon(Icons.search),
-              tooltip: "Seach in List",
-              onPressed: onListSearch,
-            ) : null,
-        ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: resultList,
+          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: _HeaderText(
+                  text: headerText,
+                  trailingWidget: onListSearch != null?
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    tooltip: "Seach in List",
+                    onPressed: onListSearch,
+                  ) : null,
+                ),
+              ),
+              resultList,
+              SizedBox(
+                width: double.maxFinite,
+                child: linkWidget,
+              ),
+              trailingWidget?? Container(),
+            ],
+          ),
         ),
-        trailingWidget?? Container(),
       ],
     );
 
@@ -1239,40 +1254,34 @@ class ResultsListSingle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return _ResultsListHeader(
+    return _ResultsList(
       headerText: shownName,
       resultList: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
-        itemCount: 1,
+        itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
+          CollectionItem result = items[index];
 
-          if(items.isEmpty) {
+          return DismissibleItem(
+            item: result,
+            dismissIcon: Icons.link_off,
+            onDismissed: (DismissDirection direction) {
+              updateDelete(result);
+            },
+            onTap: () {
+              onTap(result);
+            }
+          );
 
-            return _LinkButton(
-              itemType: itemType,
-              itemTypeName: itemTypeName,
-              onSearch: onSearch,
-              updateAdd: updateAdd,
-            );
-
-          } else {
-            CollectionItem result = items[index];
-
-            return DismissibleItem(
-              item: result,
-              dismissIcon: Icons.link_off,
-              onDismissed: (DismissDirection direction) {
-                updateDelete(result);
-              },
-              onTap: () {
-                onTap(result);
-              }
-            );
-
-          }
         },
       ),
+      linkWidget: items.isEmpty? _LinkButton(
+          itemType: itemType,
+          itemTypeName: itemTypeName,
+          onSearch: onSearch,
+          updateAdd: updateAdd,
+        ) : null,
     );
 
   }
@@ -1297,7 +1306,7 @@ class ResultsListMany extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return _ResultsListHeader(
+    return _ResultsList(
       headerText: shownName + " (" + items.length.toString() + ")",
       resultList: Container(
         constraints: BoxConstraints.loose(
@@ -1306,35 +1315,29 @@ class ResultsListMany extends StatelessWidget {
         child: ListView.builder(
           shrinkWrap: true,
           physics: ClampingScrollPhysics(),
-          itemCount: items.length + 1,
+          itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
+            CollectionItem result = items[index];
 
-            if(index == items.length) {
+            return DismissibleItem(
+              item: result,
+              dismissIcon: Icons.link_off,
+              onDismissed: (DismissDirection direction) {
+                updateDelete(result);
+              },
+              onTap: () {
+                onTap(result);
+              },
+            );
 
-              return _LinkButton(
-                itemType: itemType,
-                itemTypeName: itemTypeName,
-                onSearch: onSearch,
-                updateAdd: updateAdd,
-              );
-
-            } else {
-              CollectionItem result = items[index];
-
-              return DismissibleItem(
-                item: result,
-                dismissIcon: Icons.link_off,
-                onDismissed: (DismissDirection direction) {
-                  updateDelete(result);
-                },
-                onTap: () {
-                  onTap(result);
-                },
-              );
-
-            }
           },
         ),
+      ),
+      linkWidget: _LinkButton(
+        itemType: itemType,
+        itemTypeName: itemTypeName,
+        onSearch: onSearch,
+        updateAdd: updateAdd,
       ),
       trailingWidget: trailingBuilder != null?
         Column(
@@ -1362,7 +1365,7 @@ class ResultsChipMany extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return _ResultsListHeader(
+    return _ResultsList(
       headerText: shownName,
       resultList: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,

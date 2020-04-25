@@ -32,6 +32,8 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
   @override
   Stream<ItemRelationState> mapEventToState(ItemRelationEvent event) async* {
 
+    yield* _checkConnection();
+
     if(event is LoadItemRelation) {
 
       yield* _mapLoadToState();
@@ -40,6 +42,25 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
       yield* _mapUpdateToState(event);
 
+    }
+
+  }
+
+  Stream<ItemRelationState> _checkConnection() async* {
+
+    if(collectionRepository.isClosed()) {
+      yield ItemRelationNotLoaded("Connection lost. Trying to reconnect");
+
+      try {
+
+        collectionRepository.reconnect();
+        await collectionRepository.open();
+
+      } catch(e) {
+
+        yield ItemRelationNotLoaded("Connection lost. Reopen app");
+
+      }
     }
 
   }

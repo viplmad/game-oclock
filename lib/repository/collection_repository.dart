@@ -36,9 +36,31 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
+  @override
   Future<dynamic> close() {
 
     return _dbConnector.close();
+
+  }
+
+  @override
+  bool isOpen() {
+
+    return _dbConnector.isOpen();
+
+  }
+
+  @override
+  bool isClosed() {
+
+    return _dbConnector.isClosed();
+
+  }
+
+  @override
+  void reconnect() {
+
+    _dbConnector.reconnect();
 
   }
 
@@ -47,7 +69,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Game> insertGame(String name, String edition) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: gameTable,
       fieldAndValues: <String, dynamic> {
         game_nameField : name,
@@ -111,7 +133,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<DLC> insertDLC(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: dlcTable,
       fieldAndValues: <String, dynamic> {
         dlc_nameField : name,
@@ -137,7 +159,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Platform> insertPlatform(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: platformTable,
       fieldAndValues: <String, dynamic> {
         plat_nameField : name,
@@ -162,7 +184,7 @@ class CollectionRepository implements ICollectionRepository {
   //#region Purchase
   Future<Purchase> insertPurchase(String description) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: purchaseTable,
       fieldAndValues: <String, dynamic> {
         purc_descriptionField : description,
@@ -189,7 +211,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Store> insertStore(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: storeTable,
       fieldAndValues: <String, dynamic> {
         stor_nameField : name,
@@ -215,7 +237,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<System> insertSystem(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: systemTable,
       fieldAndValues: <String, dynamic> {
         sys_nameField : name,
@@ -229,7 +251,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Tag> insertTag(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: tagTable,
       fieldAndValues: <String, dynamic> {
         tag_nameField : name,
@@ -243,7 +265,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<PurchaseType> insertType(String name) {
 
-    return _dbConnector.insertTable(
+    return _dbConnector.insertRecord(
       tableName: typeTable,
       fieldAndValues: <String, dynamic> {
         type_nameField : name,

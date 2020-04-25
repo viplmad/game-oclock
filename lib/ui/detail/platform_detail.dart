@@ -10,6 +10,8 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'item_detail.dart';
 
 
+const Color platformColour = Colors.black87;
+
 class PlatformDetail extends StatelessWidget {
 
   const PlatformDetail({Key key, @required this.ID}) : super(key: key);
@@ -19,10 +21,19 @@ class PlatformDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final ThemeData contextTheme = Theme.of(context);
+    final ThemeData platformTheme = contextTheme.copyWith(
+      primaryColor: platformColour,
+      accentColor: Colors.black12,
+    );
+
     return Scaffold(
-      body: _PlatformDetailBody(
-        itemID: ID,
-        itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(ID)),
+      body: Theme(
+        data: platformTheme,
+        child: _PlatformDetailBody(
+          itemID: ID,
+          itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(ID)),
+        ),
       ),
     );
 

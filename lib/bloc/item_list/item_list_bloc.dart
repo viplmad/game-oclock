@@ -30,6 +30,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
   @override
   Stream<ItemListState> mapEventToState(ItemListEvent event) async* {
 
+    yield* _checkConnection();
+
     if(event is LoadItemList) {
 
       yield* _mapLoadToState();
@@ -50,6 +52,25 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
       yield* _mapUpdateIsGridToState(event);
 
+    }
+
+  }
+
+  Stream<ItemListState> _checkConnection() async* {
+
+    if(collectionRepository.isClosed()) {
+      yield ItemListNotLoaded("Connection lost. Trying to reconnect");
+
+      try {
+
+        collectionRepository.reconnect();
+        await collectionRepository.open();
+
+      } catch(e) {
+
+        yield ItemListNotLoaded("Connection lost. Reopen app");
+
+      }
     }
 
   }

@@ -20,9 +20,13 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
   @override
   Stream<ConnectState> mapEventToState(ConnectionEvent event) async* {
 
-    if(event is AppStarted) {
+    if(event is Connect) {
 
       yield* _mapStartToState();
+
+    } else if(event is Reconnect) {
+
+      yield* _mapReconnectToState();
 
     }
 
@@ -30,10 +34,28 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
   Stream<ConnectState> _mapStartToState() async* {
 
-    yield Loading();
+    yield Connecting();
 
     try {
 
+      await collectionRepository.open();
+      yield Connected();
+
+    } catch(e) {
+
+      yield FailedConnection(e.toString());
+
+    }
+
+  }
+
+  Stream<ConnectState> _mapReconnectToState() async* {
+
+    yield Reconnecting();
+
+    try {
+
+      collectionRepository.reconnect();
       await collectionRepository.open();
       yield Connected();
 

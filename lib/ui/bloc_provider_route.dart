@@ -28,7 +28,7 @@ Widget StartProvider() {
     create: (BuildContext context) {
       return ConnectionBloc(
         collectionRepository: CollectionRepository(),
-      )..add(AppStarted());
+      )..add(Connect());
     },
     child: StartPage(),
   );

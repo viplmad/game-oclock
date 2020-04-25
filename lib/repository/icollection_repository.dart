@@ -6,6 +6,11 @@ abstract class ICollectionRepository {
   Future<dynamic> open();
   Future<dynamic> close();
 
+  bool isOpen();
+  bool isClosed();
+
+  void reconnect();
+
   //#region CREATE
     //Game
   Future<Game> insertGame(String name, String edition);

@@ -8,4 +8,6 @@ abstract class ConnectionEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AppStarted extends ConnectionEvent {}
+class Connect extends ConnectionEvent {}
+
+class Reconnect extends ConnectionEvent {}

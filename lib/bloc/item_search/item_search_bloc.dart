@@ -23,11 +23,17 @@ abstract class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
   @override
   Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
 
+    yield* checkConnection();
+
     if(event is SearchTextChanged) {
 
       yield* _mapTextChangedToState(event);
 
     }
+
+  }
+
+  Stream<ItemSearchState> checkConnection() async* {
 
   }
 

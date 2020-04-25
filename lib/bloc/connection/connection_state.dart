@@ -10,7 +10,9 @@ abstract class ConnectState extends Equatable {
 
 class Uninitialised extends ConnectState {}
 
-class Loading extends ConnectState {}
+class Connecting extends ConnectState {}
+
+class Reconnecting extends ConnectState {}
 
 class Connected extends ConnectState {}
 

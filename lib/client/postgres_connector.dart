@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 
@@ -25,13 +23,19 @@ class PostgresConnector extends IDBConnector {
       this._instance = PostgresInstance.fromString(_tempConnectionString);
     }
 
+    createConnection();
+
+  }
+
+  void createConnection() {
+
     _connection = new PostgreSQLConnection(
-        _instance._host,
-        _instance._port,
-        _instance._database,
-        username: _instance._user,
-        password: _instance._password,
-        useSSL: true,
+      _instance._host,
+      _instance._port,
+      _instance._database,
+      username: _instance._user,
+      password: _instance._password,
+      useSSL: true,
     );
 
   }
@@ -71,9 +75,16 @@ class PostgresConnector extends IDBConnector {
 
   }
 
+  @override
+  void reconnect() {
+
+    createConnection();
+
+  }
+
   //#region CREATE
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> insertTable({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> insertRecord({@required String tableName, Map<String, dynamic> fieldAndValues, List<String> returningFields}) {
 
     String sql = _insertStatement(tableName);
 

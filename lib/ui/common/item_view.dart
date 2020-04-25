@@ -153,24 +153,25 @@ class _ItemGridTile extends StatelessWidget {
 
 class CachedImage extends StatelessWidget {
 
-  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.applyGradient = false}) : super(key: key);
+  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.backgroundColour = Colors.black, this.applyGradient = false}) : super(key: key);
 
   final String imageURL;
   final BoxFit fit;
+  final Color backgroundColour;
   final bool applyGradient;
 
   @override
   Widget build(BuildContext context) {
 
     return imageURL != null?
-    applyGradient?
-    Container(
-      color: Colors.black,
-      child: Opacity(
-        opacity: 0.75,
-        child: _getCachedImage(),
-      ),
-    ) : _getCachedImage()
+      applyGradient?
+        Container(
+          color: Colors.black,
+          child: Opacity(
+            opacity: 0.75,
+            child: _getCachedImage(),
+          ),
+        ) : _getCachedImage()
         : Container();
 
   }
@@ -182,7 +183,7 @@ class CachedImage extends StatelessWidget {
       fit: fit,
       useOldImageOnUrlChange: true,
       placeholder: (BuildContext context, String url) => LoadingIcon(),
-      errorWidget: (BuildContext context, String url, Object error) => Container(),
+      errorWidget: (BuildContext context, String url, Object error) => Container( color: backgroundColour, ),
     );
 
   }

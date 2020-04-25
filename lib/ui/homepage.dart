@@ -40,7 +40,7 @@ class Homepage extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(Icons.grid_on),
-                tooltip: 'Change View',
+                tooltip: 'Change to Grid/List',
                 onPressed: () {
                   ItemListProvider(context, state).add(UpdateIsGrid());
                 },
@@ -93,7 +93,7 @@ class _HomepageViewAction extends StatelessWidget {
 
     return PopupMenuButton(
       icon: Icon(Icons.view_carousel),
-      tooltip: "Change Filter",
+      tooltip: "Change View",
       itemBuilder: (BuildContext context) {
         return barItem.views.map( (String view) {
           return PopupMenuItem(
