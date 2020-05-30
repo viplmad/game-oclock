@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -239,6 +237,8 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   Widget _imageActionListBuilder(BuildContext context, {String imageFilename}) {
 
+    final ImagePicker _picker = ImagePicker();
+
     return Container(
       child: Wrap(
         children: <Widget>[
@@ -250,9 +250,9 @@ abstract class ItemDetailBody extends StatelessWidget {
             title: imageFilename != null? Text("Replace image") : Text("Upload image"),
             leading: Icon(Icons.file_upload),
             onTap: () {
-              ImagePicker.pickImage(
-                source: ImageSource.gallery,
-              ).then( (File imagePicked) {
+              _picker.getImage(
+                  source: ImageSource.gallery,
+              ).then( (PickedFile imagePicked) {
                 if(imagePicked != null) {
 
                   itemBloc.add(
@@ -725,7 +725,7 @@ class ItemGenericField<T> extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+            child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
@@ -890,17 +890,11 @@ class ItemDoubleField extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
 
-              MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
-              return NumberPickerDialog.decimal(
-                title: Text("Edit " + fieldName),
-                initialDoubleValue: value,
-                decimalPlaces: 2,
-                minValue: 0,
-                maxValue: 100,
-                cancelWidget: Text(localizations.cancelButtonLabel),
-                confirmWidget: Text(localizations.okButtonLabel),
+              return DecimalPickerDialog(
+                fieldName: fieldName,
+                number: value,
               );
+              
             }
         );
       },
@@ -996,10 +990,12 @@ class ItemDurationField extends StatelessWidget {
         return showDialog<Duration>(
             context: context,
             builder: (BuildContext context) {
+
               return DurationPickerDialog(
                 fieldName: fieldName,
                 duration: value,
               );
+
             }
         );
       },
@@ -1029,7 +1025,7 @@ class RatingField extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-                child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+                child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
               ),
             ],
           ),
@@ -1040,7 +1036,7 @@ class RatingField extends StatelessWidget {
             color: Colors.yellow,
             borderColor: Colors.orangeAccent,
             size: 35.0,
-            onRatingChanged: (double newRating) {
+            onRated: (double newRating) {
               if (newRating != null) {
 
                 int updatedRating = newRating.toInt();
@@ -1097,7 +1093,7 @@ class EnumField extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-          child: Text(fieldName, style: Theme.of(context).textTheme.subhead),
+          child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
         ),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -1144,7 +1140,7 @@ class _HeaderText extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(text, style: Theme.of(context).textTheme.subhead),
+        Text(text, style: Theme.of(context).textTheme.subtitle1),
         trailingWidget?? Container(),
       ],
     );
@@ -1472,7 +1468,7 @@ class YearPickerDialogState extends State<YearPickerDialog> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(localizations.formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subhead.copyWith( color: Colors.white),),
+                    child: Text(localizations.formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith( color: Colors.white),),
                   )
                 ],
               ),
@@ -1480,7 +1476,7 @@ class YearPickerDialogState extends State<YearPickerDialog> {
             Flexible(
               child: YearPicker(
                 firstDate: DateTime(1970),
-                lastDate: DateTime(2030),
+                lastDate: DateTime.now(),
                 selectedDate: _selectedDate,
                 onChanged: (DateTime newDate) {
                   setState(() {
@@ -1556,7 +1552,7 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
                 });
               }
           ),
-          Text(':', style: Theme.of(context).textTheme.title,),
+          Text(':', style: Theme.of(context).textTheme.headline6,),
           NumberPicker.integer(
               initialValue: _minutes,
               minValue: 0,
@@ -1581,6 +1577,82 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
           child: Text(localizations.okButtonLabel),
           onPressed: () {
             Navigator.maybePop(context, Duration(hours: _hours, minutes: _minutes));
+          },
+        ),
+      ],
+    );
+  }
+
+}
+
+class DecimalPickerDialog extends StatefulWidget {
+  DecimalPickerDialog({Key key, this.fieldName, this.number}) : super(key: key);
+
+  final String fieldName;
+  final double number;
+
+  State<DecimalPickerDialog> createState() => DecimalPickerDialogState();
+}
+class DecimalPickerDialogState extends State<DecimalPickerDialog> {
+  int _integerPart;
+  int _decimalPart;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _integerPart = widget.number.truncate();
+    _decimalPart = ((widget.number - _integerPart) * 100).round();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text("Edit " + widget.fieldName),
+      content: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          NumberPicker.integer(
+              initialValue: _integerPart,
+              minValue: 0,
+              maxValue: 100,
+              highlightSelectedValue: true,
+              onChanged: (num newInteger) {
+                setState(() {
+                  _integerPart = newInteger;
+                });
+              }
+          ),
+          Text('.', style: Theme.of(context).textTheme.headline6,),
+          NumberPicker.integer(
+              initialValue: _decimalPart,
+              minValue: 0,
+              maxValue: 99,
+              infiniteLoop: true,
+              highlightSelectedValue: true,
+              onChanged: (num newDecimal) {
+                setState(() {
+                  _decimalPart = newDecimal;
+                });
+              }
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(localizations.cancelButtonLabel),
+          onPressed: () {
+            Navigator.maybePop(context);
+          },
+        ),
+        FlatButton(
+          child: Text(localizations.okButtonLabel),
+          onPressed: () {
+            Navigator.maybePop(context, double.tryParse(_integerPart.toString() + "." + _decimalPart.toString().padLeft(2, '0')));
           },
         ),
       ],

@@ -185,15 +185,3 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
   }
 
 }
-
-class ItemLocalSearch extends ItemSearch
-{
-
-}
-class ItemLocalSearchState extends _ItemSearchState
-{
-  @override
-  ItemSearchBloc getSearchBloc() {
-    BlocProvider.of<ItemLocalSearchBloc>(context);
-  }
-}

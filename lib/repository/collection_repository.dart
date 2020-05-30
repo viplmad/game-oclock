@@ -1446,7 +1446,6 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion IMAGE
 
   //#region DOWNLOAD
-  @override
   String getGameCoverURL(String gameCoverName) {
 
     return gameCoverName != null?
@@ -1458,7 +1457,6 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  @override
   String getDLCCoverURL(String dlcCoverName) {
 
     return dlcCoverName != null?
@@ -1470,7 +1468,6 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  @override
   String getPlatformIconURL(String platformIconName) {
 
     return platformIconName != null?
@@ -1482,7 +1479,6 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  @override
   String getStoreIconURL(String storeIconName) {
 
     return storeIconName != null?
@@ -1494,7 +1490,6 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  @override
   String getSystemIconURL(String systemIconName) {
 
     return systemIconName != null?
