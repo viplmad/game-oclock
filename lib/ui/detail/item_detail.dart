@@ -1619,7 +1619,7 @@ class DecimalPickerDialogState extends State<DecimalPickerDialog> {
           NumberPicker.integer(
               initialValue: _integerPart,
               minValue: 0,
-              maxValue: 100,
+              maxValue: 1000,
               highlightSelectedValue: true,
               onChanged: (num newInteger) {
                 setState(() {
