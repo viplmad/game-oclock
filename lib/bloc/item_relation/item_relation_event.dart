@@ -12,6 +12,20 @@ abstract class ItemRelationEvent extends Equatable {
 
 class LoadItemRelation extends ItemRelationEvent {}
 
+class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
+  const UpdateItemRelation(this.otherItems);
+
+  final List<W> otherItems;
+
+  @override
+  List<Object> get props => [otherItems];
+
+  @override
+  String toString() => 'UpdateItemRelation { '
+      'otherItems: $otherItems'
+      ' }';
+}
+
 class AddItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemRelationEvent {
   const AddItemRelation(this.item, this.otherItem);
 
