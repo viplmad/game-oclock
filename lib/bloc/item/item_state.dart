@@ -12,10 +12,10 @@ abstract class ItemState extends Equatable {
 
 class Rested extends ItemState {}
 
-class ItemAdded extends ItemState {
+class ItemAdded<T extends CollectionItem> extends ItemState {
   const ItemAdded(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];
@@ -40,10 +40,10 @@ class ItemNotAdded extends ItemState {
       ' }';
 }
 
-class ItemDeleted extends ItemState {
+class ItemDeleted<T extends CollectionItem> extends ItemState {
   const ItemDeleted(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];
@@ -70,10 +70,10 @@ class ItemNotDeleted extends ItemState {
 
 class ItemUpdating extends ItemState {}
 
-class ItemFieldUpdated extends ItemState {
+class ItemFieldUpdated<T extends CollectionItem> extends ItemState {
   const ItemFieldUpdated(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];
@@ -98,10 +98,10 @@ class ItemFieldNotUpdated extends ItemState {
       ' }';
 }
 
-class ItemImageUpdated extends ItemState {
+class ItemImageUpdated<T extends CollectionItem> extends ItemState {
   const ItemImageUpdated(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];
@@ -126,18 +126,17 @@ class ItemImageNotUpdated extends ItemState {
       ' }';
 }
 
-class ItemRelationAdded extends ItemState {
-  const ItemRelationAdded(this.item);
+class ItemRelationAdded<W extends CollectionItem> extends ItemState {
+  const ItemRelationAdded(this.otherItem);
 
-  final CollectionItem item;
-  Type get type => item.runtimeType;
+  final W otherItem;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => [otherItem];
 
   @override
   String toString() => 'ItemRelationAdded { '
-      'item: $item'
+      'otherItem: $otherItem'
       ' }';
 }
 
@@ -155,18 +154,17 @@ class ItemRelationNotAdded extends ItemState {
       ' }';
 }
 
-class ItemRelationDeleted extends ItemState {
-  const ItemRelationDeleted(this.item);
+class ItemRelationDeleted<W extends CollectionItem> extends ItemState {
+  const ItemRelationDeleted(this.otherItem);
 
-  final CollectionItem item;
-  Type get type => item.runtimeType;
+  final W otherItem;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => [otherItem];
 
   @override
   String toString() => 'ItemRelationDeleted { '
-      'item: $item'
+      'otherItem: $otherItem'
       ' }';
 }
 

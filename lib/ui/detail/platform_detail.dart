@@ -14,9 +14,9 @@ const Color platformColour = Colors.black87;
 
 class PlatformDetail extends StatelessWidget {
 
-  const PlatformDetail({Key key, @required this.ID}) : super(key: key);
+  const PlatformDetail({Key key, @required this.platform}) : super(key: key);
 
-  final int ID;
+  final Platform platform;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class PlatformDetail extends StatelessWidget {
       body: Theme(
         data: platformTheme,
         child: _PlatformDetailBody(
-          itemID: ID,
-          itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(ID)),
+          item: platform,
+          itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(platform.ID)),
         ),
       ),
     );
@@ -46,22 +46,20 @@ const List<Color> typeColours = [
   Colors.deepPurpleAccent,
 ];
 
-class _PlatformDetailBody extends ItemDetailBody {
+class _PlatformDetailBody extends ItemDetailBody<Platform> {
 
   _PlatformDetailBody({
     Key key,
-    @required int itemID,
-    @required ItemDetailBloc itemDetailBloc,
+    @required Platform item,
+    @required PlatformDetailBloc itemDetailBloc,
   }) : super(
     key: key,
-    itemID: itemID,
+    item: item,
     itemDetailBloc: itemDetailBloc,
   );
 
   @override
-  List<Widget> itemFieldsBuilder(CollectionItem item) {
-
-    Platform platform = (item as Platform);
+  List<Widget> itemFieldsBuilder(Platform platform) {
 
     return [
       itemTextField(
@@ -82,22 +80,17 @@ class _PlatformDetailBody extends ItemDetailBody {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListManyRelation(
-        itemType: Game,
-      ),
-      itemListManyRelation( //TODO: show as chips
-        itemType: System,
-      ),
+      itemListManyRelation<Game>(),
+      itemListManyRelation<System>() //TODO: show as chips
     ];
 
   }
 
   @override
-  PlatformRelationBloc itemRelationBlocFunction(Type itemType) {
+  PlatformRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
 
-    return PlatformRelationBloc(
-      platformID: itemID,
-      relationType: itemType,
+    return PlatformRelationBloc<W>(
+      platformID: item.ID,
       itemBloc: itemBloc,
     );
 

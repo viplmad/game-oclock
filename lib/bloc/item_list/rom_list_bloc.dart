@@ -9,10 +9,10 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_list.dart';
 
 
-class RomListBloc extends ItemListBloc {
+class RomListBloc extends ItemListBloc<Game> {
 
   RomListBloc({
-    @required ItemBloc itemBloc,
+    @required GameBloc itemBloc,
   }) : super(itemBloc: itemBloc);
 
   @override

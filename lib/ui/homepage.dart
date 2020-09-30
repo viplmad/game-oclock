@@ -17,6 +17,7 @@ import 'item_list.dart';
 import 'bloc_provider_route.dart';
 
 
+GameTab activeGameTab = GameTab.all;
 class Homepage extends StatelessWidget {
 
   @override
@@ -24,55 +25,50 @@ class Homepage extends StatelessWidget {
 
     return BlocBuilder<MainTabBloc, MainTab> (
       builder: (BuildContext context, MainTab state) {
-        BarItem barItem = barItems.elementAt(MainTab.values.indexOf(state));
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(barItem.title + 's'),
-            backgroundColor: barItem.color,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.sort_by_alpha),
-                tooltip: 'Change Order',
-                onPressed: () {
-                  ItemListProvider(context, state).add(UpdateSortOrder());
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.grid_on),
-                tooltip: 'Change to Grid/List',
-                onPressed: () {
-                  ItemListProvider(context, state).add(UpdateIsGrid());
-                },
-              ),
-              _HomepageViewAction(
-                activeTab: state,
-                onSelected: (String selectedView) {
-                  ItemListProvider(context, state).add(UpdateView(selectedView));
-                },
-              ),
-            ],
-          ),
-          body: _HomepageBody(
-            activeTab: state,
-            itemListBloc: ItemListProvider(context, state),
-            onDismiss: (CollectionItem item) {
-              ItemListProvider(context, state).itemBloc.add(DeleteItem(item));
-            },
-          ),
-          bottomNavigationBar: _HomepageTab(
-            activeTab: state,
-            onTap: (tab) {
-              BlocProvider.of<MainTabBloc>(context).add(UpdateMainTab(tab));
-            },
-          ),
-          floatingActionButton: _HomepageFAB(
-            activeTab: state,
-            onTap: () {
-              ItemListProvider(context, state).itemBloc.add(AddItem());
-            },
-          ),
-        );
+        switch(state) {
+          case MainTab.game:
+            switch(activeGameTab) {
+              case GameTab.all:
+                return _HomepageIntermediate<Game>(
+                  activeTab: state,
+                  itemListBloc: BlocProvider.of<AllListBloc>(context),
+                );
+              case GameTab.game:
+                return _HomepageIntermediate<Game>(
+                  activeTab: state,
+                  itemListBloc: BlocProvider.of<GameListBloc>(context),
+                );
+              case GameTab.rom:
+                return _HomepageIntermediate<Game>(
+                  activeTab: state,
+                  itemListBloc: BlocProvider.of<RomListBloc>(context),
+                );
+            }
+            break;
+          case MainTab.dlc:
+            return _HomepageIntermediate<DLC>(
+              activeTab: state,
+              itemListBloc: BlocProvider.of<DLCListBloc>(context),
+            );
+          case MainTab.purchase:
+            return _HomepageIntermediate<Purchase>(
+              activeTab: state,
+              itemListBloc: BlocProvider.of<PurchaseListBloc>(context),
+            );
+          case MainTab.store:
+            return _HomepageIntermediate<Store>(
+              activeTab: state,
+              itemListBloc: BlocProvider.of<StoreListBloc>(context),
+            );
+          case MainTab.platform:
+            return _HomepageIntermediate<Platform>(
+              activeTab: state,
+              itemListBloc: BlocProvider.of<PlatformListBloc>(context),
+            );
+        }
+
+        return Container();
       },
     );
 
@@ -80,16 +76,75 @@ class Homepage extends StatelessWidget {
 
 }
 
-class _HomepageViewAction extends StatelessWidget {
-
-  const _HomepageViewAction({Key key, this.activeTab, this.onSelected}) : super(key: key);
+class _HomepageIntermediate<T extends CollectionItem> extends StatelessWidget {
+  const _HomepageIntermediate({Key key, this.activeTab, this.itemListBloc}) : super(key: key);
 
   final MainTab activeTab;
-  final Function(String) onSelected;
+  final ItemListBloc<T> itemListBloc;
 
   @override
   Widget build(BuildContext context) {
     BarItem barItem = barItems.elementAt(MainTab.values.indexOf(activeTab));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(barItem.title + 's'),
+        backgroundColor: barItem.color,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.sort_by_alpha),
+            tooltip: 'Change Order',
+            onPressed: () {
+              itemListBloc.add(UpdateSortOrder());
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.grid_on),
+            tooltip: 'Change to Grid/List',
+            onPressed: () {
+              itemListBloc.add(UpdateIsGrid());
+            },
+          ),
+          _HomepageViewAction(
+            barItem: barItem,
+            onSelected: (String selectedView) {
+              itemListBloc.add(UpdateView(selectedView));
+            },
+          ),
+        ],
+      ),
+      body: _HomepageBody<T>(
+        itemListBloc: itemListBloc,
+        onDismiss: (CollectionItem item) {
+          itemListBloc.itemBloc.add(DeleteItem<T>(item));
+        },
+      ),
+      bottomNavigationBar: _HomepageTab(
+        activeTab: activeTab,
+        onTap: (tab) {
+          BlocProvider.of<MainTabBloc>(context).add(UpdateMainTab(tab));
+        },
+      ),
+      floatingActionButton: _HomepageFAB(
+        barItem: barItem,
+        onTap: () {
+          itemListBloc.itemBloc.add(AddItem());
+        },
+      ),
+    );
+
+  }
+}
+
+class _HomepageViewAction extends StatelessWidget {
+
+  const _HomepageViewAction({Key key, this.barItem, this.onSelected}) : super(key: key);
+
+  final BarItem barItem;
+  final Function(String) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
 
     return PopupMenuButton(
       icon: Icon(Icons.view_carousel),
@@ -142,14 +197,13 @@ class _HomepageTab extends StatelessWidget {
 
 class _HomepageFAB extends StatelessWidget {
 
-  _HomepageFAB({Key key, @required this.activeTab, @required this.onTap}) : super(key: key);
+  _HomepageFAB({Key key, @required this.barItem, @required this.onTap}) : super(key: key);
 
-  final MainTab activeTab;
+  final BarItem barItem;
   final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    BarItem barItem = barItems.elementAt(MainTab.values.indexOf(activeTab));
 
     return FloatingActionButton(
       onPressed: () {
@@ -163,23 +217,22 @@ class _HomepageFAB extends StatelessWidget {
   }
 }
 
-class _HomepageBody extends StatelessWidget {
+class _HomepageBody<T extends CollectionItem> extends StatelessWidget {
 
-  const _HomepageBody({Key key, @required this.activeTab, @required this.itemListBloc, @required this.onDismiss}) : super(key: key);
+  const _HomepageBody({Key key, @required this.itemListBloc, @required this.onDismiss}) : super(key: key);
 
-  final MainTab activeTab;
-  final ItemListBloc itemListBloc;
-  final Function(CollectionItem) onDismiss;
+  final ItemListBloc<T> itemListBloc;
+  final void Function(CollectionItem) onDismiss;
 
-  ItemBloc get itemBloc => itemListBloc.itemBloc;
+  ItemBloc<T> get itemBloc => itemListBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ItemBloc, ItemState>(
+    return BlocListener<ItemBloc<T>, ItemState>(
       bloc: itemBloc,
       listener: (BuildContext context, ItemState state) {
-        if(state is ItemAdded) {
+        if(state is ItemAdded<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Added",
@@ -191,7 +244,7 @@ class _HomepageBody extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) {
-                      return ItemDetailProvider(state.item);
+                      return ItemDetailProvider<T>(state.item);
                     },
                   ),
                 );
@@ -212,7 +265,7 @@ class _HomepageBody extends StatelessWidget {
             ),
           );
         }
-        if(state is ItemDeleted) {
+        if(state is ItemDeleted<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Deleted",
@@ -233,16 +286,17 @@ class _HomepageBody extends StatelessWidget {
           );
         }
       },
-      child: BlocBuilder<ItemListBloc, ItemListState>(
+      child: BlocBuilder<ItemListBloc<T>, ItemListState>(
         bloc: itemListBloc,
         builder: (BuildContext context, ItemListState state) {
 
-          if(state is ItemListLoaded) {
+          if(state is ItemListLoaded<T>) {
 
-            if(activeTab == MainTab.game) {
+            if(T is Game) {
               return GameTabBar();
             }
-            return ItemList(
+
+            return ItemList<T>(
               items: state.items,
               activeView: state.view,
               onDismiss: onDismiss,
@@ -302,13 +356,13 @@ class GameTabBar extends StatelessWidget {
             },
             body: TabBarView(
               children: [
-                ItemListBlocBuilder(
+                ItemListBlocBuilder<Game>(
                   itemListBloc: BlocProvider.of<AllListBloc>(context),
                 ),
-                ItemListBlocBuilder(
+                ItemListBlocBuilder<Game>(
                   itemListBloc: BlocProvider.of<GameListBloc>(context),
                 ),
-                ItemListBlocBuilder(
+                ItemListBlocBuilder<Game>(
                   itemListBloc: BlocProvider.of<RomListBloc>(context),
                 ),
               ],
@@ -323,26 +377,26 @@ class GameTabBar extends StatelessWidget {
 
 }
 
-class ItemListBlocBuilder extends StatelessWidget {
+class ItemListBlocBuilder<T extends CollectionItem> extends StatelessWidget {
 
   ItemListBlocBuilder({@required this.itemListBloc});
 
-  final ItemListBloc itemListBloc;
+  final ItemListBloc<T> itemListBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<ItemListBloc, ItemListState>(
+    return BlocBuilder<ItemListBloc<T>, ItemListState>(
       bloc: itemListBloc,
       builder: (BuildContext context, ItemListState state) {
 
-        if(state is ItemListLoaded) {
+        if(state is ItemListLoaded<T>) {
 
-          return ItemList(
+          return ItemList<T>(
             items: state.items,
             activeView: state.view,
             onDismiss: (CollectionItem item) {
-              itemListBloc.itemBloc.add(DeleteItem(item));
+              itemListBloc.itemBloc.add(DeleteItem<T>(item));
             },
             isGridView: state.isGrid,
           );

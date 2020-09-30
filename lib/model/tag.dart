@@ -87,3 +87,13 @@ class Tag extends CollectionItem {
   }
 
 }
+
+class TagsData {
+
+  TagsData({
+    this.tags,
+  });
+
+  final List<Tag> tags;
+
+}

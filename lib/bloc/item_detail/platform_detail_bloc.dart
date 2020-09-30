@@ -9,10 +9,10 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetailBloc extends ItemDetailBloc {
+class PlatformDetailBloc extends ItemDetailBloc<Platform> {
 
   PlatformDetailBloc({
-    @required ItemBloc itemBloc
+    @required PlatformBloc itemBloc
   }) : super(itemBloc: itemBloc);
 
   @override

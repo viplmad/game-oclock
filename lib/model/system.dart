@@ -137,3 +137,13 @@ class System extends CollectionItem {
   }
 
 }
+
+class SystemsData {
+
+  SystemsData({
+    this.systems,
+  });
+
+  final List<System> systems;
+
+}

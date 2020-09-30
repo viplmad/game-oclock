@@ -142,3 +142,13 @@ class DLC extends CollectionItem {
   }
 
 }
+
+class DLCsData {
+
+  DLCsData({
+    this.dlcs,
+  });
+
+  final List<DLC> dlcs;
+
+}

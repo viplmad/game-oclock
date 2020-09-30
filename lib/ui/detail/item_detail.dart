@@ -18,24 +18,22 @@ import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 
 
-abstract class ItemDetailBody extends StatelessWidget {
+abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget {
 
-  ItemDetailBody({Key key, @required this.itemID, @required this.itemDetailBloc}) : super(key: key);
+  ItemDetailBody({Key key, @required this.item, @required this.itemDetailBloc}) : super(key: key);
 
-  final int itemID;
-  final ItemDetailBloc itemDetailBloc;
+  final T item;
+  final ItemDetailBloc<T> itemDetailBloc;
 
-  CollectionItem get item => Item(ID: itemID);
-
-  ItemBloc get itemBloc => itemDetailBloc.itemBloc;
+  ItemBloc<T> get itemBloc => itemDetailBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ItemBloc, ItemState>(
+    return BlocListener<ItemBloc<T>, ItemState>(
       bloc: itemBloc,
       listener: (BuildContext context, ItemState state) {
-        if(state is ItemFieldUpdated) {
+        if(state is ItemFieldUpdated<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Updated",
@@ -53,7 +51,7 @@ abstract class ItemDetailBody extends StatelessWidget {
             ),
           );
         }
-        if(state is ItemImageUpdated) {
+        if(state is ItemImageUpdated<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: "Image successfully updated",
@@ -82,7 +80,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                 itemBloc.add(
                   DeleteItemRelation(
                     item,
-                    state.item,
+                    state.otherItem,
                   ),
                 );
 
@@ -113,7 +111,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                 itemBloc.add(
                   AddItemRelation(
                     item,
-                    state.item,
+                    state.otherItem,
                   ),
                 );
 
@@ -138,11 +136,11 @@ abstract class ItemDetailBody extends StatelessWidget {
         headerSliverBuilder: _appBarBuilder,
         body: ListView(
           children: [
-            BlocBuilder<ItemDetailBloc, ItemDetailState> (
+            BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
               bloc: itemDetailBloc,
               builder: (BuildContext context, ItemDetailState state) {
 
-                if(state is ItemLoaded) {
+                if(state is ItemLoaded<T>) {
 
                   return Column(
                     children: itemFieldsBuilder(state.item),
@@ -181,7 +179,7 @@ abstract class ItemDetailBody extends StatelessWidget {
         snap: false,
         bottom: PreferredSize(
           preferredSize: Size(double.maxFinite, 1.0,),
-          child: BlocBuilder<ItemDetailBloc, ItemDetailState> (
+          child: BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
             bloc: itemDetailBloc,
             builder: (BuildContext context, ItemDetailState state) {
               if(state is ItemLoading) {
@@ -191,14 +189,14 @@ abstract class ItemDetailBody extends StatelessWidget {
             },
           ),
         ),
-        flexibleSpace: BlocBuilder<ItemDetailBloc, ItemDetailState> (
+        flexibleSpace: BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
           bloc: itemDetailBloc,
           builder: (BuildContext context, ItemDetailState state) {
             String title = "";
             String imageURL;
             String imageFilename;
 
-            if(state is ItemLoaded) {
+            if(state is ItemLoaded<T>) {
               title = state.item.getTitle();
               imageURL = state.item.getImageURL();
               imageFilename = state.item.getImageFilename();
@@ -256,7 +254,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                 if(imagePicked != null) {
 
                   itemBloc.add(
-                    AddItemImage(
+                    AddItemImage<T>(
                       item,
                       imagePicked.path,
                       imageFilename != null? imageFilename.split('.').first : null,
@@ -317,7 +315,7 @@ abstract class ItemDetailBody extends StatelessWidget {
                 if(newName != null) {
 
                   itemBloc.add(
-                    UpdateItemImageName(
+                    UpdateItemImageName<T>(
                       item,
                       imageName,
                       newName,
@@ -338,7 +336,7 @@ abstract class ItemDetailBody extends StatelessWidget {
               String imageName = imageFilename.split('.').first;
 
               itemBloc.add(
-                DeleteItemImage(
+                DeleteItemImage<T>(
                   item,
                   imageName,
                 ),
@@ -353,16 +351,15 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget loadingBar()
-  {
+  Widget loadingBar() {
     return LinearProgressIndicator();
   }
 
-  void Function(T) _updateFieldFunction<T>(String fieldName) {
+  void Function(K) _updateFieldFunction<K>(String fieldName) {
 
-    return (T newValue) {
+    return (K newValue) {
       itemBloc.add(
-        UpdateItemField(
+        UpdateItemField<T>(
           item,
           fieldName,
           newValue,
@@ -372,11 +369,11 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function(CollectionItem) _addRelationFunction() {
+  void Function(W) _addRelationFunction<W extends CollectionItem>() {
 
-    return (CollectionItem addedItem) {
+    return (W addedItem) {
       itemBloc.add(
-        AddItemRelation(
+        AddItemRelation<T, W>(
           item,
           addedItem,
         ),
@@ -385,11 +382,11 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function(CollectionItem) _deleteRelationFunction() {
+  void Function(W) _deleteRelationFunction<W extends CollectionItem>() {
 
-    return (CollectionItem deletedItem) {
+    return (W deletedItem) {
       itemBloc.add(
-        DeleteItemRelation(
+        DeleteItemRelation<T, W>(
           item,
           deletedItem,
         ),
@@ -398,14 +395,14 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function(CollectionItem) _onTapFunction(BuildContext context) {
+  void Function(W) _onTapFunction<W extends CollectionItem>(BuildContext context) {
 
-    return (CollectionItem item) {
+    return (W item) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return ItemDetailProvider(item);
+            return ItemDetailProvider<W>(item);
           }
         ),
       );
@@ -413,14 +410,14 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Future<CollectionItem> Function() _repositorySearchFuture(BuildContext context, Type itemType) {
+  Future<W> Function() _repositorySearchFuture<W extends CollectionItem>(BuildContext context) {
 
     return () {
-      return Navigator.push<CollectionItem>(
+      return Navigator.push<W>(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return ItemRepositorySearchProvider(itemType);
+            return ItemRepositorySearchProvider<W>();
           }
         ),
       );
@@ -428,14 +425,14 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  void Function() _localSearchFuture(BuildContext context, List<CollectionItem> items) {
+  void Function() _localSearchFuture<W extends CollectionItem>(BuildContext context, List<W> items) {
 
     return () {
-      return Navigator.push<CollectionItem>(
+      return Navigator.push<W>(
         context,
         MaterialPageRoute(
             builder: (BuildContext context) {
-              return ItemLocalSearchProvider(items);
+              return ItemLocalSearchProvider<W>(items);
             }
         ),
       );
@@ -600,21 +597,20 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemListSingleRelation({@required Type itemType, String shownName}) {
+  Widget itemListSingleRelation<W extends CollectionItem>({String shownName}) {
 
-    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
+    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
+      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
-        if(state is ItemRelationLoaded) {
-          return ResultsListSingle(
-            items: state.items,
-            itemType: itemType,
+        if(state is ItemRelationLoaded<W>) {
+          return ResultsListSingle<W>(
+            items: state.otherItems,
             itemTypeName: shownName,
-            onTap: _onTapFunction(context),
-            onSearch: _repositorySearchFuture(context, itemType),
-            updateAdd: _addRelationFunction(),
-            updateDelete: _deleteRelationFunction(),
+            onTap: _onTapFunction<W>(context),
+            onSearch: _repositorySearchFuture<W>(context),
+            updateAdd: _addRelationFunction<W>(),
+            updateDelete: _deleteRelationFunction<W>(),
           );
         }
 
@@ -631,23 +627,22 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemListManyRelation({@required Type itemType, String shownName, List<Widget> Function(List<CollectionItem>) trailingBuilder}) {
+  Widget itemListManyRelation<W extends CollectionItem>({String shownName, List<Widget> Function(List<W>) trailingBuilder}) {
 
-    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
+    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
+      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
-        if(state is ItemRelationLoaded) {
-          return ResultsListMany(
-            items: state.items,
-            itemType: itemType,
+        if(state is ItemRelationLoaded<W>) {
+          return ResultsListMany<W>(
+            items: state.otherItems,
             itemTypeName: shownName,
-            onTap: _onTapFunction(context),
-            onSearch: _repositorySearchFuture(context, itemType),
-            updateAdd: _addRelationFunction(),
-            updateDelete: _deleteRelationFunction(),
+            onTap: _onTapFunction<W>(context),
+            onSearch: _repositorySearchFuture<W>(context),
+            updateAdd: _addRelationFunction<W>(),
+            updateDelete: _deleteRelationFunction<W>(),
             trailingBuilder: trailingBuilder,
-            onListSearch: state.items.isNotEmpty? _localSearchFuture(context, state.items) : null,
+            onListSearch: state.otherItems.isNotEmpty? _localSearchFuture<W>(context, state.otherItems) : null,
           );
         }
         if(state is ItemRelationNotLoaded) {
@@ -669,20 +664,19 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  Widget itemChipRelation({@required Type itemType, String shownName}) {
+  Widget itemChipRelation<W extends CollectionItem>({String shownName}) {
 
-    return BlocBuilder<ItemRelationBloc, ItemRelationState>(
-      bloc: itemRelationBlocFunction(itemType)..add(LoadItemRelation()),
+    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
+      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
       builder: (BuildContext context, ItemRelationState state) {
 
-        if(state is ItemRelationLoaded) {
-          return ResultsChipMany(
-            selectedItems: state.items,
-            items: state.items,
-            itemType: itemType,
+        if(state is ItemRelationLoaded<W>) {
+          return ResultsChipMany<W>(
+            selectedItems: state.otherItems,
+            items: state.otherItems,
             itemTypeName: shownName,
-            updateAdd: _addRelationFunction(),
-            updateDelete: _deleteRelationFunction(),
+            updateAdd: _addRelationFunction<W>(),
+            updateDelete: _deleteRelationFunction<W>(),
           );
         }
 
@@ -693,25 +687,25 @@ abstract class ItemDetailBody extends StatelessWidget {
 
   }
 
-  external List<Widget> itemFieldsBuilder(CollectionItem item);
+  external List<Widget> itemFieldsBuilder(T item);
 
   external List<Widget> itemRelationsBuilder();
 
-  external ItemRelationBloc itemRelationBlocFunction(Type itemType);
+  external ItemRelationBloc<T, W> itemRelationBlocFunction<W extends CollectionItem>();
 
 }
 
-class ItemGenericField<T> extends StatelessWidget {
+class ItemGenericField<K> extends StatelessWidget {
 
   ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
 
   final String fieldName;
-  final T value;
+  final K value;
   final String shownValue;
   final bool editable;
-  final Future<T> Function() onTap;
+  final Future<K> Function() onTap;
   final void Function() onLongPress;
-  final void Function(T) update;
+  final void Function(K) update;
 
   final bool extended;
 
@@ -735,7 +729,7 @@ class ItemGenericField<T> extends StatelessWidget {
       ),
       onTap: editable?
         () {
-          onTap().then( (T newValue) {
+          onTap().then( (K newValue) {
             if (newValue != null) {
               update(newValue);
             }
@@ -750,7 +744,7 @@ class ItemGenericField<T> extends StatelessWidget {
         trailing: Text(shownValue?? "Unknown"),
         onTap: editable?
           () {
-            onTap().then( (T newValue) {
+            onTap().then( (K newValue) {
               if (newValue != null) {
                 update(newValue);
               }
@@ -777,7 +771,7 @@ class ItemTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<String>(
       fieldName: fieldName,
       value: value,
       shownValue: shownValue?? value,
@@ -838,7 +832,7 @@ class ItemIntField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
       shownValue: value?.toString(),
@@ -879,7 +873,7 @@ class ItemDoubleField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<double>(
       fieldName: fieldName,
       value: value,
       shownValue: shownValue,
@@ -914,7 +908,7 @@ class ItemYearField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
       shownValue: value?.toString(),
@@ -946,7 +940,7 @@ class ItemDateTimeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<DateTime>(
         fieldName: fieldName,
         value: value,
         shownValue: value != null?
@@ -978,7 +972,7 @@ class ItemDurationField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField(
+    return ItemGenericField<Duration>(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
@@ -1197,16 +1191,15 @@ class _ResultsList extends StatelessWidget {
   }
 
 }
-class _LinkButton extends StatelessWidget {
+class _LinkButton<W extends CollectionItem> extends StatelessWidget {
 
-  const _LinkButton({Key key, @required this.itemType, this.itemTypeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
+  const _LinkButton({Key key, this.itemTypeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
 
-  final Type itemType;
   final String itemTypeName;
-  final Future<CollectionItem> Function() onSearch;
-  final void Function(CollectionItem) updateAdd;
+  final Future<W> Function() onSearch;
+  final void Function(W) updateAdd;
 
-  String get shownName => itemTypeName?? itemType.toString();
+  String get shownName => itemTypeName?? W.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -1220,7 +1213,7 @@ class _LinkButton extends StatelessWidget {
         highlightElevation: 2.0,
         onPressed: () {
 
-          onSearch().then( (CollectionItem result) {
+          onSearch().then( (W result) {
             if (result != null) {
               updateAdd(result);
             }
@@ -1233,19 +1226,18 @@ class _LinkButton extends StatelessWidget {
   }
 
 }
-class ResultsListSingle extends StatelessWidget {
+class ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
 
-  ResultsListSingle({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  ResultsListSingle({@required this.items, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
-  final List<CollectionItem> items;
-  final Type itemType;
+  final List<W> items;
   final String itemTypeName;
-  final void Function(CollectionItem) onTap;
-  final Future<CollectionItem> Function() onSearch;
-  final void Function(CollectionItem) updateAdd;
-  final void Function(CollectionItem) updateDelete;
+  final void Function(W) onTap;
+  final Future<W> Function() onSearch;
+  final void Function(W) updateAdd;
+  final void Function(W) updateDelete;
 
-  String get shownName => itemTypeName?? itemType.toString();
+  String get shownName => itemTypeName?? W.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -1257,7 +1249,7 @@ class ResultsListSingle extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          CollectionItem result = items[index];
+          W result = items[index];
 
           return DismissibleItem(
             item: result,
@@ -1272,8 +1264,7 @@ class ResultsListSingle extends StatelessWidget {
 
         },
       ),
-      linkWidget: items.isEmpty? _LinkButton(
-          itemType: itemType,
+      linkWidget: items.isEmpty? _LinkButton<W>(
           itemTypeName: itemTypeName,
           onSearch: onSearch,
           updateAdd: updateAdd,
@@ -1283,21 +1274,20 @@ class ResultsListSingle extends StatelessWidget {
   }
 
 }
-class ResultsListMany extends StatelessWidget {
+class ResultsListMany<W extends CollectionItem> extends StatelessWidget {
 
-  ResultsListMany({@required this.items, @required this.itemType, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
+  ResultsListMany({@required this.items, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
 
-  final List<CollectionItem> items;
-  final Type itemType;
+  final List<W> items;
   final String itemTypeName;
-  final void Function(CollectionItem) onTap;
-  final Future<CollectionItem> Function() onSearch;
-  final void Function(CollectionItem) updateAdd;
-  final void Function(CollectionItem) updateDelete;
-  final List<Widget> Function(List<CollectionItem>) trailingBuilder;
+  final void Function(W) onTap;
+  final Future<W> Function() onSearch;
+  final void Function(W) updateAdd;
+  final void Function(W) updateDelete;
+  final List<Widget> Function(List<W>) trailingBuilder;
   final void Function() onListSearch;
 
-  String get shownName => itemTypeName?? itemType.toString() + 's';
+  String get shownName => itemTypeName?? W.toString() + 's';
 
   @override
   Widget build(BuildContext context) {
@@ -1313,7 +1303,7 @@ class ResultsListMany extends StatelessWidget {
           physics: ClampingScrollPhysics(),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
-            CollectionItem result = items[index];
+            W result = items[index];
 
             return DismissibleItem(
               item: result,
@@ -1329,8 +1319,7 @@ class ResultsListMany extends StatelessWidget {
           },
         ),
       ),
-      linkWidget: _LinkButton(
-        itemType: itemType,
+      linkWidget: _LinkButton<W>(
         itemTypeName: itemTypeName,
         onSearch: onSearch,
         updateAdd: updateAdd,
@@ -1345,18 +1334,17 @@ class ResultsListMany extends StatelessWidget {
   }
 
 }
-class ResultsChipMany extends StatelessWidget {
+class ResultsChipMany<W extends CollectionItem> extends StatelessWidget {
 
-  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, @required this.itemType, this.itemTypeName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
+  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, this.itemTypeName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
 
-  final List<CollectionItem> items;
-  final List<CollectionItem> selectedItems;
-  final Type itemType;
+  final List<W> items;
+  final List<W> selectedItems;
   final String itemTypeName;
-  final Function(CollectionItem) updateAdd;
-  final Function(CollectionItem) updateDelete;
+  final Function(W) updateAdd;
+  final Function(W) updateDelete;
 
-  String get shownName => itemTypeName?? itemType.toString() + 's';
+  String get shownName => itemTypeName?? W.toString() + 's';
 
   @override
   Widget build(BuildContext context) {
@@ -1387,7 +1375,7 @@ class ResultsChipMany extends StatelessWidget {
                           children: List<Widget>.generate(
                             items.length,
                             (int index) {
-                              CollectionItem option = items[index];
+                              W option = items[index];
 
                               return FilterChip(
                                 label: Text(option.getTitle()),
@@ -1413,7 +1401,7 @@ class ResultsChipMany extends StatelessWidget {
 
             }
 
-            CollectionItem selection = selectedItems[index];
+            W selection = selectedItems[index];
 
             return ChoiceChip(
               label: Text(selection.getTitle()),

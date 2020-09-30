@@ -57,3 +57,22 @@ class Item extends CollectionItem {
   String getTitle() => this.title;
 
 }
+
+class YearData<T> {
+
+  YearData() {
+    data = new List(12);
+    month = 0;
+  }
+
+  List<T> data;
+  int month;
+
+  void addData(T sum) {
+    if(month < 12) {
+      data[month] = sum;
+
+      month++;
+    }
+  }
+}

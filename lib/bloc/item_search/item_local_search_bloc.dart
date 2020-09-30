@@ -5,29 +5,33 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-class ItemLocalSearchBloc extends ItemSearchBloc {
+class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
 
   ItemLocalSearchBloc({
-    @required Type itemType,
     @required this.itemList,
-  }) : super(itemType: itemType);
+  }) : super();
 
-  final List<CollectionItem> itemList;
+  final List<T> itemList;
 
   @override
-  Future<List<CollectionItem>> getInitialItems() {
-
-    return Future<List<CollectionItem>>.value([]);
+  Stream<ItemSearchState> checkConnection() async* {
 
   }
 
   @override
-  Future<List<CollectionItem>> getSearchItems(String query) {
+  Future<List<T>> getInitialItems() {
 
-    final List<CollectionItem> items = itemList.where( (CollectionItem item) {
+    return Future<List<T>>.value([]);
+
+  }
+
+  @override
+  Future<List<T>> getSearchItems(String query) {
+
+    final List<T> items = itemList.where( (T item) {
       return item.getTitle().toLowerCase().contains(query.toLowerCase());
     }).take(super.maxResults).toList();
-    return Future<List<CollectionItem>>.value(items);
+    return Future<List<T>>.value(items);
 
   }
 

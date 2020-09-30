@@ -12,17 +12,16 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_relation.dart';
 
 
-abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationState> {
+abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.relationType, @required this.itemBloc}) {
+  ItemRelationBloc({@required this.itemID, @required this.itemBloc}) {
 
     itemSubscription = itemBloc.listen( mapItemStateToEvent );
 
   }
 
   final int itemID;
-  final Type relationType;
-  final ItemBloc itemBloc;
+  final ItemBloc<T> itemBloc;
   StreamSubscription<ItemState> itemSubscription;
   ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
 
@@ -38,7 +37,7 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
       yield* _mapLoadToState();
 
-    } else if(event is UpdateItemRelation) {
+    } else if(event is UpdateItemRelation<W>) {
 
       yield* _mapUpdateToState(event);
 
@@ -68,8 +67,8 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
     try {
 
-      final List<CollectionItem> items = await getRelationStream().first;
-      yield ItemRelationLoaded(items);
+      final List<W> items = await getRelationStream().first;
+      yield ItemRelationLoaded<W>(items);
 
     } catch (e) {
 
@@ -79,19 +78,19 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
   }
 
-  Stream<ItemRelationState> _mapUpdateToState(UpdateItemRelation event) async* {
+  Stream<ItemRelationState> _mapUpdateToState(UpdateItemRelation<W> event) async* {
 
-    yield ItemRelationLoaded(event.items);
+    yield ItemRelationLoaded<W>(event.otherItems);
 
   }
 
   void mapItemStateToEvent(ItemState itemState) {
 
-    if(itemState is ItemRelationAdded) {
+    if(itemState is ItemRelationAdded<W>) {
 
       _mapRelationAddedToEvent(itemState);
 
-    } else if(itemState is ItemRelationDeleted) {
+    } else if(itemState is ItemRelationDeleted<W>) {
 
       _mapRelationDeletedToEvent(itemState);
 
@@ -99,30 +98,28 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
 
   }
 
-  void _mapRelationAddedToEvent(ItemRelationAdded itemState) {
+  void _mapRelationAddedToEvent(ItemRelationAdded<W> itemState) {
 
-    if(state is ItemRelationLoaded
-        && relationType == itemState.type) {
-      final relationItemAdded = itemState.item;
-      final List<CollectionItem> updatedItems = List.from(
-          (state as ItemRelationLoaded).items)..add(relationItemAdded);
+    if(state is ItemRelationLoaded<W>) {
+      final W relationItemAdded = itemState.otherItem;
+      final List<W> updatedItems = List.from(
+          (state as ItemRelationLoaded<W>).otherItems)..add(relationItemAdded);
 
-      add(UpdateItemRelation(updatedItems));
+      add(UpdateItemRelation<W>(updatedItems));
     }
 
   }
 
-  void _mapRelationDeletedToEvent(ItemRelationDeleted itemState) {
+  void _mapRelationDeletedToEvent(ItemRelationDeleted<W> itemState) {
 
-    if(state is ItemRelationLoaded
-        && relationType == itemState.type) {
-      final itemDeleted = itemState.item;
-      final List<CollectionItem> updatedItems = (state as ItemRelationLoaded)
-          .items
-          .where((CollectionItem item) => item.ID != itemDeleted.ID)
+    if(state is ItemRelationLoaded<W>) {
+      final W itemDeleted = itemState.otherItem;
+      final List<W> updatedItems = (state as ItemRelationLoaded<W>)
+          .otherItems
+          .where((W item) => item.ID != itemDeleted.ID)
           .toList();
 
-      add(UpdateItemRelation(updatedItems));
+      add(UpdateItemRelation<W>(updatedItems));
     }
 
   }
@@ -136,7 +133,7 @@ abstract class ItemRelationBloc extends Bloc<ItemRelationEvent, ItemRelationStat
   }
 
   @mustCallSuper
-  Stream<List<CollectionItem>> getRelationStream() {
+  Stream<List<W>> getRelationStream() {
 
     return Stream.error("Relation does not exist");
 

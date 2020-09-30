@@ -12,17 +12,17 @@ abstract class ItemRelationState extends Equatable {
 
 class ItemRelationLoading extends ItemRelationState {}
 
-class ItemRelationLoaded extends ItemRelationState {
-  const ItemRelationLoaded([this.items = const []]);
+class ItemRelationLoaded<W extends CollectionItem> extends ItemRelationState {
+  const ItemRelationLoaded([this.otherItems = const []]);
 
-  final List<CollectionItem> items;
+  final List<W> otherItems;
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [otherItems];
 
   @override
   String toString() => 'ItemRelationLoaded { '
-      'items: $items'
+      'otherItems: $otherItems'
       ' }';
 }
 

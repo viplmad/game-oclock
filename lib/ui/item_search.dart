@@ -10,18 +10,18 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'common/item_view.dart';
 
 
-class ItemSearch<T extends ItemSearchBloc> extends StatefulWidget {
-  const ItemSearch({Key key, @required this.searchType, @required this.itemBloc, @required this.onTapBehaviour, this.allowNewButton = false}) : super(key: key);
+class ItemSearch<T extends CollectionItem> extends StatefulWidget {
+  const ItemSearch({Key key, @required this.itemSearchBloc, @required this.itemBloc, @required this.onTapBehaviour, this.allowNewButton = false}) : super(key: key);
 
-  final Type searchType;
-  final ItemBloc itemBloc;
-  final Function() Function(BuildContext, CollectionItem) onTapBehaviour;
+  final ItemSearchBloc<T> itemSearchBloc;
+  final ItemBloc<T> itemBloc;
+  final void Function() Function(BuildContext, T) onTapBehaviour;
   final bool allowNewButton;
 
   @override
   State<ItemSearch> createState() => _ItemSearchState<T>();
 }
-class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
+class _ItemSearchState<T extends CollectionItem> extends State<ItemSearch<T>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -29,15 +29,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
     _textEditingController.text = value;
   }
 
-  ItemSearchBloc _itemSearchBloc;
-  String get searchName => widget.searchType.toString();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _itemSearchBloc = BlocProvider.of<T>(context);
-  }
+  String get searchName => T.toString(); // TODO: Localisations
 
   List<Widget> buildActions() {
 
@@ -47,7 +39,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
         tooltip: 'Clear',
         onPressed: () {
           _textEditingController.clear();
-          _itemSearchBloc.add(
+          widget.itemSearchBloc.add(
             SearchTextChanged(query),
           );
         },
@@ -66,7 +58,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
         onPressed: () {
 
           widget.itemBloc.add(
-            AddItem(Item(ID: 0, title: query)),
+            AddItem(query),
           );
 
         },
@@ -87,7 +79,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
           onChanged: (String newQuery) {
             //Not sure of this fix to update button text
             setState(() {});
-            _itemSearchBloc.add(
+            widget.itemSearchBloc.add(
               SearchTextChanged(query),
             );
           },
@@ -99,10 +91,10 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
           ),
         ),
       ),
-      body: BlocListener<ItemBloc, ItemState>(
+      body: BlocListener<ItemBloc<T>, ItemState>(
         bloc: widget.itemBloc,
         listener: (BuildContext context, ItemState state) {
-          if(state is ItemAdded) {
+          if(state is ItemAdded<T>) {
             Navigator.maybePop(context, state.item);
           }
         },
@@ -114,16 +106,16 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
                 color: Colors.grey,
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               ) : Container(),
-            BlocBuilder<ItemSearchBloc, ItemSearchState>(
-              bloc: _itemSearchBloc,
+            BlocBuilder<ItemSearchBloc<T>, ItemSearchState>(
+              bloc: widget.itemSearchBloc,
               builder: (BuildContext context, ItemSearchState state) {
 
-                if(state is ItemSearchEmpty) {
+                if(state is ItemSearchEmpty<T>) {
 
                   return listItems(state.suggestions);
 
                 }
-                if(state is ItemSearchSuccess) {
+                if(state is ItemSearchSuccess<T>) {
 
                   return listItems(state.results);
 
@@ -147,7 +139,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
 
   }
 
-  Widget listItems(List<CollectionItem> results) {
+  Widget listItems(List<T> results) {
 
     if(results.isEmpty) {
       return Center(
@@ -162,11 +154,13 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
           padding: const EdgeInsets.all(8.0),
           itemCount: results.length,
           itemBuilder: (BuildContext context, int index) {
-            CollectionItem result = results[index];
+            T result = results[index];
+
+            var onTap = widget.onTapBehaviour(context, result);
 
             return ItemListCard(
               item: result,
-              onTap: widget.onTapBehaviour(context, result),
+              onTap: onTap,
             );
 
           },
@@ -179,7 +173,7 @@ class _ItemSearchState<T extends ItemSearchBloc> extends State<ItemSearch> {
   @override
   void dispose() {
 
-    _itemSearchBloc.close();
+    widget.itemSearchBloc.close();
     super.dispose();
 
   }

@@ -9,20 +9,19 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_relation.dart';
 
 
-class TagRelationBloc extends ItemRelationBloc {
+class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W> {
 
   TagRelationBloc({
     @required int tagID,
-    @required Type relationType,
-    @required ItemBloc itemBloc,
-  }) : super(itemID: tagID, relationType: relationType, itemBloc: itemBloc);
+    @required TagBloc itemBloc,
+  }) : super(itemID: tagID, itemBloc: itemBloc);
 
   @override
-  Stream<List<CollectionItem>> getRelationStream() {
+  Stream<List<W>> getRelationStream() {
 
-    switch(relationType) {
+    switch(W) {
       case Game:
-        return collectionRepository.getGamesFromTag(itemID);
+        return collectionRepository.getGamesFromTag(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

@@ -9,7 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'item.dart';
 
 
-class DLCBloc extends ItemBloc {
+class DLCBloc extends ItemBloc<DLC> {
 
   DLCBloc({
     @required ICollectionRepository collectionRepository,
@@ -18,76 +18,76 @@ class DLCBloc extends ItemBloc {
   @override
   Future<DLC> createFuture(AddItem event) {
 
-    return collectionRepository.insertDLC(event.item != null? event.item.getTitle() : '');
+    return collectionRepository.insertDLC(event.title ?? '');
 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem event) {
+  Future<dynamic> deleteFuture(DeleteItem<DLC> event) {
 
     return collectionRepository.deleteDLC(event.item.ID);
 
   }
 
   @override
-  Future<DLC> updateFuture(UpdateItemField event) {
+  Future<DLC> updateFuture(UpdateItemField<DLC> event) {
 
     return collectionRepository.updateDLC(event.item.ID, event.field, event.value);
 
   }
 
   @override
-  Future<DLC> addImage(AddItemImage event) {
+  Future<DLC> addImage(AddItemImage<DLC> event) {
 
     return collectionRepository.uploadDLCCover(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
   @override
-  Future<DLC> updateImageName(UpdateItemImageName event) {
+  Future<DLC> updateImageName(UpdateItemImageName<DLC> event) {
 
     return collectionRepository.renameDLCCover(event.item.ID, event.oldImageName, event.newImageName);
 
   }
 
   @override
-  Future<DLC> deleteImage(DeleteItemImage event) {
+  Future<DLC> deleteImage(DeleteItemImage<DLC> event) {
 
     return collectionRepository.deleteDLCCover(event.item.ID, event.imageName);
 
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation event) {
+  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<DLC, W> event) {
 
     int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.insertGameDLC(otherID, dlcID);
       case Purchase:
         return collectionRepository.insertDLCPurchase(dlcID, otherID);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelationFuture<W>(event);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<DLC, W> event) {
 
     int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.deleteGameDLC(dlcID);
       case Purchase:
         return collectionRepository.deleteDLCPurchase(dlcID, otherID);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelationFuture<W>(event);
 
   }
 

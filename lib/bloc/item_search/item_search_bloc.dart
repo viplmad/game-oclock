@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -8,17 +7,15 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-abstract class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
+abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemSearchBloc({@required this.itemType});
-
-  final Type itemType;
+  ItemSearchBloc();
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
   @override
-  ItemSearchState get initialState => ItemSearchEmpty();
+  ItemSearchState get initialState => ItemSearchEmpty<T>();
 
   @override
   Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
@@ -33,10 +30,6 @@ abstract class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
 
   }
 
-  Stream<ItemSearchState> checkConnection() async* {
-
-  }
-
   Stream<ItemSearchState> _mapTextChangedToState(SearchTextChanged event) async* {
 
     yield ItemSearchLoading();
@@ -46,13 +39,13 @@ abstract class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
       final query = event.query;
       if(query.isEmpty) {
 
-        final List<CollectionItem> initialItems = await getInitialItems();
-        yield ItemSearchEmpty(initialItems);
+        final List<T> initialItems = await getInitialItems();
+        yield ItemSearchEmpty<T>(initialItems);
 
       } else {
 
-        final List<CollectionItem> items = await getSearchItems(query);
-        yield ItemSearchSuccess(items);
+        final List<T> items = await getSearchItems(query);
+        yield ItemSearchSuccess<T>(items);
 
       }
 
@@ -71,7 +64,9 @@ abstract class ItemSearchBloc extends Bloc<ItemSearchEvent, ItemSearchState> {
 
   }
 
-  external Future<List<CollectionItem>> getInitialItems();
-  external Future<List<CollectionItem>> getSearchItems(String query);
+  external Stream<ItemSearchState> checkConnection();
+
+  external Future<List<T>> getInitialItems();
+  external Future<List<T>> getSearchItems(String query);
 
 }

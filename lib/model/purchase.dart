@@ -147,3 +147,84 @@ class Purchase extends CollectionItem {
   }
 
 }
+
+class PurchasesData {
+
+  PurchasesData({
+    this.purchases,
+  });
+
+  final List<Purchase> purchases;
+
+  PurchasesDataYear getYearData(int year) {
+    List<Purchase> yearItems = purchases.where((Purchase item) => item.date?.year == year).toList(growable: false);
+
+    return PurchasesDataYear(yearItems);
+  }
+
+}
+
+class PurchasesDataYear {
+  PurchasesDataYear(this.items);
+
+  final List<Purchase> items;
+  int get length => items.length;
+
+  double getTotalPrice() {
+    double value = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
+
+    return value;
+  }
+
+  double getTotalOriginalPrice() {
+    double value = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.originalPrice);
+
+    return value;
+  }
+
+  YearData<int> getMonthCount() {
+    YearData<int> values = YearData<int>();
+
+    for(int month = 1; month <= 12; month++) {
+
+      int monthSum = items.where((item) => item.date.month == month).length;
+
+      values.addData(monthSum);
+    }
+
+    return values;
+  }
+
+  YearData<double> getMonthPrice() {
+    YearData<double> values = YearData<double>();
+
+    for(int month = 1; month <= 12; month++) {
+
+      List<Purchase> itemsMonth = items.where((Purchase item) => item.date.month == month);
+      double monthSum = itemsMonth.fold(0, (double previousValue, Purchase item) => previousValue + item.price);
+
+      values.addData(monthSum);
+    }
+
+    return values;
+  }
+
+  List<int> getIntervalPrice(List<int> intervals) {
+    List<int> values = List<int>(intervals.length);
+
+    for(int index = 0; index < intervals.length; index++) {
+      int minPrice = intervals.elementAt(index);
+
+      int maxPrice = 10000;
+      if(intervals.length != index + 1) {
+        maxPrice = intervals.elementAt(index + 1);
+      }
+
+      int intervalSum = items.where((Purchase item) => item.price >= minPrice && item.price < maxPrice).length;
+
+      values[index] = intervalSum;
+    }
+
+    return values;
+  }
+}

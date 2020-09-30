@@ -122,3 +122,13 @@ class Platform extends CollectionItem {
   }
 
 }
+
+class PlatformsData {
+
+  PlatformsData({
+    this.platforms,
+  });
+
+  final List<Platform> platforms;
+
+}

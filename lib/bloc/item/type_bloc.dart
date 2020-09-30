@@ -9,7 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'item.dart';
 
 
-class TypeBloc extends ItemBloc {
+class TypeBloc extends ItemBloc<PurchaseType> {
 
   TypeBloc({
     @required ICollectionRepository collectionRepository,
@@ -18,51 +18,51 @@ class TypeBloc extends ItemBloc {
   @override
   Future<PurchaseType> createFuture(AddItem event) {
 
-    return collectionRepository.insertType(event.item != null? event.item.getTitle() : '');
+    return collectionRepository.insertType(event.title ?? '');
 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem event) {
+  Future<dynamic> deleteFuture(DeleteItem<PurchaseType> event) {
 
     return collectionRepository.deleteType(event.item.ID);
 
   }
 
   @override
-  Future<Tag> updateFuture(UpdateItemField event) {
+  Future<PurchaseType> updateFuture(UpdateItemField<PurchaseType> event) {
 
-    return collectionRepository.updateTag(event.item.ID, event.field, event.value);
+    return collectionRepository.updateType(event.item.ID, event.field, event.value);
 
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation event) {
+  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<PurchaseType, W> event) {
 
     int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Purchase:
         return collectionRepository.insertPurchaseType(otherID, typeID);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelationFuture<W>(event);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<PurchaseType, W> event) {
 
     int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Purchase:
         return collectionRepository.deletePurchaseType(otherID, typeID);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelationFuture<W>(event);
 
   }
 

@@ -12,13 +12,13 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_detail.dart';
 
 
-abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   ItemDetailBloc({@required this.itemBloc}) {
     itemSubscription = itemBloc.listen( _mapItemStateToEvent );
   }
 
-  final ItemBloc itemBloc;
+  final ItemBloc<T> itemBloc;
   StreamSubscription<ItemState> itemSubscription;
   ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
 
@@ -34,7 +34,7 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
       yield* _mapLoadToState(event);
 
-    } else if(event is UpdateItem) {
+    } else if(event is UpdateItem<T>) {
 
       yield* _mapUpdateToState(event);
 
@@ -64,8 +64,8 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
     try {
 
-      final CollectionItem item = await getReadIDStream(event).first;
-      yield ItemLoaded(item);
+      final T item = await getReadIDStream(event).first;
+      yield ItemLoaded<T>(item);
 
     } catch (e) {
 
@@ -75,19 +75,19 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   }
 
-  Stream<ItemDetailState> _mapUpdateToState(UpdateItem event) async* {
+  Stream<ItemDetailState> _mapUpdateToState(UpdateItem<T> event) async* {
 
-    yield ItemLoaded(event.item);
+    yield ItemLoaded<T>(event.item);
 
   }
 
   void _mapItemStateToEvent(ItemState itemState) {
 
-    if(itemState is ItemFieldUpdated) {
+    if(itemState is ItemFieldUpdated<T>) {
 
       _mapUpdatedFieldToEvent(itemState);
 
-    } else if(itemState is ItemImageUpdated) {
+    } else if(itemState is ItemImageUpdated<T>) {
 
       _mapUpdatedImageToEvent(itemState);
 
@@ -95,22 +95,22 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   }
 
-  void _mapUpdatedFieldToEvent(ItemFieldUpdated itemState) {
+  void _mapUpdatedFieldToEvent(ItemFieldUpdated<T> itemState) {
 
-    if(state is ItemLoaded) {
-      final CollectionItem itemUpdated = itemState.item;
+    if(state is ItemLoaded<T>) {
+      final T itemUpdated = itemState.item;
 
-      add(UpdateItem(itemUpdated));
+      add(UpdateItem<T>(itemUpdated));
     }
 
   }
 
-  void _mapUpdatedImageToEvent(ItemImageUpdated itemState) {
+  void _mapUpdatedImageToEvent(ItemImageUpdated<T> itemState) {
 
-    if(state is ItemLoaded) {
-      final CollectionItem itemUpdated = itemState.item;
+    if(state is ItemLoaded<T>) {
+      final T itemUpdated = itemState.item;
 
-      add(UpdateItem(itemUpdated));
+      add(UpdateItem<T>(itemUpdated));
     }
 
   }
@@ -123,6 +123,6 @@ abstract class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
 
   }
 
-  external Stream<CollectionItem> getReadIDStream(LoadItem event);
+  external Stream<T> getReadIDStream(LoadItem event);
 
 }

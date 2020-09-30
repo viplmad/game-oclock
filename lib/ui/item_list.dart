@@ -7,11 +7,11 @@ import 'package:game_collection/ui/bloc_provider_route.dart';
 import 'common/item_view.dart';
 
 
-class ItemList extends StatelessWidget {
+class ItemList<T extends CollectionItem> extends StatelessWidget {
 
   ItemList({Key key, @required this.items, @required this.activeView, @required this.onDismiss, this.isGridView = true}) : super(key: key);
 
-  final List<CollectionItem> items;
+  final List<T> items;
   final String activeView;
   final Function(CollectionItem) onDismiss;
   final bool isGridView;
@@ -24,19 +24,38 @@ class ItemList extends StatelessWidget {
         Container(
           child: ListTile(
             title: Text(activeView),
-            trailing: IconButton(
-              icon: Icon(Icons.search),
-              tooltip: 'Search in View',
-              onPressed: items.isNotEmpty? () {
-                Navigator.push<CollectionItem>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return ItemLocalSearchProvider(items);
-                    }
-                  ),
-                );
-              } : null,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.search),
+                  tooltip: 'Search in View',
+                  onPressed: items.isNotEmpty? () {
+                    Navigator.push<CollectionItem>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return ItemLocalSearchProvider<T>(items);
+                        },
+                      ),
+                    );
+                  } : null,
+                ),
+                IconButton(
+                  icon: Icon(Icons.insert_chart),
+                  tooltip: 'Stats in View',
+                  onPressed: items.isNotEmpty? () {
+                    Navigator.push<CollectionItem>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return ItemStatisticsProvider<T>(items, activeView);
+                        },
+                      ),
+                    );
+                  } : null,
+                ),
+              ],
             ),
           ),
           color: Colors.grey,
@@ -44,15 +63,15 @@ class ItemList extends StatelessWidget {
         Expanded(
           child: Scrollbar(
             child: isGridView?
-              ItemGridView(
+              ItemGridView<T>(
                 items: items,
-                onTap: (CollectionItem item) {
+                onTap: (T item) {
                   return () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return ItemDetailProvider(item);
+                          return ItemDetailProvider<T>(item);
                         },
                       ),
                     );
@@ -60,15 +79,15 @@ class ItemList extends StatelessWidget {
                 },
               )
               :
-              ItemListView(
+              ItemListView<T>(
                 items: items,
-                onTap: (CollectionItem item) {
+                onTap: (T item) {
                   return () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return ItemDetailProvider(item);
+                          return ItemDetailProvider<T>(item);
                         },
                       ),
                     );
@@ -113,12 +132,12 @@ class ItemList extends StatelessWidget {
 
 }
 
-class ItemListView extends StatelessWidget {
+class ItemListView<T extends CollectionItem> extends StatelessWidget {
 
   const ItemListView({Key key, @required this.items, @required this.onTap, @required this.onDismiss, @required this.confirmDelete}) : super(key: key);
 
-  final List<CollectionItem> items;
-  final Function() Function(CollectionItem item) onTap;
+  final List<T> items;
+  final void Function() Function(T item) onTap;
   final void Function(CollectionItem item) onDismiss;
   final Widget Function(BuildContext, CollectionItem) confirmDelete;
 
@@ -129,7 +148,7 @@ class ItemListView extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        CollectionItem item = items[index];
+        T item = items[index];
 
         return DismissibleItem(
           item: item,
@@ -155,12 +174,12 @@ class ItemListView extends StatelessWidget {
   }
 }
 
-class ItemGridView extends StatelessWidget {
+class ItemGridView<T extends CollectionItem> extends StatelessWidget {
 
   const ItemGridView({Key key, @required this.items, @required this.onTap}) : super(key: key);
 
-  final List<CollectionItem> items;
-  final Function() Function(CollectionItem item) onTap;
+  final List<T> items;
+  final Function() Function(T item) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +191,7 @@ class ItemGridView extends StatelessWidget {
         crossAxisCount: 3,
       ),
       itemBuilder: (BuildContext context, int index) {
-        CollectionItem item = items[index];
+        T item = items[index];
 
         return ItemGridCard(
           item: item,

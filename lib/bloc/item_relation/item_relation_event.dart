@@ -12,16 +12,16 @@ abstract class ItemRelationEvent extends Equatable {
 
 class LoadItemRelation extends ItemRelationEvent {}
 
-class UpdateItemRelation extends ItemRelationEvent {
-  const UpdateItemRelation(this.items);
+class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
+  const UpdateItemRelation(this.otherItems);
 
-  final List<CollectionItem> items;
+  final List<W> otherItems;
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [otherItems];
 
   @override
   String toString() => 'UpdateItemRelation { '
-      'items: $items'
+      'otherItems: $otherItems'
       ' }';
 }

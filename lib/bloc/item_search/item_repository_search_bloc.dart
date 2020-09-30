@@ -7,12 +7,11 @@ import 'package:game_collection/model/model.dart';
 import 'item_search.dart';
 
 
-class ItemRepositorySearchBloc extends ItemSearchBloc {
+class ItemRepositorySearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
 
   ItemRepositorySearchBloc({
-    @required Type itemType,
     @required this.collectionRepository,
-  }) : super(itemType: itemType);
+  }) : super();
 
   final ICollectionRepository collectionRepository;
 
@@ -34,16 +33,16 @@ class ItemRepositorySearchBloc extends ItemSearchBloc {
   }
 
   @override
-  Future<List<CollectionItem>> getInitialItems() {
+  Future<List<T>> getInitialItems() {
 
-    return collectionRepository.getItemsWithView(itemType, 1, super.maxSuggestions).first;
+    return collectionRepository.getItemsWithView<T>(1, super.maxSuggestions).first;
 
   }
 
   @override
-  Future<List<CollectionItem>> getSearchItems(String query) {
+  Future<List<T>> getSearchItems(String query) {
 
-    return collectionRepository.getSearchItem(itemType, query, super.maxResults).first;
+    return collectionRepository.getSearchItem<T>(query, super.maxResults).first;
 
   }
 

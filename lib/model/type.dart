@@ -87,3 +87,13 @@ class PurchaseType extends CollectionItem {
   }
 
 }
+
+class TypesData {
+
+  TypesData({
+    this.types,
+  });
+
+  final List<PurchaseType> types;
+
+}

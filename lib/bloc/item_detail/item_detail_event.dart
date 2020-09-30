@@ -24,10 +24,10 @@ class LoadItem extends ItemDetailEvent {
       ' }';
 }
 
-class UpdateItem extends ItemDetailEvent {
+class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
   const UpdateItem(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];

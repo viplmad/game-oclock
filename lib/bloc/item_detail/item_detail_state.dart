@@ -12,10 +12,10 @@ abstract class ItemDetailState extends Equatable {
 
 class ItemLoading extends ItemDetailState {}
 
-class ItemLoaded extends ItemDetailState {
+class ItemLoaded<T extends CollectionItem> extends ItemDetailState {
   const ItemLoaded(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];

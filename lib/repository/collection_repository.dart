@@ -105,7 +105,7 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future insertGameDLC(int gameID, int dlcID) {
+  Future<dynamic> insertGameDLC(int gameID, int dlcID) {
 
     return _dbConnector.updateTable(
       tableName: dlcTable,
@@ -278,25 +278,25 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region READ
   @override
-  Stream<List<CollectionItem>> getItemsWithView(Type itemType, int viewIndex, [int limit]) {
+  Stream<List<T>> getItemsWithView<T extends CollectionItem>(int viewIndex, [int limit]) {
 
-    switch(itemType) {
+    switch(T) {
       case Game:
-        return getGamesWithView(GameView.values[viewIndex], limit);
+        return getGamesWithView(GameView.values[viewIndex], limit) as Stream<List<T>>;
       case DLC:
-        return getDLCsWithView(DLCView.values[viewIndex], limit);
+        return getDLCsWithView(DLCView.values[viewIndex], limit) as Stream<List<T>>;
       case Platform:
-        return getPlatformsWithView(PlatformView.values[viewIndex], limit);
+        return getPlatformsWithView(PlatformView.values[viewIndex], limit) as Stream<List<T>>;
       case Purchase:
-        return getPurchasesWithView(PurchaseView.values[viewIndex], limit);
+        return getPurchasesWithView(PurchaseView.values[viewIndex], limit) as Stream<List<T>>;
       case Store:
-        return getStoresWithView(StoreView.values[viewIndex], limit);
+        return getStoresWithView(StoreView.values[viewIndex], limit) as Stream<List<T>>;
       case System:
-        return getSystemsWithView(SystemView.values[viewIndex], limit);
+        return getSystemsWithView(SystemView.values[viewIndex], limit) as Stream<List<T>>;
       case Tag:
-        return getTagsWithView(TagView.values[viewIndex], limit);
+        return getTagsWithView(TagView.values[viewIndex], limit) as Stream<List<T>>;
       case PurchaseType:
-        return getTypesWithView(TypeView.values[viewIndex], limit);
+        return getTypesWithView(TypeView.values[viewIndex], limit) as Stream<List<T>>;
     }
     return null;
 
@@ -1086,25 +1086,25 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<CollectionItem>> getSearchItem(Type itemType, String query, int maxResults) {
+  Stream<List<T>> getSearchItem<T extends CollectionItem>(String query, int maxResults) {
 
-    switch(itemType) {
+    switch(T) {
       case Game:
-        return getGamesWithName(query, maxResults);
+        return getGamesWithName(query, maxResults) as Stream<List<T>>;
       case DLC:
-        return getDLCsWithName(query, maxResults);
+        return getDLCsWithName(query, maxResults) as Stream<List<T>>;
       case Platform:
-        return getPlatformsWithName(query, maxResults);
+        return getPlatformsWithName(query, maxResults) as Stream<List<T>>;
       case Purchase:
-        return getPurchasesWithDescription(query, maxResults);
+        return getPurchasesWithDescription(query, maxResults) as Stream<List<T>>;
       case Store:
-        return getStoresWithName(query, maxResults);
+        return getStoresWithName(query, maxResults) as Stream<List<T>>;
       case System:
-        return getSystemsWithName(query, maxResults);
+        return getSystemsWithName(query, maxResults) as Stream<List<T>>;
       case Tag:
-        return getTagsWithName(query, maxResults);
+        return getTagsWithName(query, maxResults) as Stream<List<T>>;
       case PurchaseType:
-        return getTypesWithName(query, maxResults);
+        return getTypesWithName(query, maxResults) as Stream<List<T>>;
     }
     return null;
 

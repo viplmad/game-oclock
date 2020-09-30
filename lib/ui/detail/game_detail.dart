@@ -14,9 +14,9 @@ const Color gameColour = Colors.red;
 
 class GameDetail extends StatelessWidget {
 
-  const GameDetail({Key key, @required this.ID}) : super(key: key);
+  const GameDetail({Key key, @required this.game}) : super(key: key);
 
-  final int ID;
+  final Game game;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class GameDetail extends StatelessWidget {
       body: Theme(
         data: gameTheme,
         child: _GameDetailBody(
-          itemID: ID,
-          itemDetailBloc: BlocProvider.of<GameDetailBloc>(context)..add(LoadItem(ID)),
+          item: game,
+          itemDetailBloc: BlocProvider.of<GameDetailBloc>(context)..add(LoadItem(game.ID)),
         ),
       ),
     );
@@ -48,22 +48,20 @@ const List<Color> statusColours = [
   Colors.greenAccent,
 ];
 
-class _GameDetailBody extends ItemDetailBody {
+class _GameDetailBody extends ItemDetailBody<Game> {
 
   _GameDetailBody({
     Key key,
-    @required int itemID,
-    @required ItemDetailBloc itemDetailBloc,
+    @required Game item,
+    @required GameDetailBloc itemDetailBloc,
   }) : super(
     key: key,
-    itemID: itemID,
+    item: item,
     itemDetailBloc: itemDetailBloc,
   );
 
   @override
-  List<Widget> itemFieldsBuilder(CollectionItem item) {
-
-    Game game = (item as Game);
+  List<Widget> itemFieldsBuilder(Game game) {
 
     return [
       itemTextField(
@@ -120,28 +118,19 @@ class _GameDetailBody extends ItemDetailBody {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListManyRelation(
-        itemType: Platform,
-      ),
-      itemListManyRelation(
-        itemType: Purchase,
-      ),
-      itemListManyRelation(
-        itemType: DLC,
-      ),
-      itemListManyRelation( //TODO: show as chips
-        itemType: Tag,
-      ),
+      itemListManyRelation<Platform>(),
+      itemListManyRelation<Purchase>(),
+      itemListManyRelation<DLC>(),
+      itemListManyRelation<Tag>(), //TODO: show as chips
     ];
 
   }
 
   @override
-  GameRelationBloc itemRelationBlocFunction(Type itemType) {
+  GameRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
 
-    return GameRelationBloc(
-      gameID: itemID,
-      relationType: itemType,
+    return GameRelationBloc<W>(
+      gameID: item.ID,
       itemBloc: itemBloc,
     );
 

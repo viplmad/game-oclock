@@ -213,3 +213,107 @@ class Game extends CollectionItem {
   }
 
 }
+
+class GamesData {
+
+  GamesData({
+    this.games,
+  });
+
+  final List<Game> games;
+
+  GamesDataYear getYearData(int year) {
+    List<Game> yearItems = games.where((Game item) => item.finishDate?.year == year).toList(growable: false);
+
+    return GamesDataYear(yearItems);
+  }
+}
+
+class GamesDataYear {
+  GamesDataYear(this.items);
+
+  final List<Game> items;
+  int get length => items.length;
+
+  int getLowPriorityGamesCount() {
+    int lowPriorityGames = items.where((item) => item.status == statuses.elementAt(0)).length;
+
+    return lowPriorityGames;
+  }
+
+  int getNextUpGamesCount() {
+    int nextUpGames = items.where((Game item) => item.status == statuses.elementAt(1)).length;
+
+    return nextUpGames;
+  }
+
+  int getPlayingGamesCount() {
+    int playingGames = items.where((Game item) => item.status == statuses.elementAt(2)).length;
+
+    return playingGames;
+  }
+
+  int getPlayedGamesCount() {
+    int playedGames = items.where((Game item) => item.status == statuses.elementAt(3)).length;
+
+    return playedGames;
+  }
+
+  int getTotalMinutes() {
+    int totalMinutes = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.time.inMinutes);
+
+    return totalMinutes;
+  }
+
+  List<int> getIntervalRating(List<int> intervals) {
+    List<int> values = List<int>(intervals.length);
+
+    for(int index = 0; index < intervals.length; index++) {
+      int rating = intervals.elementAt(index);
+
+      int intervalSum = items.where((Game item) => item.rating == rating).length;
+
+      values[index] = intervalSum;
+    }
+
+    return values;
+  }
+
+  List<int> getIntervalReleaseYears(List<int> intervals) {
+    List<int> values = List<int>(intervals.length);
+
+    for(int index = 0; index < intervals.length; index++) {
+      int minYear = intervals.elementAt(index);
+
+      int maxYear = 10000;
+      if(intervals.length != index + 1) {
+        maxYear = intervals.elementAt(index + 1);
+      }
+
+      int intervalSum = items.where((Game item) => item.releaseYear >= minYear && item.releaseYear <= maxYear).length;
+
+      values[index] = intervalSum;
+    }
+
+    return values;
+  }
+
+  List<int> getIntervalTime(List<int> intervals) {
+    List<int> values = List<int>(intervals.length);
+
+    for(int index = 0; index < intervals.length; index++) {
+      int minDuration = intervals.elementAt(index);
+
+      int maxDuration = 10000;
+      if(intervals.length != index + 1) {
+        maxDuration = intervals.elementAt(index + 1);
+      }
+
+      int intervalSum = items.where((Game item) => item.time >= Duration(hours: minDuration) && item.time < Duration(hours: maxDuration)).length;
+
+      values[index] = intervalSum;
+    }
+
+    return values;
+  }
+}

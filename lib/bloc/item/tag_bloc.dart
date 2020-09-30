@@ -9,7 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'item.dart';
 
 
-class TagBloc extends ItemBloc {
+class TagBloc extends ItemBloc<Tag> {
 
   TagBloc({
     @required ICollectionRepository collectionRepository,
@@ -18,51 +18,51 @@ class TagBloc extends ItemBloc {
   @override
   Future<Tag> createFuture(AddItem event) {
 
-    return collectionRepository.insertTag(event.item != null? event.item.getTitle() : '');
+    return collectionRepository.insertTag(event.title ?? '');
 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem event) {
+  Future<dynamic> deleteFuture(DeleteItem<Tag> event) {
 
     return collectionRepository.deleteTag(event.item.ID);
 
   }
 
   @override
-  Future<Tag> updateFuture(UpdateItemField event) {
+  Future<Tag> updateFuture(UpdateItemField<Tag> event) {
 
     return collectionRepository.updateTag(event.item.ID, event.field, event.value);
 
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation event) {
+  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<Tag, W> event) {
 
     int tagID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.insertGameTag(otherID, tagID);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelationFuture<W>(event);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<Tag, W> event) {
 
     int tagID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.deleteGameTag(otherID, tagID);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelationFuture<W>(event);
 
   }
 

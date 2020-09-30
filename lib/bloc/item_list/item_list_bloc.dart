@@ -12,7 +12,7 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_list.dart';
 
 
-abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
+abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
 
   ItemListBloc({@required this.itemBloc}) {
 
@@ -20,7 +20,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  final ItemBloc itemBloc;
+  final ItemBloc<T> itemBloc;
   StreamSubscription<ItemState> itemSubscription;
   ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
 
@@ -36,7 +36,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
       yield* _mapLoadToState();
 
-    } else if(event is UpdateItemList) {
+    } else if(event is UpdateItemList<T>) {
 
       yield* _mapListUpdateListToState(event);
 
@@ -78,8 +78,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     try {
 
-      final List<CollectionItem> items = await getReadAllStream().first;
-      yield ItemListLoaded(items);
+      final List<T> items = await getReadAllStream().first;
+      yield ItemListLoaded<T>(items);
 
     } catch (e) {
 
@@ -89,12 +89,12 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  Stream<ItemListState> _mapListUpdateListToState(UpdateItemList event) async* {
+  Stream<ItemListState> _mapListUpdateListToState(UpdateItemList<T> event) async* {
 
-    if(state is ItemListLoaded) {
-      final String activeView = (state as ItemListLoaded).view;
-      final bool isGrid = (state as ItemListLoaded).isGrid;
-      yield ItemListLoaded(event.items, activeView, isGrid);
+    if(state is ItemListLoaded<T>) {
+      final String activeView = (state as ItemListLoaded<T>).view;
+      final bool isGrid = (state as ItemListLoaded<T>).isGrid;
+      yield ItemListLoaded<T>(event.items, activeView, isGrid);
     }
 
   }
@@ -105,8 +105,8 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
     try {
 
-      final List<CollectionItem> items = await getReadViewStream(event).first;
-      yield ItemListLoaded(items, event.view);
+      final List<T> items = await getReadViewStream(event).first;
+      yield ItemListLoaded<T>(items, event.view);
 
     } catch(e) {
 
@@ -118,41 +118,41 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   Stream<ItemListState> _mapUpdateSortOrderToState(UpdateSortOrder event) async* {
 
-    if(state is ItemListLoaded) {
-      final List<CollectionItem> reversedItems = (state as ItemListLoaded).items.reversed.toList();
+    if(state is ItemListLoaded<T>) {
+      final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList();
 
-      final String activeView = (state as ItemListLoaded).view;
-      final bool isGrid = (state as ItemListLoaded).isGrid;
+      final String activeView = (state as ItemListLoaded<T>).view;
+      final bool isGrid = (state as ItemListLoaded<T>).isGrid;
 
-      yield ItemListLoaded(reversedItems, activeView, isGrid);
+      yield ItemListLoaded<T>(reversedItems, activeView, isGrid);
     }
 
   }
 
   Stream<ItemListState> _mapUpdateIsGridToState(UpdateIsGrid event) async* {
 
-    if(state is ItemListLoaded) {
-      final bool isGrid = !((state as ItemListLoaded).isGrid);
+    if(state is ItemListLoaded<T>) {
+      final bool isGrid = !((state as ItemListLoaded<T>).isGrid);
 
-      final List<CollectionItem> items = (state as ItemListLoaded).items;
-      final String activeView = (state as ItemListLoaded).view;
+      final List<T> items = (state as ItemListLoaded<T>).items;
+      final String activeView = (state as ItemListLoaded<T>).view;
 
-      yield ItemListLoaded(items, activeView, isGrid);
+      yield ItemListLoaded<T>(items, activeView, isGrid);
     }
 
   }
 
   void mapItemStateToEvent(ItemState itemState) {
 
-    if(itemState is ItemAdded) {
+    if(itemState is ItemAdded<T>) {
 
       _mapAddedToEvent(itemState);
 
-    } else if(itemState is ItemDeleted) {
+    } else if(itemState is ItemDeleted<T>) {
 
       _mapDeletedToEvent(itemState);
 
-    } else if(itemState is ItemFieldUpdated) {
+    } else if(itemState is ItemFieldUpdated<T>) {
 
       _mapUpdatedFieldToEvent(itemState);
 
@@ -160,39 +160,39 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  void _mapAddedToEvent(ItemAdded itemState) {
+  void _mapAddedToEvent(ItemAdded<T> itemState) {
 
-    if(state is ItemListLoaded) {
+    if(state is ItemListLoaded<T>) {
       final itemAdded = itemState.item;
-      final List<CollectionItem> updatedItems = List.from(
-          (state as ItemListLoaded).items)..add(itemAdded);
+      final List<T> updatedItems = List.from(
+          (state as ItemListLoaded<T>).items)..add(itemAdded);
 
-      add(UpdateItemList(updatedItems));
+      add(UpdateItemList<T>(updatedItems));
     }
 
   }
 
-  void _mapDeletedToEvent(ItemDeleted itemState) {
+  void _mapDeletedToEvent(ItemDeleted<T> itemState) {
 
-    if(state is ItemListLoaded) {
+    if(state is ItemListLoaded<T>) {
       final itemDeleted = itemState.item;
-      final List<CollectionItem> updatedItems = (state as ItemListLoaded)
+      final List<T> updatedItems = (state as ItemListLoaded<T>)
           .items
-          .where((CollectionItem item) => item.ID != itemDeleted.ID)
+          .where((T item) => item.ID != itemDeleted.ID)
           .toList();
 
-      add(UpdateItemList(updatedItems));
+      add(UpdateItemList<T>(updatedItems));
     }
 
   }
 
-  void _mapUpdatedFieldToEvent(ItemFieldUpdated itemState) {
+  void _mapUpdatedFieldToEvent(ItemFieldUpdated<T> itemState) {
 
-    if(state is ItemListLoaded) {
+    if(state is ItemListLoaded<T>) {
       final itemUpdated = itemState.item;
-      final List<CollectionItem> updatedItems = (state as ItemListLoaded)
+      final List<T> updatedItems = (state as ItemListLoaded<T>)
           .items
-          .map((CollectionItem item) {
+          .map((T item) {
             if(item.ID == itemUpdated.ID) {
               return itemUpdated;
             }
@@ -200,7 +200,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
             return item;
           }).toList();
 
-      add(UpdateItemList(updatedItems));
+      add(UpdateItemList<T>(updatedItems));
     }
 
   }
@@ -213,7 +213,7 @@ abstract class ItemListBloc extends Bloc<ItemListEvent, ItemListState> {
 
   }
 
-  external Stream<List<CollectionItem>> getReadAllStream();
-  external Stream<List<CollectionItem>> getReadViewStream(UpdateView event);
+  external Stream<List<T>> getReadAllStream();
+  external Stream<List<T>> getReadViewStream(UpdateView event);
 
 }

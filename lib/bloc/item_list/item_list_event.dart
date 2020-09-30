@@ -12,10 +12,10 @@ abstract class ItemListEvent extends Equatable {
 
 class LoadItemList extends ItemListEvent {}
 
-class UpdateItemList extends ItemListEvent {
+class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
   const UpdateItemList(this.items);
 
-  final List<CollectionItem> items;
+  final List<T> items;
 
   @override
   List<Object> get props => [items];

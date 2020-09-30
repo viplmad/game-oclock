@@ -12,10 +12,10 @@ abstract class ItemListState extends Equatable {
 
 class ItemListLoading extends ItemListState {}
 
-class ItemListLoaded extends ItemListState {
+class ItemListLoaded<T extends CollectionItem> extends ItemListState {
   const ItemListLoaded([this.items = const [], this.view = "Main", this.isGrid = false]);
 
-  final List<CollectionItem> items;
+  final List<T> items;
   final String view;
   final bool isGrid;
 

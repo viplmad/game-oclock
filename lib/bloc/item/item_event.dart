@@ -11,23 +11,23 @@ abstract class ItemEvent extends Equatable {
 }
 
 class AddItem extends ItemEvent {
-  const AddItem([this.item]);
+  const AddItem([this.title]);
 
-  final CollectionItem item;
+  final String title;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => [title];
 
   @override
   String toString() => 'AddItem { '
-      'item: $item'
+      'title: $title'
       ' }';
 }
 
-class DeleteItem extends ItemEvent {
+class DeleteItem<T extends CollectionItem> extends ItemEvent {
   const DeleteItem(this.item);
 
-  final CollectionItem item;
+  final T item;
 
   @override
   List<Object> get props => [item];
@@ -38,10 +38,10 @@ class DeleteItem extends ItemEvent {
       ' }';
 }
 
-class UpdateItemField extends ItemEvent {
+class UpdateItemField<T extends CollectionItem> extends ItemEvent {
   const UpdateItemField(this.item, this.field, this.value);
 
-  final CollectionItem item;
+  final T item;
   final String field;
   final dynamic value;
 
@@ -56,10 +56,10 @@ class UpdateItemField extends ItemEvent {
       ' }';
 }
 
-class AddItemImage extends ItemEvent {
+class AddItemImage<T extends CollectionItem> extends ItemEvent {
   const AddItemImage(this.item, this.imagePath, [this.oldImageName]);
 
-  final CollectionItem item;
+  final T item;
   final String imagePath;
   final String oldImageName;
 
@@ -73,10 +73,10 @@ class AddItemImage extends ItemEvent {
       ' }';
 }
 
-class UpdateItemImageName extends ItemEvent {
+class UpdateItemImageName<T extends CollectionItem> extends ItemEvent {
   const UpdateItemImageName(this.item, this.oldImageName, this.newImageName);
 
-  final CollectionItem item;
+  final T item;
   final String oldImageName;
   final String newImageName;
 
@@ -90,10 +90,10 @@ class UpdateItemImageName extends ItemEvent {
       ' }';
 }
 
-class DeleteItemImage extends ItemEvent {
+class DeleteItemImage<T extends CollectionItem> extends ItemEvent {
   const DeleteItemImage(this.item, this.imageName);
 
-  final CollectionItem item;
+  final T item;
   final String imageName;
 
   @override
@@ -106,12 +106,11 @@ class DeleteItemImage extends ItemEvent {
       ' }';
 }
 
-class AddItemRelation extends ItemEvent {
+class AddItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemEvent {
   const AddItemRelation(this.item, this.otherItem);
 
-  final CollectionItem item;
-  final CollectionItem otherItem;
-  Type get type => otherItem.runtimeType;
+  final T item;
+  final W otherItem;
 
   @override
   List<Object> get props => [item, otherItem];
@@ -123,12 +122,11 @@ class AddItemRelation extends ItemEvent {
       ' }';
 }
 
-class DeleteItemRelation extends ItemEvent {
+class DeleteItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemEvent {
   const DeleteItemRelation(this.item, this.otherItem);
 
-  final CollectionItem item;
-  final CollectionItem otherItem;
-  Type get type => otherItem.runtimeType;
+  final T item;
+  final W otherItem;
 
   @override
   List<Object> get props => [item, otherItem];

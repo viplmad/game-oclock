@@ -14,9 +14,9 @@ const Color storeColour = Colors.blueGrey;
 
 class StoreDetail extends StatelessWidget {
 
-  const StoreDetail({Key key, @required this.ID}) : super(key: key);
+  const StoreDetail({Key key, @required this.store}) : super(key: key);
 
-  final int ID;
+  final Store store;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class StoreDetail extends StatelessWidget {
       body: Theme(
         data: storeTheme,
         child: _StoreDetailBody(
-          itemID: ID,
-          itemDetailBloc: BlocProvider.of<StoreDetailBloc>(context)..add(LoadItem(ID)),
+          item: store,
+          itemDetailBloc: BlocProvider.of<StoreDetailBloc>(context)..add(LoadItem(store.ID)),
         ),
       ),
     );
@@ -41,22 +41,20 @@ class StoreDetail extends StatelessWidget {
 
 }
 
-class _StoreDetailBody extends ItemDetailBody {
+class _StoreDetailBody extends ItemDetailBody<Store> {
 
   _StoreDetailBody({
     Key key,
-    @required int itemID,
-    @required ItemDetailBloc itemDetailBloc,
+    @required Store item,
+    @required StoreDetailBloc itemDetailBloc,
   }) : super(
     key: key,
-    itemID: itemID,
+    item: item,
     itemDetailBloc: itemDetailBloc,
   );
 
   @override
-  List<Widget> itemFieldsBuilder(CollectionItem item) {
-
-    Store store = (item as Store);
+  List<Widget> itemFieldsBuilder(Store store) {
 
     return [
       itemTextField(
@@ -71,10 +69,8 @@ class _StoreDetailBody extends ItemDetailBody {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListManyRelation(
-        itemType: Purchase,
-        trailingBuilder: (List<CollectionItem> items) {
-          List<Purchase> purchases = items.cast<Purchase>();
+      itemListManyRelation<Purchase>(
+        trailingBuilder: (List<Purchase> purchases) {
 
           double totalSpent = 0.0;
           double totalValue = 0.0;
@@ -111,11 +107,10 @@ class _StoreDetailBody extends ItemDetailBody {
   }
 
   @override
-  StoreRelationBloc itemRelationBlocFunction(Type itemType) {
+  StoreRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
 
-    return StoreRelationBloc(
-      storeID: itemID,
-      relationType: itemType,
+    return StoreRelationBloc<W>(
+      storeID: item.ID,
       itemBloc: itemBloc,
     );
 

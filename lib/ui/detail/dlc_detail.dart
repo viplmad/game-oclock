@@ -14,9 +14,9 @@ const Color dlcColour = Colors.deepPurple;
 
 class DLCDetail extends StatelessWidget {
 
-  const DLCDetail({Key key, @required this.ID}) : super(key: key);
+  const DLCDetail({Key key, @required this.dlc}) : super(key: key);
 
-  final int ID;
+  final DLC dlc;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class DLCDetail extends StatelessWidget {
       body: Theme(
         data: dlcTheme,
         child: _DLCDetailBody(
-          itemID: ID,
-          itemDetailBloc: BlocProvider.of<DLCDetailBloc>(context)..add(LoadItem(ID)),
+          item: dlc,
+          itemDetailBloc: BlocProvider.of<DLCDetailBloc>(context)..add(LoadItem(dlc.ID)),
         ),
       ),
     );
@@ -41,22 +41,20 @@ class DLCDetail extends StatelessWidget {
 
 }
 
-class _DLCDetailBody extends ItemDetailBody {
+class _DLCDetailBody extends ItemDetailBody<DLC> {
 
   _DLCDetailBody({
     Key key,
-    @required int itemID,
-    @required ItemDetailBloc itemDetailBloc,
+    @required DLC item,
+    @required DLCDetailBloc itemDetailBloc,
   }) : super(
     key: key,
-    itemID: itemID,
+    item: item,
     itemDetailBloc: itemDetailBloc,
   );
 
   @override
-  List<Widget> itemFieldsBuilder(CollectionItem item) {
-
-    DLC dlc = (item as DLC);
+  List<Widget> itemFieldsBuilder(DLC dlc) {
 
     return [
       itemTextField(
@@ -79,23 +77,19 @@ class _DLCDetailBody extends ItemDetailBody {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListSingleRelation(
-        itemType: Game,
+      itemListSingleRelation<Game>(
         shownName: dlc_baseGameField,
       ),
-      itemListManyRelation(
-        itemType: Purchase,
-      ),
+      itemListManyRelation<Purchase>(),
     ];
 
   }
 
   @override
-  DLCRelationBloc itemRelationBlocFunction(Type itemType) {
+  DLCRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
 
-    return DLCRelationBloc(
-      dlcID: itemID,
-      relationType: itemType,
+    return DLCRelationBloc<W>(
+      dlcID: item.ID,
       itemBloc: itemBloc,
     );
 

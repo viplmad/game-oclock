@@ -9,7 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'item.dart';
 
 
-class PurchaseBloc extends ItemBloc {
+class PurchaseBloc extends ItemBloc<Purchase> {
 
   PurchaseBloc({
     @required ICollectionRepository collectionRepository,
@@ -18,31 +18,31 @@ class PurchaseBloc extends ItemBloc {
   @override
   Future<Purchase> createFuture(AddItem event) {
 
-    return collectionRepository.insertPurchase(event.item != null? event.item.getTitle() : '');
+    return collectionRepository.insertPurchase(event.title ?? '');
 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem event) {
+  Future<dynamic> deleteFuture(DeleteItem<Purchase> event) {
 
     return collectionRepository.deletePurchase(event.item.ID);
 
   }
 
   @override
-  Future<Purchase> updateFuture(UpdateItemField event) {
+  Future<Purchase> updateFuture(UpdateItemField<Purchase> event) {
     
     return collectionRepository.updatePurchase(event.item.ID, event.field, event.value);
     
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation event) {
+  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<Purchase, W> event) {
 
     int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.insertGamePurchase(otherID, purchaseID);
       case DLC:
@@ -53,17 +53,17 @@ class PurchaseBloc extends ItemBloc {
         return collectionRepository.insertPurchaseType(purchaseID, otherID);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelationFuture<W>(event);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<Purchase, W> event) {
 
     int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Game:
         return collectionRepository.deleteGamePurchase(otherID, purchaseID);
       case DLC:
@@ -74,7 +74,7 @@ class PurchaseBloc extends ItemBloc {
         return collectionRepository.deletePurchaseType(purchaseID, otherID);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelationFuture<W>(event);
 
   }
 

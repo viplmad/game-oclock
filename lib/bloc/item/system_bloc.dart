@@ -9,7 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'item.dart';
 
 
-class SystemBloc extends ItemBloc {
+class SystemBloc extends ItemBloc<System> {
 
   SystemBloc({
     @required ICollectionRepository collectionRepository,
@@ -18,72 +18,72 @@ class SystemBloc extends ItemBloc {
   @override
   Future<System> createFuture(AddItem event) {
 
-    return collectionRepository.insertSystem(event.item != null? event.item.getTitle() : '');
+    return collectionRepository.insertSystem(event.title ?? '');
 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem event) {
+  Future<dynamic> deleteFuture(DeleteItem<System> event) {
 
     return collectionRepository.deleteSystem(event.item.ID);
 
   }
 
   @override
-  Future<System> updateFuture(UpdateItemField event) {
+  Future<System> updateFuture(UpdateItemField<System> event) {
 
     return collectionRepository.updateSystem(event.item.ID, event.field, event.value);
 
   }
 
   @override
-  Future<System> addImage(AddItemImage event) {
+  Future<System> addImage(AddItemImage<System> event) {
 
     return collectionRepository.uploadSystemIcon(event.item.ID, event.imagePath, event.oldImageName);
 
   }
 
   @override
-  Future<System> updateImageName(UpdateItemImageName event) {
+  Future<System> updateImageName(UpdateItemImageName<System> event) {
 
     return collectionRepository.renameSystemIcon(event.item.ID, event.oldImageName, event.newImageName);
 
   }
 
   @override
-  Future<System> deleteImage(DeleteItemImage event) {
+  Future<System> deleteImage(DeleteItemImage<System> event) {
 
     return collectionRepository.deleteSystemIcon(event.item.ID, event.imageName);
 
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation event) {
+  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<System, W> event) {
 
     int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Platform:
         return collectionRepository.insertPlatformSystem(otherID, systemID);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelationFuture<W>(event);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation event) {
+  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<System, W> event) {
 
     int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
-    switch(event.type) {
+    switch(W) {
       case Platform:
         return collectionRepository.deletePlatformSystem(otherID, systemID);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelationFuture<W>(event);
 
   }
 

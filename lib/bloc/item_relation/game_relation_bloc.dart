@@ -9,26 +9,25 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_relation.dart';
 
 
-class GameRelationBloc extends ItemRelationBloc {
+class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, W> {
 
   GameRelationBloc({
     @required int gameID,
-    @required Type relationType,
-    @required ItemBloc itemBloc,
-  }) : super(itemID: gameID, relationType: relationType, itemBloc: itemBloc);
+    @required GameBloc itemBloc,
+  }) : super(itemID: gameID, itemBloc: itemBloc);
 
   @override
-  Stream<List<CollectionItem>> getRelationStream() {
+  Stream<List<W>> getRelationStream() {
 
-    switch(relationType) {
+    switch(W) {
       case DLC:
-        return collectionRepository.getDLCsFromGame(itemID);
+        return collectionRepository.getDLCsFromGame(itemID) as Stream<List<W>>;
       case Purchase:
-        return collectionRepository.getPurchasesFromGame(itemID);
+        return collectionRepository.getPurchasesFromGame(itemID) as Stream<List<W>>;
       case Platform:
-        return collectionRepository.getPlatformsFromGame(itemID);
+        return collectionRepository.getPlatformsFromGame(itemID) as Stream<List<W>>;
       case Tag:
-        return collectionRepository.getTagsFromGame(itemID);
+        return collectionRepository.getTagsFromGame(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

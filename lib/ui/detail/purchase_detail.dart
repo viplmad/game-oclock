@@ -14,9 +14,9 @@ const Color purchaseColour = Colors.lightBlue;
 
 class PurchaseDetail extends StatelessWidget {
 
-  const PurchaseDetail({Key key, @required this.ID}) : super(key: key);
+  const PurchaseDetail({Key key, @required this.purchase}) : super(key: key);
 
-  final int ID;
+  final Purchase purchase;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class PurchaseDetail extends StatelessWidget {
       body: Theme(
         data: purchaseTheme,
         child: _PurchaseDetailBody(
-          itemID: ID,
-          itemDetailBloc: BlocProvider.of<PurchaseDetailBloc>(context)..add(LoadItem(ID)),
+          item: purchase,
+          itemDetailBloc: BlocProvider.of<PurchaseDetailBloc>(context)..add(LoadItem(purchase.ID)),
         ),
       ),
     );
@@ -41,22 +41,20 @@ class PurchaseDetail extends StatelessWidget {
 
 }
 
-class _PurchaseDetailBody extends ItemDetailBody {
+class _PurchaseDetailBody extends ItemDetailBody<Purchase> {
 
   _PurchaseDetailBody({
     Key key,
-    @required int itemID,
-    @required ItemDetailBloc itemDetailBloc,
+    @required Purchase item,
+    @required PurchaseDetailBloc itemDetailBloc,
   }) : super(
     key: key,
-    itemID: itemID,
+    item: item,
     itemDetailBloc: itemDetailBloc,
   );
 
   @override
-  List<Widget> itemFieldsBuilder(CollectionItem item) {
-
-    Purchase purchase = (item as Purchase);
+  List<Widget> itemFieldsBuilder(Purchase purchase) {
 
     return [
       itemTextField(
@@ -90,17 +88,10 @@ class _PurchaseDetailBody extends ItemDetailBody {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListSingleRelation(
-        itemType: Store,
-      ),
-      itemListManyRelation(
-        itemType: Game,
-      ),
-      itemListManyRelation(
-        itemType: DLC,
-      ),
-      itemListManyRelation( //TODO: show as chips
-        itemType: PurchaseType,
+      itemListSingleRelation<Store>(),
+      itemListManyRelation<Game>(),
+      itemListManyRelation<DLC>(),
+      itemListManyRelation<PurchaseType>( //TODO: show as chips
         shownName: 'Types',
       ),
     ];
@@ -108,11 +99,10 @@ class _PurchaseDetailBody extends ItemDetailBody {
   }
 
   @override
-  PurchaseRelationBloc itemRelationBlocFunction(Type itemType) {
+  PurchaseRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
 
-    return PurchaseRelationBloc(
-      purchaseID: itemID,
-      relationType: itemType,
+    return PurchaseRelationBloc<W>(
+      purchaseID: item.ID,
       itemBloc: itemBloc,
     );
 

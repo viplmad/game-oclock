@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/repository/collection_repository.dart';
+import 'bloc_storage.dart';
 
 import 'package:game_collection/bloc/connection/connection.dart';
 import 'start.dart';
@@ -15,12 +16,11 @@ import 'homepage.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'detail/detail.dart';
+import 'statistics/statistiscs.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'item_search.dart';
 
-
-Map<Type, ItemBloc> itemBlocs;
 
 Widget StartProvider() {
 
@@ -162,37 +162,9 @@ Widget HomepageProvider() {
 
 }
 
-GameTab activeGameTab = GameTab.all;
-ItemListBloc ItemListProvider(BuildContext context, MainTab activeTab) {
+Widget ItemDetailProvider<T extends CollectionItem>(T item) {
 
-  switch(activeTab) {
-    case MainTab.game:
-      switch(activeGameTab) {
-        case GameTab.all:
-          return BlocProvider.of<AllListBloc>(context);
-        case GameTab.game:
-          return BlocProvider.of<GameListBloc>(context);
-        case GameTab.rom:
-          return BlocProvider.of<RomListBloc>(context);
-      }
-      return BlocProvider.of<GameListBloc>(context);
-    case MainTab.dlc:
-      return BlocProvider.of<DLCListBloc>(context);
-    case MainTab.purchase:
-      return BlocProvider.of<PurchaseListBloc>(context);
-    case MainTab.store:
-      return BlocProvider.of<StoreListBloc>(context);
-    case MainTab.platform:
-      return BlocProvider.of<PlatformListBloc>(context);
-  }
-
-}
-
-Widget ItemDetailProvider(CollectionItem item) {
-
-  int itemID = item.ID;
-
-  switch(item.runtimeType) {
+  switch(T) {
     case Game:
       return BlocProvider<GameDetailBloc>(
         create: (BuildContext context) {
@@ -201,7 +173,7 @@ Widget ItemDetailProvider(CollectionItem item) {
           );
         },
         child: GameDetail(
-          ID: itemID,
+          game: item as Game,
         ),
       );
     case DLC:
@@ -212,7 +184,7 @@ Widget ItemDetailProvider(CollectionItem item) {
           );
         },
         child: DLCDetail(
-          ID: itemID,
+          dlc: item as DLC,
         ),
       );
     case Platform:
@@ -223,7 +195,7 @@ Widget ItemDetailProvider(CollectionItem item) {
           );
         },
         child: PlatformDetail(
-          ID: itemID,
+          platform: item as Platform,
         ),
       );
     case Purchase:
@@ -234,7 +206,7 @@ Widget ItemDetailProvider(CollectionItem item) {
           );
         },
         child: PurchaseDetail(
-          ID: itemID,
+          purchase: item as Purchase,
         ),
       );
     case Store:
@@ -245,7 +217,7 @@ Widget ItemDetailProvider(CollectionItem item) {
           );
         },
         child: StoreDetail(
-          ID: itemID,
+          store: item as Store,
         ),
       );
     case System:
@@ -266,57 +238,82 @@ Widget ItemDetailProvider(CollectionItem item) {
 
 }
 
-Widget ItemRepositorySearchProvider(Type itemType) {
+Widget ItemRepositorySearchProvider<T extends CollectionItem>() {
 
-  return BlocProvider<ItemRepositorySearchBloc>(
-    create: (BuildContext context) {
-      return ItemRepositorySearchBloc(
-        collectionRepository: CollectionRepository(),
-        itemType: itemType,
-      )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
+  return ItemSearch<T>(
+    itemSearchBloc: ItemRepositorySearchBloc<T>(
+      collectionRepository: CollectionRepository(),
+    )..add(SearchTextChanged('')),
+    itemBloc: itemBlocs[T],
+    allowNewButton: true,
+    onTapBehaviour: (BuildContext context, T result) {
+      return () {
+        Navigator.maybePop<T>(context, result);
+      };
     },
-    child: ItemSearch<ItemRepositorySearchBloc>(
-      searchType: itemType,
-      itemBloc: itemBlocs[itemType],
-      allowNewButton: true,
-      onTapBehaviour: (BuildContext context, CollectionItem result) {
-        return () {
-          Navigator.maybePop(context, result);
-        };
-      },
-    ),
   );
 
 }
 
-Widget ItemLocalSearchProvider(List<CollectionItem> itemList) {
+Widget ItemLocalSearchProvider<T extends CollectionItem>(List<T> itemList) {
 
-  Type itemType = itemList.first.runtimeType;
-
-  return BlocProvider<ItemLocalSearchBloc>(
-    create: (BuildContext context) {
-      return ItemLocalSearchBloc(
-        itemType: itemType,
-        itemList: itemList,
-      )..add(SearchTextChanged('')); //put empty string first, so suggestions will be shown
+  return ItemSearch<T>(
+    itemSearchBloc: ItemLocalSearchBloc<T>(
+      itemList: itemList,
+    )..add(SearchTextChanged('')),
+    itemBloc: itemBlocs[T],
+    allowNewButton: false,
+    onTapBehaviour: (BuildContext context, T result) {
+      return () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ItemDetailProvider<T>(result);
+            },
+          ),
+        );
+      };
     },
-    child: ItemSearch<ItemLocalSearchBloc>(
-      searchType: itemType,
-      itemBloc: itemBlocs[itemType],
-      allowNewButton: false,
-      onTapBehaviour: (BuildContext context, CollectionItem result) {
-        return () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return ItemDetailProvider(result);
-                }
-            ),
-          );
-        };
-      },
-    ),
   );
+
+}
+
+Widget ItemStatisticsProvider<T extends CollectionItem>(List<T> itemList, String viewName) {
+
+  switch(T) {
+    case Game:
+      return GameStatistics(
+        yearData: GamesData(
+          games: itemList as List<Game>,
+        ).getYearData(2020),
+      );
+    case DLC:
+      return Center();
+    case Platform:
+      return Center();
+    case Purchase:
+      return PurchaseStatistics(
+        yearData: PurchasesData(
+          purchases: itemList as List<Purchase>,
+        ).getYearData(2020),
+      );
+    case Store:
+      return Center();
+    case System:
+      return Center(
+        child: Text("This is a System"),
+      );
+    case Tag:
+      return Center(
+        child: Text("This is a Tag"),
+      );
+    case PurchaseType:
+      return Center(
+        child: Text("This is a Type"),
+      );
+  }
+
+  return Center();
 
 }

@@ -9,10 +9,10 @@ import 'package:game_collection/bloc/item/item.dart';
 import 'item_list.dart';
 
 
-class StoreListBloc extends ItemListBloc {
+class StoreListBloc extends ItemListBloc<Store> {
 
   StoreListBloc({
-    @required ItemBloc itemBloc,
+    @required StoreBloc itemBloc,
   }) : super(itemBloc: itemBloc);
 
   @override

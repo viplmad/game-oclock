@@ -114,3 +114,13 @@ class Store extends CollectionItem {
   }
 
 }
+
+class StoresData {
+
+  StoresData({
+    this.stores,
+  });
+
+  final List<Store> stores;
+
+}
