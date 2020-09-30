@@ -12,16 +12,34 @@ abstract class ItemRelationEvent extends Equatable {
 
 class LoadItemRelation extends ItemRelationEvent {}
 
-class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
-  const UpdateItemRelation(this.otherItems);
+class AddItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemRelationEvent {
+  const AddItemRelation(this.item, this.otherItem);
 
-  final List<W> otherItems;
-
-  @override
-  List<Object> get props => [otherItems];
+  final T item;
+  final W otherItem;
 
   @override
-  String toString() => 'UpdateItemRelation { '
-      'otherItems: $otherItems'
+  List<Object> get props => [item, otherItem];
+
+  @override
+  String toString() => 'AddItemRelation { '
+      'item: $item, '
+      'other item: $otherItem'
+      ' }';
+}
+
+class DeleteItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemRelationEvent {
+  const DeleteItemRelation(this.item, this.otherItem);
+
+  final T item;
+  final W otherItem;
+
+  @override
+  List<Object> get props => [item, otherItem];
+
+  @override
+  String toString() => 'DeleteItemRelation { '
+      'item: $item, '
+      'other item: $otherItem'
       ' }';
 }

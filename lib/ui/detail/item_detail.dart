@@ -69,68 +69,6 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
             ),
           );
         }
-        if(state is ItemRelationAdded) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Linked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemBloc.add(
-                  DeleteItemRelation(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotAdded) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to link",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to link",
-              content: state.error,
-            ),
-          );
-        }
-        if(state is ItemRelationDeleted) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unlinked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemBloc.add(
-                  AddItemRelation(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotDeleted) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to unlink",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to unlink",
-              content: state.error,
-            ),
-          );
-        }
       },
       child: NestedScrollView(
         headerSliverBuilder: _appBarBuilder,
@@ -369,10 +307,10 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  void Function(W) _addRelationFunction<W extends CollectionItem>() {
+  void Function(W) _addRelationFunction<W extends CollectionItem>(ItemRelationBloc<T, W> itemRelationBloc) {
 
     return (W addedItem) {
-      itemBloc.add(
+      itemRelationBloc.add(
         AddItemRelation<T, W>(
           item,
           addedItem,
@@ -382,10 +320,10 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  void Function(W) _deleteRelationFunction<W extends CollectionItem>() {
+  void Function(W) _deleteRelationFunction<W extends CollectionItem>(ItemRelationBloc<T, W> itemRelationBloc) {
 
     return (W deletedItem) {
-      itemBloc.add(
+      itemRelationBloc.add(
         DeleteItemRelation<T, W>(
           item,
           deletedItem,
@@ -599,90 +537,205 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   Widget itemListSingleRelation<W extends CollectionItem>({String shownName}) {
 
-    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
-      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
-      builder: (BuildContext context, ItemRelationState state) {
+    ItemRelationBloc<T, W> itemRelationBloc = itemRelationBlocFunction<W>();
 
-        if(state is ItemRelationLoaded<W>) {
-          return ResultsListSingle<W>(
-            items: state.otherItems,
-            itemTypeName: shownName,
-            onTap: _onTapFunction<W>(context),
-            onSearch: _repositorySearchFuture<W>(context),
-            updateAdd: _addRelationFunction<W>(),
-            updateDelete: _deleteRelationFunction<W>(),
+    return BlocListener<ItemRelationBloc<T, W>, ItemRelationState>(
+      bloc: itemRelationBloc,
+      listener: (BuildContext context, ItemRelationState state) {
+        if(state is ItemRelationAdded<W>) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Linked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+
+                itemRelationBloc.add(
+                  DeleteItemRelation<T, W>(
+                    item,
+                    state.otherItem,
+                  ),
+                );
+
+              },
+            ),
           );
         }
+        if(state is ItemRelationNotAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to link",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to link",
+              content: state.error,
+            ),
+          );
+        }
+        if(state is ItemRelationDeleted<W>) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unlinked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Divider(),
-            loadingBar(),
-          ],
-        );
+                itemRelationBloc.add(
+                  AddItemRelation<T, W>(
+                    item,
+                    state.otherItem,
+                  ),
+                );
 
+              },
+            ),
+          );
+        }
+        if(state is ItemRelationNotDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to unlink",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to unlink",
+              content: state.error,
+            ),
+          );
+        }
       },
+      child: BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
+        bloc: itemRelationBloc..add(LoadItemRelation()),
+        builder: (BuildContext context, ItemRelationState state) {
+
+          if(state is ItemRelationLoaded<W>) {
+            return ResultsListSingle<W>(
+              items: state.otherItems,
+              itemTypeName: shownName,
+              onTap: _onTapFunction<W>(context),
+              onSearch: _repositorySearchFuture<W>(context),
+              updateAdd: _addRelationFunction<W>(itemRelationBloc),
+              updateDelete: _deleteRelationFunction<W>(itemRelationBloc),
+            );
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(),
+              loadingBar(),
+            ],
+          );
+
+        },
+      ),
     );
 
   }
 
   Widget itemListManyRelation<W extends CollectionItem>({String shownName, List<Widget> Function(List<W>) trailingBuilder}) {
 
-    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
-      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
-      builder: (BuildContext context, ItemRelationState state) {
+    ItemRelationBloc<T, W> itemRelationBloc = itemRelationBlocFunction<W>();
 
-        if(state is ItemRelationLoaded<W>) {
-          return ResultsListMany<W>(
-            items: state.otherItems,
-            itemTypeName: shownName,
-            onTap: _onTapFunction<W>(context),
-            onSearch: _repositorySearchFuture<W>(context),
-            updateAdd: _addRelationFunction<W>(),
-            updateDelete: _deleteRelationFunction<W>(),
-            trailingBuilder: trailingBuilder,
-            onListSearch: state.otherItems.isNotEmpty? _localSearchFuture<W>(context, state.otherItems) : null,
+    return BlocListener<ItemRelationBloc<T, W>, ItemRelationState>(
+      bloc: itemRelationBloc,
+      listener: (BuildContext context, ItemRelationState state) {
+        if(state is ItemRelationAdded<W>) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Linked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+
+                itemRelationBloc.add(
+                  DeleteItemRelation<T, W>(
+                    item,
+                    state.otherItem,
+                  ),
+                );
+
+              },
+            ),
           );
         }
-        if(state is ItemRelationNotLoaded) {
-          return Center(
-            child: Text(state.error),
+        if(state is ItemRelationNotAdded) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to link",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to link",
+              content: state.error,
+            ),
           );
         }
+        if(state is ItemRelationDeleted<W>) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unlinked",
+            snackBarAction: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Divider(),
-            loadingBar(),
-          ],
-        );
+                itemRelationBloc.add(
+                  AddItemRelation<T, W>(
+                    item,
+                    state.otherItem,
+                  ),
+                );
 
+              },
+            ),
+          );
+        }
+        if(state is ItemRelationNotDeleted) {
+          showSnackBar(
+            scaffoldState: Scaffold.of(context),
+            message: "Unable to unlink",
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: "More",
+              title: "Unable to unlink",
+              content: state.error,
+            ),
+          );
+        }
       },
-    );
+      child: BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
+        bloc: itemRelationBloc..add(LoadItemRelation()),
+        builder: (BuildContext context, ItemRelationState state) {
 
-  }
+          if(state is ItemRelationLoaded<W>) {
+            return ResultsListMany<W>(
+              items: state.otherItems,
+              itemTypeName: shownName,
+              onTap: _onTapFunction<W>(context),
+              onSearch: _repositorySearchFuture<W>(context),
+              updateAdd: _addRelationFunction<W>(itemRelationBloc),
+              updateDelete: _deleteRelationFunction<W>(itemRelationBloc),
+              trailingBuilder: trailingBuilder,
+              onListSearch: state.otherItems.isNotEmpty? _localSearchFuture<W>(context, state.otherItems) : null,
+            );
+          }
+          if(state is ItemRelationNotLoaded) {
+            return Center(
+              child: Text(state.error),
+            );
+          }
 
-  Widget itemChipRelation<W extends CollectionItem>({String shownName}) {
-
-    return BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
-      bloc: itemRelationBlocFunction<W>()..add(LoadItemRelation()),
-      builder: (BuildContext context, ItemRelationState state) {
-
-        if(state is ItemRelationLoaded<W>) {
-          return ResultsChipMany<W>(
-            selectedItems: state.otherItems,
-            items: state.otherItems,
-            itemTypeName: shownName,
-            updateAdd: _addRelationFunction<W>(),
-            updateDelete: _deleteRelationFunction<W>(),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(),
+              loadingBar(),
+            ],
           );
-        }
 
-        return Divider();
-
-      },
+        },
+      ),
     );
 
   }
@@ -1329,88 +1382,6 @@ class ResultsListMany<W extends CollectionItem> extends StatelessWidget {
           children: trailingBuilder(items),
         ) : null,
       onListSearch: onListSearch,
-    );
-
-  }
-
-}
-class ResultsChipMany<W extends CollectionItem> extends StatelessWidget {
-
-  const ResultsChipMany({Key key, @required this.items, @required this.selectedItems, this.itemTypeName, @required this.updateAdd, @required this.updateDelete}) : super(key: key);
-
-  final List<W> items;
-  final List<W> selectedItems;
-  final String itemTypeName;
-  final Function(W) updateAdd;
-  final Function(W) updateDelete;
-
-  String get shownName => itemTypeName?? W.toString() + 's';
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ResultsList(
-      headerText: shownName,
-      resultList: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceEvenly,
-        children: List<Widget>.generate(
-          selectedItems.length + 1,
-              (int index) {
-
-            if(index == items.length) {
-
-              return FilterChip(
-                label: Text("Add more"),
-                selected: true,
-                onSelected: (bool selected) {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 200,
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.spaceEvenly,
-                          children: List<Widget>.generate(
-                            items.length,
-                            (int index) {
-                              W option = items[index];
-
-                              return FilterChip(
-                                label: Text(option.getTitle()),
-                                selected: selectedItems.contains(option),
-                                onSelected: (bool selected) {
-
-                                  if(selected) {
-                                    updateAdd(option);
-                                  } else {
-                                    updateDelete(option);
-                                  }
-
-                                },
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-
-            }
-
-            W selection = selectedItems[index];
-
-            return ChoiceChip(
-              label: Text(selection.getTitle()),
-              selected: true,
-            );
-
-          },
-        ).toList(),
-      ),
     );
 
   }

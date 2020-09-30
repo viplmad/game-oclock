@@ -28,4 +28,34 @@ class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W>
 
   }
 
+  @override
+  Future<dynamic> addRelationFuture(AddItemRelation<Tag, W> event) {
+
+    int tagID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Game:
+        return collectionRepository.insertGameTag(otherID, tagID);
+    }
+
+    return super.addRelationFuture(event);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Tag, W> event) {
+
+    int tagID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Game:
+        return collectionRepository.deleteGameTag(otherID, tagID);
+    }
+
+    return super.deleteRelationFuture(event);
+
+  }
+
 }

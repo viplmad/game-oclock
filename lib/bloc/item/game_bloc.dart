@@ -57,46 +57,4 @@ class GameBloc extends ItemBloc<Game> {
 
   }
 
-  @override
-  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<Game, W> event) {
-
-    int gameID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case DLC:
-        return collectionRepository.insertGameDLC(gameID, otherID);
-      case Purchase:
-        return collectionRepository.insertGamePurchase(gameID, otherID);
-      case Platform:
-        return collectionRepository.insertGamePlatform(gameID, otherID);
-      case Tag:
-        return collectionRepository.insertGameTag(gameID, otherID);
-    }
-
-    return super.addRelationFuture<W>(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<Game, W> event) {
-
-    int gameID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case DLC:
-        return collectionRepository.deleteGameDLC(otherID);
-      case Purchase:
-        return collectionRepository.deleteGamePurchase(gameID, otherID);
-      case Platform:
-        return collectionRepository.deleteGamePlatform(gameID, otherID);
-      case Tag:
-        return collectionRepository.deleteGameTag(gameID, otherID);
-    }
-
-    return super.deleteRelationFuture<W>(event);
-
-  }
-
 }

@@ -57,34 +57,4 @@ class StoreBloc extends ItemBloc<Store> {
 
   }
 
-  @override
-  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<Store, W> event) {
-
-    int storeID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Purchase:
-        return collectionRepository.insertStorePurchase(storeID, otherID);
-    }
-
-    return super.addRelationFuture<W>(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<Store, W> event) {
-
-    int storeID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Purchase:
-        return collectionRepository.deleteStorePurchase(otherID);
-    }
-
-    return super.deleteRelationFuture<W>(event);
-
-  }
-
 }

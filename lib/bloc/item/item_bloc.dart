@@ -48,14 +48,6 @@ abstract class ItemBloc<T extends CollectionItem> extends Bloc<ItemEvent, ItemSt
 
       yield* _mapDeleteImageToState(event);
 
-    } else if(event is AddItemRelation) {
-
-      yield* _mapAddRelationToState(event);
-
-    } else if(event is DeleteItemRelation) {
-
-      yield* _mapDeleteRelationToState(event);
-
     }
 
     yield Rested();
@@ -167,40 +159,6 @@ abstract class ItemBloc<T extends CollectionItem> extends Bloc<ItemEvent, ItemSt
 
   }
 
-  Stream<ItemState> _mapAddRelationToState<W extends CollectionItem>(AddItemRelation<T, W> event) async* {
-
-    try{
-
-      await addRelationFuture<W>(event);
-      yield ItemRelationAdded<W>(
-        event.otherItem,
-      );
-
-    } catch(e) {
-
-      yield ItemRelationNotAdded(e);
-
-    }
-
-  }
-
-  Stream<ItemState> _mapDeleteRelationToState<W extends CollectionItem>(DeleteItemRelation<T, W> event) async* {
-
-    try{
-
-      await deleteRelationFuture<W>(event);
-      yield ItemRelationDeleted<W>(
-        event.otherItem,
-      );
-
-    } catch(e) {
-
-      yield ItemRelationNotDeleted(e);
-
-    }
-
-  }
-
   @override
   Future<void> close() {
 
@@ -214,17 +172,5 @@ abstract class ItemBloc<T extends CollectionItem> extends Bloc<ItemEvent, ItemSt
   external Future<T> addImage(AddItemImage<T> event);
   external Future<T> deleteImage(DeleteItemImage<T> event);
   external Future<T> updateImageName(UpdateItemImageName<T> event);
-  @mustCallSuper
-  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<T, W> event) {
-
-    return Future.error("Relation does not exist");
-
-  }
-  @mustCallSuper
-  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<T, W> event) {
-
-    return Future.error("Relation does not exist");
-
-  }
 
 }

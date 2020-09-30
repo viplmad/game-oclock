@@ -57,34 +57,4 @@ class SystemBloc extends ItemBloc<System> {
 
   }
 
-  @override
-  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<System, W> event) {
-
-    int systemID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Platform:
-        return collectionRepository.insertPlatformSystem(otherID, systemID);
-    }
-
-    return super.addRelationFuture<W>(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<System, W> event) {
-
-    int systemID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Platform:
-        return collectionRepository.deletePlatformSystem(otherID, systemID);
-    }
-
-    return super.deleteRelationFuture<W>(event);
-
-  }
-
 }

@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:game_collection/entity/collection_item_entity.dart';
 
 
-//TODO: move to localisation
 abstract class CollectionItem extends Equatable {
 
   CollectionItem({

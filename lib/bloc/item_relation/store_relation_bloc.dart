@@ -28,4 +28,34 @@ class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store
 
   }
 
+  @override
+  Future<dynamic> addRelationFuture(AddItemRelation<Store, W> event) {
+
+    int storeID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Purchase:
+        return collectionRepository.insertStorePurchase(storeID, otherID);
+    }
+
+    return super.addRelationFuture(event);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Store, W> event) {
+
+    int storeID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Purchase:
+        return collectionRepository.deleteStorePurchase(otherID);
+    }
+
+    return super.deleteRelationFuture(event);
+
+  }
+
 }

@@ -36,34 +36,4 @@ class TypeBloc extends ItemBloc<PurchaseType> {
 
   }
 
-  @override
-  Future<dynamic> addRelationFuture<W extends CollectionItem>(AddItemRelation<PurchaseType, W> event) {
-
-    int typeID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Purchase:
-        return collectionRepository.insertPurchaseType(otherID, typeID);
-    }
-
-    return super.addRelationFuture<W>(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture<W extends CollectionItem>(DeleteItemRelation<PurchaseType, W> event) {
-
-    int typeID = event.item.ID;
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Purchase:
-        return collectionRepository.deletePurchaseType(otherID, typeID);
-    }
-
-    return super.deleteRelationFuture<W>(event);
-
-  }
-
 }

@@ -28,4 +28,34 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
 
   }
 
+  @override
+  Future<dynamic> addRelationFuture(AddItemRelation<System, W> event) {
+
+    int systemID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Platform:
+        return collectionRepository.insertPlatformSystem(otherID, systemID);
+    }
+
+    return super.addRelationFuture(event);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<System, W> event) {
+
+    int systemID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Platform:
+        return collectionRepository.deletePlatformSystem(otherID, systemID);
+    }
+
+    return super.deleteRelationFuture(event);
+
+  }
+
 }

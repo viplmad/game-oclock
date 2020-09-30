@@ -14,15 +14,10 @@ import 'item_relation.dart';
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.itemBloc}) {
-
-    itemSubscription = itemBloc.listen( mapItemStateToEvent );
-
-  }
+  ItemRelationBloc({@required this.itemID, @required this.itemBloc});
 
   final int itemID;
   final ItemBloc<T> itemBloc;
-  StreamSubscription<ItemState> itemSubscription;
   ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
 
   @override
@@ -37,9 +32,13 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
       yield* _mapLoadToState();
 
-    } else if(event is UpdateItemRelation<W>) {
+    } else if(event is AddItemRelation<T, W>) {
 
-      yield* _mapUpdateToState(event);
+      yield* _mapAddRelationToState(event);
+
+    } else if(event is DeleteItemRelation<T, W>) {
+
+      yield* _mapDeleteRelationToState(event);
 
     }
 
@@ -78,48 +77,62 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  Stream<ItemRelationState> _mapUpdateToState(UpdateItemRelation<W> event) async* {
+  Stream<ItemRelationState> _mapAddRelationToState(AddItemRelation<T, W> event) async* {
 
-    yield ItemRelationLoaded<W>(event.otherItems);
+    try{
 
-  }
+      await addRelationFuture(event);
 
-  void mapItemStateToEvent(ItemState itemState) {
+      List<W> items = List<W>();
+      if(state is ItemRelationLoaded<W>) {
+        items = (state as ItemRelationLoaded<W>).otherItems;
+      }
 
-    if(itemState is ItemRelationAdded<W>) {
+      yield ItemRelationAdded<W>(
+        event.otherItem,
+      );
 
-      _mapRelationAddedToEvent(itemState);
+      final List<W> updatedItems = List.from(items)..add(event.otherItem);
 
-    } else if(itemState is ItemRelationDeleted<W>) {
+      yield ItemRelationLoaded<W>(
+        updatedItems,
+      );
 
-      _mapRelationDeletedToEvent(itemState);
+    } catch(e) {
+
+      yield ItemRelationNotAdded(e);
 
     }
 
   }
 
-  void _mapRelationAddedToEvent(ItemRelationAdded<W> itemState) {
+  Stream<ItemRelationState> _mapDeleteRelationToState(DeleteItemRelation<T, W> event) async* {
 
-    if(state is ItemRelationLoaded<W>) {
-      final W relationItemAdded = itemState.otherItem;
-      final List<W> updatedItems = List.from(
-          (state as ItemRelationLoaded<W>).otherItems)..add(relationItemAdded);
+    try{
 
-      add(UpdateItemRelation<W>(updatedItems));
-    }
+      await deleteRelationFuture(event);
 
-  }
+      List<W> items = List<W>();
+      if(state is ItemRelationLoaded<W>) {
+        items = (state as ItemRelationLoaded<W>).otherItems;
+      }
 
-  void _mapRelationDeletedToEvent(ItemRelationDeleted<W> itemState) {
+      yield ItemRelationDeleted<W>(
+        event.otherItem,
+      );
 
-    if(state is ItemRelationLoaded<W>) {
-      final W itemDeleted = itemState.otherItem;
-      final List<W> updatedItems = (state as ItemRelationLoaded<W>)
-          .otherItems
-          .where((W item) => item.ID != itemDeleted.ID)
+      final List<W> updatedItems = items
+          .where((W item) => item.ID != event.otherItem.ID)
           .toList();
 
-      add(UpdateItemRelation<W>(updatedItems));
+      yield ItemRelationLoaded<W>(
+        updatedItems,
+      );
+
+    } catch(e) {
+
+      yield ItemRelationNotDeleted(e);
+
     }
 
   }
@@ -127,7 +140,6 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   @override
   Future<void> close() {
 
-    itemSubscription?.cancel();
     return super.close();
 
   }
@@ -136,6 +148,18 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   Stream<List<W>> getRelationStream() {
 
     return Stream.error("Relation does not exist");
+
+  }
+  @mustCallSuper
+  Future<dynamic> addRelationFuture(AddItemRelation<T, W> event) {
+
+    return Future.error("Relation does not exist");
+
+  }
+  @mustCallSuper
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<T, W> event) {
+
+    return Future.error("Relation does not exist");
 
   }
 

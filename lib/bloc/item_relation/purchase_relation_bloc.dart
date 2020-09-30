@@ -34,4 +34,46 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
   }
 
+  @override
+  Future<dynamic> addRelationFuture(AddItemRelation<Purchase, W> event) {
+
+    int purchaseID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Game:
+        return collectionRepository.insertGamePurchase(otherID, purchaseID);
+      case DLC:
+        return collectionRepository.insertDLCPurchase(otherID, purchaseID);
+      case Store:
+        return collectionRepository.insertStorePurchase(otherID, purchaseID);
+      case PurchaseType:
+        return collectionRepository.insertPurchaseType(purchaseID, otherID);
+    }
+
+    return super.addRelationFuture(event);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Purchase, W> event) {
+
+    int purchaseID = event.item.ID;
+    int otherID = event.otherItem.ID;
+
+    switch(W) {
+      case Game:
+        return collectionRepository.deleteGamePurchase(otherID, purchaseID);
+      case DLC:
+        return collectionRepository.deleteDLCPurchase(otherID, purchaseID);
+      case Store:
+        return collectionRepository.deleteStorePurchase(purchaseID);
+      case PurchaseType:
+        return collectionRepository.deletePurchaseType(purchaseID, otherID);
+    }
+
+    return super.deleteRelationFuture(event);
+
+  }
+
 }
