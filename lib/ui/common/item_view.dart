@@ -91,7 +91,7 @@ class _ItemListTile extends StatelessWidget {
               fit: BoxFit.scaleDown,
               backgroundColour: Colors.white,
               applyGradient: false,
-            ),//CachedNetworkImage(
+            ),
           )
           : null,
       title: Text(title),

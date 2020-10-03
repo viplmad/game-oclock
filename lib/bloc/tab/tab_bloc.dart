@@ -7,8 +7,7 @@ import 'tab.dart';
 
 class TabBloc extends Bloc<TabEvent, TabState> {
 
-  @override
-  TabState get initialState => TabState();
+  TabBloc() : super(TabState());
 
   @override
   Stream<TabState> mapEventToState(TabEvent event) async* {

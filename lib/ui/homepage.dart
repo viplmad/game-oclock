@@ -112,11 +112,12 @@ class _HomepageBar extends StatelessWidget {
             currentIndex: state.mainTab.index,
             onTap: (index) {
               MainTab newMainTab = MainTab.values.elementAt(index);
+
               BlocProvider.of<TabBloc>(context).add(UpdateMainTab(newMainTab));
             },
             items: barDatas.map<BottomNavigationBarItem>( (barItem) {
               return BottomNavigationBarItem(
-                title: Text(barItem.title + 's'),
+                label: barItem.title + 's',
                 icon: Icon(barItem.icon),
                 backgroundColor: barItem.color,
               );

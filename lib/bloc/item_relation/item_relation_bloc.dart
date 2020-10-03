@@ -12,13 +12,10 @@ import 'item_relation.dart';
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.iCollectionRepository});
+  ItemRelationBloc({@required this.itemID, @required this.iCollectionRepository}) : super(ItemRelationLoading());
 
   final int itemID;
   final ICollectionRepository iCollectionRepository;
-
-  @override
-  ItemRelationState get initialState => ItemRelationLoading();
 
   @override
   Stream<ItemRelationState> mapEventToState(ItemRelationEvent event) async* {

@@ -13,12 +13,9 @@ import 'item_list.dart';
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
 
-  ItemListBloc({@required this.iCollectionRepository});
+  ItemListBloc({@required this.iCollectionRepository}) : super(ItemListLoading());
 
   final ICollectionRepository iCollectionRepository;
-
-  @override
-  ItemListState get initialState => ItemListLoading();
 
   @override
   Stream<ItemListState> mapEventToState(ItemListEvent event) async* {

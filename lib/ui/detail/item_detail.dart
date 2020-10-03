@@ -252,7 +252,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                       autofocus: true,
                       maxLines: null,
                       inputFormatters: <TextInputFormatter> [
-                        WhitelistingTextInputFormatter(RegExp(r'^([A-z])*$')),
+                        FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                       ],
                       decoration: InputDecoration(
                         hintText: "Name",

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 import 'package:game_collection/model/app_tab.dart';
 
+import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
@@ -109,32 +111,42 @@ class GameTabs extends StatelessWidget {
 
     return DefaultTabController(
       length: tabItems.length,
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverPersistentHeader(
-              pinned: false,
-              floating: true,
-              delegate: TabsDelegate(
-                tabBar: TabBar(
-                  tabs: tabItems.map<Tab>( (tabItem) {
-                    return Tab(
-                      text: tabItem.title,
-                    );
-                  }).toList(growable: false),
+      child: Builder(
+        builder: (BuildContext context) {
+          DefaultTabController.of(context).addListener( () {
+            GameTab newGameTab = GameTab.values.elementAt(DefaultTabController.of(context).index);
+
+            BlocProvider.of<TabBloc>(context).add(UpdateGameTab(newGameTab));
+          });
+
+          return NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverPersistentHeader(
+                  pinned: false,
+                  floating: true,
+                  delegate: TabsDelegate(
+                    tabBar: TabBar(
+                      tabs: tabItems.map<Tab>( (tabItem) {
+                        return Tab(
+                          text: tabItem.title,
+                        );
+                      }).toList(growable: false),
+                    ),
+                    color: gameAccentColour,
+                  ),
                 ),
-                color: gameAccentColour,
-              ),
+              ];
+            },
+            body: TabBarView(
+              children: [
+                _AllGameList(),
+                _OwnedGameList(),
+                _RomGameList(),
+              ],
             ),
-          ];
+          );
         },
-        body: TabBarView(
-          children: [
-            _AllGameList(),
-            _OwnedGameList(),
-            _RomGameList(),
-          ],
-        ),
       ),
     );
 

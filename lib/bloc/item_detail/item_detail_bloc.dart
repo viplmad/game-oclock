@@ -12,13 +12,10 @@ import 'item_detail.dart';
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
-  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository});
+  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository}) : super(ItemLoading());
 
   final int itemID;
   final ICollectionRepository iCollectionRepository;
-
-  @override
-  ItemDetailState get initialState => ItemLoading();
 
   @override
   Stream<ItemDetailState> mapEventToState(ItemDetailEvent event) async* {

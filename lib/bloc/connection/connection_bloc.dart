@@ -10,12 +10,9 @@ import 'connection.dart';
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
-  ConnectionBloc({@required this.iCollectionRepository});
+  ConnectionBloc({@required this.iCollectionRepository}) : super(Uninitialised());
 
   final ICollectionRepository iCollectionRepository;
-
-  @override
-  ConnectState get initialState => Uninitialised();
 
   @override
   Stream<ConnectState> mapEventToState(ConnectionEvent event) async* {

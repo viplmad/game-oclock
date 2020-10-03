@@ -12,15 +12,12 @@ import 'item_search.dart';
 
 abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemSearchBloc({@required this.iCollectionRepository});
+  ItemSearchBloc({@required this.iCollectionRepository}) : super(ItemSearchEmpty<T>());
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
   final ICollectionRepository iCollectionRepository;
-
-  @override
-  ItemSearchState get initialState => ItemSearchEmpty<T>();
 
   @override
   Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
