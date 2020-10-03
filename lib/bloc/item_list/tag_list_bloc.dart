@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_list.dart';
 
@@ -12,8 +12,8 @@ import 'item_list.dart';
 class TagListBloc extends ItemListBloc<Tag> {
 
   TagListBloc({
-    @required TagBloc itemBloc,
-  }) : super(itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(collectionRepository: collectionRepository);
 
   @override
   Stream<List<Tag>> getReadAllStream() {
@@ -23,10 +23,23 @@ class TagListBloc extends ItemListBloc<Tag> {
   }
 
   @override
+  Future<Tag> createFuture(AddItem event) {
+
+    return collectionRepository.insertTag(event.title ?? '');
+
+  }
+
+  @override
+  Future<dynamic> deleteFuture(DeleteItem<Tag> event) {
+
+    return collectionRepository.deleteTag(event.item.ID);
+
+  }
+
+  @override
   Stream<List<Tag>> getReadViewStream(UpdateView event) {
 
-    int viewIndex = tagViews.indexOf(event.view);
-    TagView tagView = TagView.values[viewIndex];
+    TagView tagView = TagView.values[event.viewIndex];
 
     return collectionRepository.getTagsWithView(tagView);
 

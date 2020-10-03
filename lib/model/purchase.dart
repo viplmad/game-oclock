@@ -14,14 +14,6 @@ enum PurchaseView {
   Review2019,
 }
 
-const List<String> purchaseViews = [
-  "Main",
-  "Last Created",
-  "Pending",
-  "Last Purchased",
-  "2019 in Review",
-];
-
 class Purchase extends CollectionItem {
 
   Purchase({

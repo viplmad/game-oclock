@@ -277,30 +277,6 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion CREATE
 
   //#region READ
-  @override
-  Stream<List<T>> getItemsWithView<T extends CollectionItem>(int viewIndex, [int limit]) {
-
-    switch(T) {
-      case Game:
-        return getGamesWithView(GameView.values[viewIndex], limit) as Stream<List<T>>;
-      case DLC:
-        return getDLCsWithView(DLCView.values[viewIndex], limit) as Stream<List<T>>;
-      case Platform:
-        return getPlatformsWithView(PlatformView.values[viewIndex], limit) as Stream<List<T>>;
-      case Purchase:
-        return getPurchasesWithView(PurchaseView.values[viewIndex], limit) as Stream<List<T>>;
-      case Store:
-        return getStoresWithView(StoreView.values[viewIndex], limit) as Stream<List<T>>;
-      case System:
-        return getSystemsWithView(SystemView.values[viewIndex], limit) as Stream<List<T>>;
-      case Tag:
-        return getTagsWithView(TagView.values[viewIndex], limit) as Stream<List<T>>;
-      case PurchaseType:
-        return getTypesWithView(TypeView.values[viewIndex], limit) as Stream<List<T>>;
-    }
-    return null;
-
-  }
   //#region Game
   @override
   Stream<List<Game>> getAll() {
@@ -1086,30 +1062,6 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<T>> getSearchItem<T extends CollectionItem>(String query, int maxResults) {
-
-    switch(T) {
-      case Game:
-        return getGamesWithName(query, maxResults) as Stream<List<T>>;
-      case DLC:
-        return getDLCsWithName(query, maxResults) as Stream<List<T>>;
-      case Platform:
-        return getPlatformsWithName(query, maxResults) as Stream<List<T>>;
-      case Purchase:
-        return getPurchasesWithDescription(query, maxResults) as Stream<List<T>>;
-      case Store:
-        return getStoresWithName(query, maxResults) as Stream<List<T>>;
-      case System:
-        return getSystemsWithName(query, maxResults) as Stream<List<T>>;
-      case Tag:
-        return getTagsWithName(query, maxResults) as Stream<List<T>>;
-      case PurchaseType:
-        return getTypesWithName(query, maxResults) as Stream<List<T>>;
-    }
-    return null;
-
-  }
-
   @override
   Stream<List<Game>> getGamesWithName(String nameQuery, int maxResults) {
 

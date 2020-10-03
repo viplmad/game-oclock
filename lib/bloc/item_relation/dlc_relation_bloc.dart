@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
   DLCRelationBloc({
     @required int dlcID,
-    @required DLCBloc itemBloc,
-  }) : super(itemID: dlcID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: dlcID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -31,16 +31,15 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<DLC, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.insertGameDLC(otherID, dlcID);
+        return collectionRepository.insertGameDLC(otherID, itemID);
       case Purchase:
-        return collectionRepository.insertDLCPurchase(dlcID, otherID);
+        return collectionRepository.insertDLCPurchase(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -48,16 +47,15 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<DLC, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int dlcID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.deleteGameDLC(dlcID);
+        return collectionRepository.deleteGameDLC(itemID);
       case Purchase:
-        return collectionRepository.deleteDLCPurchase(dlcID, otherID);
+        return collectionRepository.deleteDLCPurchase(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

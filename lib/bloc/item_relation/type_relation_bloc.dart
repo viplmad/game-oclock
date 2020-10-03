@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purcha
 
   TypeRelationBloc({
     @required int typeID,
-    @required TypeBloc itemBloc,
-  }) : super(itemID: typeID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: typeID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -29,14 +29,13 @@ class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purcha
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<PurchaseType, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Purchase:
-        return collectionRepository.insertPurchaseType(otherID, typeID);
+        return collectionRepository.insertPurchaseType(otherID, itemID);
     }
 
     return super.addRelationFuture(event);
@@ -44,14 +43,13 @@ class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purcha
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<PurchaseType, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int typeID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Purchase:
-        return collectionRepository.deletePurchaseType(otherID, typeID);
+        return collectionRepository.deletePurchaseType(otherID, itemID);
     }
 
     return super.deleteRelationFuture(event);

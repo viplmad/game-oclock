@@ -8,10 +8,10 @@ import 'item_search.dart';
 class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
 
   ItemLocalSearchBloc({
-    @required this.itemList,
-  }) : super();
+    @required this.items,
+  });
 
-  final List<T> itemList;
+  final List<T> items;
 
   @override
   Stream<ItemSearchState> checkConnection() async* {
@@ -28,10 +28,11 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
   @override
   Future<List<T>> getSearchItems(String query) {
 
-    final List<T> items = itemList.where( (T item) {
+    final List<T> searchItems = items.where( (T item) {
       return item.getTitle().toLowerCase().contains(query.toLowerCase());
     }).take(super.maxResults).toList();
-    return Future<List<T>>.value(items);
+
+    return Future<List<T>>.value(searchItems);
 
   }
 

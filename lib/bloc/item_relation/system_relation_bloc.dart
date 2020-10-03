@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
 
   SystemRelationBloc({
     @required int systemID,
-    @required SystemBloc itemBloc,
-  }) : super(itemID: systemID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: systemID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -29,14 +29,13 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<System, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Platform:
-        return collectionRepository.insertPlatformSystem(otherID, systemID);
+        return collectionRepository.insertPlatformSystem(otherID, itemID);
     }
 
     return super.addRelationFuture(event);
@@ -44,14 +43,13 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<System, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int systemID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Platform:
-        return collectionRepository.deletePlatformSystem(otherID, systemID);
+        return collectionRepository.deletePlatformSystem(otherID, itemID);
     }
 
     return super.deleteRelationFuture(event);

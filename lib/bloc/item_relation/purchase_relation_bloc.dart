@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
   PurchaseRelationBloc({
     @required int purchaseID,
-    @required PurchaseBloc itemBloc,
-  }) : super(itemID: purchaseID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: purchaseID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -35,20 +35,19 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<Purchase, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.insertGamePurchase(otherID, purchaseID);
+        return collectionRepository.insertGamePurchase(otherID, itemID);
       case DLC:
-        return collectionRepository.insertDLCPurchase(otherID, purchaseID);
+        return collectionRepository.insertDLCPurchase(otherID, itemID);
       case Store:
-        return collectionRepository.insertStorePurchase(otherID, purchaseID);
+        return collectionRepository.insertStorePurchase(otherID, itemID);
       case PurchaseType:
-        return collectionRepository.insertPurchaseType(purchaseID, otherID);
+        return collectionRepository.insertPurchaseType(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -56,20 +55,19 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Purchase, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int purchaseID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.deleteGamePurchase(otherID, purchaseID);
+        return collectionRepository.deleteGamePurchase(otherID, itemID);
       case DLC:
-        return collectionRepository.deleteDLCPurchase(otherID, purchaseID);
+        return collectionRepository.deleteDLCPurchase(otherID, itemID);
       case Store:
-        return collectionRepository.deleteStorePurchase(purchaseID);
+        return collectionRepository.deleteStorePurchase(itemID);
       case PurchaseType:
-        return collectionRepository.deletePurchaseType(purchaseID, otherID);
+        return collectionRepository.deletePurchaseType(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

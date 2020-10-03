@@ -11,11 +11,6 @@ enum PlatformView {
   LastCreated,
 }
 
-const List<String> platformViews = [
-  "Main",
-  "Last Created",
-];
-
 class Platform extends CollectionItem {
 
   Platform({

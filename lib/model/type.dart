@@ -11,11 +11,6 @@ enum TypeView {
   LastCreated,
 }
 
-const List<String> typeViews = [
-  "Main",
-  "Last Created",
-];
-
 class PurchaseType extends CollectionItem {
 
   PurchaseType({

@@ -11,11 +11,6 @@ enum StoreView {
   LastCreated,
 }
 
-const List<String> storeViews = [
-  "Main",
-  "Last Created",
-];
-
 class Store extends CollectionItem {
 
   Store({

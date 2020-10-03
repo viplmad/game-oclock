@@ -19,7 +19,6 @@ List<String> monthLabels = [
 
 
 abstract class ItemStatistics extends StatelessWidget {
-
   const ItemStatistics({Key key, @required this.itemName}) : super(key: key);
 
   final String itemName;

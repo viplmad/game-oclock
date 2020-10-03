@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
   GameRelationBloc({
     @required int gameID,
-    @required GameBloc itemBloc,
-  }) : super(itemID: gameID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: gameID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -35,20 +35,19 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<Game, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int gameID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case DLC:
-        return collectionRepository.insertGameDLC(gameID, otherID);
+        return collectionRepository.insertGameDLC(itemID, otherID);
       case Purchase:
-        return collectionRepository.insertGamePurchase(gameID, otherID);
+        return collectionRepository.insertGamePurchase(itemID, otherID);
       case Platform:
-        return collectionRepository.insertGamePlatform(gameID, otherID);
+        return collectionRepository.insertGamePlatform(itemID, otherID);
       case Tag:
-        return collectionRepository.insertGameTag(gameID, otherID);
+        return collectionRepository.insertGameTag(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -56,20 +55,19 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Game, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int gameID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case DLC:
         return collectionRepository.deleteGameDLC(otherID);
       case Purchase:
-        return collectionRepository.deleteGamePurchase(gameID, otherID);
+        return collectionRepository.deleteGamePurchase(itemID, otherID);
       case Platform:
-        return collectionRepository.deleteGamePlatform(gameID, otherID);
+        return collectionRepository.deleteGamePlatform(itemID, otherID);
       case Tag:
-        return collectionRepository.deleteGameTag(gameID, otherID);
+        return collectionRepository.deleteGameTag(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

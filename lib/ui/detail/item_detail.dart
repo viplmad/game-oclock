@@ -9,30 +9,54 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
-import 'package:game_collection/ui/bloc_provider_route.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/item_view.dart';
+import '../common/show_snackbar.dart';
+import '../common/item_view.dart';
 
 
-abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget {
-
-  ItemDetailBody({Key key, @required this.item, @required this.itemDetailBloc}) : super(key: key);
+abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>> extends StatelessWidget {
+  const ItemDetail({Key key, @required this.item}) : super(key: key);
 
   final T item;
-  final ItemDetailBloc<T> itemDetailBloc;
-
-  ItemBloc<T> get itemBloc => itemDetailBloc.itemBloc;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ItemBloc<T>, ItemState>(
-      bloc: itemBloc,
-      listener: (BuildContext context, ItemState state) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<K>(
+          create: (BuildContext context) {
+            return detailBlocBuilder()..add(LoadItem());
+          },
+        ),
+      ]..addAll(relationBlocsBuilder()),
+      child: Scaffold(
+        body: Theme(
+          data: getThemeData(context),
+          child: detailBodyBuilder(),
+        )
+      ),
+    );
+
+  }
+
+  external K detailBlocBuilder();
+  external List<BlocProvider> relationBlocsBuilder();
+
+  external ThemeData getThemeData(BuildContext context);
+  external ItemDetailBody<T, K> detailBodyBuilder();
+
+}
+
+
+abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>> extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return BlocListener<K, ItemDetailState>(
+      listener: (BuildContext context, ItemDetailState state) {
         if(state is ItemFieldUpdated<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
@@ -74,14 +98,13 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
         headerSliverBuilder: _appBarBuilder,
         body: ListView(
           children: [
-            BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
-              bloc: itemDetailBloc,
+            BlocBuilder<K, ItemDetailState> (
               builder: (BuildContext context, ItemDetailState state) {
 
                 if(state is ItemLoaded<T>) {
 
                   return Column(
-                    children: itemFieldsBuilder(state.item),
+                    children: itemFieldsBuilder(context, state.item),
                   );
 
                 }
@@ -117,18 +140,19 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
         snap: false,
         bottom: PreferredSize(
           preferredSize: Size(double.maxFinite, 1.0,),
-          child: BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
-            bloc: itemDetailBloc,
+          child: BlocBuilder<K, ItemDetailState> (
             builder: (BuildContext context, ItemDetailState state) {
+
               if(state is ItemLoading) {
-                return loadingBar();
+                return LinearProgressIndicator();
               }
+
               return Container();
+
             },
           ),
         ),
-        flexibleSpace: BlocBuilder<ItemDetailBloc<T>, ItemDetailState> (
-          bloc: itemDetailBloc,
+        flexibleSpace: BlocBuilder<K, ItemDetailState> (
           builder: (BuildContext context, ItemDetailState state) {
             String title = "";
             String imageURL;
@@ -191,9 +215,8 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
               ).then( (PickedFile imagePicked) {
                 if(imagePicked != null) {
 
-                  itemBloc.add(
+                  BlocProvider.of<K>(context).add(
                     AddItemImage<T>(
-                      item,
                       imagePicked.path,
                       imageFilename != null? imageFilename.split('.').first : null,
                     ),
@@ -252,9 +275,8 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
               ).then( (String newName) {
                 if(newName != null) {
 
-                  itemBloc.add(
+                  BlocProvider.of<K>(context).add(
                     UpdateItemImageName<T>(
-                      item,
                       imageName,
                       newName,
                     ),
@@ -273,9 +295,8 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
             onTap: () {
               String imageName = imageFilename.split('.').first;
 
-              itemBloc.add(
+              BlocProvider.of<K>(context).add(
                 DeleteItemImage<T>(
-                  item,
                   imageName,
                 ),
               );
@@ -289,16 +310,11 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  Widget loadingBar() {
-    return LinearProgressIndicator();
-  }
+  void Function(S) _updateFieldFunction<S>(BuildContext context, String fieldName) {
 
-  void Function(K) _updateFieldFunction<K>(String fieldName) {
-
-    return (K newValue) {
-      itemBloc.add(
+    return (S newValue) {
+      BlocProvider.of<K>(context).add(
         UpdateItemField<T>(
-          item,
           fieldName,
           newValue,
         ),
@@ -307,93 +323,22 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  void Function(W) _addRelationFunction<W extends CollectionItem>(ItemRelationBloc<T, W> itemRelationBloc) {
-
-    return (W addedItem) {
-      itemRelationBloc.add(
-        AddItemRelation<T, W>(
-          item,
-          addedItem,
-        ),
-      );
-    };
-
-  }
-
-  void Function(W) _deleteRelationFunction<W extends CollectionItem>(ItemRelationBloc<T, W> itemRelationBloc) {
-
-    return (W deletedItem) {
-      itemRelationBloc.add(
-        DeleteItemRelation<T, W>(
-          item,
-          deletedItem,
-        ),
-      );
-    };
-
-  }
-
-  void Function(W) _onTapFunction<W extends CollectionItem>(BuildContext context) {
-
-    return (W item) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return ItemDetailProvider<W>(item);
-          }
-        ),
-      );
-    };
-
-  }
-
-  Future<W> Function() _repositorySearchFuture<W extends CollectionItem>(BuildContext context) {
-
-    return () {
-      return Navigator.push<W>(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return ItemRepositorySearchProvider<W>();
-          }
-        ),
-      );
-    };
-
-  }
-
-  void Function() _localSearchFuture<W extends CollectionItem>(BuildContext context, List<W> items) {
-
-    return () {
-      return Navigator.push<W>(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) {
-              return ItemLocalSearchProvider<W>(items);
-            }
-        ),
-      );
-    };
-
-  }
-
-  Widget itemTextField({@required String fieldName, @required String value}) {
+  Widget itemTextField(BuildContext context, {@required String fieldName, @required String value}) {
 
     return ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(context, fieldName),
     );
 
   }
 
-  Widget itemURLField({@required String fieldName, @required String value}) {
+  Widget itemURLField(BuildContext context, {@required String fieldName, @required String value}) {
 
     return ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(context, fieldName),
       onLongPress: () async {
         if (await canLaunch(value)) {
           await launch(value);
@@ -410,28 +355,28 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  Widget itemLongTextField({@required String fieldName, @required String value}) {
+  Widget itemLongTextField(BuildContext context, {@required String fieldName, @required String value}) {
 
     return ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(context, fieldName),
       isLongText: true,
     );
 
   }
 
-  Widget itemIntField({@required String fieldName, @required int value}) {
+  Widget itemIntField(BuildContext context, {@required String fieldName, @required int value}) {
 
     return ItemIntField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(context, fieldName),
     );
 
   }
 
-  Widget itemMoneyField({@required String fieldName, @required double value}) {
+  Widget itemMoneyField(BuildContext context, {@required String fieldName, @required double value}) {
 
     return ItemDoubleField(
       fieldName: fieldName,
@@ -440,7 +385,7 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
           value.toStringAsFixed(2) + ' €'
           :
           null,
-      update: _updateFieldFunction<double>(fieldName),
+      update: _updateFieldFunction<double>(context, fieldName),
     );
 
   }
@@ -473,278 +418,71 @@ abstract class ItemDetailBody<T extends CollectionItem> extends StatelessWidget 
 
   }
 
-  Widget itemYearField({@required String fieldName, @required int value}) {
+  Widget itemYearField(BuildContext context, {@required String fieldName, @required int value}) {
 
     return ItemYearField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(context, fieldName),
     );
 
   }
 
-  Widget itemDateTimeField({@required String fieldName, @required DateTime value}) {
+  Widget itemDateTimeField(BuildContext context, {@required String fieldName, @required DateTime value}) {
 
     return ItemDateTimeField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<DateTime>(fieldName),
+      update: _updateFieldFunction<DateTime>(context, fieldName),
     );
 
   }
 
-  Widget itemDurationField({@required String fieldName, @required Duration value}) {
+  Widget itemDurationField(BuildContext context, {@required String fieldName, @required Duration value}) {
 
     return ItemDurationField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<Duration>(fieldName),
+      update: _updateFieldFunction<Duration>(context, fieldName),
     );
 
   }
 
-  Widget itemRatingField({@required String fieldName, @required int value}) {
+  Widget itemRatingField(BuildContext context, {@required String fieldName, @required int value}) {
 
     return RatingField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(fieldName),
+      update: _updateFieldFunction<int>(context, fieldName),
     );
 
   }
 
-  Widget itemBoolField({@required String fieldName, @required bool value}) {
+  Widget itemBoolField(BuildContext context, {@required String fieldName, @required bool value}) {
 
     return BoolField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<bool>(fieldName),
+      update: _updateFieldFunction<bool>(context, fieldName),
     );
 
   }
 
-  Widget itemChipField({@required String fieldName, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
+  Widget itemChipField(BuildContext context, {@required String fieldName, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
 
     return EnumField(
       fieldName: fieldName,
       value: value,
       enumValues: possibleValues,
       enumColours: possibleValuesColours,
-      update: _updateFieldFunction<String>(fieldName),
+      update: _updateFieldFunction<String>(context, fieldName),
     );
 
   }
 
-  Widget itemListSingleRelation<W extends CollectionItem>({String shownName}) {
-
-    ItemRelationBloc<T, W> itemRelationBloc = itemRelationBlocFunction<W>();
-
-    return BlocListener<ItemRelationBloc<T, W>, ItemRelationState>(
-      bloc: itemRelationBloc,
-      listener: (BuildContext context, ItemRelationState state) {
-        if(state is ItemRelationAdded<W>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Linked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemRelationBloc.add(
-                  DeleteItemRelation<T, W>(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotAdded) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to link",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to link",
-              content: state.error,
-            ),
-          );
-        }
-        if(state is ItemRelationDeleted<W>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unlinked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemRelationBloc.add(
-                  AddItemRelation<T, W>(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotDeleted) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to unlink",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to unlink",
-              content: state.error,
-            ),
-          );
-        }
-      },
-      child: BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
-        bloc: itemRelationBloc..add(LoadItemRelation()),
-        builder: (BuildContext context, ItemRelationState state) {
-
-          if(state is ItemRelationLoaded<W>) {
-            return ResultsListSingle<W>(
-              items: state.otherItems,
-              itemTypeName: shownName,
-              onTap: _onTapFunction<W>(context),
-              onSearch: _repositorySearchFuture<W>(context),
-              updateAdd: _addRelationFunction<W>(itemRelationBloc),
-              updateDelete: _deleteRelationFunction<W>(itemRelationBloc),
-            );
-          }
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Divider(),
-              loadingBar(),
-            ],
-          );
-
-        },
-      ),
-    );
-
-  }
-
-  Widget itemListManyRelation<W extends CollectionItem>({String shownName, List<Widget> Function(List<W>) trailingBuilder}) {
-
-    ItemRelationBloc<T, W> itemRelationBloc = itemRelationBlocFunction<W>();
-
-    return BlocListener<ItemRelationBloc<T, W>, ItemRelationState>(
-      bloc: itemRelationBloc,
-      listener: (BuildContext context, ItemRelationState state) {
-        if(state is ItemRelationAdded<W>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Linked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemRelationBloc.add(
-                  DeleteItemRelation<T, W>(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotAdded) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to link",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to link",
-              content: state.error,
-            ),
-          );
-        }
-        if(state is ItemRelationDeleted<W>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unlinked",
-            snackBarAction: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-
-                itemRelationBloc.add(
-                  AddItemRelation<T, W>(
-                    item,
-                    state.otherItem,
-                  ),
-                );
-
-              },
-            ),
-          );
-        }
-        if(state is ItemRelationNotDeleted) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to unlink",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to unlink",
-              content: state.error,
-            ),
-          );
-        }
-      },
-      child: BlocBuilder<ItemRelationBloc<T, W>, ItemRelationState>(
-        bloc: itemRelationBloc..add(LoadItemRelation()),
-        builder: (BuildContext context, ItemRelationState state) {
-
-          if(state is ItemRelationLoaded<W>) {
-            return ResultsListMany<W>(
-              items: state.otherItems,
-              itemTypeName: shownName,
-              onTap: _onTapFunction<W>(context),
-              onSearch: _repositorySearchFuture<W>(context),
-              updateAdd: _addRelationFunction<W>(itemRelationBloc),
-              updateDelete: _deleteRelationFunction<W>(itemRelationBloc),
-              trailingBuilder: trailingBuilder,
-              onListSearch: state.otherItems.isNotEmpty? _localSearchFuture<W>(context, state.otherItems) : null,
-            );
-          }
-          if(state is ItemRelationNotLoaded) {
-            return Center(
-              child: Text(state.error),
-            );
-          }
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Divider(),
-              loadingBar(),
-            ],
-          );
-
-        },
-      ),
-    );
-
-  }
-
-  external List<Widget> itemFieldsBuilder(T item);
+  external List<Widget> itemFieldsBuilder(BuildContext context, T item);
 
   external List<Widget> itemRelationsBuilder();
-
-  external ItemRelationBloc<T, W> itemRelationBlocFunction<W extends CollectionItem>();
 
 }
 
@@ -1174,219 +912,6 @@ class EnumField extends StatelessWidget {
 
 }
 
-class _HeaderText extends StatelessWidget {
-
-  const _HeaderText({Key key, this.text, this.trailingWidget}) : super(key: key);
-
-  final String text;
-  final Widget trailingWidget;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(text, style: Theme.of(context).textTheme.subtitle1),
-        trailingWidget?? Container(),
-      ],
-    );
-
-  }
-
-}
-
-class _ResultsList extends StatelessWidget {
-
-  const _ResultsList({Key key, @required this.headerText, @required this.resultList, this.linkWidget, this.trailingWidget, this.onListSearch}) : super(key: key);
-
-  final String headerText;
-  final Widget resultList;
-  final Widget linkWidget;
-  final Widget trailingWidget;
-  final void Function() onListSearch;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Divider(),
-        Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: _HeaderText(
-                  text: headerText,
-                  trailingWidget: onListSearch != null?
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    tooltip: "Seach in List",
-                    onPressed: onListSearch,
-                  ) : null,
-                ),
-              ),
-              resultList,
-              SizedBox(
-                width: double.maxFinite,
-                child: linkWidget,
-              ),
-              trailingWidget?? Container(),
-            ],
-          ),
-        ),
-      ],
-    );
-
-  }
-
-}
-class _LinkButton<W extends CollectionItem> extends StatelessWidget {
-
-  const _LinkButton({Key key, this.itemTypeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
-
-  final String itemTypeName;
-  final Future<W> Function() onSearch;
-  final void Function(W) updateAdd;
-
-  String get shownName => itemTypeName?? W.toString();
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-      child: RaisedButton.icon(
-        label: Text("Link " + shownName),
-        icon: Icon(Icons.link),
-        elevation: 1.0,
-        highlightElevation: 2.0,
-        onPressed: () {
-
-          onSearch().then( (W result) {
-            if (result != null) {
-              updateAdd(result);
-            }
-          });
-
-        },
-      ),
-    );
-
-  }
-
-}
-class ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
-
-  ResultsListSingle({@required this.items, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
-
-  final List<W> items;
-  final String itemTypeName;
-  final void Function(W) onTap;
-  final Future<W> Function() onSearch;
-  final void Function(W) updateAdd;
-  final void Function(W) updateDelete;
-
-  String get shownName => itemTypeName?? W.toString();
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ResultsList(
-      headerText: shownName,
-      resultList: ListView.builder(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          W result = items[index];
-
-          return DismissibleItem(
-            item: result,
-            dismissIcon: Icons.link_off,
-            onDismissed: (DismissDirection direction) {
-              updateDelete(result);
-            },
-            onTap: () {
-              onTap(result);
-            }
-          );
-
-        },
-      ),
-      linkWidget: items.isEmpty? _LinkButton<W>(
-          itemTypeName: itemTypeName,
-          onSearch: onSearch,
-          updateAdd: updateAdd,
-        ) : null,
-    );
-
-  }
-
-}
-class ResultsListMany<W extends CollectionItem> extends StatelessWidget {
-
-  ResultsListMany({@required this.items, this.itemTypeName, @required this.onTap, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
-
-  final List<W> items;
-  final String itemTypeName;
-  final void Function(W) onTap;
-  final Future<W> Function() onSearch;
-  final void Function(W) updateAdd;
-  final void Function(W) updateDelete;
-  final List<Widget> Function(List<W>) trailingBuilder;
-  final void Function() onListSearch;
-
-  String get shownName => itemTypeName?? W.toString() + 's';
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ResultsList(
-      headerText: shownName + " (" + items.length.toString() + ")",
-      resultList: Container(
-        constraints: BoxConstraints.loose(
-          Size.fromHeight( (MediaQuery.of(context).size.height / 3), ),
-        ),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            W result = items[index];
-
-            return DismissibleItem(
-              item: result,
-              dismissIcon: Icons.link_off,
-              onDismissed: (DismissDirection direction) {
-                updateDelete(result);
-              },
-              onTap: () {
-                onTap(result);
-              },
-            );
-
-          },
-        ),
-      ),
-      linkWidget: _LinkButton<W>(
-        itemTypeName: itemTypeName,
-        onSearch: onSearch,
-        updateAdd: updateAdd,
-      ),
-      trailingWidget: trailingBuilder != null?
-        Column(
-          children: trailingBuilder(items),
-        ) : null,
-      onListSearch: onListSearch,
-    );
-
-  }
-
-}
 
 class YearPickerDialog extends StatefulWidget {
   YearPickerDialog({Key key, this.fieldName, this.year}) : super(key: key);

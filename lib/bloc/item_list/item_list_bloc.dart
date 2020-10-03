@@ -5,24 +5,17 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/model.dart';
-
-import 'package:game_collection/bloc/item/item.dart';
 
 import 'item_list.dart';
 
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
 
-  ItemListBloc({@required this.itemBloc}) {
+  ItemListBloc({@required this.collectionRepository});
 
-    itemSubscription = itemBloc.listen( mapItemStateToEvent );
-
-  }
-
-  final ItemBloc<T> itemBloc;
-  StreamSubscription<ItemState> itemSubscription;
-  ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
+  final ICollectionRepository collectionRepository;
 
   @override
   ItemListState get initialState => ItemListLoading();
@@ -38,7 +31,15 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
     } else if(event is UpdateItemList<T>) {
 
-      yield* _mapListUpdateListToState(event);
+      yield* _mapUpdateListToState(event);
+
+    } else if(event is AddItem) {
+
+      yield* _mapAddItemToState(event);
+
+    } else if(event is DeleteItem<T>) {
+
+      yield* _mapDeleteItemToState(event);
 
     } else if(event is UpdateView) {
 
@@ -48,9 +49,9 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
       yield* _mapUpdateSortOrderToState(event);
 
-    } else if(event is UpdateIsGrid) {
+    } else if(event is UpdateStyle) {
 
-      yield* _mapUpdateIsGridToState(event);
+      yield* _mapUpdateStyleToState(event);
 
     }
 
@@ -89,12 +90,56 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  Stream<ItemListState> _mapListUpdateListToState(UpdateItemList<T> event) async* {
+  Stream<ItemListState> _mapUpdateListToState(UpdateItemList<T> event) async* {
 
-    if(state is ItemListLoaded<T>) {
-      final String activeView = (state as ItemListLoaded<T>).view;
-      final bool isGrid = (state as ItemListLoaded<T>).isGrid;
-      yield ItemListLoaded<T>(event.items, activeView, isGrid);
+    yield ItemListLoaded<T>(
+      event.items,
+      event.viewIndex,
+      event.style,
+    );
+
+  }
+
+  Stream<ItemListState> _mapAddItemToState(AddItem event) async* {
+
+    try {
+
+      final T item = await createFuture(event);
+
+      final UpdateItemList<T> updateEvent = _getUpdateAddList(item);
+
+      yield ItemAdded<T>(
+        item,
+      );
+
+      add(updateEvent);
+
+    } catch (e) {
+
+      yield ItemNotAdded(e.toString());
+
+    }
+
+  }
+
+  Stream<ItemListState> _mapDeleteItemToState(DeleteItem<T> event) async* {
+
+    try{
+
+      await deleteFuture(event);
+
+      final UpdateItemList<T> updateEvent = _getUpdateDeleteList(event.item);
+
+      yield ItemDeleted<T>(
+        event.item,
+      );
+
+      add(updateEvent);
+
+    } catch (e) {
+
+      yield ItemNotDeleted(e.toString());
+
     }
 
   }
@@ -106,7 +151,10 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
     try {
 
       final List<T> items = await getReadViewStream(event).first;
-      yield ItemListLoaded<T>(items, event.view);
+      yield ItemListLoaded<T>(
+        items,
+        event.viewIndex,
+      );
 
     } catch(e) {
 
@@ -121,99 +169,74 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
     if(state is ItemListLoaded<T>) {
       final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList();
 
-      final String activeView = (state as ItemListLoaded<T>).view;
-      final bool isGrid = (state as ItemListLoaded<T>).isGrid;
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final ListStyle style = (state as ItemListLoaded<T>).style;
 
-      yield ItemListLoaded<T>(reversedItems, activeView, isGrid);
+      yield ItemListLoaded<T>(reversedItems, viewIndex, style);
     }
 
   }
 
-  Stream<ItemListState> _mapUpdateIsGridToState(UpdateIsGrid event) async* {
+  Stream<ItemListState> _mapUpdateStyleToState(UpdateStyle event) async* {
 
     if(state is ItemListLoaded<T>) {
-      final bool isGrid = !((state as ItemListLoaded<T>).isGrid);
+      final rotatingIndex = ((state as ItemListLoaded<T>).style.index + 1) % ListStyle.values.length;
+      final ListStyle updatedStyle = ListStyle.values.elementAt(rotatingIndex);
 
       final List<T> items = (state as ItemListLoaded<T>).items;
-      final String activeView = (state as ItemListLoaded<T>).view;
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
 
-      yield ItemListLoaded<T>(items, activeView, isGrid);
+      yield ItemListLoaded<T>(items, viewIndex, updatedStyle);
     }
 
   }
 
-  void mapItemStateToEvent(ItemState itemState) {
+  UpdateItemList<T> _getUpdateAddList(T addedItem) {
 
-    if(itemState is ItemAdded<T>) {
-
-      _mapAddedToEvent(itemState);
-
-    } else if(itemState is ItemDeleted<T>) {
-
-      _mapDeletedToEvent(itemState);
-
-    } else if(itemState is ItemFieldUpdated<T>) {
-
-      _mapUpdatedFieldToEvent(itemState);
-
-    }
-
-  }
-
-  void _mapAddedToEvent(ItemAdded<T> itemState) {
-
+    List<T> items = List<T>();
+    int viewIndex;
+    ListStyle style;
     if(state is ItemListLoaded<T>) {
-      final itemAdded = itemState.item;
-      final List<T> updatedItems = List.from(
-          (state as ItemListLoaded<T>).items)..add(itemAdded);
-
-      add(UpdateItemList<T>(updatedItems));
+      items = (state as ItemListLoaded<T>).items;
+      viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      style = (state as ItemListLoaded<T>).style;
     }
+
+    final List<T> updatedItems = List.from(items)..add(addedItem);
+
+    return UpdateItemList<T>(updatedItems, viewIndex, style);
 
   }
 
-  void _mapDeletedToEvent(ItemDeleted<T> itemState) {
+  UpdateItemList<T> _getUpdateDeleteList(T deletedItem) {
 
+    List<T> items = List<T>();
+    int viewIndex;
+    ListStyle style;
     if(state is ItemListLoaded<T>) {
-      final itemDeleted = itemState.item;
-      final List<T> updatedItems = (state as ItemListLoaded<T>)
-          .items
-          .where((T item) => item.ID != itemDeleted.ID)
-          .toList();
-
-      add(UpdateItemList<T>(updatedItems));
+      items = (state as ItemListLoaded<T>).items;
+      viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      style = (state as ItemListLoaded<T>).style;
     }
 
-  }
+    final List<T> updatedItems = items
+        .where((T item) => item.ID != deletedItem.ID)
+        .toList();
 
-  void _mapUpdatedFieldToEvent(ItemFieldUpdated<T> itemState) {
-
-    if(state is ItemListLoaded<T>) {
-      final itemUpdated = itemState.item;
-      final List<T> updatedItems = (state as ItemListLoaded<T>)
-          .items
-          .map((T item) {
-            if(item.ID == itemUpdated.ID) {
-              return itemUpdated;
-            }
-
-            return item;
-          }).toList();
-
-      add(UpdateItemList<T>(updatedItems));
-    }
+    return UpdateItemList<T>(updatedItems, viewIndex, style);
 
   }
 
   @override
   Future<void> close() {
 
-    itemSubscription?.cancel();
     return super.close();
 
   }
 
   external Stream<List<T>> getReadAllStream();
+  external Future<T> createFuture(AddItem event);
+  external Future<dynamic> deleteFuture(DeleteItem<T> event);
   external Stream<List<T>> getReadViewStream(UpdateView event);
 
 }

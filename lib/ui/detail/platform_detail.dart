@@ -1,72 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:game_collection/repository/collection_repository.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
+import '../theme/theme.dart';
+import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-const Color platformColour = Colors.black87;
-
-class PlatformDetail extends StatelessWidget {
-
-  const PlatformDetail({Key key, @required this.platform}) : super(key: key);
-
-  final Platform platform;
+class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
+  const PlatformDetail({Key key, @required Platform item}) : super(item: item, key: key);
 
   @override
-  Widget build(BuildContext context) {
+  PlatformDetailBloc detailBlocBuilder() {
+
+    return PlatformDetailBloc(
+      platformID: item.ID,
+      collectionRepository: CollectionRepository(),
+    );
+
+  }
+
+  @override
+  List<BlocProvider> relationBlocsBuilder() {
+
+    return [
+      blocProviderRelationBuilder<Game>(),
+      blocProviderRelationBuilder<System>(),
+    ];
+
+  }
+
+  @override
+  ThemeData getThemeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData platformTheme = contextTheme.copyWith(
       primaryColor: platformColour,
-      accentColor: Colors.black12,
+      accentColor: platformAccentColour,
     );
 
-    return Scaffold(
-      body: Theme(
-        data: platformTheme,
-        child: _PlatformDetailBody(
-          item: platform,
-          itemDetailBloc: BlocProvider.of<PlatformDetailBloc>(context)..add(LoadItem(platform.ID)),
-        ),
-      ),
+    return platformTheme;
+
+  }
+
+  @override
+  _PlatformDetailBody detailBodyBuilder() {
+
+    return _PlatformDetailBody();
+
+  }
+
+  BlocProvider<PlatformRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+
+    return BlocProvider<PlatformRelationBloc<W>>(
+      create: (BuildContext context) {
+        return PlatformRelationBloc<W>(
+          platformID: item.ID,
+          collectionRepository: CollectionRepository(),
+        )..add(LoadItemRelation());
+      },
     );
 
   }
 
 }
 
-const List<Color> typeColours = [
-  Colors.blueAccent,
-  Colors.deepPurpleAccent,
-];
-
-class _PlatformDetailBody extends ItemDetailBody<Platform> {
-
-  _PlatformDetailBody({
-    Key key,
-    @required Platform item,
-    @required PlatformDetailBloc itemDetailBloc,
-  }) : super(
-    key: key,
-    item: item,
-    itemDetailBloc: itemDetailBloc,
-  );
+class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc> {
 
   @override
-  List<Widget> itemFieldsBuilder(Platform platform) {
+  List<Widget> itemFieldsBuilder(BuildContext context, Platform platform) {
 
     return [
       itemTextField(
+        context,
         fieldName: plat_nameField,
         value: platform.name,
       ),
       itemChipField(
+        context,
         fieldName: plat_typeField,
         value: platform.type,
         possibleValues: types,
@@ -80,19 +98,9 @@ class _PlatformDetailBody extends ItemDetailBody<Platform> {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListManyRelation<Game>(),
-      itemListManyRelation<System>() //TODO: show as chips
+      PlatformGameRelationList(),
+      PlatformSystemRelationList(),
     ];
-
-  }
-
-  @override
-  PlatformRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
-
-    return PlatformRelationBloc<W>(
-      platformID: item.ID,
-      itemBloc: itemBloc,
-    );
 
   }
 

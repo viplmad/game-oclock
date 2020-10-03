@@ -10,19 +10,7 @@ abstract class ItemDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadItem extends ItemDetailEvent {
-  const LoadItem(this.ID);
-
-  final int ID;
-
-  @override
-  List<Object> get props => [ID];
-
-  @override
-  String toString() => 'LoadItem { '
-      'ID: $ID'
-      ' }';
-}
+class LoadItem extends ItemDetailEvent {}
 
 class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
   const UpdateItem(this.item);
@@ -35,5 +23,66 @@ class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
   @override
   String toString() => 'UpdateItem { '
       'item: $item'
+      ' }';
+}
+
+class UpdateItemField<T extends CollectionItem> extends ItemDetailEvent {
+  const UpdateItemField(this.field, this.value);
+
+  final String field;
+  final dynamic value;
+
+  @override
+  List<Object> get props => [field, value];
+
+  @override
+  String toString() => 'UpdateItemField { '
+      'field: $field, '
+      'value: $value'
+      ' }';
+}
+
+class AddItemImage<T extends CollectionItem> extends ItemDetailEvent {
+  const AddItemImage(this.imagePath, [this.oldImageName]);
+
+  final String imagePath;
+  final String oldImageName;
+
+  @override
+  List<Object> get props => [imagePath];
+
+  @override
+  String toString() => 'AddItemImage { '
+      'image: $imagePath'
+      ' }';
+}
+
+class UpdateItemImageName<T extends CollectionItem> extends ItemDetailEvent {
+  const UpdateItemImageName(this.oldImageName, this.newImageName);
+
+  final String oldImageName;
+  final String newImageName;
+
+  @override
+  List<Object> get props => [oldImageName, newImageName];
+
+  @override
+  String toString() => 'UpdateItemImageName { '
+      'oldImageName: $oldImageName, '
+      'newImageName: $newImageName'
+      ' }';
+}
+
+class DeleteItemImage<T extends CollectionItem> extends ItemDetailEvent {
+  const DeleteItemImage(this.imageName);
+
+  final String imageName;
+
+  @override
+  List<Object> get props => [imageName];
+
+  @override
+  String toString() => 'DeleteItemImage { '
+      'image: $imageName'
       ' }';
 }

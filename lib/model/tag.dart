@@ -11,11 +11,6 @@ enum TagView {
   LastCreated,
 }
 
-const List<String> tagViews = [
-  "Main",
-  "Last Created",
-];
-
 class Tag extends CollectionItem {
 
   Tag({

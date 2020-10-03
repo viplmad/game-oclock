@@ -1,79 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:game_collection/repository/collection_repository.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
+import '../theme/theme.dart';
+import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-const Color purchaseColour = Colors.lightBlue;
-
-class PurchaseDetail extends StatelessWidget {
-
-  const PurchaseDetail({Key key, @required this.purchase}) : super(key: key);
-
-  final Purchase purchase;
+class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
+  const PurchaseDetail({Key key, @required Purchase item}) : super(item: item, key: key);
 
   @override
-  Widget build(BuildContext context) {
+  PurchaseDetailBloc detailBlocBuilder() {
+
+    return PurchaseDetailBloc(
+      purchaseID: item.ID,
+      collectionRepository: CollectionRepository(),
+    );
+
+  }
+
+  @override
+  List<BlocProvider> relationBlocsBuilder() {
+
+    return [
+      blocProviderRelationBuilder<Store>(),
+      blocProviderRelationBuilder<Game>(),
+      blocProviderRelationBuilder<DLC>(),
+      blocProviderRelationBuilder<PurchaseType>(),
+    ];
+
+  }
+
+  @override
+  ThemeData getThemeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData purchaseTheme = contextTheme.copyWith(
       primaryColor: purchaseColour,
-      accentColor: Colors.lightBlueAccent,
+      accentColor: purchaseAccentColour,
     );
 
-    return Scaffold(
-      body: Theme(
-        data: purchaseTheme,
-        child: _PurchaseDetailBody(
-          item: purchase,
-          itemDetailBloc: BlocProvider.of<PurchaseDetailBloc>(context)..add(LoadItem(purchase.ID)),
-        ),
-      ),
+    return purchaseTheme;
+
+  }
+
+  @override
+  _PurchaseDetailBody detailBodyBuilder() {
+
+    return _PurchaseDetailBody();
+
+  }
+
+  BlocProvider<PurchaseRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+
+    return BlocProvider<PurchaseRelationBloc<W>>(
+      create: (BuildContext context) {
+        return PurchaseRelationBloc<W>(
+          purchaseID: item.ID,
+          collectionRepository: CollectionRepository(),
+        )..add(LoadItemRelation());
+      },
     );
 
   }
 
 }
 
-class _PurchaseDetailBody extends ItemDetailBody<Purchase> {
-
-  _PurchaseDetailBody({
-    Key key,
-    @required Purchase item,
-    @required PurchaseDetailBloc itemDetailBloc,
-  }) : super(
-    key: key,
-    item: item,
-    itemDetailBloc: itemDetailBloc,
-  );
+class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc> {
 
   @override
-  List<Widget> itemFieldsBuilder(Purchase purchase) {
+  List<Widget> itemFieldsBuilder(BuildContext context, Purchase purchase) {
 
     return [
       itemTextField(
+        context,
         fieldName: purc_descriptionField,
         value: purchase.description,
       ),
       itemMoneyField(
+        context,
         fieldName: purc_priceField,
         value: purchase.price,
       ),
       itemMoneyField(
+        context,
         fieldName: purc_externalCreditField,
         value: purchase.externalCredit,
       ),
       itemDateTimeField(
+        context,
         fieldName: purc_dateField,
         value: purchase.date,
       ),
       itemMoneyField(
+        context,
         fieldName: purc_originalPriceField,
         value: purchase.originalPrice,
       ),
@@ -88,23 +116,13 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase> {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListSingleRelation<Store>(),
-      itemListManyRelation<Game>(),
-      itemListManyRelation<DLC>(),
-      itemListManyRelation<PurchaseType>( //TODO: show as chips
+      PurchaseStoreRelationList(),
+      PurchaseGameRelationList(),
+      PurchaseDLCRelationList(),
+      PurchaseTypeRelationList(
         shownName: 'Types',
       ),
     ];
-
-  }
-
-  @override
-  PurchaseRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
-
-    return PurchaseRelationBloc<W>(
-      purchaseID: item.ID,
-      itemBloc: itemBloc,
-    );
 
   }
 

@@ -39,3 +39,35 @@ class ItemNotLoaded extends ItemDetailState {
       'error: $error'
       ' }';
 }
+
+class ItemFieldUpdated<T extends CollectionItem> extends ItemDetailState {}
+
+class ItemFieldNotUpdated extends ItemDetailState {
+  const ItemFieldNotUpdated(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ItemFieldNotUpdated { '
+      'error: $error'
+      ' }';
+}
+
+class ItemImageUpdated<T extends CollectionItem> extends ItemDetailState {}
+
+class ItemImageNotUpdated extends ItemDetailState {
+  const ItemImageNotUpdated(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => [error];
+
+  @override
+  String toString() => 'ItemImageNotUpdated { '
+      'error: $error'
+      ' }';
+}

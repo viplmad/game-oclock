@@ -15,15 +15,6 @@ enum GameView {
   Review2019,
 }
 
-const List<String> gameViews = [
-  "Main",
-  "Last Created",
-  "Playing",
-  "Next Up",
-  "Last Finished",
-  "2019 in Review",
-];
-
 class Game extends CollectionItem {
 
   Game({

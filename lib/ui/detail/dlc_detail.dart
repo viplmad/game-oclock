@@ -1,71 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:game_collection/repository/collection_repository.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
+import '../theme/theme.dart';
+import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-const Color dlcColour = Colors.deepPurple;
-
-class DLCDetail extends StatelessWidget {
-
-  const DLCDetail({Key key, @required this.dlc}) : super(key: key);
-
-  final DLC dlc;
+class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
+  const DLCDetail({Key key, @required DLC item}) : super(item: item, key: key);
 
   @override
-  Widget build(BuildContext context) {
+  DLCDetailBloc detailBlocBuilder() {
+
+    return DLCDetailBloc(
+      dlcID: item.ID,
+      collectionRepository: CollectionRepository(),
+    );
+
+  }
+
+  @override
+  List<BlocProvider> relationBlocsBuilder() {
+
+    return [
+      blocProviderRelationBuilder<Game>(),
+      blocProviderRelationBuilder<Purchase>(),
+    ];
+
+  }
+
+  @override
+  ThemeData getThemeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData dlcTheme = contextTheme.copyWith(
       primaryColor: dlcColour,
-      accentColor: Colors.deepPurpleAccent,
+      accentColor: dlcAccentColour,
     );
 
-    return Scaffold(
-      body: Theme(
-        data: dlcTheme,
-        child: _DLCDetailBody(
-          item: dlc,
-          itemDetailBloc: BlocProvider.of<DLCDetailBloc>(context)..add(LoadItem(dlc.ID)),
-        ),
-      ),
+    return dlcTheme;
+
+  }
+
+  @override
+  _DLCDetailBody detailBodyBuilder() {
+
+    return _DLCDetailBody();
+
+  }
+
+  BlocProvider<DLCRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+
+    return BlocProvider<DLCRelationBloc<W>>(
+      create: (BuildContext context) {
+        return DLCRelationBloc<W>(
+          dlcID: item.ID,
+          collectionRepository: CollectionRepository(),
+        )..add(LoadItemRelation());
+      },
     );
 
   }
 
 }
 
-class _DLCDetailBody extends ItemDetailBody<DLC> {
-
-  _DLCDetailBody({
-    Key key,
-    @required DLC item,
-    @required DLCDetailBloc itemDetailBloc,
-  }) : super(
-    key: key,
-    item: item,
-    itemDetailBloc: itemDetailBloc,
-  );
+class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc> {
 
   @override
-  List<Widget> itemFieldsBuilder(DLC dlc) {
+  List<Widget> itemFieldsBuilder(BuildContext context, DLC dlc) {
 
     return [
       itemTextField(
+        context,
         fieldName: dlc_nameField,
         value: dlc.name,
       ),
       itemYearField(
+        context,
         fieldName: dlc_releaseYearField,
         value: dlc.releaseYear,
       ),
       itemDateTimeField(
+        context,
         fieldName: dlc_finishDateField,
         value: dlc.finishDate,
       ),
@@ -77,21 +101,11 @@ class _DLCDetailBody extends ItemDetailBody<DLC> {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListSingleRelation<Game>(
+      DLCGameRelationList(
         shownName: dlc_baseGameField,
       ),
-      itemListManyRelation<Purchase>(),
+      DLCPurchaseRelationList(),
     ];
-
-  }
-
-  @override
-  DLCRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
-
-    return DLCRelationBloc<W>(
-      dlcID: item.ID,
-      itemBloc: itemBloc,
-    );
 
   }
 

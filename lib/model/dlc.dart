@@ -11,11 +11,6 @@ enum DLCView {
   LastCreated,
 }
 
-const List<String> dlcViews = [
-  "Main",
-  "Last Created",
-];
-
 class DLC extends CollectionItem {
 
   DLC({

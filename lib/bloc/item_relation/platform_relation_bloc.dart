@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
+import 'package:game_collection/model/model.dart';
 
 import 'item_relation.dart';
 
@@ -13,8 +13,8 @@ class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pl
 
   PlatformRelationBloc({
     @required int platformID,
-    @required PlatformBloc itemBloc,
-  }) : super(itemID: platformID, itemBloc: itemBloc);
+    @required ICollectionRepository collectionRepository,
+  }) : super(itemID: platformID, collectionRepository: collectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -31,16 +31,15 @@ class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pl
   }
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<Platform, W> event) {
+  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int platformID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.insertGamePlatform(otherID, platformID);
+        return collectionRepository.insertGamePlatform(otherID, itemID);
       case System:
-        return collectionRepository.insertPlatformSystem(platformID, otherID);
+        return collectionRepository.insertPlatformSystem(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -48,16 +47,15 @@ class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pl
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<Platform, W> event) {
+  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int platformID = event.item.ID;
     int otherID = event.otherItem.ID;
 
     switch(W) {
       case Game:
-        return collectionRepository.deleteGamePlatform(otherID, platformID);
+        return collectionRepository.deleteGamePlatform(otherID, itemID);
       case System:
-        return collectionRepository.deletePlatformSystem(platformID, otherID);
+        return collectionRepository.deletePlatformSystem(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

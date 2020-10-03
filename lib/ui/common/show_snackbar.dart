@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showSnackBar({@required ScaffoldState scaffoldState, @required String message, int seconds = 3, SnackBarAction snackBarAction}){
+void showSnackBar({@required ScaffoldState scaffoldState, @required String message, int seconds = 3, SnackBarAction snackBarAction}) {
 
   final snackBar = SnackBar(
     content: Text(message),

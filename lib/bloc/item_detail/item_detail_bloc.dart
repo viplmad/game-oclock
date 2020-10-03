@@ -7,20 +7,15 @@ import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item/item.dart';
-
 import 'item_detail.dart';
 
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
-  ItemDetailBloc({@required this.itemBloc}) {
-    itemSubscription = itemBloc.listen( _mapItemStateToEvent );
-  }
+  ItemDetailBloc({@required this.itemID, @required this.collectionRepository});
 
-  final ItemBloc<T> itemBloc;
-  StreamSubscription<ItemState> itemSubscription;
-  ICollectionRepository get collectionRepository => itemBloc.collectionRepository;
+  final int itemID;
+  final ICollectionRepository collectionRepository;
 
   @override
   ItemDetailState get initialState => ItemLoading();
@@ -37,6 +32,22 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
     } else if(event is UpdateItem<T>) {
 
       yield* _mapUpdateToState(event);
+
+    } else if (event is UpdateItemField<T>) {
+
+      yield* _mapUpdateFieldToState(event);
+
+    } else if(event is AddItemImage<T>) {
+
+      yield* _mapAddImageToState(event);
+
+    } else if(event is UpdateItemImageName<T>) {
+
+      yield* _mapUpdateImageNameToState(event);
+
+    } else if(event is DeleteItemImage<T>) {
+
+      yield* _mapDeleteImageToState(event);
 
     }
 
@@ -64,7 +75,7 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
     try {
 
-      final T item = await getReadIDStream(event).first;
+      final T item = await getReadStream().first;
       yield ItemLoaded<T>(item);
 
     } catch (e) {
@@ -81,36 +92,73 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
   }
 
-  void _mapItemStateToEvent(ItemState itemState) {
+  Stream<ItemDetailState> _mapUpdateFieldToState(UpdateItemField<T> event) async* {
 
-    if(itemState is ItemFieldUpdated<T>) {
+    try {
 
-      _mapUpdatedFieldToEvent(itemState);
+      final T updatedItem = await updateFuture(event);
 
-    } else if(itemState is ItemImageUpdated<T>) {
+      yield ItemFieldUpdated<T>();
 
-      _mapUpdatedImageToEvent(itemState);
+      add(UpdateItem<T>(updatedItem));
+
+    } catch(e) {
+
+      yield ItemFieldNotUpdated(e.toString());
+
+    }
+  }
+
+  Stream<ItemDetailState> _mapAddImageToState(AddItemImage<T> event) async* {
+
+    try {
+
+      final T updatedItem = await addImage(event);
+
+      yield ItemImageUpdated<T>();
+
+      add(UpdateItem<T>(updatedItem));
+
+    } catch(e) {
+
+      yield ItemImageNotUpdated(e.toString());
 
     }
 
   }
 
-  void _mapUpdatedFieldToEvent(ItemFieldUpdated<T> itemState) {
+  Stream<ItemDetailState> _mapUpdateImageNameToState(UpdateItemImageName<T> event) async* {
 
-    if(state is ItemLoaded<T>) {
-      final T itemUpdated = itemState.item;
+    try {
 
-      add(UpdateItem<T>(itemUpdated));
+      final T updatedItem = await updateImageName(event);
+
+      yield ItemImageUpdated<T>();
+
+      add(UpdateItem<T>(updatedItem));
+
+    } catch(e) {
+
+      yield ItemImageNotUpdated(e.toString());
+
     }
 
   }
 
-  void _mapUpdatedImageToEvent(ItemImageUpdated<T> itemState) {
+  Stream<ItemDetailState> _mapDeleteImageToState(DeleteItemImage<T> event) async* {
 
-    if(state is ItemLoaded<T>) {
-      final T itemUpdated = itemState.item;
+    try {
 
-      add(UpdateItem<T>(itemUpdated));
+      final T updatedItem = await deleteImage(event);
+
+      yield ItemImageUpdated<T>();
+
+      add(UpdateItem<T>(updatedItem));
+
+    } catch(e) {
+
+      yield ItemImageNotUpdated(e.toString());
+
     }
 
   }
@@ -118,11 +166,14 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   @override
   Future<void> close() {
 
-    itemSubscription?.cancel();
     return super.close();
 
   }
 
-  external Stream<T> getReadIDStream(LoadItem event);
+  external Stream<T> getReadStream();
+  external Future<T> updateFuture(UpdateItemField<T> event);
+  external Future<T> addImage(AddItemImage<T> event);
+  external Future<T> deleteImage(DeleteItemImage<T> event);
+  external Future<T> updateImageName(UpdateItemImageName<T> event);
 
 }

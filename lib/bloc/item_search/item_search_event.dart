@@ -21,3 +21,17 @@ class SearchTextChanged extends ItemSearchEvent {
       'query: $query'
       ' }';
 }
+
+class AddItem extends ItemSearchEvent {
+  const AddItem([this.title]);
+
+  final String title;
+
+  @override
+  List<Object> get props => [title];
+
+  @override
+  String toString() => 'AddItem { '
+      'title: $title'
+      ' }';
+}

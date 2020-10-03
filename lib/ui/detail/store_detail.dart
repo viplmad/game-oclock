@@ -1,63 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:game_collection/repository/collection_repository.dart';
+
 import 'package:game_collection/entity/entity.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 
+import '../theme/theme.dart';
+import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-const Color storeColour = Colors.blueGrey;
-
-class StoreDetail extends StatelessWidget {
-
-  const StoreDetail({Key key, @required this.store}) : super(key: key);
-
-  final Store store;
+class StoreDetail extends ItemDetail<Store, StoreDetailBloc> {
+  const StoreDetail({Key key, @required Store item}) : super(item: item, key: key);
 
   @override
-  Widget build(BuildContext context) {
+  StoreDetailBloc detailBlocBuilder() {
+
+    return StoreDetailBloc(
+      storeID: item.ID,
+      collectionRepository: CollectionRepository(),
+    );
+
+  }
+
+  @override
+  List<BlocProvider> relationBlocsBuilder() {
+
+    return [
+      blocProviderRelationBuilder<Purchase>(),
+    ];
+
+  }
+
+  @override
+  ThemeData getThemeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData storeTheme = contextTheme.copyWith(
       primaryColor: storeColour,
-      accentColor: Colors.grey,
+      accentColor: storeAccentColour,
     );
 
-    return Scaffold(
-      body: Theme(
-        data: storeTheme,
-        child: _StoreDetailBody(
-          item: store,
-          itemDetailBloc: BlocProvider.of<StoreDetailBloc>(context)..add(LoadItem(store.ID)),
-        ),
-      ),
+    return storeTheme;
+
+  }
+
+  @override
+  _StoreDetailBody detailBodyBuilder() {
+
+    return _StoreDetailBody();
+
+  }
+
+  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+
+    return BlocProvider<StoreRelationBloc<W>>(
+      create: (BuildContext context) {
+        return StoreRelationBloc<W>(
+          storeID: item.ID,
+          collectionRepository: CollectionRepository(),
+        )..add(LoadItemRelation());
+      },
     );
 
   }
 
 }
 
-class _StoreDetailBody extends ItemDetailBody<Store> {
-
-  _StoreDetailBody({
-    Key key,
-    @required Store item,
-    @required StoreDetailBloc itemDetailBloc,
-  }) : super(
-    key: key,
-    item: item,
-    itemDetailBloc: itemDetailBloc,
-  );
+class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc> {
 
   @override
-  List<Widget> itemFieldsBuilder(Store store) {
+  List<Widget> itemFieldsBuilder(BuildContext context, Store store) {
 
     return [
       itemTextField(
+        context,
         fieldName: stor_nameField,
         value: store.name,
       ),
@@ -69,7 +90,7 @@ class _StoreDetailBody extends ItemDetailBody<Store> {
   List<Widget> itemRelationsBuilder() {
 
     return [
-      itemListManyRelation<Purchase>(
+      StorePurchaseRelationList(
         trailingBuilder: (List<Purchase> purchases) {
 
           double totalSpent = 0.0;
@@ -103,16 +124,6 @@ class _StoreDetailBody extends ItemDetailBody<Store> {
         },
       ),
     ];
-
-  }
-
-  @override
-  StoreRelationBloc<W> itemRelationBlocFunction<W extends CollectionItem>() {
-
-    return StoreRelationBloc<W>(
-      storeID: item.ID,
-      itemBloc: itemBloc,
-    );
 
   }
 

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/model.dart';
 
 
@@ -13,63 +14,65 @@ abstract class ItemListEvent extends Equatable {
 class LoadItemList extends ItemListEvent {}
 
 class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
-  const UpdateItemList(this.items);
+  const UpdateItemList(this.items, this.viewIndex, this.style);
 
   final List<T> items;
+  final int viewIndex;
+  final ListStyle style;
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [items, viewIndex, style];
 
   @override
   String toString() => 'UpdateItemList { '
-      'items: $items'
+      'items: $items, '
+      'viewIndex: $viewIndex, '
+      'style: $style'
+      ' }';
+}
+
+class AddItem extends ItemListEvent {
+  const AddItem([this.title]);
+
+  final String title;
+
+  @override
+  List<Object> get props => [title];
+
+  @override
+  String toString() => 'AddItem { '
+      'title: $title'
+      ' }';
+}
+
+class DeleteItem<T extends CollectionItem> extends ItemListEvent {
+  const DeleteItem(this.item);
+
+  final T item;
+
+  @override
+  List<Object> get props => [item];
+
+  @override
+  String toString() => 'DeleteItem { '
+      'item: $item'
       ' }';
 }
 
 class UpdateView extends ItemListEvent {
-  const UpdateView(this.view);
+  const UpdateView(this.viewIndex);
 
-  final String view;
+  final int viewIndex;
 
   @override
-  List<Object> get props => [view];
+  List<Object> get props => [viewIndex];
 
   @override
   String toString() => 'UpdateView { '
-      'view: $view'
+      'viewIndex: $viewIndex'
       ' }';
 }
 
 class UpdateSortOrder extends ItemListEvent {}
 
-class UpdateIsGrid extends ItemListEvent {}
-
-/*
-class UpdateSort extends ItemListEvent {
-  const UpdateSort(this.fields);
-
-  final List<String> fields;
-
-  @override
-  List<Object> get props => [fields];
-
-  @override
-  String toString() => 'UpdateSort { '
-      'fields: $fields'
-      ' }';
-}
-
-class UpdateFilter extends ItemListEvent {
-  const UpdateFilter(this.filter);
-
-  final FilterEnum filter;
-
-  @override
-  List<Object> get props => [filter];
-
-  @override
-  String toString() => 'UpdateFilter { '
-      'filter: $filter'
-      ' }';
-}
-*/
+class UpdateStyle extends ItemListEvent {}

@@ -26,34 +26,30 @@ class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
       ' }';
 }
 
-class AddItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemRelationEvent {
-  const AddItemRelation(this.item, this.otherItem);
+class AddItemRelation<W extends CollectionItem> extends ItemRelationEvent {
+  const AddItemRelation(this.otherItem);
 
-  final T item;
   final W otherItem;
 
   @override
-  List<Object> get props => [item, otherItem];
+  List<Object> get props => [otherItem];
 
   @override
   String toString() => 'AddItemRelation { '
-      'item: $item, '
-      'other item: $otherItem'
+      'otherItem: $otherItem'
       ' }';
 }
 
-class DeleteItemRelation<T extends CollectionItem, W extends CollectionItem> extends ItemRelationEvent {
-  const DeleteItemRelation(this.item, this.otherItem);
+class DeleteItemRelation<W extends CollectionItem> extends ItemRelationEvent {
+  const DeleteItemRelation(this.otherItem);
 
-  final T item;
   final W otherItem;
 
   @override
-  List<Object> get props => [item, otherItem];
+  List<Object> get props => [otherItem];
 
   @override
   String toString() => 'DeleteItemRelation { '
-      'item: $item, '
-      'other item: $otherItem'
+      'otherItem: $otherItem'
       ' }';
 }

@@ -11,11 +11,6 @@ enum SystemView {
   LastCreated,
 }
 
-const List<String> systemViews = [
-  "Main",
-  "Last Created",
-];
-
 class System extends CollectionItem {
 
   System({
