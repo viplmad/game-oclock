@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'loading_icon.dart';
 
+
 class DismissibleItem extends StatelessWidget {
   DismissibleItem({Key key, @required this.dismissibleKey, @required this.itemWidget, @required this.onDismissed, @required this.dismissIcon, this.confirmDismiss}) : super(key: key);
 

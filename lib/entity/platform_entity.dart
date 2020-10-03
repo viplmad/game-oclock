@@ -1,7 +1,6 @@
-import 'package:game_collection/entity/entity.dart';
 import 'package:meta/meta.dart';
 
-import 'collection_item_entity.dart';
+import 'entity.dart';
 
 
 const String platformTable = "Platform";

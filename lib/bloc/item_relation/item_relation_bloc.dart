@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_relation.dart';
 
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.collectionRepository});
+  ItemRelationBloc({@required this.itemID, @required this.iCollectionRepository});
 
   final int itemID;
-  final ICollectionRepository collectionRepository;
+  final ICollectionRepository iCollectionRepository;
 
   @override
   ItemRelationState get initialState => ItemRelationLoading();
@@ -47,13 +47,13 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
   Stream<ItemRelationState> _checkConnection() async* {
 
-    if(collectionRepository.isClosed()) {
+    if(iCollectionRepository.isClosed()) {
       yield ItemRelationNotLoaded("Connection lost. Trying to reconnect");
 
       try {
 
-        collectionRepository.reconnect();
-        await collectionRepository.open();
+        iCollectionRepository.reconnect();
+        await iCollectionRepository.open();
 
       } catch(e) {
       }
@@ -152,7 +152,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
     final List<W> updatedItems = items
         .where((W item) => item.ID != deletedItem.ID)
-        .toList();
+        .toList(growable: false);
 
     return UpdateItemRelation(updatedItems);
 

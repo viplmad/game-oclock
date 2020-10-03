@@ -2,36 +2,37 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
 
+import 'package:game_collection/repository/icollection_repository.dart';
+
 import 'item_search.dart';
+
 
 class StoreSearchBloc extends ItemSearchBloc<Store> {
 
   StoreSearchBloc({
-    @required ICollectionRepository collectionRepository
-  }) : super(collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
   Future<Store> createFuture(AddItem event) {
 
-    return collectionRepository.insertStore(event.title ?? '');
+    return iCollectionRepository.insertStore(event.title ?? '');
 
   }
 
   @override
   Future<List<Store>> getInitialItems() {
 
-    return collectionRepository.getStoresWithView(StoreView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getStoresWithView(StoreView.Main, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Store>> getSearchItems(String query) {
 
-    return collectionRepository.getStoresWithName(query, super.maxResults).first;
+    return iCollectionRepository.getStoresWithName(query, super.maxResults).first;
 
   }
 

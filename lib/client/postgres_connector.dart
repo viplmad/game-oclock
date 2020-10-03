@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+
 import 'package:postgres/postgres.dart';
 
 import 'package:game_collection/entity/entity.dart';
@@ -125,7 +126,7 @@ class PostgresConnector extends IDBConnector {
   @override
   Future<List<Map<String, Map<String, dynamic>>>> readTable({@required String tableName, List<String> selectFields, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields, int limitResults}) {
 
-    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList()?? null) + _orderByStatement(sortFields) + _limitStatement(limitResults);
+    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) + _orderByStatement(sortFields) + _limitStatement(limitResults);
 
     return _connection.mappedResultsQuery(sql, substitutionValues: whereFieldsAndValues);
 
@@ -346,7 +347,7 @@ class PostgresConnector extends IDBConnector {
 
   List<String> _forceFieldsDoubleQuotes(List<String> fields) {
 
-    return fields.map( (String field) => _forceDoubleQuotes(field) ).toList();
+    return fields.map( (String field) => _forceDoubleQuotes(field) ).toList(growable: false);
 
   }
 

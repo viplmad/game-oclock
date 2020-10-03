@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'collection_item_entity.dart';
+import 'entity.dart';
 
 
 const String gameTable = "Game";

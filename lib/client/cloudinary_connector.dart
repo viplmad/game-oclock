@@ -141,13 +141,3 @@ class CloudinaryInstance {
   }
 
 }
-
-
-
-//#region UPLOAD
-
-//#endregion UPLOAD
-
-//#region DOWNLOAD
-
-//#endregion DOWNLOAD

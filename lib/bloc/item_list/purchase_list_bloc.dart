@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_list.dart';
 
@@ -12,27 +12,27 @@ import 'item_list.dart';
 class PurchaseListBloc extends ItemListBloc<Purchase> {
 
   PurchaseListBloc({
-    @required ICollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<Purchase>> getReadAllStream() {
 
-    return collectionRepository.getAllPurchases();
+    return iCollectionRepository.getAllPurchases();
 
   }
 
   @override
   Future<Purchase> createFuture(AddItem event) {
 
-    return collectionRepository.insertPurchase(event.title ?? '');
+    return iCollectionRepository.insertPurchase(event.title ?? '');
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Purchase> event) {
 
-    return collectionRepository.deletePurchase(event.item.ID);
+    return iCollectionRepository.deletePurchase(event.item.ID);
 
   }
 
@@ -41,7 +41,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
 
     PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
-    return collectionRepository.getPurchasesWithView(purchaseView);
+    return iCollectionRepository.getPurchasesWithView(purchaseView);
 
   }
 

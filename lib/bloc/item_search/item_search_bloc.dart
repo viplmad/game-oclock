@@ -1,23 +1,23 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
-
-import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_search.dart';
 
 
 abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchEvent, ItemSearchState> {
 
-  ItemSearchBloc({@required this.collectionRepository});
+  ItemSearchBloc({@required this.iCollectionRepository});
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
-  final ICollectionRepository collectionRepository;
+  final ICollectionRepository iCollectionRepository;
 
   @override
   ItemSearchState get initialState => ItemSearchEmpty<T>();
@@ -41,13 +41,13 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
   Stream<ItemSearchState> checkConnection() async* {
 
-    if(collectionRepository.isClosed()) {
+    if(iCollectionRepository.isClosed()) {
       yield ItemSearchError("Connection lost. Trying to reconnect");
 
       try {
 
-        collectionRepository.reconnect();
-        await collectionRepository.open();
+        iCollectionRepository.reconnect();
+        await iCollectionRepository.open();
 
       } catch(e) {
       }

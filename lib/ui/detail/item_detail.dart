@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
@@ -260,13 +261,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                       FlatButton(
                         child: Text(localizations.cancelButtonLabel),
                         onPressed: () {
-                          Navigator.maybePop(context);
+                          Navigator.maybePop<String>(context);
                         },
                       ),
                       FlatButton(
                         child: Text(localizations.okButtonLabel),
                         onPressed: () {
-                          Navigator.maybePop(context, fieldController.text.trim());
+                          Navigator.maybePop<String>(context, fieldController.text.trim());
                         },
                       ),
                     ],
@@ -592,13 +593,13 @@ class ItemTextField extends StatelessWidget {
                 FlatButton(
                   child: Text(localizations.cancelButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop(context);
+                    Navigator.maybePop<String>(context);
                   },
                 ),
                 FlatButton(
                   child: Text(localizations.okButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop(context, fieldController.text.trim());
+                    Navigator.maybePop<String>(context, fieldController.text.trim());
                   },
                 ),
               ],
@@ -903,7 +904,7 @@ class EnumField extends StatelessWidget {
               );
 
             },
-          ).toList(),
+          ).toList(growable: false),
         ),
       ],
     );
@@ -974,13 +975,13 @@ class YearPickerDialogState extends State<YearPickerDialog> {
                 FlatButton(
                   child: Text(localizations.cancelButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop(context);
+                    Navigator.maybePop<int>(context);
                   },
                 ),
                 FlatButton(
                   child: Text(localizations.okButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop(context, _selectedDate.year);
+                    Navigator.maybePop<int>(context, _selectedDate.year);
                   },
                 ),
               ],
@@ -1054,13 +1055,13 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
         FlatButton(
           child: Text(localizations.cancelButtonLabel),
           onPressed: () {
-            Navigator.maybePop(context);
+            Navigator.maybePop<Duration>(context);
           },
         ),
         FlatButton(
           child: Text(localizations.okButtonLabel),
           onPressed: () {
-            Navigator.maybePop(context, Duration(hours: _hours, minutes: _minutes));
+            Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));
           },
         ),
       ],
@@ -1130,13 +1131,13 @@ class DecimalPickerDialogState extends State<DecimalPickerDialog> {
         FlatButton(
           child: Text(localizations.cancelButtonLabel),
           onPressed: () {
-            Navigator.maybePop(context);
+            Navigator.maybePop<double>(context);
           },
         ),
         FlatButton(
           child: Text(localizations.okButtonLabel),
           onPressed: () {
-            Navigator.maybePop(context, double.tryParse(_integerPart.toString() + "." + _decimalPart.toString().padLeft(2, '0')));
+            Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + "." + _decimalPart.toString().padLeft(2, '0')));
           },
         ),
       ],

@@ -10,9 +10,9 @@ import 'connection.dart';
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
-  ConnectionBloc({@required this.collectionRepository});
+  ConnectionBloc({@required this.iCollectionRepository});
 
-  final ICollectionRepository collectionRepository;
+  final ICollectionRepository iCollectionRepository;
 
   @override
   ConnectState get initialState => Uninitialised();
@@ -34,7 +34,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     try {
 
-      await collectionRepository.open();
+      await iCollectionRepository.open();
       yield Connected();
 
     } catch(e) {

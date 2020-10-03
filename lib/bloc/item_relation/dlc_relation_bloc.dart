@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_relation.dart';
 
@@ -13,17 +13,17 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
   DLCRelationBloc({
     @required int dlcID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: dlcID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: dlcID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return collectionRepository.getBaseGameFromDLC(itemID).map<List<Game>>( (Game game) => game != null? [game] : [] ) as Stream<List<W>>;
+        return iCollectionRepository.getBaseGameFromDLC(itemID).map<List<Game>>( (Game game) => game != null? [game] : [] ) as Stream<List<W>>;
       case Purchase:
-        return collectionRepository.getPurchasesFromDLC(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getPurchasesFromDLC(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();
@@ -37,9 +37,9 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
     switch(W) {
       case Game:
-        return collectionRepository.insertGameDLC(otherID, itemID);
+        return iCollectionRepository.insertGameDLC(otherID, itemID);
       case Purchase:
-        return collectionRepository.insertDLCPurchase(itemID, otherID);
+        return iCollectionRepository.insertDLCPurchase(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -53,9 +53,9 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
     switch(W) {
       case Game:
-        return collectionRepository.deleteGameDLC(itemID);
+        return iCollectionRepository.deleteGameDLC(itemID);
       case Purchase:
-        return collectionRepository.deleteDLCPurchase(itemID, otherID);
+        return iCollectionRepository.deleteDLCPurchase(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

@@ -2,6 +2,7 @@ import 'package:game_collection/client/idb_connector.dart';
 import 'package:game_collection/client/iimage_connector.dart';
 
 import 'package:game_collection/entity/entity.dart';
+
 import 'package:game_collection/model/model.dart';
 
 import 'icollection_repository.dart';
@@ -1459,7 +1460,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
       return Game.fromEntity(gameEntity, getGameCoverURL(gameEntity.coverFilename));
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1467,7 +1468,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
       return DLC.fromEntity(dlcEntity, getDLCCoverURL(dlcEntity.coverFilename));
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1475,7 +1476,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
       return Platform.fromEntity(platformEntity, getPlatformIconURL(platformEntity.iconFilename));
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1483,7 +1484,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return PurchaseEntity.fromDynamicMapList(results).map( (PurchaseEntity purchaseEntity) {
       return Purchase.fromEntity(purchaseEntity);
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1491,7 +1492,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
       return Store.fromEntity(storeEntity, getStoreIconURL(storeEntity.iconFilename));
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1499,7 +1500,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
       return System.fromEntity(systemEntity, getSystemIconURL(systemEntity.iconFilename));
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1507,7 +1508,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return TagEntity.fromDynamicMapList(results).map( (TagEntity tagEntity) {
       return Tag.fromEntity(tagEntity);
-    }).toList();
+    }).toList(growable: false);
 
   }
 
@@ -1515,7 +1516,7 @@ class CollectionRepository implements ICollectionRepository {
 
     return PurchaseTypeEntity.fromDynamicMapList(results).map( (PurchaseTypeEntity typeEntity) {
       return PurchaseType.fromEntity(typeEntity);
-    }).toList();
+    }).toList(growable: false);
 
   }
 

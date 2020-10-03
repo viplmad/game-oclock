@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_list.dart';
 
@@ -12,27 +12,27 @@ import 'item_list.dart';
 class GameListBloc extends ItemListBloc<Game> {
 
   GameListBloc({
-    @required ICollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<Game>> getReadAllStream() {
 
-    return collectionRepository.getAllGames();
+    return iCollectionRepository.getAllGames();
 
   }
 
   @override
   Future<Game> createFuture(AddItem event) {
 
-    return collectionRepository.insertGame(event.title ?? '', '');
+    return iCollectionRepository.insertGame(event.title ?? '', '');
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Game> event) {
 
-    return collectionRepository.deleteGame(event.item.ID);
+    return iCollectionRepository.deleteGame(event.item.ID);
 
   }
 
@@ -41,7 +41,7 @@ class GameListBloc extends ItemListBloc<Game> {
 
     GameView gameView = GameView.values[event.viewIndex];
 
-    return collectionRepository.getGamesWithView(gameView);
+    return iCollectionRepository.getGamesWithView(gameView);
 
   }
 

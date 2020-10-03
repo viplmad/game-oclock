@@ -13,20 +13,20 @@ class TagDetailBloc extends ItemDetailBloc<Tag> {
 
   TagDetailBloc({
     @required int tagID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: tagID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: tagID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<Tag> getReadStream() {
 
-    return collectionRepository.getTagWithID(itemID);
+    return iCollectionRepository.getTagWithID(itemID);
 
   }
 
   @override
   Future<Tag> updateFuture(UpdateItemField<Tag> event) {
 
-    return collectionRepository.updateTag(itemID, event.field, event.value);
+    return iCollectionRepository.updateTag(itemID, event.field, event.value);
 
   }
 

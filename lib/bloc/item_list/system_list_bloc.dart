@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_list.dart';
 
@@ -13,26 +13,26 @@ class SystemListBloc extends ItemListBloc<System> {
 
   SystemListBloc({
     @required ICollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+  }) : super(iCollectionRepository: collectionRepository);
 
   @override
   Stream<List<System>> getReadAllStream() {
 
-    return collectionRepository.getAllSystems();
+    return iCollectionRepository.getAllSystems();
 
   }
 
   @override
   Future<System> createFuture(AddItem event) {
 
-    return collectionRepository.insertSystem(event.title ?? '');
+    return iCollectionRepository.insertSystem(event.title ?? '');
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<System> event) {
 
-    return collectionRepository.deleteSystem(event.item.ID);
+    return iCollectionRepository.deleteSystem(event.item.ID);
 
   }
 
@@ -41,7 +41,7 @@ class SystemListBloc extends ItemListBloc<System> {
 
     SystemView systemView = SystemView.values[event.viewIndex];
 
-    return collectionRepository.getSystemsWithView(systemView);
+    return iCollectionRepository.getSystemsWithView(systemView);
 
   }
 

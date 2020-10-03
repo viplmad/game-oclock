@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_search/item_search.dart';
 
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_search/item_search.dart';
 
 import '../search/search.dart';
 import '../detail/detail.dart';

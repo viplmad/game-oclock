@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
-import 'package:flutter/widgets.dart';
-
 import 'package:equatable/equatable.dart';
+
+import 'package:flutter/material.dart';
 
 
 class BarData extends Equatable {

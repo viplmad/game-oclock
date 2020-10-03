@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-
-import 'package:game_collection/model/model.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';

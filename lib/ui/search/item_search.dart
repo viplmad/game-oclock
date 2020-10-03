@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/bloc/item_search/item_search.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/bloc/item_search/item_search.dart';
 
 import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
@@ -140,18 +140,18 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
                 if(state is ItemSearchEmpty<T>) {
 
-                  return listItems(state.suggestions);
+                  return listItems(state.suggestions, "");
 
                 }
                 if(state is ItemSearchSuccess<T>) {
 
-                  return listItems(state.results);
+                  return listItems(state.results, "No results found");
 
                 }
                 if(state is ItemSearchError) {
 
                   return Center(
-                    child: Text("Error during search" + "\n" + state.error),
+                    child: Text(state.error),
                   );
 
                 }
@@ -201,11 +201,11 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
   }
 
-  Widget listItems(List<T> results) {
+  Widget listItems(List<T> results, String emptyMessage) {
 
     if(results.isEmpty) {
       return Center(
-        child: Text("No results found", textAlign: TextAlign.center,),
+        child: Text(emptyMessage),
       );
     }
 

@@ -30,7 +30,7 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
 
     final List<T> searchItems = items.where( (T item) {
       return item.getTitle().toLowerCase().contains(query.toLowerCase());
-    }).take(super.maxResults).toList();
+    }).take(super.maxResults).toList(growable: false);
 
     return Future<List<T>>.value(searchItems);
 

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:crypto/crypto.dart';
-import 'base_api.dart';
 
+import 'base_api.dart';
 import 'cloudinary_response.dart';
+
 
 class CloudinaryConnection extends BaseApi {
   String _cloudName;
@@ -124,7 +125,7 @@ class CloudinaryConnection extends BaseApi {
     cleanParamsMap.remove("api_key");
     cleanParamsMap["timestamp"] = timestamp;
 
-    List<String> sortedParams = cleanParamsMap.keys.toList();
+    List<String> sortedParams = cleanParamsMap.keys..toList(growable: false);
     sortedParams.sort();
 
     StringBuffer signBuffer = new StringBuffer();

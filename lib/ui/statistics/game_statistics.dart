@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:game_collection/entity/entity.dart';
+
 import 'package:game_collection/model/model.dart';
 
 import 'statistics.dart';

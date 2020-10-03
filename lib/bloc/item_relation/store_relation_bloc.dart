@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_relation.dart';
 
@@ -13,15 +13,15 @@ class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store
 
   StoreRelationBloc({
     @required int storeID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: storeID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: storeID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Purchase:
-        return collectionRepository.getPurchasesFromStore(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getPurchasesFromStore(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();
@@ -35,7 +35,7 @@ class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store
 
     switch(W) {
       case Purchase:
-        return collectionRepository.insertStorePurchase(itemID, otherID);
+        return iCollectionRepository.insertStorePurchase(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -49,7 +49,7 @@ class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store
 
     switch(W) {
       case Purchase:
-        return collectionRepository.deleteStorePurchase(otherID);
+        return iCollectionRepository.deleteStorePurchase(otherID);
     }
 
     return super.deleteRelationFuture(event);

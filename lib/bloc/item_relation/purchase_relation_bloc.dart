@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_relation.dart';
 
@@ -13,21 +13,21 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
   PurchaseRelationBloc({
     @required int purchaseID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: purchaseID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: purchaseID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return collectionRepository.getGamesFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getGamesFromPurchase(itemID) as Stream<List<W>>;
       case DLC:
-        return collectionRepository.getDLCsFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getDLCsFromPurchase(itemID) as Stream<List<W>>;
       case Store:
-        return collectionRepository.getStoreFromPurchase(itemID).map<List<Store>>( (Store store) => store != null? [store] : [] ) as Stream<List<W>>;
+        return iCollectionRepository.getStoreFromPurchase(itemID).map<List<Store>>( (Store store) => store != null? [store] : [] ) as Stream<List<W>>;
       case PurchaseType:
-        return collectionRepository.getTypesFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getTypesFromPurchase(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();
@@ -41,13 +41,13 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
     switch(W) {
       case Game:
-        return collectionRepository.insertGamePurchase(otherID, itemID);
+        return iCollectionRepository.insertGamePurchase(otherID, itemID);
       case DLC:
-        return collectionRepository.insertDLCPurchase(otherID, itemID);
+        return iCollectionRepository.insertDLCPurchase(otherID, itemID);
       case Store:
-        return collectionRepository.insertStorePurchase(otherID, itemID);
+        return iCollectionRepository.insertStorePurchase(otherID, itemID);
       case PurchaseType:
-        return collectionRepository.insertPurchaseType(itemID, otherID);
+        return iCollectionRepository.insertPurchaseType(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -61,13 +61,13 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
     switch(W) {
       case Game:
-        return collectionRepository.deleteGamePurchase(otherID, itemID);
+        return iCollectionRepository.deleteGamePurchase(otherID, itemID);
       case DLC:
-        return collectionRepository.deleteDLCPurchase(otherID, itemID);
+        return iCollectionRepository.deleteDLCPurchase(otherID, itemID);
       case Store:
-        return collectionRepository.deleteStorePurchase(itemID);
+        return iCollectionRepository.deleteStorePurchase(itemID);
       case PurchaseType:
-        return collectionRepository.deletePurchaseType(itemID, otherID);
+        return iCollectionRepository.deletePurchaseType(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

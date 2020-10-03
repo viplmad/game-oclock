@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
-
 import 'package:game_collection/entity/entity.dart';
+
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
@@ -22,7 +24,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
 
     return DLCDetailBloc(
       dlcID: item.ID,
-      collectionRepository: CollectionRepository(),
+      iCollectionRepository: CollectionRepository(),
     );
 
   }
@@ -63,7 +65,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
           dlcID: item.ID,
-          collectionRepository: CollectionRepository(),
+          iCollectionRepository: CollectionRepository(),
         )..add(LoadItemRelation());
       },
     );

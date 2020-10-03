@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/list_style.dart';
+import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
-
-import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
-import 'package:game_collection/model/model.dart';
 
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
@@ -60,13 +61,13 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
       tooltip: "Change View",
       itemBuilder: (BuildContext context) {
         return barData.views.map( (String view) {
-          return PopupMenuItem(
+          return PopupMenuItem<int>(
             child: ListTile(
               title: Text(view),
             ),
             value: barData.views.indexOf(view),
           );
-        }).toList();
+        }).toList(growable: false);
       },
       onSelected: onSelect,
     );
@@ -271,13 +272,13 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
         FlatButton(
           child: Text("Cancel"),
           onPressed: () {
-            Navigator.maybePop(context);
+            Navigator.maybePop<bool>(context);
           },
         ),
         RaisedButton(
           child: Text("Delete", style: TextStyle(color: Colors.white),),
           onPressed: () {
-            Navigator.maybePop(context, true);
+            Navigator.maybePop<bool>(context, true);
           },
           color: Colors.red,
         )

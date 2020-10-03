@@ -13,20 +13,20 @@ class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
 
   TypeDetailBloc({
     @required int typeID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: typeID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: typeID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<PurchaseType> getReadStream() {
 
-    return collectionRepository.getTypeWithID(itemID);
+    return iCollectionRepository.getTypeWithID(itemID);
 
   }
 
   @override
   Future<PurchaseType> updateFuture(UpdateItemField<PurchaseType> event) {
 
-    return collectionRepository.updateType(itemID, event.field, event.value);
+    return iCollectionRepository.updateType(itemID, event.field, event.value);
 
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/repository/collection_repository.dart';
@@ -7,7 +8,6 @@ import 'package:game_collection/bloc/connection/connection.dart';
 
 import 'common/loading_icon.dart';
 import 'common/show_snackbar.dart';
-
 import 'homepage.dart';
 
 
@@ -19,7 +19,7 @@ class Startpage extends StatelessWidget {
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
         return ConnectionBloc(
-          collectionRepository: CollectionRepository(),
+          iCollectionRepository: CollectionRepository(),
         )..add(Connect());
       },
       child: _StartpageBody(),

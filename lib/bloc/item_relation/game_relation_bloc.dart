@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_relation.dart';
 
@@ -13,21 +13,21 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
   GameRelationBloc({
     @required int gameID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: gameID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: gameID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case DLC:
-        return collectionRepository.getDLCsFromGame(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getDLCsFromGame(itemID) as Stream<List<W>>;
       case Purchase:
-        return collectionRepository.getPurchasesFromGame(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getPurchasesFromGame(itemID) as Stream<List<W>>;
       case Platform:
-        return collectionRepository.getPlatformsFromGame(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getPlatformsFromGame(itemID) as Stream<List<W>>;
       case Tag:
-        return collectionRepository.getTagsFromGame(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getTagsFromGame(itemID) as Stream<List<W>>;
     }
 
     return super.getRelationStream();
@@ -41,13 +41,13 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
     switch(W) {
       case DLC:
-        return collectionRepository.insertGameDLC(itemID, otherID);
+        return iCollectionRepository.insertGameDLC(itemID, otherID);
       case Purchase:
-        return collectionRepository.insertGamePurchase(itemID, otherID);
+        return iCollectionRepository.insertGamePurchase(itemID, otherID);
       case Platform:
-        return collectionRepository.insertGamePlatform(itemID, otherID);
+        return iCollectionRepository.insertGamePlatform(itemID, otherID);
       case Tag:
-        return collectionRepository.insertGameTag(itemID, otherID);
+        return iCollectionRepository.insertGameTag(itemID, otherID);
     }
 
     return super.addRelationFuture(event);
@@ -61,13 +61,13 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
     switch(W) {
       case DLC:
-        return collectionRepository.deleteGameDLC(otherID);
+        return iCollectionRepository.deleteGameDLC(otherID);
       case Purchase:
-        return collectionRepository.deleteGamePurchase(itemID, otherID);
+        return iCollectionRepository.deleteGamePurchase(itemID, otherID);
       case Platform:
-        return collectionRepository.deleteGamePlatform(itemID, otherID);
+        return iCollectionRepository.deleteGamePlatform(itemID, otherID);
       case Tag:
-        return collectionRepository.deleteGameTag(itemID, otherID);
+        return iCollectionRepository.deleteGameTag(itemID, otherID);
     }
 
     return super.deleteRelationFuture(event);

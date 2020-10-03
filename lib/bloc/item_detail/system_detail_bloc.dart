@@ -13,41 +13,41 @@ class SystemDetailBloc extends ItemDetailBloc<System> {
 
   SystemDetailBloc({
     @required int systemID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: systemID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: systemID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<System> getReadStream() {
 
-    return collectionRepository.getSystemWithID(itemID);
+    return iCollectionRepository.getSystemWithID(itemID);
 
   }
 
   @override
   Future<System> updateFuture(UpdateItemField<System> event) {
 
-    return collectionRepository.updateSystem(itemID, event.field, event.value);
+    return iCollectionRepository.updateSystem(itemID, event.field, event.value);
 
   }
 
   @override
   Future<System> addImage(AddItemImage<System> event) {
 
-    return collectionRepository.uploadSystemIcon(itemID, event.imagePath, event.oldImageName);
+    return iCollectionRepository.uploadSystemIcon(itemID, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<System> updateImageName(UpdateItemImageName<System> event) {
 
-    return collectionRepository.renameSystemIcon(itemID, event.oldImageName, event.newImageName);
+    return iCollectionRepository.renameSystemIcon(itemID, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<System> deleteImage(DeleteItemImage<System> event) {
 
-    return collectionRepository.deleteSystemIcon(itemID, event.imageName);
+    return iCollectionRepository.deleteSystemIcon(itemID, event.imageName);
 
   }
 

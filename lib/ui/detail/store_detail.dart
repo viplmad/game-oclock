@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
-
 import 'package:game_collection/entity/entity.dart';
+
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
@@ -22,7 +24,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc> {
 
     return StoreDetailBloc(
       storeID: item.ID,
-      collectionRepository: CollectionRepository(),
+      iCollectionRepository: CollectionRepository(),
     );
 
   }
@@ -62,7 +64,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc> {
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
           storeID: item.ID,
-          collectionRepository: CollectionRepository(),
+          iCollectionRepository: CollectionRepository(),
         )..add(LoadItemRelation());
       },
     );

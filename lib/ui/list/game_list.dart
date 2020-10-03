@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-
-import 'package:game_collection/model/app_tab.dart';
+import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
-import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/app_tab.dart';
+
+import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
 import '../theme/theme.dart';
 import '../detail/detail.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart';
 
+
 List<String> monthLabels = [
   "Jan",
   "Feb",
@@ -16,7 +17,6 @@ List<String> monthLabels = [
   "Nov",
   "Dec",
 ];
-
 
 abstract class ItemStatistics extends StatelessWidget {
   const ItemStatistics({Key key, @required this.itemName}) : super(key: key);

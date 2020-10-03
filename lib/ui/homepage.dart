@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/app_tab.dart';
 import 'package:game_collection/model/bar_data.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/repository/collection_repository.dart';
+
 import 'package:game_collection/bloc/tab/tab.dart';
+import 'package:game_collection/bloc/item_list/item_list.dart';
 
 import 'list/list.dart';
 import 'theme/theme.dart';
@@ -29,49 +30,49 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<GameListBloc>(
           create: (BuildContext context) {
             return GameListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              collectionRepository: CollectionRepository(),
+              iCollectionRepository: CollectionRepository(),
             )..add(LoadItemList());
           },
         ),

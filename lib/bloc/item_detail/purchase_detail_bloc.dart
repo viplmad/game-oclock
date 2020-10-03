@@ -13,20 +13,20 @@ class PurchaseDetailBloc extends ItemDetailBloc<Purchase> {
 
   PurchaseDetailBloc({
     @required int purchaseID,
-    @required ICollectionRepository collectionRepository,
-  }) : super(itemID: purchaseID, collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemID: purchaseID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<Purchase> getReadStream() {
 
-    return collectionRepository.getPurchaseWithID(itemID);
+    return iCollectionRepository.getPurchaseWithID(itemID);
 
   }
 
   @override
   Future<Purchase> updateFuture(UpdateItemField<Purchase> event) {
 
-    return collectionRepository.updatePurchase(itemID, event.field, event.value);
+    return iCollectionRepository.updatePurchase(itemID, event.field, event.value);
 
   }
 

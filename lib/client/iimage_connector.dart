@@ -19,5 +19,4 @@ abstract class IImageConnector {
   String getDownloadURL({@required String tableName, @required String imageFilename});
   //#ENDregion DOWNLOAD
 
-
 }

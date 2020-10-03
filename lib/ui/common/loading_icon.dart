@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class LoadingIcon extends StatelessWidget {
 
   @override

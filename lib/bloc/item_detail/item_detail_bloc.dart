@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_detail.dart';
 
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
-  ItemDetailBloc({@required this.itemID, @required this.collectionRepository});
+  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository});
 
   final int itemID;
-  final ICollectionRepository collectionRepository;
+  final ICollectionRepository iCollectionRepository;
 
   @override
   ItemDetailState get initialState => ItemLoading();
@@ -55,13 +55,13 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
   Stream<ItemDetailState> _checkConnection() async* {
 
-    if(collectionRepository.isClosed()) {
+    if(iCollectionRepository.isClosed()) {
       yield ItemNotLoaded("Connection lost. Trying to reconnect");
 
       try {
 
-        collectionRepository.reconnect();
-        await collectionRepository.open();
+        iCollectionRepository.reconnect();
+        await iCollectionRepository.open();
 
       } catch(e) {
       }

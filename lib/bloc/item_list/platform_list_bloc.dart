@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
 import 'package:game_collection/model/model.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_list.dart';
 
@@ -12,27 +12,27 @@ import 'item_list.dart';
 class PlatformListBloc extends ItemListBloc<Platform> {
 
   PlatformListBloc({
-    @required ICollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<List<Platform>> getReadAllStream() {
 
-    return collectionRepository.getAllPlatforms();
+    return iCollectionRepository.getAllPlatforms();
 
   }
 
   @override
   Future<Platform> createFuture(AddItem event) {
 
-    return collectionRepository.insertPlatform(event.title ?? '');
+    return iCollectionRepository.insertPlatform(event.title ?? '');
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Platform> event) {
 
-    return collectionRepository.deletePlatform(event.item.ID);
+    return iCollectionRepository.deletePlatform(event.item.ID);
 
   }
 
@@ -41,7 +41,7 @@ class PlatformListBloc extends ItemListBloc<Platform> {
 
     PlatformView platformView = PlatformView.values[event.viewIndex];
 
-    return collectionRepository.getPlatformsWithView(platformView);
+    return iCollectionRepository.getPlatformsWithView(platformView);
 
   }
 

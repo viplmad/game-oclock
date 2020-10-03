@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/list_style.dart';
+
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_list.dart';
 
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
 
-  ItemListBloc({@required this.collectionRepository});
+  ItemListBloc({@required this.iCollectionRepository});
 
-  final ICollectionRepository collectionRepository;
+  final ICollectionRepository iCollectionRepository;
 
   @override
   ItemListState get initialState => ItemListLoading();
@@ -59,13 +59,13 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<ItemListState> _checkConnection() async* {
 
-    if(collectionRepository.isClosed()) {
+    if(iCollectionRepository.isClosed()) {
       yield ItemListNotLoaded("Connection lost. Trying to reconnect");
 
       try {
 
-        collectionRepository.reconnect();
-        await collectionRepository.open();
+        iCollectionRepository.reconnect();
+        await iCollectionRepository.open();
 
       } catch(e) {
       }
@@ -167,7 +167,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _mapUpdateSortOrderToState(UpdateSortOrder event) async* {
 
     if(state is ItemListLoaded<T>) {
-      final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList();
+      final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList(growable: false);
 
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final ListStyle style = (state as ItemListLoaded<T>).style;
@@ -221,7 +221,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
     final List<T> updatedItems = items
         .where((T item) => item.ID != deletedItem.ID)
-        .toList();
+        .toList(growable: false);
 
     return UpdateItemList<T>(updatedItems, viewIndex, style);
 

@@ -1,8 +1,7 @@
 import 'package:meta/meta.dart';
-
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection/entity/collection_item_entity.dart';
+import 'package:game_collection/entity/entity.dart';
 
 
 abstract class CollectionItem extends Equatable {

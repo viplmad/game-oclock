@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 void showSnackBar({@required ScaffoldState scaffoldState, @required String message, int seconds = 3, SnackBarAction snackBarAction}) {
 
   final snackBar = SnackBar(
@@ -17,7 +18,7 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {@required String labe
   return SnackBarAction(
     label: label,
     onPressed: () {
-      showDialog(
+      showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -33,7 +34,7 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {@required String labe
               FlatButton(
                 child: Text("OK"),
                 onPressed: () {
-                  Navigator.maybePop(context);
+                  Navigator.maybePop<bool>(context, true);
                 },
               ),
             ],

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/list_style.dart';
 
 
 abstract class ItemListState extends Equatable {

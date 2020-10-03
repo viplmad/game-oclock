@@ -1,9 +1,8 @@
 import 'package:meta/meta.dart';
 
-import 'package:game_collection/entity/collection_item_entity.dart';
-import 'package:game_collection/entity/tag_entity.dart';
+import 'package:game_collection/entity/entity.dart';
 
-import 'collection_item.dart';
+import 'model.dart';
 
 
 enum TagView {
