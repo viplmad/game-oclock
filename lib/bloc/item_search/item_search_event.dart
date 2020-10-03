@@ -9,7 +9,7 @@ abstract class ItemSearchEvent extends Equatable {
 }
 
 class SearchTextChanged extends ItemSearchEvent {
-  const SearchTextChanged(this.query);
+  const SearchTextChanged([this.query = '']);
 
   final String query;
 

@@ -15,9 +15,9 @@ class Connecting extends ConnectState {}
 class Connected extends ConnectState {}
 
 class FailedConnection extends ConnectState {
-  final String error;
-
   const FailedConnection(this.error);
+
+  final String error;
 
   @override
   List<Object> get props => [error];

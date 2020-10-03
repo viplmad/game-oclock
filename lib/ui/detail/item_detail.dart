@@ -249,6 +249,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                     content: TextField(
                       controller: fieldController,
                       keyboardType: TextInputType.text,
+                      autofocus: true,
                       maxLines: null,
                       inputFormatters: <TextInputFormatter> [
                         WhitelistingTextInputFormatter(RegExp(r'^([A-z])*$')),
@@ -584,6 +585,7 @@ class ItemTextField extends StatelessWidget {
               content: TextField(
                 controller: fieldController,
                 keyboardType: isLongText? TextInputType.multiline : TextInputType.text,
+                autofocus: true,
                 maxLines: null,
                 decoration: InputDecoration(
                   hintText: fieldName,

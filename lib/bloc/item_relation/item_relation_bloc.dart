@@ -68,7 +68,9 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
     try {
 
       final List<W> items = await getRelationStream().first;
-      yield ItemRelationLoaded<W>(items);
+      yield ItemRelationLoaded<W>(
+        items,
+      );
 
     } catch (e) {
 

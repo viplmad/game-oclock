@@ -11,7 +11,7 @@ abstract class TabEvent extends Equatable {
 }
 
 class UpdateTab extends TabEvent {
-  const UpdateTab(this.mainTab, [this.gameTab]);
+  const UpdateTab(this.mainTab, this.gameTab);
 
   final MainTab mainTab;
   final GameTab gameTab;

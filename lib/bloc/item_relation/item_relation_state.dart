@@ -13,7 +13,7 @@ abstract class ItemRelationState extends Equatable {
 class ItemRelationLoading extends ItemRelationState {}
 
 class ItemRelationLoaded<W extends CollectionItem> extends ItemRelationState {
-  const ItemRelationLoaded([this.otherItems = const []]);
+  const ItemRelationLoaded(this.otherItems);
 
   final List<W> otherItems;
 

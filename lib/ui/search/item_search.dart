@@ -23,7 +23,7 @@ class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget {
       create: (BuildContext context) {
         return ItemLocalSearchBloc<T>(
           items: items,
-        )..add(SearchTextChanged(''));
+        )..add(SearchTextChanged());
       },
       child: _ItemSearchBody<T, ItemLocalSearchBloc<T>>(
         onTap: onTap,
@@ -42,7 +42,7 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>>
 
     return BlocProvider<K>(
       create: (BuildContext context) {
-        return searchBlocBuilder()..add(SearchTextChanged(''));
+        return searchBlocBuilder()..add(SearchTextChanged());
       },
       child: _ItemSearchBody<T, K>(
         onTap: (BuildContext context, T result) {
@@ -89,6 +89,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
         title: TextField(
           controller: _textEditingController,
           keyboardType: TextInputType.text,
+          autofocus: true,
           onChanged: (String newQuery) {
             //Not sure of this fix to update button text
             setState(() {});
