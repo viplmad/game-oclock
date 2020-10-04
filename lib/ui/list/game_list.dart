@@ -104,13 +104,14 @@ const List<BarData> tabItems = [
 class GameTabs extends StatelessWidget {
   const GameTabs({Key key, this.gameTab}) : super(key: key);
 
-  final GameTab gameTab; //TODO use for smth
+  final GameTab gameTab;
 
   @override
   Widget build(BuildContext context) {
 
     return DefaultTabController(
       length: tabItems.length,
+      initialIndex: gameTab.index,
       child: Builder(
         builder: (BuildContext context) {
           DefaultTabController.of(context).addListener( () {

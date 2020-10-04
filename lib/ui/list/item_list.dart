@@ -404,7 +404,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
             );
 
           },
-          dismissIcon: Icons.delete_forever,
+          dismissIcon: Icons.delete,
         );
 
       },

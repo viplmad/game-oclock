@@ -17,25 +17,34 @@ class DismissibleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Dismissible(
-      key: ValueKey<int>(dismissibleKey),
-      background: Container(
-          color: Colors.red,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-              children: <Widget>[
-                Icon(dismissIcon, color: Colors.white,),
-                Icon(dismissIcon, color: Colors.white,),
-              ],
-            ),
-          )
+    return Padding(
+      padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+      child: Dismissible(
+        key: ValueKey<int>(dismissibleKey),
+        background: backgroundBuilder(Alignment.centerLeft),
+        secondaryBackground: backgroundBuilder(Alignment.centerRight),
+        child: itemWidget,
+        onDismissed: onDismissed,
+        confirmDismiss: confirmDismiss,
       ),
-      child: itemWidget,
-      onDismissed: onDismissed,
-      confirmDismiss: confirmDismiss,
+    );
+
+  }
+
+  Widget backgroundBuilder(AlignmentGeometry alignment) {
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      ),
+      child: Align(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Icon(dismissIcon, color: Colors.white),
+        ),
+        alignment: alignment,
+      ),
     );
 
   }
@@ -54,7 +63,7 @@ class ItemListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(4.0),),
+        borderRadius: BorderRadius.all(Radius.circular(4.0)),
         child: _ItemListTile(
           title: title,
           subtitle: subtitle,
@@ -62,6 +71,7 @@ class ItemListCard extends StatelessWidget {
         ),
         onTap: onTap,
       ),
+      margin: EdgeInsets.all(0.0),
     );
   }
 
@@ -155,7 +165,7 @@ class _ItemGridTile extends StatelessWidget {
 }
 
 class CachedImage extends StatelessWidget {
-  const CachedImage({Key key, @required this.imageURL, @required this.fit, this.backgroundColour = Colors.black, this.applyGradient = false}) : super(key: key);
+  const CachedImage({Key key, @required this.imageURL, @required this.fit, @required this.backgroundColour, this.applyGradient = false}) : super(key: key);
 
   final String imageURL;
   final BoxFit fit;
@@ -184,8 +194,12 @@ class CachedImage extends StatelessWidget {
       imageUrl: imageURL,
       fit: fit,
       useOldImageOnUrlChange: true,
-      placeholder: (BuildContext context, String url) => LoadingIcon(),
-      errorWidget: (BuildContext context, String url, Object error) => Container( color: backgroundColour, ),
+      progressIndicatorBuilder: (context, url, downloadProgress) {
+        return Center(
+          child: CircularProgressIndicator(value: downloadProgress.progress),
+        );
+      },
+      errorWidget: (BuildContext context, String url, Object error) => Container(color: backgroundColour),
     );
 
   }

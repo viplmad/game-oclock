@@ -14,6 +14,7 @@ import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
+import 'year_picker.dart' as customyearpicker;
 
 
 abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>> extends StatelessWidget {
@@ -345,12 +346,10 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         if (await canLaunch(value)) {
           await launch(value);
         } else {
-          //TODO: use Snackbar
-          print('Could not launch $value');
-          /*showSnackBar(
+          showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: 'Could not launch $value',
-          );*/
+          );
         }
       }
     );
@@ -746,7 +745,7 @@ class ItemDateTimeField extends StatelessWidget {
           return showDatePicker(
             context: context,
             firstDate: DateTime(1970),
-            lastDate: DateTime(2030),
+            lastDate: DateTime.now(),
             initialDate: value?? DateTime.now(),
           );
         },
@@ -961,9 +960,10 @@ class YearPickerDialogState extends State<YearPickerDialog> {
               ),
             ),
             Flexible(
-              child: YearPicker(
+              child: customyearpicker.YearPicker(
                 firstDate: DateTime(1970),
                 lastDate: DateTime.now(),
+                initialDate: _selectedDate,
                 selectedDate: _selectedDate,
                 onChanged: (DateTime newDate) {
                   setState(() {
