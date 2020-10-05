@@ -146,12 +146,13 @@ class _ItemGridTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GridTile(
-      child: CachedImage(
-        imageURL: imageURL,
-        fit: BoxFit.cover,
-        backgroundColour: Colors.black,
-        applyGradient: false,
-      ),
+      child: imageURL != null?
+        CachedImage(
+          imageURL: imageURL,
+          fit: BoxFit.cover,
+          backgroundColour: Colors.black,
+          applyGradient: false,
+        ) : Container(),
       footer: Container(
         color: Colors.black.withOpacity(0.5),
         child: Text(title, style: TextStyle(fontSize: 18.0, color: Colors.white),),
@@ -173,16 +174,21 @@ class CachedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return imageURL != null?
-      applyGradient?
-        Container(
-          color: Colors.black,
-          child: Opacity(
-            opacity: 0.75,
-            child: _getCachedImage(),
-          ),
-        ) : _getCachedImage()
-        : Container();
+    return imageURL.isNotEmpty?
+      applyGradient? _getGradientImage() : _getCachedImage()
+      : Container();
+
+  }
+
+  Widget _getGradientImage() {
+
+    return Container(
+      color: Colors.black,
+      child: Opacity(
+        opacity: 0.75,
+        child: _getCachedImage(),
+      ),
+    );
 
   }
 

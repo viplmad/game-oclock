@@ -125,7 +125,7 @@ class CloudinaryConnection extends BaseApi {
     cleanParamsMap.remove("api_key");
     cleanParamsMap["timestamp"] = timestamp;
 
-    List<String> sortedParams = cleanParamsMap.keys..toList(growable: false);
+    List<String> sortedParams = cleanParamsMap.keys.toList(growable: false);
     sortedParams.sort();
 
     StringBuffer signBuffer = new StringBuffer();

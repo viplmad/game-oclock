@@ -181,9 +181,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               onTap: imageURL != null? () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (BuildContext context) {
+                  builder: (BuildContext innerContext) {
 
-                    return _imageActionListBuilder(context, imageFilename: imageFilename);
+                    return _imageActionListBuilder(
+                      innerContext,
+                      context,
+                      imageFilename: imageFilename,
+                    );
 
                   },
                 );
@@ -197,7 +201,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget _imageActionListBuilder(BuildContext context, {String imageFilename}) {
+  Widget _imageActionListBuilder(BuildContext context, BuildContext outerContext, {String imageFilename}) {
 
     final ImagePicker _picker = ImagePicker();
 
@@ -217,7 +221,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               ).then( (PickedFile imagePicked) {
                 if(imagePicked != null) {
 
-                  BlocProvider.of<K>(context).add(
+                  BlocProvider.of<K>(outerContext).add(
                     AddItemImage<T>(
                       imagePicked.path,
                       imageFilename != null? imageFilename.split('.').first : null,
@@ -278,7 +282,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               ).then( (String newName) {
                 if(newName != null) {
 
-                  BlocProvider.of<K>(context).add(
+                  BlocProvider.of<K>(outerContext).add(
                     UpdateItemImageName<T>(
                       imageName,
                       newName,
@@ -298,7 +302,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
             onTap: () {
               String imageName = imageFilename.split('.').first;
 
-              BlocProvider.of<K>(context).add(
+              BlocProvider.of<K>(outerContext).add(
                 DeleteItemImage<T>(
                   imageName,
                 ),
