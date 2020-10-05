@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
+import 'route_constants.dart';
 import 'start.dart';
 import 'homepage.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
 import 'statistics/statistics.dart';
-
-import 'route_constants.dart';
 
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -155,6 +154,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
       );
   }
+
+  return _pageRoute(
+    Container(),
+  );
 
 }
 
