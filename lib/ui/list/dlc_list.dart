@@ -8,7 +8,6 @@ import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
-
 import '../theme/theme.dart';
 import 'list.dart';
 

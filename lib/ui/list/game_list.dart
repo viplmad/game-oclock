@@ -11,7 +11,6 @@ import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
-
 import '../theme/theme.dart';
 import 'list.dart';
 
@@ -40,7 +39,7 @@ class GameAppBar extends StatelessWidget {
 }
 
 class _AllAppBar extends _GameAppBar<AllListBloc> {}
-class _OwnedAppBar extends _GameAppBar<GameListBloc> {}
+class _OwnedAppBar extends _GameAppBar<OwnedListBloc> {}
 class _RomAppBar extends _GameAppBar<RomListBloc> {}
 
 abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
@@ -147,7 +146,7 @@ class GameTabs extends StatelessWidget {
 }
 
 class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {}
-class _OwnedGameList extends _GameList<GameListBloc, OwnedListManagerBloc> {}
+class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {}
 class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {}
 
 abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {

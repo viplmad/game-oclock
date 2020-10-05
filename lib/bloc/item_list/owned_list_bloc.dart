@@ -10,9 +10,9 @@ import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class GameListBloc extends ItemListBloc<Game> {
+class OwnedListBloc extends ItemListBloc<Game> {
 
-  GameListBloc({
+  OwnedListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required OwnedListManagerBloc managerBloc,
   }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);

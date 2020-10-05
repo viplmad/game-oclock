@@ -8,7 +8,6 @@ import 'package:game_collection/model/bar_data.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 
 import '../route_constants.dart';
-
 import '../theme/theme.dart';
 import 'list.dart';
 

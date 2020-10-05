@@ -9,6 +9,7 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'list/list.dart';
 import 'theme/theme.dart';
@@ -18,6 +19,34 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
 
     return MultiBlocProvider(
       providers: [
@@ -31,13 +60,15 @@ class Homepage extends StatelessWidget {
           create: (BuildContext context) {
             return AllListBloc(
               iCollectionRepository: CollectionRepository(),
+              managerBloc: _allListManagerBloc,
             )..add(LoadItemList());
           },
         ),
-        BlocProvider<GameListBloc>(
+        BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
-            return GameListBloc(
+            return OwnedListBloc(
               iCollectionRepository: CollectionRepository(),
+              managerBloc: _ownedListManagerBloc,
             )..add(LoadItemList());
           },
         ),
@@ -45,6 +76,7 @@ class Homepage extends StatelessWidget {
           create: (BuildContext context) {
             return RomListBloc(
               iCollectionRepository: CollectionRepository(),
+              managerBloc: _romListManagerBloc,
             )..add(LoadItemList());
           },
         ),
@@ -52,13 +84,7 @@ class Homepage extends StatelessWidget {
           create: (BuildContext context) {
             return DLCListBloc(
               iCollectionRepository: CollectionRepository(),
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<PlatformListBloc>(
-          create: (BuildContext context) {
-            return PlatformListBloc(
-              iCollectionRepository: CollectionRepository(),
+              managerBloc: _dlcListManagerBloc,
             )..add(LoadItemList());
           },
         ),
@@ -66,6 +92,7 @@ class Homepage extends StatelessWidget {
           create: (BuildContext context) {
             return PurchaseListBloc(
               iCollectionRepository: CollectionRepository(),
+              managerBloc: _purchaseListManagerBloc,
             )..add(LoadItemList());
           },
         ),
@@ -73,7 +100,52 @@ class Homepage extends StatelessWidget {
           create: (BuildContext context) {
             return StoreListBloc(
               iCollectionRepository: CollectionRepository(),
+              managerBloc: _storeListManagerBloc,
             )..add(LoadItemList());
+          },
+        ),
+        BlocProvider<PlatformListBloc>(
+          create: (BuildContext context) {
+            return PlatformListBloc(
+              iCollectionRepository: CollectionRepository(),
+              managerBloc: _platformListManagerBloc,
+            )..add(LoadItemList());
+          },
+        ),
+
+        BlocProvider<AllListManagerBloc>(
+          create: (BuildContext context) {
+            return _allListManagerBloc;
+          },
+        ),
+        BlocProvider<OwnedListManagerBloc>(
+          create: (BuildContext context) {
+            return _ownedListManagerBloc;
+          },
+        ),
+        BlocProvider<RomListManagerBloc>(
+          create: (BuildContext context) {
+            return _romListManagerBloc;
+          },
+        ),
+        BlocProvider<DLCListManagerBloc>(
+          create: (BuildContext context) {
+            return _dlcListManagerBloc;
+          },
+        ),
+        BlocProvider<PurchaseListManagerBloc>(
+          create: (BuildContext context) {
+            return _purchaseListManagerBloc;
+          },
+        ),
+        BlocProvider<StoreListManagerBloc>(
+          create: (BuildContext context) {
+            return _storeListManagerBloc;
+          },
+        ),
+        BlocProvider<PlatformListManagerBloc>(
+          create: (BuildContext context) {
+            return _platformListManagerBloc;
           },
         ),
       ],
