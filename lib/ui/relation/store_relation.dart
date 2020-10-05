@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_search/item_search.dart';
 
-import '../search/search.dart';
-import '../detail/detail.dart';
+import '../route_constants.dart';
 import 'relation.dart';
 
 
@@ -15,20 +12,13 @@ class StorePurchaseRelationList extends StoreRelationList<Purchase> {
   StorePurchaseRelationList({Key key, String shownName, List<Widget> Function(List<Purchase>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
 
   @override
-  ItemDetail<Purchase, PurchaseDetailBloc> detailBuilder(Purchase purchase) {
-
-    return PurchaseDetail(
-      item: purchase,
-    );
-
-  }
+  String detailRouteName = purchaseDetailRoute;
 
   @override
-  ItemSearch<Purchase, ItemSearchBloc<Purchase>> repositorySearchBuilder(BuildContext context) {
+  String searchRouteName = purchaseSearchRoute;
 
-    return PurchaseSearch();
-
-  }
+  @override
+  String localSearchRouteName = purchaseLocalSearchRoute;
 
 }
 

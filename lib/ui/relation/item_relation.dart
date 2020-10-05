@@ -4,14 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_search/item_search.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
-import '../search/search.dart';
-import '../detail/detail.dart';
+
 
 abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>> extends StatelessWidget {
   ItemRelationList({Key key, this.shownName, this.trailingBuilder}) : super(key: key);
@@ -20,6 +17,10 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
   String typeName = W.toString();
   final String shownName;
   final List<Widget> Function(List<W>) trailingBuilder;
+
+  String detailRouteName;
+  String searchRouteName;
+  String localSearchRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +98,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
                 items: state.otherItems,
                 shownName: shownName?? typeName,
                 linkName: typeName,
-                itemBuilder: cardBuilder,
-                onSearch: _repositorySearchFuture(context),
+                itemBuilder: _cardBuilder,
+                onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
                 updateDelete: _deleteRelationFunction(context),
               )
@@ -107,12 +108,12 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
                 items: state.otherItems,
                 shownName: shownName?? typeName + 's',
                 linkName: typeName,
-                itemBuilder: cardBuilder,
-                onSearch: _repositorySearchFuture(context),
+                itemBuilder: _cardBuilder,
+                onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
                 updateDelete: _deleteRelationFunction(context),
                 trailingBuilder: trailingBuilder,
-                onListSearch: state.otherItems.isNotEmpty? _localSearchFuture(context, state.otherItems) : null,
+                onListSearch: state.otherItems.isNotEmpty? _onLocalSearchTap(context, state.otherItems) : null,
               );
 
           }
@@ -161,74 +162,32 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  void Function() onTap(BuildContext context, W item) {
+  Future<W> Function() _onRepositorySearchTap(BuildContext context) {
 
     return () {
-      Navigator.push(
+      return Navigator.pushNamed<W>(
         context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return detailBuilder(item);
-          }
-        ),
+        searchRouteName,
       );
     };
 
   }
 
-  Future<W> Function() _repositorySearchFuture(BuildContext context) {
+  void Function() _onLocalSearchTap(BuildContext context, List<W> items) {
 
     return () {
-      return Navigator.push<W>(
+      return Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-            builder: (BuildContext context) {
-              return repositorySearchBuilder(context);
-            }
-        ),
+        localSearchRouteName,
+        arguments: items,
       );
     };
 
   }
 
-  Widget _localSearchBuilder(BuildContext context, List<W> items) {
+  Widget _cardBuilder(BuildContext context, W item) {
 
-    return ItemLocalSearch<W>(
-      items: items,
-      onTap: (BuildContext context, W result) {
-        return () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return detailBuilder(result);
-              },
-            ),
-          );
-        };
-      },
-    );
-
-  }
-
-  void Function() _localSearchFuture(BuildContext context, List<W> items) {
-
-    return () {
-      return Navigator.push<W>(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) {
-              return _localSearchBuilder(context, items);
-            }
-        ),
-      );
-    };
-
-  }
-
-  Widget cardBuilder(BuildContext context, W item) {
-
-    return ItemListCard(
+    return ItemCard(
       title: item.getTitle(),
       subtitle: item.getSubtitle(),
       imageURL: item.getImageURL(),
@@ -237,8 +196,17 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  external ItemDetail<W, ItemDetailBloc<W>> detailBuilder(W item);
-  external ItemSearch<W, ItemSearchBloc<W>> repositorySearchBuilder(BuildContext context);
+  void Function() onTap(BuildContext context, W item) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        detailRouteName,
+        arguments: item,
+      );
+    };
+
+  }
 
 }
 

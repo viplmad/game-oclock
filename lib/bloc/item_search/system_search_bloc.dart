@@ -25,7 +25,7 @@ class SystemSearchBloc extends ItemSearchBloc<System> {
   @override
   Future<List<System>> getInitialItems() {
 
-    return iCollectionRepository.getSystemsWithView(SystemView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getSystemsWithView(SystemView.LastCreated, super.maxSuggestions).first;
 
   }
 

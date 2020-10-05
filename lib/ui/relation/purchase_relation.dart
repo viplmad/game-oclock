@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_search/item_search.dart';
 
-import '../search/search.dart';
-import '../detail/detail.dart';
+import '../route_constants.dart';
 import 'relation.dart';
 
 
@@ -18,20 +15,13 @@ class PurchaseStoreRelationList extends PurchaseRelationList<Store> {
   bool isSingleList = true;
 
   @override
-  ItemDetail<Store, StoreDetailBloc> detailBuilder(Store store) {
-
-    return StoreDetail(
-      item: store,
-    );
-
-  }
+  String detailRouteName = storeDetailRoute;
 
   @override
-  ItemSearch<Store, ItemSearchBloc<Store>> repositorySearchBuilder(BuildContext context) {
+  String searchRouteName = storeSearchRoute;
 
-    return StoreSearch();
-
-  }
+  @override
+  String localSearchRouteName = storeLocalSearchRoute;
 
 }
 
@@ -39,20 +29,13 @@ class PurchaseGameRelationList extends PurchaseRelationList<Game> {
   PurchaseGameRelationList({Key key, String shownName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
 
   @override
-  ItemDetail<Game, GameDetailBloc> detailBuilder(Game game) {
-
-    return GameDetail(
-      item: game,
-    );
-
-  }
+  String detailRouteName = gameDetailRoute;
 
   @override
-  ItemSearch<Game, ItemSearchBloc<Game>> repositorySearchBuilder(BuildContext context) {
+  String searchRouteName = gameSearchRoute;
 
-    return GameSearch();
-
-  }
+  @override
+  String localSearchRouteName = gameLocalSearchRoute;
 
 }
 
@@ -60,20 +43,13 @@ class PurchaseDLCRelationList extends PurchaseRelationList<DLC> {
   PurchaseDLCRelationList({Key key, String shownName, List<Widget> Function(List<DLC>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
 
   @override
-  ItemDetail<DLC, DLCDetailBloc> detailBuilder(DLC dlc) {
-
-    return DLCDetail(
-      item: dlc,
-    );
-
-  }
+  String detailRouteName = dlcDetailRoute;
 
   @override
-  ItemSearch<DLC, ItemSearchBloc<DLC>> repositorySearchBuilder(BuildContext context) {
+  String searchRouteName = dlcSearchRoute;
 
-    return DLCSearch();
-
-  }
+  @override
+  String localSearchRouteName = dlcLocalSearchRoute;
 
 }
 
@@ -84,11 +60,10 @@ class PurchaseTypeRelationList extends PurchaseRelationList<PurchaseType> {
   String typeName = 'Type';
 
   @override
-  ItemSearch<PurchaseType, ItemSearchBloc<PurchaseType>> repositorySearchBuilder(BuildContext context) {
+  String searchRouteName = typeSearchRoute;
 
-    return TypeSearch();
-
-  }
+  @override
+  String localSearchRouteName = typeLocalSearchRoute;
 
   @override
   void Function() onTap(BuildContext context, PurchaseType item) {

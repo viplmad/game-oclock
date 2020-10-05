@@ -5,47 +5,31 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
+
+import '../route_constants.dart';
 
 import '../theme/theme.dart';
-import '../detail/detail.dart';
-import '../statistics/statistics.dart';
-
 import 'list.dart';
 
 
 class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return purchaseBarData;
-
-  }
+  BarData barData = purchaseBarData;
 
 }
 
 class PurchaseFAB extends ItemFAB<Purchase, PurchaseListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return purchaseBarData;
-
-  }
+  BarData barData = purchaseBarData;
 
 }
 
 class PurchaseList extends ItemList<Purchase, PurchaseListBloc> {
 
   @override
-  ItemDetail<Purchase, PurchaseDetailBloc> detailBuilder(Purchase purchase) {
-
-    return PurchaseDetail(
-      item: purchase,
-    );
-
-  }
+  String detailRouteName = purchaseDetailRoute;
 
   @override
   _PurchaseListBody itemListBodyBuilder({@required List<Purchase> items, @required int viewIndex, @required void Function(Purchase) onDelete, @required ListStyle style}) {
@@ -78,29 +62,18 @@ class _PurchaseListBody extends ItemListBody<Purchase> {
   );
 
   @override
+  String detailRouteName = purchaseDetailRoute;
+
+  @override
+  String localSearchRouteName = purchaseLocalSearchRoute;
+
+  @override
+  String statisticsRouteName = purchaseStatisticsRoute;
+
+  @override
   String getViewTitle() {
 
     return purchaseBarData.views.elementAt(viewIndex);
-
-  }
-
-  @override
-  ItemDetail<Purchase, PurchaseDetailBloc> detailBuilder(Purchase purchase) {
-
-    return PurchaseDetail(
-      item: purchase,
-    );
-
-  }
-
-  @override
-  Widget statisticsBuilder() {
-
-    return PurchaseStatistics(
-      yearData: PurchasesData(
-        purchases: items,
-      ).getYearData(2020),
-    );
 
   }
 

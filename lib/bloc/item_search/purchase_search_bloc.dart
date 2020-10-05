@@ -25,7 +25,7 @@ class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
   @override
   Future<List<Purchase>> getInitialItems() {
 
-    return iCollectionRepository.getPurchasesWithView(PurchaseView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getPurchasesWithView(PurchaseView.LastCreated, super.maxSuggestions).first;
 
   }
 

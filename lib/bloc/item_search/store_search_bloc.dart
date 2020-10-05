@@ -25,7 +25,7 @@ class StoreSearchBloc extends ItemSearchBloc<Store> {
   @override
   Future<List<Store>> getInitialItems() {
 
-    return iCollectionRepository.getStoresWithView(StoreView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getStoresWithView(StoreView.LastCreated, super.maxSuggestions).first;
 
   }
 

@@ -7,13 +7,10 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
 
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
-import '../search/search.dart';
-import '../detail/detail.dart';
 
 
 abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends _ItemListMember with PreferredSizeWidget {
@@ -23,7 +20,6 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
   @override
   Widget build(BuildContext context) {
-    BarData barData = getBarData();
 
     return AppBar(
       title: Text(barData.title + 's'),
@@ -80,7 +76,6 @@ abstract class ItemFAB<T extends CollectionItem, K extends ItemListBloc<T>> exte
 
   @override
   Widget build(BuildContext context) {
-    BarData barData = getBarData();
 
     return FloatingActionButton(
       onPressed: () {
@@ -97,11 +92,13 @@ abstract class ItemFAB<T extends CollectionItem, K extends ItemListBloc<T>> exte
 
 abstract class _ItemListMember extends StatelessWidget {
 
-  external BarData getBarData();
+  BarData barData;
 
 }
 
 abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
+
+  String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -116,13 +113,10 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>> ext
             snackBarAction: SnackBarAction(
               label: "Open",
               onPressed: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return detailBuilder(state.item);
-                    },
-                  ),
+                  detailRouteName,
+                  arguments: state.item
                 );
               },
             ),
@@ -193,7 +187,6 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>> ext
 
   }
 
-  external ItemDetail<T, ItemDetailBloc<T>> detailBuilder(T item);
   external ItemListBody<T> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
 
 }
@@ -205,6 +198,10 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
   final int viewIndex;
   final void Function(T) onDelete;
   final ListStyle style;
+
+  String detailRouteName;
+  String localSearchRouteName;
+  String statisticsRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -220,31 +217,13 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.search),
                   tooltip: 'Search in View',
-                  onPressed: items.isNotEmpty? () {
-                    Navigator.push<T>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return searchBuilder(context);
-                        },
-                      ),
-                    );
-                  } : null,
+                  onPressed: items.isNotEmpty? _onSearchTap(context) : null,
                 ),
-                IconButton(
+                /*IconButton(
                   icon: Icon(Icons.insert_chart),
                   tooltip: 'Stats in View',
-                  onPressed: items.isNotEmpty? () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return statisticsBuilder();
-                        },
-                      ),
-                    );
-                  } : null,
-                ),
+                  onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
+                ),*/
               ],
             ),
           ),
@@ -252,7 +231,7 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
         ),
         Expanded(
           child: Scrollbar(
-            child: listBuilder(context),
+            child: _listBuilder(context),
           ),
         ),
       ],
@@ -260,7 +239,7 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
 
   }
 
-  Widget confirmDelete(BuildContext context, T item) {
+  Widget _confirmDelete(BuildContext context, T item) {
 
     return AlertDialog(
       title: Text("Delete"),
@@ -287,7 +266,7 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
 
   }
 
-  Widget listBuilder(BuildContext context) {
+  Widget _listBuilder(BuildContext context) {
 
     switch(style) {
       case ListStyle.Card:
@@ -295,7 +274,7 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
           items: items,
           itemBuilder: cardBuilder,
           onDismiss: onDelete,
-          confirmDelete: confirmDelete,
+          confirmDelete: _confirmDelete,
         );
       case ListStyle.Grid:
         return ItemGridView<T>(
@@ -308,36 +287,37 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
 
   }
 
-  Widget searchBuilder(BuildContext context) {
+  void Function() _onTap(BuildContext context, T item) {
 
-    return ItemLocalSearch<T>(
-      items: items,
-      onTap: (BuildContext context, T result) {
-        return () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return detailBuilder(result);
-              },
-            ),
-          );
-        };
-      },
-    );
+    return () {
+      Navigator.pushNamed(
+        context,
+        detailRouteName,
+        arguments: item,
+      );
+    };
 
   }
 
-  void Function() onTap(BuildContext context, T item) {
+  void Function() _onSearchTap(BuildContext context) {
 
     return () {
-      Navigator.push(
+      Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return detailBuilder(item);
-          },
-        ),
+        localSearchRouteName,
+        arguments: items,
+      );
+    };
+
+  }
+
+  void Function() onStatisticsTap(BuildContext context) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        statisticsRouteName,
+        arguments: items,
       );
     };
 
@@ -345,29 +325,26 @@ abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
 
   Widget cardBuilder(BuildContext context, T item) {
 
-    return ItemListCard(
+    return ItemCard(
       title: item.getTitle(),
       subtitle: item.getSubtitle(),
       imageURL: item.getImageURL(),
-      onTap: onTap(context, item),
+      onTap: _onTap(context, item),
     );
 
   }
 
   Widget gridBuilder(BuildContext context, T item) {
 
-    return ItemGridCard(
+    return ItemGrid(
       title: item.getTitle(),
       imageURL: item.getImageURL(),
-      onTap: onTap(context, item),
+      onTap: _onTap(context, item),
     );
 
   }
 
   external String getViewTitle();
-
-  external ItemDetail<T, ItemDetailBloc<T>> detailBuilder(T item);
-  external Widget statisticsBuilder(); // TODO use ItemStatistics<T>
 
 }
 

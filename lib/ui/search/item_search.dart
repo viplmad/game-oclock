@@ -10,11 +10,12 @@ import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
 
 
-class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget {
-  const ItemLocalSearch({Key key, @required this.items, @required this.onTap}) : super(key: key);
+abstract class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget {
+  ItemLocalSearch({Key key, @required this.items}) : super(key: key);
 
   final List<T> items;
-  final void Function() Function(BuildContext, T) onTap;
+
+  String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,18 @@ class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget {
 
   }
 
+  void Function() onTap(BuildContext context, T item) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        detailRouteName,
+        arguments: item,
+      );
+    };
+
+  }
+
 }
 
 abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>> extends StatelessWidget {
@@ -45,14 +58,18 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>>
         return searchBlocBuilder()..add(SearchTextChanged());
       },
       child: _ItemSearchBody<T, K>(
-        onTap: (BuildContext context, T result) {
-          return () {
-            Navigator.maybePop<T>(context, result);
-          };
-        },
+        onTap: onTap,
         allowNewButton: true,
       ),
     );
+
+  }
+
+  void Function() onTap(BuildContext context, T item) {
+
+    return () {
+      Navigator.maybePop<T>(context, item);
+    };
 
   }
 
@@ -219,11 +236,14 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           itemBuilder: (BuildContext context, int index) {
             T result = results[index];
 
-            return ItemListCard(
-              title: result.getTitle(),
-              subtitle: result.getSubtitle(),
-              imageURL: result.getImageURL(),
-              onTap: widget.onTap(context, result),
+            return Padding(
+              padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+              child: ItemCard(
+                title: result.getTitle(),
+                subtitle: result.getSubtitle(),
+                imageURL: result.getImageURL(),
+                onTap: widget.onTap(context, result),
+              ),
             );
 
           },

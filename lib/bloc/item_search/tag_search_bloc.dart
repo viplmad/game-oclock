@@ -25,7 +25,7 @@ class TagSearchBloc extends ItemSearchBloc<Tag> {
   @override
   Future<List<Tag>> getInitialItems() {
 
-    return iCollectionRepository.getTagsWithView(TagView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getTagsWithView(TagView.LastCreated, super.maxSuggestions).first;
 
   }
 

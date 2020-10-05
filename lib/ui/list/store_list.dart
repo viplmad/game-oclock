@@ -5,47 +5,31 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
+
+import '../route_constants.dart';
 
 import '../theme/theme.dart';
-import '../detail/detail.dart';
-import '../statistics/statistics.dart';
-
 import 'list.dart';
 
 
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return storeBarData;
-
-  }
+  BarData barData = storeBarData;
 
 }
 
 class StoreFAB extends ItemFAB<Store, StoreListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return storeBarData;
-
-  }
+  BarData barData = storeBarData;
 
 }
 
 class StoreList extends ItemList<Store, StoreListBloc> {
 
   @override
-  ItemDetail<Store, StoreDetailBloc> detailBuilder(Store store) {
-
-    return StoreDetail(
-      item: store,
-    );
-
-  }
+  String detailRouteName = storeDetailRoute;
 
   @override
   _StoreListBody itemListBodyBuilder({@required List<Store> items, @required int viewIndex, @required void Function(Store) onDelete, @required ListStyle style}) {
@@ -78,25 +62,22 @@ class _StoreListBody extends ItemListBody<Store> {
   );
 
   @override
+  String detailRouteName = storeDetailRoute;
+
+  @override
+  String localSearchRouteName = storeLocalSearchRoute;
+
+  @override
+  void Function() onStatisticsTap(BuildContext context) {
+
+    return null;
+
+  }
+
+  @override
   String getViewTitle() {
 
     return storeBarData.views.elementAt(viewIndex);
-
-  }
-
-  @override
-  ItemDetail<Store, StoreDetailBloc> detailBuilder(Store store) {
-
-    return StoreDetail(
-      item: store,
-    );
-
-  }
-
-  @override
-  Widget statisticsBuilder() {
-
-    return null;
 
   }
 

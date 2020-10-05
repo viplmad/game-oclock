@@ -25,7 +25,7 @@ class DLCSearchBloc extends ItemSearchBloc<DLC> {
   @override
   Future<List<DLC>> getInitialItems() {
 
-    return iCollectionRepository.getDLCsWithView(DLCView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getDLCsWithView(DLCView.LastCreated, super.maxSuggestions).first;
 
   }
 

@@ -6,9 +6,9 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/connection/connection.dart';
 
+import 'route_constants.dart';
 import 'common/loading_icon.dart';
 import 'common/show_snackbar.dart';
-import 'homepage.dart';
 
 
 class Startpage extends StatelessWidget {
@@ -41,13 +41,9 @@ class _StartpageBody extends StatelessWidget {
       body: BlocListener<ConnectionBloc, ConnectState>(
         listener: (BuildContext context, ConnectState state) {
           if(state is Connected) {
-            Navigator.pushReplacement(
+            Navigator.pushReplacementNamed(
               context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return Homepage();
-                },
-              ),
+              homeRoute,
             );
           }
           if(state is FailedConnection) {

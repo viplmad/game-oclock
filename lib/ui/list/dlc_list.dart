@@ -5,47 +5,31 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
+
+import '../route_constants.dart';
 
 import '../theme/theme.dart';
-import '../detail/detail.dart';
-import '../statistics/statistics.dart';
-
 import 'list.dart';
 
 
 class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return dlcBarData;
-
-  }
+  BarData barData = dlcBarData;
 
 }
 
 class DLCFAB extends ItemFAB<DLC, DLCListBloc> {
 
   @override
-  BarData getBarData() {
-
-    return dlcBarData;
-
-  }
+  BarData barData = dlcBarData;
 
 }
 
 class DLCList extends ItemList<DLC, DLCListBloc> {
 
   @override
-  ItemDetail<DLC, DLCDetailBloc> detailBuilder(DLC dlc) {
-
-    return DLCDetail(
-      item: dlc,
-    );
-
-  }
+  String detailRouteName = dlcDetailRoute;
 
   @override
   _DLCListBody itemListBodyBuilder({@required List<DLC> items, @required int viewIndex, @required void Function(DLC) onDelete, @required ListStyle style}) {
@@ -78,25 +62,22 @@ class _DLCListBody extends ItemListBody<DLC> {
   );
 
   @override
+  String detailRouteName = dlcDetailRoute;
+
+  @override
+  String localSearchRouteName = dlcLocalSearchRoute;
+
+  @override
+  void Function() onStatisticsTap(BuildContext context) {
+
+    return null;
+
+  }
+
+  @override
   String getViewTitle() {
 
     return dlcBarData.views.elementAt(viewIndex);
-
-  }
-
-  @override
-  ItemDetail<DLC, DLCDetailBloc> detailBuilder(DLC dlc) {
-
-    return DLCDetail(
-      item: dlc,
-    );
-
-  }
-
-  @override
-  Widget statisticsBuilder() {
-
-    return null;
 
   }
 

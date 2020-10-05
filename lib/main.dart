@@ -6,7 +6,8 @@ import 'package:game_collection/repository/collection_repository.dart';
 import 'package:game_collection/client/postgres_connector.dart';
 import 'package:game_collection/client/cloudinary_connector.dart';
 
-import 'package:game_collection/ui/start.dart';
+import 'ui/route.dart';
+import 'ui/route_constants.dart';
 
 
 void main() => runApp(GameCollection());
@@ -31,7 +32,8 @@ class GameCollection extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Startpage(),
+      initialRoute: startRoute,
+      onGenerateRoute: onGenerateRoute,
     );
 
   }

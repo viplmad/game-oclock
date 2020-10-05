@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'loading_icon.dart';
-
 
 class DismissibleItem extends StatelessWidget {
   DismissibleItem({Key key, @required this.dismissibleKey, @required this.itemWidget, @required this.onDismissed, @required this.dismissIcon, this.confirmDismiss}) : super(key: key);
@@ -51,8 +49,8 @@ class DismissibleItem extends StatelessWidget {
 
 }
 
-class ItemListCard extends StatelessWidget {
-  const ItemListCard({Key key, @required this.title, this.subtitle, this.imageURL, @required this.onTap}) : super(key: key);
+class ItemCard extends StatelessWidget {
+  const ItemCard({Key key, @required this.title, this.subtitle, this.imageURL, @required this.onTap}) : super(key: key);
 
   final String title;
   final String subtitle;
@@ -114,8 +112,8 @@ class _ItemListTile extends StatelessWidget {
 
 }
 
-class ItemGridCard extends StatelessWidget {
-  const ItemGridCard({Key key, @required this.title, this.imageURL, @required this.onTap}) : super(key: key);
+class ItemGrid extends StatelessWidget {
+  const ItemGrid({Key key, @required this.title, this.imageURL, @required this.onTap}) : super(key: key);
 
   final String title;
   final String imageURL;

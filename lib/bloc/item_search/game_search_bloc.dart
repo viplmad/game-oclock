@@ -25,7 +25,7 @@ class GameSearchBloc extends ItemSearchBloc<Game> {
   @override
   Future<List<Game>> getInitialItems() {
 
-    return iCollectionRepository.getGamesWithView(GameView.Main, super.maxSuggestions).first;
+    return iCollectionRepository.getGamesWithView(GameView.LastCreated, super.maxSuggestions).first;
 
   }
 

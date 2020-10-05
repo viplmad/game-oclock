@@ -8,12 +8,10 @@ import 'package:game_collection/model/app_tab.dart';
 
 import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
+
+import '../route_constants.dart';
 
 import '../theme/theme.dart';
-import '../detail/detail.dart';
-import '../statistics/statistics.dart';
-
 import 'list.dart';
 
 
@@ -47,11 +45,7 @@ class _RomAppBar extends _GameAppBar<RomListBloc> {}
 abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
 
   @override
-  BarData getBarData() {
-
-    return gameBarData;
-
-  }
+  BarData barData = gameBarData;
 
 }
 
@@ -86,11 +80,7 @@ class _RomFAB extends _GameFAB<RomListBloc> {}
 abstract class _GameFAB<K extends ItemListBloc<Game>> extends ItemFAB<Game, K> {
 
   @override
-  BarData getBarData() {
-
-    return gameBarData;
-
-  }
+  BarData barData = gameBarData;
 
 }
 
@@ -162,13 +152,7 @@ class _RomGameList extends _GameList<RomListBloc> {}
 abstract class _GameList<K extends ItemListBloc<Game>> extends ItemList<Game, K> {
 
   @override
-  ItemDetail<Game, GameDetailBloc> detailBuilder(Game game) {
-
-    return GameDetail(
-      item: game,
-    );
-
-  }
+  String detailRouteName = gameDetailRoute;
 
   @override
   _GameListBody itemListBodyBuilder({@required List<Game> items, @required int viewIndex, @required void Function(Game) onDelete, @required ListStyle style}) {
@@ -201,29 +185,18 @@ class _GameListBody extends ItemListBody<Game> {
   );
 
   @override
+  String detailRouteName = gameDetailRoute;
+
+  @override
+  String localSearchRouteName = gameLocalSearchRoute;
+
+  @override
+  String statisticsRouteName = gameStatisticsRoute;
+
+  @override
   String getViewTitle() {
 
     return gameBarData.views.elementAt(viewIndex);
-
-  }
-
-  @override
-  ItemDetail<Game, GameDetailBloc> detailBuilder(Game game) {
-
-    return GameDetail(
-      item: game,
-    );
-
-  }
-
-  @override
-  Widget statisticsBuilder() {
-
-    return GameStatistics(
-      yearData: GamesData(
-        games: items,
-      ).getYearData(2020),
-    );
 
   }
 
