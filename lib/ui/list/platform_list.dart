@@ -5,6 +5,7 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
 
@@ -19,14 +20,14 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
 
 }
 
-class PlatformFAB extends ItemFAB<Platform, PlatformListBloc> {
+class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 
   @override
   BarData barData = platformBarData;
 
 }
 
-class PlatformList extends ItemList<Platform, PlatformListBloc> {
+class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
 
   @override
   String detailRouteName = platformDetailRoute;

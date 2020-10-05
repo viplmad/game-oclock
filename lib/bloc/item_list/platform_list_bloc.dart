@@ -6,6 +6,7 @@ import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
@@ -13,26 +14,13 @@ class PlatformListBloc extends ItemListBloc<Platform> {
 
   PlatformListBloc({
     @required ICollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    @required PlatformListManagerBloc managerBloc,
+  }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<Platform>> getReadAllStream() {
 
     return iCollectionRepository.getAllPlatforms();
-
-  }
-
-  @override
-  Future<Platform> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertPlatform(event.title ?? '');
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<Platform> event) {
-
-    return iCollectionRepository.deletePlatform(event.item.ID);
 
   }
 

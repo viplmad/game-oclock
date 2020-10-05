@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
@@ -19,14 +20,14 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
 }
 
-class PurchaseFAB extends ItemFAB<Purchase, PurchaseListBloc> {
+class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
 
   @override
   BarData barData = purchaseBarData;
 
 }
 
-class PurchaseList extends ItemList<Purchase, PurchaseListBloc> {
+class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
 
   @override
   String detailRouteName = purchaseDetailRoute;

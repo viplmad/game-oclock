@@ -8,14 +8,21 @@ import 'package:game_collection/model/list_style.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
 
-  ItemListBloc({@required this.iCollectionRepository}) : super(ItemListLoading());
+  ItemListBloc({@required this.iCollectionRepository, @required this.managerBloc}) : super(ItemListLoading()) {
+
+    managerSubscription = managerBloc.listen(mapListManagerStateToEvent);
+
+  }
 
   final ICollectionRepository iCollectionRepository;
+  final ItemListManagerBloc<T> managerBloc;
+  StreamSubscription<ItemListManagerState> managerSubscription;
 
   @override
   Stream<ItemListState> mapEventToState(ItemListEvent event) async* {
@@ -29,14 +36,6 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
     } else if(event is UpdateItemList<T>) {
 
       yield* _mapUpdateListToState(event);
-
-    } else if(event is AddItem) {
-
-      yield* _mapAddItemToState(event);
-
-    } else if(event is DeleteItem<T>) {
-
-      yield* _mapDeleteItemToState(event);
 
     } else if(event is UpdateView) {
 
@@ -97,50 +96,6 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  Stream<ItemListState> _mapAddItemToState(AddItem event) async* {
-
-    try {
-
-      final T item = await createFuture(event);
-
-      final UpdateItemList<T> updateEvent = _getUpdateAddList(item);
-
-      yield ItemAdded<T>(
-        item,
-      );
-
-      add(updateEvent);
-
-    } catch (e) {
-
-      yield ItemNotAdded(e.toString());
-
-    }
-
-  }
-
-  Stream<ItemListState> _mapDeleteItemToState(DeleteItem<T> event) async* {
-
-    try{
-
-      await deleteFuture(event);
-
-      final UpdateItemList<T> updateEvent = _getUpdateDeleteList(event.item);
-
-      yield ItemDeleted<T>(
-        event.item,
-      );
-
-      add(updateEvent);
-
-    } catch (e) {
-
-      yield ItemNotDeleted(e.toString());
-
-    }
-
-  }
-
   Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
 
     yield ItemListLoading();
@@ -188,52 +143,71 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  UpdateItemList<T> _getUpdateAddList(T addedItem) {
+  void mapListManagerStateToEvent(ItemListManagerState managerState) {
 
-    List<T> items = List<T>();
-    int viewIndex;
-    ListStyle style;
-    if(state is ItemListLoaded<T>) {
-      items = (state as ItemListLoaded<T>).items;
-      viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      style = (state as ItemListLoaded<T>).style;
+    if(managerState is ItemAdded) {
+
+      _mapAddedToEvent(managerState);
+
+    } else if(managerState is ItemDeleted) {
+
+      _mapDeletedToEvent(managerState);
+
     }
-
-    final List<T> updatedItems = List.from(items)..add(addedItem);
-
-    return UpdateItemList<T>(updatedItems, viewIndex, style);
 
   }
 
-  UpdateItemList<T> _getUpdateDeleteList(T deletedItem) {
+  void _mapAddedToEvent(ItemAdded managerState) {
 
-    List<T> items = List<T>();
-    int viewIndex;
-    ListStyle style;
     if(state is ItemListLoaded<T>) {
-      items = (state as ItemListLoaded<T>).items;
-      viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      style = (state as ItemListLoaded<T>).style;
+      List<T> items = (state as ItemListLoaded<T>).items;
+      int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      ListStyle style = (state as ItemListLoaded<T>).style;
+
+      final List<T> updatedItems = List.from(items)..add(managerState.item);
+
+      add(
+        UpdateItemList<T>(
+          updatedItems,
+          viewIndex,
+          style,
+        ),
+      );
     }
 
-    final List<T> updatedItems = items
-        .where((T item) => item.ID != deletedItem.ID)
-        .toList(growable: false);
+  }
 
-    return UpdateItemList<T>(updatedItems, viewIndex, style);
+  void _mapDeletedToEvent(ItemDeleted<T> managerState) {
+
+    if(state is ItemListLoaded<T>) {
+      List<T> items = (state as ItemListLoaded<T>).items;
+      int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      ListStyle style = (state as ItemListLoaded<T>).style;
+
+      final List<T> updatedItems = items
+          .where((T item) => item.ID != managerState.item.ID)
+          .toList(growable: false);
+
+      add(
+        UpdateItemList<T>(
+          updatedItems,
+          viewIndex,
+          style,
+        ),
+      );
+    }
 
   }
 
   @override
   Future<void> close() {
 
+    managerSubscription?.cancel();
     return super.close();
 
   }
 
   external Stream<List<T>> getReadAllStream();
-  external Future<T> createFuture(AddItem event);
-  external Future<dynamic> deleteFuture(DeleteItem<T> event);
   external Stream<List<T>> getReadViewStream(UpdateView event);
 
 }

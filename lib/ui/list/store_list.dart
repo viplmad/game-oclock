@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
@@ -19,14 +20,14 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 
 }
 
-class StoreFAB extends ItemFAB<Store, StoreListBloc> {
+class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
 
   @override
   BarData barData = storeBarData;
 
 }
 
-class StoreList extends ItemList<Store, StoreListBloc> {
+class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
 
   @override
   String detailRouteName = storeDetailRoute;

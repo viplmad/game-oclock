@@ -7,6 +7,7 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
@@ -72,14 +73,14 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
 }
 
-abstract class ItemFAB<T extends CollectionItem, K extends ItemListBloc<T>> extends _ItemListMember {
+abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends _ItemListMember {
 
   @override
   Widget build(BuildContext context) {
 
     return FloatingActionButton(
       onPressed: () {
-        BlocProvider.of<K>(context).add(AddItem());
+        BlocProvider.of<S>(context).add(AddItem());
       },
       tooltip: 'New ' + barData.title,
       child: Icon(Icons.add),
@@ -96,15 +97,15 @@ abstract class _ItemListMember extends StatelessWidget {
 
 }
 
-abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
+abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
 
   String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<K, ItemListState>(
-      listener: (BuildContext context, ItemListState state) {
+    return BlocListener<S, ItemListManagerState>(
+      listener: (BuildContext context, ItemListManagerState state) {
         if(state is ItemAdded<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
@@ -165,7 +166,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>> ext
               items: state.items,
               viewIndex: state.viewIndex,
               onDelete: (T item) {
-                BlocProvider.of<K>(context).add(DeleteItem<T>(item));
+                BlocProvider.of<S>(context).add(DeleteItem<T>(item));
               },
               style: state.style,
             );

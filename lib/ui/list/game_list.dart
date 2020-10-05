@@ -8,6 +8,7 @@ import 'package:game_collection/model/app_tab.dart';
 
 import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
 
@@ -73,11 +74,11 @@ class GameFAB extends StatelessWidget {
 
 }
 
-class _AllFAB extends _GameFAB<AllListBloc> {}
-class _OwnedFAB extends _GameFAB<GameListBloc> {}
-class _RomFAB extends _GameFAB<RomListBloc> {}
+class _AllFAB extends _GameFAB<AllListManagerBloc> {}
+class _OwnedFAB extends _GameFAB<OwnedListManagerBloc> {}
+class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 
-abstract class _GameFAB<K extends ItemListBloc<Game>> extends ItemFAB<Game, K> {
+abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
 
   @override
   BarData barData = gameBarData;
@@ -145,11 +146,11 @@ class GameTabs extends StatelessWidget {
 
 }
 
-class _AllGameList extends _GameList<AllListBloc> {}
-class _OwnedGameList extends _GameList<GameListBloc> {}
-class _RomGameList extends _GameList<RomListBloc> {}
+class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {}
+class _OwnedGameList extends _GameList<GameListBloc, OwnedListManagerBloc> {}
+class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {}
 
-abstract class _GameList<K extends ItemListBloc<Game>> extends ItemList<Game, K> {
+abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
 
   @override
   String detailRouteName = gameDetailRoute;

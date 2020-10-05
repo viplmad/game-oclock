@@ -31,34 +31,6 @@ class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
       ' }';
 }
 
-class AddItem extends ItemListEvent {
-  const AddItem([this.title]);
-
-  final String title;
-
-  @override
-  List<Object> get props => [title];
-
-  @override
-  String toString() => 'AddItem { '
-      'title: $title'
-      ' }';
-}
-
-class DeleteItem<T extends CollectionItem> extends ItemListEvent {
-  const DeleteItem(this.item);
-
-  final T item;
-
-  @override
-  List<Object> get props => [item];
-
-  @override
-  String toString() => 'DeleteItem { '
-      'item: $item'
-      ' }';
-}
-
 class UpdateView extends ItemListEvent {
   const UpdateView(this.viewIndex);
 

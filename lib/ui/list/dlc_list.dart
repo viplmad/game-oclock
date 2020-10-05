@@ -5,6 +5,7 @@ import 'package:game_collection/model/list_style.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
 
@@ -19,14 +20,14 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
 
 }
 
-class DLCFAB extends ItemFAB<DLC, DLCListBloc> {
+class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
 
   @override
   BarData barData = dlcBarData;
 
 }
 
-class DLCList extends ItemList<DLC, DLCListBloc> {
+class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
 
   @override
   String detailRouteName = dlcDetailRoute;
