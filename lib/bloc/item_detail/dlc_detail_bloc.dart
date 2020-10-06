@@ -12,9 +12,9 @@ import 'item_detail.dart';
 class DLCDetailBloc extends ItemDetailBloc<DLC> {
 
   DLCDetailBloc({
-    @required int dlcID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: dlcID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<DLC> getReadStream() {

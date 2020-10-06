@@ -10,6 +10,7 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../theme/theme.dart';
 import '../relation/relation.dart';
@@ -23,7 +24,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
   PlatformDetailBloc detailBlocBuilder() {
 
     return PlatformDetailBloc(
-      platformID: item.ID,
+      itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
 
@@ -32,9 +33,30 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
   @override
   List<BlocProvider> relationBlocsBuilder() {
 
+    PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
     return [
-      blocProviderRelationBuilder<Game>(),
-      blocProviderRelationBuilder<System>(),
+      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
+      blocProviderRelationBuilder<System>(_systemRelationManagerBloc),
+
+      BlocProvider<PlatformRelationManagerBloc<Game>>(
+        create: (BuildContext context) {
+          return _gameRelationManagerBloc;
+        },
+      ),
+      BlocProvider<PlatformRelationManagerBloc<System>>(
+        create: (BuildContext context) {
+          return _systemRelationManagerBloc;
+        },
+      ),
     ];
 
   }
@@ -59,13 +81,14 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
 
   }
 
-  BlocProvider<PlatformRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+  BlocProvider<PlatformRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(PlatformRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<PlatformRelationBloc<W>>(
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
-          platformID: item.ID,
+          itemID: item.ID,
           iCollectionRepository: CollectionRepository(),
+          managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
     );

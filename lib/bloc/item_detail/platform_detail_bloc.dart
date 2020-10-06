@@ -12,9 +12,9 @@ import 'item_detail.dart';
 class PlatformDetailBloc extends ItemDetailBloc<Platform> {
 
   PlatformDetailBloc({
-    @required int platformID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: platformID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<Platform> getReadStream() {

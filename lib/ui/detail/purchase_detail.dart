@@ -10,6 +10,7 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../theme/theme.dart';
 import '../relation/relation.dart';
@@ -23,7 +24,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
   PurchaseDetailBloc detailBlocBuilder() {
 
     return PurchaseDetailBloc(
-      purchaseID: item.ID,
+      itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
 
@@ -32,11 +33,52 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
   @override
   List<BlocProvider> relationBlocsBuilder() {
 
+    PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
     return [
-      blocProviderRelationBuilder<Store>(),
-      blocProviderRelationBuilder<Game>(),
-      blocProviderRelationBuilder<DLC>(),
-      blocProviderRelationBuilder<PurchaseType>(),
+      blocProviderRelationBuilder<Store>(_storeRelationManagerBloc),
+      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
+      blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
+      blocProviderRelationBuilder<PurchaseType>(_typeRelationManagerBloc),
+
+      BlocProvider<PurchaseRelationManagerBloc<Store>>(
+        create: (BuildContext context) {
+          return _storeRelationManagerBloc;
+        },
+      ),
+      BlocProvider<PurchaseRelationManagerBloc<Game>>(
+        create: (BuildContext context) {
+          return _gameRelationManagerBloc;
+        },
+      ),
+      BlocProvider<PurchaseRelationManagerBloc<DLC>>(
+        create: (BuildContext context) {
+          return _dlcRelationManagerBloc;
+        },
+      ),
+      BlocProvider<PurchaseRelationManagerBloc<PurchaseType>>(
+        create: (BuildContext context) {
+          return _typeRelationManagerBloc;
+        },
+      ),
     ];
 
   }
@@ -61,13 +103,14 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
 
   }
 
-  BlocProvider<PurchaseRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+  BlocProvider<PurchaseRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(PurchaseRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<PurchaseRelationBloc<W>>(
       create: (BuildContext context) {
         return PurchaseRelationBloc<W>(
-          purchaseID: item.ID,
+          itemID: item.ID,
           iCollectionRepository: CollectionRepository(),
+          managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
     );

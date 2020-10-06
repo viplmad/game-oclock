@@ -12,9 +12,9 @@ import 'item_detail.dart';
 class TagDetailBloc extends ItemDetailBloc<Tag> {
 
   TagDetailBloc({
-    @required int tagID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: tagID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<Tag> getReadStream() {

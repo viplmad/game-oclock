@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
 import 'relation.dart';
@@ -40,6 +41,6 @@ class PlatformSystemRelationList extends PlatformRelationList<System> {
 
 }
 
-abstract class PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>> {
+abstract class PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   PlatformRelationList({Key key, String shownName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
 }

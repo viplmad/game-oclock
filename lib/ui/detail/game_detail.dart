@@ -10,6 +10,7 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../theme/theme.dart';
 import '../relation/relation.dart';
@@ -23,7 +24,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc> {
   GameDetailBloc detailBlocBuilder() {
 
     return GameDetailBloc(
-      gameID: item.ID,
+      itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
 
@@ -32,11 +33,52 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc> {
   @override
   List<BlocProvider> relationBlocsBuilder() {
 
+    GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
     return [
-      blocProviderRelationBuilder<Platform>(),
-      blocProviderRelationBuilder<Purchase>(),
-      blocProviderRelationBuilder<DLC>(),
-      blocProviderRelationBuilder<Tag>(),
+      blocProviderRelationBuilder<Platform>(_platformRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
+      blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
+      blocProviderRelationBuilder<Tag>(_tagRelationManagerBloc),
+
+      BlocProvider<GameRelationManagerBloc<Platform>>(
+        create: (BuildContext context) {
+          return _platformRelationManagerBloc;
+        },
+      ),
+      BlocProvider<GameRelationManagerBloc<Purchase>>(
+        create: (BuildContext context) {
+          return _purchaseRelationManagerBloc;
+        },
+      ),
+      BlocProvider<GameRelationManagerBloc<DLC>>(
+        create: (BuildContext context) {
+          return _dlcRelationManagerBloc;
+        },
+      ),
+      BlocProvider<GameRelationManagerBloc<Tag>>(
+        create: (BuildContext context) {
+          return _tagRelationManagerBloc;
+        },
+      ),
     ];
 
   }
@@ -61,13 +103,14 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc> {
 
   }
 
-  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(GameRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<GameRelationBloc<W>>(
       create: (BuildContext context) {
         return GameRelationBloc<W>(
-          gameID: item.ID,
+          itemID: item.ID,
           iCollectionRepository: CollectionRepository(),
+          managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
     );

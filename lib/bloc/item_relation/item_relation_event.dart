@@ -25,31 +25,3 @@ class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
       'otherItems: $otherItems'
       ' }';
 }
-
-class AddItemRelation<W extends CollectionItem> extends ItemRelationEvent {
-  const AddItemRelation(this.otherItem);
-
-  final W otherItem;
-
-  @override
-  List<Object> get props => [otherItem];
-
-  @override
-  String toString() => 'AddItemRelation { '
-      'otherItem: $otherItem'
-      ' }';
-}
-
-class DeleteItemRelation<W extends CollectionItem> extends ItemRelationEvent {
-  const DeleteItemRelation(this.otherItem);
-
-  final W otherItem;
-
-  @override
-  List<Object> get props => [otherItem];
-
-  @override
-  String toString() => 'DeleteItemRelation { '
-      'otherItem: $otherItem'
-      ' }';
-}

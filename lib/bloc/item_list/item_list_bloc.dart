@@ -145,11 +145,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   void mapListManagerStateToEvent(ItemListManagerState managerState) {
 
-    if(managerState is ItemAdded) {
+    if(managerState is ItemAdded<T>) {
 
       _mapAddedToEvent(managerState);
 
-    } else if(managerState is ItemDeleted) {
+    } else if(managerState is ItemDeleted<T>) {
 
       _mapDeletedToEvent(managerState);
 
@@ -157,7 +157,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  void _mapAddedToEvent(ItemAdded managerState) {
+  void _mapAddedToEvent(ItemAdded<T> managerState) {
 
     if(state is ItemListLoaded<T>) {
       List<T> items = (state as ItemListLoaded<T>).items;

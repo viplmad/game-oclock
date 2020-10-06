@@ -6,15 +6,17 @@ import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
 class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W> {
 
   TagRelationBloc({
-    @required int tagID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: tagID, iCollectionRepository: iCollectionRepository);
+    @required TagRelationManagerBloc<W> managerBloc,
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -25,34 +27,6 @@ class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W>
     }
 
     return super.getRelationStream();
-
-  }
-
-  @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
-
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Game:
-        return iCollectionRepository.insertGameTag(otherID, itemID);
-    }
-
-    return super.addRelationFuture(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
-
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Game:
-        return iCollectionRepository.deleteGameTag(otherID, itemID);
-    }
-
-    return super.deleteRelationFuture(event);
 
   }
 

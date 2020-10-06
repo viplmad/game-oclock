@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
 import 'relation.dart';
@@ -74,6 +75,6 @@ class PurchaseTypeRelationList extends PurchaseRelationList<PurchaseType> {
 
 }
 
-abstract class PurchaseRelationList<W extends CollectionItem> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>> {
+abstract class PurchaseRelationList<W extends CollectionItem> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>, PurchaseRelationManagerBloc<W>> {
   PurchaseRelationList({Key key, String shownName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
 }

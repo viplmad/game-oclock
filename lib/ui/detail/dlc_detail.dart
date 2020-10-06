@@ -10,6 +10,7 @@ import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../theme/theme.dart';
 import '../relation/relation.dart';
@@ -23,7 +24,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
   DLCDetailBloc detailBlocBuilder() {
 
     return DLCDetailBloc(
-      dlcID: item.ID,
+      itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
 
@@ -32,9 +33,30 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
   @override
   List<BlocProvider> relationBlocsBuilder() {
 
+    DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
+    DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+    );
+
     return [
-      blocProviderRelationBuilder<Game>(),
-      blocProviderRelationBuilder<Purchase>(),
+      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
+
+      BlocProvider<DLCRelationManagerBloc<Game>>(
+        create: (BuildContext context) {
+          return _gameRelationManagerBloc;
+        },
+      ),
+      BlocProvider<DLCRelationManagerBloc<Purchase>>(
+        create: (BuildContext context) {
+          return _purchaseRelationManagerBloc;
+        },
+      ),
     ];
 
   }
@@ -59,13 +81,14 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
 
   }
 
-  BlocProvider<DLCRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>() {
+  BlocProvider<DLCRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(DLCRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<DLCRelationBloc<W>>(
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
-          dlcID: item.ID,
+          itemID: item.ID,
           iCollectionRepository: CollectionRepository(),
+          managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
     );

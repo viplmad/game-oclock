@@ -5,12 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
+import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 
 
-abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>> extends StatelessWidget {
+abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
   ItemRelationList({Key key, this.shownName, this.trailingBuilder}) : super(key: key);
 
   bool isSingleList = false;
@@ -25,8 +26,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<K, ItemRelationState>(
-      listener: (BuildContext context, ItemRelationState state) {
+    return BlocListener<S, ItemRelationManagerState>(
+      listener: (BuildContext context, ItemRelationManagerState state) {
         if(state is ItemRelationAdded<W>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
@@ -35,7 +36,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
               label: 'Undo',
               onPressed: () {
 
-                BlocProvider.of<K>(context).add(
+                BlocProvider.of<S>(context).add(
                   DeleteItemRelation<W>(
                     state.otherItem,
                   ),
@@ -65,7 +66,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
               label: 'Undo',
               onPressed: () {
 
-                BlocProvider.of<K>(context).add(
+                BlocProvider.of<S>(context).add(
                   AddItemRelation<W>(
                     state.otherItem,
                   ),
@@ -141,7 +142,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
   void Function(W) _addRelationFunction(BuildContext context) {
 
     return (W addedItem) {
-      BlocProvider.of<K>(context).add(
+      BlocProvider.of<S>(context).add(
         AddItemRelation<W>(
           addedItem,
         ),
@@ -153,7 +154,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
   void Function(W) _deleteRelationFunction(BuildContext context) {
 
     return (W deletedItem) {
-      BlocProvider.of<K>(context).add(
+      BlocProvider.of<S>(context).add(
         DeleteItemRelation<W>(
           deletedItem,
         ),

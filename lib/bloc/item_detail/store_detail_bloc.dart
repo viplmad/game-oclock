@@ -12,9 +12,9 @@ import 'item_detail.dart';
 class StoreDetailBloc extends ItemDetailBloc<Store> {
 
   StoreDetailBloc({
-    @required int storeID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: storeID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
 
   @override
   Stream<Store> getReadStream() {

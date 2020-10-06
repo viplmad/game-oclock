@@ -51,7 +51,6 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
     try {
 
       final T item = await createFuture(event);
-
       yield ItemAdded<T>(
         item,
       );
@@ -69,7 +68,6 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
     try{
 
       await deleteFuture(event);
-
       yield ItemDeleted<T>(
         event.item,
       );

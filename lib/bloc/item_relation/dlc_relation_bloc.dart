@@ -6,15 +6,17 @@ import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
 class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W> {
 
   DLCRelationBloc({
-    @required int dlcID,
+    @required int itemID,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: dlcID, iCollectionRepository: iCollectionRepository);
+    @required DLCRelationManagerBloc<W> managerBloc,
+  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
@@ -27,38 +29,6 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
     }
 
     return super.getRelationStream();
-
-  }
-
-  @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
-
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Game:
-        return iCollectionRepository.insertGameDLC(otherID, itemID);
-      case Purchase:
-        return iCollectionRepository.insertDLCPurchase(itemID, otherID);
-    }
-
-    return super.addRelationFuture(event);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
-
-    int otherID = event.otherItem.ID;
-
-    switch(W) {
-      case Game:
-        return iCollectionRepository.deleteGameDLC(itemID);
-      case Purchase:
-        return iCollectionRepository.deleteDLCPurchase(itemID, otherID);
-    }
-
-    return super.deleteRelationFuture(event);
 
   }
 
