@@ -16,13 +16,6 @@ class DLCSearchBloc extends ItemSearchBloc<DLC> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<DLC> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertDLC(event.title ?? '');
-
-  }
-
-  @override
   Future<List<DLC>> getInitialItems() {
 
     return iCollectionRepository.getDLCsWithView(DLCView.LastCreated, super.maxSuggestions).first;

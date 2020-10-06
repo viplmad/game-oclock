@@ -53,31 +53,3 @@ class ItemSearchError extends ItemSearchState {
       'error: $error'
       ' }';
 }
-
-class ItemAdded<T extends CollectionItem> extends ItemSearchState {
-  const ItemAdded(this.item);
-
-  final T item;
-
-  @override
-  List<Object> get props => [item];
-
-  @override
-  String toString() => 'ItemAdded { '
-      'item: $item'
-      ' }';
-}
-
-class ItemNotAdded extends ItemSearchState {
-  const ItemNotAdded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => [error];
-
-  @override
-  String toString() => 'ItemNotAdded { '
-      'error: $error'
-      ' }';
-}

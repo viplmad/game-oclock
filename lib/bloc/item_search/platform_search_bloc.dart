@@ -16,13 +16,6 @@ class PlatformSearchBloc extends ItemSearchBloc<Platform> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Platform> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertPlatform(event.title ?? '');
-
-  }
-
-  @override
   Future<List<Platform>> getInitialItems() {
 
     return iCollectionRepository.getPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions).first;

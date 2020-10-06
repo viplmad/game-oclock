@@ -16,13 +16,6 @@ class StoreSearchBloc extends ItemSearchBloc<Store> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Store> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertStore(event.title ?? '');
-
-  }
-
-  @override
   Future<List<Store>> getInitialItems() {
 
     return iCollectionRepository.getStoresWithView(StoreView.LastCreated, super.maxSuggestions).first;

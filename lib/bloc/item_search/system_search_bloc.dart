@@ -16,13 +16,6 @@ class SystemSearchBloc extends ItemSearchBloc<System> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<System> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertSystem(event.title ?? '');
-
-  }
-
-  @override
   Future<List<System>> getInitialItems() {
 
     return iCollectionRepository.getSystemsWithView(SystemView.LastCreated, super.maxSuggestions).first;

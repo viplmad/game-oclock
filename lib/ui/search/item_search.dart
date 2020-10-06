@@ -5,12 +5,54 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
 
 
-abstract class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget {
+abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<K>(
+            create: (BuildContext context) {
+              return searchBlocBuilder()..add(SearchTextChanged());
+            }
+        ),
+
+        BlocProvider<S>(
+            create: (BuildContext context) {
+              return managerBlocBuilder();
+            }
+        ),
+
+      ],
+      child: _ItemSearchBody<T, K, S>(
+        onTap: onTap,
+        allowNewButton: true,
+      ),
+    );
+
+  }
+
+  void Function() onTap(BuildContext context, T item) {
+
+    return () {
+      Navigator.maybePop<T>(context, item);
+    };
+
+  }
+
+  external K searchBlocBuilder();
+  external S managerBlocBuilder();
+
+}
+
+abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
   ItemLocalSearch({Key key, @required this.items}) : super(key: key);
 
   final List<T> items;
@@ -20,13 +62,24 @@ abstract class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget
   @override
   Widget build(BuildContext context) {
 
-    return BlocProvider<ItemLocalSearchBloc<T>>(
-      create: (BuildContext context) {
-        return ItemLocalSearchBloc<T>(
-          items: items,
-        )..add(SearchTextChanged());
-      },
-      child: _ItemSearchBody<T, ItemLocalSearchBloc<T>>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ItemLocalSearchBloc<T>>(
+          create: (BuildContext context) {
+            return ItemLocalSearchBloc<T>(
+              items: items,
+            )..add(SearchTextChanged());
+          },
+        ),
+
+        BlocProvider<S>(
+            create: (BuildContext context) {
+              return managerBlocBuilder();
+            }
+        ),
+
+      ],
+      child: _ItemSearchBody<T, ItemLocalSearchBloc<T>, S>(
         onTap: onTap,
         allowNewButton: false,
       ),
@@ -46,48 +99,20 @@ abstract class ItemLocalSearch<T extends CollectionItem> extends StatelessWidget
 
   }
 
-}
-
-abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>> extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-
-    return BlocProvider<K>(
-      create: (BuildContext context) {
-        return searchBlocBuilder()..add(SearchTextChanged());
-      },
-      child: _ItemSearchBody<T, K>(
-        onTap: onTap,
-        allowNewButton: true,
-      ),
-    );
-
-  }
-
-  void Function() onTap(BuildContext context, T item) {
-
-    return () {
-      Navigator.maybePop<T>(context, item);
-    };
-
-  }
-
-  external K searchBlocBuilder();
+  external S managerBlocBuilder();
 
 }
 
-
-class _ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>> extends StatefulWidget {
+class _ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatefulWidget {
   const _ItemSearchBody({Key key, @required this.onTap, this.allowNewButton = false}) : super(key: key);
 
   final void Function() Function(BuildContext, T) onTap;
   final bool allowNewButton;
 
   @override
-  State<_ItemSearchBody<T, K>> createState() => _ItemSearchBodyState<T, K>();
+  State<_ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
 }
-class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>> extends State<_ItemSearchBody<T, K>> {
+class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends State<_ItemSearchBody<T, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -122,8 +147,8 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           ),
         ),
       ),
-      body: BlocListener<K, ItemSearchState>(
-        listener: (BuildContext context, ItemSearchState state) {
+      body: BlocListener<S, ItemListManagerState>(
+        listener: (BuildContext context, ItemListManagerState state) {
           if(state is ItemAdded<T>) {
 
             Navigator.maybePop<T>(context, state.item);
@@ -211,7 +236,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
         color: Colors.white,
         onPressed: () {
 
-          BlocProvider.of<K>(context).add(AddItem(query));
+          BlocProvider.of<S>(context).add(AddItem(query));
 
         },
       ),

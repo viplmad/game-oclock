@@ -5,12 +5,13 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../route_constants.dart';
 import 'search.dart';
 
 
-class GameSearch extends ItemSearch<Game, GameSearchBloc> {
+class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
 
   @override
   GameSearchBloc searchBlocBuilder() {
@@ -21,9 +22,18 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc> {
 
   }
 
+  @override
+  GameListManagerBloc managerBlocBuilder() {
+
+    return GameListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+  }
+
 }
 
-class GameLocalSearch extends ItemLocalSearch<Game> {
+class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
 
   GameLocalSearch({
     Key key,
@@ -32,6 +42,15 @@ class GameLocalSearch extends ItemLocalSearch<Game> {
 
   @override
   String detailRouteName = gameDetailRoute;
+
+  @override
+  GameListManagerBloc managerBlocBuilder() {
+
+    return GameListManagerBloc(
+      iCollectionRepository: CollectionRepository(),
+    );
+
+  }
 
 
 }

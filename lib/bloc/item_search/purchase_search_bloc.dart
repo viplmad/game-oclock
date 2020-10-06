@@ -16,13 +16,6 @@ class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Purchase> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertPurchase(event.title ?? '');
-
-  }
-
-  @override
   Future<List<Purchase>> getInitialItems() {
 
     return iCollectionRepository.getPurchasesWithView(PurchaseView.LastCreated, super.maxSuggestions).first;

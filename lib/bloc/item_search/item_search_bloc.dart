@@ -28,10 +28,6 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
       yield* _mapTextChangedToState(event);
 
-    } else if(event is AddItem) {
-
-      yield* _mapAddItemToState(event);
-
     }
 
   }
@@ -79,24 +75,6 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
   }
 
-  Stream<ItemSearchState> _mapAddItemToState(AddItem event) async* {
-
-    try {
-
-      final T item = await createFuture(event);
-
-      yield ItemAdded<T>(
-        item,
-      );
-
-    } catch (e) {
-
-      yield ItemNotAdded(e.toString());
-
-    }
-
-  }
-
   @override
   Future<void> close() {
 
@@ -104,7 +82,6 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
   }
 
-  external Future<T> createFuture(AddItem event);
   external Future<List<T>> getInitialItems();
   external Future<List<T>> getSearchItems(String query);
 

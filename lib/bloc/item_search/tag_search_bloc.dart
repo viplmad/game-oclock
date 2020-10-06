@@ -16,13 +16,6 @@ class TagSearchBloc extends ItemSearchBloc<Tag> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Tag> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertTag(event.title ?? '');
-
-  }
-
-  @override
   Future<List<Tag>> getInitialItems() {
 
     return iCollectionRepository.getTagsWithView(TagView.LastCreated, super.maxSuggestions).first;

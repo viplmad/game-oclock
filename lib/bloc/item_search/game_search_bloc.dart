@@ -16,13 +16,6 @@ class GameSearchBloc extends ItemSearchBloc<Game> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Game> createFuture(AddItem event) {
-
-    return iCollectionRepository.insertGame(event.title ?? '', '');
-
-  }
-
-  @override
   Future<List<Game>> getInitialItems() {
 
     return iCollectionRepository.getGamesWithView(GameView.LastCreated, super.maxSuggestions).first;
