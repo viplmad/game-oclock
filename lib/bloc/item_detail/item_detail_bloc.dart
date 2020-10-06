@@ -7,15 +7,22 @@ import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
+import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
-  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository}) : super(ItemLoading());
+  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemLoading()) {
+
+    managerSubscription = managerBloc.listen(_mapDetailManagerStateToEvent);
+
+  }
 
   final int itemID;
   final ICollectionRepository iCollectionRepository;
+  final ItemDetailManagerBloc<T> managerBloc;
+  StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   @override
   Stream<ItemDetailState> mapEventToState(ItemDetailEvent event) async* {
@@ -29,22 +36,6 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
     } else if(event is UpdateItem<T>) {
 
       yield* _mapUpdateToState(event);
-
-    } else if (event is UpdateItemField<T>) {
-
-      yield* _mapUpdateFieldToState(event);
-
-    } else if(event is AddItemImage<T>) {
-
-      yield* _mapAddImageToState(event);
-
-    } else if(event is UpdateItemImageName<T>) {
-
-      yield* _mapUpdateImageNameToState(event);
-
-    } else if(event is DeleteItemImage<T>) {
-
-      yield* _mapDeleteImageToState(event);
 
     }
 
@@ -89,88 +80,40 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
   }
 
-  Stream<ItemDetailState> _mapUpdateFieldToState(UpdateItemField<T> event) async* {
+  void _mapDetailManagerStateToEvent(ItemDetailManagerState managerState) {
 
-    try {
+    if(managerState is ItemFieldUpdated<T>) {
 
-      final T updatedItem = await updateFuture(event);
+      _mapFieldUpdatedToEvent(managerState);
 
-      yield ItemFieldUpdated<T>();
+    } else if(managerState is ItemImageUpdated<T>) {
 
-      add(UpdateItem<T>(updatedItem));
-
-    } catch(e) {
-
-      yield ItemFieldNotUpdated(e.toString());
-
-    }
-  }
-
-  Stream<ItemDetailState> _mapAddImageToState(AddItemImage<T> event) async* {
-
-    try {
-
-      final T updatedItem = await addImage(event);
-
-      yield ItemImageUpdated<T>();
-
-      add(UpdateItem<T>(updatedItem));
-
-    } catch(e) {
-
-      yield ItemImageNotUpdated(e.toString());
+      _mapImageUpdatedToEvent(managerState);
 
     }
 
   }
 
-  Stream<ItemDetailState> _mapUpdateImageNameToState(UpdateItemImageName<T> event) async* {
+  void _mapFieldUpdatedToEvent(ItemFieldUpdated<T> event) {
 
-    try {
-
-      final T updatedItem = await updateImageName(event);
-
-      yield ItemImageUpdated<T>();
-
-      add(UpdateItem<T>(updatedItem));
-
-    } catch(e) {
-
-      yield ItemImageNotUpdated(e.toString());
-
-    }
+    add(UpdateItem<T>(event.item));
 
   }
 
-  Stream<ItemDetailState> _mapDeleteImageToState(DeleteItemImage<T> event) async* {
+  void _mapImageUpdatedToEvent(ItemImageUpdated<T> event) {
 
-    try {
-
-      final T updatedItem = await deleteImage(event);
-
-      yield ItemImageUpdated<T>();
-
-      add(UpdateItem<T>(updatedItem));
-
-    } catch(e) {
-
-      yield ItemImageNotUpdated(e.toString());
-
-    }
+    add(UpdateItem<T>(event.item));
 
   }
 
   @override
   Future<void> close() {
 
+    managerSubscription?.cancel();
     return super.close();
 
   }
 
   external Stream<T> getReadStream();
-  external Future<T> updateFuture(UpdateItemField<T> event);
-  external Future<T> addImage(AddItemImage<T> event);
-  external Future<T> deleteImage(DeleteItemImage<T> event);
-  external Future<T> updateImageName(UpdateItemImageName<T> event);
 
 }

@@ -31,6 +31,20 @@ class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
       ' }';
 }
 
+class UpdateListItem<T extends CollectionItem> extends ItemListEvent {
+  const UpdateListItem(this.item);
+
+  final T item;
+
+  @override
+  List<Object> get props => [item];
+
+  @override
+  String toString() => 'UpdateItemList { '
+      'item: $item'
+      ' }';
+}
+
 class UpdateView extends ItemListEvent {
   const UpdateView(this.viewIndex);
 

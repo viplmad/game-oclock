@@ -45,7 +45,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
 
 }
 
-class _PurchaseListBody extends ItemListBody<Purchase> {
+class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
 
   _PurchaseListBody({
     Key key,

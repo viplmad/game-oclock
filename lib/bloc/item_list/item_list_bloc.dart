@@ -37,6 +37,10 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
       yield* _mapUpdateListToState(event);
 
+    } else if(event is UpdateListItem<T>) {
+
+      yield* _mapUpdateItemToState(event);
+
     } else if(event is UpdateView) {
 
       yield* _mapUpdateViewToState(event);
@@ -93,6 +97,31 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       event.viewIndex,
       event.style,
     );
+
+  }
+
+  Stream<ItemListState> _mapUpdateItemToState(UpdateListItem<T> event) async* {
+
+    if(state is ItemListLoaded<T>) {
+      List<T> items = (state as ItemListLoaded<T>).items;
+
+      final int listItemIndex = items.indexWhere((T item) => item.ID == event.item.ID);
+      final T listItem = items.elementAt(listItemIndex);
+
+      if(listItem != event.item) {
+        items[listItemIndex] = event.item;
+
+        final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+        final ListStyle style = (state as ItemListLoaded<T>).style;
+
+        yield ItemListLoaded<T>(
+          items,
+          viewIndex,
+          style,
+        );
+      }
+
+    }
 
   }
 

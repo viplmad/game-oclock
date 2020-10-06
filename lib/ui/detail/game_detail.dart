@@ -9,6 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
@@ -17,13 +18,24 @@ import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-class GameDetail extends ItemDetail<Game, GameDetailBloc> {
+class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({Key key, @required Game item}) : super(item: item, key: key);
 
   @override
-  GameDetailBloc detailBlocBuilder() {
+  GameDetailBloc detailBlocBuilder(GameDetailManagerBloc managerBloc) {
 
     return GameDetailBloc(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+      managerBloc: managerBloc,
+    );
+
+  }
+
+  @override
+  GameDetailManagerBloc managerBlocBuilder() {
+
+    return GameDetailManagerBloc(
       itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
@@ -84,7 +96,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc> {
   }
 
   @override
-  ThemeData getThemeData(BuildContext context) {
+  ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData gameTheme = contextTheme.copyWith(
@@ -119,7 +131,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc> {
 
 }
 
-class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc> {
+class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Game game) {

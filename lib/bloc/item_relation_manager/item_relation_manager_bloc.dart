@@ -29,6 +29,9 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
     yield* _mapDeleteRelationToState(event);
 
     }
+
+    yield Initialised();
+
   }
 
   Stream<ItemRelationManagerState> _checkConnection() async* {

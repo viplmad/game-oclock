@@ -9,6 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
@@ -17,13 +18,24 @@ import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
+class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({Key key, @required Platform item}) : super(item: item, key: key);
 
   @override
-  PlatformDetailBloc detailBlocBuilder() {
+  PlatformDetailBloc detailBlocBuilder(PlatformDetailManagerBloc managerBloc) {
 
     return PlatformDetailBloc(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+      managerBloc: managerBloc,
+    );
+
+  }
+
+  @override
+  PlatformDetailManagerBloc managerBlocBuilder() {
+
+    return PlatformDetailManagerBloc(
       itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
@@ -62,7 +74,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
   }
 
   @override
-  ThemeData getThemeData(BuildContext context) {
+  ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData platformTheme = contextTheme.copyWith(
@@ -97,7 +109,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc> {
 
 }
 
-class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc> {
+class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Platform platform) {

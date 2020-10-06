@@ -29,6 +29,8 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
     }
 
+    yield Initialised();
+
   }
 
   Stream<ItemListManagerState> _checkConnection() async* {

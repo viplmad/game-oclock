@@ -11,13 +11,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import 'year_picker.dart' as customyearpicker;
 
 
-abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>> extends StatelessWidget {
+abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   const ItemDetail({Key key, @required this.item}) : super(key: key);
 
   final T item;
@@ -25,17 +26,25 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>>
   @override
   Widget build(BuildContext context) {
 
+    S _managerBloc = managerBlocBuilder();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<K>(
           create: (BuildContext context) {
-            return detailBlocBuilder()..add(LoadItem());
+            return detailBlocBuilder(_managerBloc)..add(LoadItem());
+          },
+        ),
+
+        BlocProvider<S>(
+          create: (BuildContext context) {
+            return _managerBloc;
           },
         ),
       ]..addAll(relationBlocsBuilder()),
       child: Scaffold(
         body: Theme(
-          data: getThemeData(context),
+          data: themeData(context),
           child: detailBodyBuilder(),
         )
       ),
@@ -43,22 +52,23 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>>
 
   }
 
-  external K detailBlocBuilder();
+  external K detailBlocBuilder(S managerBloc);
+  external S managerBlocBuilder();
   external List<BlocProvider> relationBlocsBuilder();
 
-  external ThemeData getThemeData(BuildContext context);
-  external ItemDetailBody<T, K> detailBodyBuilder();
+  external ThemeData themeData(BuildContext context);
+  external ItemDetailBody<T, K, S> detailBodyBuilder();
 
 }
 
 
-abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>> extends StatelessWidget {
+abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<K, ItemDetailState>(
-      listener: (BuildContext context, ItemDetailState state) {
+    return BlocListener<S, ItemDetailManagerState>(
+      listener: (BuildContext context, ItemDetailManagerState state) {
         if(state is ItemFieldUpdated<T>) {
           showSnackBar(
             scaffoldState: Scaffold.of(context),
@@ -171,12 +181,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               child: FlexibleSpaceBar(
                 title: Text(title),
                 collapseMode: CollapseMode.parallax,
-                background: CachedImage(
-                  imageURL: imageURL,
-                  fit: BoxFit.cover,
-                  applyGradient: true,
-                  backgroundColour: Theme.of(context).primaryColor,
-                ),
+                background: imageURL != null?
+                  CachedImage(
+                    imageURL: imageURL,
+                    fit: BoxFit.cover,
+                    applyGradient: true,
+                    backgroundColour: Theme.of(context).primaryColor,
+                  ) : Container(),
               ),
               onTap: imageURL != null? () {
                 showModalBottomSheet(
@@ -221,7 +232,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               ).then( (PickedFile imagePicked) {
                 if(imagePicked != null) {
 
-                  BlocProvider.of<K>(outerContext).add(
+                  BlocProvider.of<S>(outerContext).add(
                     AddItemImage<T>(
                       imagePicked.path,
                       imageFilename != null? imageFilename.split('.').first : null,
@@ -282,7 +293,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               ).then( (String newName) {
                 if(newName != null) {
 
-                  BlocProvider.of<K>(outerContext).add(
+                  BlocProvider.of<S>(outerContext).add(
                     UpdateItemImageName<T>(
                       imageName,
                       newName,
@@ -302,7 +313,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
             onTap: () {
               String imageName = imageFilename.split('.').first;
 
-              BlocProvider.of<K>(outerContext).add(
+              BlocProvider.of<S>(outerContext).add(
                 DeleteItemImage<T>(
                   imageName,
                 ),
@@ -317,10 +328,10 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  void Function(S) _updateFieldFunction<S>(BuildContext context, String fieldName) {
+  void Function(O) _updateFieldFunction<O>(BuildContext context, String fieldName) {
 
-    return (S newValue) {
-      BlocProvider.of<K>(context).add(
+    return (O newValue) {
+      BlocProvider.of<S>(context).add(
         UpdateItemField<T>(
           fieldName,
           newValue,

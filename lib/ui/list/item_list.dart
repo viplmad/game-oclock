@@ -188,11 +188,11 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   }
 
-  external ItemListBody<T> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
+  external ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
 
 }
 
-abstract class ItemListBody<T extends CollectionItem> extends StatelessWidget {
+abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
   ItemListBody({Key key, @required this.items, @required this.viewIndex, @required this.onDelete, @required this.style}) : super(key: key);
 
   final List<T> items;

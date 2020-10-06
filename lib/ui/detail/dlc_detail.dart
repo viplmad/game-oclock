@@ -9,6 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
@@ -17,13 +18,24 @@ import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
+class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({Key key, @required DLC item}) : super(item: item, key: key);
 
   @override
-  DLCDetailBloc detailBlocBuilder() {
+  DLCDetailBloc detailBlocBuilder(DLCDetailManagerBloc managerBloc) {
 
     return DLCDetailBloc(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+      managerBloc: managerBloc,
+    );
+
+  }
+
+  @override
+  DLCDetailManagerBloc managerBlocBuilder() {
+
+    return DLCDetailManagerBloc(
       itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
@@ -62,7 +74,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
   }
 
   @override
-  ThemeData getThemeData(BuildContext context) {
+  ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData dlcTheme = contextTheme.copyWith(
@@ -97,7 +109,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc> {
 
 }
 
-class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc> {
+class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, DLC dlc) {

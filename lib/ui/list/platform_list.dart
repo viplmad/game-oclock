@@ -45,7 +45,7 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
 
 }
 
-class _PlatformListBody extends ItemListBody<Platform> {
+class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
 
   _PlatformListBody({
     Key key,

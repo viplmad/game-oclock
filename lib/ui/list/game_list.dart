@@ -155,9 +155,9 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
   String detailRouteName = gameDetailRoute;
 
   @override
-  _GameListBody itemListBodyBuilder({@required List<Game> items, @required int viewIndex, @required void Function(Game) onDelete, @required ListStyle style}) {
+  _GameListBody<K> itemListBodyBuilder({@required List<Game> items, @required int viewIndex, @required void Function(Game) onDelete, @required ListStyle style}) {
 
-    return _GameListBody(
+    return _GameListBody<K>(
       items: items,
       viewIndex: viewIndex,
       onDelete: onDelete,
@@ -168,7 +168,7 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
 
 }
 
-class _GameListBody extends ItemListBody<Game> {
+class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> {
 
   _GameListBody({
     Key key,

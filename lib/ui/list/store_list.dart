@@ -45,7 +45,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
 
 }
 
-class _StoreListBody extends ItemListBody<Store> {
+class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
 
   _StoreListBody({
     Key key,

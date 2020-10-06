@@ -45,7 +45,7 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
 
 }
 
-class _DLCListBody extends ItemListBody<DLC> {
+class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
 
   _DLCListBody({
     Key key,

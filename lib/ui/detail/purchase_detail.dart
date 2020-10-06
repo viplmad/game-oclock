@@ -9,6 +9,7 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/repository/collection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
+import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
@@ -17,13 +18,24 @@ import '../relation/relation.dart';
 import 'item_detail.dart';
 
 
-class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
+class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   const PurchaseDetail({Key key, @required Purchase item}) : super(item: item, key: key);
 
   @override
-  PurchaseDetailBloc detailBlocBuilder() {
+  PurchaseDetailBloc detailBlocBuilder(PurchaseDetailManagerBloc managerBloc) {
 
     return PurchaseDetailBloc(
+      itemID: item.ID,
+      iCollectionRepository: CollectionRepository(),
+      managerBloc: managerBloc,
+    );
+
+  }
+
+  @override
+  PurchaseDetailManagerBloc managerBlocBuilder() {
+
+    return PurchaseDetailManagerBloc(
       itemID: item.ID,
       iCollectionRepository: CollectionRepository(),
     );
@@ -84,7 +96,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
   }
 
   @override
-  ThemeData getThemeData(BuildContext context) {
+  ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData purchaseTheme = contextTheme.copyWith(
@@ -119,7 +131,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc> {
 
 }
 
-class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc> {
+class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Purchase purchase) {
