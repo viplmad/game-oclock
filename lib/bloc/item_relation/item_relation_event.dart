@@ -25,3 +25,17 @@ class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
       'otherItems: $otherItems'
       ' }';
 }
+
+class UpdateRelationItem<T extends CollectionItem> extends ItemRelationEvent {
+  const UpdateRelationItem(this.item);
+
+  final T item;
+
+  @override
+  List<Object> get props => [item];
+
+  @override
+  String toString() => 'UpdateRelationItem { '
+      'item: $item'
+      ' }';
+}

@@ -19,7 +19,11 @@ import 'item_detail.dart';
 
 
 class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
-  const DLCDetail({Key key, @required DLC item}) : super(item: item, key: key);
+  const DLCDetail({
+    Key key,
+    @required DLC item,
+    void Function(DLC item) onUpdate,
+  }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
   DLCDetailBloc detailBlocBuilder(DLCDetailManagerBloc managerBloc) {
@@ -89,7 +93,9 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   @override
   _DLCDetailBody detailBodyBuilder() {
 
-    return _DLCDetailBody();
+    return _DLCDetailBody(
+      onUpdate: onUpdate,
+    );
 
   }
 
@@ -110,6 +116,10 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 }
 
 class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
+  _DLCDetailBody({
+    Key key,
+    void Function(DLC item) onUpdate,
+  }) : super(key: key, onUpdate: onUpdate);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, DLC dlc) {

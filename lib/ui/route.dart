@@ -24,37 +24,47 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameDetailRoute:
+      DetailArguments<Game> detailArguments = settings.arguments as DetailArguments<Game>;
       return _pageRoute(
         GameDetail(
-          item: settings.arguments as Game,
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
         ),
       );
 
     case dlcDetailRoute:
+      DetailArguments<DLC> detailArguments = settings.arguments as DetailArguments<DLC>;
       return _pageRoute(
         DLCDetail(
-          item: settings.arguments as DLC,
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
         ),
       );
 
     case purchaseDetailRoute:
+      DetailArguments<Purchase> detailArguments = settings.arguments as DetailArguments<Purchase>;
       return _pageRoute(
         PurchaseDetail(
-          item: settings.arguments as Purchase,
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
         ),
       );
 
     case storeDetailRoute:
+      DetailArguments<Store> detailArguments = settings.arguments as DetailArguments<Store>;
       return _pageRoute(
         StoreDetail(
-          item: settings.arguments as Store,
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
         ),
       );
 
     case platformDetailRoute:
+      DetailArguments<Platform> detailArguments = settings.arguments as DetailArguments<Platform>;
       return _pageRoute(
         PlatformDetail(
-          item: settings.arguments as Platform,
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
         ),
       );
 

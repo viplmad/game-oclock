@@ -19,7 +19,11 @@ import 'item_detail.dart';
 
 
 class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
-  const PurchaseDetail({Key key, @required Purchase item}) : super(item: item, key: key);
+  const PurchaseDetail({
+    Key key,
+    @required Purchase item,
+    void Function(Purchase item) onUpdate,
+  }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
   PurchaseDetailBloc detailBlocBuilder(PurchaseDetailManagerBloc managerBloc) {
@@ -111,7 +115,9 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   @override
   _PurchaseDetailBody detailBodyBuilder() {
 
-    return _PurchaseDetailBody();
+    return _PurchaseDetailBody(
+      onUpdate: onUpdate,
+    );
 
   }
 
@@ -132,6 +138,10 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
 }
 
 class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+  _PurchaseDetailBody({
+    Key key,
+    void Function(Purchase item) onUpdate,
+  }) : super(key: key, onUpdate: onUpdate);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Purchase purchase) {

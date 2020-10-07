@@ -9,6 +9,7 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
+import '../detail/detail.dart';
 
 
 abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
@@ -203,7 +204,18 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: item,
+        arguments: DetailArguments(
+          item: item,
+          onUpdate: (W updatedItem) {
+
+            if(updatedItem != null) {
+
+              BlocProvider.of<K>(context).add(UpdateRelationItem<W>(updatedItem));
+
+            }
+
+          },
+        ),
       );
     };
 

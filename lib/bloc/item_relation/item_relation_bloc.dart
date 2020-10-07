@@ -37,6 +37,10 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
       yield* _mapUpdateRelationToState(event);
 
+    } else if(event is UpdateRelationItem<W>) {
+
+      yield* _mapUpdateItemToState(event);
+
     }
 
   }
@@ -84,6 +88,27 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
   }
 
+  Stream<ItemRelationState> _mapUpdateItemToState(UpdateRelationItem<W> event) async* {
+
+    if(state is ItemRelationLoaded<W>) {
+      List<W> items = (state as ItemRelationLoaded<W>).otherItems;
+
+      final int listItemIndex = items.indexWhere((W item) => item.ID == event.item.ID);
+      final W listItem = items.elementAt(listItemIndex);
+
+      if(listItem != event.item) {
+        items[listItemIndex] = event.item;
+
+        yield ItemRelationLoading();
+        yield ItemRelationLoaded<W>(
+          items,
+        );
+      }
+
+    }
+
+  }
+
   void mapRelationManagerStateToEvent(ItemRelationManagerState managerState) {
 
     if(managerState is ItemRelationAdded<W>) {
@@ -106,9 +131,9 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
       final List<W> updatedItems = List.from(items)..add(managerState.otherItem);
 
       add(
-          UpdateItemRelation<W>(
-            updatedItems,
-          )
+        UpdateItemRelation<W>(
+          updatedItems,
+        ),
       );
     }
 
@@ -124,9 +149,9 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
           .toList(growable: false);
 
       add(
-          UpdateItemRelation<W>(
-            updatedItems,
-          )
+        UpdateItemRelation<W>(
+          updatedItems,
+        ),
       );
     }
 

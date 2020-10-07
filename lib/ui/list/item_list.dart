@@ -12,6 +12,7 @@ import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
+import '../detail/detail.dart';
 
 
 abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends _ItemListMember with PreferredSizeWidget {
@@ -117,7 +118,9 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
-                  arguments: state.item
+                  arguments: DetailArguments(
+                    item: state.item,
+                  )
                 );
               },
             ),
@@ -294,7 +297,18 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: item,
+        arguments: DetailArguments(
+          item: item,
+          onUpdate: (T updatedItem) {
+
+            if(updatedItem != null) {
+
+              BlocProvider.of<K>(context).add(UpdateListItem<T>(updatedItem));
+
+            }
+
+          },
+        ),
       );
     };
 

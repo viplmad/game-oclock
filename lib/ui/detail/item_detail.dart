@@ -18,10 +18,25 @@ import '../common/item_view.dart';
 import 'year_picker.dart' as customyearpicker;
 
 
-abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
-  const ItemDetail({Key key, @required this.item}) : super(key: key);
+class DetailArguments<T> {
+  DetailArguments({
+    this.item,
+    this.onUpdate,
+  });
 
   final T item;
+  final void Function(T item) onUpdate;
+}
+
+abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
+  const ItemDetail({
+    Key key,
+    @required this.item,
+    this.onUpdate,
+  }) : super(key: key);
+
+  final T item;
+  final void Function(T item) onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -63,79 +78,98 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 
 
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
+  ItemDetailBody({
+    Key key,
+    this.onUpdate,
+  }) : super(key: key);
+
+  final void Function(T item) onUpdate;
+  T updatedItem;
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<S, ItemDetailManagerState>(
-      listener: (BuildContext context, ItemDetailManagerState state) {
-        if(state is ItemFieldUpdated<T>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Updated",
-          );
-        }
-        if(state is ItemFieldNotUpdated) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to update",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to update",
-              content: state.error,
-            ),
-          );
-        }
-        if(state is ItemImageUpdated<T>) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Image successfully updated",
-          );
-        }
-        if(state is ItemImageNotUpdated) {
-          showSnackBar(
-            scaffoldState: Scaffold.of(context),
-            message: "Unable to update image",
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: "More",
-              title: "Unable to update image",
-              content: state.error,
-            ),
-          );
-        }
+    return WillPopScope(
+      onWillPop: () {
+
+        if(onUpdate != null) { onUpdate(updatedItem); }
+        return Future<bool>.value(true);
+
       },
-      child: NestedScrollView(
-        headerSliverBuilder: _appBarBuilder,
-        body: ListView(
-          children: [
-            BlocBuilder<K, ItemDetailState> (
-              builder: (BuildContext context, ItemDetailState state) {
+      child: BlocListener<S, ItemDetailManagerState>(
+        listener: (BuildContext context, ItemDetailManagerState state) {
+          if(state is ItemFieldUpdated<T>) {
+            updatedItem = state.item;
 
-                if(state is ItemLoaded<T>) {
+            showSnackBar(
+              scaffoldState: Scaffold.of(context),
+              message: "Updated",
+            );
+          }
+          if(state is ItemFieldNotUpdated) {
+            showSnackBar(
+              scaffoldState: Scaffold.of(context),
+              message: "Unable to update",
+              snackBarAction: dialogSnackBarAction(
+                context,
+                label: "More",
+                title: "Unable to update",
+                content: state.error,
+              ),
+            );
+          }
+          if(state is ItemImageUpdated<T>) {
+            updatedItem = state.item;
 
-                  return Column(
-                    children: itemFieldsBuilder(context, state.item),
-                  );
+            showSnackBar(
+              scaffoldState: Scaffold.of(context),
+              message: "Image successfully updated",
+            );
+          }
+          if(state is ItemImageNotUpdated) {
+            showSnackBar(
+              scaffoldState: Scaffold.of(context),
+              message: "Unable to update image",
+              snackBarAction: dialogSnackBarAction(
+                context,
+                label: "More",
+                title: "Unable to update image",
+                content: state.error,
+              ),
+            );
+          }
+        },
+        child: NestedScrollView(
+          headerSliverBuilder: _appBarBuilder,
+          body: ListView(
+            children: [
+              BlocBuilder<K, ItemDetailState> (
+                builder: (BuildContext context, ItemDetailState state) {
 
-                }
-                if(state is ItemNotLoaded) {
+                  if(state is ItemLoaded<T>) {
 
-                  return Center(
-                    child: Text(state.error),
-                  );
+                    return Column(
+                      children: itemFieldsBuilder(context, state.item),
+                    );
 
-                }
+                  }
+                  if(state is ItemNotLoaded) {
 
-                return Container();
+                    return Center(
+                      child: Text(state.error),
+                    );
 
-              },
-            ),
-            Column(
-              children: itemRelationsBuilder(),
-            ),
-          ],
+                  }
+
+                  return Container();
+
+                },
+              ),
+              Column(
+                children: itemRelationsBuilder(),
+              ),
+            ],
+          ),
         ),
       ),
     );

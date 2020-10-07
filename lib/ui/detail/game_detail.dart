@@ -19,7 +19,11 @@ import 'item_detail.dart';
 
 
 class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
-  const GameDetail({Key key, @required Game item}) : super(item: item, key: key);
+  const GameDetail({
+    Key key,
+    @required Game item,
+    void Function(Game item) onUpdate,
+  }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
   GameDetailBloc detailBlocBuilder(GameDetailManagerBloc managerBloc) {
@@ -111,7 +115,9 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   @override
   _GameDetailBody detailBodyBuilder() {
 
-    return _GameDetailBody();
+    return _GameDetailBody(
+      onUpdate: onUpdate,
+    );
 
   }
 
@@ -132,6 +138,10 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 }
 
 class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
+  _GameDetailBody({
+    Key key,
+    void Function(Game item) onUpdate,
+  }) : super(key: key, onUpdate: onUpdate);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Game game) {

@@ -9,6 +9,7 @@ import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
+import '../detail/detail.dart';
 
 
 abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
@@ -93,7 +94,9 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: item,
+        arguments: DetailArguments(
+          item: item,
+        ),
       );
     };
 

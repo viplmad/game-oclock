@@ -19,7 +19,11 @@ import 'item_detail.dart';
 
 
 class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
-  const StoreDetail({Key key, @required Store item}) : super(item: item, key: key);
+  const StoreDetail({
+    Key key,
+    @required Store item,
+    void Function(Store item) onUpdate,
+  }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
   StoreDetailBloc detailBlocBuilder(StoreDetailManagerBloc managerBloc) {
@@ -78,7 +82,9 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   @override
   _StoreDetailBody detailBodyBuilder() {
 
-    return _StoreDetailBody();
+    return _StoreDetailBody(
+      onUpdate: onUpdate,
+    );
 
   }
 
@@ -99,6 +105,10 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 }
 
 class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
+  _StoreDetailBody({
+    Key key,
+    void Function(Store item) onUpdate,
+  }) : super(key: key, onUpdate: onUpdate);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Store store) {

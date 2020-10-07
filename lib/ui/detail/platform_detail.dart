@@ -19,7 +19,11 @@ import 'item_detail.dart';
 
 
 class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
-  const PlatformDetail({Key key, @required Platform item}) : super(item: item, key: key);
+  const PlatformDetail({
+    Key key,
+    @required Platform item,
+    void Function(Platform item) onUpdate,
+  }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
   PlatformDetailBloc detailBlocBuilder(PlatformDetailManagerBloc managerBloc) {
@@ -89,7 +93,9 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   @override
   _PlatformDetailBody detailBodyBuilder() {
 
-    return _PlatformDetailBody();
+    return _PlatformDetailBody(
+      onUpdate: onUpdate,
+    );
 
   }
 
@@ -110,6 +116,10 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 }
 
 class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
+  _PlatformDetailBody({
+    Key key,
+    void Function(Platform item) onUpdate,
+  }) : super(key: key, onUpdate: onUpdate);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Platform platform) {

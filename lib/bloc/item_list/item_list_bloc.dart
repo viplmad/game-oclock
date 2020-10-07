@@ -127,6 +127,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
 
+    ListStyle style;
+    if(state is ItemListLoaded<T>) {
+       style = (state as ItemListLoaded<T>).style;
+    }
+
     yield ItemListLoading();
 
     try {
@@ -135,6 +140,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       yield ItemListLoaded<T>(
         items,
         event.viewIndex,
+        style,
       );
 
     } catch(e) {
