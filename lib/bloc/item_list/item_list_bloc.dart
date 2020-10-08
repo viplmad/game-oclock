@@ -103,7 +103,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _mapUpdateItemToState(UpdateListItem<T> event) async* {
 
     if(state is ItemListLoaded<T>) {
-      List<T> items = (state as ItemListLoaded<T>).items;
+      List<T> items = List.from((state as ItemListLoaded<T>).items);
 
       final int listItemIndex = items.indexWhere((T item) => item.ID == event.item.ID);
       final T listItem = items.elementAt(listItemIndex);

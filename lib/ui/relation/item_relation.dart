@@ -15,10 +15,11 @@ import '../detail/detail.dart';
 abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
   ItemRelationList({Key key, this.shownName, this.trailingBuilder}) : super(key: key);
 
-  bool isSingleList = false;
-  String typeName = W.toString();
   final String shownName;
   final List<Widget> Function(List<W>) trailingBuilder;
+
+  String typeName = W.toString();
+  bool isSingleList = false;
 
   String detailRouteName;
   String searchRouteName;
@@ -30,9 +31,10 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if(state is ItemRelationAdded<W>) {
+          String message = "Linked " + typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Linked",
+            message: message,
             snackBarAction: SnackBarAction(
               label: 'Undo',
               onPressed: () {
@@ -48,21 +50,23 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotAdded) {
+          String message = "Unable to link " + typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Unable to link",
+            message: message,
             snackBarAction: dialogSnackBarAction(
               context,
               label: "More",
-              title: "Unable to link",
+              title: message,
               content: state.error,
             ),
           );
         }
         if(state is ItemRelationDeleted<W>) {
+          String message = "Unlinked " + typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Unlinked",
+            message: message,
             snackBarAction: SnackBarAction(
               label: 'Undo',
               onPressed: () {
@@ -78,13 +82,14 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotDeleted) {
+          String message = "Unable to unlink " + typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Unable to unlink",
+            message: message,
             snackBarAction: dialogSnackBarAction(
               context,
               label: "More",
-              title: "Unable to unlink",
+              title: message,
               content: state.error,
             ),
           );

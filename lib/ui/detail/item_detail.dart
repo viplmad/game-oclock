@@ -101,19 +101,21 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           if(state is ItemFieldUpdated<T>) {
             updatedItem = state.item;
 
+            String message = "Field updated";
             showSnackBar(
               scaffoldState: Scaffold.of(context),
-              message: "Updated",
+              message: message,
             );
           }
           if(state is ItemFieldNotUpdated) {
+            String message = "Unable to update field";
             showSnackBar(
               scaffoldState: Scaffold.of(context),
-              message: "Unable to update",
+              message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
                 label: "More",
-                title: "Unable to update",
+                title: message,
                 content: state.error,
               ),
             );
@@ -121,19 +123,21 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           if(state is ItemImageUpdated<T>) {
             updatedItem = state.item;
 
+            String message = "Image updated";
             showSnackBar(
               scaffoldState: Scaffold.of(context),
-              message: "Image successfully updated",
+              message: message,
             );
           }
           if(state is ItemImageNotUpdated) {
+            String message = "Unable to update image";
             showSnackBar(
               scaffoldState: Scaffold.of(context),
-              message: "Unable to update image",
+              message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
                 label: "More",
-                title: "Unable to update image",
+                title: message,
                 content: state.error,
               ),
             );
@@ -395,9 +399,10 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         if (await canLaunch(value)) {
           await launch(value);
         } else {
+          String message = "Could not launch $value";
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: 'Could not launch $value',
+            message: message,
           );
         }
       }

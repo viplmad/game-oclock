@@ -100,6 +100,8 @@ abstract class _ItemListMember extends StatelessWidget {
 
 abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
 
+  String _typeName = T.toString();
+
   String detailRouteName;
 
   @override
@@ -108,9 +110,10 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if(state is ItemAdded<T>) {
+          String message = "Added " + _typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Added",
+            message: message,
             seconds: 2,
             snackBarAction: SnackBarAction(
               label: "Open",
@@ -127,34 +130,37 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemNotAdded) {
+          String message = "Unable to add " + _typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Unable to add",
+            message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
               label: "More",
-              title: "Unable to add",
+              title: message,
               content: state.error,
             ),
           );
         }
         if(state is ItemDeleted<T>) {
+          String message = "Deleted " + _typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Deleted",
+            message: message,
             seconds: 2,
           );
         }
         if(state is ItemNotDeleted) {
+          String message = "Unable to delete " + _typeName;
           showSnackBar(
             scaffoldState: Scaffold.of(context),
-            message: "Unable to delete",
+            message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
               label: "More",
-              title: "Unable to delete",
+              title: message,
               content: state.error,
             ),
           );

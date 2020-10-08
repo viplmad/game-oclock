@@ -91,7 +91,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   Stream<ItemRelationState> _mapUpdateItemToState(UpdateRelationItem<W> event) async* {
 
     if(state is ItemRelationLoaded<W>) {
-      List<W> items = (state as ItemRelationLoaded<W>).otherItems;
+      List<W> items = List.from((state as ItemRelationLoaded<W>).otherItems);
 
       final int listItemIndex = items.indexWhere((W item) => item.ID == event.item.ID);
       final W listItem = items.elementAt(listItemIndex);
@@ -99,7 +99,6 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
       if(listItem != event.item) {
         items[listItemIndex] = event.item;
 
-        yield ItemRelationLoading();
         yield ItemRelationLoaded<W>(
           items,
         );

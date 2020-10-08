@@ -158,14 +158,15 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
           }
           if(state is ItemNotAdded) {
+            String message = "Unable to add";
             showSnackBar(
               scaffoldState: Scaffold.of(context),
-              message: "Unable to add",
+              message: message,
               seconds: 2,
               snackBarAction: dialogSnackBarAction(
                 context,
                 label: "More",
-                title: "Unable to add",
+                title: message,
                 content: state.error,
               ),
             );
