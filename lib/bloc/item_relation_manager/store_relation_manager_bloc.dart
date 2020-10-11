@@ -21,7 +21,7 @@ class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationMan
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.insertStorePurchase(itemID, otherID);
+        return iCollectionRepository.relateStorePurchase(itemID, otherID);
     }
 
     return super.addRelationFuture(event);

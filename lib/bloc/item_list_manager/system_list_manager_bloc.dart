@@ -16,7 +16,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System> {
   @override
   Future<System> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertSystem(event.title ?? '');
+    return iCollectionRepository.createSystem(event.title ?? '');
 
   }
 

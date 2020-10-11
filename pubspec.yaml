@@ -24,6 +24,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
 
+  encrypted_shared_preferences: ^1.0.7
+
   # BLoC pattern
   bloc: ^6.0.3
   flutter_bloc: ^6.0.5

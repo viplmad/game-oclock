@@ -21,7 +21,7 @@ class TypeRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.insertPurchaseType(otherID, itemID);
+        return iCollectionRepository.relatePurchaseType(otherID, itemID);
     }
 
     return super.addRelationFuture(event);

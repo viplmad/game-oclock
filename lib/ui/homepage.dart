@@ -5,11 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection/model/app_tab.dart';
 import 'package:game_collection/model/bar_data.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:game_collection/ui/route_constants.dart';
 
 import 'list/list.dart';
 import 'theme/theme.dart';
@@ -21,31 +22,31 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     return MultiBlocProvider(
@@ -59,7 +60,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _allListManagerBloc,
             )..add(LoadItemList());
           },
@@ -67,7 +68,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
             return OwnedListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _ownedListManagerBloc,
             )..add(LoadItemList());
           },
@@ -75,7 +76,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _romListManagerBloc,
             )..add(LoadItemList());
           },
@@ -83,7 +84,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _dlcListManagerBloc,
             )..add(LoadItemList());
           },
@@ -91,7 +92,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _purchaseListManagerBloc,
             )..add(LoadItemList());
           },
@@ -99,7 +100,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _storeListManagerBloc,
             )..add(LoadItemList());
           },
@@ -107,7 +108,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              iCollectionRepository: CollectionRepository(),
+              iCollectionRepository: ICollectionRepository.iCollectionRepository,
               managerBloc: _platformListManagerBloc,
             )..add(LoadItemList());
           },
@@ -175,6 +176,35 @@ class _HomepageBar extends StatelessWidget {
         return Scaffold(
           appBar: _HomepageAppBar(
             state: state,
+          ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text(
+                    'Game Collection',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Repository settings'),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      repositorySettingsRoute,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           body: _HomepageBody(
             state: state,

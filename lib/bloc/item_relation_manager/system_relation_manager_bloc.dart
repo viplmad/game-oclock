@@ -21,7 +21,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.insertPlatformSystem(otherID, itemID);
+        return iCollectionRepository.relatePlatformSystem(otherID, itemID);
     }
 
     return super.addRelationFuture(event);

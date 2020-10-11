@@ -21,13 +21,13 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.insertGameDLC(itemID, otherID);
+        return iCollectionRepository.relateGameDLC(itemID, otherID);
       case Purchase:
-        return iCollectionRepository.insertGamePurchase(itemID, otherID);
+        return iCollectionRepository.relateGamePurchase(itemID, otherID);
       case Platform:
-        return iCollectionRepository.insertGamePlatform(itemID, otherID);
+        return iCollectionRepository.relateGamePlatform(itemID, otherID);
       case Tag:
-        return iCollectionRepository.insertGameTag(itemID, otherID);
+        return iCollectionRepository.relateGameTag(itemID, otherID);
     }
 
     return super.addRelationFuture(event);

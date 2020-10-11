@@ -21,9 +21,9 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.insertGameDLC(otherID, itemID);
+        return iCollectionRepository.relateGameDLC(otherID, itemID);
       case Purchase:
-        return iCollectionRepository.insertDLCPurchase(itemID, otherID);
+        return iCollectionRepository.relateDLCPurchase(itemID, otherID);
     }
 
     return super.addRelationFuture(event);

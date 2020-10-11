@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 
-abstract class IDBConnector {
+abstract class ISQLConnector {
 
   Future<dynamic> open();
   Future<dynamic> close();

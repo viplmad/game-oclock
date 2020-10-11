@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +17,7 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   SystemSearchBloc searchBlocBuilder() {
 
     return SystemSearchBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -26,7 +26,7 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   SystemListManagerBloc managerBlocBuilder() {
 
     return SystemListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -51,7 +51,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   SystemListManagerBloc managerBlocBuilder() {
 
     return SystemListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }

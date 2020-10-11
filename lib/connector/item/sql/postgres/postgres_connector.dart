@@ -4,26 +4,17 @@ import 'package:postgres/postgres.dart';
 
 import 'package:game_collection/entity/entity.dart';
 
-import 'idb_connector.dart';
+import '../isql_connector.dart';
 
 
-class PostgresConnector extends IDBConnector {
+class PostgresConnector extends ISQLConnector {
 
   PostgresInstance _instance;
   PostgreSQLConnection _connection;
 
-  PostgresConnector() {
+  PostgresConnector.fromConnectionString(String connectionString) {
 
-    try {
-      //TODO load from json
-      throw Exception();
-
-    } catch (Exception) {
-      print("json not provided, resorting to temporary connection");
-
-      this._instance = PostgresInstance.fromString(_tempConnectionString);
-    }
-
+    this._instance = PostgresInstance.fromString(connectionString);
     createConnection();
 
   }
@@ -31,11 +22,11 @@ class PostgresConnector extends IDBConnector {
   void createConnection() {
 
     _connection = new PostgreSQLConnection(
-      _instance._host,
-      _instance._port,
-      _instance._database,
-      username: _instance._user,
-      password: _instance._password,
+      _instance.host,
+      _instance.port,
+      _instance.database,
+      username: _instance.user,
+      password: _instance.password,
       useSSL: true,
     );
 
@@ -401,23 +392,21 @@ class PostgresConnector extends IDBConnector {
 
 }
 
-
-const herokuURIPattern = "^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$";
-const String _tempConnectionString = "***REMOVED***";
+const String _postgresURIPattern = "^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$";
 
 class PostgresInstance {
 
-  final String _host;
-  final int _port;
-  final String _database;
-  final String _user;
-  final String _password;
+  final String host;
+  final int port;
+  final String database;
+  final String user;
+  final String password;
 
-  PostgresInstance._(this._host, this._port, this._database, this._user, this._password);
+  PostgresInstance({this.host, this.port, this.database, this.user, this.password});
 
   factory PostgresInstance.fromString(String connectionString) {
 
-    RegExp pattern = RegExp(herokuURIPattern);
+    RegExp pattern = RegExp(_postgresURIPattern);
 
     RegExpMatch match = pattern.firstMatch(connectionString);
 
@@ -425,13 +414,19 @@ class PostgresInstance {
       throw Exception("Could not parse Postgres connection string.");
     }
 
-    return PostgresInstance._(
-      match.namedGroup('host'),
-      int.parse(match.namedGroup('port')),
-      match.namedGroup('db'),
-      match.namedGroup('user'),
-      match.namedGroup('pass'),
+    return PostgresInstance(
+      host: match.namedGroup('host'),
+      port: int.parse(match.namedGroup('port')),
+      database: match.namedGroup('db'),
+      user: match.namedGroup('user'),
+      password: match.namedGroup('pass'),
     );
+
+  }
+
+  String connectionString() {
+
+    return "postgres://$user:$password@$host:$port/$database";
 
   }
 

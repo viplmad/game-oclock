@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +17,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   StoreSearchBloc searchBlocBuilder() {
 
     return StoreSearchBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -26,7 +26,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -47,7 +47,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }

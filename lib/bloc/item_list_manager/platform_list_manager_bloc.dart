@@ -16,7 +16,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
   @override
   Future<Platform> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertPlatform(event.title ?? '');
+    return iCollectionRepository.createPlatform(event.title ?? '');
 
   }
 

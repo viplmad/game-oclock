@@ -16,7 +16,7 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
   @override
   Future<DLC> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertDLC(event.title ?? '');
+    return iCollectionRepository.createDLC(event.title ?? '');
 
   }
 

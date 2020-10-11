@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:game_collection/model/model.dart';
 
 import 'route_constants.dart';
-import 'start.dart';
+import 'connect.dart';
 import 'homepage.dart';
+import 'settings/settings.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
 import 'statistics/statistics.dart';
@@ -13,14 +14,19 @@ import 'statistics/statistics.dart';
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
   switch(settings.name) {
-    case startRoute:
+    case connectRoute:
       return _pageRoute(
-        Startpage(),
+        Connectpage(),
       );
 
     case homeRoute:
       return _pageRoute(
         Homepage(),
+      );
+
+    case repositorySettingsRoute:
+      return _pageRoute(
+        RepositorySettings(),
       );
 
     case gameDetailRoute:

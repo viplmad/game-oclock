@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
-
-import 'package:game_collection/client/postgres_connector.dart';
-import 'package:game_collection/client/cloudinary_connector.dart';
-
 import 'ui/route.dart';
 import 'ui/route_constants.dart';
 
@@ -21,18 +16,12 @@ class GameCollection extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    //Initial set of backend providers
-    CollectionRepository(
-      iDbConnector: PostgresConnector(),
-      iImageConnector: CloudinaryConnector(),
-    );
-
     return MaterialApp(
       title: 'Game Collection',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: startRoute,
+      initialRoute: connectRoute,
       onGenerateRoute: onGenerateRoute,
     );
 

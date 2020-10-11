@@ -16,7 +16,7 @@ class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
   @override
   Future<PurchaseType> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertType(event.title ?? '');
+    return iCollectionRepository.createType(event.title ?? '');
 
   }
 

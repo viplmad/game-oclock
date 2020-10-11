@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +17,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   DLCSearchBloc searchBlocBuilder() {
 
     return DLCSearchBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -26,7 +26,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -46,7 +46,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   @override DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }

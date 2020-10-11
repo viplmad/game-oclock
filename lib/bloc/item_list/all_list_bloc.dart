@@ -20,7 +20,7 @@ class AllListBloc extends ItemListBloc<Game> {
   @override
   Stream<List<Game>> getReadAllStream() {
 
-    return iCollectionRepository.getAll();
+    return iCollectionRepository.getAllGames();
 
   }
 

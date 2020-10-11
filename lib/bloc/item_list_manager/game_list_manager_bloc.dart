@@ -40,7 +40,7 @@ class GameListManagerBloc extends ItemListManagerBloc<Game> {
   @override
   Future<Game> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertGame(event.title ?? '', '');
+    return iCollectionRepository.createGame(event.title ?? '', '');
 
   }
 

@@ -6,7 +6,7 @@ import 'package:game_collection/entity/entity.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
@@ -30,7 +30,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     return PlatformDetailBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
 
@@ -41,7 +41,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     return PlatformDetailManagerBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -51,12 +51,12 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     return [
@@ -105,7 +105,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
           itemID: item.ID,
-          iCollectionRepository: CollectionRepository(),
+          iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

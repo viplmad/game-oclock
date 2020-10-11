@@ -8,11 +8,11 @@ abstract class ConnectState extends Equatable {
   List<Object> get props => [];
 }
 
-class Uninitialised extends ConnectState {}
-
 class Connecting extends ConnectState {}
 
 class Connected extends ConnectState {}
+
+class NonexistentConnection extends ConnectState {}
 
 class FailedConnection extends ConnectState {
   const FailedConnection(this.error);

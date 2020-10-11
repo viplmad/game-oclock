@@ -1,18 +1,16 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:game_collection/preferences/repository_preferences.dart';
 
 import 'connection.dart';
 
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
-  ConnectionBloc({@required this.iCollectionRepository}) : super(Uninitialised());
-
-  final ICollectionRepository iCollectionRepository;
+  ConnectionBloc() : super(Connecting());
 
   @override
   Stream<ConnectState> mapEventToState(ConnectionEvent event) async* {
@@ -20,6 +18,10 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
     if(event is Connect) {
 
       yield* _mapConnectToState();
+
+    } else if(event is Reconnect) {
+
+      yield* _mapReconnectToState();
 
     }
 
@@ -29,9 +31,38 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     yield Connecting();
 
+    bool existsConnection = await RepositoryPreferences.existsRepository();
+    if(!existsConnection) {
+
+      yield NonexistentConnection();
+
+    } else {
+
+      try {
+
+        ICollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
+        ICollectionRepository.iCollectionRepository = iCollectionRepository;
+        await iCollectionRepository.open();
+        yield Connected();
+
+      } catch(e) {
+
+        yield FailedConnection(e.toString());
+
+      }
+
+    }
+
+  }
+
+  Stream<ConnectState> _mapReconnectToState() async* {
+
+    yield Connecting();
+
     try {
 
-      await iCollectionRepository.open();
+      ICollectionRepository.iCollectionRepository.reconnect();
+      ICollectionRepository.iCollectionRepository.open();
       yield Connected();
 
     } catch(e) {

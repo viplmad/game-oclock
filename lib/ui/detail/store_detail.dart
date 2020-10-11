@@ -6,7 +6,7 @@ import 'package:game_collection/entity/entity.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
@@ -30,7 +30,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     return StoreDetailBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
 
@@ -41,7 +41,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     return StoreDetailManagerBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -51,7 +51,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     return [
@@ -94,7 +94,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
           itemID: item.ID,
-          iCollectionRepository: CollectionRepository(),
+          iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

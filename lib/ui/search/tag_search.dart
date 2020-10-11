@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +17,7 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   TagSearchBloc searchBlocBuilder() {
 
     return TagSearchBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -26,7 +26,7 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -51,7 +51,7 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }

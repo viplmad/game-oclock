@@ -16,7 +16,7 @@ class PurchaseListManagerBloc extends ItemListManagerBloc<Purchase> {
   @override
   Future<Purchase> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertPurchase(event.title ?? '');
+    return iCollectionRepository.createPurchase(event.title ?? '');
 
   }
 

@@ -21,9 +21,9 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.insertGamePlatform(otherID, itemID);
+        return iCollectionRepository.relateGamePlatform(otherID, itemID);
       case System:
-        return iCollectionRepository.insertPlatformSystem(itemID, otherID);
+        return iCollectionRepository.relatePlatformSystem(itemID, otherID);
     }
 
     return super.addRelationFuture(event);

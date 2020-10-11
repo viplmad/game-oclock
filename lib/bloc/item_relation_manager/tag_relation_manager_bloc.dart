@@ -21,7 +21,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.insertGameTag(otherID, itemID);
+        return iCollectionRepository.relateGameTag(otherID, itemID);
     }
 
     return super.addRelationFuture(event);

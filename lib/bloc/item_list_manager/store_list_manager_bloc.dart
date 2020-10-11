@@ -16,7 +16,7 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store> {
   @override
   Future<Store> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertStore(event.title ?? '');
+    return iCollectionRepository.createStore(event.title ?? '');
 
   }
 

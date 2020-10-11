@@ -21,13 +21,13 @@ class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.insertGamePurchase(otherID, itemID);
+        return iCollectionRepository.relateGamePurchase(otherID, itemID);
       case DLC:
-        return iCollectionRepository.insertDLCPurchase(otherID, itemID);
+        return iCollectionRepository.relateDLCPurchase(otherID, itemID);
       case Store:
-        return iCollectionRepository.insertStorePurchase(otherID, itemID);
+        return iCollectionRepository.relateStorePurchase(otherID, itemID);
       case PurchaseType:
-        return iCollectionRepository.insertPurchaseType(itemID, otherID);
+        return iCollectionRepository.relatePurchaseType(itemID, otherID);
     }
 
     return super.addRelationFuture(event);

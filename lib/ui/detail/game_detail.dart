@@ -6,7 +6,7 @@ import 'package:game_collection/entity/entity.dart';
 
 import 'package:game_collection/model/model.dart';
 
-import 'package:game_collection/repository/collection_repository.dart';
+import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
@@ -30,7 +30,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     return GameDetailBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
 
@@ -41,7 +41,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     return GameDetailManagerBloc(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
   }
@@ -51,22 +51,22 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
       itemID: item.ID,
-      iCollectionRepository: CollectionRepository(),
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     return [
@@ -127,7 +127,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       create: (BuildContext context) {
         return GameRelationBloc<W>(
           itemID: item.ID,
-          iCollectionRepository: CollectionRepository(),
+          iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

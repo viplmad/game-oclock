@@ -16,7 +16,7 @@ class TagListManagerBloc extends ItemListManagerBloc<Tag> {
   @override
   Future<Tag> createFuture(AddItem event) {
 
-    return iCollectionRepository.insertTag(event.title ?? '');
+    return iCollectionRepository.createTag(event.title ?? '');
 
   }
 

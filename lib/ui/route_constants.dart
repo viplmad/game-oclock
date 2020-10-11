@@ -1,4 +1,5 @@
-const String startRoute = '/';
+const String connectRoute = '/';
+const String repositorySettingsRoute = '/repoSettings';
 const String homeRoute = '/home';
 
 const String _detailRoute = '/detail';

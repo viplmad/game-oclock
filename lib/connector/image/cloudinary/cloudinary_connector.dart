@@ -2,42 +2,40 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../iimage_connector.dart';
+
 import 'cloudinary_connection/cloudinary_connection.dart';
 import 'cloudinary_connection/cloudinary_response.dart';
 
-import 'iimage_connector.dart';
 
-
-const String baseAPIURL = 'https://api.cloudinary.com/v1_1/';
-const String baseRESURL = 'http://res.cloudinary.com/';
+const String _baseAPIURL = 'https://api.cloudinary.com/v1_1/';
+const String _baseRESURL = 'http://res.cloudinary.com/';
 
 class CloudinaryConnector extends IImageConnector {
 
   CloudinaryInstance _instance;
   CloudinaryConnection _connection;
 
-  CloudinaryConnector() {
+  CloudinaryConnector.fromConnectionString(String connectionString) {
 
-    try {
-      //TODO load from json
-      throw Exception();
+    this._instance = CloudinaryInstance.fromString(connectionString);
+    createConnection();
 
-    } catch (Exception) {
-      print("json not provided, resorting to temporary connection");
+  }
 
-      this._instance = CloudinaryInstance.fromString(_tempConnectionString);
-    }
+  void createConnection() {
 
-    _connection = new CloudinaryConnection(
-      _instance._apiKey,
-      _instance._apiSecret,
-      _instance._cloudName,
+    this._connection = new CloudinaryConnection(
+      _instance.apiKey.toString(),
+      _instance.apiSecret,
+      _instance.cloudName,
     );
+
   }
 
   //#region UPLOAD
   @override
-  Future<String> uploadImage({@required String imagePath, @required String tableName, @required String imageName}) {
+  Future<String> setImage({@required String imagePath, @required String tableName, @required String imageName}) {
 
     return _connection.uploadImage(
       imagePath,
@@ -75,7 +73,7 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region DOWNLOAD
   @override
-  String getDownloadURL({@required String tableName, @required String imageFilename}) {
+  String getURI({@required String tableName, @required String imageFilename}) {
 
     String baseURL = getCompleteResURL(tableName, imageFilename);
 
@@ -88,7 +86,7 @@ class CloudinaryConnector extends IImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageFilename) {
 
-    String url = baseRESURL + _instance._cloudName + '/image/upload/$folderName/$imageFilename';
+    String url = _baseRESURL + _instance.cloudName + '/image/upload/$folderName/$imageFilename';
 
     return url;
 
@@ -96,7 +94,7 @@ class CloudinaryConnector extends IImageConnector {
 
   String getCompleteAPIURL() {
 
-    String url = baseAPIURL + _instance._cloudName + "/image/upload";
+    String url = _baseAPIURL + _instance.cloudName + "/image/upload";
 
     return url;
 
@@ -111,20 +109,19 @@ class CloudinaryConnector extends IImageConnector {
 
 }
 
-const cloudinaryURIPattern = "cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$";
-const String _tempConnectionString = "***REMOVED***";
+const String _cloudinaryURIPattern = "cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$";
 
 class CloudinaryInstance {
 
-  final String _cloudName;
-  final String _apiKey;
-  final String _apiSecret;
+  final String cloudName;
+  final int apiKey;
+  final String apiSecret;
 
-  CloudinaryInstance._(this._cloudName, this._apiKey, this._apiSecret);
+  CloudinaryInstance({this.cloudName, this.apiKey, this.apiSecret});
 
   factory CloudinaryInstance.fromString(String connectionString) {
 
-    RegExp pattern = RegExp(cloudinaryURIPattern);
+    RegExp pattern = RegExp(_cloudinaryURIPattern);
 
     RegExpMatch match = pattern.firstMatch(connectionString);
 
@@ -132,11 +129,17 @@ class CloudinaryInstance {
       throw Exception("Could not parse Cloudinary connection string.");
     }
 
-    return CloudinaryInstance._(
-      match.namedGroup('name'),
-      match.namedGroup('key'),
-      match.namedGroup('secret'),
+    return CloudinaryInstance(
+      cloudName: match.namedGroup('name'),
+      apiKey: int.parse(match.namedGroup('key')),
+      apiSecret: match.namedGroup('secret'),
     );
+
+  }
+
+  String connectionString() {
+
+    return "cloudinary://$apiKey:$apiSecret@$cloudName";
 
   }
 

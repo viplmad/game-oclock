@@ -1,0 +1,4 @@
+enum RepositorySettingsRadio {
+  Remote,
+  Local,
+}

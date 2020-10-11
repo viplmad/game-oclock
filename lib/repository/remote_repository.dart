@@ -1,5 +1,5 @@
-import 'package:game_collection/client/idb_connector.dart';
-import 'package:game_collection/client/iimage_connector.dart';
+import 'package:game_collection/connector/item/sql/isql_connector.dart';
+import 'package:game_collection/connector/image/iimage_connector.dart';
 
 import 'package:game_collection/entity/entity.dart';
 
@@ -8,69 +8,64 @@ import 'package:game_collection/model/model.dart';
 import 'icollection_repository.dart';
 
 
-class CollectionRepository implements ICollectionRepository {
+class RemoteRepository implements ICollectionRepository {
 
-  CollectionRepository._(IDBConnector idbConnector, IImageConnector iImageConnector) {
-    _dbConnector = idbConnector;
-    _imageConnector = iImageConnector;
+  RemoteRepository._(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
+    _iSQLConnector = iSQLConnector;
+    _iImageConnector = iImageConnector;
   }
 
-  IDBConnector _dbConnector;
-  IImageConnector _imageConnector;
+  ISQLConnector _iSQLConnector;
+  IImageConnector _iImageConnector;
 
-  static CollectionRepository _singleton;
-  factory CollectionRepository({IDBConnector iDbConnector, IImageConnector iImageConnector}) {
-    if(_singleton == null) {
-      _singleton = CollectionRepository._(
-        iDbConnector,
-        iImageConnector,
-      );
-    }
-
-    return _singleton;
+  factory RemoteRepository({ISQLConnector iSQLConnector, IImageConnector iImageConnector}) {
+    return RemoteRepository._(
+      iSQLConnector,
+      iImageConnector,
+    );
   }
 
   @override
   Future<dynamic> open() {
 
-    return _dbConnector.open();
+    return _iSQLConnector.open();
 
   }
 
   @override
   Future<dynamic> close() {
 
-    return _dbConnector.close();
+    return _iSQLConnector.close();
 
   }
 
   @override
   bool isOpen() {
 
-    return _dbConnector.isOpen();
+    return _iSQLConnector.isOpen();
 
   }
 
   @override
   bool isClosed() {
 
-    return _dbConnector.isClosed();
+    return _iSQLConnector.isClosed();
 
   }
 
   @override
   void reconnect() {
 
-    _dbConnector.reconnect();
+    _iSQLConnector.reconnect();
 
   }
 
   //#region CREATE
   //#region Game
   @override
-  Future<Game> insertGame(String name, String edition) {
+  Future<Game> createGame(String name, String edition) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: gameTable,
       fieldAndValues: <String, dynamic> {
         game_nameField : name,
@@ -82,9 +77,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertGamePlatform(int gameID, int platformID) {
+  Future<dynamic> relateGamePlatform(int gameID, int platformID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftTableID: gameID,
@@ -94,9 +89,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertGamePurchase(int gameID, int purchaseID) {
+  Future<dynamic> relateGamePurchase(int gameID, int purchaseID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftTableID: gameID,
@@ -106,9 +101,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertGameDLC(int gameID, int dlcID) {
+  Future<dynamic> relateGameDLC(int gameID, int dlcID) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: dlcTable,
       ID: dlcID,
       fieldName: dlc_baseGameField,
@@ -118,9 +113,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertGameTag(int gameID, int tagID) {
+  Future<dynamic> relateGameTag(int gameID, int tagID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftTableID: gameID,
@@ -132,9 +127,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Future<DLC> insertDLC(String name) {
+  Future<DLC> createDLC(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: dlcTable,
       fieldAndValues: <String, dynamic> {
         dlc_nameField : name,
@@ -144,9 +139,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertDLCPurchase(int dlcID, int purchaseID) {
+  Future<dynamic> relateDLCPurchase(int dlcID, int purchaseID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftTableID: dlcID,
@@ -158,9 +153,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Future<Platform> insertPlatform(String name) {
+  Future<Platform> createPlatform(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: platformTable,
       fieldAndValues: <String, dynamic> {
         plat_nameField : name,
@@ -170,9 +165,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertPlatformSystem(int platformID, int systemID) {
+  Future<dynamic> relatePlatformSystem(int platformID, int systemID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftTableID: platformID,
@@ -183,9 +178,9 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion Platform
 
   //#region Purchase
-  Future<Purchase> insertPurchase(String description) {
+  Future<Purchase> createPurchase(String description) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: purchaseTable,
       fieldAndValues: <String, dynamic> {
         purc_descriptionField : description,
@@ -196,9 +191,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertPurchaseType(int purchaseID, int typeID) {
+  Future<dynamic> relatePurchaseType(int purchaseID, int typeID) {
 
-    return _dbConnector.insertRelation(
+    return _iSQLConnector.insertRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftTableID: purchaseID,
@@ -210,9 +205,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Future<Store> insertStore(String name) {
+  Future<Store> createStore(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: storeTable,
       fieldAndValues: <String, dynamic> {
         stor_nameField : name,
@@ -222,9 +217,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> insertStorePurchase(int storeID, int purchaseID) {
+  Future<dynamic> relateStorePurchase(int storeID, int purchaseID) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: purchaseTable,
       ID: purchaseID,
       fieldName: purc_storeField,
@@ -236,9 +231,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Future<System> insertSystem(String name) {
+  Future<System> createSystem(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: systemTable,
       fieldAndValues: <String, dynamic> {
         sys_nameField : name,
@@ -250,9 +245,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Tag
   @override
-  Future<Tag> insertTag(String name) {
+  Future<Tag> createTag(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: tagTable,
       fieldAndValues: <String, dynamic> {
         tag_nameField : name,
@@ -264,9 +259,9 @@ class CollectionRepository implements ICollectionRepository {
 
   //#region Type
   @override
-  Future<PurchaseType> insertType(String name) {
+  Future<PurchaseType> createType(String name) {
 
-    return _dbConnector.insertRecord(
+    return _iSQLConnector.insertRecord(
       tableName: typeTable,
       fieldAndValues: <String, dynamic> {
         type_nameField : name,
@@ -280,16 +275,16 @@ class CollectionRepository implements ICollectionRepository {
   //#region READ
   //#region Game
   @override
-  Stream<List<Game>> getAll() {
+  Stream<List<Game>> getAllGames() {
 
     return getAllWithView(GameView.Main);
 
   }
 
   @override
-  Stream<List<Game>> getAllGames() {
+  Stream<List<Game>> getAllOwned() {
 
-    return getGamesWithView(GameView.Main);
+    return getOwnedWithView(GameView.Main);
 
   }
 
@@ -303,7 +298,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getAllWithView(GameView gameView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: allViewToTable[gameView],
       selectFields: gameFields,
       limitResults: limit,
@@ -312,9 +307,9 @@ class CollectionRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getGamesWithView(GameView gameView, [int limit]) {
+  Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: gameViewToTable[gameView],
       selectFields: gameFields,
       limitResults: limit,
@@ -325,7 +320,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: romViewToTable[gameView],
       selectFields: gameFields,
       limitResults: limit,
@@ -336,7 +331,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Game> getGameWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: gameTable,
       selectFields: gameFields,
       whereFieldsAndValues: <String, int> {
@@ -349,7 +344,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Platform>> getPlatformsFromGame(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: false,
@@ -361,7 +356,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesFromGame(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: false,
@@ -374,7 +369,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<DLC>> getDLCsFromGame(int ID) {
 
-    return _dbConnector.readWeakRelation(
+    return _iSQLConnector.readWeakRelation(
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
@@ -386,7 +381,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Tag>> getTagsFromGame(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: false,
@@ -407,7 +402,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: dlcViewToTable[dlcView],
       limitResults: limit,
     ).asStream().map( _dynamicToListDLC );
@@ -417,7 +412,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<DLC> getDLCWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: dlcTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -429,7 +424,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Game> getBaseGameFromDLC(int ID) {
 
-    return _dbConnector.readWeakRelation(
+    return _iSQLConnector.readWeakRelation(
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
@@ -443,7 +438,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesFromDLC(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: false,
@@ -465,7 +460,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: platformViewToTable[platformView],
       limitResults: limit,
     ).asStream().map( _dynamicToListPlatform );
@@ -475,7 +470,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Platform> getPlatformWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: platformTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -487,7 +482,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getGamesFromPlatform(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: true,
@@ -500,7 +495,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<System>> getSystemsFromPlatform(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: false,
@@ -521,7 +516,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: purchaseViewToTable[purchaseView],
       selectFields: purchaseFields,
       limitResults: limit,
@@ -532,7 +527,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Purchase> getPurchaseWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: purchaseTable,
       selectFields: purchaseFields,
       whereFieldsAndValues: <String, int> {
@@ -544,7 +539,7 @@ class CollectionRepository implements ICollectionRepository {
 
   Stream<Store> getStoreFromPurchase(int ID) {
 
-    return _dbConnector.readWeakRelation(
+    return _iSQLConnector.readWeakRelation(
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
@@ -557,7 +552,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getGamesFromPurchase(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: true,
@@ -570,7 +565,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<DLC>> getDLCsFromPurchase(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: true,
@@ -582,7 +577,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<PurchaseType>> getTypesFromPurchase(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: false,
@@ -603,7 +598,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: storeViewToTable[storeView],
       limitResults: limit,
     ).asStream().map( _dynamicToListStore );
@@ -613,7 +608,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Store> getStoreWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: storeTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -625,7 +620,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesFromStore(int ID) {
 
-    return _dbConnector.readWeakRelation(
+    return _iSQLConnector.readWeakRelation(
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
@@ -647,7 +642,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: systemViewToTable[systemView],
       limitResults: limit,
     ).asStream().map( _dynamicToListSystem );
@@ -657,7 +652,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<System> getSystemWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: systemTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -669,7 +664,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Platform>> getPlatformsFromSystem(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: true,
@@ -690,7 +685,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: tagViewToTable[tagView],
       limitResults: limit,
     ).asStream().map( _dynamicToListTag );
@@ -700,7 +695,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<Tag> getTagWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: tagTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -712,7 +707,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getGamesFromTag(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: true,
@@ -734,7 +729,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: typeViewToTable[typeView],
       limitResults: limit,
     ).asStream().map( _dynamicToListType );
@@ -744,7 +739,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<PurchaseType> getTypeWithID(int ID) {
 
-    return _dbConnector.readTable(
+    return _iSQLConnector.readTable(
       tableName: typeTable,
       whereFieldsAndValues: <String, int> {
         IDField : ID,
@@ -756,7 +751,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesFromType(int ID) {
 
-    return _dbConnector.readRelation(
+    return _iSQLConnector.readRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: true,
@@ -772,7 +767,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Game> updateGame<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: gameTable,
       ID: ID,
       fieldName: fieldName,
@@ -785,7 +780,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: dlcTable,
       ID: ID,
       fieldName: fieldName,
@@ -797,7 +792,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Platform> updatePlatform<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: platformTable,
       ID: ID,
       fieldName: fieldName,
@@ -809,7 +804,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Purchase> updatePurchase<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: purchaseTable,
       ID: ID,
       fieldName: fieldName,
@@ -822,7 +817,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Store> updateStore<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: storeTable,
       ID: ID,
       fieldName: fieldName,
@@ -834,7 +829,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<System> updateSystem<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: systemTable,
       ID: ID,
       fieldName: fieldName,
@@ -846,7 +841,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Tag> updateTag<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: tagTable,
       ID: ID,
       fieldName: fieldName,
@@ -858,7 +853,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<PurchaseType> updateType<T>(int ID, String fieldName, T newValue) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: typeTable,
       ID: ID,
       fieldName: fieldName,
@@ -873,7 +868,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteGame(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: gameTable,
       ID: ID,
     );
@@ -883,7 +878,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteGamePlatform(int gameID, int platformID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftID: gameID,
@@ -895,7 +890,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftID: gameID,
@@ -907,7 +902,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteGameDLC(int dlcID) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: dlcTable,
       ID: dlcID,
       fieldName: dlc_baseGameField,
@@ -919,7 +914,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteGameTag(int gameID, int tagID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftID: gameID,
@@ -933,7 +928,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteDLC(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: dlcTable,
       ID: ID,
     );
@@ -943,7 +938,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftID: dlcID,
@@ -957,7 +952,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deletePlatform(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: platformTable,
       ID: ID,
     );
@@ -967,7 +962,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deletePlatformSystem(int platformID, int systemID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftID: platformID,
@@ -981,7 +976,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deletePurchase(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: purchaseTable,
       ID: ID,
     );
@@ -991,7 +986,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deletePurchaseType(int purchaseID, int typeID) {
 
-    return _dbConnector.deleteRelation(
+    return _iSQLConnector.deleteRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftID: purchaseID,
@@ -1005,7 +1000,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteStore(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: storeTable,
       ID: ID,
     );
@@ -1015,7 +1010,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteStorePurchase(int purchaseID) {
 
-    return _dbConnector.updateTable(
+    return _iSQLConnector.updateTable(
       tableName: purchaseTable,
       ID: purchaseID,
       fieldName: purc_storeField,
@@ -1029,7 +1024,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteSystem(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: systemTable,
       ID: ID,
     );
@@ -1041,7 +1036,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteTag(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: tagTable,
       ID: ID,
     );
@@ -1053,7 +1048,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<dynamic> deleteType(int ID) {
 
-    return _dbConnector.deleteTable(
+    return _iSQLConnector.deleteTable(
       tableName: typeTable,
       ID: ID,
     );
@@ -1066,7 +1061,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Game>> getGamesWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: gameTable,
       searchField: game_nameField,
       query: nameQuery,
@@ -1079,7 +1074,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<DLC>> getDLCsWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: dlcTable,
       searchField: dlc_nameField,
       query: nameQuery,
@@ -1091,7 +1086,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Platform>> getPlatformsWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: platformTable,
       searchField: plat_nameField,
       query: nameQuery,
@@ -1103,7 +1098,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Purchase>> getPurchasesWithDescription(String descQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: purchaseTable,
       searchField: purc_descriptionField,
       query: descQuery,
@@ -1116,7 +1111,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Store>> getStoresWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: storeTable,
       searchField: stor_nameField,
       query: nameQuery,
@@ -1128,7 +1123,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<System>> getSystemsWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: systemTable,
       searchField: sys_nameField,
       query: nameQuery,
@@ -1140,7 +1135,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<Tag>> getTagsWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: tagTable,
       searchField: tag_nameField,
       query: nameQuery,
@@ -1152,7 +1147,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Stream<List<PurchaseType>> getTypesWithName(String nameQuery, int maxResults) {
 
-    return _dbConnector.readTableSearch(
+    return _iSQLConnector.readTableSearch(
       tableName: typeTable,
       searchField: type_nameField,
       query: nameQuery,
@@ -1168,13 +1163,13 @@ class CollectionRepository implements ICollectionRepository {
   Future<Game> uploadGameCover(int gameID, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
-      await _imageConnector.deleteImage(
+      await _iImageConnector.deleteImage(
         tableName: gameTable,
         imageName: oldImageName,
       );
     }
 
-    final String coverName = await _imageConnector.uploadImage(
+    final String coverName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: gameTable,
       imageName: _getImageName(gameID, 'header'),
@@ -1187,7 +1182,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Game> renameGameCover(int gameID, String imageName, String newImageName) async {
 
-    final String coverName = await _imageConnector.renameImage(
+    final String coverName = await _iImageConnector.renameImage(
       tableName: gameTable,
       oldImageName: imageName,
       newImageName: _getImageName(gameID, newImageName),
@@ -1200,7 +1195,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Game> deleteGameCover(int gameID, String imageName) async {
 
-    await _imageConnector.deleteImage(
+    await _iImageConnector.deleteImage(
       tableName: gameTable,
       imageName: imageName,
     );
@@ -1215,13 +1210,13 @@ class CollectionRepository implements ICollectionRepository {
   Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
-      await _imageConnector.deleteImage(
+      await _iImageConnector.deleteImage(
         tableName: dlcTable,
         imageName: oldImageName,
       );
     }
 
-    final String coverName = await _imageConnector.uploadImage(
+    final String coverName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: dlcTable,
       imageName: _getImageName(dlcID, 'header'),
@@ -1234,7 +1229,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName) async {
 
-    final String coverName = await _imageConnector.renameImage(
+    final String coverName = await _iImageConnector.renameImage(
       tableName: dlcTable,
       oldImageName: imageName,
       newImageName: _getImageName(dlcID, newImageName),
@@ -1247,7 +1242,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<DLC> deleteDLCCover(int dlcID, String imageName) async {
 
-    await _imageConnector.deleteImage(
+    await _iImageConnector.deleteImage(
       tableName: dlcTable,
       imageName: imageName,
     );
@@ -1262,13 +1257,13 @@ class CollectionRepository implements ICollectionRepository {
   Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
-      await _imageConnector.deleteImage(
+      await _iImageConnector.deleteImage(
         tableName: platformTable,
         imageName: oldImageName,
       );
     }
 
-    final String iconName = await _imageConnector.uploadImage(
+    final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: platformTable,
       imageName: _getImageName(platformID, 'icon'),
@@ -1281,7 +1276,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName) async {
 
-    final String iconName = await _imageConnector.renameImage(
+    final String iconName = await _iImageConnector.renameImage(
       tableName: platformTable,
       oldImageName: imageName,
       newImageName: _getImageName(platformID, newImageName),
@@ -1294,7 +1289,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Platform> deletePlatformIcon(int platformID, String imageName) async {
 
-    await _imageConnector.deleteImage(
+    await _iImageConnector.deleteImage(
       tableName: platformTable,
       imageName: imageName,
     );
@@ -1309,13 +1304,13 @@ class CollectionRepository implements ICollectionRepository {
   Future<Store> uploadStoreIcon(int storeID, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
-      await _imageConnector.deleteImage(
+      await _iImageConnector.deleteImage(
         tableName: storeTable,
         imageName: oldImageName,
       );
     }
 
-    final String iconName = await _imageConnector.uploadImage(
+    final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: storeTable,
       imageName: _getImageName(storeID, 'icon'),
@@ -1327,7 +1322,7 @@ class CollectionRepository implements ICollectionRepository {
 
   Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName) async {
 
-    final String iconName = await _imageConnector.renameImage(
+    final String iconName = await _iImageConnector.renameImage(
       tableName: storeTable,
       oldImageName: imageName,
       newImageName: _getImageName(storeID, newImageName),
@@ -1340,7 +1335,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<Store> deleteStoreIcon(int storeID, String imageName) async {
 
-    await _imageConnector.deleteImage(
+    await _iImageConnector.deleteImage(
       tableName: storeTable,
       imageName: imageName,
     );
@@ -1355,13 +1350,13 @@ class CollectionRepository implements ICollectionRepository {
   Future<System> uploadSystemIcon(int systemID, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
-      await _imageConnector.deleteImage(
+      await _iImageConnector.deleteImage(
         tableName: systemTable,
         imageName: oldImageName,
       );
     }
 
-    final String iconName = await _imageConnector.uploadImage(
+    final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: systemTable,
       imageName: _getImageName(systemID, 'icon'),
@@ -1374,7 +1369,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<System> renameSystemIcon(int systemID, String imageName, String newImageName) async {
 
-    final String iconName = await _imageConnector.renameImage(
+    final String iconName = await _iImageConnector.renameImage(
       tableName: systemTable,
       oldImageName: imageName,
       newImageName: _getImageName(systemID, newImageName),
@@ -1387,7 +1382,7 @@ class CollectionRepository implements ICollectionRepository {
   @override
   Future<System> deleteSystemIcon(int systemID, String imageName) async {
 
-    await _imageConnector.deleteImage(
+    await _iImageConnector.deleteImage(
       tableName: systemTable,
       imageName: imageName,
     );
@@ -1399,10 +1394,10 @@ class CollectionRepository implements ICollectionRepository {
   //#endregion IMAGE
 
   //#region DOWNLOAD
-  String getGameCoverURL(String gameCoverName) {
+  String _getGameCoverURL(String gameCoverName) {
 
     return gameCoverName != null?
-        _imageConnector.getDownloadURL(
+        _iImageConnector.getURI(
           tableName: gameTable,
           imageFilename: gameCoverName,
         )
@@ -1410,10 +1405,10 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  String getDLCCoverURL(String dlcCoverName) {
+  String _getDLCCoverURL(String dlcCoverName) {
 
     return dlcCoverName != null?
-        _imageConnector.getDownloadURL(
+        _iImageConnector.getURI(
           tableName: dlcTable,
           imageFilename: dlcCoverName,
         )
@@ -1421,10 +1416,10 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  String getPlatformIconURL(String platformIconName) {
+  String _getPlatformIconURL(String platformIconName) {
 
     return platformIconName != null?
-        _imageConnector.getDownloadURL(
+        _iImageConnector.getURI(
           tableName: platformTable,
           imageFilename: platformIconName,
         )
@@ -1432,10 +1427,10 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  String getStoreIconURL(String storeIconName) {
+  String _getStoreIconURL(String storeIconName) {
 
     return storeIconName != null?
-        _imageConnector.getDownloadURL(
+        _iImageConnector.getURI(
           tableName: storeTable,
           imageFilename: storeIconName,
         )
@@ -1443,10 +1438,10 @@ class CollectionRepository implements ICollectionRepository {
 
   }
 
-  String getSystemIconURL(String systemIconName) {
+  String _getSystemIconURL(String systemIconName) {
 
     return systemIconName != null?
-        _imageConnector.getDownloadURL(
+        _iImageConnector.getURI(
           tableName: systemTable,
           imageFilename: systemIconName,
         )
@@ -1459,7 +1454,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
 
     return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
-      return Game.fromEntity(gameEntity, getGameCoverURL(gameEntity.coverFilename));
+      return Game.fromEntity(gameEntity, _getGameCoverURL(gameEntity.coverFilename));
     }).toList(growable: false);
 
   }
@@ -1467,7 +1462,7 @@ class CollectionRepository implements ICollectionRepository {
   List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
 
     return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
-      return DLC.fromEntity(dlcEntity, getDLCCoverURL(dlcEntity.coverFilename));
+      return DLC.fromEntity(dlcEntity, _getDLCCoverURL(dlcEntity.coverFilename));
     }).toList(growable: false);
 
   }
@@ -1475,7 +1470,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
 
     return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
-      return Platform.fromEntity(platformEntity, getPlatformIconURL(platformEntity.iconFilename));
+      return Platform.fromEntity(platformEntity, _getPlatformIconURL(platformEntity.iconFilename));
     }).toList(growable: false);
 
   }
@@ -1491,7 +1486,7 @@ class CollectionRepository implements ICollectionRepository {
   List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
 
     return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
-      return Store.fromEntity(storeEntity, getStoreIconURL(storeEntity.iconFilename));
+      return Store.fromEntity(storeEntity, _getStoreIconURL(storeEntity.iconFilename));
     }).toList(growable: false);
 
   }
@@ -1499,7 +1494,7 @@ class CollectionRepository implements ICollectionRepository {
   List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
 
     return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
-      return System.fromEntity(systemEntity, getSystemIconURL(systemEntity.iconFilename));
+      return System.fromEntity(systemEntity, _getSystemIconURL(systemEntity.iconFilename));
     }).toList(growable: false);
 
   }
