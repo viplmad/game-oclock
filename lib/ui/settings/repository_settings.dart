@@ -6,10 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
 import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';
 
-import 'package:game_collection/model/repository_radio.dart';
+import 'package:game_collection/model/repository_type.dart';
 
 import 'package:game_collection/bloc/repository_settings/repository_settings.dart';
-import 'package:game_collection/bloc/repository_settings_radio/repository_settings_radio.dart';
+import 'package:game_collection/bloc/repository_settings_manager/repository_settings_manager.dart';
 
 import '../common/show_snackbar.dart';
 import '../route_constants.dart';
@@ -28,9 +28,9 @@ class RepositorySettings extends StatelessWidget {
           },
         ),
 
-        BlocProvider<RepositorySettingsRadioBloc>(
+        BlocProvider<RepositorySettingsManagerBloc>(
           create: (BuildContext context) {
-            return RepositorySettingsRadioBloc();
+            return RepositorySettingsManagerBloc();
           },
         ),
       ],
@@ -54,8 +54,8 @@ class _RepositorySettingsBody extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Container(
-        child: BlocListener<RepositorySettingsBloc, RepositorySettingsState>(
-          listener: (BuildContext context, RepositorySettingsState state) {
+        child: BlocListener<RepositorySettingsManagerBloc, RepositorySettingsManagerState>(
+          listener: (BuildContext context, RepositorySettingsManagerState state) {
             if(state is RepositorySettingsUpdated) {
               Navigator.pushReplacementNamed(
                 context,
@@ -76,53 +76,53 @@ class _RepositorySettingsBody extends StatelessWidget {
               );
             }
           },
-          child: BlocBuilder<RepositorySettingsRadioBloc, RepositorySettingsRadioState>(
-            builder: (BuildContext context, RepositorySettingsRadioState radioState) {
+          child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
+            builder: (BuildContext context, RepositorySettingsState state) {
+              PostgresInstance postgresInstance;
+              CloudinaryInstance cloudinaryInstance;
+              RepositoryType radioGroup;
 
-              return BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
-                builder: (BuildContext context, RepositorySettingsState state) {
-                  PostgresInstance postgresInstance;
-                  CloudinaryInstance cloudinaryInstance;
+              if(state is RepositorySettingsLoading) {
 
-                  if(state is RepositorySettingsLoading) {
+                return LinearProgressIndicator();
 
-                    return LinearProgressIndicator();
+              }
+              if(state is EmptyRepositorySettings) {
+                radioGroup = RepositoryType.Remote;
+              }
+              if(state is RemoteRepositorySettingsLoaded) {
+                radioGroup = state.radio;
+                postgresInstance = state.postgresInstance;
+                cloudinaryInstance = state.cloudinaryInstance;
+              }
+              /*if(state is Local) {}*/
 
+              return ExpansionPanelList(
+                expansionCallback: (int panelIndex, bool isExpanded) {
+
+                  if(panelIndex == 0) {
+                    if(!isExpanded) {
+
+                      BlocProvider.of<RepositorySettingsBloc>(context).add(
+                        UpdateRepositorySettingsRadio(RepositoryType.Remote),
+                      );
+
+                    }
+                  } else if(panelIndex == 1) {
+                    if(!isExpanded) {
+
+                      BlocProvider.of<RepositorySettingsBloc>(context).add(
+                        UpdateRepositorySettingsRadio(RepositoryType.Local),
+                      );
+
+                    }
                   }
-                  if(state is RemoteRepositorySettingsLoaded) {
-                    postgresInstance = state.postgresInstance;
-                    cloudinaryInstance = state.cloudinaryInstance;
-                  }
-
-                  return ExpansionPanelList(
-                    expansionCallback: (int panelIndex, bool isExpanded) {
-
-                      if(panelIndex == 0) {
-                        if(!isExpanded) {
-
-                          BlocProvider.of<RepositorySettingsRadioBloc>(context).add(
-                            UpdateRepositorySettingsRadio(RepositorySettingsRadio.Remote),
-                          );
-
-                        }
-                      } else if(panelIndex == 1) {
-                        if(!isExpanded) {
-
-                          BlocProvider.of<RepositorySettingsRadioBloc>(context).add(
-                            UpdateRepositorySettingsRadio(RepositorySettingsRadio.Local),
-                          );
-
-                        }
-                      }
-
-                    },
-                    children: [
-                      _remoteExpansionPanel(context, radioState.radio, postgresInstance, cloudinaryInstance),
-                      _localRepositoryPanel(context, radioState.radio),
-                    ],
-                  );
 
                 },
+                children: [
+                  _remoteExpansionPanel(context, radioGroup, postgresInstance, cloudinaryInstance),
+                  //_localRepositoryPanel(context, radioGroup),
+                ],
               );
 
             },
@@ -133,7 +133,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _remoteExpansionPanel(BuildContext context, RepositorySettingsRadio radioGroup, [PostgresInstance postgresInstance, CloudinaryInstance cloudinaryInstance]) {
+  ExpansionPanel _remoteExpansionPanel(BuildContext context, RepositoryType radioGroup, [PostgresInstance postgresInstance, CloudinaryInstance cloudinaryInstance]) {
 
     String _host;
     int _port;
@@ -149,7 +149,7 @@ class _RepositorySettingsBody extends StatelessWidget {
       context,
       title: "Remote repository",
       radioGroup: radioGroup,
-      radioValue: RepositorySettingsRadio.Remote,
+      radioValue: RepositoryType.Remote,
       textForms: [
         _headerText(context, "Postgres"),
         textFormField(
@@ -213,7 +213,7 @@ class _RepositorySettingsBody extends StatelessWidget {
         ),
       ],
       onUpdate: () {
-        BlocProvider.of<RepositorySettingsBloc>(context).add(
+        BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
           UpdateRemoteConnectionSettings(
             PostgresInstance(
               host: _host,
@@ -234,16 +234,14 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _localRepositoryPanel(BuildContext context, RepositorySettingsRadio radioGroup) {
+  ExpansionPanel _localRepositoryPanel(BuildContext context, RepositoryType radioGroup) {
 
     return _repositoryExpansionPanel(
       context,
       title: "Local repository",
       radioGroup: radioGroup,
-      radioValue: RepositorySettingsRadio.Local,
-      textForms: [
-        _headerText(context, "Under construction"),
-      ],
+      radioValue: RepositoryType.Local,
+      textForms: [],
     );
 
   }
@@ -315,7 +313,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _repositoryExpansionPanel(BuildContext context, {RepositorySettingsRadio radioGroup, RepositorySettingsRadio radioValue, String title, List<Widget> textForms, void Function() onUpdate}) {
+  ExpansionPanel _repositoryExpansionPanel(BuildContext context, {RepositoryType radioGroup, RepositoryType radioValue, String title, List<Widget> textForms, void Function() onUpdate}) {
 
     final _formKey = GlobalKey<FormState>();
 
@@ -325,7 +323,7 @@ class _RepositorySettingsBody extends StatelessWidget {
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
           leading: IgnorePointer(
-            child: Radio<RepositorySettingsRadio>(
+            child: Radio<RepositoryType>(
                 groupValue: radioGroup,
                 value: radioValue,
                 onChanged: (_) {}

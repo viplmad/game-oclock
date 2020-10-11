@@ -75,13 +75,6 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
   }
 
-  @override
-  Future<void> close() {
-
-    return super.close();
-
-  }
-
   external Future<List<T>> getInitialItems();
   external Future<List<T>> getSearchItems(String query);
 

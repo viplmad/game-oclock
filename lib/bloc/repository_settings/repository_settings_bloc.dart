@@ -2,8 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/preferences/repository_preferences.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
-import 'package:game_collection/repository/remote_repository.dart';
+import 'package:game_collection/model/repository_type.dart';
 
 import 'repository_settings.dart';
 
@@ -19,15 +18,11 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
       yield* _mapLoadToState();
 
-    } else if(event is UpdateRemoteConnectionSettings) {
+    } else if(event is UpdateRepositorySettingsRadio) {
 
-      yield* _mapUpdateRemoteToState(event);
+      yield* _mapUpdateRadioToState(event);
 
-    }/* else if(event is UpdateLocalConnectionSettings) {
-
-      yield* _mapUpdateLocalToState();
-
-    }*/
+    }
 
   }
 
@@ -44,16 +39,9 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
       try {
 
-        ICollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
+        RepositoryType repositoryType = await RepositoryPreferences.retrieveRepositoryType();
 
-        if(iCollectionRepository is RemoteRepository) {
-
-          yield RemoteRepositorySettingsLoaded(
-            await RepositoryPreferences.retrievePostgresInstance(),
-            await RepositoryPreferences.retrieveCloudinaryInstance(),
-          );
-
-        }
+        yield* _mapRepositoryTypeToState(repositoryType);
 
       } catch(e) {
 
@@ -65,24 +53,34 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
   }
 
-  Stream<RepositorySettingsState> _mapUpdateRemoteToState(UpdateRemoteConnectionSettings event) async* {
+  Stream<RepositorySettingsState> _mapUpdateRadioToState(UpdateRepositorySettingsRadio event) async* {
 
-    try {
+    yield* _mapRepositoryTypeToState(event.radio);
 
-      await RepositoryPreferences.setPostgresConnector(event.postgresInstance);
-      await RepositoryPreferences.setCloudinaryConnector(event.cloudinaryInstance);
+  }
 
-      await RepositoryPreferences.setRepositoryTypeRemote();
-      await RepositoryPreferences.setRepositoryExist();
+  Stream<RepositorySettingsState> _mapRepositoryTypeToState(RepositoryType type) async* {
 
-      yield RepositorySettingsUpdated();
-
-    } catch(e) {
-
-      yield RepositorySettingsNotUpdated(e.toString());
-
+    switch(type) {
+      case RepositoryType.Remote:
+        yield* _remoteRepositoryState();
+        break;
+      case RepositoryType.Local:
+        //yield* _localRepositoryState();
+        break;
     }
 
   }
+
+  Stream<RepositorySettingsState> _remoteRepositoryState() async* {
+
+    yield RemoteRepositorySettingsLoaded(
+      await RepositoryPreferences.retrievePostgresInstance(),
+      await RepositoryPreferences.retrieveCloudinaryInstance(),
+    );
+
+  }
+
+  /*Stream<RepositorySettingsState> _localRepositoryState() async* {}*/
 
 }

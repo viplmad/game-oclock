@@ -3,27 +3,19 @@ import 'package:equatable/equatable.dart';
 import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';
 import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
 
-import 'package:game_collection/model/repository_type.dart';
 
-
-abstract class RepositorySettingsState extends Equatable {
-  const RepositorySettingsState();
+abstract class RepositorySettingsManagerEvent extends Equatable {
+  const RepositorySettingsManagerEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class RepositorySettingsLoading extends RepositorySettingsState {}
-
-class EmptyRepositorySettings extends RepositorySettingsState {}
-
-class RemoteRepositorySettingsLoaded extends RepositorySettingsState {
-  RemoteRepositorySettingsLoaded(this.postgresInstance, this.cloudinaryInstance);
+class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
+  UpdateRemoteConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
 
   final PostgresInstance postgresInstance;
   final CloudinaryInstance cloudinaryInstance;
-
-  final RepositoryType radio = RepositoryType.Remote;
 
   @override
   List<Object> get props => [postgresInstance, cloudinaryInstance];
@@ -35,4 +27,4 @@ class RemoteRepositorySettingsLoaded extends RepositorySettingsState {
       ' }';
 }
 
-/*class LocalRepositorySettingsLoaded extends RepositorySettingsState {}*/
+/*class UpdateLocalConnectionSettings extends RepositorySettingsEvent {}*/

@@ -82,13 +82,6 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  @override
-  Future<void> close() {
-
-    return super.close();
-
-  }
-
   external Future<T> createFuture(AddItem event);
   external Future<dynamic> deleteFuture(DeleteItem<T> event);
 

@@ -1,0 +1,4 @@
+enum RepositoryType {
+  Remote,
+  Local,
+}

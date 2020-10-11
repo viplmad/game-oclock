@@ -83,13 +83,6 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
 
   }
 
-  @override
-  Future<void> close() {
-
-    return super.close();
-
-  }
-
   @mustCallSuper
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 

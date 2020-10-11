@@ -123,13 +123,6 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
   }
 
-  @override
-  Future<void> close() {
-
-    return super.close();
-
-  }
-
   external Future<T> updateFuture(UpdateItemField<T> event);
   external Future<T> addImage(AddItemImage<T> event);
   external Future<T> deleteImage(DeleteItemImage<T> event);

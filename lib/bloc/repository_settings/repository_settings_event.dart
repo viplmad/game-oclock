@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';
-import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
+import 'package:game_collection/model/repository_type.dart';
 
 
 abstract class RepositorySettingsEvent extends Equatable {
@@ -13,20 +12,16 @@ abstract class RepositorySettingsEvent extends Equatable {
 
 class LoadRepositorySettings extends RepositorySettingsEvent {}
 
-class UpdateRemoteConnectionSettings extends RepositorySettingsEvent {
-  UpdateRemoteConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
+class UpdateRepositorySettingsRadio extends RepositorySettingsEvent {
+  const UpdateRepositorySettingsRadio(this.radio);
 
-  final PostgresInstance postgresInstance;
-  final CloudinaryInstance cloudinaryInstance;
-
-  @override
-  List<Object> get props => [postgresInstance, cloudinaryInstance];
+  final RepositoryType radio;
 
   @override
-  String toString() => 'UpdatePostgresConnectionSettings { '
-      'postgres instance: $postgresInstance, '
-      'cloudinary instance: $cloudinaryInstance'
+  List<Object> get props => [radio];
+
+  @override
+  String toString() => 'UpdateRepositorySettingsRadio { '
+      'radio: $radio'
       ' }';
 }
-
-/*class UpdateLocalConnectionSettings extends RepositorySettingsEvent {}*/

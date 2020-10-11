@@ -3,6 +3,8 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
 import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';
 
+import 'package:game_collection/model/repository_type.dart';
+
 import 'package:game_collection/repository/icollection_repository.dart';
 import 'package:game_collection/repository/remote_repository.dart';
 import 'package:game_collection/repository/local_repository.dart';
@@ -28,6 +30,23 @@ class RepositoryPreferences {
     return sharedPreferences.getString(_repositorySetKey).then<bool>((String value) {
 
       return value == _trueValue;
+
+    });
+
+  }
+
+  static Future<RepositoryType> retrieveRepositoryType() {
+
+    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+
+    return sharedPreferences.getString(_typeRepositoryKey).then<RepositoryType>((String value) {
+
+      switch(value) {
+        case _remoteRepositoryValue:
+          return RepositoryType.Remote;
+        case _localRepositoryValue:
+          return RepositoryType.Local;
+      }
 
     });
 
