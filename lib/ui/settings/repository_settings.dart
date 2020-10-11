@@ -183,7 +183,7 @@ class _RepositorySettingsBody extends StatelessWidget {
         textFormField(
           labelText: 'Password',
           initialValue: postgresInstance?.password,
-          //obscureText: true,
+          obscureText: true,
           onSaved: (String value) {
             _pass = value;
           },
@@ -206,7 +206,7 @@ class _RepositorySettingsBody extends StatelessWidget {
         textFormField(
           labelText: 'API Secret',
           initialValue: cloudinaryInstance?.apiSecret,
-          //obscureText: true,
+          obscureText: true,
           onSaved: (String value) {
             _apiSecret = value;
           },
