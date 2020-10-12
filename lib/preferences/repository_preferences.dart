@@ -31,7 +31,7 @@ class RepositoryPreferences {
 
       return value == _trueValue;
 
-    });
+    }, onError: (error) => null);
 
   }
 
@@ -48,7 +48,9 @@ class RepositoryPreferences {
           return RepositoryType.Local;
       }
 
-    });
+      return null;
+
+    }, onError: (error) => null);
 
   }
 
@@ -56,17 +58,16 @@ class RepositoryPreferences {
 
     EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_typeRepositoryKey).then<ICollectionRepository>((String value) {
-      if(value == _remoteRepositoryValue) {
+    return retrieveRepositoryType().then<ICollectionRepository>((RepositoryType type) {
 
-        return _retrieveRemoteRepository(sharedPreferences);
-
-
-      }/* else if(value == _localRepositoryValue) {
-
-        return retrieveAndSetLocalRepositoryData(sharedPreferences);
-
-      }*/
+      switch(type) {
+        case RepositoryType.Remote:
+          return _retrieveRemoteRepository(sharedPreferences);
+          break;
+        case RepositoryType.Local:
+          //return _retrieveLocalRepository(sharedPreferences);
+          break;
+      }
 
       return null;
 

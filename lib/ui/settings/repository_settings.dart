@@ -250,56 +250,34 @@ class _RepositorySettingsBody extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text(text, style: Theme.of(context).textTheme.subtitle1),
+      child: Text(text, style: Theme.of(context).textTheme.headline6),
     );
 
   }
 
   Widget textFormField({String labelText, String initialValue, bool obscureText = false, void Function(String) onSaved}) {
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
-      child: TextFormField(
-        initialValue: initialValue,
-        obscureText: obscureText,
-        decoration: _inputDecoration(
-          labelText: labelText,
-        ),
-        keyboardType: TextInputType.text,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          }
-          return null;
-        },
-        onSaved: onSaved,
-      ),
+    return ShowHideTextField(
+      labelText: labelText,
+      initialValue: initialValue,
+      allowObscureText: obscureText,
+      onSaved: onSaved,
+      keyboardType: TextInputType.text,
     );
 
   }
 
   Widget numberFormField({String labelText, int initialValue, bool obscureText = false, void Function(String) onSaved}) {
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
-      child: TextFormField(
-        initialValue: initialValue != null? initialValue.toString() : '',
-        obscureText: obscureText,
-        decoration: _inputDecoration(
-          labelText: labelText,
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some number';
-          }
-          return null;
-        },
-        onSaved: onSaved,
-      ),
+    return ShowHideTextField(
+      labelText: labelText,
+      initialValue: initialValue != null? initialValue.toString() : '',
+      allowObscureText: obscureText,
+      onSaved: onSaved,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
     );
 
   }
@@ -337,21 +315,80 @@ class _RepositorySettingsBody extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: textForms..add(
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
-                color: Theme.of(context).primaryColor,
-                child: Text("Save"),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
-                    onUpdate();
-                  }
-                },
+            SizedBox(
+              width: double.maxFinite,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  child: Text("Save", style: TextStyle(color: Colors.white),),
+                  elevation: 1.0,
+                  highlightElevation: 2.0,
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                      onUpdate();
+                    }
+                  },
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+
+  }
+
+}
+
+class ShowHideTextField extends StatefulWidget {
+  const ShowHideTextField({Key key, @required this.labelText, @required this.initialValue, this.allowObscureText = false, @required this.onSaved, this.keyboardType, this.inputFormatters}) : super(key: key);
+
+  final String initialValue;
+  final String labelText;
+  final bool allowObscureText;
+  final void Function(String) onSaved;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter> inputFormatters;
+
+  @override
+  State<ShowHideTextField> createState() => ShowHideTextFieldState();
+}
+class ShowHideTextFieldState extends State<ShowHideTextField> {
+
+  bool obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
+      child: TextFormField(
+        initialValue: widget.initialValue,
+        obscureText: widget.allowObscureText? obscureText : false,
+        decoration: InputDecoration(
+          labelText: widget.labelText,
+          border: OutlineInputBorder(),
+          suffixIcon: widget.allowObscureText? IconButton(
+            tooltip: 'Visibility',
+            icon: obscureText? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+            onPressed: () {
+              setState(() {
+                obscureText = !obscureText;
+              });
+            },
+          ) : null,
+        ),
+        keyboardType: widget.keyboardType,
+        inputFormatters: widget.inputFormatters,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        },
+        onSaved: widget.onSaved,
       ),
     );
 

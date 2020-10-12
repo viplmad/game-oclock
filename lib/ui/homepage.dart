@@ -177,35 +177,7 @@ class _HomepageBar extends StatelessWidget {
           appBar: _HomepageAppBar(
             state: state,
           ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  child: Text(
-                    'Game Collection',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Repository settings'),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      repositorySettingsRoute,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+          drawer: _HomepageDrawer(),
           body: _HomepageBody(
             state: state,
           ),
@@ -263,6 +235,45 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
     }
 
     return Container();
+
+  }
+
+}
+
+class _HomepageDrawer extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text(
+              'Game Collection',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Repository settings'),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                repositorySettingsRoute,
+              );
+            },
+          ),
+        ],
+      ),
+    );
 
   }
 
