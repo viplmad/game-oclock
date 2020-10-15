@@ -10,20 +10,20 @@ import 'item_relation_manager.dart';
 class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Platform, W> {
 
   PlatformRelationManagerBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGamePlatform(otherID, itemID);
+        return iCollectionRepository.relateGamePlatform(otherId, itemId);
       case System:
-        return iCollectionRepository.relatePlatformSystem(itemID, otherID);
+        return iCollectionRepository.relatePlatformSystem(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -33,13 +33,13 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGamePlatform(otherID, itemID);
+        return iCollectionRepository.deleteGamePlatform(otherId, itemId);
       case System:
-        return iCollectionRepository.deletePlatformSystem(itemID, otherID);
+        return iCollectionRepository.deletePlatformSystem(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

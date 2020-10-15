@@ -13,13 +13,13 @@ import 'item_detail.dart';
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
 
-  ItemDetailBloc({@required this.itemID, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemLoading()) {
+  ItemDetailBloc({@required this.itemId, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemLoading()) {
 
     managerSubscription = managerBloc.listen(_mapDetailManagerStateToEvent);
 
   }
 
-  final int itemID;
+  final int itemId;
   final ICollectionRepository iCollectionRepository;
   final ItemDetailManagerBloc<T> managerBloc;
   StreamSubscription<ItemDetailManagerState> managerSubscription;

@@ -51,7 +51,7 @@ class Tag extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'Tg' + this.id.toString();
 
@@ -74,7 +74,7 @@ class Tag extends CollectionItem {
   String toString() {
 
     return '$tagTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$tag_nameField: $name'
         ' }';
 

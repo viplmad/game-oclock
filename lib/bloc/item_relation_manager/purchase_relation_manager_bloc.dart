@@ -10,24 +10,24 @@ import 'item_relation_manager.dart';
 class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Purchase, W> {
 
   PurchaseRelationManagerBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGamePurchase(otherID, itemID);
+        return iCollectionRepository.relateGamePurchase(otherId, itemId);
       case DLC:
-        return iCollectionRepository.relateDLCPurchase(otherID, itemID);
+        return iCollectionRepository.relateDLCPurchase(otherId, itemId);
       case Store:
-        return iCollectionRepository.relateStorePurchase(otherID, itemID);
+        return iCollectionRepository.relateStorePurchase(otherId, itemId);
       case PurchaseType:
-        return iCollectionRepository.relatePurchaseType(itemID, otherID);
+        return iCollectionRepository.relatePurchaseType(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -37,17 +37,17 @@ class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelation
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGamePurchase(otherID, itemID);
+        return iCollectionRepository.deleteGamePurchase(otherId, itemId);
       case DLC:
-        return iCollectionRepository.deleteDLCPurchase(otherID, itemID);
+        return iCollectionRepository.deleteDLCPurchase(otherId, itemId);
       case Store:
-        return iCollectionRepository.deleteStorePurchase(itemID);
+        return iCollectionRepository.deleteStorePurchase(itemId);
       case PurchaseType:
-        return iCollectionRepository.deletePurchaseType(itemID, otherID);
+        return iCollectionRepository.deletePurchaseType(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

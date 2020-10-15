@@ -10,24 +10,24 @@ import 'item_relation_manager.dart';
 class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Game, W> {
 
   GameRelationManagerBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.relateGameDLC(itemID, otherID);
+        return iCollectionRepository.relateGameDLC(itemId, otherId);
       case Purchase:
-        return iCollectionRepository.relateGamePurchase(itemID, otherID);
+        return iCollectionRepository.relateGamePurchase(itemId, otherId);
       case Platform:
-        return iCollectionRepository.relateGamePlatform(itemID, otherID);
+        return iCollectionRepository.relateGamePlatform(itemId, otherId);
       case Tag:
-        return iCollectionRepository.relateGameTag(itemID, otherID);
+        return iCollectionRepository.relateGameTag(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -37,17 +37,17 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.deleteGameDLC(otherID);
+        return iCollectionRepository.deleteGameDLC(otherId);
       case Purchase:
-        return iCollectionRepository.deleteGamePurchase(itemID, otherID);
+        return iCollectionRepository.deleteGamePurchase(itemId, otherId);
       case Platform:
-        return iCollectionRepository.deleteGamePlatform(itemID, otherID);
+        return iCollectionRepository.deleteGamePlatform(itemId, otherId);
       case Tag:
-        return iCollectionRepository.deleteGameTag(itemID, otherID);
+        return iCollectionRepository.deleteGameTag(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

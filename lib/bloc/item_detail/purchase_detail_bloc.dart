@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class PurchaseDetailBloc extends ItemDetailBloc<Purchase> {
 
   PurchaseDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required PurchaseDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<Purchase> getReadStream() {
 
-    return iCollectionRepository.getPurchaseWithID(itemID);
+    return iCollectionRepository.getPurchaseWithId(itemId);
 
   }
 

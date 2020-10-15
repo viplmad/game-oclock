@@ -10,9 +10,9 @@ import 'item_relation_manager.dart';
 
 abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
 
-  ItemRelationManagerBloc({@required this.itemID, @required this.iCollectionRepository}) : super(Initialised());
+  ItemRelationManagerBloc({@required this.itemId, @required this.iCollectionRepository}) : super(Initialised());
 
-  final int itemID;
+  final int itemId;
   final ICollectionRepository iCollectionRepository;
 
   @override

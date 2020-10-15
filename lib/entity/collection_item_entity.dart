@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 
-const String IDField = 'ID';
+const String IdField = 'ID';
 
 abstract class CollectionItemEntity extends Equatable {
 

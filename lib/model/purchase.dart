@@ -91,7 +91,7 @@ class Purchase extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'Pu' + this.id.toString();
 
@@ -125,7 +125,7 @@ class Purchase extends CollectionItem {
   String toString() {
 
     return '$purchaseTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$purc_descriptionField: $description, '
         '$purc_priceField: $price, '
         '$purc_externalCreditField: $externalCredit, '

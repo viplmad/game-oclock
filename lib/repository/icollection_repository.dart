@@ -16,26 +16,26 @@ abstract class ICollectionRepository {
   //#region CREATE
     //Game
   Future<Game> createGame(String name, String edition);
-  Future<dynamic> relateGamePlatform(int gameID, int platformID);
-  Future<dynamic> relateGamePurchase(int gameID, int purchaseID);
-  Future<dynamic> relateGameDLC(int gameID, int dlcID);
-  Future<dynamic> relateGameTag(int gameID, int tagID);
+  Future<dynamic> relateGamePlatform(int gameId, int platformId);
+  Future<dynamic> relateGamePurchase(int gameId, int purchaseId);
+  Future<dynamic> relateGameDLC(int gameId, int dlcId);
+  Future<dynamic> relateGameTag(int gameId, int tagId);
 
     //DLC
   Future<DLC> createDLC(String name);
-  Future<dynamic> relateDLCPurchase(int dlcID, int purchaseID);
+  Future<dynamic> relateDLCPurchase(int dlcId, int purchaseId);
 
     //Platform
   Future<Platform> createPlatform(String name);
-  Future<dynamic> relatePlatformSystem(int platformID, int systemID);
+  Future<dynamic> relatePlatformSystem(int platformId, int systemId);
 
     //Purchase
   Future<Purchase> createPurchase(String description);
-  Future<dynamic> relatePurchaseType(int purchaseID, int typeID);
+  Future<dynamic> relatePurchaseType(int purchaseId, int typeId);
 
     //Store
   Future<Store> createStore(String name);
-  Future<dynamic> relateStorePurchase(int storeID, int purchaseID);
+  Future<dynamic> relateStorePurchase(int storeId, int purchaseId);
 
     //System
   Future<System> createSystem(String name);
@@ -56,7 +56,7 @@ abstract class ICollectionRepository {
   Stream<List<Game>> getAllWithView(GameView gameView, [int limit]);
   Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]);
   Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]);
-  Stream<Game> getGameWithID(int id);
+  Stream<Game> getGameWithId(int id);
   Stream<List<Platform>> getPlatformsFromGame(int id);
   Stream<List<Purchase>> getPurchasesFromGame(int id);
   Stream<List<DLC>> getDLCsFromGame(int id);
@@ -65,22 +65,22 @@ abstract class ICollectionRepository {
     //DLC
   Stream<List<DLC>> getAllDLCs();
   Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]);
-  Stream<DLC> getDLCWithID(int id);
+  Stream<DLC> getDLCWithId(int id);
   Stream<Game> getBaseGameFromDLC(int id);
   Stream<List<Purchase>> getPurchasesFromDLC(int id);
 
     //Platform
   Stream<List<Platform>> getAllPlatforms();
   Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]);
-  Stream<Platform> getPlatformWithID(int id);
+  Stream<Platform> getPlatformWithId(int id);
   Stream<List<Game>> getGamesFromPlatform(int id);
   Stream<List<System>> getSystemsFromPlatform(int id);
 
     //Purchase
   Stream<List<Purchase>> getAllPurchases();
   Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]);
-  Stream<Purchase> getPurchaseWithID(int id);
-  Stream<Store> getStoreFromPurchase(int storeID);
+  Stream<Purchase> getPurchaseWithId(int id);
+  Stream<Store> getStoreFromPurchase(int storeId);
   Stream<List<Game>> getGamesFromPurchase(int id);
   Stream<List<DLC>> getDLCsFromPurchase(int id);
   Stream<List<PurchaseType>> getTypesFromPurchase(int id);
@@ -88,25 +88,25 @@ abstract class ICollectionRepository {
     //Store
   Stream<List<Store>> getAllStores();
   Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]);
-  Stream<Store> getStoreWithID(int id);
+  Stream<Store> getStoreWithId(int id);
   Stream<List<Purchase>> getPurchasesFromStore(int id);
 
     //System
   Stream<List<System>> getAllSystems();
   Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]);
-  Stream<System> getSystemWithID(int id);
+  Stream<System> getSystemWithId(int id);
   Stream<List<Platform>> getPlatformsFromSystem(int id);
 
     //Tag
   Stream<List<Tag>> getAllTags();
   Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]);
-  Stream<Tag> getTagWithID(int id);
+  Stream<Tag> getTagWithId(int id);
   Stream<List<Game>> getGamesFromTag(int id);
 
     //Type
   Stream<List<PurchaseType>> getAllTypes();
   Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]);
-  Stream<PurchaseType> getTypeWithID(int id);
+  Stream<PurchaseType> getTypeWithId(int id);
   Stream<List<Purchase>> getPurchasesFromType(int id);
   //#endregion READ
 
@@ -141,26 +141,26 @@ abstract class ICollectionRepository {
   //#region DELETE
     //Game
   Future<dynamic> deleteGame(int id);
-  Future<dynamic> deleteGamePlatform(int gameID, int platformID);
-  Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
-  Future<dynamic> deleteGameDLC(int dlcID);
-  Future<dynamic> deleteGameTag(int gameID, int tagID);
+  Future<dynamic> deleteGamePlatform(int gameId, int platformId);
+  Future<dynamic> deleteGamePurchase(int gameId, int purchaseId);
+  Future<dynamic> deleteGameDLC(int dlcId);
+  Future<dynamic> deleteGameTag(int gameId, int tagId);
 
     //DLC
   Future<dynamic> deleteDLC(int id);
-  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID);
+  Future<dynamic> deleteDLCPurchase(int dlcId, int purchaseId);
 
     //Platform
   Future<dynamic> deletePlatform(int id);
-  Future<dynamic> deletePlatformSystem(int platformID, int systemID);
+  Future<dynamic> deletePlatformSystem(int platformId, int systemId);
 
     //Purchase
   Future<dynamic> deletePurchase(int id);
-  Future<dynamic> deletePurchaseType(int purchaseID, int typeID);
+  Future<dynamic> deletePurchaseType(int purchaseId, int typeId);
 
     //Store
   Future<dynamic> deleteStore(int id);
-  Future<dynamic> deleteStorePurchase(int purchaseID);
+  Future<dynamic> deleteStorePurchase(int purchaseId);
 
     //System
   Future<dynamic> deleteSystem(int id);
@@ -187,25 +187,25 @@ abstract class ICollectionRepository {
 
   //#region IMAGE
     //Game
-  Future<Game> uploadGameCover(int gameID, String uploadImagePath, [String oldImageName]);
-  Future<Game> renameGameCover(int gameID, String imageName, String newImageName);
-  Future<Game> deleteGameCover(int gameID, String imageName);
+  Future<Game> uploadGameCover(int gameId, String uploadImagePath, [String oldImageName]);
+  Future<Game> renameGameCover(int gameId, String imageName, String newImageName);
+  Future<Game> deleteGameCover(int gameId, String imageName);
     //DLC
-  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath, [String oldImageName]);
-  Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName);
-  Future<DLC> deleteDLCCover(int dlcID, String imageName);
+  Future<DLC> uploadDLCCover(int dlcId, String uploadImagePath, [String oldImageName]);
+  Future<DLC> renameDLCCover(int dlcId, String imageName, String newImageName);
+  Future<DLC> deleteDLCCover(int dlcId, String imageName);
     //Platform
-  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath, [String oldImageName]);
-  Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName);
-  Future<Platform> deletePlatformIcon(int platformID, String imageName);
+  Future<Platform> uploadPlatformIcon(int platformId, String uploadImagePath, [String oldImageName]);
+  Future<Platform> renamePlatformIcon(int platformId, String imageName, String newImageName);
+  Future<Platform> deletePlatformIcon(int platformId, String imageName);
     //Store
-  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath, [String oldImageName]);
-  Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName);
-  Future<Store> deleteStoreIcon(int storeID, String imageName);
+  Future<Store> uploadStoreIcon(int storeId, String uploadImagePath, [String oldImageName]);
+  Future<Store> renameStoreIcon(int storeId, String imageName, String newImageName);
+  Future<Store> deleteStoreIcon(int storeId, String imageName);
     //System
-  Future<System> uploadSystemIcon(int systemID, String uploadImagePath, [String oldImageName]);
-  Future<System> renameSystemIcon(int systemID, String imageName, String newImageName);
-  Future<System> deleteSystemIcon(int systemID, String imageName);
+  Future<System> uploadSystemIcon(int systemId, String uploadImagePath, [String oldImageName]);
+  Future<System> renameSystemIcon(int systemId, String imageName, String newImageName);
+  Future<System> deleteSystemIcon(int systemId, String imageName);
   //#endregion IMAGE
 
 }

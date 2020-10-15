@@ -10,35 +10,35 @@ import 'item_detail_manager.dart';
 class SystemDetailManagerBloc extends ItemDetailManagerBloc<System> {
 
   SystemDetailManagerBloc({
-    @required int itemID,
+    @required int itemId,
     ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<System> updateFuture(UpdateItemField<System> event) {
 
-    return iCollectionRepository.updateSystem(itemID, event.field, event.value);
+    return iCollectionRepository.updateSystem(itemId, event.field, event.value);
 
   }
 
   @override
   Future<System> addImage(AddItemImage<System> event) {
 
-    return iCollectionRepository.uploadSystemIcon(itemID, event.imagePath, event.oldImageName);
+    return iCollectionRepository.uploadSystemIcon(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<System> updateImageName(UpdateItemImageName<System> event) {
 
-    return iCollectionRepository.renameSystemIcon(itemID, event.oldImageName, event.newImageName);
+    return iCollectionRepository.renameSystemIcon(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<System> deleteImage(DeleteItemImage<System> event) {
 
-    return iCollectionRepository.deleteSystemIcon(itemID, event.imageName);
+    return iCollectionRepository.deleteSystemIcon(itemId, event.imageName);
 
   }
 

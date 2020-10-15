@@ -6,7 +6,7 @@ import 'entity.dart';
 const purchaseTable = "Purchase";
 
 const List<String> purchaseFields = [
-  IDField,
+  IdField,
   purc_descriptionField,
   purc_priceField,
   purc_externalCreditField,
@@ -48,7 +48,7 @@ class PurchaseEntity extends CollectionItemEntity {
   static PurchaseEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseEntity(
-      id: map[IDField],
+      id: map[IdField],
       description: map[purc_descriptionField],
       price: map[purc_priceField],
       externalCredit: map[purc_externalCreditField],
@@ -64,7 +64,7 @@ class PurchaseEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       purc_descriptionField : description,
       purc_priceField : price,
       purc_externalCreditField : externalCredit,
@@ -104,7 +104,7 @@ class PurchaseEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$purchaseTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$purc_descriptionField: $description, '
         '$purc_priceField: $price, '
         '$purc_externalCreditField: $externalCredit, '

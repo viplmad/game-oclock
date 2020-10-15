@@ -13,17 +13,17 @@ import 'item_relation.dart';
 class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W> {
 
   TagRelationBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required TagRelationManagerBloc<W> managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromTag(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getGamesFromTag(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

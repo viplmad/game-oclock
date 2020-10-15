@@ -13,17 +13,17 @@ import 'item_relation.dart';
 class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store, W> {
 
   StoreRelationBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required StoreRelationManagerBloc<W> managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.getPurchasesFromStore(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getPurchasesFromStore(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

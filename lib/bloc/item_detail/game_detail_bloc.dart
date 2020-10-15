@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class GameDetailBloc extends ItemDetailBloc<Game> {
 
   GameDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required GameDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<Game> getReadStream() {
 
-    return iCollectionRepository.getGameWithID(itemID);
+    return iCollectionRepository.getGameWithId(itemId);
 
   }
 

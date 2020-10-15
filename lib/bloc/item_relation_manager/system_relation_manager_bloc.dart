@@ -10,18 +10,18 @@ import 'item_relation_manager.dart';
 class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<System, W> {
 
   SystemRelationManagerBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.relatePlatformSystem(otherID, itemID);
+        return iCollectionRepository.relatePlatformSystem(otherId, itemId);
     }
 
     return super.addRelationFuture(event);
@@ -31,11 +31,11 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.deletePlatformSystem(otherID, itemID);
+        return iCollectionRepository.deletePlatformSystem(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

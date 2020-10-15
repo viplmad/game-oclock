@@ -6,7 +6,7 @@ import 'entity.dart';
 const String platformTable = "Platform";
 
 const List<String> platformFields = [
-  IDField,
+  IdField,
   plat_nameField,
   plat_iconField,
   plat_typeField,
@@ -37,7 +37,7 @@ class PlatformEntity extends CollectionItemEntity {
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
-      id: map[IDField],
+      id: map[IdField],
       name: map[plat_nameField],
       iconFilename: map[plat_iconField],
       type: map[plat_typeField],
@@ -48,7 +48,7 @@ class PlatformEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       plat_nameField : name,
       plat_iconField : iconFilename,
       plat_typeField : type,
@@ -82,7 +82,7 @@ class PlatformEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$platformTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$plat_nameField: $name, '
         '$plat_iconField: $iconFilename, '
         '$plat_typeField: $type'

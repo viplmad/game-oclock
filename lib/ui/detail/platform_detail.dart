@@ -31,7 +31,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   PlatformDetailBloc detailBlocBuilder(PlatformDetailManagerBloc managerBloc) {
 
     return PlatformDetailBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -42,7 +42,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   PlatformDetailManagerBloc managerBlocBuilder() {
 
     return PlatformDetailManagerBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -52,12 +52,12 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   List<BlocProvider> relationBlocsBuilder() {
 
     PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -96,7 +96,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
     return BlocProvider<PlatformRelationBloc<W>>(
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
-          itemID: item.id,
+          itemId: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());

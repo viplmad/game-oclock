@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class TagDetailBloc extends ItemDetailBloc<Tag> {
 
   TagDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required TagDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<Tag> getReadStream() {
 
-    return iCollectionRepository.getTagWithID(itemID);
+    return iCollectionRepository.getTagWithId(itemId);
 
   }
 

@@ -13,23 +13,23 @@ import 'item_relation.dart';
 class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purchase, W> {
 
   PurchaseRelationBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required PurchaseRelationManagerBloc<W> managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getGamesFromPurchase(itemId) as Stream<List<W>>;
       case DLC:
-        return iCollectionRepository.getDLCsFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getDLCsFromPurchase(itemId) as Stream<List<W>>;
       case Store:
-        return iCollectionRepository.getStoreFromPurchase(itemID).map<List<Store>>( (Store store) => store != null? [store] : [] ) as Stream<List<W>>;
+        return iCollectionRepository.getStoreFromPurchase(itemId).map<List<Store>>( (Store store) => store != null? [store] : [] ) as Stream<List<W>>;
       case PurchaseType:
-        return iCollectionRepository.getTypesFromPurchase(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getTypesFromPurchase(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

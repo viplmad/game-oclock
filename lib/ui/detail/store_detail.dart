@@ -31,7 +31,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   StoreDetailBloc detailBlocBuilder(StoreDetailManagerBloc managerBloc) {
 
     return StoreDetailBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -42,7 +42,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   StoreDetailManagerBloc managerBlocBuilder() {
 
     return StoreDetailManagerBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -52,7 +52,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   List<BlocProvider> relationBlocsBuilder() {
 
     StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -85,7 +85,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
     return BlocProvider<StoreRelationBloc<W>>(
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
-          itemID: item.id,
+          itemId: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());

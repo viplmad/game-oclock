@@ -6,7 +6,7 @@ import 'entity.dart';
 const String systemTable = "System";
 
 const List<String> systemTables = [
-  IDField,
+  IdField,
   sys_nameField,
   sys_iconField,
   sys_generationField,
@@ -43,7 +43,7 @@ class SystemEntity extends CollectionItemEntity {
   static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return SystemEntity(
-      id: map[IDField],
+      id: map[IdField],
       name: map[sys_nameField],
       iconFilename: map[sys_iconField],
       generation: map[sys_generationField],
@@ -56,7 +56,7 @@ class SystemEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       sys_nameField : name,
       sys_iconField : iconFilename,
       sys_generationField : generation,
@@ -92,7 +92,7 @@ class SystemEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$systemTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$sys_nameField: $name, '
         '$sys_iconField: $iconFilename, '
         '$sys_generationField: $generation, '

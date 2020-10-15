@@ -31,7 +31,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   GameDetailBloc detailBlocBuilder(GameDetailManagerBloc managerBloc) {
 
     return GameDetailBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -42,7 +42,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   GameDetailManagerBloc managerBlocBuilder() {
 
     return GameDetailManagerBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -52,22 +52,22 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   List<BlocProvider> relationBlocsBuilder() {
 
     GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -118,7 +118,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
     return BlocProvider<GameRelationBloc<W>>(
       create: (BuildContext context) {
         return GameRelationBloc<W>(
-          itemID: item.id,
+          itemId: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());

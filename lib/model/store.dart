@@ -62,7 +62,7 @@ class Store extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'St' + this.id.toString();
 
@@ -100,7 +100,7 @@ class Store extends CollectionItem {
   String toString() {
 
     return '$storeTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$stor_nameField: $name, '
         '$stor_iconField: $iconURL'
         ' }';

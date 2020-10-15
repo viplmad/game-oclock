@@ -86,7 +86,7 @@ class DLC extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'D' + this.id.toString();
 
@@ -126,7 +126,7 @@ class DLC extends CollectionItem {
   String toString() {
 
     return '$dlcTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverURL, '

@@ -126,7 +126,7 @@ class Game extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'G' + this.id.toString();
 
@@ -185,7 +185,7 @@ class Game extends CollectionItem {
   String toString() {
 
     return '$gameTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '

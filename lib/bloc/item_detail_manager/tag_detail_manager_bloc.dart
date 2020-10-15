@@ -10,14 +10,14 @@ import 'item_detail_manager.dart';
 class TagDetailManagerBloc extends ItemDetailManagerBloc<Tag> {
 
   TagDetailManagerBloc({
-    @required int itemID,
+    @required int itemId,
     ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<Tag> updateFuture(UpdateItemField<Tag> event) {
 
-    return iCollectionRepository.updateTag(itemID, event.field, event.value);
+    return iCollectionRepository.updateTag(itemId, event.field, event.value);
 
   }
 

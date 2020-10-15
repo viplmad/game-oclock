@@ -9,9 +9,9 @@ import 'item_detail_manager.dart';
 
 abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
 
-  ItemDetailManagerBloc({@required this.itemID, @required this.iCollectionRepository}) : super(Initialised());
+  ItemDetailManagerBloc({@required this.itemId, @required this.iCollectionRepository}) : super(Initialised());
 
-  final int itemID;
+  final int itemId;
   final ICollectionRepository iCollectionRepository;
 
   @override

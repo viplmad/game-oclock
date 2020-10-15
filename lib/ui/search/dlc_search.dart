@@ -7,7 +7,10 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../route_constants.dart';
+import '../theme/theme.dart';
 import 'search.dart';
 
 
@@ -31,6 +34,16 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
 
   }
 
+  @override
+  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, DLC) onTap, bool allowNewButton}) {
+
+    return _DLCSearchBody<DLCSearchBloc>(
+      onTap: onTap,
+      allowNewButton: allowNewButton,
+    );
+
+  }
+
 }
 
 class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
@@ -50,5 +63,29 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
     );
 
   }
+
+  @override
+  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({void Function() Function(BuildContext, DLC) onTap, bool allowNewButton}) {
+
+    return _DLCSearchBody<ItemLocalSearchBloc<DLC>>(
+      onTap: onTap,
+      allowNewButton: allowNewButton,
+    );
+
+  }
+
+}
+
+class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
+  const _DLCSearchBody({Key key, @required void Function() Function(BuildContext, DLC) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
+
+  @override
+  ThemeData themeData(BuildContext context) => DLCTheme.themeData(context);
 
 }

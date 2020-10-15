@@ -77,49 +77,49 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relateGamePlatform(int gameID, int platformID) {
+  Future<dynamic> relateGamePlatform(int gameId, int platformId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
-      leftTableID: gameID,
-      rightTableID: platformID,
+      leftTableId: gameId,
+      rightTableId: platformId,
     );
 
   }
 
   @override
-  Future<dynamic> relateGamePurchase(int gameID, int purchaseID) {
+  Future<dynamic> relateGamePurchase(int gameId, int purchaseId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
-      leftTableID: gameID,
-      rightTableID: purchaseID,
+      leftTableId: gameId,
+      rightTableId: purchaseId,
     );
 
   }
 
   @override
-  Future<dynamic> relateGameDLC(int gameID, int dlcID) {
+  Future<dynamic> relateGameDLC(int gameId, int dlcId) {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      id: dlcID,
+      id: dlcId,
       fieldName: dlc_baseGameField,
-      newValue: gameID,
+      newValue: gameId,
     );
 
   }
 
   @override
-  Future<dynamic> relateGameTag(int gameID, int tagID) {
+  Future<dynamic> relateGameTag(int gameId, int tagId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
-      leftTableID: gameID,
-      rightTableID: tagID,
+      leftTableId: gameId,
+      rightTableId: tagId,
     );
 
   }
@@ -139,13 +139,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relateDLCPurchase(int dlcID, int purchaseID) {
+  Future<dynamic> relateDLCPurchase(int dlcId, int purchaseId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
-      leftTableID: dlcID,
-      rightTableID: purchaseID,
+      leftTableId: dlcId,
+      rightTableId: purchaseId,
     );
 
   }
@@ -165,13 +165,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relatePlatformSystem(int platformID, int systemID) {
+  Future<dynamic> relatePlatformSystem(int platformId, int systemId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
-      leftTableID: platformID,
-      rightTableID: systemID,
+      leftTableId: platformId,
+      rightTableId: systemId,
     );
 
   }
@@ -191,13 +191,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relatePurchaseType(int purchaseID, int typeID) {
+  Future<dynamic> relatePurchaseType(int purchaseId, int typeId) {
 
     return _iSQLConnector.insertRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
-      leftTableID: purchaseID,
-      rightTableID: typeID,
+      leftTableId: purchaseId,
+      rightTableId: typeId,
     );
 
   }
@@ -217,13 +217,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relateStorePurchase(int storeID, int purchaseID) {
+  Future<dynamic> relateStorePurchase(int storeId, int purchaseId) {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      id: purchaseID,
+      id: purchaseId,
       fieldName: purc_storeField,
-      newValue: storeID,
+      newValue: storeId,
     );
 
   }
@@ -329,13 +329,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getGameWithID(int id) {
+  Stream<Game> getGameWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: gameTable,
       selectFields: gameFields,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleGame );
 
@@ -348,7 +348,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -360,7 +360,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -373,7 +373,7 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -385,7 +385,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -410,12 +410,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<DLC> getDLCWithID(int id) {
+  Stream<DLC> getDLCWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: dlcTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleDLC );
 
@@ -428,7 +428,7 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
-      relationID: id,
+      relationId: id,
       primaryResults: true,
       selectFields: gameFields,
     ).asStream().map( _dynamicToSingleGame );
@@ -442,7 +442,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -468,12 +468,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Platform> getPlatformWithID(int id) {
+  Stream<Platform> getPlatformWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: platformTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSinglePlatform );
 
@@ -486,7 +486,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
@@ -499,7 +499,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -525,13 +525,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Purchase> getPurchaseWithID(int id) {
+  Stream<Purchase> getPurchaseWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: purchaseTable,
       selectFields: purchaseFields,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSinglePurchase );
 
@@ -543,7 +543,7 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
-      relationID: id,
+      relationId: id,
       primaryResults: true,
     ).asStream().map( _dynamicToSingleStore );
 
@@ -556,7 +556,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
@@ -569,7 +569,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -581,7 +581,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: false,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -606,12 +606,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Store> getStoreWithID(int id) {
+  Stream<Store> getStoreWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: storeTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleStore );
 
@@ -624,7 +624,7 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
-      relationID: id,
+      relationId: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -650,12 +650,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<System> getSystemWithID(int id) {
+  Stream<System> getSystemWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: systemTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleSystem );
 
@@ -668,7 +668,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -693,12 +693,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Tag> getTagWithID(int id) {
+  Stream<Tag> getTagWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: tagTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleTag );
 
@@ -711,7 +711,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
@@ -737,12 +737,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<PurchaseType> getTypeWithID(int id) {
+  Stream<PurchaseType> getTypeWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: typeTable,
       whereFieldsAndValues: <String, int> {
-        IDField : id,
+        IdField : id,
       },
     ).asStream().map( _dynamicToSingleType );
 
@@ -755,7 +755,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: true,
-      relationID: id,
+      relationId: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -876,35 +876,35 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deleteGamePlatform(int gameID, int platformID) {
+  Future<dynamic> deleteGamePlatform(int gameId, int platformId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
-      leftID: gameID,
-      rightID: platformID,
+      leftId: gameId,
+      rightId: platformId,
     );
 
   }
 
   @override
-  Future<dynamic> deleteGamePurchase(int gameID, int purchaseID) {
+  Future<dynamic> deleteGamePurchase(int gameId, int purchaseId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
-      leftID: gameID,
-      rightID: purchaseID,
+      leftId: gameId,
+      rightId: purchaseId,
     );
 
   }
 
   @override
-  Future<dynamic> deleteGameDLC(int dlcID) {
+  Future<dynamic> deleteGameDLC(int dlcId) {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      id: dlcID,
+      id: dlcId,
       fieldName: dlc_baseGameField,
       newValue: null,
     );
@@ -912,13 +912,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deleteGameTag(int gameID, int tagID) {
+  Future<dynamic> deleteGameTag(int gameId, int tagId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
-      leftID: gameID,
-      rightID: tagID,
+      leftId: gameId,
+      rightId: tagId,
     );
 
   }
@@ -936,13 +936,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID) {
+  Future<dynamic> deleteDLCPurchase(int dlcId, int purchaseId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
-      leftID: dlcID,
-      rightID: purchaseID,
+      leftId: dlcId,
+      rightId: purchaseId,
     );
 
   }
@@ -960,13 +960,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deletePlatformSystem(int platformID, int systemID) {
+  Future<dynamic> deletePlatformSystem(int platformId, int systemId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
-      leftID: platformID,
-      rightID: systemID,
+      leftId: platformId,
+      rightId: systemId,
     );
 
   }
@@ -984,13 +984,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deletePurchaseType(int purchaseID, int typeID) {
+  Future<dynamic> deletePurchaseType(int purchaseId, int typeId) {
 
     return _iSQLConnector.deleteRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
-      leftID: purchaseID,
-      rightID: typeID,
+      leftId: purchaseId,
+      rightId: typeId,
     );
 
   }
@@ -1008,11 +1008,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> deleteStorePurchase(int purchaseID) {
+  Future<dynamic> deleteStorePurchase(int purchaseId) {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      id: purchaseID,
+      id: purchaseId,
       fieldName: purc_storeField,
       newValue: null,
     );
@@ -1160,7 +1160,7 @@ class RemoteRepository implements ICollectionRepository {
   //#region IMAGE
   //#region Game
   @override
-  Future<Game> uploadGameCover(int gameID, String uploadImagePath, [String oldImageName]) async {
+  Future<Game> uploadGameCover(int gameId, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1172,42 +1172,42 @@ class RemoteRepository implements ICollectionRepository {
     final String coverName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: gameTable,
-      imageName: _getImageName(gameID, 'header'),
+      imageName: _getImageName(gameId, 'header'),
     );
 
-    return updateGame(gameID, game_coverField, coverName);
+    return updateGame(gameId, game_coverField, coverName);
 
   }
 
   @override
-  Future<Game> renameGameCover(int gameID, String imageName, String newImageName) async {
+  Future<Game> renameGameCover(int gameId, String imageName, String newImageName) async {
 
     final String coverName = await _iImageConnector.renameImage(
       tableName: gameTable,
       oldImageName: imageName,
-      newImageName: _getImageName(gameID, newImageName),
+      newImageName: _getImageName(gameId, newImageName),
     );
 
-    return updateGame(gameID, game_coverField, coverName);
+    return updateGame(gameId, game_coverField, coverName);
 
   }
 
   @override
-  Future<Game> deleteGameCover(int gameID, String imageName) async {
+  Future<Game> deleteGameCover(int gameId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: gameTable,
       imageName: imageName,
     );
 
-    return updateGame(gameID, game_coverField, null);
+    return updateGame(gameId, game_coverField, null);
 
   }
   //#endregion Game
 
   //#region DLC
   @override
-  Future<DLC> uploadDLCCover(int dlcID, String uploadImagePath, [String oldImageName]) async {
+  Future<DLC> uploadDLCCover(int dlcId, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1219,42 +1219,42 @@ class RemoteRepository implements ICollectionRepository {
     final String coverName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: dlcTable,
-      imageName: _getImageName(dlcID, 'header'),
+      imageName: _getImageName(dlcId, 'header'),
     );
 
-    return updateDLC(dlcID, dlc_coverField, coverName);
+    return updateDLC(dlcId, dlc_coverField, coverName);
 
   }
 
   @override
-  Future<DLC> renameDLCCover(int dlcID, String imageName, String newImageName) async {
+  Future<DLC> renameDLCCover(int dlcId, String imageName, String newImageName) async {
 
     final String coverName = await _iImageConnector.renameImage(
       tableName: dlcTable,
       oldImageName: imageName,
-      newImageName: _getImageName(dlcID, newImageName),
+      newImageName: _getImageName(dlcId, newImageName),
     );
 
-    return updateDLC(dlcID, dlc_coverField, coverName);
+    return updateDLC(dlcId, dlc_coverField, coverName);
 
   }
 
   @override
-  Future<DLC> deleteDLCCover(int dlcID, String imageName) async {
+  Future<DLC> deleteDLCCover(int dlcId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: dlcTable,
       imageName: imageName,
     );
 
-    return updateDLC(dlcID, dlc_coverField, null);
+    return updateDLC(dlcId, dlc_coverField, null);
 
   }
   //#endregion DLC
 
   //#region Platform
   @override
-  Future<Platform> uploadPlatformIcon(int platformID, String uploadImagePath, [String oldImageName]) async {
+  Future<Platform> uploadPlatformIcon(int platformId, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1266,42 +1266,42 @@ class RemoteRepository implements ICollectionRepository {
     final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: platformTable,
-      imageName: _getImageName(platformID, 'icon'),
+      imageName: _getImageName(platformId, 'icon'),
     );
 
-    return updatePlatform(platformID, plat_iconField, iconName);
+    return updatePlatform(platformId, plat_iconField, iconName);
 
   }
 
   @override
-  Future<Platform> renamePlatformIcon(int platformID, String imageName, String newImageName) async {
+  Future<Platform> renamePlatformIcon(int platformId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: platformTable,
       oldImageName: imageName,
-      newImageName: _getImageName(platformID, newImageName),
+      newImageName: _getImageName(platformId, newImageName),
     );
 
-    return updatePlatform(platformID, plat_iconField, iconName);
+    return updatePlatform(platformId, plat_iconField, iconName);
 
   }
 
   @override
-  Future<Platform> deletePlatformIcon(int platformID, String imageName) async {
+  Future<Platform> deletePlatformIcon(int platformId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: platformTable,
       imageName: imageName,
     );
 
-    return updatePlatform(platformID, plat_iconField, null);
+    return updatePlatform(platformId, plat_iconField, null);
 
   }
   //#endregion Platform
 
   //#region Store
   @override
-  Future<Store> uploadStoreIcon(int storeID, String uploadImagePath, [String oldImageName]) async {
+  Future<Store> uploadStoreIcon(int storeId, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1313,41 +1313,41 @@ class RemoteRepository implements ICollectionRepository {
     final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: storeTable,
-      imageName: _getImageName(storeID, 'icon'),
+      imageName: _getImageName(storeId, 'icon'),
     );
 
-    return updateStore(storeID, stor_iconField, iconName);
+    return updateStore(storeId, stor_iconField, iconName);
 
   }
 
-  Future<Store> renameStoreIcon(int storeID, String imageName, String newImageName) async {
+  Future<Store> renameStoreIcon(int storeId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: storeTable,
       oldImageName: imageName,
-      newImageName: _getImageName(storeID, newImageName),
+      newImageName: _getImageName(storeId, newImageName),
     );
 
-    return updateStore(storeID, stor_iconField, iconName);
+    return updateStore(storeId, stor_iconField, iconName);
 
   }
 
   @override
-  Future<Store> deleteStoreIcon(int storeID, String imageName) async {
+  Future<Store> deleteStoreIcon(int storeId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: storeTable,
       imageName: imageName,
     );
 
-    return updateStore(storeID, stor_iconField, null);
+    return updateStore(storeId, stor_iconField, null);
 
   }
   //#endregion Store
 
   //#region System
   @override
-  Future<System> uploadSystemIcon(int systemID, String uploadImagePath, [String oldImageName]) async {
+  Future<System> uploadSystemIcon(int systemId, String uploadImagePath, [String oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1359,35 +1359,35 @@ class RemoteRepository implements ICollectionRepository {
     final String iconName = await _iImageConnector.setImage(
       imagePath: uploadImagePath,
       tableName: systemTable,
-      imageName: _getImageName(systemID, 'icon'),
+      imageName: _getImageName(systemId, 'icon'),
     );
 
-    return updateSystem(systemID, sys_iconField, iconName);
+    return updateSystem(systemId, sys_iconField, iconName);
 
   }
 
   @override
-  Future<System> renameSystemIcon(int systemID, String imageName, String newImageName) async {
+  Future<System> renameSystemIcon(int systemId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: systemTable,
       oldImageName: imageName,
-      newImageName: _getImageName(systemID, newImageName),
+      newImageName: _getImageName(systemId, newImageName),
     );
 
-    return updateSystem(systemID, sys_iconField, iconName);
+    return updateSystem(systemId, sys_iconField, iconName);
 
   }
 
   @override
-  Future<System> deleteSystemIcon(int systemID, String imageName) async {
+  Future<System> deleteSystemIcon(int systemId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: systemTable,
       imageName: imageName,
     );
 
-    return updateSystem(systemID, sys_iconField, null);
+    return updateSystem(systemId, sys_iconField, null);
 
   }
   //#endregion System

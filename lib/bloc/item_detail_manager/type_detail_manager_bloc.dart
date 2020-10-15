@@ -10,14 +10,14 @@ import 'item_detail_manager.dart';
 class TypeDetailManagerBloc extends ItemDetailManagerBloc<PurchaseType> {
 
   TypeDetailManagerBloc({
-    @required int itemID,
+    @required int itemId,
     ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<PurchaseType> updateFuture(UpdateItemField<PurchaseType> event) {
 
-    return iCollectionRepository.updateType(itemID, event.field, event.value);
+    return iCollectionRepository.updateType(itemId, event.field, event.value);
 
   }
 

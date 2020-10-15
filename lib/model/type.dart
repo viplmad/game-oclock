@@ -51,7 +51,7 @@ class PurchaseType extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'Ty' + this.id.toString();
 
@@ -74,7 +74,7 @@ class PurchaseType extends CollectionItem {
   String toString() {
 
     return '$typeTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$type_nameField: $name'
         ' }';
 

@@ -74,7 +74,7 @@ class System extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'Sy' + this.id.toString();
 
@@ -121,7 +121,7 @@ class System extends CollectionItem {
   String toString() {
 
     return '$systemTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$sys_nameField: $name, '
         '$sys_iconField: $iconURL, '
         '$sys_generationField: $generation, '

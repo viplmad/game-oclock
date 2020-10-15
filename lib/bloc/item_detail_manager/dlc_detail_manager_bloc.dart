@@ -10,35 +10,35 @@ import 'item_detail_manager.dart';
 class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC> {
 
   DLCDetailManagerBloc({
-    @required int itemID,
+    @required int itemId,
     ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<DLC> updateFuture(UpdateItemField<DLC> event) {
 
-    return iCollectionRepository.updateDLC(itemID, event.field, event.value);
+    return iCollectionRepository.updateDLC(itemId, event.field, event.value);
 
   }
 
   @override
   Future<DLC> addImage(AddItemImage<DLC> event) {
 
-    return iCollectionRepository.uploadDLCCover(itemID, event.imagePath, event.oldImageName);
+    return iCollectionRepository.uploadDLCCover(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<DLC> updateImageName(UpdateItemImageName<DLC> event) {
 
-    return iCollectionRepository.renameDLCCover(itemID, event.oldImageName, event.newImageName);
+    return iCollectionRepository.renameDLCCover(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<DLC> deleteImage(DeleteItemImage<DLC> event) {
 
-    return iCollectionRepository.deleteDLCCover(itemID, event.imageName);
+    return iCollectionRepository.deleteDLCCover(itemId, event.imageName);
 
   }
 

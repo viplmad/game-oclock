@@ -16,7 +16,7 @@ abstract class CollectionItem extends Equatable {
 
   CollectionItem copyWith();
 
-  String getUniqueID();
+  String getUniqueId();
 
   String getTitle();
 
@@ -35,7 +35,7 @@ abstract class CollectionItem extends Equatable {
   String toString() {
 
     return 'CollectionItem { '
-        '$IDField: $id'
+        '$IdField: $id'
         ' }';
 
   }

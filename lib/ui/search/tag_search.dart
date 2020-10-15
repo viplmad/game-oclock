@@ -7,6 +7,8 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../route_constants.dart';
 import 'search.dart';
 
@@ -27,6 +29,16 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
 
     return TagListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
+    );
+
+  }
+
+  @override
+  _TagSearchBody<TagSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Tag) onTap, bool allowNewButton}) {
+
+    return _TagSearchBody<TagSearchBloc>(
+      onTap: onTap,
+      allowNewButton: allowNewButton,
     );
 
   }
@@ -58,5 +70,29 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
     );
 
   }
+
+  @override
+  _TagSearchBody<ItemLocalSearchBloc<Tag>> itemSearchBodyBuilder({void Function() Function(BuildContext, Tag) onTap, bool allowNewButton}) {
+
+    return _TagSearchBody<ItemLocalSearchBloc<Tag>>(
+      onTap: onTap,
+      allowNewButton: allowNewButton,
+    );
+
+  }
+
+}
+
+class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, K, TagListManagerBloc> {
+  const _TagSearchBody({Key key, @required void Function() Function(BuildContext, Tag) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).tagString;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).tagsString;
+
+  @override
+  ThemeData themeData(BuildContext context) => Theme.of(context);
 
 }

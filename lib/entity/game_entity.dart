@@ -6,7 +6,7 @@ import 'entity.dart';
 const String gameTable = "Game";
 
 const List<String> gameFields = [
-  IDField,
+  IdField,
   game_nameField,
   game_editionField,
   game_releaseYearField,
@@ -75,7 +75,7 @@ class GameEntity extends CollectionItemEntity {
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameEntity(
-      id: map[IDField],
+      id: map[IdField],
       name: map[game_nameField],
       edition: map[game_editionField],
       releaseYear: map[game_releaseYearField],
@@ -96,7 +96,7 @@ class GameEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       game_nameField : name,
       game_editionField : edition,
       game_releaseYearField : releaseYear,
@@ -148,7 +148,7 @@ class GameEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$gameTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '

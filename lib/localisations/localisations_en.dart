@@ -191,7 +191,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   String get clearSearchString => 'Clear';
   String newWithTitleString(String typeString, String titleString) {
-    return '+ New $typeString titled \"$titleString\"';
+    return '+ New $typeString titled \'$titleString\'';
   }
   String get noSuggestionsString => '';
   String get noResultsString => 'No results found';

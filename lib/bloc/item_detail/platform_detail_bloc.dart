@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class PlatformDetailBloc extends ItemDetailBloc<Platform> {
 
   PlatformDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required PlatformDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<Platform> getReadStream() {
 
-    return iCollectionRepository.getPlatformWithID(itemID);
+    return iCollectionRepository.getPlatformWithId(itemId);
 
   }
 

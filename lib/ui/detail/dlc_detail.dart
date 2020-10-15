@@ -31,7 +31,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   DLCDetailBloc detailBlocBuilder(DLCDetailManagerBloc managerBloc) {
 
     return DLCDetailBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -42,7 +42,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   DLCDetailManagerBloc managerBlocBuilder() {
 
     return DLCDetailManagerBloc(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -52,12 +52,12 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   List<BlocProvider> relationBlocsBuilder() {
 
     DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
-      itemID: item.id,
+      itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -96,7 +96,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
     return BlocProvider<DLCRelationBloc<W>>(
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
-          itemID: item.id,
+          itemId: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());

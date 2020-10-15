@@ -6,7 +6,7 @@ import 'entity.dart';
 const String tagTable = "Tag";
 
 const tagFields = [
-  IDField,
+  IdField,
   tag_nameField,
 ];
 
@@ -24,7 +24,7 @@ class TagEntity extends CollectionItemEntity {
   static TagEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return TagEntity(
-      id: map[IDField],
+      id: map[IdField],
       name: map[tag_nameField],
     );
 
@@ -34,7 +34,7 @@ class TagEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       tag_nameField : name,
     };
 
@@ -64,7 +64,7 @@ class TagEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$tagTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$tag_nameField: $name'
         ' }';
 

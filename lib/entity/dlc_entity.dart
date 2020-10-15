@@ -6,7 +6,7 @@ import 'entity.dart';
 const String dlcTable = "DLC";
 
 const List<String> dlcFields = [
-  IDField,
+  IdField,
   dlc_nameField,
   dlc_releaseYearField,
   dlc_coverField,
@@ -43,7 +43,7 @@ class DLCEntity extends CollectionItemEntity {
   static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCEntity(
-      id: map[IDField],
+      id: map[IdField],
       name: map[dlc_nameField],
       releaseYear: map[dlc_releaseYearField],
       coverFilename: map[dlc_coverField],
@@ -58,7 +58,7 @@ class DLCEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : id,
+      IdField : id,
       dlc_nameField : name,
       dlc_releaseYearField : releaseYear,
       dlc_coverField : coverFilename,
@@ -96,7 +96,7 @@ class DLCEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$dlcTable}Entity { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverFilename, '

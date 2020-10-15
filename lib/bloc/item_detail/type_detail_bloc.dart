@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
 
   TypeDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required TypeDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<PurchaseType> getReadStream() {
 
-    return iCollectionRepository.getTypeWithID(itemID);
+    return iCollectionRepository.getTypeWithId(itemId);
 
   }
 

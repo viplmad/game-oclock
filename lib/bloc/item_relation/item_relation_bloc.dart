@@ -13,13 +13,13 @@ import 'item_relation.dart';
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
 
-  ItemRelationBloc({@required this.itemID, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemRelationLoading()) {
+  ItemRelationBloc({@required this.itemId, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemRelationLoading()) {
 
     managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
 
   }
 
-  final int itemID;
+  final int itemId;
   final ICollectionRepository iCollectionRepository;
   final ItemRelationManagerBloc<T, W> managerBloc;
   StreamSubscription<ItemRelationManagerState> managerSubscription;

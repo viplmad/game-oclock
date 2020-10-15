@@ -10,14 +10,14 @@ import 'item_detail_manager.dart';
 class PurchaseDetailManagerBloc extends ItemDetailManagerBloc<Purchase> {
 
   PurchaseDetailManagerBloc({
-    @required int itemID,
+    @required int itemId,
     ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<Purchase> updateFuture(UpdateItemField<Purchase> event) {
 
-    return iCollectionRepository.updatePurchase(itemID, event.field, event.value);
+    return iCollectionRepository.updatePurchase(itemId, event.field, event.value);
 
   }
 

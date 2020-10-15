@@ -34,7 +34,7 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
         ),
 
       ],
-      child: _ItemSearchBody<T, K, S>(
+      child: itemSearchBodyBuilder(
         onTap: _onTap,
         allowNewButton: true,
       ),
@@ -52,6 +52,7 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
 
   K searchBlocBuilder();
   S managerBlocBuilder();
+  ItemSearchBody<T, K, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 
 }
 
@@ -82,7 +83,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
         ),
 
       ],
-      child: _ItemSearchBody<T, ItemLocalSearchBloc<T>, S>(
+      child: itemSearchBodyBuilder(
         onTap: onTap,
         allowNewButton: false,
       ),
@@ -105,19 +106,24 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
   }
 
   S managerBlocBuilder();
+  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 
 }
 
-class _ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatefulWidget {
-  const _ItemSearchBody({Key key, @required this.onTap, this.allowNewButton = false}) : super(key: key);
+abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatefulWidget {
+  const ItemSearchBody({Key key, @required this.onTap, this.allowNewButton = false}) : super(key: key);
 
   final void Function() Function(BuildContext, T) onTap;
   final bool allowNewButton;
 
+  String typeName(BuildContext context);
+  String typesName(BuildContext context);
+  ThemeData themeData(BuildContext context);
+
   @override
-  State<_ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
+  State<ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
 }
-class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends State<_ItemSearchBody<T, K, S>> {
+class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends State<ItemSearchBody<T, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -125,91 +131,92 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
     _textEditingController.text = value;
   }
 
-  String get searchName => T.toString();
-
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: _buildActions(),
-        title: TextField(
-          controller: _textEditingController,
-          keyboardType: TextInputType.text,
-          autofocus: true,
-          onChanged: (String newQuery) {
-            //Not sure of this fix to update button text
-            setState(() {});
-            BlocProvider.of<K>(context).add(
-              SearchTextChanged(query),
-            );
-          },
-          maxLines: 1,
-          decoration: InputDecoration(
-            border: UnderlineInputBorder(),
-            prefixIcon: Icon(Icons.search),
-            hintText: GameCollectionLocalisations.of(context).searchString(searchName),
+    return Theme(
+      data: widget.themeData(context),
+      child: Scaffold(
+        appBar: AppBar(
+          actions: _buildActions(),
+          title: TextField(
+            controller: _textEditingController,
+            keyboardType: TextInputType.text,
+            autofocus: true,
+            onChanged: (String newQuery) {
+              //Not sure of this fix to update button text
+              setState(() {});
+              BlocProvider.of<K>(context).add(
+                SearchTextChanged(query),
+              );
+            },
+            maxLines: 1,
+            decoration: InputDecoration(
+              border: UnderlineInputBorder(),
+              prefixIcon: Icon(Icons.search),
+              hintText: GameCollectionLocalisations.of(context).searchString(widget.typesName(context)),
+            ),
           ),
         ),
-      ),
-      body: BlocListener<S, ItemListManagerState>(
-        listener: (BuildContext context, ItemListManagerState state) {
-          if(state is ItemAdded<T>) {
+        body: BlocListener<S, ItemListManagerState>(
+          listener: (BuildContext context, ItemListManagerState state) {
+            if(state is ItemAdded<T>) {
 
-            Navigator.maybePop<T>(context, state.item);
+              Navigator.maybePop<T>(context, state.item);
 
-          }
-          if(state is ItemNotAdded) {
-            String message = GameCollectionLocalisations.of(context).unableToAddString(searchName);
-            showSnackBar(
-              scaffoldState: Scaffold.of(context),
-              message: message,
-              seconds: 2,
-              snackBarAction: dialogSnackBarAction(
-                context,
-                label: GameCollectionLocalisations.of(context).moreString,
-                title: message,
-                content: state.error,
+            }
+            if(state is ItemNotAdded) {
+              String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
+              showSnackBar(
+                scaffoldState: Scaffold.of(context),
+                message: message,
+                seconds: 2,
+                snackBarAction: dialogSnackBarAction(
+                  context,
+                  label: GameCollectionLocalisations.of(context).moreString,
+                  title: message,
+                  content: state.error,
+                ),
+              );
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              widget.allowNewButton?
+                Container(
+                  child: _newButton(),
+                  color: Colors.grey,
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                )
+                :
+                Container(),
+              BlocBuilder<K, ItemSearchState>(
+                builder: (BuildContext context, ItemSearchState state) {
+
+                  if(state is ItemSearchEmpty<T>) {
+
+                    return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
+
+                  }
+                  if(state is ItemSearchSuccess<T>) {
+
+                    return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
+
+                  }
+                  if(state is ItemSearchError) {
+
+                    return Center(
+                      child: Text(state.error),
+                    );
+
+                  }
+
+                  return LinearProgressIndicator();
+
+                },
               ),
-            );
-          }
-        },
-        child: Column(
-          children: <Widget>[
-            widget.allowNewButton?
-              Container(
-                child: _newButton(),
-                color: Colors.grey,
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              )
-              :
-              Container(),
-            BlocBuilder<K, ItemSearchState>(
-              builder: (BuildContext context, ItemSearchState state) {
-
-                if(state is ItemSearchEmpty<T>) {
-
-                  return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
-
-                }
-                if(state is ItemSearchSuccess<T>) {
-
-                  return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
-
-                }
-                if(state is ItemSearchError) {
-
-                  return Center(
-                    child: Text(state.error),
-                  );
-
-                }
-
-                return LinearProgressIndicator();
-
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -238,7 +245,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
     return SizedBox(
       width: double.maxFinite,
       child: FlatButton(
-        child: Text(GameCollectionLocalisations.of(context).newWithTitleString(searchName, query)),
+        child: Text(GameCollectionLocalisations.of(context).newWithTitleString(widget.typeName(context), query)),
         color: Colors.white,
         onPressed: () {
 

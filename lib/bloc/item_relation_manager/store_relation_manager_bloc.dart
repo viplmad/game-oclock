@@ -10,18 +10,18 @@ import 'item_relation_manager.dart';
 class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Store, W> {
 
   StoreRelationManagerBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.relateStorePurchase(itemID, otherID);
+        return iCollectionRepository.relateStorePurchase(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -31,11 +31,11 @@ class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationMan
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.id;
+    int otherId = event.otherItem.id;
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.deleteStorePurchase(otherID);
+        return iCollectionRepository.deleteStorePurchase(otherId);
     }
 
     return super.deleteRelationFuture(event);

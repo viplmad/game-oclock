@@ -102,7 +102,7 @@ class CloudinaryConnector extends IImageConnector {
 
   String getFilename(CloudinaryResponse response) {
 
-    return response.public_id.split('/').last + '.' + response.format;
+    return response.publicId.split('/').last + '.' + response.format;
 
   }
   //#endregion Helpers

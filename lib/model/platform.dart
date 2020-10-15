@@ -68,7 +68,7 @@ class Platform extends CollectionItem {
   }
 
   @override
-  String getUniqueID() {
+  String getUniqueId() {
 
     return 'Pl' + this.id.toString();
 
@@ -107,7 +107,7 @@ class Platform extends CollectionItem {
   String toString() {
 
     return '$platformTable { '
-        '$IDField: $id, '
+        '$IdField: $id, '
         '$plat_nameField: $name, '
         '$plat_iconField: $iconURL, '
         '$plat_typeField: $type'

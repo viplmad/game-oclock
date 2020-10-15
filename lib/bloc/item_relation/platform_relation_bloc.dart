@@ -13,19 +13,19 @@ import 'item_relation.dart';
 class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Platform, W> {
 
   PlatformRelationBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required PlatformRelationManagerBloc<W> managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromPlatform(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getGamesFromPlatform(itemId) as Stream<List<W>>;
       case System:
-        return iCollectionRepository.getSystemsFromPlatform(itemID) as Stream<List<W>>;
+        return iCollectionRepository.getSystemsFromPlatform(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

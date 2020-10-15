@@ -13,15 +13,15 @@ import 'item_detail.dart';
 class SystemDetailBloc extends ItemDetailBloc<System> {
 
   SystemDetailBloc({
-    @required int itemID,
+    @required int itemId,
     @required ICollectionRepository iCollectionRepository,
     @required SystemDetailManagerBloc managerBloc,
-  }) : super(itemID: itemID, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
   Stream<System> getReadStream() {
 
-    return iCollectionRepository.getSystemWithID(itemID);
+    return iCollectionRepository.getSystemWithId(itemId);
 
   }
 
