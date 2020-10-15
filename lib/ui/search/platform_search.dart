@@ -41,7 +41,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   }) : super(key: key, items: items);
 
   @override
-  String detailRouteName = platformDetailRoute;
+  final String detailRouteName = platformDetailRoute;
 
   @override
   PlatformListManagerBloc managerBlocBuilder() {

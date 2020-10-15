@@ -9,62 +9,62 @@ import '../route_constants.dart';
 import 'relation.dart';
 
 
-class PurchaseStoreRelationList extends PurchaseRelationList<Store> {
-  PurchaseStoreRelationList({Key key, String shownName, List<Widget> Function(List<Store>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PurchaseStoreRelationList extends _PurchaseRelationList<Store> {
+  PurchaseStoreRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Store>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  bool isSingleList = true;
+  final bool isSingleList = true;
 
   @override
-  String detailRouteName = storeDetailRoute;
+  final String detailRouteName = storeDetailRoute;
 
   @override
-  String searchRouteName = storeSearchRoute;
+  final String searchRouteName = storeSearchRoute;
 
   @override
-  String localSearchRouteName = storeLocalSearchRoute;
+  final String localSearchRouteName = storeLocalSearchRoute;
 
 }
 
-class PurchaseGameRelationList extends PurchaseRelationList<Game> {
-  PurchaseGameRelationList({Key key, String shownName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PurchaseGameRelationList extends _PurchaseRelationList<Game> {
+  PurchaseGameRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  String detailRouteName = gameDetailRoute;
+  final String detailRouteName = gameDetailRoute;
 
   @override
-  String searchRouteName = gameSearchRoute;
+  final String searchRouteName = gameSearchRoute;
 
   @override
-  String localSearchRouteName = gameLocalSearchRoute;
+  final String localSearchRouteName = gameLocalSearchRoute;
 
 }
 
-class PurchaseDLCRelationList extends PurchaseRelationList<DLC> {
-  PurchaseDLCRelationList({Key key, String shownName, List<Widget> Function(List<DLC>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PurchaseDLCRelationList extends _PurchaseRelationList<DLC> {
+  PurchaseDLCRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<DLC>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  String detailRouteName = dlcDetailRoute;
+  final String detailRouteName = dlcDetailRoute;
 
   @override
-  String searchRouteName = dlcSearchRoute;
+  final String searchRouteName = dlcSearchRoute;
 
   @override
-  String localSearchRouteName = dlcLocalSearchRoute;
+  final String localSearchRouteName = dlcLocalSearchRoute;
 
 }
 
-class PurchaseTypeRelationList extends PurchaseRelationList<PurchaseType> {
-  PurchaseTypeRelationList({Key key, String shownName, List<Widget> Function(List<PurchaseType>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
+  PurchaseTypeRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<PurchaseType>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  String typeName = 'Type';
+  final String detailRouteName = '';
 
   @override
-  String searchRouteName = typeSearchRoute;
+  final String searchRouteName = typeSearchRoute;
 
   @override
-  String localSearchRouteName = typeLocalSearchRoute;
+  final String localSearchRouteName = typeLocalSearchRoute;
 
   @override
   void Function() onTap(BuildContext context, PurchaseType item) {
@@ -75,6 +75,6 @@ class PurchaseTypeRelationList extends PurchaseRelationList<PurchaseType> {
 
 }
 
-abstract class PurchaseRelationList<W extends CollectionItem> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>, PurchaseRelationManagerBloc<W>> {
-  PurchaseRelationList({Key key, String shownName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+abstract class _PurchaseRelationList<W extends CollectionItem> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>, PurchaseRelationManagerBloc<W>> {
+  _PurchaseRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

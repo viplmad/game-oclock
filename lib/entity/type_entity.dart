@@ -15,16 +15,16 @@ const String type_nameField = 'Name';
 class PurchaseTypeEntity extends CollectionItemEntity {
 
   PurchaseTypeEntity({
-    @required int ID,
+    @required int id,
     this.name,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
 
   static PurchaseTypeEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[type_nameField],
     );
 
@@ -34,7 +34,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       type_nameField : name,
     };
 
@@ -56,7 +56,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
   ];
 
@@ -64,7 +64,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$typeTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$type_nameField: $name'
         ' }';
 

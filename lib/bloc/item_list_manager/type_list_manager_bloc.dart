@@ -23,7 +23,7 @@ class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<PurchaseType> event) {
 
-    return iCollectionRepository.deleteType(event.item.ID);
+    return iCollectionRepository.deleteType(event.item.id);
 
   }
 

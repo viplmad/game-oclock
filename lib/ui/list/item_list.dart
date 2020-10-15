@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
@@ -15,34 +16,37 @@ import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends _ItemListMember with PreferredSizeWidget {
+abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
 
   @override
   final Size preferredSize = Size.fromHeight(50.0);
+
+  Color get themeColor;
 
   @override
   Widget build(BuildContext context) {
 
     return AppBar(
-      title: Text(barData.title + 's'),
-      backgroundColor: barData.color,
+      title: Text(typesName(context)),
+      backgroundColor: themeColor,
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.sort_by_alpha),
-          tooltip: 'Change Order',
+          tooltip: GameCollectionLocalisations.of(context).changeOrderString,
           onPressed: () {
             BlocProvider.of<K>(context).add(UpdateSortOrder());
           },
         ),
         IconButton(
           icon: Icon(Icons.grid_on),
-          tooltip: 'Change Style',
+          tooltip: GameCollectionLocalisations.of(context).changeStyleString,
           onPressed: () {
             BlocProvider.of<K>(context).add(UpdateStyle());
           },
         ),
-        viewActionBuilder(
-          barData: barData,
+        _viewActionBuilder(
+          context,
+          views: views(context),
           onSelect: (int selectedViewIndex) {
             BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
           },
@@ -52,18 +56,18 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
   }
 
-  Widget viewActionBuilder({BarData barData, void Function(int) onSelect}) {
+  Widget _viewActionBuilder(BuildContext context, {List<String> views, void Function(int) onSelect}) {
 
     return PopupMenuButton<int>(
       icon: Icon(Icons.view_carousel),
-      tooltip: "Change View",
+      tooltip: GameCollectionLocalisations.of(context).changeViewString,
       itemBuilder: (BuildContext context) {
-        return barData.views.map( (String view) {
+        return views.map( (String view) {
           return PopupMenuItem<int>(
             child: ListTile(
               title: Text(view),
             ),
-            value: barData.views.indexOf(view),
+            value: views.indexOf(view),
           );
         }).toList(growable: false);
       },
@@ -72,51 +76,51 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
   }
 
+  String typesName(BuildContext context);
+  List<String> views(BuildContext context);
+
 }
 
-abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends _ItemListMember {
+abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+
+  Color get themeColor;
 
   @override
   Widget build(BuildContext context) {
 
     return FloatingActionButton(
+      tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
+      child: Icon(Icons.add),
+      backgroundColor: themeColor,
       onPressed: () {
         BlocProvider.of<S>(context).add(AddItem());
       },
-      tooltip: 'New ' + barData.title,
-      child: Icon(Icons.add),
-      backgroundColor: barData.color,
     );
 
   }
 
-}
-
-abstract class _ItemListMember extends StatelessWidget {
-
-  BarData barData;
+  String typeName(BuildContext context);
 
 }
 
 abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
 
-  String _typeName = T.toString();
-
-  String detailRouteName;
+  String get detailRouteName;
 
   @override
   Widget build(BuildContext context) {
+    String currentTypeString = typeName(context);
 
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if(state is ItemAdded<T>) {
-          String message = "Added " + _typeName;
+          String message = GameCollectionLocalisations.of(context).addedString(currentTypeString);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             seconds: 2,
             snackBarAction: SnackBarAction(
-              label: "Open",
+              label: GameCollectionLocalisations.of(context).openString,
               onPressed: () {
                 Navigator.pushNamed(
                   context,
@@ -130,21 +134,21 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemNotAdded) {
-          String message = "Unable to add " + _typeName;
+          String message = GameCollectionLocalisations.of(context).unableToAddString(currentTypeString);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: "More",
+              label: GameCollectionLocalisations.of(context).moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if(state is ItemDeleted<T>) {
-          String message = "Deleted " + _typeName;
+          String message = GameCollectionLocalisations.of(context).deletedString(currentTypeString);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
@@ -152,14 +156,14 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemNotDeleted) {
-          String message = "Unable to delete " + _typeName;
+          String message = GameCollectionLocalisations.of(context).unableToDeleteString(currentTypeString);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: "More",
+              label: GameCollectionLocalisations.of(context).moreString,
               title: message,
               content: state.error,
             ),
@@ -197,7 +201,8 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   }
 
-  external ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
+  String typeName(BuildContext context);
+  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
 
 }
 
@@ -209,9 +214,9 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   final void Function(T) onDelete;
   final ListStyle style;
 
-  String detailRouteName;
-  String localSearchRouteName;
-  String statisticsRouteName;
+  String get detailRouteName;
+  String get localSearchRouteName;
+  String get statisticsRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -220,18 +225,18 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
       children: <Widget>[
         Container(
           child: ListTile(
-            title: Text(getViewTitle()),
+            title: Text(viewTitle(context)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.search),
-                  tooltip: 'Search in View',
+                  tooltip: GameCollectionLocalisations.of(context).searchInViewString,
                   onPressed: items.isNotEmpty? _onSearchTap(context) : null,
                 ),
                 /*IconButton(
                   icon: Icon(Icons.insert_chart),
-                  tooltip: 'Stats in View',
+                  tooltip: GameCollectionLocalisations.of(context).statsInViewString,
                   onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
                 ),*/
               ],
@@ -252,20 +257,20 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   Widget _confirmDelete(BuildContext context, T item) {
 
     return AlertDialog(
-      title: Text("Delete"),
+      title: Text(GameCollectionLocalisations.of(context).deleteString),
       content: ListTile(
-        title: Text("Are you sure you want to delete " + item.getTitle() + "?"),
-        subtitle: Text("This action cannot be undone"),
+        title: Text(GameCollectionLocalisations.of(context).deleteDialogTitle(item.getTitle())),
+        subtitle: Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text("Cancel"),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<bool>(context);
           },
         ),
         RaisedButton(
-          child: Text("Delete", style: TextStyle(color: Colors.white),),
+          child: Text(GameCollectionLocalisations.of(context).deleteString, style: TextStyle(color: Colors.white)),
           onPressed: () {
             Navigator.maybePop<bool>(context, true);
           },
@@ -365,7 +370,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
   }
 
-  external String getViewTitle();
+  String viewTitle(BuildContext context);
 
 }
 
@@ -387,7 +392,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
         T item = items[index];
 
         return DismissibleItem(
-          dismissibleKey: item.ID,
+          dismissibleKey: item.id,
           itemWidget: itemBuilder(context, item),
           onDismissed: (DismissDirection direction) {
             onDismiss(item);

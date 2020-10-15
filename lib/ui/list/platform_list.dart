@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';
@@ -15,21 +16,33 @@ import 'list.dart';
 class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
 
   @override
-  BarData barData = platformBarData;
+  final Color themeColor = PlatformTheme.primaryColour;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
+
+  @override
+  List<String> views(BuildContext context) => PlatformTheme.views(context);
 
 }
 
 class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 
   @override
-  BarData barData = platformBarData;
+  final Color themeColor = PlatformTheme.primaryColour;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 
 }
 
 class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
 
   @override
-  String detailRouteName = platformDetailRoute;
+  final String detailRouteName = platformDetailRoute;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 
   @override
   _PlatformListBody itemListBodyBuilder({@required List<Platform> items, @required int viewIndex, @required void Function(Platform) onDelete, @required ListStyle style}) {
@@ -62,10 +75,13 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   );
 
   @override
-  String detailRouteName = platformDetailRoute;
+  final String detailRouteName = platformDetailRoute;
 
   @override
-  String localSearchRouteName = platformLocalSearchRoute;
+  final String localSearchRouteName = platformLocalSearchRoute;
+
+  @override
+  final String statisticsRouteName = '';
 
   @override
   void Function() onStatisticsTap(BuildContext context) {
@@ -75,9 +91,9 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   }
 
   @override
-  String getViewTitle() {
+  String viewTitle(BuildContext context) {
 
-    return platformBarData.views.elementAt(viewIndex);
+    return PlatformTheme.views(context).elementAt(viewIndex);
 
   }
 

@@ -13,16 +13,16 @@ enum TypeView {
 class PurchaseType extends CollectionItem {
 
   PurchaseType({
-    @required int ID,
+    @required int id,
     this.name,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
 
   static PurchaseType fromEntity(PurchaseTypeEntity entity) {
 
     return PurchaseType(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
     );
 
@@ -32,7 +32,7 @@ class PurchaseType extends CollectionItem {
   PurchaseTypeEntity toEntity() {
 
     return PurchaseTypeEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
     );
 
@@ -44,7 +44,7 @@ class PurchaseType extends CollectionItem {
   }) {
 
     return PurchaseType(
-      ID: ID,
+      id: id,
       name: name?? this.name,
     );
 
@@ -53,7 +53,7 @@ class PurchaseType extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'Ty' + this.ID.toString();
+    return 'Ty' + this.id.toString();
 
   }
 
@@ -66,7 +66,7 @@ class PurchaseType extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
   ];
 
@@ -74,7 +74,7 @@ class PurchaseType extends CollectionItem {
   String toString() {
 
     return '$typeTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$type_nameField: $name'
         ' }';
 

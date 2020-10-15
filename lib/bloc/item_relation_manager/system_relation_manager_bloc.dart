@@ -17,7 +17,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherID = event.otherItem.ID;
+    int otherID = event.otherItem.id;
 
     switch(W) {
       case Platform:
@@ -31,7 +31,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherID = event.otherItem.ID;
+    int otherID = event.otherItem.id;
 
     switch(W) {
       case Platform:

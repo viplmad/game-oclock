@@ -23,7 +23,7 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<DLC> event) {
 
-    return iCollectionRepository.deleteDLC(event.item.ID);
+    return iCollectionRepository.deleteDLC(event.item.id);
 
   }
 

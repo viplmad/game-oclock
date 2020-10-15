@@ -82,7 +82,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  external Future<T> createFuture(AddItem event);
-  external Future<dynamic> deleteFuture(DeleteItem<T> event);
+  Future<T> createFuture(AddItem event);
+  Future<dynamic> deleteFuture(DeleteItem<T> event);
 
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';
@@ -15,21 +16,33 @@ import 'list.dart';
 class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
   @override
-  BarData barData = purchaseBarData;
+  final Color themeColor = PurchaseTheme.primaryColour;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;
+
+  @override
+  List<String> views(BuildContext context) => PurchaseTheme.views(context);
 
 }
 
 class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
 
   @override
-  BarData barData = purchaseBarData;
+  final Color themeColor = PurchaseTheme.primaryColour;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 
 }
 
 class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
 
   @override
-  String detailRouteName = purchaseDetailRoute;
+  final String detailRouteName = purchaseDetailRoute;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 
   @override
   _PurchaseListBody itemListBodyBuilder({@required List<Purchase> items, @required int viewIndex, @required void Function(Purchase) onDelete, @required ListStyle style}) {
@@ -62,18 +75,18 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   );
 
   @override
-  String detailRouteName = purchaseDetailRoute;
+  final String detailRouteName = purchaseDetailRoute;
 
   @override
-  String localSearchRouteName = purchaseLocalSearchRoute;
+  final String localSearchRouteName = purchaseLocalSearchRoute;
 
   @override
-  String statisticsRouteName = purchaseStatisticsRoute;
+  final String statisticsRouteName = purchaseStatisticsRoute;
 
   @override
-  String getViewTitle() {
+  String viewTitle(BuildContext context) {
 
-    return purchaseBarData.views.elementAt(viewIndex);
+    return PurchaseTheme.views(context).elementAt(viewIndex);
 
   }
 

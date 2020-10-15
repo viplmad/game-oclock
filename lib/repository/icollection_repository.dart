@@ -56,120 +56,120 @@ abstract class ICollectionRepository {
   Stream<List<Game>> getAllWithView(GameView gameView, [int limit]);
   Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]);
   Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]);
-  Stream<Game> getGameWithID(int ID);
-  Stream<List<Platform>> getPlatformsFromGame(int ID);
-  Stream<List<Purchase>> getPurchasesFromGame(int ID);
-  Stream<List<DLC>> getDLCsFromGame(int ID);
-  Stream<List<Tag>> getTagsFromGame(int ID);
+  Stream<Game> getGameWithID(int id);
+  Stream<List<Platform>> getPlatformsFromGame(int id);
+  Stream<List<Purchase>> getPurchasesFromGame(int id);
+  Stream<List<DLC>> getDLCsFromGame(int id);
+  Stream<List<Tag>> getTagsFromGame(int id);
 
     //DLC
   Stream<List<DLC>> getAllDLCs();
   Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]);
-  Stream<DLC> getDLCWithID(int ID);
-  Stream<Game> getBaseGameFromDLC(int ID);
-  Stream<List<Purchase>> getPurchasesFromDLC(int ID);
+  Stream<DLC> getDLCWithID(int id);
+  Stream<Game> getBaseGameFromDLC(int id);
+  Stream<List<Purchase>> getPurchasesFromDLC(int id);
 
     //Platform
   Stream<List<Platform>> getAllPlatforms();
   Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]);
-  Stream<Platform> getPlatformWithID(int ID);
-  Stream<List<Game>> getGamesFromPlatform(int ID);
-  Stream<List<System>> getSystemsFromPlatform(int ID);
+  Stream<Platform> getPlatformWithID(int id);
+  Stream<List<Game>> getGamesFromPlatform(int id);
+  Stream<List<System>> getSystemsFromPlatform(int id);
 
     //Purchase
   Stream<List<Purchase>> getAllPurchases();
   Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]);
-  Stream<Purchase> getPurchaseWithID(int ID);
+  Stream<Purchase> getPurchaseWithID(int id);
   Stream<Store> getStoreFromPurchase(int storeID);
-  Stream<List<Game>> getGamesFromPurchase(int ID);
-  Stream<List<DLC>> getDLCsFromPurchase(int ID);
-  Stream<List<PurchaseType>> getTypesFromPurchase(int ID);
+  Stream<List<Game>> getGamesFromPurchase(int id);
+  Stream<List<DLC>> getDLCsFromPurchase(int id);
+  Stream<List<PurchaseType>> getTypesFromPurchase(int id);
 
     //Store
   Stream<List<Store>> getAllStores();
   Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]);
-  Stream<Store> getStoreWithID(int ID);
-  Stream<List<Purchase>> getPurchasesFromStore(int ID);
+  Stream<Store> getStoreWithID(int id);
+  Stream<List<Purchase>> getPurchasesFromStore(int id);
 
     //System
   Stream<List<System>> getAllSystems();
   Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]);
-  Stream<System> getSystemWithID(int ID);
-  Stream<List<Platform>> getPlatformsFromSystem(int ID);
+  Stream<System> getSystemWithID(int id);
+  Stream<List<Platform>> getPlatformsFromSystem(int id);
 
     //Tag
   Stream<List<Tag>> getAllTags();
   Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]);
-  Stream<Tag> getTagWithID(int ID);
-  Stream<List<Game>> getGamesFromTag(int ID);
+  Stream<Tag> getTagWithID(int id);
+  Stream<List<Game>> getGamesFromTag(int id);
 
     //Type
   Stream<List<PurchaseType>> getAllTypes();
   Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]);
-  Stream<PurchaseType> getTypeWithID(int ID);
-  Stream<List<Purchase>> getPurchasesFromType(int ID);
+  Stream<PurchaseType> getTypeWithID(int id);
+  Stream<List<Purchase>> getPurchasesFromType(int id);
   //#endregion READ
 
 
   //#region UPDATE
     //Game
-  Future<Game> updateGame<T>(int ID, String fieldName, T newValue);
+  Future<Game> updateGame<T>(int id, String fieldName, T newValue);
 
     //DLC
-  Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue);
+  Future<DLC> updateDLC<T>(int id, String fieldName, T newValue);
 
     //Platform
-  Future<Platform> updatePlatform<T>(int ID, String fieldName, T newValue);
+  Future<Platform> updatePlatform<T>(int id, String fieldName, T newValue);
 
     //Purchase
-  Future<Purchase> updatePurchase<T>(int ID, String fieldName, T newValue);
+  Future<Purchase> updatePurchase<T>(int id, String fieldName, T newValue);
 
     //Store
-  Future<Store> updateStore<T>(int ID, String fieldName, T newValue);
+  Future<Store> updateStore<T>(int id, String fieldName, T newValue);
 
     //System
-  Future<System> updateSystem<T>(int ID, String fieldName, T newValue);
+  Future<System> updateSystem<T>(int id, String fieldName, T newValue);
 
     //Tag
-  Future<Tag> updateTag<T>(int ID, String fieldName, T newValue);
+  Future<Tag> updateTag<T>(int id, String fieldName, T newValue);
 
     //Type
-  Future<PurchaseType> updateType<T>(int ID, String fieldName, T newValue);
+  Future<PurchaseType> updateType<T>(int id, String fieldName, T newValue);
   //#endregion UPDATE
 
 
   //#region DELETE
     //Game
-  Future<dynamic> deleteGame(int ID);
+  Future<dynamic> deleteGame(int id);
   Future<dynamic> deleteGamePlatform(int gameID, int platformID);
   Future<dynamic> deleteGamePurchase(int gameID, int purchaseID);
   Future<dynamic> deleteGameDLC(int dlcID);
   Future<dynamic> deleteGameTag(int gameID, int tagID);
 
     //DLC
-  Future<dynamic> deleteDLC(int ID);
+  Future<dynamic> deleteDLC(int id);
   Future<dynamic> deleteDLCPurchase(int dlcID, int purchaseID);
 
     //Platform
-  Future<dynamic> deletePlatform(int ID);
+  Future<dynamic> deletePlatform(int id);
   Future<dynamic> deletePlatformSystem(int platformID, int systemID);
 
     //Purchase
-  Future<dynamic> deletePurchase(int ID);
+  Future<dynamic> deletePurchase(int id);
   Future<dynamic> deletePurchaseType(int purchaseID, int typeID);
 
     //Store
-  Future<dynamic> deleteStore(int ID);
+  Future<dynamic> deleteStore(int id);
   Future<dynamic> deleteStorePurchase(int purchaseID);
 
     //System
-  Future<dynamic> deleteSystem(int ID);
+  Future<dynamic> deleteSystem(int id);
 
     //Tag
-  Future<dynamic> deleteTag(int ID);
+  Future<dynamic> deleteTag(int id);
 
     //Type
-  Future<dynamic> deleteType(int ID);
+  Future<dynamic> deleteType(int id);
   //#endregion DELETE
 
 

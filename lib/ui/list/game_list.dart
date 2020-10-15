@@ -11,6 +11,8 @@ import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../route_constants.dart';
 import '../theme/theme.dart';
 import 'list.dart';
@@ -46,7 +48,13 @@ class _RomAppBar extends _GameAppBar<RomListBloc> {}
 abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
 
   @override
-  BarData barData = gameBarData;
+  final Color themeColor = GameTheme.primaryColour;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;
+
+  @override
+  List<String> views(BuildContext context) => GameTheme.views(context);
 
 }
 
@@ -81,16 +89,12 @@ class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
 
   @override
-  BarData barData = gameBarData;
+  final Color themeColor = GameTheme.primaryColour;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
 }
-
-
-const List<BarData> tabItems = [
-  allTabData,
-  gameTabData,
-  romTabData,
-];
 
 class GameTabs extends StatelessWidget {
   const GameTabs({Key key, this.gameTab}) : super(key: key);
@@ -99,6 +103,11 @@ class GameTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<BarData> tabItems = [
+      GameTheme.allTabData(context),
+      GameTheme.ownedTabData(context),
+      GameTheme.romsTabData(context),
+    ];
 
     return DefaultTabController(
       length: tabItems.length,
@@ -125,7 +134,7 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
-                    color: gameAccentColour,
+                    color: GameTheme.accentColour,
                   ),
                 ),
               ];
@@ -153,7 +162,10 @@ class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {}
 abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
 
   @override
-  String detailRouteName = gameDetailRoute;
+  final String detailRouteName = gameDetailRoute;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
   @override
   _GameListBody<K> itemListBodyBuilder({@required List<Game> items, @required int viewIndex, @required void Function(Game) onDelete, @required ListStyle style}) {
@@ -186,18 +198,18 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   );
 
   @override
-  String detailRouteName = gameDetailRoute;
+  final String detailRouteName = gameDetailRoute;
 
   @override
-  String localSearchRouteName = gameLocalSearchRoute;
+  final String localSearchRouteName = gameLocalSearchRoute;
 
   @override
-  String statisticsRouteName = gameStatisticsRoute;
+  final String statisticsRouteName = gameStatisticsRoute;
 
   @override
-  String getViewTitle() {
+  String viewTitle(BuildContext context) {
 
-    return gameBarData.views.elementAt(viewIndex);
+    return GameTheme.views(context).elementAt(viewIndex);
 
   }
 

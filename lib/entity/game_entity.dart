@@ -44,7 +44,7 @@ const List<String> statuses = [
 class GameEntity extends CollectionItemEntity {
 
   GameEntity({
-    @required int ID,
+    @required int id,
     this.name,
     this.edition,
     this.releaseYear,
@@ -57,7 +57,7 @@ class GameEntity extends CollectionItemEntity {
     this.screenshotFolder,
     this.finishDate,
     this.isBackup,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String edition;
@@ -75,7 +75,7 @@ class GameEntity extends CollectionItemEntity {
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[game_nameField],
       edition: map[game_editionField],
       releaseYear: map[game_releaseYearField],
@@ -96,7 +96,7 @@ class GameEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       game_nameField : name,
       game_editionField : edition,
       game_releaseYearField : releaseYear,
@@ -129,7 +129,7 @@ class GameEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     edition,
     releaseYear,
@@ -148,7 +148,7 @@ class GameEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$gameTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '

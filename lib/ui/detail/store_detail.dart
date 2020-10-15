@@ -13,6 +13,8 @@ import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dar
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../theme/theme.dart';
 import '../relation/relation.dart';
 import 'item_detail.dart';
@@ -29,7 +31,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   StoreDetailBloc detailBlocBuilder(StoreDetailManagerBloc managerBloc) {
 
     return StoreDetailBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -40,7 +42,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   StoreDetailManagerBloc managerBlocBuilder() {
 
     return StoreDetailManagerBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -50,7 +52,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   List<BlocProvider> relationBlocsBuilder() {
 
     StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -67,17 +69,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }
 
   @override
-  ThemeData themeData(BuildContext context) {
-
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData storeTheme = contextTheme.copyWith(
-      primaryColor: storeColour,
-      accentColor: storeAccentColour,
-    );
-
-    return storeTheme;
-
-  }
+  ThemeData themeData(BuildContext context) => StoreTheme.themeData(context);
 
   @override
   _StoreDetailBody detailBodyBuilder() {
@@ -93,7 +85,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
     return BlocProvider<StoreRelationBloc<W>>(
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
-          itemID: item.ID,
+          itemID: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
@@ -116,7 +108,8 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
     return [
       itemTextField(
         context,
-        fieldName: stor_nameField,
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        field: stor_nameField,
         value: store.name,
       ),
     ];
@@ -124,10 +117,12 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
   }
 
   @override
-  List<Widget> itemRelationsBuilder() {
+  List<Widget> itemRelationsBuilder(BuildContext context) {
 
     return [
       StorePurchaseRelationList(
+        relationName: GameCollectionLocalisations.of(context).purchasesString,
+        relationTypeName: GameCollectionLocalisations.of(context).purchaseString,
         trailingBuilder: (List<Purchase> purchases) {
 
           double totalSpent = 0.0;
@@ -142,19 +137,23 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
 
           return [
             itemMoneySumField(
-              fieldName: "Total Money Spent",
+              context,
+              fieldName: GameCollectionLocalisations.of(context).totalMoneySpentString,
               value: totalSpent,
             ),
             itemMoneySumField(
-              fieldName: "Total Money Saved",
+              context,
+              fieldName: GameCollectionLocalisations.of(context).totalMoneySavedString,
               value: totalSaved,
             ),
             itemMoneySumField(
-              fieldName: "Real Value",
+              context,
+              fieldName: GameCollectionLocalisations.of(context).realValueString,
               value: totalValue,
             ),
             itemPercentageField(
-              fieldName: "Percentage Saved",
+              context,
+              fieldName: GameCollectionLocalisations.of(context).percentageSavedString,
               value: totalPercentageSaved,
             ),
           ];

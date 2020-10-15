@@ -47,7 +47,7 @@ class GameListManagerBloc extends ItemListManagerBloc<Game> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<Game> event) {
 
-    return iCollectionRepository.deleteGame(event.item.ID);
+    return iCollectionRepository.deleteGame(event.item.id);
 
   }
 

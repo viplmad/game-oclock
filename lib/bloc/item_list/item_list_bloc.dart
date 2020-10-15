@@ -105,7 +105,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
     if(state is ItemListLoaded<T>) {
       List<T> items = List.from((state as ItemListLoaded<T>).items);
 
-      final int listItemIndex = items.indexWhere((T item) => item.ID == event.item.ID);
+      final int listItemIndex = items.indexWhere((T item) => item.id == event.item.id);
       final T listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {
@@ -220,7 +220,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = items
-          .where((T item) => item.ID != managerState.item.ID)
+          .where((T item) => item.id != managerState.item.id)
           .toList(growable: false);
 
       add(
@@ -242,7 +242,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  external Stream<List<T>> getReadAllStream();
-  external Stream<List<T>> getReadViewStream(UpdateView event);
+  Stream<List<T>> getReadAllStream();
+  Stream<List<T>> getReadViewStream(UpdateView event);
 
 }

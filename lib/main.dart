@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:game_collection/localisations/localisations.dart';
+
 import 'ui/route.dart';
 import 'ui/route_constants.dart';
 
@@ -17,12 +21,22 @@ class GameCollection extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      title: 'Game Collection',
+      onGenerateTitle: (BuildContext context) => GameCollectionLocalisations.appTitle,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       initialRoute: connectRoute,
       onGenerateRoute: onGenerateRoute,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        const GameCollectionLocalisationsDelegate(),
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('es', ''),
+      ],
     );
 
   }

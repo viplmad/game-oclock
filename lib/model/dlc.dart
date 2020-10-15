@@ -13,7 +13,7 @@ enum DLCView {
 class DLC extends CollectionItem {
 
   DLC({
-    @required int ID,
+    @required int id,
     this.name,
     this.releaseYear,
     this.coverURL,
@@ -21,7 +21,7 @@ class DLC extends CollectionItem {
     this.finishDate,
 
     this.baseGame,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final int releaseYear;
@@ -34,7 +34,7 @@ class DLC extends CollectionItem {
   static DLC fromEntity(DLCEntity entity, [String coverURL]) {
 
     return DLC(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
       releaseYear: entity.releaseYear,
       coverURL: coverURL,
@@ -50,7 +50,7 @@ class DLC extends CollectionItem {
   DLCEntity toEntity() {
 
     return DLCEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
       releaseYear: this.releaseYear,
       coverFilename: this.coverFilename,
@@ -73,7 +73,7 @@ class DLC extends CollectionItem {
   }) {
 
     return DLC(
-      ID: ID,
+      id: id,
       name: name?? this.name,
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
@@ -88,7 +88,7 @@ class DLC extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'D' + this.ID.toString();
+    return 'D' + this.id.toString();
 
   }
 
@@ -115,7 +115,7 @@ class DLC extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     releaseYear,
     coverURL,
@@ -126,7 +126,7 @@ class DLC extends CollectionItem {
   String toString() {
 
     return '$dlcTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverURL, '

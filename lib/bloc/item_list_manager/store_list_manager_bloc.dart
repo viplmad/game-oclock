@@ -23,7 +23,7 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<Store> event) {
 
-    return iCollectionRepository.deleteStore(event.item.ID);
+    return iCollectionRepository.deleteStore(event.item.id);
 
   }
 

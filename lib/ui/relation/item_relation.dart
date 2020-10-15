@@ -7,23 +7,25 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import '../detail/detail.dart';
 
 
 abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
-  ItemRelationList({Key key, this.shownName, this.trailingBuilder}) : super(key: key);
+  ItemRelationList({Key key, @required this.relationName, @required this.relationTypeName, this.trailingBuilder}) : super(key: key);
 
-  final String shownName;
+  final String relationName;
+  final String relationTypeName;
   final List<Widget> Function(List<W>) trailingBuilder;
 
-  String typeName = W.toString();
-  bool isSingleList = false;
+  final bool isSingleList = false;
 
-  String detailRouteName;
-  String searchRouteName;
-  String localSearchRouteName;
+  String get detailRouteName;
+  String get searchRouteName;
+  String get localSearchRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,12 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if(state is ItemRelationAdded<W>) {
-          String message = "Linked " + typeName;
+          String message = GameCollectionLocalisations.of(context).linkedString(relationTypeName);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             snackBarAction: SnackBarAction(
-              label: 'Undo',
+              label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
 
                 BlocProvider.of<S>(context).add(
@@ -50,25 +52,25 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotAdded) {
-          String message = "Unable to link " + typeName;
+          String message = GameCollectionLocalisations.of(context).unableToLinkString(relationTypeName);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: "More",
+              label: GameCollectionLocalisations.of(context).moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if(state is ItemRelationDeleted<W>) {
-          String message = "Unlinked " + typeName;
+          String message = GameCollectionLocalisations.of(context).unlinkedString(relationTypeName);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             snackBarAction: SnackBarAction(
-              label: 'Undo',
+              label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
 
                 BlocProvider.of<S>(context).add(
@@ -82,13 +84,13 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotDeleted) {
-          String message = "Unable to unlink " + typeName;
+          String message = GameCollectionLocalisations.of(context).unableToUnlinkString(relationTypeName);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: "More",
+              label: GameCollectionLocalisations.of(context).moreString,
               title: message,
               content: state.error,
             ),
@@ -103,8 +105,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
             return (isSingleList)?
               _ResultsListSingle<W>(
                 items: state.otherItems,
-                shownName: shownName?? typeName,
-                linkName: typeName,
+                relationName: relationName,
+                relationTypeName: relationTypeName,
                 itemBuilder: _cardBuilder,
                 onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
@@ -113,8 +115,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
               :
               _ResultsListMany<W>(
                 items: state.otherItems,
-                shownName: shownName?? typeName + 's',
-                linkName: typeName,
+                relationName: relationName,
+                relationTypeName: relationTypeName,
                 itemBuilder: _cardBuilder,
                 onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
@@ -229,7 +231,6 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 }
 
 class _HeaderText extends StatelessWidget {
-
   const _HeaderText({Key key, this.text, this.trailingWidget}) : super(key: key);
 
   final String text;
@@ -247,11 +248,9 @@ class _HeaderText extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ResultsList extends StatelessWidget {
-
   const _ResultsList({Key key, @required this.headerText, @required this.resultList, this.linkWidget, this.trailingWidget, this.onListSearch}) : super(key: key);
 
   final String headerText;
@@ -278,7 +277,7 @@ class _ResultsList extends StatelessWidget {
                   trailingWidget: onListSearch != null?
                   IconButton(
                     icon: Icon(Icons.search),
-                    tooltip: "Seach in List",
+                    tooltip: GameCollectionLocalisations.of(context).searchInListString,
                     onPressed: onListSearch,
                   ) : null,
                 ),
@@ -296,17 +295,14 @@ class _ResultsList extends StatelessWidget {
     );
 
   }
-
 }
+
 class _LinkButton<W extends CollectionItem> extends StatelessWidget {
+  const _LinkButton({Key key, @required this.typeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
 
-  const _LinkButton({Key key, this.itemTypeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
-
-  final String itemTypeName;
+  final String typeName;
   final Future<W> Function() onSearch;
   final void Function(W) updateAdd;
-
-  String get shownName => itemTypeName?? W.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +310,7 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: RaisedButton.icon(
-        label: Text("Link " + shownName),
+        label: Text(GameCollectionLocalisations.of(context).linkString(typeName)),
         icon: Icon(Icons.link),
         elevation: 1.0,
         highlightElevation: 2.0,
@@ -331,14 +327,14 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
     );
 
   }
-
 }
+
 class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
-  _ResultsListSingle({@required this.items, this.shownName, this.linkName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  _ResultsListSingle({@required this.items, this.relationName, this.relationTypeName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
 
   final List<W> items;
-  final String shownName;
-  final String linkName;
+  final String relationName;
+  final String relationTypeName;
   final Widget Function(BuildContext, W) itemBuilder;
   final Future<W> Function() onSearch;
   final void Function(W) updateAdd;
@@ -348,7 +344,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return _ResultsList(
-      headerText: shownName,
+      headerText: relationName,
       resultList: ListView.builder(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
@@ -357,7 +353,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
           W result = items[index];
 
           return DismissibleItem(
-            dismissibleKey: result.ID,
+            dismissibleKey: result.id,
             itemWidget: itemBuilder(context, result),
             onDismissed: (DismissDirection direction) {
               updateDelete(result);
@@ -368,7 +364,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
         },
       ),
       linkWidget: items.isEmpty? _LinkButton<W>(
-        itemTypeName: linkName,
+        typeName: relationTypeName,
         onSearch: onSearch,
         updateAdd: updateAdd,
       ) : null,
@@ -377,12 +373,13 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
   }
 
 }
+
 class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
-  _ResultsListMany({@required this.items, this.shownName, this.linkName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
+  _ResultsListMany({@required this.items, this.relationName, this.relationTypeName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
 
   final List<W> items;
-  final String shownName;
-  final String linkName;
+  final String relationName;
+  final String relationTypeName;
   final Widget Function(BuildContext, W) itemBuilder;
   final Future<W> Function() onSearch;
   final void Function(W) updateAdd;
@@ -394,7 +391,7 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return _ResultsList(
-      headerText: shownName + " (" + items.length.toString() + ")",
+      headerText: relationName + ' (' + items.length.toString() + ')',
       resultList: Container(
         constraints: BoxConstraints.loose(
           Size.fromHeight( (MediaQuery.of(context).size.height / 3), ),
@@ -407,7 +404,7 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
             W result = items[index];
 
             return DismissibleItem(
-                dismissibleKey: result.ID,
+                dismissibleKey: result.id,
                 itemWidget: itemBuilder(context, result),
                 onDismissed: (DismissDirection direction) {
                   updateDelete(result);
@@ -419,7 +416,7 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
         ),
       ),
       linkWidget: _LinkButton<W>(
-        itemTypeName: linkName,
+        typeName: relationTypeName,
         onSearch: onSearch,
         updateAdd: updateAdd,
       ),
@@ -431,5 +428,4 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
     );
 
   }
-
 }

@@ -13,11 +13,11 @@ enum StoreView {
 class Store extends CollectionItem {
 
   Store({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconURL;
@@ -26,7 +26,7 @@ class Store extends CollectionItem {
   static Store fromEntity(StoreEntity entity, [String iconURL]) {
 
     return Store(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
@@ -38,7 +38,7 @@ class Store extends CollectionItem {
   StoreEntity toEntity() {
 
     return StoreEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
       iconFilename: this.iconFilename,
     );
@@ -53,7 +53,7 @@ class Store extends CollectionItem {
   }) {
 
     return Store(
-      ID: ID,
+      id: id,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
       iconFilename: iconFilename?? this.iconFilename,
@@ -64,7 +64,7 @@ class Store extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'St' + this.ID.toString();
+    return 'St' + this.id.toString();
 
   }
 
@@ -91,7 +91,7 @@ class Store extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     iconURL,
   ];
@@ -100,7 +100,7 @@ class Store extends CollectionItem {
   String toString() {
 
     return '$storeTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$stor_nameField: $name, '
         '$stor_iconField: $iconURL'
         ' }';

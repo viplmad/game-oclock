@@ -59,7 +59,7 @@ abstract class ItemStatistics extends StatelessWidget {
     return StatisticsField(
       fieldName: fieldName,
       shownValue: value != null?
-        value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0')
+        value.inHours.toString() + ':' + (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0')
         :
         "",
     );
@@ -104,7 +104,7 @@ abstract class ItemStatistics extends StatelessWidget {
 
   }
 
-  external List<Widget> statisticsFieldsBuilder(BuildContext context);
+  List<Widget> statisticsFieldsBuilder(BuildContext context);
 
 }
 

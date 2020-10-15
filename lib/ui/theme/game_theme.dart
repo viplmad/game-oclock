@@ -1,51 +1,82 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/bar_data.dart';
 
-
-const Color gameColour = Colors.red;
-const Color gameAccentColour = Colors.redAccent;
-
-const List<Color> statusColours = [
-  Colors.grey,
-  Colors.redAccent,
-  Colors.blueAccent,
-  Colors.greenAccent,
-];
-
-const List<String> gameViews = [
-  "Main",
-  "Last Created",
-  "Playing",
-  "Next Up",
-  "Last Finished",
-  "2019 in Review",
-];
-
-const BarData gameBarData = BarData(
-  title: gameTable,
-  icon: Icons.videogame_asset,
-  color: gameColour,
-  views: gameViews,
-);
+import 'package:game_collection/localisations/localisations.dart';
 
 
-const BarData allTabData = BarData(
-  title: "All",
-  icon: Icons.done_all,
-  views: gameViews,
-);
+class GameTheme {
 
-const BarData gameTabData = BarData(
-  title: "Games",
-  icon: Icons.videogame_asset,
-  views: gameViews,
-);
+  static const Color primaryColour = Colors.red;
+  static const Color accentColour = Colors.redAccent;
 
-const BarData romTabData = BarData(
-  title: "Roms",
-  icon: Icons.file_download,
-  views: gameViews,
-);
+  static const List<Color> statusColours = <Color>[
+    Colors.grey,
+    Colors.redAccent,
+    Colors.blueAccent,
+    Colors.greenAccent,
+  ];
+
+  static ThemeData themeData(BuildContext context) {
+
+    final ThemeData contextTheme = Theme.of(context);
+    final ThemeData gameTheme = contextTheme.copyWith(
+      primaryColor: primaryColour,
+      accentColor: accentColour,
+    );
+
+    return gameTheme;
+
+  }
+
+  static BarData barData(BuildContext context) {
+
+    return BarData(
+      title: GameCollectionLocalisations.of(context).gamesString,
+      icon: Icons.videogame_asset,
+      color: primaryColour,
+    );
+
+  }
+
+  static BarData allTabData(BuildContext context) {
+
+    return BarData(
+      title: GameCollectionLocalisations.of(context).allString,
+      icon: Icons.done_all,
+    );
+
+  }
+
+  static BarData ownedTabData(BuildContext context) {
+
+    return BarData(
+      title: GameCollectionLocalisations.of(context).ownedString,
+      icon: Icons.videogame_asset,
+    );
+
+  }
+
+  static BarData romsTabData(BuildContext context) {
+
+    return BarData(
+      title: GameCollectionLocalisations.of(context).romsString,
+      icon: Icons.file_download,
+    );
+
+  }
+
+  static List<String> views(BuildContext context) {
+
+    return <String>[
+      GameCollectionLocalisations.of(context).mainViewString,
+      GameCollectionLocalisations.of(context).lastCreatedViewString,
+      GameCollectionLocalisations.of(context).playingViewString,
+      GameCollectionLocalisations.of(context).nextUpViewString,
+      GameCollectionLocalisations.of(context).lastFinishedViewString,
+      GameCollectionLocalisations.of(context).yearInReviewViewString,
+    ];
+
+  }
+
+}

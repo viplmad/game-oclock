@@ -17,10 +17,10 @@ const String stor_iconField = 'Icon';
 class StoreEntity extends CollectionItemEntity {
 
   StoreEntity({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconFilename,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconFilename;
@@ -28,7 +28,7 @@ class StoreEntity extends CollectionItemEntity {
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[stor_nameField],
       iconFilename: map[stor_iconField],
     );
@@ -39,7 +39,7 @@ class StoreEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       stor_nameField : name,
       stor_iconField : iconFilename,
     };
@@ -62,7 +62,7 @@ class StoreEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
   ];
 
@@ -70,7 +70,7 @@ class StoreEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$storeTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$stor_nameField: $name, '
         '$stor_iconField: $iconFilename'
         ' }';

@@ -7,18 +7,18 @@ import 'package:game_collection/entity/entity.dart';
 abstract class CollectionItem extends Equatable {
 
   CollectionItem({
-    @required this.ID
+    @required this.id,
   });
 
-  final int ID;
+  final int id;
 
-  external CollectionItemEntity toEntity();
+  CollectionItemEntity toEntity();
 
-  external CollectionItem copyWith();
+  CollectionItem copyWith();
 
-  external String getUniqueID();
+  String getUniqueID();
 
-  external String getTitle();
+  String getTitle();
 
   String getSubtitle() => null;
 
@@ -28,14 +28,14 @@ abstract class CollectionItem extends Equatable {
 
   @override
   List<Object> get props => [
-    ID
+    id
   ];
 
   @override
   String toString() {
 
     return 'CollectionItem { '
-        '$IDField: $ID'
+        '$IDField: $id'
         ' }';
 
   }

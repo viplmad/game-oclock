@@ -23,7 +23,7 @@ class TagListManagerBloc extends ItemListManagerBloc<Tag> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<Tag> event) {
 
-    return iCollectionRepository.deleteTag(event.item.ID);
+    return iCollectionRepository.deleteTag(event.item.id);
 
   }
 

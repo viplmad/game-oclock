@@ -24,11 +24,11 @@ const List<String> types = [
 class PlatformEntity extends CollectionItemEntity {
 
   PlatformEntity({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconFilename,
     this.type
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconFilename;
@@ -37,7 +37,7 @@ class PlatformEntity extends CollectionItemEntity {
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[plat_nameField],
       iconFilename: map[plat_iconField],
       type: map[plat_typeField],
@@ -48,7 +48,7 @@ class PlatformEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       plat_nameField : name,
       plat_iconField : iconFilename,
       plat_typeField : type,
@@ -72,7 +72,7 @@ class PlatformEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     iconFilename,
     type,
@@ -82,7 +82,7 @@ class PlatformEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$platformTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$plat_nameField: $name, '
         '$plat_iconField: $iconFilename, '
         '$plat_typeField: $type'

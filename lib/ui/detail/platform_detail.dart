@@ -13,6 +13,8 @@ import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dar
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../theme/theme.dart';
 import '../relation/relation.dart';
 import 'item_detail.dart';
@@ -29,7 +31,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   PlatformDetailBloc detailBlocBuilder(PlatformDetailManagerBloc managerBloc) {
 
     return PlatformDetailBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -40,7 +42,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   PlatformDetailManagerBloc managerBlocBuilder() {
 
     return PlatformDetailManagerBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -50,12 +52,12 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   List<BlocProvider> relationBlocsBuilder() {
 
     PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -78,17 +80,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   }
 
   @override
-  ThemeData themeData(BuildContext context) {
-
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData platformTheme = contextTheme.copyWith(
-      primaryColor: platformColour,
-      accentColor: platformAccentColour,
-    );
-
-    return platformTheme;
-
-  }
+  ThemeData themeData(BuildContext context) => PlatformTheme.themeData(context);
 
   @override
   _PlatformDetailBody detailBodyBuilder() {
@@ -104,7 +96,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
     return BlocProvider<PlatformRelationBloc<W>>(
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
-          itemID: item.ID,
+          itemID: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
@@ -127,26 +119,37 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
     return [
       itemTextField(
         context,
-        fieldName: plat_nameField,
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        field: plat_nameField,
         value: platform.name,
       ),
       itemChipField(
         context,
-        fieldName: plat_typeField,
+        fieldName: GameCollectionLocalisations.of(context).platformTypeFieldString,
+        field: plat_typeField,
         value: platform.type,
-        possibleValues: types,
-        possibleValuesColours: typeColours,
+        possibleValues: [
+          GameCollectionLocalisations.of(context).physicalString,
+          GameCollectionLocalisations.of(context).digitalString,
+        ],
+        possibleValuesColours: PlatformTheme.typeColours,
       ),
     ];
 
   }
 
   @override
-  List<Widget> itemRelationsBuilder() {
+  List<Widget> itemRelationsBuilder(BuildContext context) {
 
     return [
-      PlatformGameRelationList(),
-      PlatformSystemRelationList(),
+      PlatformGameRelationList(
+        relationName: GameCollectionLocalisations.of(context).gamesString,
+        relationTypeName: GameCollectionLocalisations.of(context).gameString,
+      ),
+      PlatformSystemRelationList(
+        relationName: GameCollectionLocalisations.of(context).systemsString,
+        relationTypeName: GameCollectionLocalisations.of(context).systemString,
+      ),
     ];
 
   }

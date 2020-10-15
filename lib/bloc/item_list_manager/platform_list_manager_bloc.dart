@@ -23,7 +23,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<Platform> event) {
 
-    return iCollectionRepository.deletePlatform(event.item.ID);
+    return iCollectionRepository.deletePlatform(event.item.id);
 
   }
 

@@ -41,7 +41,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   }) : super(key: key, items: items);
 
   @override
-  String detailRouteName = storeDetailRoute;
+  final String detailRouteName = storeDetailRoute;
 
   @override
   StoreListManagerBloc managerBlocBuilder() {

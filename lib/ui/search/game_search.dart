@@ -41,7 +41,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   }) : super(key: key, items: items);
 
   @override
-  String detailRouteName = gameDetailRoute;
+  final String detailRouteName = gameDetailRoute;
 
   @override
   GameListManagerBloc managerBlocBuilder() {
@@ -51,6 +51,5 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
     );
 
   }
-
 
 }

@@ -13,13 +13,13 @@ enum SystemView {
 class System extends CollectionItem {
 
   System({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
     this.generation,
     this.manufacturer,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconURL;
@@ -30,7 +30,7 @@ class System extends CollectionItem {
   static System fromEntity(SystemEntity entity, [String iconURL]) {
 
     return System(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
@@ -44,7 +44,7 @@ class System extends CollectionItem {
   SystemEntity toEntity() {
 
     return SystemEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
       iconFilename: this.iconFilename,
       generation: this.generation,
@@ -63,7 +63,7 @@ class System extends CollectionItem {
   }) {
 
     return System(
-      ID: ID,
+      id: id,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
       iconFilename: iconFilename?? this.iconFilename,
@@ -76,7 +76,7 @@ class System extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'Sy' + this.ID.toString();
+    return 'Sy' + this.id.toString();
 
   }
 
@@ -110,7 +110,7 @@ class System extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     iconURL,
     generation,
@@ -121,7 +121,7 @@ class System extends CollectionItem {
   String toString() {
 
     return '$systemTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$sys_nameField: $name, '
         '$sys_iconField: $iconURL, '
         '$sys_generationField: $generation, '

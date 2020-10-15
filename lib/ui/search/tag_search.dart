@@ -41,6 +41,9 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   }) : super(key: key, items: items);
 
   @override
+  final String detailRouteName = '';
+
+  @override
   void Function() onTap(BuildContext context, Tag item) {
 
     return null;

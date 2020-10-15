@@ -174,12 +174,12 @@ class PostgresConnector extends ISQLConnector {
 
   //#region UPDATE
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required int ID, @required String fieldName, @required T newValue, List<String> returningFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required int id, @required String fieldName, @required T newValue, List<String> returningFields}) {
 
     if(newValue == null) {
       return _updateTableToNull(
         tableName: tableName,
-        ID: ID,
+        id: id,
         fieldName: fieldName,
         returningFields: returningFields,
       );
@@ -193,17 +193,17 @@ class PostgresConnector extends ISQLConnector {
           :
           //Duration is not supported, special case
           (newValue as Duration).inSeconds,
-      "tableID" : ID,
+      "tableID" : id,
     });
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _updateTableToNull({@required String tableName, @required int ID, @required String fieldName, List<String> returningFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> _updateTableToNull({@required String tableName, @required int id, @required String fieldName, List<String> returningFields}) {
 
     String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL WHERE " + _forceDoubleQuotes(IDField) + " = @tableID " +  _returningStatement(returningFields), substitutionValues: {
-      "tableID" : ID,
+      "tableID" : id,
     });
 
   }
@@ -211,12 +211,12 @@ class PostgresConnector extends ISQLConnector {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteTable({@required String tableName, @required int ID}) {
+  Future<dynamic> deleteTable({@required String tableName, @required int id}) {
 
     String sql = _deleteStatement(tableName);
 
     return _connection.mappedResultsQuery(sql + " WHERE + " + _forceDoubleQuotes(IDField) + " = @ID ", substitutionValues: {
-      "ID" : ID,
+      "ID" : id,
     });
 
   }

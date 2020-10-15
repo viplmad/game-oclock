@@ -9,28 +9,31 @@ import '../route_constants.dart';
 import 'relation.dart';
 
 
-class PlatformGameRelationList extends PlatformRelationList<Game> {
-  PlatformGameRelationList({Key key, String shownName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PlatformGameRelationList extends _PlatformRelationList<Game> {
+  PlatformGameRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  String detailRouteName = gameDetailRoute;
+  final String detailRouteName = gameDetailRoute;
 
   @override
-  String searchRouteName = gameSearchRoute;
+  final String searchRouteName = gameSearchRoute;
 
   @override
-  String localSearchRouteName = gameLocalSearchRoute;
+  final String localSearchRouteName = gameLocalSearchRoute;
 
 }
 
-class PlatformSystemRelationList extends PlatformRelationList<System> {
-  PlatformSystemRelationList({Key key, String shownName, List<Widget> Function(List<System>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+class PlatformSystemRelationList extends _PlatformRelationList<System> {
+  PlatformSystemRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<System>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  String searchRouteName = systemSearchRoute;
+  final String detailRouteName = '';
 
   @override
-  String localSearchRouteName = systemLocalSearchRoute;
+  final String searchRouteName = systemSearchRoute;
+
+  @override
+  final String localSearchRouteName = systemLocalSearchRoute;
 
   @override
   void Function() onTap(BuildContext context, System item) {
@@ -41,6 +44,6 @@ class PlatformSystemRelationList extends PlatformRelationList<System> {
 
 }
 
-abstract class PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
-  PlatformRelationList({Key key, String shownName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, shownName: shownName, trailingBuilder: trailingBuilder);
+abstract class _PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
+  _PlatformRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

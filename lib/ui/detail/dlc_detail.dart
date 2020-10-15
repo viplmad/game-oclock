@@ -13,6 +13,8 @@ import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dar
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../theme/theme.dart';
 import '../relation/relation.dart';
 import 'item_detail.dart';
@@ -29,7 +31,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   DLCDetailBloc detailBlocBuilder(DLCDetailManagerBloc managerBloc) {
 
     return DLCDetailBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -40,7 +42,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   DLCDetailManagerBloc managerBlocBuilder() {
 
     return DLCDetailManagerBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -50,12 +52,12 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   List<BlocProvider> relationBlocsBuilder() {
 
     DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -78,17 +80,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   }
 
   @override
-  ThemeData themeData(BuildContext context) {
-
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData dlcTheme = contextTheme.copyWith(
-      primaryColor: dlcColour,
-      accentColor: dlcAccentColour,
-    );
-
-    return dlcTheme;
-
-  }
+  ThemeData themeData(BuildContext context) => DLCTheme.themeData(context);
 
   @override
   _DLCDetailBody detailBodyBuilder() {
@@ -104,7 +96,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
     return BlocProvider<DLCRelationBloc<W>>(
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
-          itemID: item.ID,
+          itemID: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
@@ -127,17 +119,20 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
     return [
       itemTextField(
         context,
-        fieldName: dlc_nameField,
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        field: dlc_nameField,
         value: dlc.name,
       ),
       itemYearField(
         context,
-        fieldName: dlc_releaseYearField,
+        fieldName: GameCollectionLocalisations.of(context).releaseYearFieldString,
+        field: dlc_releaseYearField,
         value: dlc.releaseYear,
       ),
       itemDateTimeField(
         context,
-        fieldName: dlc_finishDateField,
+        fieldName: GameCollectionLocalisations.of(context).finishDateFieldString,
+        field: dlc_finishDateField,
         value: dlc.finishDate,
       ),
     ];
@@ -145,13 +140,17 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
   }
 
   @override
-  List<Widget> itemRelationsBuilder() {
+  List<Widget> itemRelationsBuilder(BuildContext context) {
 
     return [
       DLCGameRelationList(
-        shownName: dlc_baseGameField,
+        relationName: GameCollectionLocalisations.of(context).baseGameFieldString,
+        relationTypeName: GameCollectionLocalisations.of(context).gameString,
       ),
-      DLCPurchaseRelationList(),
+      DLCPurchaseRelationList(
+        relationName: GameCollectionLocalisations.of(context).purchasesString,
+        relationTypeName: GameCollectionLocalisations.of(context).purchaseString,
+      ),
     ];
 
   }

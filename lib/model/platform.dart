@@ -13,12 +13,12 @@ enum PlatformView {
 class Platform extends CollectionItem {
 
   Platform({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
     this.type,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconURL;
@@ -28,7 +28,7 @@ class Platform extends CollectionItem {
   static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
 
     return Platform(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
@@ -41,7 +41,7 @@ class Platform extends CollectionItem {
   PlatformEntity toEntity() {
 
     return PlatformEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
       iconFilename: this.iconFilename,
       type: this.type,
@@ -58,7 +58,7 @@ class Platform extends CollectionItem {
   }) {
 
     return Platform(
-      ID: ID,
+      id: id,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
       iconFilename: iconName?? this.iconFilename,
@@ -70,7 +70,7 @@ class Platform extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'Pl' + this.ID.toString();
+    return 'Pl' + this.id.toString();
 
   }
 
@@ -97,7 +97,7 @@ class Platform extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     iconURL,
     type,
@@ -107,7 +107,7 @@ class Platform extends CollectionItem {
   String toString() {
 
     return '$platformTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$plat_nameField: $name, '
         '$plat_iconField: $iconURL, '
         '$plat_typeField: $type'

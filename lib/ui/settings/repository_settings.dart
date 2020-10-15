@@ -11,6 +11,8 @@ import 'package:game_collection/model/repository_type.dart';
 import 'package:game_collection/bloc/repository_settings/repository_settings.dart';
 import 'package:game_collection/bloc/repository_settings_manager/repository_settings_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../common/show_snackbar.dart';
 import '../route_constants.dart';
 
@@ -37,7 +39,7 @@ class RepositorySettings extends StatelessWidget {
 
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Repository settings"),
+          title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
         ),
         body: _RepositorySettingsBody(),
       ),
@@ -63,13 +65,13 @@ class _RepositorySettingsBody extends StatelessWidget {
               );
             }
             if(state is RepositorySettingsNotUpdated) {
-              String message = "Unable to update connection";
+              String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
               showSnackBar(
                 scaffoldState: Scaffold.of(context),
                 message: message,
                 snackBarAction: dialogSnackBarAction(
                   context,
-                  label: "More",
+                  label: GameCollectionLocalisations.of(context).moreString,
                   title: message,
                   content: state.error,
                 ),
@@ -147,64 +149,64 @@ class _RepositorySettingsBody extends StatelessWidget {
 
     return _repositoryExpansionPanel(
       context,
-      title: "Remote repository",
+      title: GameCollectionLocalisations.of(context).remoteRepositoryString,
       radioGroup: radioGroup,
       radioValue: RepositoryType.Remote,
       textForms: [
-        _headerText(context, "Postgres"),
-        textFormField(
-          labelText: 'Host',
+        _headerText(context, 'Postgres'),
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).hostString,
           initialValue: postgresInstance?.host,
           onSaved: (String value) {
             _host = value;
           },
         ),
-        numberFormField(
-          labelText: 'Port',
+        _numberFormField(
+          labelText: GameCollectionLocalisations.of(context).portString,
           initialValue: postgresInstance?.port,
           onSaved: (String value) {
             _port = int.parse(value);
           },
         ),
-        textFormField(
-          labelText: 'Database',
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).databaseString,
           initialValue: postgresInstance?.database,
           onSaved: (String value) {
             _db = value;
           },
         ),
-        textFormField(
-          labelText: 'User',
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).userString,
           initialValue: postgresInstance?.user,
           onSaved: (String value) {
             _user = value;
           },
         ),
-        textFormField(
-          labelText: 'Password',
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).passwordString,
           initialValue: postgresInstance?.password,
           obscureText: true,
           onSaved: (String value) {
             _pass = value;
           },
         ),
-        _headerText(context, "Cloudinary"),
-        textFormField(
-          labelText: 'Cloud name',
+        _headerText(context, 'Cloudinary'),
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).cloudNameString,
           initialValue: cloudinaryInstance?.cloudName,
           onSaved: (String value) {
             _cloud = value;
           },
         ),
-        numberFormField(
-          labelText: 'API Key',
+        _numberFormField(
+          labelText: GameCollectionLocalisations.of(context).apiKeyString,
           initialValue: cloudinaryInstance?.apiKey,
           onSaved: (String value) {
             _apiKey = int.parse(value);
           },
         ),
-        textFormField(
-          labelText: 'API Secret',
+        _textFormField(
+          labelText: GameCollectionLocalisations.of(context).apiSecretString,
           initialValue: cloudinaryInstance?.apiSecret,
           obscureText: true,
           onSaved: (String value) {
@@ -234,17 +236,17 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _localRepositoryPanel(BuildContext context, RepositoryType radioGroup) {
+  /*ExpansionPanel _localRepositoryPanel(BuildContext context, RepositoryType radioGroup) {
 
     return _repositoryExpansionPanel(
       context,
-      title: "Local repository",
+      title: GameCollectionLocalisations.of(context).localRepositoryString,
       radioGroup: radioGroup,
       radioValue: RepositoryType.Local,
       textForms: [],
     );
 
-  }
+  }*/
 
   Widget _headerText(BuildContext context, String text) {
 
@@ -255,9 +257,9 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget textFormField({String labelText, String initialValue, bool obscureText = false, void Function(String) onSaved}) {
+  Widget _textFormField({String labelText, String initialValue, bool obscureText = false, void Function(String) onSaved}) {
 
-    return ShowHideTextField(
+    return _ShowHideTextField(
       labelText: labelText,
       initialValue: initialValue,
       allowObscureText: obscureText,
@@ -267,9 +269,9 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget numberFormField({String labelText, int initialValue, bool obscureText = false, void Function(String) onSaved}) {
+  Widget _numberFormField({String labelText, int initialValue, bool obscureText = false, void Function(String) onSaved}) {
 
-    return ShowHideTextField(
+    return _ShowHideTextField(
       labelText: labelText,
       initialValue: initialValue != null? initialValue.toString() : '',
       allowObscureText: obscureText,
@@ -278,15 +280,6 @@ class _RepositorySettingsBody extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-    );
-
-  }
-
-  InputDecoration _inputDecoration({String labelText}) {
-
-    return InputDecoration(
-      labelText: labelText,
-      border: OutlineInputBorder(),
     );
 
   }
@@ -321,7 +314,10 @@ class _RepositorySettingsBody extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: RaisedButton(
                   color: Theme.of(context).primaryColor,
-                  child: Text("Save", style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    GameCollectionLocalisations.of(context).saveString,
+                    style: TextStyle(color: Colors.white),
+                  ),
                   elevation: 1.0,
                   highlightElevation: 2.0,
                   onPressed: () {
@@ -342,8 +338,8 @@ class _RepositorySettingsBody extends StatelessWidget {
 
 }
 
-class ShowHideTextField extends StatefulWidget {
-  const ShowHideTextField({Key key, @required this.labelText, @required this.initialValue, this.allowObscureText = false, @required this.onSaved, this.keyboardType, this.inputFormatters}) : super(key: key);
+class _ShowHideTextField extends StatefulWidget {
+  const _ShowHideTextField({Key key, @required this.labelText, @required this.initialValue, this.allowObscureText = false, @required this.onSaved, this.keyboardType, this.inputFormatters}) : super(key: key);
 
   final String initialValue;
   final String labelText;
@@ -353,9 +349,9 @@ class ShowHideTextField extends StatefulWidget {
   final List<TextInputFormatter> inputFormatters;
 
   @override
-  State<ShowHideTextField> createState() => ShowHideTextFieldState();
+  State<_ShowHideTextField> createState() => _ShowHideTextFieldState();
 }
-class ShowHideTextFieldState extends State<ShowHideTextField> {
+class _ShowHideTextFieldState extends State<_ShowHideTextField> {
 
   bool obscureText = true;
 
@@ -367,11 +363,15 @@ class ShowHideTextFieldState extends State<ShowHideTextField> {
       child: TextFormField(
         initialValue: widget.initialValue,
         obscureText: widget.allowObscureText? obscureText : false,
+        maxLines: 1,
         decoration: InputDecoration(
           labelText: widget.labelText,
           border: OutlineInputBorder(),
           suffixIcon: widget.allowObscureText? IconButton(
-            tooltip: 'Visibility',
+            tooltip: obscureText?
+              GameCollectionLocalisations.of(context).showString
+              :
+              GameCollectionLocalisations.of(context).hideString,
             icon: obscureText? Icon(Icons.visibility_off) : Icon(Icons.visibility),
             onPressed: () {
               setState(() {
@@ -384,7 +384,7 @@ class ShowHideTextFieldState extends State<ShowHideTextField> {
         inputFormatters: widget.inputFormatters,
         validator: (value) {
           if (value.isEmpty) {
-            return 'Please enter some text';
+            return GameCollectionLocalisations.of(context).enterTextString;
           }
           return null;
         },

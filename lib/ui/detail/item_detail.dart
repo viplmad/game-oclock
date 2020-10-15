@@ -13,6 +13,8 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/bloc/item_detail/item_detail.dart';
 import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import 'year_picker.dart' as customyearpicker;
@@ -67,15 +69,14 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 
   }
 
-  external K detailBlocBuilder(S managerBloc);
-  external S managerBlocBuilder();
-  external List<BlocProvider> relationBlocsBuilder();
+  K detailBlocBuilder(S managerBloc);
+  S managerBlocBuilder();
+  List<BlocProvider> relationBlocsBuilder();
 
-  external ThemeData themeData(BuildContext context);
-  external ItemDetailBody<T, K, S> detailBodyBuilder();
+  ThemeData themeData(BuildContext context);
+  ItemDetailBody<T, K, S> detailBodyBuilder();
 
 }
-
 
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   ItemDetailBody({
@@ -84,7 +85,8 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
   }) : super(key: key);
 
   final void Function(T item) onUpdate;
-  T updatedItem;
+
+  T _updatedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -92,51 +94,51 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
     return WillPopScope(
       onWillPop: () {
 
-        if(onUpdate != null) { onUpdate(updatedItem); }
+        if(onUpdate != null) { onUpdate(_updatedItem); }
         return Future<bool>.value(true);
 
       },
       child: BlocListener<S, ItemDetailManagerState>(
         listener: (BuildContext context, ItemDetailManagerState state) {
           if(state is ItemFieldUpdated<T>) {
-            updatedItem = state.item;
+            _updatedItem = state.item;
 
-            String message = "Field updated";
+            String message = GameCollectionLocalisations.of(context).fieldUpdatedString;
             showSnackBar(
               scaffoldState: Scaffold.of(context),
               message: message,
             );
           }
           if(state is ItemFieldNotUpdated) {
-            String message = "Unable to update field";
+            String message = GameCollectionLocalisations.of(context).unableToUpdateFieldString;
             showSnackBar(
               scaffoldState: Scaffold.of(context),
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: "More",
+                label: GameCollectionLocalisations.of(context).moreString,
                 title: message,
                 content: state.error,
               ),
             );
           }
           if(state is ItemImageUpdated<T>) {
-            updatedItem = state.item;
+            _updatedItem = state.item;
 
-            String message = "Image updated";
+            String message = GameCollectionLocalisations.of(context).imageUpdatedString;
             showSnackBar(
               scaffoldState: Scaffold.of(context),
               message: message,
             );
           }
           if(state is ItemImageNotUpdated) {
-            String message = "Unable to update image";
+            String message = GameCollectionLocalisations.of(context).unableToUpdateImageString;
             showSnackBar(
               scaffoldState: Scaffold.of(context),
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: "More",
+                label: GameCollectionLocalisations.of(context).moreString,
                 title: message,
                 content: state.error,
               ),
@@ -170,7 +172,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                 },
               ),
               Column(
-                children: itemRelationsBuilder(),
+                children: itemRelationsBuilder(context),
               ),
             ],
           ),
@@ -204,7 +206,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         ),
         flexibleSpace: BlocBuilder<K, ItemDetailState> (
           builder: (BuildContext context, ItemDetailState state) {
-            String title = "";
+            String title = '';
             String imageURL;
             String imageFilename;
 
@@ -258,11 +260,14 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
       child: Wrap(
         children: <Widget>[
           ListTile(
-            title: Text(imageFilename?? 'none'),
+            title: Text(imageFilename?? ''),
           ),
           Divider(),
           ListTile(
-            title: imageFilename != null? Text("Replace image") : Text("Upload image"),
+            title: imageFilename != null?
+              Text(GameCollectionLocalisations.of(context).replaceImageString)
+              :
+              Text(GameCollectionLocalisations.of(context).uploadImageString),
             leading: Icon(Icons.file_upload),
             onTap: () {
               _picker.getImage(
@@ -284,7 +289,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
             },
           ),
           ListTile(
-            title: Text("Rename image"),
+            title: Text(GameCollectionLocalisations.of(context).renameImageString),
             leading: Icon(Icons.edit),
             enabled: imageFilename != null,
             onTap: () {
@@ -296,10 +301,8 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                 context: context,
                 builder: (BuildContext context) {
 
-                  MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
                   return AlertDialog(
-                    title: Text("Edit Name"),
+                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).nameFieldString)),
                     content: TextField(
                       controller: fieldController,
                       keyboardType: TextInputType.text,
@@ -309,18 +312,18 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                         FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                       ],
                       decoration: InputDecoration(
-                        hintText: "Name",
+                        hintText: GameCollectionLocalisations.of(context).nameFieldString,
                       ),
                     ),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text(localizations.cancelButtonLabel),
+                        child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
                         onPressed: () {
                           Navigator.maybePop<String>(context);
                         },
                       ),
                       FlatButton(
-                        child: Text(localizations.okButtonLabel),
+                        child: Text(MaterialLocalizations.of(context).okButtonLabel),
                         onPressed: () {
                           Navigator.maybePop<String>(context, fieldController.text.trim());
                         },
@@ -345,7 +348,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
             },
           ),
           ListTile(
-            title: Text("Delete image"),
+            title: Text(GameCollectionLocalisations.of(context).deleteImageString),
             leading: Icon(Icons.delete_outline),
             enabled: imageFilename != null,
             onTap: () {
@@ -379,27 +382,27 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemTextField(BuildContext context, {@required String fieldName, @required String value}) {
+  Widget itemTextField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
 
-    return ItemTextField(
+    return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, fieldName),
+      update: _updateFieldFunction<String>(context, field),
     );
 
   }
 
-  Widget itemURLField(BuildContext context, {@required String fieldName, @required String value}) {
+  Widget itemURLField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
 
-    return ItemTextField(
+    return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, fieldName),
+      update: _updateFieldFunction<String>(context, field),
       onLongPress: () async {
         if (await canLaunch(value)) {
           await launch(value);
         } else {
-          String message = "Could not launch $value";
+          String message = GameCollectionLocalisations.of(context).unableToLaunchString(value);
           showSnackBar(
             scaffoldState: Scaffold.of(context),
             message: message,
@@ -410,140 +413,139 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemLongTextField(BuildContext context, {@required String fieldName, @required String value}) {
+  Widget itemLongTextField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
 
-    return ItemTextField(
+    return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, fieldName),
+      update: _updateFieldFunction<String>(context, field),
       isLongText: true,
     );
 
   }
 
-  Widget itemIntField(BuildContext context, {@required String fieldName, @required int value}) {
+  Widget itemIntField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
 
-    return ItemIntField(
+    return _ItemIntField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(context, fieldName),
+      update: _updateFieldFunction<int>(context, field),
     );
 
   }
 
-  Widget itemMoneyField(BuildContext context, {@required String fieldName, @required double value}) {
+  Widget itemMoneyField(BuildContext context, {@required String fieldName, @required String field, @required double value}) {
 
-    return ItemDoubleField(
+    return _ItemDoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.toStringAsFixed(2) + ' €'
-          :
-          null,
-      update: _updateFieldFunction<double>(context, fieldName),
+        GameCollectionLocalisations.of(context).euroString(value.toStringAsFixed(2))
+        :
+        null,
+      update: _updateFieldFunction<double>(context, field),
     );
 
   }
 
-  Widget itemMoneySumField({@required String fieldName, @required double value}) {
+  Widget itemMoneySumField(BuildContext context, {@required String fieldName, @required double value}) {
 
-    return ItemDoubleField(
+    return _ItemDoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.toStringAsFixed(2) + ' €'
-          :
-          null,
+        GameCollectionLocalisations.of(context).euroString(value.toStringAsFixed(2))
+        :
+        null,
       editable: false,
     );
 
   }
 
-  Widget itemPercentageField({@required String fieldName, @required double value}) {
+  Widget itemPercentageField(BuildContext context, {@required String fieldName, @required double value}) {
 
-    return ItemDoubleField(
+    return _ItemDoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.toStringAsFixed(2) + ' %'
-          :
-          null,
+        GameCollectionLocalisations.of(context).percentageString(value.toStringAsFixed(2))
+        :
+        null,
       editable: false,
     );
 
   }
 
-  Widget itemYearField(BuildContext context, {@required String fieldName, @required int value}) {
+  Widget itemYearField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
 
-    return ItemYearField(
+    return _ItemYearField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(context, fieldName),
+      update: _updateFieldFunction<int>(context, field),
     );
 
   }
 
-  Widget itemDateTimeField(BuildContext context, {@required String fieldName, @required DateTime value}) {
+  Widget itemDateTimeField(BuildContext context, {@required String fieldName, @required String field, @required DateTime value}) {
 
-    return ItemDateTimeField(
+    return _ItemDateTimeField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<DateTime>(context, fieldName),
+      update: _updateFieldFunction<DateTime>(context, field),
     );
 
   }
 
-  Widget itemDurationField(BuildContext context, {@required String fieldName, @required Duration value}) {
+  Widget itemDurationField(BuildContext context, {@required String fieldName, @required String field, @required Duration value}) {
 
-    return ItemDurationField(
+    return _ItemDurationField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<Duration>(context, fieldName),
+      update: _updateFieldFunction<Duration>(context, field),
     );
 
   }
 
-  Widget itemRatingField(BuildContext context, {@required String fieldName, @required int value}) {
+  Widget itemRatingField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
 
-    return RatingField(
+    return _RatingField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(context, fieldName),
+      update: _updateFieldFunction<int>(context, field),
     );
 
   }
 
-  Widget itemBoolField(BuildContext context, {@required String fieldName, @required bool value}) {
+  Widget itemBoolField(BuildContext context, {@required String fieldName, @required String field, @required bool value}) {
 
-    return BoolField(
+    return _BoolField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<bool>(context, fieldName),
+      update: _updateFieldFunction<bool>(context, field),
     );
 
   }
 
-  Widget itemChipField(BuildContext context, {@required String fieldName, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
+  Widget itemChipField(BuildContext context, {@required String fieldName, @required String field, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
 
-    return EnumField(
+    return _EnumField(
       fieldName: fieldName,
       value: value,
       enumValues: possibleValues,
       enumColours: possibleValuesColours,
-      update: _updateFieldFunction<String>(context, fieldName),
+      update: _updateFieldFunction<String>(context, field),
     );
 
   }
 
-  external List<Widget> itemFieldsBuilder(BuildContext context, T item);
-
-  external List<Widget> itemRelationsBuilder();
+  List<Widget> itemFieldsBuilder(BuildContext context, T item);
+  List<Widget> itemRelationsBuilder(BuildContext context);
 
 }
 
-class ItemGenericField<K> extends StatelessWidget {
+class _ItemGenericField<K> extends StatelessWidget {
 
-  ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
+  _ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
 
   final String fieldName;
   final K value;
@@ -569,7 +571,7 @@ class ItemGenericField<K> extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
-            child: Text(shownValue?? "Unknown",),
+            child: Text(shownValue?? ''),
           ),
         ],
       ),
@@ -587,7 +589,7 @@ class ItemGenericField<K> extends StatelessWidget {
     ListTileTheme.merge(
       child: ListTile(
         title: Text(fieldName),
-        trailing: Text(shownValue?? "Unknown"),
+        trailing: Text(shownValue?? ''),
         onTap: editable?
           () {
             onTap().then( (K newValue) {
@@ -603,9 +605,10 @@ class ItemGenericField<K> extends StatelessWidget {
   }
 
 }
-class ItemTextField extends StatelessWidget {
 
-  ItemTextField({@required this.fieldName, @required this.value, this.shownValue, this.onLongPress, @required this.update, this.isLongText = false});
+class _ItemTextField extends StatelessWidget {
+
+  _ItemTextField({@required this.fieldName, @required this.value, this.shownValue, this.onLongPress, @required this.update, this.isLongText = false});
 
   final String fieldName;
   final String value;
@@ -617,7 +620,7 @@ class ItemTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField<String>(
+    return _ItemGenericField<String>(
       fieldName: fieldName,
       value: value,
       shownValue: shownValue?? value,
@@ -634,7 +637,7 @@ class ItemTextField extends StatelessWidget {
             MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
             return AlertDialog(
-              title: Text("Edit " + fieldName),
+              title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
               content: TextField(
                 controller: fieldController,
                 keyboardType: isLongText? TextInputType.multiline : TextInputType.text,
@@ -668,9 +671,10 @@ class ItemTextField extends StatelessWidget {
   }
 
 }
-class ItemIntField extends StatelessWidget {
 
-  ItemIntField({@required this.fieldName, @required this.value, @required this.update});
+class _ItemIntField extends StatelessWidget {
+
+  _ItemIntField({@required this.fieldName, @required this.value, @required this.update});
 
   final String fieldName;
   final int value;
@@ -679,7 +683,7 @@ class ItemIntField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField<int>(
+    return _ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
       shownValue: value?.toString(),
@@ -692,7 +696,7 @@ class ItemIntField extends StatelessWidget {
             MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
             return NumberPickerDialog.integer(
-              title: Text("Edit " + fieldName),
+              title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
               initialIntegerValue: value,
               minValue: 1,
               maxValue: 10,
@@ -707,9 +711,10 @@ class ItemIntField extends StatelessWidget {
   }
 
 }
-class ItemDoubleField extends StatelessWidget {
 
-  ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.update});
+class _ItemDoubleField extends StatelessWidget {
+
+  _ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.update});
 
   final String fieldName;
   final double value;
@@ -720,7 +725,7 @@ class ItemDoubleField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField<double>(
+    return _ItemGenericField<double>(
       fieldName: fieldName,
       value: value,
       shownValue: shownValue,
@@ -728,15 +733,15 @@ class ItemDoubleField extends StatelessWidget {
       update: update,
       onTap: () {
         return showDialog<double>(
-            context: context,
-            builder: (BuildContext context) {
+          context: context,
+          builder: (BuildContext context) {
 
-              return DecimalPickerDialog(
-                fieldName: fieldName,
-                number: value,
-              );
-              
-            }
+            return _DecimalPickerDialog(
+              fieldName: fieldName,
+              number: value,
+            );
+
+          },
         );
       },
     );
@@ -744,9 +749,10 @@ class ItemDoubleField extends StatelessWidget {
   }
 
 }
-class ItemYearField extends StatelessWidget {
 
-  ItemYearField({@required this.fieldName, @required this.value, @required this.update});
+class _ItemYearField extends StatelessWidget {
+
+  _ItemYearField({@required this.fieldName, @required this.value, @required this.update});
 
   final String fieldName;
   final int value;
@@ -755,20 +761,20 @@ class ItemYearField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField<int>(
+    return _ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
       shownValue: value?.toString(),
       update: update,
       onTap: () {
         return showDialog<int>(
-            context: context,
-            builder: (BuildContext context) {
-              return YearPickerDialog(
-                fieldName: fieldName,
-                year: value,
-              );
-            }
+          context: context,
+          builder: (BuildContext context) {
+            return _YearPickerDialog(
+              fieldName: fieldName,
+              year: value,
+            );
+          },
         );
       },
     );
@@ -776,9 +782,10 @@ class ItemYearField extends StatelessWidget {
   }
 
 }
-class ItemDateTimeField extends StatelessWidget {
 
-  ItemDateTimeField({@required this.fieldName, @required this.value, @required this.update});
+class _ItemDateTimeField extends StatelessWidget {
+
+  _ItemDateTimeField({@required this.fieldName, @required this.value, @required this.update});
 
   final String fieldName;
   final DateTime value;
@@ -787,57 +794,20 @@ class ItemDateTimeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ItemGenericField<DateTime>(
-        fieldName: fieldName,
-        value: value,
-        shownValue: value != null?
-            value.day.toString() + "/" + value.month.toString() + "/" + value.year.toString()
-            :
-            null,
-        update: update,
-        onTap: () {
-          return showDatePicker(
-            context: context,
-            firstDate: DateTime(1970),
-            lastDate: DateTime.now(),
-            initialDate: value?? DateTime.now(),
-          );
-        },
-    );
-
-  }
-
-}
-class ItemDurationField extends StatelessWidget {
-
-  ItemDurationField({@required this.fieldName, @required this.value, @required this.update});
-
-  final String fieldName;
-  final Duration value;
-  final void Function(Duration) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return ItemGenericField<Duration>(
+    return _ItemGenericField<DateTime>(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-          value.inHours.toString() + ":" + (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0')
-          :
-          null,
+        GameCollectionLocalisations.of(context).dateString(value.day.toString(), value.month.toString(), value.year.toString())
+        :
+        null,
       update: update,
       onTap: () {
-        return showDialog<Duration>(
-            context: context,
-            builder: (BuildContext context) {
-
-              return DurationPickerDialog(
-                fieldName: fieldName,
-                duration: value,
-              );
-
-            }
+        return showDatePicker(
+          context: context,
+          firstDate: DateTime(1970),
+          lastDate: DateTime.now(),
+          initialDate: value?? DateTime.now(),
         );
       },
     );
@@ -846,10 +816,47 @@ class ItemDurationField extends StatelessWidget {
 
 }
 
+class _ItemDurationField extends StatelessWidget {
 
-class RatingField extends StatelessWidget {
+  _ItemDurationField({@required this.fieldName, @required this.value, @required this.update});
 
-  RatingField({@required this.fieldName, @required this.value, this.update});
+  final String fieldName;
+  final Duration value;
+  final void Function(Duration) update;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return _ItemGenericField<Duration>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+        GameCollectionLocalisations.of(context).durationString(value.inHours.toString(), (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0'))
+        :
+        null,
+      update: update,
+      onTap: () {
+        return showDialog<Duration>(
+          context: context,
+          builder: (BuildContext context) {
+
+            return _DurationPickerDialog(
+              fieldName: fieldName,
+              duration: value,
+            );
+
+          },
+        );
+      },
+    );
+
+  }
+
+}
+
+class _RatingField extends StatelessWidget {
+
+  _RatingField({@required this.fieldName, @required this.value, this.update});
 
   final String fieldName;
   final int value;
@@ -896,9 +903,10 @@ class RatingField extends StatelessWidget {
   }
 
 }
-class BoolField extends StatelessWidget {
 
-  BoolField({@required this.fieldName, @required this.value, this.update});
+class _BoolField extends StatelessWidget {
+
+  _BoolField({@required this.fieldName, @required this.value, this.update});
 
   final String fieldName;
   final bool value;
@@ -916,9 +924,10 @@ class BoolField extends StatelessWidget {
   }
 
 }
-class EnumField extends StatelessWidget {
 
-  const EnumField({Key key, @required this.fieldName, @required this.value, @required this.enumValues, this.enumColours, @required this.update}) : super(key: key);
+class _EnumField extends StatelessWidget {
+
+  const _EnumField({Key key, @required this.fieldName, @required this.value, @required this.enumValues, this.enumColours, @required this.update}) : super(key: key);
 
   final String fieldName;
   final String value;
@@ -968,16 +977,15 @@ class EnumField extends StatelessWidget {
 
 }
 
-
-class YearPickerDialog extends StatefulWidget {
-  YearPickerDialog({Key key, this.fieldName, this.year}) : super(key: key);
+class _YearPickerDialog extends StatefulWidget {
+  _YearPickerDialog({Key key, this.fieldName, this.year}) : super(key: key);
 
   final String fieldName;
   final int year;
 
-  State<YearPickerDialog> createState() => YearPickerDialogState();
+  State<_YearPickerDialog> createState() => _YearPickerDialogState();
 }
-class YearPickerDialogState extends State<YearPickerDialog> {
+class _YearPickerDialogState extends State<_YearPickerDialog> {
 
   DateTime _selectedDate;
 
@@ -1051,15 +1059,15 @@ class YearPickerDialogState extends State<YearPickerDialog> {
 
 }
 
-class DurationPickerDialog extends StatefulWidget {
-  DurationPickerDialog({Key key, this.fieldName, this.duration}) : super(key: key);
+class _DurationPickerDialog extends StatefulWidget {
+  _DurationPickerDialog({Key key, this.fieldName, this.duration}) : super(key: key);
 
   final String fieldName;
   final Duration duration;
 
-  State<DurationPickerDialog> createState() => DurationPickerDialogState();
+  State<_DurationPickerDialog> createState() => _DurationPickerDialogState();
 }
-class DurationPickerDialogState extends State<DurationPickerDialog> {
+class _DurationPickerDialogState extends State<_DurationPickerDialog> {
   int _hours;
   int _minutes;
 
@@ -1074,10 +1082,8 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
   @override
   Widget build(BuildContext context) {
 
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
     return AlertDialog(
-      title: Text("Edit " + widget.fieldName),
+      title: Text(GameCollectionLocalisations.of(context).editString(widget.fieldName)),
       content: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1109,13 +1115,13 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(localizations.cancelButtonLabel),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<Duration>(context);
           },
         ),
         FlatButton(
-          child: Text(localizations.okButtonLabel),
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () {
             Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));
           },
@@ -1126,15 +1132,15 @@ class DurationPickerDialogState extends State<DurationPickerDialog> {
 
 }
 
-class DecimalPickerDialog extends StatefulWidget {
-  DecimalPickerDialog({Key key, this.fieldName, this.number}) : super(key: key);
+class _DecimalPickerDialog extends StatefulWidget {
+  _DecimalPickerDialog({Key key, this.fieldName, this.number}) : super(key: key);
 
   final String fieldName;
   final double number;
 
-  State<DecimalPickerDialog> createState() => DecimalPickerDialogState();
+  State<_DecimalPickerDialog> createState() => _DecimalPickerDialogState();
 }
-class DecimalPickerDialogState extends State<DecimalPickerDialog> {
+class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
   int _integerPart;
   int _decimalPart;
 
@@ -1149,10 +1155,8 @@ class DecimalPickerDialogState extends State<DecimalPickerDialog> {
   @override
   Widget build(BuildContext context) {
 
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
     return AlertDialog(
-      title: Text("Edit " + widget.fieldName),
+      title: Text(GameCollectionLocalisations.of(context).editString(widget.fieldName)),
       content: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1185,15 +1189,15 @@ class DecimalPickerDialogState extends State<DecimalPickerDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(localizations.cancelButtonLabel),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<double>(context);
           },
         ),
         FlatButton(
-          child: Text(localizations.okButtonLabel),
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () {
-            Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + "." + _decimalPart.toString().padLeft(2, '0')));
+            Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + '.' + _decimalPart.toString().padLeft(2, '0')));
           },
         ),
       ],

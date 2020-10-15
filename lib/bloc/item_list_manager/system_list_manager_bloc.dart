@@ -23,7 +23,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<System> event) {
 
-    return iCollectionRepository.deleteSystem(event.item.ID);
+    return iCollectionRepository.deleteSystem(event.item.id);
 
   }
 

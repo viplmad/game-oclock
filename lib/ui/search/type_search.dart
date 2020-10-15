@@ -41,6 +41,9 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   }) : super(key: key, items: items);
 
   @override
+  final String detailRouteName = '';
+
+  @override
   void Function() onTap(BuildContext context, PurchaseType item) {
 
     return null;

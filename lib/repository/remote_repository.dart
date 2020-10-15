@@ -105,7 +105,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      ID: dlcID,
+      id: dlcID,
       fieldName: dlc_baseGameField,
       newValue: gameID,
     );
@@ -221,7 +221,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      ID: purchaseID,
+      id: purchaseID,
       fieldName: purc_storeField,
       newValue: storeID,
     );
@@ -329,63 +329,63 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getGameWithID(int ID) {
+  Stream<Game> getGameWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: gameTable,
       selectFields: gameFields,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleGame );
 
   }
 
   @override
-  Stream<List<Platform>> getPlatformsFromGame(int ID) {
+  Stream<List<Platform>> getPlatformsFromGame(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromGame(int ID) {
+  Stream<List<Purchase>> getPurchasesFromGame(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
   }
 
   @override
-  Stream<List<DLC>> getDLCsFromGame(int ID) {
+  Stream<List<DLC>> getDLCsFromGame(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<List<Tag>> getTagsFromGame(int ID) {
+  Stream<List<Tag>> getTagsFromGame(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListTag );
 
   }
@@ -410,25 +410,25 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<DLC> getDLCWithID(int ID) {
+  Stream<DLC> getDLCWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: dlcTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleDLC );
 
   }
 
   @override
-  Stream<Game> getBaseGameFromDLC(int ID) {
+  Stream<Game> getBaseGameFromDLC(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: gameTable,
       subordinateTable: dlcTable,
       relationField: dlc_baseGameField,
-      relationID: ID,
+      relationID: id,
       primaryResults: true,
       selectFields: gameFields,
     ).asStream().map( _dynamicToSingleGame );
@@ -436,13 +436,13 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromDLC(int ID) {
+  Stream<List<Purchase>> getPurchasesFromDLC(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -468,38 +468,38 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Platform> getPlatformWithID(int ID) {
+  Stream<Platform> getPlatformWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: platformTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSinglePlatform );
 
   }
 
   @override
-  Stream<List<Game>> getGamesFromPlatform(int ID) {
+  Stream<List<Game>> getGamesFromPlatform(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: platformTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<System>> getSystemsFromPlatform(int ID) {
+  Stream<List<System>> getSystemsFromPlatform(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -525,63 +525,63 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Purchase> getPurchaseWithID(int ID) {
+  Stream<Purchase> getPurchaseWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: purchaseTable,
       selectFields: purchaseFields,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSinglePurchase );
 
   }
 
-  Stream<Store> getStoreFromPurchase(int ID) {
+  Stream<Store> getStoreFromPurchase(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
-      relationID: ID,
+      relationID: id,
       primaryResults: true,
     ).asStream().map( _dynamicToSingleStore );
 
   }
 
   @override
-  Stream<List<Game>> getGamesFromPurchase(int ID) {
+  Stream<List<Game>> getGamesFromPurchase(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: purchaseTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
   }
 
   @override
-  Stream<List<DLC>> getDLCsFromPurchase(int ID) {
+  Stream<List<DLC>> getDLCsFromPurchase(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: dlcTable,
       rightTableName: purchaseTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<List<PurchaseType>> getTypesFromPurchase(int ID) {
+  Stream<List<PurchaseType>> getTypesFromPurchase(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: false,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListType );
 
   }
@@ -606,25 +606,25 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Store> getStoreWithID(int ID) {
+  Stream<Store> getStoreWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: storeTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleStore );
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromStore(int ID) {
+  Stream<List<Purchase>> getPurchasesFromStore(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: storeTable,
       subordinateTable: purchaseTable,
       relationField: purc_storeField,
-      relationID: ID,
+      relationID: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -650,25 +650,25 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<System> getSystemWithID(int ID) {
+  Stream<System> getSystemWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: systemTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleSystem );
 
   }
 
   @override
-  Stream<List<Platform>> getPlatformsFromSystem(int ID) {
+  Stream<List<Platform>> getPlatformsFromSystem(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: platformTable,
       rightTableName: systemTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -693,25 +693,25 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Tag> getTagWithID(int ID) {
+  Stream<Tag> getTagWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: tagTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleTag );
 
   }
 
   @override
-  Stream<List<Game>> getGamesFromTag(int ID) {
+  Stream<List<Game>> getGamesFromTag(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: gameTable,
       rightTableName: tagTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
       selectFields: gameFields,
     ).asStream().map( _dynamicToListGame );
 
@@ -737,25 +737,25 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<PurchaseType> getTypeWithID(int ID) {
+  Stream<PurchaseType> getTypeWithID(int id) {
 
     return _iSQLConnector.readTable(
       tableName: typeTable,
       whereFieldsAndValues: <String, int> {
-        IDField : ID,
+        IDField : id,
       },
     ).asStream().map( _dynamicToSingleType );
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesFromType(int ID) {
+  Stream<List<Purchase>> getPurchasesFromType(int id) {
 
     return _iSQLConnector.readRelation(
       leftTableName: purchaseTable,
       rightTableName: typeTable,
       leftResults: true,
-      relationID: ID,
+      relationID: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -765,11 +765,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region UPDATE
   @override
-  Future<Game> updateGame<T>(int ID, String fieldName, T newValue) {
+  Future<Game> updateGame<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: gameTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
       returningFields: gameFields,
@@ -778,11 +778,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<DLC> updateDLC<T>(int ID, String fieldName, T newValue) {
+  Future<DLC> updateDLC<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleDLC ).first;
@@ -790,11 +790,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Platform> updatePlatform<T>(int ID, String fieldName, T newValue) {
+  Future<Platform> updatePlatform<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: platformTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSinglePlatform ).first;
@@ -802,11 +802,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Purchase> updatePurchase<T>(int ID, String fieldName, T newValue) {
+  Future<Purchase> updatePurchase<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
       returningFields: purchaseFields,
@@ -815,11 +815,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Store> updateStore<T>(int ID, String fieldName, T newValue) {
+  Future<Store> updateStore<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: storeTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleStore ).first;
@@ -827,11 +827,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<System> updateSystem<T>(int ID, String fieldName, T newValue) {
+  Future<System> updateSystem<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: systemTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleSystem ).first;
@@ -839,11 +839,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Tag> updateTag<T>(int ID, String fieldName, T newValue) {
+  Future<Tag> updateTag<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: tagTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleTag ).first;
@@ -851,11 +851,11 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<PurchaseType> updateType<T>(int ID, String fieldName, T newValue) {
+  Future<PurchaseType> updateType<T>(int id, String fieldName, T newValue) {
 
     return _iSQLConnector.updateTable(
       tableName: typeTable,
-      ID: ID,
+      id: id,
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleType ).first;
@@ -866,11 +866,11 @@ class RemoteRepository implements ICollectionRepository {
   //#region DELETE
   //#region Game
   @override
-  Future<dynamic> deleteGame(int ID) {
+  Future<dynamic> deleteGame(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: gameTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -904,7 +904,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      ID: dlcID,
+      id: dlcID,
       fieldName: dlc_baseGameField,
       newValue: null,
     );
@@ -926,11 +926,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Future<dynamic> deleteDLC(int ID) {
+  Future<dynamic> deleteDLC(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: dlcTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -950,11 +950,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Future<dynamic> deletePlatform(int ID) {
+  Future<dynamic> deletePlatform(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: platformTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -974,11 +974,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Purchase
   @override
-  Future<dynamic> deletePurchase(int ID) {
+  Future<dynamic> deletePurchase(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: purchaseTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -998,11 +998,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Future<dynamic> deleteStore(int ID) {
+  Future<dynamic> deleteStore(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: storeTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -1012,7 +1012,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      ID: purchaseID,
+      id: purchaseID,
       fieldName: purc_storeField,
       newValue: null,
     );
@@ -1022,11 +1022,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Future<dynamic> deleteSystem(int ID) {
+  Future<dynamic> deleteSystem(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: systemTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -1034,11 +1034,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Tag
   @override
-  Future<dynamic> deleteTag(int ID) {
+  Future<dynamic> deleteTag(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: tagTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -1046,11 +1046,11 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Type
   @override
-  Future<dynamic> deleteType(int ID) {
+  Future<dynamic> deleteType(int id) {
 
     return _iSQLConnector.deleteTable(
       tableName: typeTable,
-      ID: ID,
+      id: id,
     );
 
   }
@@ -1612,9 +1612,9 @@ class RemoteRepository implements ICollectionRepository {
   }
   //#endregion Dynamic Map to List
 
-  String _getImageName(int ID, String imageName) {
+  String _getImageName(int id, String imageName) {
 
-    return ID.toString() + '-' + imageName;
+    return id.toString() + '-' + imageName;
 
   }
 

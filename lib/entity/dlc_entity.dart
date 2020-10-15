@@ -24,14 +24,14 @@ const String dlc_baseGameField = 'Base Game';
 class DLCEntity extends CollectionItemEntity {
 
   DLCEntity({
-    @required int ID,
+    @required int id,
     this.name,
     this.releaseYear,
     this.coverFilename,
     this.finishDate,
 
     this.baseGame,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final int releaseYear;
@@ -43,7 +43,7 @@ class DLCEntity extends CollectionItemEntity {
   static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[dlc_nameField],
       releaseYear: map[dlc_releaseYearField],
       coverFilename: map[dlc_coverField],
@@ -58,7 +58,7 @@ class DLCEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       dlc_nameField : name,
       dlc_releaseYearField : releaseYear,
       dlc_coverField : coverFilename,
@@ -85,7 +85,7 @@ class DLCEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     releaseYear,
     coverFilename,
@@ -96,7 +96,7 @@ class DLCEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$dlcTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverFilename, '

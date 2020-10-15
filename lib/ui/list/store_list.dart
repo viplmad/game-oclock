@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/bloc/item_list/item_list.dart';
+import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';
@@ -15,21 +16,33 @@ import 'list.dart';
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 
   @override
-  BarData barData = storeBarData;
+  final Color themeColor = StoreTheme.primaryColour;
+
+  @override
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
+
+  @override
+  List<String> views(BuildContext context) => StoreTheme.views(context);
 
 }
 
 class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
 
   @override
-  BarData barData = storeBarData;
+  final Color themeColor = StoreTheme.primaryColour;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 
 }
 
 class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
 
   @override
-  String detailRouteName = storeDetailRoute;
+  final String detailRouteName = storeDetailRoute;
+
+  @override
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 
   @override
   _StoreListBody itemListBodyBuilder({@required List<Store> items, @required int viewIndex, @required void Function(Store) onDelete, @required ListStyle style}) {
@@ -62,10 +75,13 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   );
 
   @override
-  String detailRouteName = storeDetailRoute;
+  final String detailRouteName = storeDetailRoute;
 
   @override
-  String localSearchRouteName = storeLocalSearchRoute;
+  final String localSearchRouteName = storeLocalSearchRoute;
+
+  @override
+  final String statisticsRouteName = '';
 
   @override
   void Function() onStatisticsTap(BuildContext context) {
@@ -75,9 +91,9 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   }
 
   @override
-  String getViewTitle() {
+  String viewTitle(BuildContext context) {
 
-    return storeBarData.views.elementAt(viewIndex);
+    return StoreTheme.views(context).elementAt(viewIndex);
 
   }
 

@@ -8,12 +8,12 @@ const String IDField = 'ID';
 abstract class CollectionItemEntity extends Equatable {
 
   const CollectionItemEntity({
-    @required this.ID
+    @required this.id
   });
 
-  final int ID;
+  final int id;
 
-  external Map<String, dynamic> toDynamicMap();
+  Map<String, dynamic> toDynamicMap();
 
   static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
@@ -32,14 +32,14 @@ abstract class CollectionItemEntity extends Equatable {
 
   @override
   List<Object> get props => [
-    ID
+    id
   ];
 
   @override
   String toString() {
 
     return 'CollectionItemEntity { '
-        'id: $ID'
+        'id: $id'
         ' }';
 
   }

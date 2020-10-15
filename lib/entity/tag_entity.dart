@@ -15,16 +15,16 @@ const tag_nameField = 'Name';
 class TagEntity extends CollectionItemEntity {
 
   TagEntity({
-    @required int ID,
+    @required int id,
     this.name
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
 
   static TagEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return TagEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[tag_nameField],
     );
 
@@ -34,7 +34,7 @@ class TagEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       tag_nameField : name,
     };
 
@@ -56,7 +56,7 @@ class TagEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
   ];
 
@@ -64,7 +64,7 @@ class TagEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$tagTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$tag_nameField: $name'
         ' }';
 

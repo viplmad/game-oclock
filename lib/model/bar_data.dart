@@ -10,13 +10,11 @@ class BarData extends Equatable {
     @required this.title,
     this.color,
     @required this.icon,
-    this.views,
   });
 
   final String title;
   final IconData icon;
   final Color color;
-  final List<String> views;
 
   @override
   List<Object> get props => [title, icon, color];

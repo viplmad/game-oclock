@@ -123,7 +123,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
   }
 
-  external Future<T> updateFuture(UpdateItemField<T> event);
+  Future<T> updateFuture(UpdateItemField<T> event);
   external Future<T> addImage(AddItemImage<T> event);
   external Future<T> deleteImage(DeleteItemImage<T> event);
   external Future<T> updateImageName(UpdateItemImageName<T> event);

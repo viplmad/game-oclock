@@ -13,6 +13,8 @@ import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dar
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../theme/theme.dart';
 import '../relation/relation.dart';
 import 'item_detail.dart';
@@ -29,7 +31,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   PurchaseDetailBloc detailBlocBuilder(PurchaseDetailManagerBloc managerBloc) {
 
     return PurchaseDetailBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
       managerBloc: managerBloc,
     );
@@ -40,7 +42,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   PurchaseDetailManagerBloc managerBlocBuilder() {
 
     return PurchaseDetailManagerBloc(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -50,22 +52,22 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   List<BlocProvider> relationBlocsBuilder() {
 
     PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
     PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
-      itemID: item.ID,
+      itemID: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
@@ -100,17 +102,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   }
 
   @override
-  ThemeData themeData(BuildContext context) {
-
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData purchaseTheme = contextTheme.copyWith(
-      primaryColor: purchaseColour,
-      accentColor: purchaseAccentColour,
-    );
-
-    return purchaseTheme;
-
-  }
+  ThemeData themeData(BuildContext context) => PurchaseTheme.themeData(context);
 
   @override
   _PurchaseDetailBody detailBodyBuilder() {
@@ -126,7 +118,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
     return BlocProvider<PurchaseRelationBloc<W>>(
       create: (BuildContext context) {
         return PurchaseRelationBloc<W>(
-          itemID: item.ID,
+          itemID: item.id,
           iCollectionRepository: ICollectionRepository.iCollectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
@@ -149,45 +141,61 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
     return [
       itemTextField(
         context,
-        fieldName: purc_descriptionField,
+        fieldName: GameCollectionLocalisations.of(context).descriptionFieldString,
+        field: purc_descriptionField,
         value: purchase.description,
       ),
       itemMoneyField(
         context,
-        fieldName: purc_priceField,
+        fieldName: GameCollectionLocalisations.of(context).priceFieldString,
+        field: purc_priceField,
         value: purchase.price,
       ),
       itemMoneyField(
         context,
-        fieldName: purc_externalCreditField,
+        fieldName: GameCollectionLocalisations.of(context).externalCreditsFieldString,
+        field: purc_externalCreditField,
         value: purchase.externalCredit,
       ),
       itemDateTimeField(
         context,
-        fieldName: purc_dateField,
+        fieldName: GameCollectionLocalisations.of(context).purchaseDateFieldString,
+        field: purc_dateField,
         value: purchase.date,
       ),
       itemMoneyField(
         context,
-        fieldName: purc_originalPriceField,
+        fieldName: GameCollectionLocalisations.of(context).originalPriceFieldString,
+        field: purc_originalPriceField,
         value: purchase.originalPrice,
       ),
       itemPercentageField(
-        fieldName: purc_discountField,
+        context,
+        fieldName: GameCollectionLocalisations.of(context).discountFieldString,
         value: purchase.discount,
       ),
     ];
   }
 
   @override
-  List<Widget> itemRelationsBuilder() {
+  List<Widget> itemRelationsBuilder(BuildContext context) {
 
     return [
-      PurchaseStoreRelationList(),
-      PurchaseGameRelationList(),
-      PurchaseDLCRelationList(),
+      PurchaseStoreRelationList(
+        relationName: GameCollectionLocalisations.of(context).storeString,
+        relationTypeName: GameCollectionLocalisations.of(context).storeString,
+      ),
+      PurchaseGameRelationList(
+        relationName: GameCollectionLocalisations.of(context).gamesString,
+        relationTypeName: GameCollectionLocalisations.of(context).gameString,
+      ),
+      PurchaseDLCRelationList(
+        relationName: GameCollectionLocalisations.of(context).dlcsString,
+        relationTypeName: GameCollectionLocalisations.of(context).dlcString,
+      ),
       PurchaseTypeRelationList(
-        shownName: 'Types',
+        relationName: GameCollectionLocalisations.of(context).purchaseTypesString,
+        relationTypeName: GameCollectionLocalisations.of(context).purchaseTypeString,
       ),
     ];
 

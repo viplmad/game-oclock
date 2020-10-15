@@ -16,7 +16,7 @@ enum PurchaseView {
 class Purchase extends CollectionItem {
 
   Purchase({
-    @required int ID,
+    @required int id,
     this.description,
     this.price,
     this.externalCredit,
@@ -24,23 +24,21 @@ class Purchase extends CollectionItem {
     this.originalPrice,
 
     this.store,
-  }) : super(ID: ID) {
-    this.discount = this.originalPrice > 0.0? (1 - (this.price + this.externalCredit) / this.originalPrice) * 100 : 0.0;
-  }
+  }) : super(id: id);
 
   final String description;
   final double price;
   final double externalCredit;
   final DateTime date;
   final double originalPrice;
-  double discount;
+  double get discount => this.originalPrice > 0.0? (1 - (this.price + this.externalCredit) / this.originalPrice) * 100 : 0.0;
 
   final int store;
 
   static Purchase fromEntity(PurchaseEntity entity) {
 
     return Purchase(
-      ID: entity.ID,
+      id: entity.id,
       description: entity.description,
       price: entity.price,
       externalCredit: entity.externalCredit,
@@ -56,7 +54,7 @@ class Purchase extends CollectionItem {
   PurchaseEntity toEntity() {
 
     return PurchaseEntity(
-      ID: this.ID,
+      id: this.id,
       description: this.description,
       price: this.price,
       externalCredit: this.externalCredit,
@@ -80,7 +78,7 @@ class Purchase extends CollectionItem {
   }) {
 
     return Purchase(
-      ID: ID,
+      id: id,
       description: description?? this.description,
       price: price?? this.price,
       externalCredit: externalCredit?? this.externalCredit,
@@ -95,7 +93,7 @@ class Purchase extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'Pu' + this.ID.toString();
+    return 'Pu' + this.id.toString();
 
   }
 
@@ -109,13 +107,13 @@ class Purchase extends CollectionItem {
   @override
   String getSubtitle() {
 
-    return this.price.toStringAsFixed(2) + " €" + " · " + this.discount.toStringAsFixed(2) + " %";
+    return this.price.toStringAsFixed(2) + " €" + " · " + this.discount.toStringAsFixed(2) + " %"; //TODO
 
   }
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     description,
     price,
     externalCredit,
@@ -127,7 +125,7 @@ class Purchase extends CollectionItem {
   String toString() {
 
     return '$purchaseTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$purc_descriptionField: $description, '
         '$purc_priceField: $price, '
         '$purc_externalCreditField: $externalCredit, '

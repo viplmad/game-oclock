@@ -7,6 +7,8 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/bloc/item_search/item_search.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
@@ -20,27 +22,27 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
     return MultiBlocProvider(
       providers: [
         BlocProvider<K>(
-            create: (BuildContext context) {
-              return searchBlocBuilder()..add(SearchTextChanged());
-            }
+          create: (BuildContext context) {
+            return searchBlocBuilder()..add(SearchTextChanged());
+          },
         ),
 
         BlocProvider<S>(
-            create: (BuildContext context) {
-              return managerBlocBuilder();
-            }
+          create: (BuildContext context) {
+            return managerBlocBuilder();
+          },
         ),
 
       ],
       child: _ItemSearchBody<T, K, S>(
-        onTap: onTap,
+        onTap: _onTap,
         allowNewButton: true,
       ),
     );
 
   }
 
-  void Function() onTap(BuildContext context, T item) {
+  void Function() _onTap(BuildContext context, T item) {
 
     return () {
       Navigator.maybePop<T>(context, item);
@@ -48,8 +50,8 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
 
   }
 
-  external K searchBlocBuilder();
-  external S managerBlocBuilder();
+  K searchBlocBuilder();
+  S managerBlocBuilder();
 
 }
 
@@ -58,7 +60,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
 
   final List<T> items;
 
-  String detailRouteName;
+  String get detailRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +76,9 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
         ),
 
         BlocProvider<S>(
-            create: (BuildContext context) {
-              return managerBlocBuilder();
-            }
+          create: (BuildContext context) {
+            return managerBlocBuilder();
+          },
         ),
 
       ],
@@ -102,7 +104,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
 
   }
 
-  external S managerBlocBuilder();
+  S managerBlocBuilder();
 
 }
 
@@ -130,7 +132,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
     return Scaffold(
       appBar: AppBar(
-        actions: buildActions(),
+        actions: _buildActions(),
         title: TextField(
           controller: _textEditingController,
           keyboardType: TextInputType.text,
@@ -146,7 +148,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           decoration: InputDecoration(
             border: UnderlineInputBorder(),
             prefixIcon: Icon(Icons.search),
-            hintText: 'Search ' + searchName + 's',
+            hintText: GameCollectionLocalisations.of(context).searchString(searchName),
           ),
         ),
       ),
@@ -158,14 +160,14 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
           }
           if(state is ItemNotAdded) {
-            String message = "Unable to add";
+            String message = GameCollectionLocalisations.of(context).unableToAddString(searchName);
             showSnackBar(
               scaffoldState: Scaffold.of(context),
               message: message,
               seconds: 2,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: "More",
+                label: GameCollectionLocalisations.of(context).moreString,
                 title: message,
                 content: state.error,
               ),
@@ -176,7 +178,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           children: <Widget>[
             widget.allowNewButton?
               Container(
-                child: newButton(),
+                child: _newButton(),
                 color: Colors.grey,
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               )
@@ -187,12 +189,12 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
                 if(state is ItemSearchEmpty<T>) {
 
-                  return listItems(state.suggestions, "");
+                  return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
 
                 }
                 if(state is ItemSearchSuccess<T>) {
 
-                  return listItems(state.results, "No results found");
+                  return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
 
                 }
                 if(state is ItemSearchError) {
@@ -214,12 +216,12 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
   }
 
-  List<Widget> buildActions() {
+  List<Widget> _buildActions() {
 
     return <Widget> [
       IconButton(
         icon: Icon(Icons.clear),
-        tooltip: 'Clear',
+        tooltip: GameCollectionLocalisations.of(context).clearSearchString,
         onPressed: () {
           _textEditingController.clear();
           BlocProvider.of<K>(context).add(
@@ -231,12 +233,12 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
   }
 
-  Widget newButton() {
+  Widget _newButton() {
 
     return SizedBox(
       width: double.maxFinite,
       child: FlatButton(
-        child: Text("+ New " + searchName + " titled '" + query + "'"),
+        child: Text(GameCollectionLocalisations.of(context).newWithTitleString(searchName, query)),
         color: Colors.white,
         onPressed: () {
 

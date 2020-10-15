@@ -23,7 +23,7 @@ class PurchaseListManagerBloc extends ItemListManagerBloc<Purchase> {
   @override
   Future<dynamic> deleteFuture(DeleteItem<Purchase> event) {
 
-    return iCollectionRepository.deletePurchase(event.item.ID);
+    return iCollectionRepository.deletePurchase(event.item.id);
 
   }
 

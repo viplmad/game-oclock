@@ -41,7 +41,7 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   }) : super(key: key, items: items);
 
   @override
-  String detailRouteName = purchaseDetailRoute;
+  final String detailRouteName = purchaseDetailRoute;
 
   @override
   PurchaseListManagerBloc managerBlocBuilder() {

@@ -41,7 +41,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   }) : super(key: key, items: items);
 
   @override
-  String detailRouteName = dlcDetailRoute;
+  final String detailRouteName = dlcDetailRoute;
 
   @override DLCListManagerBloc managerBlocBuilder() {
 

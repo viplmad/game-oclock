@@ -93,7 +93,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
     if(state is ItemRelationLoaded<W>) {
       List<W> items = List.from((state as ItemRelationLoaded<W>).otherItems);
 
-      final int listItemIndex = items.indexWhere((W item) => item.ID == event.item.ID);
+      final int listItemIndex = items.indexWhere((W item) => item.id == event.item.id);
       final W listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {
@@ -144,7 +144,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
       List<W> items = (state as ItemRelationLoaded<W>).otherItems;
 
       final List<W> updatedItems = items
-          .where((W item) => item.ID != managerState.otherItem.ID)
+          .where((W item) => item.id != managerState.otherItem.id)
           .toList(growable: false);
 
       add(

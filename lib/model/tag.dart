@@ -13,16 +13,16 @@ enum TagView {
 class Tag extends CollectionItem {
 
   Tag({
-    @required int ID,
+    @required int id,
     this.name
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
 
   static Tag fromEntity(TagEntity entity) {
 
     return Tag(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
     );
 
@@ -32,7 +32,7 @@ class Tag extends CollectionItem {
   TagEntity toEntity() {
 
     return TagEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
     );
 
@@ -44,7 +44,7 @@ class Tag extends CollectionItem {
   }) {
 
     return Tag(
-      ID: ID,
+      id: id,
       name: name?? this.name,
     );
 
@@ -53,7 +53,7 @@ class Tag extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'Tg' + this.ID.toString();
+    return 'Tg' + this.id.toString();
 
   }
 
@@ -66,7 +66,7 @@ class Tag extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
   ];
 
@@ -74,7 +74,7 @@ class Tag extends CollectionItem {
   String toString() {
 
     return '$tagTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$tag_nameField: $name'
         ' }';
 

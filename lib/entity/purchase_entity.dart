@@ -27,7 +27,7 @@ const String purc_storeField = 'Store';
 class PurchaseEntity extends CollectionItemEntity {
 
   PurchaseEntity({
-    @required int ID,
+    @required int id,
     this.description,
     this.price,
     this.externalCredit,
@@ -35,7 +35,7 @@ class PurchaseEntity extends CollectionItemEntity {
     this.originalPrice,
 
     this.store,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String description;
   final double price;
@@ -48,7 +48,7 @@ class PurchaseEntity extends CollectionItemEntity {
   static PurchaseEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseEntity(
-      ID: map[IDField],
+      id: map[IDField],
       description: map[purc_descriptionField],
       price: map[purc_priceField],
       externalCredit: map[purc_externalCreditField],
@@ -64,7 +64,7 @@ class PurchaseEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       purc_descriptionField : description,
       purc_priceField : price,
       purc_externalCreditField : externalCredit,
@@ -92,7 +92,7 @@ class PurchaseEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     description,
     price,
     externalCredit,
@@ -104,7 +104,7 @@ class PurchaseEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$purchaseTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$purc_descriptionField: $description, '
         '$purc_priceField: $price, '
         '$purc_externalCreditField: $externalCredit, '

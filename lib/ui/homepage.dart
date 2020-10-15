@@ -10,8 +10,10 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'package:game_collection/bloc/tab/tab.dart';
 import 'package:game_collection/bloc/item_list/item_list.dart';
 import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
-import 'package:game_collection/ui/route_constants.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
+import 'route_constants.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
 
@@ -157,18 +159,18 @@ class Homepage extends StatelessWidget {
 
 }
 
-const List<BarData> barDatas = const[
-  gameBarData,
-  dlcBarData,
-  purchaseBarData,
-  storeBarData,
-  platformBarData,
-];
-
 class _HomepageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    List<BarData> barDatum = [
+      GameTheme.barData(context),
+      DLCTheme.barData(context),
+      PurchaseTheme.barData(context),
+      StoreTheme.barData(context),
+      PlatformTheme.barData(context),
+    ];
 
     return BlocBuilder<TabBloc, TabState> (
       builder: (BuildContext context, TabState state) {
@@ -189,9 +191,9 @@ class _HomepageBar extends StatelessWidget {
 
               BlocProvider.of<TabBloc>(context).add(UpdateMainTab(newMainTab));
             },
-            items: barDatas.map<BottomNavigationBarItem>( (barItem) {
+            items: barDatum.map<BottomNavigationBarItem>( (barItem) {
               return BottomNavigationBarItem(
-                label: barItem.title + 's',
+                label: barItem.title,
                 icon: Icon(barItem.icon),
                 backgroundColor: barItem.color,
               );
@@ -251,7 +253,7 @@ class _HomepageDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Text(
-              'Game Collection',
+              GameCollectionLocalisations.appTitle,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -263,7 +265,7 @@ class _HomepageDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Repository settings'),
+            title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
             onTap: () {
               Navigator.pushNamed(
                 context,

@@ -114,6 +114,6 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
   }
 
-  external Stream<T> getReadStream();
+  Stream<T> getReadStream();
 
 }

@@ -28,12 +28,12 @@ List<String> manufacturers = [
 class SystemEntity extends CollectionItemEntity {
 
   SystemEntity({
-    @required int ID,
+    @required int id,
     this.name,
     this.iconFilename,
     this.generation,
     this.manufacturer
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String iconFilename;
@@ -43,7 +43,7 @@ class SystemEntity extends CollectionItemEntity {
   static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return SystemEntity(
-      ID: map[IDField],
+      id: map[IDField],
       name: map[sys_nameField],
       iconFilename: map[sys_iconField],
       generation: map[sys_generationField],
@@ -56,7 +56,7 @@ class SystemEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IDField : ID,
+      IDField : id,
       sys_nameField : name,
       sys_iconField : iconFilename,
       sys_generationField : generation,
@@ -81,7 +81,7 @@ class SystemEntity extends CollectionItemEntity {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     iconFilename,
     generation,
@@ -92,7 +92,7 @@ class SystemEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$systemTable}Entity { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$sys_nameField: $name, '
         '$sys_iconField: $iconFilename, '
         '$sys_generationField: $generation, '

@@ -7,7 +7,7 @@ import 'package:game_collection/model/repository_type.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 import 'package:game_collection/repository/remote_repository.dart';
-import 'package:game_collection/repository/local_repository.dart';
+//import 'package:game_collection/repository/local_repository.dart';
 
 
 const String _repositorySetKey = 'isRepositorySet';
@@ -19,7 +19,6 @@ const String _remoteRepositoryValue = 'remote';
 const String _localRepositoryValue = 'local';
 
 const String _trueValue = '1';
-const String _falseValue = '0';
 
 class RepositoryPreferences {
 

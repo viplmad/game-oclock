@@ -17,7 +17,7 @@ enum GameView {
 class Game extends CollectionItem {
 
   Game({
-    @required int ID,
+    @required int id,
     this.name,
     this.edition,
     this.releaseYear,
@@ -31,7 +31,7 @@ class Game extends CollectionItem {
     this.screenshotFolder,
     this.finishDate,
     this.isBackup,
-  }) : super(ID: ID);
+  }) : super(id: id);
 
   final String name;
   final String edition;
@@ -50,7 +50,7 @@ class Game extends CollectionItem {
   static Game fromEntity(GameEntity entity, [String coverURL]) {
 
     return Game(
-      ID: entity.ID,
+      id: entity.id,
       name: entity.name,
       edition: entity.edition,
       releaseYear: entity.releaseYear,
@@ -72,7 +72,7 @@ class Game extends CollectionItem {
   GameEntity toEntity() {
 
     return GameEntity(
-      ID: this.ID,
+      id: this.id,
       name: this.name,
       edition: this.edition,
       releaseYear: this.releaseYear,
@@ -107,7 +107,7 @@ class Game extends CollectionItem {
   }) {
 
     return Game(
-      ID: ID,
+      id: id,
       name: name?? this.name,
       edition: edition?? this.edition,
       releaseYear: releaseYear?? this.releaseYear,
@@ -128,7 +128,7 @@ class Game extends CollectionItem {
   @override
   String getUniqueID() {
 
-    return 'G' + this.ID.toString();
+    return 'G' + this.id.toString();
 
   }
 
@@ -166,7 +166,7 @@ class Game extends CollectionItem {
 
   @override
   List<Object> get props => [
-    ID,
+    id,
     name,
     edition,
     releaseYear,
@@ -185,7 +185,7 @@ class Game extends CollectionItem {
   String toString() {
 
     return '$gameTable { '
-        '$IDField: $ID, '
+        '$IDField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
