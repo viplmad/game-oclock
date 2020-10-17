@@ -181,7 +181,7 @@ class GamesData extends ItemData<Game> {
   
   List<int> finishYears() {
     
-    return (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false).reversed.toList(growable: false);
+    return (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort();
     
   }
 

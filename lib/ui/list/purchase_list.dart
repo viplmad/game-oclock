@@ -84,6 +84,13 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   final String statisticsRouteName = purchaseStatisticsRoute;
 
   @override
+  void Function() onStatisticsTap(BuildContext context) {
+
+    return null; //TODO
+
+  }
+
+  @override
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
