@@ -47,6 +47,17 @@ class Game extends CollectionItem {
   final DateTime finishDate;
   final bool isBackup;
 
+  @override
+  String get uniqueId => 'G' + this.id.toString();
+
+  @override
+  final bool hasImage = true;
+  @override
+  ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
+
+  @override
+  String get queryableTerms => [this.name, this.edition].join(',');
+
   static Game fromEntity(GameEntity entity, [String coverURL]) {
 
     return Game(
@@ -126,45 +137,6 @@ class Game extends CollectionItem {
   }
 
   @override
-  String getUniqueId() {
-
-    return 'G' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    if(this.edition == '') {
-      return this.name;
-    }
-
-    return this.name + " - " + this.edition;
-
-  }
-
-  @override
-  String getSubtitle() {
-
-    return (this.status?? "") + " · " + this.releaseYear.toString();
-
-  }
-
-  @override
-  String getImageURL() {
-
-    return this.coverURL?? '';
-
-  }
-
-  @override
-  String getImageFilename() {
-
-    return this.coverFilename;
-
-  }
-
-  @override
   List<Object> get props => [
     id,
     name,
@@ -204,58 +176,52 @@ class Game extends CollectionItem {
 
 }
 
-class GamesData {
-
-  GamesData({
-    this.games,
-  });
-
-  final List<Game> games;
-
-  GamesDataYear getYearData(int year) {
-    List<Game> yearItems = games.where((Game item) => item.finishDate?.year == year).toList(growable: false);
-
-    return GamesDataYear(yearItems);
+class GamesData extends ItemData<Game> {
+  GamesData(List<Game> items) : super(items);
+  
+  List<int> finishYears() {
+    
+    return (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false).reversed.toList(growable: false);
+    
   }
-}
 
-class GamesDataYear {
-  GamesDataYear(this.items);
-
-  final List<Game> items;
-  int get length => items.length;
-
-  int getLowPriorityGamesCount() {
+  int lowPriorityCount() {
     int lowPriorityGames = items.where((item) => item.status == statuses.elementAt(0)).length;
 
     return lowPriorityGames;
   }
 
-  int getNextUpGamesCount() {
+  int nextUpCount() {
     int nextUpGames = items.where((Game item) => item.status == statuses.elementAt(1)).length;
 
     return nextUpGames;
   }
 
-  int getPlayingGamesCount() {
+  int playingCount() {
     int playingGames = items.where((Game item) => item.status == statuses.elementAt(2)).length;
 
     return playingGames;
   }
 
-  int getPlayedGamesCount() {
+  int playedCount() {
     int playedGames = items.where((Game item) => item.status == statuses.elementAt(3)).length;
 
     return playedGames;
   }
 
-  int getTotalMinutes() {
+  int minutesSum() {
     int totalMinutes = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.time.inMinutes);
 
     return totalMinutes;
   }
 
-  List<int> getIntervalRating(List<int> intervals) {
+  int totalRating() {
+    int totalRating = items.fold(0, (int previousValue, Game item) => previousValue + item.rating);
+
+    return totalRating;
+  }
+
+  List<int> intervalRating(List<int> intervals) {
     List<int> values = List<int>(intervals.length);
 
     for(int index = 0; index < intervals.length; index++) {
@@ -269,7 +235,7 @@ class GamesDataYear {
     return values;
   }
 
-  List<int> getIntervalReleaseYears(List<int> intervals) {
+  List<int> intervalReleaseYears(List<int> intervals) {
     List<int> values = List<int>(intervals.length);
 
     for(int index = 0; index < intervals.length; index++) {
@@ -280,7 +246,7 @@ class GamesDataYear {
         maxYear = intervals.elementAt(index + 1);
       }
 
-      int intervalSum = items.where((Game item) => item.releaseYear >= minYear && item.releaseYear <= maxYear).length;
+      int intervalSum = items.where((Game item) => item.releaseYear >= minYear && item.releaseYear < maxYear).length;
 
       values[index] = intervalSum;
     }
@@ -288,7 +254,7 @@ class GamesDataYear {
     return values;
   }
 
-  List<int> getIntervalTime(List<int> intervals) {
+  List<int> intervalTime(List<int> intervals) {
     List<int> values = List<int>(intervals.length);
 
     for(int index = 0; index < intervals.length; index++) {
@@ -305,5 +271,50 @@ class GamesDataYear {
     }
 
     return values;
+  }
+
+  List<int> yearlySumHours(List<int> years) {
+    List<int> values = List<int>(years.length);
+
+    for(int index = 0; index < years.length; index++) {
+      int year = years.elementAt(index);
+
+      List<Game> yearItems = items.where((Game item) => item.finishDate?.year == year).toList(growable: false);
+      int minutesSum = yearItems.fold(0, (int previousValue, Game item) => previousValue + item.time.inMinutes);
+      int yearSum = minutesSum ~/ 60;
+
+      values[index] = yearSum;
+    }
+
+    return values;
+  }
+
+  List<int> yearlyCountFinishDate(List<int> years) {
+    List<int> values = List<int>(years.length);
+
+    for(int index = 0; index < years.length; index++) {
+      int year = years.elementAt(index);
+
+      int yearSum = items.where((Game item) => item.finishDate?.year == year).length;
+
+      values[index] = yearSum;
+    }
+
+    return values;
+  }
+
+  YearData<int> monthlySumHours() {
+    YearData<int> yearData = YearData<int>();
+
+    for(int month = 1; month <= 12; month++) {
+
+      List<Game> monthItems = items.where((Game item) => item.finishDate?.month == month).toList(growable: false);
+      int minutesSum = monthItems.fold(0, (int previousValue, Game item) => previousValue + item.time.inMinutes);
+      int monthSum = minutesSum ~/ 60;
+
+      yearData.addData(monthSum);
+    }
+
+    return yearData;
   }
 }

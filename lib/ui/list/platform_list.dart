@@ -91,6 +91,23 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   }
 
   @override
+  String itemTitle(Platform item) => PlatformTheme.itemTitle(item);
+
+  @override
+  Widget cardBuilder(BuildContext context, Platform item) {
+
+    return PlatformTheme.itemCard(context, item, onTap);
+
+  }
+
+  @override
+  Widget gridBuilder(BuildContext context, Platform item) {
+
+    return PlatformTheme.itemGrid(context, item, onTap);
+
+  }
+
+  @override
   String viewTitle(BuildContext context) {
 
     return PlatformTheme.views(context).elementAt(viewIndex);

@@ -14,6 +14,7 @@ import '../common/item_view.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
+import '../statistics/statistics.dart';
 
 
 abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
@@ -234,11 +235,12 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
                   tooltip: GameCollectionLocalisations.of(context).searchInViewString,
                   onPressed: items.isNotEmpty? _onSearchTap(context) : null,
                 ),
-                /*IconButton(
-                  icon: Icon(Icons.insert_chart),
-                  tooltip: GameCollectionLocalisations.of(context).statsInViewString,
-                  onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
-                ),*/
+                statisticsRouteName.isNotEmpty?
+                  IconButton(
+                    icon: Icon(Icons.insert_chart),
+                    tooltip: GameCollectionLocalisations.of(context).statsInViewString,
+                    onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
+                  ) : Container(),
               ],
             ),
           ),
@@ -259,7 +261,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
     return AlertDialog(
       title: Text(GameCollectionLocalisations.of(context).deleteString),
       content: ListTile(
-        title: Text(GameCollectionLocalisations.of(context).deleteDialogTitle(item.getTitle())),
+        title: Text(GameCollectionLocalisations.of(context).deleteDialogTitle(itemTitle(item))),
         subtitle: Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
       ),
       actions: <Widget>[
@@ -302,13 +304,13 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
   }
 
-  void Function() _onTap(BuildContext context, T item) {
+  void Function() onTap(BuildContext context, T item) {
 
     return () {
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: DetailArguments(
+        arguments: DetailArguments<T>(
           item: item,
           onUpdate: (T updatedItem) {
 
@@ -343,32 +345,20 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
       Navigator.pushNamed(
         context,
         statisticsRouteName,
-        arguments: items,
+        arguments: StatisticsArguments<T>(
+          items: items,
+          viewTitle: viewTitle(context),
+        ),
       );
     };
 
   }
 
-  Widget cardBuilder(BuildContext context, T item) {
+  String itemTitle(T item);
 
-    return ItemCard(
-      title: item.getTitle(),
-      subtitle: item.getSubtitle(),
-      imageURL: item.getImageURL(),
-      onTap: _onTap(context, item),
-    );
+  Widget cardBuilder(BuildContext context, T item);
 
-  }
-
-  Widget gridBuilder(BuildContext context, T item) {
-
-    return ItemGrid(
-      title: item.getTitle(),
-      imageURL: item.getImageURL(),
-      onTap: _onTap(context, item),
-    );
-
-  }
+  Widget gridBuilder(BuildContext context, T item);
 
   String viewTitle(BuildContext context);
 
@@ -439,32 +429,5 @@ class ItemGridView<T extends CollectionItem> extends StatelessWidget {
       },
     );
 
-  }
-}
-
-class TabsDelegate extends SliverPersistentHeaderDelegate {
-  TabsDelegate({@required this.tabBar, this.color}) : super();
-
-  final TabBar tabBar;
-  final Color color;
-
-  @override
-  double get minExtent => tabBar.preferredSize.height;
-  @override
-  double get maxExtent => tabBar.preferredSize.height;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-
-    return Container(
-      color: color?? Theme.of(context).primaryColor,
-      child: tabBar,
-    );
-
-  }
-
-  @override
-  bool shouldRebuild(TabsDelegate oldDelegate) {
-    return false;
   }
 }

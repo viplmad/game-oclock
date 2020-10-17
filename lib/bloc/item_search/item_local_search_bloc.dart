@@ -29,7 +29,7 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
   Future<List<T>> getSearchItems(String query) {
 
     final List<T> searchItems = items.where( (T item) {
-      return item.getTitle().toLowerCase().contains(query.toLowerCase());
+      return item.queryableTerms.toLowerCase().contains(query.toLowerCase());
     }).take(super.maxResults).toList(growable: false);
 
     return Future<List<T>>.value(searchItems);

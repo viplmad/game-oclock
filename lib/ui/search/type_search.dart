@@ -10,6 +10,7 @@ import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
+import '../theme/theme.dart';
 import 'search.dart';
 
 
@@ -93,6 +94,10 @@ class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseTypeString;
 
   @override
-  ThemeData themeData(BuildContext context) => Theme.of(context);
+  Widget cardBuilder(BuildContext context, PurchaseType item) {
+
+    return TypeTheme.itemCard(context, item, onTap);
+
+  }
 
 }

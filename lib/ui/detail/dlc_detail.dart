@@ -15,8 +15,8 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
 import '../relation/relation.dart';
+import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
@@ -80,9 +80,6 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   }
 
   @override
-  ThemeData themeData(BuildContext context) => DLCTheme.themeData(context);
-
-  @override
   _DLCDetailBody detailBodyBuilder() {
 
     return _DLCDetailBody(
@@ -112,6 +109,9 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
     Key key,
     void Function(DLC item) onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
+
+  @override
+  String itemTitle(DLC item) => DLCTheme.itemTitle(item);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, DLC dlc) {

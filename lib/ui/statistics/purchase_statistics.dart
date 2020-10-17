@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 import 'package:game_collection/entity/entity.dart';
 
@@ -14,7 +14,7 @@ class PurchaseStatistics extends ItemStatistics {
     @required this.yearData,
   }) : super(
     key: key,
-    itemName: purchaseTable,
+    typesName: purchaseTable,
   );
 
   PurchasesDataYear yearData;
@@ -65,4 +65,4 @@ class PurchaseStatistics extends ItemStatistics {
     ];
 
   }
-}
+}*/

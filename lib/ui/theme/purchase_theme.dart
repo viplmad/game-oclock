@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+
+import '../common/item_view.dart';
 
 
 class PurchaseTheme {
@@ -41,6 +44,37 @@ class PurchaseTheme {
       GameCollectionLocalisations.of(context).lastPurchasedViewString,
       GameCollectionLocalisations.of(context).yearInReviewViewString,
     ];
+
+  }
+
+  static Widget itemCard(BuildContext context, Purchase item, void Function() Function(BuildContext, Purchase) onTap) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle: _itemSubtitle(context, item),
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static Widget itemGrid(BuildContext context, Purchase item, void Function() Function(BuildContext, Purchase) onTap) {
+
+    return ItemGrid(
+      title: itemTitle(item),
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static String itemTitle(Purchase item) {
+
+    return item.description;
+
+  }
+
+  static String _itemSubtitle(BuildContext context, Purchase item) {
+
+    return GameCollectionLocalisations.of(context).euroString(item.price) + ' · ' + GameCollectionLocalisations.of(context).percentageString(item.discount);
 
   }
 

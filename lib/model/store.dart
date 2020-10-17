@@ -23,6 +23,17 @@ class Store extends CollectionItem {
   final String iconURL;
   final String iconFilename;
 
+  @override
+  String get uniqueId => 'St' + this.id.toString();
+
+  @override
+  final bool hasImage = true;
+  @override
+  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+
+  @override
+  String get queryableTerms => this.name;
+
   static Store fromEntity(StoreEntity entity, [String iconURL]) {
 
     return Store(
@@ -58,34 +69,6 @@ class Store extends CollectionItem {
       iconURL: iconURL?? this.iconURL,
       iconFilename: iconFilename?? this.iconFilename,
     );
-
-  }
-
-  @override
-  String getUniqueId() {
-
-    return 'St' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
-
-  }
-
-  @override
-  String getImageURL() {
-
-    return this.iconURL?? '';
-
-  }
-
-  @override
-  String getImageFilename() {
-
-    return this.iconFilename;
 
   }
 

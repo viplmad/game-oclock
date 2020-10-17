@@ -35,6 +35,17 @@ class Purchase extends CollectionItem {
 
   final int store;
 
+  @override
+  String get uniqueId => 'Pu' + this.id.toString();
+
+  @override
+  final bool hasImage = false;
+  @override
+  final ItemImage image = null;
+
+  @override
+  String get queryableTerms => this.description;
+
   static Purchase fromEntity(PurchaseEntity entity) {
 
     return Purchase(
@@ -91,27 +102,6 @@ class Purchase extends CollectionItem {
   }
 
   @override
-  String getUniqueId() {
-
-    return 'Pu' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.description;
-
-  }
-
-  @override
-  String getSubtitle() {
-
-    return this.price.toStringAsFixed(2) + " €" + " · " + this.discount.toStringAsFixed(2) + " %"; //TODO
-
-  }
-
-  @override
   List<Object> get props => [
     id,
     description,
@@ -137,27 +127,8 @@ class Purchase extends CollectionItem {
 
 }
 
-class PurchasesData {
-
-  PurchasesData({
-    this.purchases,
-  });
-
-  final List<Purchase> purchases;
-
-  PurchasesDataYear getYearData(int year) {
-    List<Purchase> yearItems = purchases.where((Purchase item) => item.date?.year == year).toList(growable: false);
-
-    return PurchasesDataYear(yearItems);
-  }
-
-}
-
-class PurchasesDataYear {
-  PurchasesDataYear(this.items);
-
-  final List<Purchase> items;
-  int get length => items.length;
+class PurchasesData extends ItemData<Purchase> {
+  PurchasesData(List<Purchase> items) : super(items);
 
   double getTotalPrice() {
     double value = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);

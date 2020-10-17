@@ -19,6 +19,17 @@ class PurchaseType extends CollectionItem {
 
   final String name;
 
+  @override
+  String get uniqueId => 'Ty' + this.id.toString();
+
+  @override
+  final bool hasImage = false;
+  @override
+  final ItemImage image = null;
+
+  @override
+  String get queryableTerms => this.name;
+
   static PurchaseType fromEntity(PurchaseTypeEntity entity) {
 
     return PurchaseType(
@@ -47,20 +58,6 @@ class PurchaseType extends CollectionItem {
       id: id,
       name: name?? this.name,
     );
-
-  }
-
-  @override
-  String getUniqueId() {
-
-    return 'Ty' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
 
   }
 

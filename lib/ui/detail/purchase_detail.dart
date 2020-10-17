@@ -15,8 +15,8 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
 import '../relation/relation.dart';
+import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
@@ -102,9 +102,6 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   }
 
   @override
-  ThemeData themeData(BuildContext context) => PurchaseTheme.themeData(context);
-
-  @override
   _PurchaseDetailBody detailBodyBuilder() {
 
     return _PurchaseDetailBody(
@@ -134,6 +131,9 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
     Key key,
     void Function(Purchase item) onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
+
+  @override
+  String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Purchase purchase) {

@@ -6,6 +6,7 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
+import '../theme/theme.dart';
 import 'relation.dart';
 
 
@@ -21,6 +22,13 @@ class GamePlatformRelationList extends _GameRelationList<Platform> {
   @override
   final String localSearchRouteName = platformLocalSearchRoute;
 
+  @override
+  Widget cardBuilder(BuildContext context, Platform item) {
+
+    return PlatformTheme.itemCard(context, item, onTap);
+
+  }
+
 }
 
 class GamePurchaseRelationList extends _GameRelationList<Purchase> {
@@ -35,6 +43,13 @@ class GamePurchaseRelationList extends _GameRelationList<Purchase> {
   @override
   final String localSearchRouteName = purchaseLocalSearchRoute;
 
+  @override
+  Widget cardBuilder(BuildContext context, Purchase item) {
+
+    return PurchaseTheme.itemCard(context, item, onTap);
+
+  }
+
 }
 
 class GameDLCRelationList extends _GameRelationList<DLC> {
@@ -48,6 +63,13 @@ class GameDLCRelationList extends _GameRelationList<DLC> {
 
   @override
   final String localSearchRouteName = dlcLocalSearchRoute;
+
+  @override
+  Widget cardBuilder(BuildContext context, DLC item) {
+
+    return DLCTheme.itemCard(context, item, onTap);
+
+  }
 
 }
 
@@ -67,6 +89,13 @@ class GameTagRelationList extends _GameRelationList<Tag> {
   void Function() onTap(BuildContext context, Tag item) {
 
     return null;
+
+  }
+
+  @override
+  Widget cardBuilder(BuildContext context, Tag item) {
+
+    return TagTheme.itemCard(context, item, onTap);
 
   }
 

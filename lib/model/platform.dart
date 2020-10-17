@@ -25,6 +25,17 @@ class Platform extends CollectionItem {
   final String iconFilename;
   final String type;
 
+  @override
+  String get uniqueId => 'Pl' + this.id.toString();
+
+  @override
+  final bool hasImage = true;
+  @override
+  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+
+  @override
+  String get queryableTerms => this.name;
+
   static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
 
     return Platform(
@@ -64,34 +75,6 @@ class Platform extends CollectionItem {
       iconFilename: iconName?? this.iconFilename,
       type: type?? this.type,
     );
-
-  }
-
-  @override
-  String getUniqueId() {
-
-    return 'Pl' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
-
-  }
-
-  @override
-  String getImageURL() {
-
-    return this.iconURL?? '';
-
-  }
-
-  @override
-  String getImageFilename() {
-
-    return this.iconFilename;
 
   }
 

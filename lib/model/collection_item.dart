@@ -12,23 +12,18 @@ abstract class CollectionItem extends Equatable {
 
   final int id;
 
+  String get uniqueId;
+  bool get hasImage;
+  ItemImage get image;
+  String get queryableTerms;
+
   CollectionItemEntity toEntity();
 
   CollectionItem copyWith();
 
-  String getUniqueId();
-
-  String getTitle();
-
-  String getSubtitle() => null;
-
-  String getImageURL() => null;
-
-  String getImageFilename() => null;
-
   @override
   List<Object> get props => [
-    id
+    id,
   ];
 
   @override
@@ -42,19 +37,35 @@ abstract class CollectionItem extends Equatable {
 
 }
 
+class ItemImage {
+  ItemImage(String url, String filename)
+      : this.url = url?? '',
+        this.filename = filename?? '';
+
+  final String url;
+  final String filename;
+}
+
+abstract class ItemData<T extends CollectionItem> {
+  ItemData(this.items);
+
+  final List<T> items;
+  int get length => items.length;
+}
+
 class YearData<T> {
 
   YearData() {
-    data = new List(12);
+    values = new List(12);
     month = 0;
   }
 
-  List<T> data;
+  List<T> values;
   int month;
 
   void addData(T sum) {
     if(month < 12) {
-      data[month] = sum;
+      values[month] = sum;
 
       month++;
     }

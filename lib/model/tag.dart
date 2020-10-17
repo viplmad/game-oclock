@@ -19,6 +19,17 @@ class Tag extends CollectionItem {
 
   final String name;
 
+  @override
+  String get uniqueId => 'Tg' + this.id.toString();
+
+  @override
+  final bool hasImage = false;
+  @override
+  final ItemImage image = null;
+
+  @override
+  String get queryableTerms => this.name;
+
   static Tag fromEntity(TagEntity entity) {
 
     return Tag(
@@ -47,20 +58,6 @@ class Tag extends CollectionItem {
       id: id,
       name: name?? this.name,
     );
-
-  }
-
-  @override
-  String getUniqueId() {
-
-    return 'Tg' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
 
   }
 

@@ -27,6 +27,17 @@ class System extends CollectionItem {
   final int generation;
   final String manufacturer;
 
+  @override
+  String get uniqueId => 'Sy' + this.id.toString();
+
+  @override
+  final bool hasImage = true;
+  @override
+  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+
+  @override
+  String get queryableTerms => this.name;
+
   static System fromEntity(SystemEntity entity, [String iconURL]) {
 
     return System(
@@ -70,41 +81,6 @@ class System extends CollectionItem {
       generation: generation?? this.generation,
       manufacturer: manufacturer?? this.manufacturer,
     );
-
-  }
-
-  @override
-  String getUniqueId() {
-
-    return 'Sy' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
-
-  }
-
-  @override
-  String getSubtitle() {
-
-    return this.manufacturer;
-
-  }
-
-  @override
-  String getImageURL() {
-
-    return this.iconURL?? '';
-
-  }
-
-  @override
-  String getImageFilename() {
-
-    return this.iconFilename;
 
   }
 

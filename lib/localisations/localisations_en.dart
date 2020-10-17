@@ -4,197 +4,376 @@ import 'package:game_collection/localisations/localisations.dart';
 class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   const GameCollectionLocalisationsEn();
 
-  String get connectingString => 'Connecting...';
-  String get failedConnectionString => 'Failed connection';
-  String get retryString => 'Retry';
-  String get changeRepositoryString => 'Change Repository Settings';
+  @override
+  final String connectingString = 'Connecting...';
+  @override
+  final String failedConnectionString = 'Failed connection';
+  @override
+  final String retryString = 'Retry';
+  @override
+  final String changeRepositoryString = 'Change Repository Settings';
 
-  String get repositorySettingsString => 'Repository settings';
-  String get unableToUpdateConnectionString => 'Unable to update connection';
-  String get saveString => 'Save';
-  String get remoteRepositoryString => 'Remote repository';
-  String get localRepositoryString => 'Local repository';
-  String get hostString => 'Host';
-  String get portString => 'Port';
-  String get databaseString => 'Database';
-  String get userString => 'User';
-  String get passwordString => 'Password';
-  String get cloudNameString => 'Cloud name';
-  String get apiKeyString => 'API Key';
-  String get apiSecretString => 'API Secret';
+  @override
+  final String repositorySettingsString = 'Repository settings';
+  @override
+  final String unableToUpdateConnectionString = 'Unable to update connection';
+  @override
+  final String saveString = 'Save';
+  @override
+  final String remoteRepositoryString = 'Remote repository';
+  @override
+  final String localRepositoryString = 'Local repository';
+  @override
+  final String hostString = 'Host';
+  @override
+  final String portString = 'Port';
+  @override
+  final String databaseString = 'Database';
+  @override
+  final String userString = 'User';
+  @override
+  final String passwordString = 'Password';
+  @override
+  final String cloudNameString = 'Cloud name';
+  @override
+  final String apiKeyString = 'API Key';
+  @override
+  final String apiSecretString = 'API Secret';
 
-  String get changeOrderString => 'Change Order';
-  String get changeStyleString => 'Change Style';
-  String get changeViewString => 'Change View';
-  String get searchInViewString => 'Search in View';
-  String get statsInViewString => 'Stats in View';
+  @override
+  final String changeOrderString = 'Change Order';
+  @override
+  final String changeStyleString = 'Change Style';
+  @override
+  final String changeViewString = 'Change View';
+  @override
+  final String searchInViewString = 'Search in View';
+  @override
+  final String statsInViewString = 'Stats in View';
 
+  @override
   String newString(String typeString) {
     return 'New $typeString';
   }
-  String get openString => 'Open';
+  @override
+  final String openString = 'Open';
+  @override
   String addedString(String typeString) {
     return 'Added $typeString';
   }
+  @override
   String unableToAddString(String typeString) {
     return 'Unable to add $typeString';
   }
+  @override
   String deletedString(String typeString) {
     return 'Deleted $typeString';
   }
+  @override
   String unableToDeleteString(String typeString) {
     return 'Unable to delete $typeString';
   }
-  String get deleteString => 'Delete';
+
+  @override
+  final String deleteString = 'Delete';
+  @override
   String deleteDialogTitle(String itemString) {
     return 'Are you sure you want to delete $itemString?';
   }
-  String get deleteDialogSubtitle => 'This action cannot be undone';
+  @override
+  final String deleteDialogSubtitle = 'This action cannot be undone';
 
   //#region Common
-  String get emptyValueString => '';
-  String get showString => 'Show';
-  String get hideString => 'Hide';
-  String get enterTextString => 'Please enter some text';
+  @override
+  final String emptyValueString = '';
+  @override
+  final String showString = 'Show';
+  @override
+  final String hideString = 'Hide';
+  @override
+  final String enterTextString = 'Please enter some text';
 
-  String get nameFieldString => 'Name';
-  String get releaseYearFieldString => 'Release Year';
-  String get finishDateFieldString => 'Finish Date';
+  @override
+  final String nameFieldString = 'Name';
+  @override
+  final String releaseYearFieldString = 'Release Year';
+  @override
+  final String finishDateFieldString = 'Finish Date';
 
-  String get mainViewString => 'Main';
-  String get lastCreatedViewString => 'Last Created';
-  String get yearInReviewViewString => 'Year in Review';
+  @override
+  final String mainViewString = 'Main';
+  @override
+  final String lastCreatedViewString = 'Last Created';
+  @override
+  final String yearInReviewViewString = 'Year in Review';
+
+  @override
+  final String generalString = 'General';
+  @override
+  final String changeYearString = 'Change year';
+  @override
+  final List<String> shortMonths = const <String>[
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   //#endregion Common
 
   //#region Game
-  String get gameString => 'Game';
+  @override
+  final String gameString = 'Game';
+  @override
   String get gamesString => _plural(gameString);
-  String get allString => 'All';
-  String get ownedString => 'Owned';
-  String get romsString => 'Roms';
+  @override
+  final String allString = 'All';
+  @override
+  final String ownedString = 'Owned';
+  @override
+  final String romsString = 'Roms';
 
-  String get lowPriorityString => 'Low Priority';
-  String get nextUpString => 'Next Up';
-  String get playingString => 'Playing';
-  String get playedString => 'Played';
-  String get editionFieldString => 'Edition';
-  String get statusFieldString => 'Status';
-  String get ratingFieldString => 'Rating';
-  String get thoughtsFieldString => 'Thoughts';
-  String get timeFieldString => 'Time';
-  String get saveFolderFieldString => 'Save Folder';
-  String get screenshotFolderFieldString => 'Screenshot Folder';
-  String get backupFieldString => 'Backup';
+  @override
+  final String lowPriorityString = 'Low Priority';
+  @override
+  final String nextUpString = 'Next Up';
+  @override
+  final String playingString = 'Playing';
+  @override
+  final String playedString = 'Played';
+  @override
+  final String editionFieldString = 'Edition';
+  @override
+  final String statusFieldString = 'Status';
+  @override
+  final String ratingFieldString = 'Rating';
+  @override
+  final String thoughtsFieldString = 'Thoughts';
+  @override
+  final String timeFieldString = 'Time';
+  @override
+  final String saveFolderFieldString = 'Save Folder';
+  @override
+  final String screenshotFolderFieldString = 'Screenshot Folder';
+  @override
+  final String backupFieldString = 'Backup';
 
-  String get playingViewString => 'Playing';
-  String get nextUpViewString => 'Next Up';
-  String get lastFinishedViewString => 'Last Finished';
+  @override
+  final String playingViewString = 'Playing';
+  @override
+  final String nextUpViewString = 'Next Up';
+  @override
+  final String lastFinishedViewString = 'Last Finished';
+
+  @override
+  String get totalGamesString => 'Total $gamesString';
+  @override
+  String get totalGamesPlayedString => 'Total played $gamesString';
+  @override
+  String get sumTimeString => 'Total $timeFieldString';
+  @override
+  String get avgTimeString => 'Average $timeFieldString';
+  @override
+  String get avgRatingString => 'Average $ratingFieldString';
+  @override
+  String get countByStatusString => 'Total by $statusFieldString';
+  @override
+  String get countByReleaseYearString => 'Total by $releaseYearFieldString';
+  @override
+  String get sumMinutesByFinishDateString => 'Total Time by $finishDateFieldString';
+  @override
+  final String sumMinutesByMonth = 'Total Time by month';
+  @override
+  String get countByRatingString => 'Total by $ratingFieldString';
+  @override
+  String get countByFinishDate => 'Total by $finishDateFieldString';
+  @override
+  String get countByTimeString => 'Total by $timeFieldString';
   //#endregion Game
 
   //#region DLC
-  String get dlcString => 'DLC';
+  @override
+  final String dlcString = 'DLC';
+  @override
   String get dlcsString => _plural(dlcString);
 
-  String get baseGameFieldString => 'Base Game';
+  @override
+  final String baseGameFieldString = 'Base Game';
   //#endregion DLC
 
   //#region Purchase
-  String get purchaseString => 'Purchase';
+  @override
+  final String purchaseString = 'Purchase';
+  @override
   String get purchasesString => _plural(purchaseString);
 
-  String get descriptionFieldString => 'Description';
-  String get priceFieldString => 'Price';
-  String get externalCreditsFieldString => 'External Credit';
-  String get purchaseDateFieldString => 'Date';
-  String get originalPriceFieldString => 'Original Price';
-  String get discountFieldString => 'Discount';
+  @override
+  final String descriptionFieldString = 'Description';
+  @override
+  final String priceFieldString = 'Price';
+  @override
+  final String externalCreditsFieldString = 'External Credit';
+  @override
+  final String purchaseDateFieldString = 'Date';
+  @override
+  final String originalPriceFieldString = 'Original Price';
+  @override
+  final String discountFieldString = 'Discount';
 
-  String get pendingViewString => 'Pending';
-  String get lastPurchasedViewString => 'Last Purchased';
+  @override
+  final String pendingViewString = 'Pending';
+  @override
+  final String lastPurchasedViewString = 'Last Purchased';
 
-  String get totalMoneySpentString => 'Total Money Spent';
-  String get totalMoneySavedString => 'Total Money Saved';
-  String get realValueString => 'Real Value';
-  String get percentageSavedString => 'Percentage Saved';
+  @override
+  final String totalMoneySpentString = 'Total Money Spent';
+  @override
+  final String totalMoneySavedString = 'Total Money Saved';
+  @override
+  final String realValueString = 'Real Value';
+  @override
+  final String percentageSavedString = 'Percentage Saved';
   //#endregion Purchase
 
   //#region Store
-  String get storeString => 'Store';
+  @override
+  final String storeString = 'Store';
+  @override
   String get storesString => _plural(storeString);
   //#endregion Store
 
   //#region Platform
-  String get platformString => 'Platform';
+  @override
+  final String platformString = 'Platform';
+  @override
   String get platformsString => _plural(platformString);
 
-  String get physicalString => "Physical";
-  String get digitalString => "Digital";
-  String get platformTypeFieldString => 'Type';
+  @override
+  final String physicalString = "Physical";
+  @override
+  final String digitalString = "Digital";
+  @override
+  final String platformTypeFieldString = 'Type';
   //#endregion Platform
 
   //#region System
-  String get systemString => 'System';
+  @override
+  final String systemString = 'System';
+  @override
   String get systemsString => _plural(systemString);
   //#endregion System
 
   //#region Tag
-  String get tagString => 'Tag';
+  @override
+  final String tagString = 'Tag';
+  @override
   String get tagsString => _plural(tagString);
   //#endregion Tag
 
   //#region PurchaseType
-  String get purchaseTypeString => 'Type';
+  @override
+  final String purchaseTypeString = 'Type';
+  @override
   String get purchaseTypesString => _plural(purchaseTypeString);
   //#endregion PurchaseType
 
-  String euroString(String amountString) {
+  @override
+  String euroString(double amount) {
+    String amountString = amount.toStringAsFixed(2);
     return '$amountString €';
   }
-  String percentageString(String amountString) {
+  @override
+  String percentageString(double amount) {
+    String amountString = amount.toStringAsFixed(2);
     return '$amountString %';
   }
-  String dateString(String dayString, String monthString, String yearString) {
+  @override
+  String dateString(DateTime date) {
+    String dayString = date.day.toString();
+    String monthString = date.month.toString();
+    String yearString = date.year.toString();
     return '$dayString/$monthString/$yearString';
   }
-  String durationString(String hoursString, String minutesString) {
+  @override
+  String durationString(Duration duration) {
+    String hoursString = duration.inHours.toString();
+    String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
     return '$hoursString:$minutesString';
   }
 
+  @override
   String editString(String fieldString) {
     return 'Edit $fieldString';
   }
-  String get fieldUpdatedString => 'Field updated';
-  String get unableToUpdateFieldString => 'Unable to update field';
-  String get uploadImageString => 'Upload image';
-  String get replaceImageString => 'Replace image';
-  String get renameImageString => 'Rename image';
-  String get deleteImageString => 'Delete image';
-  String get imageUpdatedString => 'Image updated';
-  String get unableToUpdateImageString => 'Unable to update image';
+  @override
+  final String fieldUpdatedString = 'Field updated';
+  @override
+  final String unableToUpdateFieldString = 'Unable to update field';
+  @override
+  final String uploadImageString = 'Upload image';
+  @override
+  final String replaceImageString = 'Replace image';
+  @override
+  final String renameImageString = 'Rename image';
+  @override
+  final String deleteImageString = 'Delete image';
+  @override
+  final String imageUpdatedString = 'Image updated';
+  @override
+  final String unableToUpdateImageString = 'Unable to update image';
+  @override
   String unableToLaunchString(String urlString) {
     return 'Could not launch $urlString';
   }
 
+  @override
   String linkString(String typeString) {
     return 'Link $typeString';
   }
-  String get undoString => 'Undo';
-  String get moreString => 'More';
-  String get searchInListString => 'Search in List';
-  String linkedString(String typeString) => 'Linked $typeString';
-  String unableToLinkString(String typeString) => 'Unable to link $typeString';
-  String unlinkedString(String typeString) => 'Unlinked $typeString';
-  String unableToUnlinkString(String typeString) => 'Unable to unlink $typeString';
+  @override
+  final String undoString = 'Undo';
+  @override
+  final String moreString = 'More';
+  @override
+  final String searchInListString = 'Search in List';
+  @override
+  String linkedString(String typeString) {
+    return 'Linked $typeString';
+  }
+  @override
+  String unableToLinkString(String typeString) {
+    return 'Unable to link $typeString';
+  }
+  @override
+  String unlinkedString(String typeString) {
+    return 'Unlinked $typeString';
+  }
+  @override
+  String unableToUnlinkString(String typeString) {
+    return 'Unable to unlink $typeString';
+  }
 
+  @override
   String searchString(String typeString) {
     return 'Search $typeString';
   }
-  String get clearSearchString => 'Clear';
+  @override
+  final String clearSearchString = 'Clear';
+  @override
   String newWithTitleString(String typeString, String titleString) {
     return '+ New $typeString titled \'$titleString\'';
   }
-  String get noSuggestionsString => '';
-  String get noResultsString => 'No results found';
+  @override
+  final String noSuggestionsString = '';
+  @override
+  final String noResultsString = 'No results found';
 
   String _plural(String string) => string + 's';
 

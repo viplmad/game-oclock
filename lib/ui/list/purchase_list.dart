@@ -84,6 +84,23 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   final String statisticsRouteName = purchaseStatisticsRoute;
 
   @override
+  String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
+
+  @override
+  Widget cardBuilder(BuildContext context, Purchase item) {
+
+    return PurchaseTheme.itemCard(context, item, onTap);
+
+  }
+
+  @override
+  Widget gridBuilder(BuildContext context, Purchase item) {
+
+    return PurchaseTheme.itemGrid(context, item, onTap);
+
+  }
+
+  @override
   String viewTitle(BuildContext context) {
 
     return PurchaseTheme.views(context).elementAt(viewIndex);

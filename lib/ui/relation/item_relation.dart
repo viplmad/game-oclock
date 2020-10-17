@@ -107,7 +107,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
                 items: state.otherItems,
                 relationName: relationName,
                 relationTypeName: relationTypeName,
-                itemBuilder: _cardBuilder,
+                itemBuilder: cardBuilder,
                 onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
                 updateDelete: _deleteRelationFunction(context),
@@ -117,7 +117,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
                 items: state.otherItems,
                 relationName: relationName,
                 relationTypeName: relationTypeName,
-                itemBuilder: _cardBuilder,
+                itemBuilder: cardBuilder,
                 onSearch: _onRepositorySearchTap(context),
                 updateAdd: _addRelationFunction(context),
                 updateDelete: _deleteRelationFunction(context),
@@ -194,17 +194,6 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  Widget _cardBuilder(BuildContext context, W item) {
-
-    return ItemCard(
-      title: item.getTitle(),
-      subtitle: item.getSubtitle(),
-      imageURL: item.getImageURL(),
-      onTap: onTap(context, item),
-    );
-
-  }
-
   void Function() onTap(BuildContext context, W item) {
 
     return () {
@@ -227,6 +216,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
     };
 
   }
+
+  Widget cardBuilder(BuildContext context, W item);
 
 }
 

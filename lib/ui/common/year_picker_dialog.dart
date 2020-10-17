@@ -4,17 +4,95 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 
+class YearPickerDialog extends StatefulWidget {
+  YearPickerDialog({Key key, this.year}) : super(key: key);
+  final int year;
+
+  State<YearPickerDialog> createState() => _YearPickerDialogState();
+}
+class _YearPickerDialogState extends State<YearPickerDialog> {
+
+  DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedDate = widget.year != null? DateTime(widget.year) : DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Dialog(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              color: Theme.of(context).primaryColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(MaterialLocalizations.of(context).formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(color: Colors.white),),
+                  )
+                ],
+              ),
+            ),
+            Flexible(
+              child: _YearPicker(
+                firstDate: DateTime(1970),
+                lastDate: DateTime.now(),
+                initialDate: _selectedDate,
+                selectedDate: _selectedDate,
+                onChanged: (DateTime newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                },
+              ),
+            ),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                  onPressed: () {
+                    Navigator.maybePop<int>(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                  onPressed: () {
+                    Navigator.maybePop<int>(context, _selectedDate.year);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+  }
+
+}
+
 const int _yearPickerColumnCount = 3;
 const double _yearPickerPadding = 16.0;
 const double _yearPickerRowHeight = 52.0;
 const double _yearPickerRowSpacing = 8.0;
 
-class YearPicker extends StatefulWidget {
+class _YearPicker extends StatefulWidget {
   /// Creates a year picker.
   ///
   /// The [currentDate, [firstDate], [lastDate], [selectedDate], and [onChanged]
   /// arguments must be non-null. The [lastDate] must be after the [firstDate].
-  YearPicker({
+  _YearPicker({
     Key key,
     @required this.firstDate,
     @required this.lastDate,
@@ -50,7 +128,7 @@ class YearPicker extends StatefulWidget {
   _YearPickerState createState() => _YearPickerState();
 }
 
-class _YearPickerState extends State<YearPicker> {
+class _YearPickerState extends State<_YearPicker> {
   ScrollController scrollController;
 
   // The approximate number of years necessary to fill the available space.

@@ -86,6 +86,10 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, 
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
 
   @override
-  ThemeData themeData(BuildContext context) => DLCTheme.themeData(context);
+  Widget cardBuilder(BuildContext context, DLC item) {
+
+    return DLCTheme.itemCard(context, item, onTap);
+
+  }
 
 }

@@ -6,6 +6,7 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
+import '../theme/theme.dart';
 import 'relation.dart';
 
 
@@ -20,6 +21,13 @@ class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
 
   @override
   final String localSearchRouteName = purchaseLocalSearchRoute;
+
+  @override
+  Widget cardBuilder(BuildContext context, Purchase item) {
+
+    return PurchaseTheme.itemCard(context, item, onTap);
+
+  }
 
 }
 

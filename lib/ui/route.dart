@@ -9,6 +9,7 @@ import 'settings/settings.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
 import 'statistics/statistics.dart';
+import 'theme/theme.dart';
 
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -36,6 +37,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           item: detailArguments.item,
           onUpdate: detailArguments.onUpdate,
         ),
+        themeDataBuilder: GameTheme.themeData,
       );
 
     case dlcDetailRoute:
@@ -45,6 +47,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           item: detailArguments.item,
           onUpdate: detailArguments.onUpdate,
         ),
+        themeDataBuilder: DLCTheme.themeData,
       );
 
     case purchaseDetailRoute:
@@ -54,6 +57,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           item: detailArguments.item,
           onUpdate: detailArguments.onUpdate,
         ),
+        themeDataBuilder: PurchaseTheme.themeData,
       );
 
     case storeDetailRoute:
@@ -63,6 +67,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           item: detailArguments.item,
           onUpdate: detailArguments.onUpdate,
         ),
+        themeDataBuilder: StoreTheme.themeData,
       );
 
     case platformDetailRoute:
@@ -72,31 +77,48 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           item: detailArguments.item,
           onUpdate: detailArguments.onUpdate,
         ),
+        themeDataBuilder: PlatformTheme.themeData,
+      );
+
+    case gameStatisticsRoute:
+      GameStatisticsArguments statisticsArguments = settings.arguments as GameStatisticsArguments;
+      return _pageRoute(
+        GameStatistics(
+          items: statisticsArguments.items,
+          viewTitle: statisticsArguments.viewTitle,
+          tabTitle: statisticsArguments.tabTitle,
+        ),
+        themeDataBuilder: GameTheme.themeData,
       );
 
     case gameSearchRoute:
       return _pageRoute<Game>(
         GameSearch(),
+        themeDataBuilder: GameTheme.themeData,
       );
 
     case dlcSearchRoute:
       return _pageRoute<DLC>(
         DLCSearch(),
+        themeDataBuilder: DLCTheme.themeData,
       );
 
     case purchaseSearchRoute:
       return _pageRoute<Purchase>(
         PurchaseSearch(),
+        themeDataBuilder: PurchaseTheme.themeData,
       );
 
     case storeSearchRoute:
       return _pageRoute<Store>(
         StoreSearch(),
+        themeDataBuilder: StoreTheme.themeData,
       );
 
     case platformSearchRoute:
       return _pageRoute<Platform>(
         PlatformSearch(),
+        themeDataBuilder: PlatformTheme.themeData,
       );
 
     case systemSearchRoute:
@@ -119,6 +141,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         GameLocalSearch(
           items: settings.arguments as List<Game>,
         ),
+        themeDataBuilder: GameTheme.themeData,
       );
 
     case dlcLocalSearchRoute:
@@ -126,6 +149,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         DLCLocalSearch(
           items: settings.arguments as List<DLC>,
         ),
+        themeDataBuilder: DLCTheme.themeData,
       );
 
     case purchaseLocalSearchRoute:
@@ -133,6 +157,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         PurchaseLocalSearch(
           items: settings.arguments as List<Purchase>,
         ),
+        themeDataBuilder: PurchaseTheme.themeData,
       );
 
     case storeLocalSearchRoute:
@@ -140,6 +165,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         StoreLocalSearch(
           items: settings.arguments as List<Store>,
         ),
+        themeDataBuilder: StoreTheme.themeData,
       );
 
     case platformLocalSearchRoute:
@@ -147,6 +173,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         PlatformLocalSearch(
           items: settings.arguments as List<Platform>,
         ),
+        themeDataBuilder: PlatformTheme.themeData,
       );
 
     case systemLocalSearchRoute:
@@ -177,11 +204,17 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
 }
 
-MaterialPageRoute<T> _pageRoute<T>(Widget child) {
+MaterialPageRoute<T> _pageRoute<T>(Widget child, {ThemeData Function(BuildContext) themeDataBuilder}) {
 
   return MaterialPageRoute(
     builder: (BuildContext context) {
-      return child;
+      return themeDataBuilder == null?
+        child
+        :
+        Theme(
+          data: themeDataBuilder(context),
+          child: child,
+        );
     },
   );
 

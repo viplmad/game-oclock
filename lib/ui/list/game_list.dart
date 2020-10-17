@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/bar_data.dart';
 import 'package:game_collection/model/app_tab.dart';
 
 import 'package:game_collection/bloc/tab/tab.dart';
@@ -15,6 +14,8 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';
+import '../common/tabs_delegate.dart';
+import '../statistics/statistics.dart';
 import 'list.dart';
 
 
@@ -103,14 +104,14 @@ class GameTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<BarData> tabItems = [
-      GameTheme.allTabData(context),
-      GameTheme.ownedTabData(context),
-      GameTheme.romsTabData(context),
+    List<String> tabTitles = [
+      GameCollectionLocalisations.of(context).allString,
+      GameCollectionLocalisations.of(context).ownedString,
+      GameCollectionLocalisations.of(context).romsString,
     ];
 
     return DefaultTabController(
-      length: tabItems.length,
+      length: tabTitles.length,
       initialIndex: gameTab.index,
       child: Builder(
         builder: (BuildContext context) {
@@ -128,9 +129,9 @@ class GameTabs extends StatelessWidget {
                   floating: true,
                   delegate: TabsDelegate(
                     tabBar: TabBar(
-                      tabs: tabItems.map<Tab>( (tabItem) {
+                      tabs: tabTitles.map<Tab>( (String title) {
                         return Tab(
-                          text: tabItem.title,
+                          text: title,
                         );
                       }).toList(growable: false),
                     ),
@@ -141,9 +142,15 @@ class GameTabs extends StatelessWidget {
             },
             body: TabBarView(
               children: [
-                _AllGameList(),
-                _OwnedGameList(),
-                _RomGameList(),
+                _AllGameList(
+                  tabTitle: tabTitles.elementAt(0),
+                ),
+                _OwnedGameList(
+                  tabTitle: tabTitles.elementAt(1),
+                ),
+                _RomGameList(
+                  tabTitle: tabTitles.elementAt(2),
+                ),
               ],
             ),
           );
@@ -155,11 +162,20 @@ class GameTabs extends StatelessWidget {
 
 }
 
-class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {}
-class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {}
-class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {}
+class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {
+  _AllGameList({String tabTitle}) : super(tabTitle: tabTitle);
+}
+class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {
+  _OwnedGameList({String tabTitle}) : super(tabTitle: tabTitle);
+}
+class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
+  _RomGameList({String tabTitle}) : super(tabTitle: tabTitle);
+}
 
 abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
+  _GameList({this.tabTitle});
+
+  final String tabTitle;
 
   @override
   final String detailRouteName = gameDetailRoute;
@@ -175,6 +191,7 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
       viewIndex: viewIndex,
       onDelete: onDelete,
       style: style,
+      tabTitle: tabTitle,
     );
 
   }
@@ -189,6 +206,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
     @required int viewIndex,
     @required void Function(Game) onDelete,
     @required ListStyle style,
+    @required this.tabTitle,
   }) : super(
     key: key,
     items: items,
@@ -196,6 +214,8 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
     onDelete: onDelete,
     style: style,
   );
+
+  final String tabTitle;
 
   @override
   final String detailRouteName = gameDetailRoute;
@@ -205,6 +225,39 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
 
   @override
   final String statisticsRouteName = gameStatisticsRoute;
+
+  void Function() onStatisticsTap(BuildContext context) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        statisticsRouteName,
+        arguments: GameStatisticsArguments(
+          items: items,
+          viewTitle: viewTitle(context),
+          tabTitle: tabTitle,
+        ),
+      );
+    };
+
+  }
+
+  @override
+  String itemTitle(Game item) => GameTheme.itemTitle(item);
+
+  @override
+  Widget cardBuilder(BuildContext context, Game item) {
+
+    return GameTheme.itemCard(context, item, onTap);
+
+  }
+
+  @override
+  Widget gridBuilder(BuildContext context, Game item) {
+
+    return GameTheme.itemGrid(context, item, onTap);
+
+  }
 
   @override
   String viewTitle(BuildContext context) {

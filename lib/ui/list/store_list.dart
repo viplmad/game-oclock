@@ -91,6 +91,23 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   }
 
   @override
+  String itemTitle(Store item) => StoreTheme.itemTitle(item);
+
+  @override
+  Widget cardBuilder(BuildContext context, Store item) {
+
+    return StoreTheme.itemCard(context, item, onTap);
+
+  }
+
+  @override
+  Widget gridBuilder(BuildContext context, Store item) {
+
+    return StoreTheme.itemGrid(context, item, onTap);
+
+  }
+
+  @override
   String viewTitle(BuildContext context) {
 
     return StoreTheme.views(context).elementAt(viewIndex);

@@ -31,6 +31,17 @@ class DLC extends CollectionItem {
 
   final int baseGame;
 
+  @override
+  String get uniqueId => 'D' + this.id.toString();
+
+  @override
+  final bool hasImage = true;
+  @override
+  ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
+
+  @override
+  String get queryableTerms => this.name;
+
   static DLC fromEntity(DLCEntity entity, [String coverURL]) {
 
     return DLC(
@@ -86,34 +97,6 @@ class DLC extends CollectionItem {
   }
 
   @override
-  String getUniqueId() {
-
-    return 'D' + this.id.toString();
-
-  }
-
-  @override
-  String getTitle() {
-
-    return this.name;
-
-  }
-
-  @override
-  String getImageURL() {
-
-    return this.coverURL?? '';
-
-  }
-
-  @override
-  String getImageFilename() {
-
-    return this.coverFilename;
-
-  }
-
-  @override
   List<Object> get props => [
     id,
     name,
@@ -134,15 +117,5 @@ class DLC extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class DLCsData {
-
-  DLCsData({
-    this.dlcs,
-  });
-
-  final List<DLC> dlcs;
 
 }

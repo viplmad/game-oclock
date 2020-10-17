@@ -59,6 +59,10 @@ abstract class GameCollectionLocalisations {
   String get mainViewString;
   String get lastCreatedViewString;
   String get yearInReviewViewString;
+
+  String get generalString;
+  String get changeYearString;
+  List<String> get shortMonths;
   //#endregion Common
 
   //#region Game
@@ -84,6 +88,19 @@ abstract class GameCollectionLocalisations {
   String get playingViewString;
   String get nextUpViewString;
   String get lastFinishedViewString;
+
+  String get totalGamesString;
+  String get totalGamesPlayedString;
+  String get sumTimeString;
+  String get avgTimeString;
+  String get avgRatingString;
+  String get countByStatusString;
+  String get countByReleaseYearString;
+  String get sumMinutesByFinishDateString;
+  String get sumMinutesByMonth;
+  String get countByRatingString;
+  String get countByFinishDate;
+  String get countByTimeString;
   //#endregion Game
 
   //#region DLC
@@ -142,10 +159,10 @@ abstract class GameCollectionLocalisations {
   String get purchaseTypesString;
   //#endregion PurchaseType
 
-  String euroString(String amountString);
-  String percentageString(String amountString);
-  String dateString(String dayString, String monthString, String yearString);
-  String durationString(String hoursString, String minutesString);
+  String euroString(double amount);
+  String percentageString(double amount);
+  String dateString(DateTime date);
+  String durationString(Duration duration);
 
   String editString(String fieldString);
   String get fieldUpdatedString;

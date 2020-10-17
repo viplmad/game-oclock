@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+
+import '../common/item_view.dart';
 
 
 class GameTheme {
@@ -39,33 +42,6 @@ class GameTheme {
 
   }
 
-  static BarData allTabData(BuildContext context) {
-
-    return BarData(
-      title: GameCollectionLocalisations.of(context).allString,
-      icon: Icons.done_all,
-    );
-
-  }
-
-  static BarData ownedTabData(BuildContext context) {
-
-    return BarData(
-      title: GameCollectionLocalisations.of(context).ownedString,
-      icon: Icons.videogame_asset,
-    );
-
-  }
-
-  static BarData romsTabData(BuildContext context) {
-
-    return BarData(
-      title: GameCollectionLocalisations.of(context).romsString,
-      icon: Icons.file_download,
-    );
-
-  }
-
   static List<String> views(BuildContext context) {
 
     return <String>[
@@ -76,6 +52,45 @@ class GameTheme {
       GameCollectionLocalisations.of(context).lastFinishedViewString,
       GameCollectionLocalisations.of(context).yearInReviewViewString,
     ];
+
+  }
+
+  static Widget itemCard(BuildContext context, Game item, Function(BuildContext, Game) onTap) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle: _itemSubtitle(item),
+      imageURL: item.coverURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static Widget itemGrid(BuildContext context, Game item, void Function() Function(BuildContext, Game) onTap) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      imageURL: item.coverURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static String itemTitle(Game item) {
+
+    String title = item.name;
+
+    if(item.edition.isNotEmpty) {
+      title += ' - ' + item.edition;
+    }
+
+    return title;
+
+  }
+
+  static String _itemSubtitle(Game item) {
+
+    return (item.status?? '') + ' · ' + item.releaseYear.toString();
 
   }
 

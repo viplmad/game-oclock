@@ -17,12 +17,12 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
-import 'year_picker.dart' as customyearpicker;
+import '../common/year_picker_dialog.dart';
 
 
 class DetailArguments<T> {
   DetailArguments({
-    this.item,
+    @required this.item,
     this.onUpdate,
   });
 
@@ -60,10 +60,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
         ),
       ]..addAll(relationBlocsBuilder()),
       child: Scaffold(
-        body: Theme(
-          data: themeData(context),
-          child: detailBodyBuilder(),
-        )
+        body: detailBodyBuilder()
       ),
     );
 
@@ -73,7 +70,6 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
   S managerBlocBuilder();
   List<BlocProvider> relationBlocsBuilder();
 
-  ThemeData themeData(BuildContext context);
   ItemDetailBody<T, K, S> detailBodyBuilder();
 
 }
@@ -207,13 +203,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         flexibleSpace: BlocBuilder<K, ItemDetailState> (
           builder: (BuildContext context, ItemDetailState state) {
             String title = '';
-            String imageURL;
-            String imageFilename;
+            bool hasImage = false;
+            ItemImage image;
 
             if(state is ItemLoaded<T>) {
-              title = state.item.getTitle();
-              imageURL = state.item.getImageURL();
-              imageFilename = state.item.getImageFilename();
+              title = itemTitle(state.item);
+              hasImage = state.item.hasImage;
+              image = state.item.image;
             }
 
             return GestureDetector(
@@ -221,15 +217,15 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               child: FlexibleSpaceBar(
                 title: Text(title),
                 collapseMode: CollapseMode.parallax,
-                background: imageURL != null?
+                background: hasImage?
                   CachedImage(
-                    imageURL: imageURL,
+                    imageURL: image.url,
                     fit: BoxFit.cover,
                     applyGradient: true,
                     backgroundColour: Theme.of(context).primaryColor,
                   ) : Container(),
               ),
-              onTap: imageURL != null? () {
+              onTap: hasImage? () {
                 showModalBottomSheet(
                   context: context,
                   builder: (BuildContext innerContext) {
@@ -237,7 +233,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                     return _imageActionListBuilder(
                       innerContext,
                       context,
-                      imageFilename: imageFilename,
+                      imageFilename: image.filename,
                     );
 
                   },
@@ -255,16 +251,17 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
   Widget _imageActionListBuilder(BuildContext context, BuildContext outerContext, {String imageFilename}) {
 
     final ImagePicker _picker = ImagePicker();
+    final bool withImage = imageFilename.isNotEmpty;
 
     return Container(
       child: Wrap(
         children: <Widget>[
           ListTile(
-            title: Text(imageFilename?? ''),
+            title: Text(withImage? imageFilename : ''),
           ),
           Divider(),
           ListTile(
-            title: imageFilename != null?
+            title: withImage?
               Text(GameCollectionLocalisations.of(context).replaceImageString)
               :
               Text(GameCollectionLocalisations.of(context).uploadImageString),
@@ -278,7 +275,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                   BlocProvider.of<S>(outerContext).add(
                     AddItemImage<T>(
                       imagePicked.path,
-                      imageFilename != null? imageFilename.split('.').first : null,
+                      withImage? imageFilename.split('.').first : null,
                     ),
                   );
 
@@ -291,7 +288,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ListTile(
             title: Text(GameCollectionLocalisations.of(context).renameImageString),
             leading: Icon(Icons.edit),
-            enabled: imageFilename != null,
+            enabled: withImage,
             onTap: () {
               TextEditingController fieldController = TextEditingController();
               String imageName = imageFilename.split('.').first;
@@ -350,7 +347,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ListTile(
             title: Text(GameCollectionLocalisations.of(context).deleteImageString),
             leading: Icon(Icons.delete_outline),
-            enabled: imageFilename != null,
+            enabled: withImage,
             onTap: () {
               String imageName = imageFilename.split('.').first;
 
@@ -440,7 +437,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).euroString(value.toStringAsFixed(2))
+        GameCollectionLocalisations.of(context).euroString(value)
         :
         null,
       update: _updateFieldFunction<double>(context, field),
@@ -454,7 +451,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).euroString(value.toStringAsFixed(2))
+        GameCollectionLocalisations.of(context).euroString(value)
         :
         null,
       editable: false,
@@ -468,7 +465,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).percentageString(value.toStringAsFixed(2))
+        GameCollectionLocalisations.of(context).percentageString(value)
         :
         null,
       editable: false,
@@ -537,6 +534,8 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
     );
 
   }
+
+  String itemTitle(T item);
 
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
   List<Widget> itemRelationsBuilder(BuildContext context);
@@ -770,8 +769,7 @@ class _ItemYearField extends StatelessWidget {
         return showDialog<int>(
           context: context,
           builder: (BuildContext context) {
-            return _YearPickerDialog(
-              fieldName: fieldName,
+            return YearPickerDialog(
               year: value,
             );
           },
@@ -798,7 +796,7 @@ class _ItemDateTimeField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).dateString(value.day.toString(), value.month.toString(), value.year.toString())
+        GameCollectionLocalisations.of(context).dateString(value)
         :
         null,
       update: update,
@@ -831,7 +829,7 @@ class _ItemDurationField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).durationString(value.inHours.toString(), (value.inMinutes - (value.inHours * 60)).toString().padLeft(2, '0'))
+        GameCollectionLocalisations.of(context).durationString(value)
         :
         null,
       update: update,
@@ -971,88 +969,6 @@ class _EnumField extends StatelessWidget {
           ).toList(growable: false),
         ),
       ],
-    );
-
-  }
-
-}
-
-class _YearPickerDialog extends StatefulWidget {
-  _YearPickerDialog({Key key, this.fieldName, this.year}) : super(key: key);
-
-  final String fieldName;
-  final int year;
-
-  State<_YearPickerDialog> createState() => _YearPickerDialogState();
-}
-class _YearPickerDialogState extends State<_YearPickerDialog> {
-
-  DateTime _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _selectedDate = widget.year != null? DateTime(widget.year) : DateTime.now();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
-    return Dialog(
-      child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              color: Theme.of(context).primaryColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(localizations.formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith( color: Colors.white),),
-                  )
-                ],
-              ),
-            ),
-            Flexible(
-              child: customyearpicker.YearPicker(
-                firstDate: DateTime(1970),
-                lastDate: DateTime.now(),
-                initialDate: _selectedDate,
-                selectedDate: _selectedDate,
-                onChanged: (DateTime newDate) {
-                  setState(() {
-                    _selectedDate = newDate;
-                  });
-                },
-              ),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  child: Text(localizations.cancelButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<int>(context);
-                  },
-                ),
-                FlatButton(
-                  child: Text(localizations.okButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<int>(context, _selectedDate.year);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
 
   }

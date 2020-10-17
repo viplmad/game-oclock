@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+
+import '../common/item_view.dart';
 
 
 class PlatformTheme {
@@ -43,6 +46,32 @@ class PlatformTheme {
       GameCollectionLocalisations.of(context).mainViewString,
       GameCollectionLocalisations.of(context).lastCreatedViewString,
     ];
+
+  }
+
+  static Widget itemCard(BuildContext context, Platform item, void Function() Function(BuildContext, Platform) onTap) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      imageURL: item.iconURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static Widget itemGrid(BuildContext context, Platform item, void Function() Function(BuildContext, Platform) onTap) {
+
+    return ItemGrid(
+      title: itemTitle(item),
+      imageURL: item.iconURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static String itemTitle(Platform item) {
+
+    return item.name;
 
   }
 

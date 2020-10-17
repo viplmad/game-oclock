@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/bar_data.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+
+import '../common/item_view.dart';
 
 
 class DLCTheme {
@@ -38,6 +41,32 @@ class DLCTheme {
       GameCollectionLocalisations.of(context).mainViewString,
       GameCollectionLocalisations.of(context).lastCreatedViewString,
     ];
+
+  }
+
+  static Widget itemCard(BuildContext context, DLC item, void Function() Function(BuildContext, DLC) onTap) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      imageURL: item.coverURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static Widget itemGrid(BuildContext context, DLC item, void Function() Function(BuildContext, DLC) onTap) {
+
+    return ItemGrid(
+      title: itemTitle(item),
+      imageURL: item.coverURL?? '',
+      onTap: onTap(context, item),
+    );
+
+  }
+
+  static String itemTitle(DLC item) {
+
+    return item.name;
 
   }
 

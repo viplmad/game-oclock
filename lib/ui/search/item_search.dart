@@ -118,7 +118,8 @@ abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc
 
   String typeName(BuildContext context);
   String typesName(BuildContext context);
-  ThemeData themeData(BuildContext context);
+
+  Widget cardBuilder(BuildContext context, T item);
 
   @override
   State<ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
@@ -134,89 +135,86 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
   @override
   Widget build(BuildContext context) {
 
-    return Theme(
-      data: widget.themeData(context),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: _buildActions(),
-          title: TextField(
-            controller: _textEditingController,
-            keyboardType: TextInputType.text,
-            autofocus: true,
-            onChanged: (String newQuery) {
-              //Not sure of this fix to update button text
-              setState(() {});
-              BlocProvider.of<K>(context).add(
-                SearchTextChanged(query),
-              );
-            },
-            maxLines: 1,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(),
-              prefixIcon: Icon(Icons.search),
-              hintText: GameCollectionLocalisations.of(context).searchString(widget.typesName(context)),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        actions: _buildActions(),
+        title: TextField(
+          controller: _textEditingController,
+          keyboardType: TextInputType.text,
+          autofocus: true,
+          onChanged: (String newQuery) {
+            //Not sure of this fix to update button text
+            setState(() {});
+            BlocProvider.of<K>(context).add(
+              SearchTextChanged(query),
+            );
+          },
+          maxLines: 1,
+          decoration: InputDecoration(
+            border: UnderlineInputBorder(),
+            prefixIcon: Icon(Icons.search),
+            hintText: GameCollectionLocalisations.of(context).searchString(widget.typesName(context)),
           ),
         ),
-        body: BlocListener<S, ItemListManagerState>(
-          listener: (BuildContext context, ItemListManagerState state) {
-            if(state is ItemAdded<T>) {
+      ),
+      body: BlocListener<S, ItemListManagerState>(
+        listener: (BuildContext context, ItemListManagerState state) {
+          if(state is ItemAdded<T>) {
 
-              Navigator.maybePop<T>(context, state.item);
+            Navigator.maybePop<T>(context, state.item);
 
-            }
-            if(state is ItemNotAdded) {
-              String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-                seconds: 2,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
-              );
-            }
-          },
-          child: Column(
-            children: <Widget>[
-              widget.allowNewButton?
-                Container(
-                  child: _newButton(),
-                  color: Colors.grey,
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                )
-                :
-                Container(),
-              BlocBuilder<K, ItemSearchState>(
-                builder: (BuildContext context, ItemSearchState state) {
-
-                  if(state is ItemSearchEmpty<T>) {
-
-                    return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
-
-                  }
-                  if(state is ItemSearchSuccess<T>) {
-
-                    return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
-
-                  }
-                  if(state is ItemSearchError) {
-
-                    return Center(
-                      child: Text(state.error),
-                    );
-
-                  }
-
-                  return LinearProgressIndicator();
-
-                },
+          }
+          if(state is ItemNotAdded) {
+            String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
+            showSnackBar(
+              scaffoldState: Scaffold.of(context),
+              message: message,
+              seconds: 2,
+              snackBarAction: dialogSnackBarAction(
+                context,
+                label: GameCollectionLocalisations.of(context).moreString,
+                title: message,
+                content: state.error,
               ),
-            ],
-          ),
+            );
+          }
+        },
+        child: Column(
+          children: <Widget>[
+            widget.allowNewButton?
+              Container(
+                child: _newButton(),
+                color: Colors.grey,
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              )
+              :
+              Container(),
+            BlocBuilder<K, ItemSearchState>(
+              builder: (BuildContext context, ItemSearchState state) {
+
+                if(state is ItemSearchEmpty<T>) {
+
+                  return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
+
+                }
+                if(state is ItemSearchSuccess<T>) {
+
+                  return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
+
+                }
+                if(state is ItemSearchError) {
+
+                  return Center(
+                    child: Text(state.error),
+                  );
+
+                }
+
+                return LinearProgressIndicator();
+
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -276,12 +274,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
             return Padding(
               padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
-              child: ItemCard(
-                title: result.getTitle(),
-                subtitle: result.getSubtitle(),
-                imageURL: result.getImageURL(),
-                onTap: widget.onTap(context, result),
-              ),
+              child: widget.cardBuilder(context, result),
             );
 
           },

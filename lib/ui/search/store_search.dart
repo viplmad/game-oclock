@@ -87,6 +87,10 @@ class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<S
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
 
   @override
-  ThemeData themeData(BuildContext context) => StoreTheme.themeData(context);
+  Widget cardBuilder(BuildContext context, Store item) {
+
+    return StoreTheme.itemCard(context, item, onTap);
+
+  }
 
 }

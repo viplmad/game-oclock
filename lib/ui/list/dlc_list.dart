@@ -91,6 +91,23 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
   }
 
   @override
+  String itemTitle(DLC item) => DLCTheme.itemTitle(item);
+
+  @override
+  Widget cardBuilder(BuildContext context, DLC item) {
+
+    return DLCTheme.itemCard(context, item, onTap);
+
+  }
+
+  @override
+  Widget gridBuilder(BuildContext context, DLC item) {
+
+    return DLCTheme.itemGrid(context, item, onTap);
+
+  }
+
+  @override
   String viewTitle(BuildContext context) {
 
     return DLCTheme.views(context).elementAt(viewIndex);

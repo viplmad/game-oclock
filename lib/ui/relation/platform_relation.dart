@@ -6,6 +6,7 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
+import '../theme/theme.dart';
 import 'relation.dart';
 
 
@@ -20,6 +21,13 @@ class PlatformGameRelationList extends _PlatformRelationList<Game> {
 
   @override
   final String localSearchRouteName = gameLocalSearchRoute;
+
+  @override
+  Widget cardBuilder(BuildContext context, Game item) {
+
+    return GameTheme.itemCard(context, item, onTap);
+
+  }
 
 }
 
@@ -39,6 +47,13 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   void Function() onTap(BuildContext context, System item) {
 
     return null;
+
+  }
+
+  @override
+  Widget cardBuilder(BuildContext context, System item) {
+
+    return SystemTheme.itemCard(context, item, onTap);
 
   }
 

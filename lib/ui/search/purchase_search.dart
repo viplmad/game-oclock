@@ -87,6 +87,10 @@ class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;
 
   @override
-  ThemeData themeData(BuildContext context) => PurchaseTheme.themeData(context);
+  Widget cardBuilder(BuildContext context, Purchase item) {
+
+    return PurchaseTheme.itemCard(context, item, onTap);
+
+  }
 
 }

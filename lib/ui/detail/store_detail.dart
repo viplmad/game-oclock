@@ -15,8 +15,8 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
 import '../relation/relation.dart';
+import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
@@ -69,9 +69,6 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }
 
   @override
-  ThemeData themeData(BuildContext context) => StoreTheme.themeData(context);
-
-  @override
   _StoreDetailBody detailBodyBuilder() {
 
     return _StoreDetailBody(
@@ -101,6 +98,9 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
     Key key,
     void Function(Store item) onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
+
+  @override
+  String itemTitle(Store item) => StoreTheme.itemTitle(item);
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Store store) {
