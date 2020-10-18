@@ -11,6 +11,7 @@ class TagTheme {
 
     return ItemCard(
       title: _getTitle(item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 
@@ -20,6 +21,7 @@ class TagTheme {
 
     return ItemGrid(
       title: _getTitle(item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 

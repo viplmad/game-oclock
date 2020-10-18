@@ -11,6 +11,7 @@ class TypeTheme {
 
     return ItemCard(
       title: _getTitle(item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 
@@ -20,6 +21,7 @@ class TypeTheme {
 
     return ItemGrid(
       title: _getTitle(item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 

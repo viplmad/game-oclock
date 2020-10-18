@@ -9,7 +9,6 @@ import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../common/item_view.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
 

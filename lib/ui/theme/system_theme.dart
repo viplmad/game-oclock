@@ -12,7 +12,8 @@ class SystemTheme {
     return ItemCard(
       title: _getTitle(item),
       subtitle: _getSubtitle(item),
-      imageURL: item.iconURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 
@@ -22,7 +23,8 @@ class SystemTheme {
 
     return ItemGrid(
       title: _getTitle(item),
-      imageURL: item.iconURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 

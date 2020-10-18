@@ -56,7 +56,7 @@ abstract class ItemData<T extends CollectionItem> {
 class YearData<T> {
 
   YearData() {
-    values = new List(12);
+    values = List<T>(12);
     month = 0;
   }
 

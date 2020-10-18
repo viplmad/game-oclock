@@ -1,4 +1,4 @@
-import 'package:game_collection/localisations/localisations.dart';
+import 'localisations.dart';
 
 
 class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
@@ -126,6 +126,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     'Nov',
     'Dec',
   ];
+  @override
+  String totalString(String typesString) {
+    return 'Total $typesString';
+  }
   //#endregion Common
 
   //#region Game
@@ -157,7 +161,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String thoughtsFieldString = 'Thoughts';
   @override
-  final String timeFieldString = 'Time';
+  final String timeFieldString = 'Play Time';
   @override
   final String saveFolderFieldString = 'Save Folder';
   @override
@@ -173,8 +177,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String lastFinishedViewString = 'Last Finished';
 
   @override
-  String get totalGamesString => 'Total $gamesString';
-  @override
   String get totalGamesPlayedString => 'Total played $gamesString';
   @override
   String get sumTimeString => 'Total $timeFieldString';
@@ -183,19 +185,19 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get avgRatingString => 'Average $ratingFieldString';
   @override
-  String get countByStatusString => 'Total by $statusFieldString';
+  String get countByStatusString => 'Number of $gamesString by $statusFieldString';
   @override
-  String get countByReleaseYearString => 'Total by $releaseYearFieldString';
+  String get countByReleaseYearString => 'Number of $gamesString by $releaseYearFieldString';
   @override
-  String get sumMinutesByFinishDateString => 'Total Time by $finishDateFieldString';
+  String get sumMinutesByFinishDateString => 'Total $timeFieldString by $finishDateFieldString';
   @override
-  final String sumMinutesByMonth = 'Total Time by month';
+  String get sumMinutesByMonth => 'Total $timeFieldString by month';
   @override
-  String get countByRatingString => 'Total by $ratingFieldString';
+  String get countByRatingString => 'Number of $gamesString by $ratingFieldString';
   @override
-  String get countByFinishDate => 'Total by $finishDateFieldString';
+  String get countByFinishDate => 'Number of $gamesString by $finishDateFieldString';
   @override
-  String get countByTimeString => 'Total by $timeFieldString';
+  String get countByTimeString => 'Number of $gamesString by $timeFieldString';
   //#endregion Game
 
   //#region DLC
@@ -240,6 +242,39 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String realValueString = 'Real Value';
   @override
   final String percentageSavedString = 'Percentage Saved';
+
+  @override
+  String get sumPriceString => 'Total spent';
+  @override
+  String get avgPriceString => 'Average spent';
+  @override
+  String get sumExternalCreditString => 'Total $externalCreditsFieldString spent';
+  @override
+  String get avgExternalCreditString => 'Average $externalCreditsFieldString spent';
+  @override
+  String get sumOriginalPriceString => 'Total $originalPriceFieldString';
+  @override
+  String get avgOriginalPriceString => 'Average $originalPriceFieldString';
+  @override
+  String get avgDiscountString => 'Average $discountFieldString';
+  @override
+  String get sumSavedString => 'Total saved';
+  @override
+  String get avgSavedString => 'Average saved';
+  @override
+  String get countByYearString => 'Number of $purchasesString by year';
+  @override
+  String get sumPriceByYearString => 'Total spent by year';
+  @override
+  String get sumOriginalPriceByYearString => 'Total $originalPriceFieldString by year';
+  @override
+  String get countByMonthString => 'Number of $purchasesString by month';
+  @override
+  String get countByPriceString => 'Number of $purchasesString by $priceFieldString';
+  @override
+  String get sumPriceByMonthString => 'Total spent by month';
+  @override
+  String get sumOriginalPriceByMonthString => 'Total $originalPriceFieldString by month';
   //#endregion Purchase
 
   //#region Store

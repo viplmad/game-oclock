@@ -50,10 +50,11 @@ class DismissibleItem extends StatelessWidget {
 }
 
 class ItemCard extends StatelessWidget {
-  const ItemCard({Key key, @required this.title, this.subtitle, this.imageURL, @required this.onTap}) : super(key: key);
+  const ItemCard({Key key, @required this.title, this.subtitle, @required this.hasImage, this.imageURL, @required this.onTap}) : super(key: key);
 
   final String title;
   final String subtitle;
+  final bool hasImage;
   final String imageURL;
   final void Function() onTap;
 
@@ -65,6 +66,7 @@ class ItemCard extends StatelessWidget {
         child: _ItemListTile(
           title: title,
           subtitle: subtitle,
+          hasImage: hasImage,
           imageURL: imageURL,
         ),
         onTap: onTap,
@@ -76,17 +78,18 @@ class ItemCard extends StatelessWidget {
 }
 
 class _ItemListTile extends StatelessWidget {
-  const _ItemListTile({Key key, @required this.title, this.subtitle, this.imageURL}) : super(key: key);
+  const _ItemListTile({Key key, @required this.title, this.subtitle, this.hasImage, this.imageURL}) : super(key: key);
 
   final String title;
   final String subtitle;
+  final bool hasImage;
   final String imageURL;
 
   @override
   Widget build(BuildContext context) {
 
     return ListTile(
-      leading: imageURL != null?
+      leading: hasImage?
           ConstrainedBox(
             constraints: BoxConstraints(
               minWidth: 100,
@@ -113,9 +116,10 @@ class _ItemListTile extends StatelessWidget {
 }
 
 class ItemGrid extends StatelessWidget {
-  const ItemGrid({Key key, @required this.title, this.imageURL, @required this.onTap}) : super(key: key);
+  const ItemGrid({Key key, @required this.title, @required this.hasImage, this.imageURL, @required this.onTap}) : super(key: key);
 
   final String title;
+  final bool hasImage;
   final String imageURL;
   final void Function() onTap;
 
@@ -126,6 +130,7 @@ class ItemGrid extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(4.0),),
         child: _ItemGridTile(
           title: title,
+          hasImage: hasImage,
           imageURL: imageURL,
         ),
         onTap: onTap,
@@ -136,17 +141,17 @@ class ItemGrid extends StatelessWidget {
 }
 
 class _ItemGridTile extends StatelessWidget {
-
-  const _ItemGridTile({Key key, @required this.title, this.imageURL}) : super(key: key);
+  const _ItemGridTile({Key key, @required this.title, @required this.hasImage, this.imageURL}) : super(key: key);
 
   final String title;
+  final bool hasImage;
   final String imageURL;
 
   @override
   Widget build(BuildContext context) {
 
     return GridTile(
-      child: imageURL != null?
+      child: hasImage?
         CachedImage(
           imageURL: imageURL,
           fit: BoxFit.cover,

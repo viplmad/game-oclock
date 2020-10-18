@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/localisations/localisations_en.dart';
+import 'localisations_en.dart';
 
 
 abstract class GameCollectionLocalisations {
@@ -63,6 +63,7 @@ abstract class GameCollectionLocalisations {
   String get generalString;
   String get changeYearString;
   List<String> get shortMonths;
+  String totalString(String typesString);
   //#endregion Common
 
   //#region Game
@@ -89,7 +90,6 @@ abstract class GameCollectionLocalisations {
   String get nextUpViewString;
   String get lastFinishedViewString;
 
-  String get totalGamesString;
   String get totalGamesPlayedString;
   String get sumTimeString;
   String get avgTimeString;
@@ -128,6 +128,23 @@ abstract class GameCollectionLocalisations {
   String get totalMoneySavedString;
   String get realValueString;
   String get percentageSavedString;
+
+  String get sumPriceString;
+  String get avgPriceString;
+  String get sumExternalCreditString;
+  String get avgExternalCreditString;
+  String get sumOriginalPriceString;
+  String get avgOriginalPriceString;
+  String get avgDiscountString;
+  String get sumSavedString;
+  String get avgSavedString;
+  String get countByYearString;
+  String get sumPriceByYearString;
+  String get sumOriginalPriceByYearString;
+  String get countByMonthString;
+  String get countByPriceString;
+  String get sumPriceByMonthString;
+  String get sumOriginalPriceByMonthString;
   //#endregion Purchase
 
   //#region Store
@@ -209,7 +226,6 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
       case 'en':
         return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
       case 'es':
-        //TODO
       default:
         return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
     }

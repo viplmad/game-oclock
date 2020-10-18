@@ -60,7 +60,8 @@ class GameTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(item),
-      imageURL: item.coverURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 
@@ -68,9 +69,10 @@ class GameTheme {
 
   static Widget itemGrid(BuildContext context, Game item, void Function() Function(BuildContext, Game) onTap) {
 
-    return ItemCard(
+    return ItemGrid(
       title: itemTitle(item),
-      imageURL: item.coverURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 

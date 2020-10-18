@@ -48,7 +48,8 @@ class StoreTheme {
 
     return ItemCard(
       title: itemTitle(item),
-      imageURL: item.iconURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 
@@ -58,7 +59,8 @@ class StoreTheme {
 
     return ItemGrid(
       title: itemTitle(item),
-      imageURL: item.iconURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 

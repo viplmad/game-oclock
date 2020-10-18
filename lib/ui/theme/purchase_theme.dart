@@ -52,6 +52,7 @@ class PurchaseTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 
@@ -61,6 +62,7 @@ class PurchaseTheme {
 
     return ItemGrid(
       title: itemTitle(item),
+      hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
 

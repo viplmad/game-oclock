@@ -48,7 +48,8 @@ class DLCTheme {
 
     return ItemCard(
       title: itemTitle(item),
-      imageURL: item.coverURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 
@@ -58,7 +59,8 @@ class DLCTheme {
 
     return ItemGrid(
       title: itemTitle(item),
-      imageURL: item.coverURL?? '',
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 

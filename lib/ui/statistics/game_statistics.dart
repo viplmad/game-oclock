@@ -39,7 +39,7 @@ class GameStatistics extends ItemStatistics<Game, GamesData, GameStatisticsBloc>
   }
 
   @override
-  ItemStatisticsBody<Game, GamesData, GameStatisticsBloc> statisticsBodyBuilder() {
+  _GameStatisticsBody statisticsBodyBuilder() {
 
     return _GameStatisticsBody(
       viewTitle: viewTitle,
@@ -75,7 +75,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     return [
       statisticsIntField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).totalGamesPlayedString,
+        fieldName: GameCollectionLocalisations.of(context).totalString(typesName(context)),
         value: totalItems,
       ),
       statisticsDurationField(
@@ -123,7 +123,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       //TODO avg rating by year
       statisticsDoubleField(
         fieldName: GameCollectionLocalisations.of(context).avgRatingString,
-        value: (playingPlayedCount > 0)? data.totalRating() / playingPlayedCount : 0,
+        value: (playingPlayedCount > 0)? data.ratingSum() / playingPlayedCount : 0,
       ),
       Divider(),
       _sumMinutesByFinishDate(context, data, finishYears),
@@ -145,7 +145,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     return [
       statisticsIntField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).totalGamesString,
+        fieldName: GameCollectionLocalisations.of(context).totalGamesPlayedString,
         value: totalItems,
       ),
       statisticsDurationField(
@@ -174,12 +174,13 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByReleaseYear(BuildContext context, GamesData data) {
     
     List<int> intervals = [1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020];
+    List<String> labels = formatIntervalLabels(intervals);
 
-    return statisticsHistogram(
+    return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByReleaseYearString,
-      labels: intervals.map<String>((int e) => e.toString()).toList(growable: false),
-      values: data.intervalReleaseYears(intervals),
+      labels: labels,
+      values: data.intervalReleaseYearCount(intervals),
     );
     
   }
@@ -187,11 +188,11 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _sumMinutesByFinishDate(BuildContext context, GamesData data, List<int> finishYears) {
 
     return finishYears.isNotEmpty?
-      statisticsHistogram(
+      statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).sumMinutesByFinishDateString,
         labels: finishYears.map<String>((int e) => e.toString()).toList(growable: false),
-        values: data.yearlySumHours(finishYears),
+        values: data.yearlyHoursSum(finishYears),
       ) : Container();
 
   }
@@ -199,11 +200,11 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByFinishDate(BuildContext context, GamesData data, List<int> finishYears) {
 
     return finishYears.isNotEmpty?
-      statisticsHistogram(
+      statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).countByFinishDate,
         labels: finishYears.map<String>((int e) => e.toString()).toList(growable: false),
-        values: data.yearlyCountFinishDate(finishYears),
+        values: data.yearlyFinishDateCount(finishYears),
       ) : Container();
 
   }
@@ -213,12 +214,13 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByRating(BuildContext context, GamesData data) {
 
     List<int> intervals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    List<String> labels = intervals.map<String>((int e) => e.toString()).toList(growable: false);
 
-    return statisticsHistogram(
+    return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByRatingString,
-      labels: intervals.map<String>((int e) => e.toString()).toList(growable: false),
-      values: data.intervalRating(intervals),
+      labels: labels,
+      values: data.intervalRatingCountEqual(intervals),
     );
 
   }
@@ -226,23 +228,24 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByTime(BuildContext context, GamesData data) {
 
     List<int> intervals = [0, 5, 10, 15, 20, 25, 50, 100];
+    List<String> labels = formatIntervalLabelsWithInitialAndLast(intervals);
 
-    return statisticsHistogram(
+    return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByTimeString,
-      labels: intervals.map<String>((int e) => e.toString()).toList(growable: false),
-      values: data.intervalTime(intervals),
+      labels: labels,
+      values: data.intervalTimeCountWithInitialAndLast(intervals),
     );
 
   }
 
   Widget _sumMinutesByMonth(BuildContext context, GamesData data) {
 
-    return statisticsHistogram(
+    return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).sumMinutesByMonth,
       labels: GameCollectionLocalisations.of(context).shortMonths,
-      values: data.monthlySumHours().values,
+      values: data.monthlyHoursSum().values,
     );
 
   }
