@@ -127,7 +127,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       Divider(),
       _avgRatingByFinishDate(context, data),
       Divider(),
-      _sumMinutesByFinishDate(context, data),
+      _sumTimeByFinishDate(context, data),
       Divider(),
       _countByFinishDate(context, data),
     ];
@@ -170,7 +170,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       Divider(),
       _countByTime(context, data),
       Divider(),
-      _sumMinutesByMonth(context, data),
+      _sumTimeByMonth(context, data),
     ];
 
   }
@@ -179,13 +179,17 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByReleaseYear(BuildContext context, GamesData data) {
 
     List<int> intervals = [1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020];
-    List<String> labels = formatIntervalLabels(intervals);
+    List<String> domainLabels = formatIntervalLabels<int>(
+      intervals,
+      (int element) => GameCollectionLocalisations.of(context).shortYearString(element),
+    );
 
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByReleaseYearString,
-      labels: labels,
+      domainLabels: domainLabels,
       values: data.intervalReleaseYearCount(intervals),
+      labelAccessor: (String domainLabel, int value) => '$value',
     );
 
   }
@@ -193,27 +197,36 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByRating(BuildContext context, GamesData data) {
 
     List<int> intervals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    List<String> labels = formatIntervalLabelsEqual(intervals);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      intervals,
+      (int element) => element.toString(),
+    );
 
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByRatingString,
-      labels: labels,
+      domainLabels: domainLabels,
       values: data.intervalRatingCount(intervals),
+      labelAccessor: (String domainLabel, int value) => '$value',
     );
 
   }
 
   Widget _countByTime(BuildContext context, GamesData data) {
 
-    List<int> intervals = [0, 5, 10, 15, 20, 25, 50, 100];
-    List<String> labels = formatIntervalLabelsWithInitialAndLast(intervals);
+    List<int> intervals = [0, 5, 10, 15, 20, 25, 30, 40, 50, 100];
+    List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<int>(
+      intervals,
+      (int element) => element.toString(),
+    );
 
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByTimeString,
-      labels: labels,
+      domainLabels: domainLabels,
       values: data.intervalTimeCount(intervals),
+      vertical: false,
+      labelAccessor: (String domainLabel, int value) => '$value',
     );
 
   }
@@ -223,29 +236,37 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _avgRatingByFinishDate(BuildContext context, GamesData data) {
 
     List<int> finishYears = data.finishYears;
-    List<String> labels = formatIntervalLabelsEqual(finishYears);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      finishYears,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return finishYears.isNotEmpty?
       statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).avgRatingByFinishDateString,
-        labels: labels,
+        domainLabels: domainLabels,
         values: data.yearlyRatingAverage(finishYears),
+        labelAccessor: (String domainLabel, int value) => '$value',
       ) : Container();
 
   }
 
-  Widget _sumMinutesByFinishDate(BuildContext context, GamesData data) {
+  Widget _sumTimeByFinishDate(BuildContext context, GamesData data) {
 
     List<int> finishYears = data.finishYears;
-    List<String> labels = formatIntervalLabelsEqual(finishYears);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      finishYears,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return finishYears.isNotEmpty?
       statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
-        histogramName: GameCollectionLocalisations.of(context).sumMinutesByFinishDateString,
-        labels: labels,
+        histogramName: GameCollectionLocalisations.of(context).sumTimeByFinishDateString,
+        domainLabels: domainLabels,
         values: data.yearlyHoursSum(finishYears),
+        labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).hoursString(value),
       ) : Container();
 
   }
@@ -253,27 +274,32 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   Widget _countByFinishDate(BuildContext context, GamesData data) {
 
     List<int> finishYears = data.finishYears;
-    List<String> labels = formatIntervalLabelsEqual(finishYears);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      finishYears,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return finishYears.isNotEmpty?
       statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).countByFinishDate,
-        labels: labels,
+        domainLabels: domainLabels,
         values: data.yearlyFinishDateCount(finishYears),
+        labelAccessor: (String domainLabel, int value) => '$value',
       ) : Container();
 
   }
   //#endregion General
 
   //#region Year
-  Widget _sumMinutesByMonth(BuildContext context, GamesData data) {
+  Widget _sumTimeByMonth(BuildContext context, GamesData data) {
 
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
-      histogramName: GameCollectionLocalisations.of(context).sumMinutesByMonth,
-      labels: GameCollectionLocalisations.of(context).shortMonths,
+      histogramName: GameCollectionLocalisations.of(context).sumTimeByMonth,
+      domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyHoursSum().values,
+      labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).hoursString(value),
     );
 
   }

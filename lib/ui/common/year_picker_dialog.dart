@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'package:game_collection/localisations/localisations.dart';
+
 
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({
@@ -43,7 +45,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(MaterialLocalizations.of(context).formatYear(_selectedDate), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(color: Colors.white),),
+                    child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(color: Colors.white),),
                   )
                 ],
               ),

@@ -234,7 +234,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsHistogram<N extends num>({@required double height, @required String histogramName, @required List<String> labels, @required List<N> values, List<StatisticsField> Function() trailingBuilder}) {
+  Widget statisticsHistogram<N extends num>({@required double height, @required String histogramName, @required List<String> domainLabels, @required List<N> values, bool vertical = true, bool hideDomainLabels = false, String Function(String, N) labelAccessor}) {
 
     return ListTile(
       title: Text(histogramName),
@@ -242,15 +242,18 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
         height: height,
         child: StatisticsHistogram<N>(
           histogramName: histogramName,
-          labels: labels,
+          domainLabels: domainLabels,
           values: values,
+          vertical: vertical,
+          hideDomainLabels: hideDomainLabels,
+          labelAccessor: labelAccessor,
         ),
       ),
     );
 
   }
 
-  List<String> formatIntervalLabels<N extends num>(List<N> intervals) {
+  List<String> formatIntervalLabels<N extends num>(List<N> intervals, String Function(N) formatValue) {
     List<String> labels = List<String>(intervals.length - 1);
     int index = 0;
 
@@ -258,7 +261,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
       N min = intervals.elementAt(intervalIndex);
       N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = min.toString() + '-' + max.toString();
+      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
@@ -266,24 +269,24 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
     return labels;
   }
 
-  List<String> formatIntervalLabelsEqual<N extends num>(List<N> intervals) {
+  List<String> formatIntervalLabelsEqual<N extends num>(List<N> intervals, String Function(N) formatValue) {
 
-    return intervals.map<String>((N element) => element.toString()).toList(growable: false);
+    return intervals.map<String>(formatValue).toList(growable: false);
 
   }
 
-  List<String> formatIntervalLabelsWithInitial<N extends num>(List<N> intervals) {
+  List<String> formatIntervalLabelsWithInitial<N extends num>(List<N> intervals, String Function(N) formatValue) {
     List<String> labels = List<String>(intervals.length);
     int index = 0;
 
-    String initialIntervalLabel = intervals.first.toString();
+    String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
     labels[index++] = initialIntervalLabel;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
       N min = intervals.elementAt(intervalIndex);
       N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = min.toString() + '-' + max.toString();
+      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
@@ -291,7 +294,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
     return labels;
   }
 
-  List<String> formatIntervalLabelsWithLast<N extends num>(List<N> intervals) {
+  List<String> formatIntervalLabelsWithLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
     List<String> labels = List<String>(intervals.length);
     int index = 0;
 
@@ -299,37 +302,55 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
       N min = intervals.elementAt(intervalIndex);
       N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = min.toString() + '-' + max.toString();
+      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
 
-    String lastIntervalLabel = intervals.last.toString() + '+';
+    String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
     labels[index] = lastIntervalLabel;
 
     return labels;
   }
 
-  List<String> formatIntervalLabelsWithInitialAndLast<N extends num>(List<N> intervals) {
+  List<String> formatIntervalLabelsWithInitialAndLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
     List<String> labels = List<String>(intervals.length + 1);
     int index = 0;
 
-    String initialIntervalLabel = intervals.first.toString();
+    String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
     labels[index++] = initialIntervalLabel;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
       N min = intervals.elementAt(intervalIndex);
       N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = min.toString() + '-' + max.toString();
+      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
 
-    String lastIntervalLabel = intervals.last.toString() + '+';
+    String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
     labels[index] = lastIntervalLabel;
 
     return labels;
+  }
+
+  String _formatIntervalLabel<N>(N min, N max, String Function(N) formatValue) {
+
+    return formatValue(min) + '-' + formatValue(max);
+
+  }
+
+  String _formatIntervalInitialLabel<N>(N first, String Function(N) formatValue) {
+
+    return formatValue(first);
+
+  }
+
+  String _formatIntervalLastLabel<N>(N last, String Function(N) formatValue) {
+
+    return formatValue(last) + '+';
+
   }
 
   String typesName(BuildContext context);
@@ -390,38 +411,40 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({
     Key key,
     @required this.histogramName,
-    @required this.labels,
+    @required this.domainLabels,
     @required this.values,
     this.vertical = true,
-    this.trailingBuilder,
+    this.hideDomainLabels = false,
+    this.labelAccessor,
   }) : super(key: key);
 
   final String histogramName;
-  final List<String> labels;
+  final List<String> domainLabels;
   final List<N> values;
-  final List<StatisticsField> Function() trailingBuilder;
   final bool vertical;
+  final bool hideDomainLabels;
+  final String Function(String, N) labelAccessor;
 
   @override
   Widget build(BuildContext context) {
     List<SeriesElement<N>> data = [];
 
-    for(int index = 0; index < labels.length; index++) {
-      String currentLabel =  labels.elementAt(index);
+    for(int index = 0; index < domainLabels.length; index++) {
+      String currentLabel =  domainLabels.elementAt(index);
       N currentValue = values.elementAt(index);
 
-      SeriesElement<N> seriesEle = SeriesElement<N>(currentLabel, currentValue);
-      data.add(seriesEle);
+      SeriesElement<N> seriesElement = SeriesElement<N>(currentLabel, currentValue);
+      data.add(seriesElement);
     }
 
     final Series<SeriesElement<N>, String> series = Series<SeriesElement<N>, String>(
       id: histogramName,
-      //colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-      domainFn: (SeriesElement<N> element, _) => element.label,
+      colorFn: (_, __) => ColorUtil.fromDartColor(Theme.of(context).primaryColor),
+      domainFn: (SeriesElement<N> element, _) => element.domainLabel,
       measureFn: (SeriesElement<N> element, _) => element.value,
       data: data,
 
-      labelAccessorFn: (SeriesElement<N> element, _) => '${element.label}: ${element.value.toString()}',
+      labelAccessorFn: labelAccessor != null? (SeriesElement<N> element, _) => labelAccessor(element.domainLabel, element.value) : null,
     );
 
     final List<Series<SeriesElement<N>, String>> seriesList = [
@@ -433,13 +456,13 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       animate: true,
       vertical: vertical,
       barRendererDecorator: BarLabelDecorator<String>(),
-      domainAxis: OrdinalAxisSpec(renderSpec: NoneRenderSpec()),
+      domainAxis: hideDomainLabels? OrdinalAxisSpec(renderSpec: NoneRenderSpec()) : OrdinalAxisSpec(),
     );
   }
 }
 class SeriesElement<N extends num> {
-  const SeriesElement(this.label, this.value);
+  const SeriesElement(this.domainLabel, this.value);
 
-  final String label;
+  final String domainLabel;
   final N value;
 }

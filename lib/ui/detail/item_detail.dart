@@ -787,7 +787,7 @@ class _ItemYearField extends StatelessWidget {
     return _ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
-      shownValue: value?.toString(),
+      shownValue: value != null? GameCollectionLocalisations.of(context).yearString(value) : null,
       update: update,
       onTap: () {
         return showDialog<int>(

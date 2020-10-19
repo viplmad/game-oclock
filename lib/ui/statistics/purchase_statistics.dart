@@ -232,14 +232,19 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
   //#region Common
   Widget _countByPrice(BuildContext context, PurchasesData data) {
 
-    List<double> intervals = [0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 75.0, 80.0, 85.0, 90.0, 95.0, 100.0];
-    List<String> labels = formatIntervalLabelsWithInitialAndLast(intervals);
+    List<double> intervals = [0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0];
+    List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<double>(
+      intervals,
+      (double element) => element.toStringAsFixed(0),
+    );
 
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByPriceString,
-      labels: labels,
+      domainLabels: domainLabels,
       values: data.intervalPriceCount(intervals),
+      vertical: false,
+      labelAccessor: (String domainLabel, int value) => '$value',
     );
   }
   //#endregion Common
@@ -248,42 +253,54 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
   Widget _countByYear(BuildContext context, PurchasesData data) {
 
     List<int> years = data.years;
-    List<String> labels = formatIntervalLabelsEqual(years);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      years,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return years.isNotEmpty?
       statisticsHistogram<int>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).countByYearString,
-        labels: labels,
+        domainLabels: domainLabels,
         values: data.yearlyCount(years),
+        labelAccessor: (String domainLabel, int value) => '$value',
       ) : Container();
   }
 
   Widget _sumPriceByYear(BuildContext context, PurchasesData data) {
 
     List<int> years = data.years;
-    List<String> labels = formatIntervalLabelsEqual(years);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      years,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return years.isNotEmpty?
       statisticsHistogram<double>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).sumPriceByYearString,
-        labels: labels,
+        domainLabels: domainLabels,
         values: data.yearlyPriceSum(years),
+        labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
       ) : Container();
   }
 
   Widget _sumOriginalPriceByYear(BuildContext context, PurchasesData data) {
 
     List<int> years = data.years;
-    List<String> labels = formatIntervalLabelsEqual(years);
+    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+      years,
+      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+    );
 
     return years.isNotEmpty?
       statisticsHistogram<double>(
         height: MediaQuery.of(context).size.height / 2,
         histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByYearString,
-        labels: labels,
+        domainLabels: domainLabels,
         values: data.yearlyOriginalPriceSum(years),
+        labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
       ) : Container();
   }
   //#endregion General
@@ -294,8 +311,9 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     return statisticsHistogram<int>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).countByMonthString,
-      labels: GameCollectionLocalisations.of(context).shortMonths,
+      domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyCount().values,
+      labelAccessor: (String domainLabel, int value) => '$value',
     );
   }
 
@@ -304,8 +322,9 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     return statisticsHistogram<double>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).sumPriceByMonthString,
-      labels: GameCollectionLocalisations.of(context).shortMonths,
+      domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyPriceSum().values,
+      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
 
@@ -314,8 +333,9 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     return statisticsHistogram<double>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByMonthString,
-      labels: GameCollectionLocalisations.of(context).shortMonths,
+      domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyOriginalPriceSum().values,
+      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
 
@@ -324,8 +344,9 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     return statisticsHistogram<double>(
       height: MediaQuery.of(context).size.height / 2,
       histogramName: GameCollectionLocalisations.of(context).sumSavedByMonthString,
-      labels: GameCollectionLocalisations.of(context).shortMonths,
+      domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlySavedSum().values,
+      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
   //#endregion Year

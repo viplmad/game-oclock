@@ -58,7 +58,7 @@ class GameTheme {
 
     return ItemCard(
       title: itemTitle(item),
-      subtitle: _itemSubtitle(item),
+      subtitle: _itemSubtitle(context, item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
@@ -89,9 +89,9 @@ class GameTheme {
 
   }
 
-  static String _itemSubtitle(Game item) {
+  static String _itemSubtitle(BuildContext context, Game item) {
 
-    return (item.status?? '') + ' · ' + item.releaseYear.toString();
+    return (item.status?? '') + ' · ' + GameCollectionLocalisations.of(context).yearString(item.releaseYear);
 
   }
 }

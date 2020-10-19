@@ -98,8 +98,8 @@ abstract class GameCollectionLocalisations {
   String get avgRatingString;
   String get countByStatusString;
   String get countByReleaseYearString;
-  String get sumMinutesByFinishDateString;
-  String get sumMinutesByMonth;
+  String get sumTimeByFinishDateString;
+  String get sumTimeByMonth;
   String get countByRatingString;
   String get countByFinishDate;
   String get countByTimeString;
@@ -189,6 +189,9 @@ abstract class GameCollectionLocalisations {
   String percentageString(double amount);
   String dateString(DateTime date);
   String durationString(Duration duration);
+  String yearString(int year);
+  String shortYearString(int year);
+  String hoursString(int hours);
 
   String editString(String fieldString);
   String get fieldUpdatedString;

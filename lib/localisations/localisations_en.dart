@@ -174,7 +174,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String gamesFromYearString(int year) {
-    return 'Finished in $year';
+    return 'Finished in ' + yearString(year);
   }
   @override
   String get totalGamesString => 'Total $gamesString';
@@ -191,9 +191,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get countByReleaseYearString => 'Number of $gamesString by $releaseYearFieldString';
   @override
-  String get sumMinutesByFinishDateString => 'Total $timeFieldString by $finishDateFieldString';
+  String get sumTimeByFinishDateString => 'Total $timeFieldString by $finishDateFieldString';
   @override
-  String get sumMinutesByMonth => 'Total $timeFieldString by month';
+  String get sumTimeByMonth => 'Total $timeFieldString by month';
   @override
   String get countByRatingString => 'Number of $gamesString by $ratingFieldString';
   @override
@@ -249,7 +249,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String purchasesFromYearString(int year) {
-    return 'From $year';
+    return 'From ' + yearString(year);
   }
   @override
   String get totalPurchasesString => 'Total $purchasesString';
@@ -359,6 +359,17 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     String hoursString = duration.inHours.toString();
     String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
     return '$hoursString:$minutesString';
+  }
+  @override
+  String yearString(int year) {
+    return year.toString();
+  }
+  @override
+  String shortYearString(int year) {
+    return '\'' + year.toString().substring(2);
+  }
+  String hoursString(int hours) {
+    return '$hours h';
   }
 
   @override
