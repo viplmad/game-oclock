@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class TagSearchBloc extends ItemSearchBloc<Tag> {
-
   TagSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class TagSearchBloc extends ItemSearchBloc<Tag> {
     return iCollectionRepository.getTagsWithName(query, super.maxResults).first;
 
   }
-
 }

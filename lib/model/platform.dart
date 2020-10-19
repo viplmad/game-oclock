@@ -11,14 +11,14 @@ enum PlatformView {
 }
 
 class Platform extends CollectionItem {
-
-  Platform({
+  const Platform({
     @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
     this.type,
-  }) : super(id: id);
+  }) : this.uniqueId = 'Pl$id',
+        super(id: id);
 
   final String name;
   final String iconURL;
@@ -26,7 +26,7 @@ class Platform extends CollectionItem {
   final String type;
 
   @override
-  String get uniqueId => 'Pl' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = true;
@@ -97,15 +97,4 @@ class Platform extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class PlatformsData {
-
-  PlatformsData({
-    this.platforms,
-  });
-
-  final List<Platform> platforms;
-
 }

@@ -8,16 +8,15 @@ import '../isql_connector.dart';
 
 
 class PostgresConnector extends ISQLConnector {
-
-  PostgresInstance _instance;
-  PostgreSQLConnection _connection;
-
   PostgresConnector.fromConnectionString(String connectionString) {
 
     this._instance = PostgresInstance.fromString(connectionString);
     createConnection();
 
   }
+
+  PostgresInstance _instance;
+  PostgreSQLConnection _connection;
 
   void createConnection() {
 
@@ -389,20 +388,18 @@ class PostgresConnector extends ISQLConnector {
 
   }
   //#endregion Helpers
-
 }
 
 const String _postgresURIPattern = "^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$";
 
 class PostgresInstance {
+  const PostgresInstance(this.host, this.port, this.database, this.user, this.password);
 
   final String host;
   final int port;
   final String database;
   final String user;
   final String password;
-
-  PostgresInstance({this.host, this.port, this.database, this.user, this.password});
 
   factory PostgresInstance.fromString(String connectionString) {
 
@@ -415,11 +412,11 @@ class PostgresInstance {
     }
 
     return PostgresInstance(
-      host: match.namedGroup('host'),
-      port: int.parse(match.namedGroup('port')),
-      database: match.namedGroup('db'),
-      user: match.namedGroup('user'),
-      password: match.namedGroup('pass'),
+      match.namedGroup('host'),
+      int.parse(match.namedGroup('port')),
+      match.namedGroup('db'),
+      match.namedGroup('user'),
+      match.namedGroup('pass'),
     );
 
   }
@@ -429,5 +426,4 @@ class PostgresInstance {
     return "postgres://$user:$password@$host:$port/$database";
 
   }
-
 }

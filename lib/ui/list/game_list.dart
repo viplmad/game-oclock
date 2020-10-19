@@ -20,7 +20,10 @@ import 'list.dart';
 
 
 class GameAppBar extends StatelessWidget {
-  const GameAppBar({Key key, @required this.gameTab}) : super(key: key);
+  const GameAppBar({
+    Key key,
+    @required this.gameTab,
+  }) : super(key: key);
 
   final GameTab gameTab;
 
@@ -39,7 +42,6 @@ class GameAppBar extends StatelessWidget {
     return Container();
 
   }
-
 }
 
 class _AllAppBar extends _GameAppBar<AllListBloc> {}
@@ -47,6 +49,9 @@ class _OwnedAppBar extends _GameAppBar<OwnedListBloc> {}
 class _RomAppBar extends _GameAppBar<RomListBloc> {}
 
 abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
+  const _GameAppBar({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = GameTheme.primaryColour;
@@ -56,12 +61,14 @@ abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game
 
   @override
   List<String> views(BuildContext context) => GameTheme.views(context);
-
 }
 
 
 class GameFAB extends StatelessWidget {
-  const GameFAB({Key key, @required this.gameTab}) : super(key: key);
+  const GameFAB({
+    Key key,
+    @required this.gameTab,
+  }) : super(key: key);
 
   final GameTab gameTab;
 
@@ -80,7 +87,6 @@ class GameFAB extends StatelessWidget {
     return Container();
 
   }
-
 }
 
 class _AllFAB extends _GameFAB<AllListManagerBloc> {}
@@ -88,17 +94,22 @@ class _OwnedFAB extends _GameFAB<OwnedListManagerBloc> {}
 class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 
 abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
+  const _GameFAB({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = GameTheme.primaryColour;
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
-
 }
 
 class GameTabs extends StatelessWidget {
-  const GameTabs({Key key, this.gameTab}) : super(key: key);
+  const GameTabs({
+    Key key,
+    this.gameTab,
+  }) : super(key: key);
 
   final GameTab gameTab;
 
@@ -159,21 +170,29 @@ class GameTabs extends StatelessWidget {
     );
 
   }
-
 }
 
 class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {
-  _AllGameList({String tabTitle}) : super(tabTitle: tabTitle);
+  const _AllGameList({
+    String tabTitle,
+  }) : super(tabTitle: tabTitle);
 }
 class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {
-  _OwnedGameList({String tabTitle}) : super(tabTitle: tabTitle);
+  const _OwnedGameList({
+    String tabTitle,
+  }) : super(tabTitle: tabTitle);
 }
 class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
-  _RomGameList({String tabTitle}) : super(tabTitle: tabTitle);
+  const _RomGameList({
+    String tabTitle,
+  }) : super(tabTitle: tabTitle);
 }
 
 abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
-  _GameList({this.tabTitle});
+  const _GameList({
+    Key key,
+    this.tabTitle,
+  }) : super(key: key);
 
   final String tabTitle;
 
@@ -195,12 +214,10 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
     );
 
   }
-
 }
 
 class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> {
-
-  _GameListBody({
+  const _GameListBody({
     Key key,
     @required List<Game> items,
     @required int viewIndex,
@@ -246,24 +263,11 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   String itemTitle(Game item) => GameTheme.itemTitle(item);
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) {
-
-    return GameTheme.itemCard(context, item, onTap);
-
-  }
+  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget gridBuilder(BuildContext context, Game item) {
-
-    return GameTheme.itemGrid(context, item, onTap);
-
-  }
+  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
 
   @override
-  String viewTitle(BuildContext context) {
-
-    return GameTheme.views(context).elementAt(viewIndex);
-
-  }
-
+  Widget gridBuilder(BuildContext context, Game item) => GameTheme.itemGrid(context, item, onTap);
 }

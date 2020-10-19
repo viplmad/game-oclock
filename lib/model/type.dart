@@ -11,16 +11,16 @@ enum TypeView {
 }
 
 class PurchaseType extends CollectionItem {
-
-  PurchaseType({
+  const PurchaseType({
     @required int id,
     this.name,
-  }) : super(id: id);
+  }) : this.uniqueId = 'Ty$id',
+        super(id: id);
 
   final String name;
 
   @override
-  String get uniqueId => 'Ty' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = false;
@@ -76,15 +76,4 @@ class PurchaseType extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class TypesData {
-
-  TypesData({
-    this.types,
-  });
-
-  final List<PurchaseType> types;
-
 }

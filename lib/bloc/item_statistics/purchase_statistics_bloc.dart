@@ -8,7 +8,6 @@ import 'item_statistics.dart';
 
 
 class PurchaseStatisticsBloc extends ItemStatisticsBloc<Purchase, PurchasesData> {
-
   PurchaseStatisticsBloc({
     @required List<Purchase> items
   }) : super(items: items);
@@ -27,5 +26,4 @@ class PurchaseStatisticsBloc extends ItemStatisticsBloc<Purchase, PurchasesData>
     return Future<PurchasesData>.value(PurchasesData(yearItems));
 
   }
-
 }

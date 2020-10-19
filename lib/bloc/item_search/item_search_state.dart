@@ -11,7 +11,7 @@ abstract class ItemSearchState extends Equatable {
 }
 
 class ItemSearchEmpty<T extends CollectionItem> extends ItemSearchState {
-  ItemSearchEmpty([this.suggestions = const []]);
+  const ItemSearchEmpty([this.suggestions = const []]);
 
   final List<T> suggestions;
 
@@ -27,7 +27,7 @@ class ItemSearchEmpty<T extends CollectionItem> extends ItemSearchState {
 class ItemSearchLoading extends ItemSearchState {}
 
 class ItemSearchSuccess<T extends CollectionItem> extends ItemSearchState {
-  ItemSearchSuccess(this.results);
+  const ItemSearchSuccess(this.results);
 
   final List<T> results;
 
@@ -41,7 +41,7 @@ class ItemSearchSuccess<T extends CollectionItem> extends ItemSearchState {
 }
 
 class ItemSearchError extends ItemSearchState {
-  ItemSearchError(this.error);
+  const ItemSearchError(this.error);
 
   final String error;
 

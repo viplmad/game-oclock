@@ -11,7 +11,6 @@ import 'item_relation.dart';
 
 
 class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<PurchaseType, W> {
-
   TypeRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -29,5 +28,4 @@ class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purcha
     return super.getRelationStream();
 
   }
-
 }

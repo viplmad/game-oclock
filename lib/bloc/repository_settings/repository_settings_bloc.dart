@@ -8,7 +8,6 @@ import 'repository_settings.dart';
 
 
 class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySettingsState> {
-
   RepositorySettingsBloc() : super(RepositorySettingsLoading());
 
   @override
@@ -82,5 +81,4 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
   }
 
   /*Stream<RepositorySettingsState> _localRepositoryState() async* {}*/
-
 }

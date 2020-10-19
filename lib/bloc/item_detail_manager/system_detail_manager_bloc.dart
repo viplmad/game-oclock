@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 
 
 class SystemDetailManagerBloc extends ItemDetailManagerBloc<System> {
-
   SystemDetailManagerBloc({
     @required int itemId,
-    ICollectionRepository iCollectionRepository,
+    @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -41,5 +40,4 @@ class SystemDetailManagerBloc extends ItemDetailManagerBloc<System> {
     return iCollectionRepository.deleteSystemIcon(itemId, event.imageName);
 
   }
-
 }

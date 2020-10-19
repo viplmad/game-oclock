@@ -4,7 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 class DismissibleItem extends StatelessWidget {
-  DismissibleItem({Key key, @required this.dismissibleKey, @required this.itemWidget, @required this.onDismissed, @required this.dismissIcon, this.confirmDismiss}) : super(key: key);
+  const DismissibleItem({
+    Key key,
+    @required this.dismissibleKey,
+    @required this.itemWidget,
+    @required this.onDismissed,
+    @required this.dismissIcon,
+    this.confirmDismiss,
+  }) : super(key: key);
 
   final int dismissibleKey;
   final Widget itemWidget;
@@ -46,11 +53,17 @@ class DismissibleItem extends StatelessWidget {
     );
 
   }
-
 }
 
 class ItemCard extends StatelessWidget {
-  const ItemCard({Key key, @required this.title, this.subtitle, @required this.hasImage, this.imageURL, @required this.onTap}) : super(key: key);
+  const ItemCard({
+    Key key,
+    @required this.title,
+    this.subtitle,
+    @required this.hasImage,
+    this.imageURL,
+    @required this.onTap,
+  }) : super(key: key);
 
   final String title;
   final String subtitle;
@@ -74,11 +87,16 @@ class ItemCard extends StatelessWidget {
       margin: EdgeInsets.all(0.0),
     );
   }
-
 }
 
 class _ItemListTile extends StatelessWidget {
-  const _ItemListTile({Key key, @required this.title, this.subtitle, this.hasImage, this.imageURL}) : super(key: key);
+  const _ItemListTile({
+    Key key,
+    @required this.title,
+    this.subtitle,
+    this.hasImage,
+    this.imageURL,
+  }) : super(key: key);
 
   final String title;
   final String subtitle;
@@ -112,11 +130,16 @@ class _ItemListTile extends StatelessWidget {
     );
 
   }
-
 }
 
 class ItemGrid extends StatelessWidget {
-  const ItemGrid({Key key, @required this.title, @required this.hasImage, this.imageURL, @required this.onTap}) : super(key: key);
+  const ItemGrid({
+    Key key,
+    @required this.title,
+    @required this.hasImage,
+    this.imageURL,
+    @required this.onTap,
+  }) : super(key: key);
 
   final String title;
   final bool hasImage;
@@ -137,11 +160,15 @@ class ItemGrid extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _ItemGridTile extends StatelessWidget {
-  const _ItemGridTile({Key key, @required this.title, @required this.hasImage, this.imageURL}) : super(key: key);
+  const _ItemGridTile({
+    Key key,
+    @required this.title,
+    @required this.hasImage,
+    this.imageURL,
+  }) : super(key: key);
 
   final String title;
   final bool hasImage;
@@ -165,11 +192,16 @@ class _ItemGridTile extends StatelessWidget {
     );
 
   }
-
 }
 
 class CachedImage extends StatelessWidget {
-  const CachedImage({Key key, @required this.imageURL, @required this.fit, @required this.backgroundColour, this.applyGradient = false}) : super(key: key);
+  const CachedImage({
+    Key key,
+    @required this.imageURL,
+    @required this.fit,
+    @required this.backgroundColour,
+    this.applyGradient = false,
+  }) : super(key: key);
 
   final String imageURL;
   final BoxFit fit;
@@ -212,15 +244,19 @@ class CachedImage extends StatelessWidget {
     );
 
   }
-
 }
 
 class ItemChip extends StatelessWidget {
-  const ItemChip({Key key, @required this.title, this.selected = true, this.onTap}) : super(key: key);
+  const ItemChip({
+    Key key,
+    @required this.title,
+    this.selected = true,
+    this.onTap,
+  }) : super(key: key);
 
   final String title;
   final bool selected;
-  final Function(bool) onTap;
+  final void Function(bool) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -232,5 +268,4 @@ class ItemChip extends StatelessWidget {
     );
 
   }
-
 }

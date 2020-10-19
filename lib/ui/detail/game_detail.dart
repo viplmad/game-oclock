@@ -123,7 +123,6 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
     );
 
   }
-
 }
 
 class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
@@ -239,5 +238,4 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
     ];
 
   }
-
 }

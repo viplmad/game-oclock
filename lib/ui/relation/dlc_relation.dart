@@ -11,7 +11,12 @@ import 'relation.dart';
 
 
 class DLCGameRelationList extends _DLCRelationList<Game> {
-  DLCGameRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Game>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+  const DLCGameRelationList({
+    Key key,
+    @required String relationName,
+    @required String relationTypeName,
+    List<Widget> Function(List<Game>) trailingBuilder,
+  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
   final bool isSingleList = true;
@@ -26,16 +31,16 @@ class DLCGameRelationList extends _DLCRelationList<Game> {
   final String localSearchRouteName = gameLocalSearchRoute;
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) {
-
-    return GameTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
 }
 
 class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
-  DLCPurchaseRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Purchase>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+  const DLCPurchaseRelationList({
+    Key key,
+    @required String relationName,
+    @required String relationTypeName,
+    List<Widget> Function(List<Purchase>) trailingBuilder,
+  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
   final String detailRouteName = purchaseDetailRoute;
@@ -47,14 +52,13 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
   final String localSearchRouteName = purchaseLocalSearchRoute;
 
   @override
-  Widget cardBuilder(BuildContext context, Purchase item) {
-
-    return PurchaseTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }
 
 abstract class _DLCRelationList<W extends CollectionItem> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
-  _DLCRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+  const _DLCRelationList({Key key,
+    @required String relationName,
+    @required String relationTypeName,
+    List<Widget> Function(List<W>) trailingBuilder,
+  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

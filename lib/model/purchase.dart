@@ -14,8 +14,7 @@ enum PurchaseView {
 }
 
 class Purchase extends CollectionItem {
-
-  Purchase({
+  const Purchase({
     @required int id,
     this.description,
     this.price,
@@ -24,19 +23,21 @@ class Purchase extends CollectionItem {
     this.originalPrice,
 
     this.store,
-  }) : super(id: id);
+  }) : this.uniqueId = 'Pu$id',
+       this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
+        super(id: id);
 
   final String description;
   final double price;
   final double externalCredit;
   final DateTime date;
   final double originalPrice;
-  double get discount => this.originalPrice > 0.0? (1 - (this.price + this.externalCredit) / this.originalPrice) * 100 : 0.0;
+  final double discount;
 
   final int store;
 
   @override
-  String get uniqueId => 'Pu' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = false;
@@ -124,17 +125,18 @@ class Purchase extends CollectionItem {
         ' }';
 
   }
-
 }
 
 class PurchasesData extends ItemData<Purchase> {
-  PurchasesData(List<Purchase> items) : super(items);
+  PurchasesData(List<Purchase> items)
+      : this.itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
+        this.years = (items.map<int>((Purchase item) => item.date?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort(),
+        super(items);
 
-  List<int> years() {
+  final List<Purchase> itemsWithoutPromotion;
+  final List<int> years;
 
-    return (items.map<int>((Purchase item) => item.date?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort();
-
-  }
+  int get lengthWithoutPromotion => itemsWithoutPromotion.length;
 
   double priceSum() {
     double priceSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
@@ -154,111 +156,94 @@ class PurchasesData extends ItemData<Purchase> {
     return originalPriceSum;
   }
 
+  double discountSum() {
+    double discountSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
+
+    return discountSum;
+  }
+
+  double discountSumWithoutPromotion() {
+    double discountSum = itemsWithoutPromotion.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
+
+    return discountSum;
+  }
+
   List<int> yearlyCount(List<int> years) {
-    List<int> values = List<int>(years.length);
 
-    for(int index = 0; index < years.length; index++) {
-      int year = years.elementAt(index);
+    return yearlyItemCount(
+      years,
+      (Purchase item) => item.date?.year,
+    );
 
-      int yearSum = items.where((Purchase item) => item.date?.year == year).toList(growable: false).length;
-
-      values[index] = yearSum;
-    }
-
-    return values;
   }
 
   List<double> yearlyPriceSum(List<int> years) {
-    List<double> values = List<double>(years.length);
 
-    for(int index = 0; index < years.length; index++) {
-      int year = years.elementAt(index);
+    return yearlyFieldSum<double>(
+      years,
+      (Purchase item) => item.date?.year,
+      0.0,
+      (Purchase item) => item.price,
+    );
 
-      List<Purchase> yearItems = items.where((Purchase item) => item.date?.year == year).toList(growable: false);
-      double yearSum = yearItems.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
-
-      values[index] = yearSum;
-    }
-
-    return values;
   }
 
   List<double> yearlyOriginalPriceSum(List<int> years) {
-    List<double> values = List<double>(years.length);
 
-    for(int index = 0; index < years.length; index++) {
-      int year = years.elementAt(index);
+    return yearlyFieldSum<double>(
+      years,
+      (Purchase item) => item.date?.year,
+      0.0,
+      (Purchase item) => item.originalPrice,
+    );
 
-      List<Purchase> yearItems = items.where((Purchase item) => item.date?.year == year).toList(growable: false);
-      double yearSum = yearItems.fold(0.0, (double previousValue, Purchase item) => previousValue + item.originalPrice);
-
-      values[index] = yearSum;
-    }
-
-    return values;
   }
 
   YearData<int> monthlyCount() {
-    YearData<int> yearData = YearData<int>();
 
-    for(int month = 1; month <= 12; month++) {
+    return monthlyItemCount(
+      (Purchase item) => item.date?.month,
+    );
 
-      int monthSum = items.where((Purchase item) => item.date?.month == month).toList(growable: false).length;
-
-      yearData.addData(monthSum);
-    }
-
-    return yearData;
   }
 
   YearData<double> monthlyPriceSum() {
-    YearData<double> yearData = YearData<double>();
 
-    for(int month = 1; month <= 12; month++) {
+    return monthlyFieldSum<double>(
+      (Purchase item) => item.date?.month,
+      0.0,
+      (Purchase item) => item.price,
+    );
 
-      List<Purchase> monthItems = items.where((Purchase item) => item.date?.month == month).toList(growable: false);
-      double monthSum = monthItems.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
-
-      yearData.addData(monthSum);
-    }
-
-    return yearData;
   }
 
   YearData<double> monthlyOriginalPriceSum() {
-    YearData<double> yearData = YearData<double>();
 
-    for(int month = 1; month <= 12; month++) {
+    return monthlyFieldSum<double>(
+      (Purchase item) => item.date?.month,
+      0.0,
+      (Purchase item) => item.originalPrice,
+    );
 
-      List<Purchase> monthItems = items.where((Purchase item) => item.date?.month == month).toList(growable: false);
-      double monthSum = monthItems.fold(0.0, (double previousValue, Purchase item) => previousValue + item.originalPrice);
-
-      yearData.addData(monthSum);
-    }
-
-    return yearData;
   }
 
-  List<int> intervalPriceCountWithInitialAndLast(List<double> intervals) {
-    List<int> values = List<int>(intervals.length + 1);
+  YearData<double> monthlySavedSum() {
 
-    double initialPrice = intervals.first;
-    int initialIntervalCount = items.where((Purchase item) => item.price <= initialPrice).length;
-    values[0] = initialIntervalCount;
+    return monthlyFieldSum<double>(
+      (Purchase item) => item.date?.month,
+      0.0,
+      (Purchase item) => item.originalPrice - item.price,
+      sumOperation: (double monthSum, int length) => (length > 0)? monthSum / length : 0,
+    );
 
-    for(int index = 0; index < intervals.length - 1; index++) {
-      double minPrice = intervals.elementAt(index);
-      double maxPrice = intervals.elementAt(index + 1);
+  }
 
-      int intervalCount = items.where((Purchase item) => minPrice < item.price  && item.price <= maxPrice).length;
+  List<int> intervalPriceCount(List<double> intervals) {
 
-      values[index] = intervalCount;
-    }
+    return intervalCountWithInitialAndLast<double>(
+      intervals,
+      (Purchase item) => item.price,
+    );
 
-    double lastPrice = intervals.last;
-    int lastIntervalCount = items.where((Purchase item) => lastPrice < item.price).length;
-    values[intervals.length] = lastIntervalCount;
-
-    return values;
   }
 }

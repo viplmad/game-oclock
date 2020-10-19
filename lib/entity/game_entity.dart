@@ -42,8 +42,7 @@ const List<String> statuses = [
 ];
 
 class GameEntity extends CollectionItemEntity {
-
-  GameEntity({
+  const GameEntity({
     @required int id,
     this.name,
     this.edition,
@@ -164,5 +163,4 @@ class GameEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

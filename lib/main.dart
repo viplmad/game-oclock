@@ -12,6 +12,9 @@ import 'ui/route_constants.dart';
 void main() => runApp(GameCollection());
 
 class GameCollection extends StatelessWidget {
+  const GameCollection({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,5 +43,4 @@ class GameCollection extends StatelessWidget {
     );
 
   }
-
 }

@@ -9,8 +9,9 @@ import 'item_statistics.dart';
 
 
 abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
-
-  ItemStatisticsBloc({@required this.items}) : super(ItemStatisticsLoading());
+  ItemStatisticsBloc({
+    @required this.items,
+  }) : super(ItemStatisticsLoading());
 
   final List<T> items;
 
@@ -53,7 +54,10 @@ abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> 
     try {
 
       final D itemData = await getItemData(event);
-      yield ItemYearStatisticsLoaded<D>(itemData, event.year);
+      yield ItemYearStatisticsLoaded<D>(
+        itemData,
+        event.year,
+      );
 
     } catch (e) {
 
@@ -65,5 +69,4 @@ abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> 
 
   Future<D> getGeneralItemData();
   Future<D> getItemData(LoadYearItemStatistics event);
-
 }

@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class PlatformDetailBloc extends ItemDetailBloc<Platform> {
-
   PlatformDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class PlatformDetailBloc extends ItemDetailBloc<Platform> {
     return iCollectionRepository.getPlatformWithId(itemId);
 
   }
-
 }

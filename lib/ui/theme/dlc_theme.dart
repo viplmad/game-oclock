@@ -9,7 +9,6 @@ import '../common/item_view.dart';
 
 
 class DLCTheme {
-
   static const Color primaryColour = Colors.deepPurple;
   static const Color accentColour = Colors.deepPurpleAccent;
 
@@ -71,5 +70,4 @@ class DLCTheme {
     return item.name;
 
   }
-
 }

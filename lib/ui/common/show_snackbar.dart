@@ -13,6 +13,7 @@ void showSnackBar({@required ScaffoldState scaffoldState, @required String messa
   scaffoldState.showSnackBar(snackBar);
 
 }
+
 SnackBarAction dialogSnackBarAction(BuildContext context, {@required String label, @required String title, @required String content}) {
 
   return SnackBarAction(

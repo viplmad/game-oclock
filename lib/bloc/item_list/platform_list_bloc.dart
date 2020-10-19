@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class PlatformListBloc extends ItemListBloc<Platform> {
-
   PlatformListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required PlatformListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class PlatformListBloc extends ItemListBloc<Platform> {
     return iCollectionRepository.getPlatformsWithView(platformView);
 
   }
-
 }

@@ -6,7 +6,6 @@ import '../common/item_view.dart';
 
 
 class TagTheme {
-
   static Widget itemCard(BuildContext context, Tag item, void Function() Function(BuildContext, Tag) onTap) {
 
     return ItemCard(
@@ -32,5 +31,4 @@ class TagTheme {
     return item.name;
 
   }
-
 }

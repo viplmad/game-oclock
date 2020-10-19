@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class AllListBloc extends ItemListBloc<Game> {
-
   AllListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required AllListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class AllListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getAllWithView(gameView);
 
   }
-
 }

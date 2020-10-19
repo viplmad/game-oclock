@@ -101,7 +101,6 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
     );
 
   }
-
 }
 
 class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
@@ -153,5 +152,4 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
     ];
 
   }
-
 }

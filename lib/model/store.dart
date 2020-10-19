@@ -11,20 +11,20 @@ enum StoreView {
 }
 
 class Store extends CollectionItem {
-
-  Store({
+  const Store({
     @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
-  }) : super(id: id);
+  }) : this.uniqueId = 'St$id',
+        super(id: id);
 
   final String name;
   final String iconURL;
   final String iconFilename;
 
   @override
-  String get uniqueId => 'St' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = true;
@@ -89,15 +89,4 @@ class Store extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class StoresData {
-
-  StoresData({
-    this.stores,
-  });
-
-  final List<Store> stores;
-
 }

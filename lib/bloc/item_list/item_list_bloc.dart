@@ -13,8 +13,10 @@ import 'item_list.dart';
 
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
-
-  ItemListBloc({@required this.iCollectionRepository, @required this.managerBloc}) : super(ItemListLoading()) {
+  ItemListBloc({
+    @required this.iCollectionRepository,
+    @required this.managerBloc,
+  }) : super(ItemListLoading()) {
 
     managerSubscription = managerBloc.listen(mapListManagerStateToEvent);
 
@@ -159,7 +161,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
-      yield ItemListLoaded<T>(reversedItems, viewIndex, style);
+      yield ItemListLoaded<T>(
+        reversedItems,
+        viewIndex,
+        style,
+      );
     }
 
   }
@@ -173,7 +179,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
 
-      yield ItemListLoaded<T>(items, viewIndex, updatedStyle);
+      yield ItemListLoaded<T>(
+        items,
+        viewIndex,
+        updatedStyle,
+      );
     }
 
   }
@@ -201,13 +211,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
       final List<T> updatedItems = List.from(items)..add(managerState.item);
 
-      add(
-        UpdateItemList<T>(
-          updatedItems,
-          viewIndex,
-          style,
-        ),
-      );
+      add(UpdateItemList<T>(
+        updatedItems,
+        viewIndex,
+        style,
+      ));
     }
 
   }
@@ -223,13 +231,11 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
           .where((T item) => item.id != managerState.item.id)
           .toList(growable: false);
 
-      add(
-        UpdateItemList<T>(
-          updatedItems,
-          viewIndex,
-          style,
-        ),
-      );
+      add(UpdateItemList<T>(
+        updatedItems,
+        viewIndex,
+        style,
+      ));
     }
 
   }
@@ -244,5 +250,4 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<List<T>> getReadAllStream();
   Stream<List<T>> getReadViewStream(UpdateView event);
-
 }

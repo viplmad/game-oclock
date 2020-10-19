@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class DLCSearchBloc extends ItemSearchBloc<DLC> {
-
   DLCSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class DLCSearchBloc extends ItemSearchBloc<DLC> {
     return iCollectionRepository.getDLCsWithName(query, super.maxResults).first;
 
   }
-
 }

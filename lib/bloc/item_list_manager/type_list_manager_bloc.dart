@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
-
   TypeListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
   @override
   Future<PurchaseType> createFuture(AddItem event) {
 
-    return iCollectionRepository.createType(event.title ?? '');
+    return iCollectionRepository.createType(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
     return iCollectionRepository.deleteType(event.item.id);
 
   }
-
 }

@@ -14,6 +14,9 @@ import 'list.dart';
 
 
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
+  const StoreAppBar({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = StoreTheme.primaryColour;
@@ -23,20 +26,24 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 
   @override
   List<String> views(BuildContext context) => StoreTheme.views(context);
-
 }
 
 class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
+  const StoreFAB({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = StoreTheme.primaryColour;
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
-
 }
 
 class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
+  const StoreList({
+    Key key,
+  }) : super(key: key);
 
   @override
   final String detailRouteName = storeDetailRoute;
@@ -55,12 +62,10 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
     );
 
   }
-
 }
 
 class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
-
-  _StoreListBody({
+  const _StoreListBody({
     Key key,
     @required List<Store> items,
     @required int viewIndex,
@@ -84,34 +89,17 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) {
-
-    return null;
-
-  }
+  void Function() onStatisticsTap(BuildContext context) => null;
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);
 
   @override
-  Widget cardBuilder(BuildContext context, Store item) {
-
-    return StoreTheme.itemCard(context, item, onTap);
-
-  }
+  String viewTitle(BuildContext context) => StoreTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget gridBuilder(BuildContext context, Store item) {
-
-    return StoreTheme.itemGrid(context, item, onTap);
-
-  }
+  Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);
 
   @override
-  String viewTitle(BuildContext context) {
-
-    return StoreTheme.views(context).elementAt(viewIndex);
-
-  }
-
+  Widget gridBuilder(BuildContext context, Store item) => StoreTheme.itemGrid(context, item, onTap);
 }

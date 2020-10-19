@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 
 
 class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC> {
-
   DLCDetailManagerBloc({
     @required int itemId,
-    ICollectionRepository iCollectionRepository,
+    @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -41,5 +40,4 @@ class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC> {
     return iCollectionRepository.deleteDLCCover(itemId, event.imageName);
 
   }
-
 }

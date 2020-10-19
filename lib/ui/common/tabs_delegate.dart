@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class TabsDelegate extends SliverPersistentHeaderDelegate {
-  TabsDelegate({@required this.tabBar, this.color}) : super();
+  const TabsDelegate({
+    @required this.tabBar,
+    this.color,
+  }) : super();
 
   final TabBar tabBar;
   final Color color;

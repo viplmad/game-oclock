@@ -7,51 +7,51 @@ const String _searchRoute = '/search';
 const String _localSearchRoute = '/search_local';
 const String _statisticsRoute = '/statistics';
 
-const gameIdentifier = 'game';
-const dlcIdentifier = 'dlc';
-const purchaseIdentifier = 'purchase';
-const storeIdentifier = 'store';
-const platformIdentifier = 'platform';
-const systemIdentifier = 'system';
-const tagIdentifier = 'tag';
-const typeIdentifier = 'type';
+const String gameIdentifier = 'game';
+const String dlcIdentifier = 'dlc';
+const String purchaseIdentifier = 'purchase';
+const String storeIdentifier = 'store';
+const String platformIdentifier = 'platform';
+const String systemIdentifier = 'system';
+const String tagIdentifier = 'tag';
+const String typeIdentifier = 'type';
 
-const gameDetailRoute = _detailRoute + gameIdentifier;
-const gameSearchRoute = _searchRoute + gameIdentifier;
-const gameLocalSearchRoute = _localSearchRoute + gameIdentifier;
-const gameStatisticsRoute = _statisticsRoute + gameIdentifier;
+const String gameDetailRoute = _detailRoute + gameIdentifier;
+const String gameSearchRoute = _searchRoute + gameIdentifier;
+const String gameLocalSearchRoute = _localSearchRoute + gameIdentifier;
+const String gameStatisticsRoute = _statisticsRoute + gameIdentifier;
 
-const dlcDetailRoute = _detailRoute + dlcIdentifier;
-const dlcSearchRoute = _searchRoute + dlcIdentifier;
-const dlcLocalSearchRoute = _localSearchRoute + dlcIdentifier;
-//const dlcStatisticsRoute = _statisticsRoute + dlcIdentifier;
+const String dlcDetailRoute = _detailRoute + dlcIdentifier;
+const String dlcSearchRoute = _searchRoute + dlcIdentifier;
+const String dlcLocalSearchRoute = _localSearchRoute + dlcIdentifier;
+//const String dlcStatisticsRoute = _statisticsRoute + dlcIdentifier;
 
-const purchaseDetailRoute = _detailRoute + purchaseIdentifier;
-const purchaseSearchRoute = _searchRoute + purchaseIdentifier;
-const purchaseLocalSearchRoute = _localSearchRoute + purchaseIdentifier;
-const purchaseStatisticsRoute = _statisticsRoute + purchaseIdentifier;
+const String purchaseDetailRoute = _detailRoute + purchaseIdentifier;
+const String purchaseSearchRoute = _searchRoute + purchaseIdentifier;
+const String purchaseLocalSearchRoute = _localSearchRoute + purchaseIdentifier;
+const String purchaseStatisticsRoute = _statisticsRoute + purchaseIdentifier;
 
-const storeDetailRoute = _detailRoute + storeIdentifier;
-const storeSearchRoute = _searchRoute + storeIdentifier;
-const storeLocalSearchRoute = _localSearchRoute + storeIdentifier;
-//const storeStatisticsRoute = _statisticsRoute + storeIdentifier;
+const String storeDetailRoute = _detailRoute + storeIdentifier;
+const String storeSearchRoute = _searchRoute + storeIdentifier;
+const String storeLocalSearchRoute = _localSearchRoute + storeIdentifier;
+//const String storeStatisticsRoute = _statisticsRoute + storeIdentifier;
 
-const platformDetailRoute = _detailRoute + platformIdentifier;
-const platformSearchRoute = _searchRoute + platformIdentifier;
-const platformLocalSearchRoute = _localSearchRoute + platformIdentifier;
-//const platformStatisticsRoute = _statisticsRoute + platformIdentifier;
+const String platformDetailRoute = _detailRoute + platformIdentifier;
+const String platformSearchRoute = _searchRoute + platformIdentifier;
+const String platformLocalSearchRoute = _localSearchRoute + platformIdentifier;
+//const String platformStatisticsRoute = _statisticsRoute + platformIdentifier;
 
-//const systemDetailRoute = _detailRoute + systemIdentifier;
-const systemSearchRoute = _searchRoute + systemIdentifier;
-const systemLocalSearchRoute = _localSearchRoute + systemIdentifier;
-//const systemStatisticsRoute = _statisticsRoute + systemIdentifier;
+//const String systemDetailRoute = _detailRoute + systemIdentifier;
+const String systemSearchRoute = _searchRoute + systemIdentifier;
+const String systemLocalSearchRoute = _localSearchRoute + systemIdentifier;
+//const String systemStatisticsRoute = _statisticsRoute + systemIdentifier;
 
-//const tagDetailRoute = _detailRoute + tagIdentifier;
-const tagSearchRoute = _searchRoute + tagIdentifier;
-const tagLocalSearchRoute = _localSearchRoute + tagIdentifier;
-//const tagStatisticsRoute = _statisticsRoute + tagIdentifier;
+//const String tagDetailRoute = _detailRoute + tagIdentifier;
+const String tagSearchRoute = _searchRoute + tagIdentifier;
+const String tagLocalSearchRoute = _localSearchRoute + tagIdentifier;
+//const String tagStatisticsRoute = _statisticsRoute + tagIdentifier;
 
-//const typeDetailRoute = _detailRoute + typeIdentifier;
-const typeSearchRoute = _searchRoute + typeIdentifier;
-const typeLocalSearchRoute = _localSearchRoute + typeIdentifier;
-//const typeStatisticsRoute = _statisticsRoute + typeIdentifier;
+//const String typeDetailRoute = _detailRoute + typeIdentifier;
+const String typeSearchRoute = _searchRoute + typeIdentifier;
+const String typeLocalSearchRoute = _localSearchRoute + typeIdentifier;
+//const String typeStatisticsRoute = _statisticsRoute + typeIdentifier;

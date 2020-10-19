@@ -11,7 +11,6 @@ import 'item_relation.dart';
 
 
 class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, W> {
-
   GameRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -35,5 +34,4 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
     return super.getRelationStream();
 
   }
-
 }

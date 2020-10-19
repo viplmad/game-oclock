@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
-
   DLCListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
   @override
   Future<DLC> createFuture(AddItem event) {
 
-    return iCollectionRepository.createDLC(event.title ?? '');
+    return iCollectionRepository.createDLC(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
     return iCollectionRepository.deleteDLC(event.item.id);
 
   }
-
 }

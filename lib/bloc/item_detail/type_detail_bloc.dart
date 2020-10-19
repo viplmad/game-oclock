@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
-
   TypeDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
     return iCollectionRepository.getTypeWithId(itemId);
 
   }
-
 }

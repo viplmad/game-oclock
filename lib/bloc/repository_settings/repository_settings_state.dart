@@ -18,7 +18,7 @@ class RepositorySettingsLoading extends RepositorySettingsState {}
 class EmptyRepositorySettings extends RepositorySettingsState {}
 
 class RemoteRepositorySettingsLoaded extends RepositorySettingsState {
-  RemoteRepositorySettingsLoaded(this.postgresInstance, this.cloudinaryInstance);
+  const RemoteRepositorySettingsLoaded(this.postgresInstance, this.cloudinaryInstance);
 
   final PostgresInstance postgresInstance;
   final CloudinaryInstance cloudinaryInstance;

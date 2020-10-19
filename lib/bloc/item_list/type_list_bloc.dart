@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class TypeListBloc extends ItemListBloc<PurchaseType> {
-
   TypeListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required TypeListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class TypeListBloc extends ItemListBloc<PurchaseType> {
     return iCollectionRepository.getTypesWithView(typeView);
 
   }
-
 }

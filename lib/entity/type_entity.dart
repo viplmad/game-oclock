@@ -13,8 +13,7 @@ const List<String> typeFields = [
 const String type_nameField = 'Name';
 
 class PurchaseTypeEntity extends CollectionItemEntity {
-
-  PurchaseTypeEntity({
+  const PurchaseTypeEntity({
     @required int id,
     this.name,
   }) : super(id: id);
@@ -69,5 +68,4 @@ class PurchaseTypeEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

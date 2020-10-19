@@ -26,13 +26,12 @@ List<String> manufacturers = [
 ];
 
 class SystemEntity extends CollectionItemEntity {
-
-  SystemEntity({
+  const SystemEntity({
     @required int id,
     this.name,
     this.iconFilename,
     this.generation,
-    this.manufacturer
+    this.manufacturer,
   }) : super(id: id);
 
   final String name;
@@ -100,5 +99,4 @@ class SystemEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

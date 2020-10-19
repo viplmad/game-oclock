@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
+  const DLCSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   DLCSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
     );
 
   }
-
 }
 
 class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
-
-  DLCLocalSearch({
+  const DLCLocalSearch({
     Key key,
     @required List<DLC> items,
   }) : super(key: key, items: items);
@@ -73,11 +74,14 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
     );
 
   }
-
 }
 
 class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
-  const _DLCSearchBody({Key key, @required void Function() Function(BuildContext, DLC) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _DLCSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, DLC) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
@@ -86,10 +90,5 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, 
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
 
   @override
-  Widget cardBuilder(BuildContext context, DLC item) {
-
-    return DLCTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
 }

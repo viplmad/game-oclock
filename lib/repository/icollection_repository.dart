@@ -2,7 +2,6 @@ import 'package:game_collection/model/model.dart';
 
 
 abstract class ICollectionRepository {
-
   static ICollectionRepository iCollectionRepository;
 
   Future<dynamic> open();
@@ -207,5 +206,4 @@ abstract class ICollectionRepository {
   Future<System> renameSystemIcon(int systemId, String imageName, String newImageName);
   Future<System> deleteSystemIcon(int systemId, String imageName);
   //#endregion IMAGE
-
 }

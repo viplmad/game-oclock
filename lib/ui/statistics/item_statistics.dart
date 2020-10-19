@@ -14,7 +14,7 @@ import '../common/year_picker_dialog.dart';
 
 
 class StatisticsArguments<T> {
-  StatisticsArguments({
+  const StatisticsArguments({
     @required this.items,
     @required this.viewTitle,
   });
@@ -24,7 +24,11 @@ class StatisticsArguments<T> {
 }
 
 abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
-  const ItemStatistics({Key key, @required this.items, @required this.viewTitle}) : super(key: key);
+  const ItemStatistics({
+    Key key,
+    @required this.items,
+    @required this.viewTitle,
+  }) : super(key: key);
 
   final List<T> items;
   final String viewTitle;
@@ -44,11 +48,13 @@ abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K
   K statisticsBlocBuilder();
 
   ItemStatisticsBody<T, D, K> statisticsBodyBuilder();
-
 }
 
 abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
-  const ItemStatisticsBody({Key key, @required this.viewTitle}) : super(key: key);
+  const ItemStatisticsBody({
+    Key key,
+    @required this.viewTitle,
+  }) : super(key: key);
 
   final String viewTitle;
 
@@ -132,7 +138,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
                 Container(
                   child: ListTile(
                     leading: Icon(Icons.date_range),
-                    title: Text(state.year.toString()),
+                    title: Text(fromYearTitle(context, state.year)),
                   ),
                   color: Colors.grey,
                 ),
@@ -212,7 +218,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
     return StatisticsField(
       fieldName: fieldName,
       shownValue: value != null?
-      GameCollectionLocalisations.of(context).percentageString(value)
+      GameCollectionLocalisations.of(context).percentageString(value * 100)
           :
       '',
     );
@@ -246,32 +252,40 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   List<String> formatIntervalLabels<N extends num>(List<N> intervals) {
     List<String> labels = List<String>(intervals.length - 1);
+    int index = 0;
 
-    for(int index = 0; index < intervals.length - 1; index++) {
-      N min = intervals.elementAt(index);
-      N max = intervals.elementAt(index + 1);
+    for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
+      N min = intervals.elementAt(intervalIndex);
+      N max = intervals.elementAt(intervalIndex + 1);
 
       String intervalLabel = min.toString() + '-' + max.toString();
 
-      labels[index] = intervalLabel;
+      labels[index++] = intervalLabel;
     }
 
     return labels;
   }
 
+  List<String> formatIntervalLabelsEqual<N extends num>(List<N> intervals) {
+
+    return intervals.map<String>((N element) => element.toString()).toList(growable: false);
+
+  }
+
   List<String> formatIntervalLabelsWithInitial<N extends num>(List<N> intervals) {
     List<String> labels = List<String>(intervals.length);
+    int index = 0;
 
     String initialIntervalLabel = intervals.first.toString();
-    labels[0] = initialIntervalLabel;
+    labels[index++] = initialIntervalLabel;
 
-    for(int index = 0; index < intervals.length - 1; index++) {
-      N min = intervals.elementAt(index);
-      N max = intervals.elementAt(index + 1);
+    for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
+      N min = intervals.elementAt(intervalIndex);
+      N max = intervals.elementAt(intervalIndex + 1);
 
       String intervalLabel = min.toString() + '-' + max.toString();
 
-      labels[index + 1] = intervalLabel;
+      labels[index++] = intervalLabel;
     }
 
     return labels;
@@ -279,52 +293,59 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   List<String> formatIntervalLabelsWithLast<N extends num>(List<N> intervals) {
     List<String> labels = List<String>(intervals.length);
+    int index = 0;
 
-    for(int index = 0; index < intervals.length - 1; index++) {
-      N min = intervals.elementAt(index);
-      N max = intervals.elementAt(index + 1);
+    for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
+      N min = intervals.elementAt(intervalIndex);
+      N max = intervals.elementAt(intervalIndex + 1);
 
       String intervalLabel = min.toString() + '-' + max.toString();
 
-      labels[index] = intervalLabel;
+      labels[index++] = intervalLabel;
     }
 
     String lastIntervalLabel = intervals.last.toString() + '+';
-    labels[intervals.length] = lastIntervalLabel;
+    labels[index] = lastIntervalLabel;
 
     return labels;
   }
 
   List<String> formatIntervalLabelsWithInitialAndLast<N extends num>(List<N> intervals) {
     List<String> labels = List<String>(intervals.length + 1);
+    int index = 0;
 
     String initialIntervalLabel = intervals.first.toString();
-    labels[0] = initialIntervalLabel;
+    labels[index++] = initialIntervalLabel;
 
-    for(int index = 0; index < intervals.length - 1; index++) {
-      N min = intervals.elementAt(index);
-      N max = intervals.elementAt(index + 1);
+    for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
+      N min = intervals.elementAt(intervalIndex);
+      N max = intervals.elementAt(intervalIndex + 1);
 
       String intervalLabel = min.toString() + '-' + max.toString();
 
-      labels[index + 1] = intervalLabel;
+      labels[index++] = intervalLabel;
     }
 
     String lastIntervalLabel = intervals.last.toString() + '+';
-    labels[intervals.length] = lastIntervalLabel;
+    labels[index] = lastIntervalLabel;
 
     return labels;
   }
 
   String typesName(BuildContext context);
+  String fromYearTitle(BuildContext context, int year);
+
   List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, D data);
   List<Widget> statisticsYearFieldsBuilder(BuildContext context, D data);
-
 }
 
 class StatisticsField extends StatelessWidget {
-
-  const StatisticsField({Key key, @required this.fieldName, @required this.shownValue, this.shownPercentage}) : super(key: key);
+  const StatisticsField({
+    Key key,
+    @required this.fieldName,
+    @required this.shownValue,
+    this.shownPercentage,
+  }) : super(key: key);
 
   final String fieldName;
   final String shownValue;
@@ -341,12 +362,14 @@ class StatisticsField extends StatelessWidget {
     );
 
   }
-
 }
 
 class StatisticsFieldGroup extends StatelessWidget {
-
-  const StatisticsFieldGroup({Key key, @required this.groupName, @required this.fields}) : super(key: key);
+  const StatisticsFieldGroup({
+    Key key,
+    @required this.groupName,
+    @required this.fields,
+  }) : super(key: key);
 
   final String groupName;
   final List<StatisticsField> fields;
@@ -364,13 +387,20 @@ class StatisticsFieldGroup extends StatelessWidget {
 }
 
 class StatisticsHistogram<N extends num> extends StatelessWidget {
-
-  const StatisticsHistogram({Key key, @required this.histogramName, @required this.labels, @required this.values, this.trailingBuilder}) : super(key: key);
+  const StatisticsHistogram({
+    Key key,
+    @required this.histogramName,
+    @required this.labels,
+    @required this.values,
+    this.vertical = true,
+    this.trailingBuilder,
+  }) : super(key: key);
 
   final String histogramName;
   final List<String> labels;
   final List<N> values;
   final List<StatisticsField> Function() trailingBuilder;
+  final bool vertical;
 
   @override
   Widget build(BuildContext context) {
@@ -386,10 +416,12 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
 
     final Series<SeriesElement<N>, String> series = Series<SeriesElement<N>, String>(
       id: histogramName,
-      colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-      domainFn: (SeriesElement<N> element, index) => element.label,
-      measureFn: (SeriesElement<N> element, index) => element.value,
+      //colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
+      domainFn: (SeriesElement<N> element, _) => element.label,
+      measureFn: (SeriesElement<N> element, _) => element.value,
       data: data,
+
+      labelAccessorFn: (SeriesElement<N> element, _) => '${element.label}: ${element.value.toString()}',
     );
 
     final List<Series<SeriesElement<N>, String>> seriesList = [
@@ -399,12 +431,14 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     return BarChart(
       seriesList,
       animate: true,
+      vertical: vertical,
+      barRendererDecorator: BarLabelDecorator<String>(),
+      domainAxis: OrdinalAxisSpec(renderSpec: NoneRenderSpec()),
     );
   }
-
 }
 class SeriesElement<N extends num> {
-  SeriesElement(this.label, this.value);
+  const SeriesElement(this.label, this.value);
 
   final String label;
   final N value;

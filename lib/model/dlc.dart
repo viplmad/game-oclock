@@ -11,8 +11,7 @@ enum DLCView {
 }
 
 class DLC extends CollectionItem {
-
-  DLC({
+  const DLC({
     @required int id,
     this.name,
     this.releaseYear,
@@ -21,7 +20,8 @@ class DLC extends CollectionItem {
     this.finishDate,
 
     this.baseGame,
-  }) : super(id: id);
+  }) : this.uniqueId = 'D$id',
+        super(id: id);
 
   final String name;
   final int releaseYear;
@@ -32,7 +32,7 @@ class DLC extends CollectionItem {
   final int baseGame;
 
   @override
-  String get uniqueId => 'D' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = true;
@@ -117,5 +117,4 @@ class DLC extends CollectionItem {
         ' }';
 
   }
-
 }

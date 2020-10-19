@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class GameDetailBloc extends ItemDetailBloc<Game> {
-
   GameDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class GameDetailBloc extends ItemDetailBloc<Game> {
     return iCollectionRepository.getGameWithId(itemId);
 
   }
-
 }

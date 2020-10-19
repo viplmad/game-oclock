@@ -8,7 +8,6 @@ import 'item_relation_manager.dart';
 
 
 class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Platform, W> {
-
   PlatformRelationManagerBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -45,5 +44,4 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
     return super.deleteRelationFuture(event);
 
   }
-
 }

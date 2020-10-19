@@ -21,7 +21,6 @@ const String _localRepositoryValue = 'local';
 const String _trueValue = '1';
 
 class RepositoryPreferences {
-
   static Future<bool> existsRepository(){
 
     EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
@@ -170,8 +169,8 @@ class RepositoryPreferences {
   static Future<RemoteRepository> _retrieveRemoteRepository(EncryptedSharedPreferences sharedPreferences) async {
 
     return RemoteRepository(
-      iSQLConnector: await _retrievePostgresConnector(sharedPreferences),
-      iImageConnector: await _retrieveCloudinaryConnector(sharedPreferences),
+      await _retrievePostgresConnector(sharedPreferences),
+      await _retrieveCloudinaryConnector(sharedPreferences),
     );
 
   }

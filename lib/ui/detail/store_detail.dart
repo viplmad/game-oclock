@@ -90,7 +90,6 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
     );
 
   }
-
 }
 
 class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
@@ -133,7 +132,7 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
           });
 
           double totalSaved = totalValue - totalSpent;
-          double totalPercentageSaved = totalValue > 0.0? (1 - totalSpent / totalValue) * 100 : 0.0;
+          double totalPercentageSaved = totalValue > 0? (1 - totalSpent / totalValue) : 0;
 
           return [
             itemMoneySumField(
@@ -162,5 +161,4 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
     ];
 
   }
-
 }

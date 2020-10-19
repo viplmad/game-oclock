@@ -9,7 +9,6 @@ import '../common/item_view.dart';
 
 
 class PurchaseTheme {
-
   static const Color primaryColour = Colors.lightBlue;
   static const Color accentColour = Colors.lightBlueAccent;
 
@@ -76,8 +75,7 @@ class PurchaseTheme {
 
   static String _itemSubtitle(BuildContext context, Purchase item) {
 
-    return GameCollectionLocalisations.of(context).euroString(item.price) + ' · ' + GameCollectionLocalisations.of(context).percentageString(item.discount);
+    return GameCollectionLocalisations.of(context).euroString(item.price) + ' · ' + GameCollectionLocalisations.of(context).percentageString(item.discount * 100);
 
   }
-
 }

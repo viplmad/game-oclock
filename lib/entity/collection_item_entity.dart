@@ -6,9 +6,8 @@ import 'package:equatable/equatable.dart';
 const String IdField = 'ID';
 
 abstract class CollectionItemEntity extends Equatable {
-
   const CollectionItemEntity({
-    @required this.id
+    @required this.id,
   });
 
   final int id;
@@ -18,7 +17,7 @@ abstract class CollectionItemEntity extends Equatable {
   static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
     Map<String, dynamic> _combinedMaps = Map<String, dynamic>();
-    manyMap.forEach( (String table, Map<String, dynamic> map) {
+    manyMap.forEach((String table, Map<String, dynamic> map) {
 
       if(table == null || table == primaryTableName) {
         _combinedMaps.addAll( map );
@@ -32,7 +31,7 @@ abstract class CollectionItemEntity extends Equatable {
 
   @override
   List<Object> get props => [
-    id
+    id,
   ];
 
   @override
@@ -43,5 +42,4 @@ abstract class CollectionItemEntity extends Equatable {
         ' }';
 
   }
-
 }

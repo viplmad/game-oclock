@@ -11,7 +11,6 @@ import 'item_relation.dart';
 
 
 class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<System, W> {
-
   SystemRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -29,5 +28,4 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
     return super.getRelationStream();
 
   }
-
 }

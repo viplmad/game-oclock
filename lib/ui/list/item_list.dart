@@ -18,9 +18,12 @@ import '../statistics/statistics.dart';
 
 
 abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
+  const ItemAppBar({
+    Key key,
+  }) : super(key: key);
 
   @override
-  final Size preferredSize = Size.fromHeight(50.0);
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   Color get themeColor;
 
@@ -79,10 +82,12 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
   String typesName(BuildContext context);
   List<String> views(BuildContext context);
-
 }
 
 abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+  const ItemFAB({
+    Key key,
+  }) : super(key: key);
 
   Color get themeColor;
 
@@ -101,10 +106,12 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
   }
 
   String typeName(BuildContext context);
-
 }
 
 abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+  const ItemList({
+    Key key,
+  }) : super(key: key);
 
   String get detailRouteName;
 
@@ -203,12 +210,18 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
   }
 
   String typeName(BuildContext context);
-  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
 
+  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
 }
 
 abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
-  ItemListBody({Key key, @required this.items, @required this.viewIndex, @required this.onDelete, @required this.style}) : super(key: key);
+  const ItemListBody({
+    Key key,
+    @required this.items,
+    @required this.viewIndex,
+    @required this.onDelete,
+    @required this.style,
+  }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
@@ -355,17 +368,20 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   }
 
   String itemTitle(T item);
-
-  Widget cardBuilder(BuildContext context, T item);
-
-  Widget gridBuilder(BuildContext context, T item);
-
   String viewTitle(BuildContext context);
 
+  Widget cardBuilder(BuildContext context, T item);
+  Widget gridBuilder(BuildContext context, T item);
 }
 
 class ItemCardView<T extends CollectionItem> extends StatelessWidget {
-  const ItemCardView({Key key, @required this.items, @required this.itemBuilder, @required this.onDismiss, @required this.confirmDelete}) : super(key: key);
+  const ItemCardView({
+    Key key,
+    @required this.items,
+    @required this.itemBuilder,
+    @required this.onDismiss,
+    @required this.confirmDelete,
+  }) : super(key: key);
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
@@ -407,7 +423,11 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
 }
 
 class ItemGridView<T extends CollectionItem> extends StatelessWidget {
-  const ItemGridView({Key key, @required this.items, @required this.itemBuilder}) : super(key: key);
+  const ItemGridView({
+    Key key,
+    @required this.items,
+    @required this.itemBuilder,
+  }) : super(key: key);
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;

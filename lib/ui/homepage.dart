@@ -19,6 +19,9 @@ import 'theme/theme.dart';
 
 
 class Homepage extends StatelessWidget {
+  const Homepage({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +159,12 @@ class Homepage extends StatelessWidget {
     );
 
   }
-
 }
 
 class _HomepageBar extends StatelessWidget {
+  const _HomepageBar({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -211,12 +216,15 @@ class _HomepageBar extends StatelessWidget {
 }
 
 class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
-  _HomepageAppBar({Key key, @required this.state}) : super(key: key);
+  const _HomepageAppBar({
+    Key key,
+    @required this.state,
+  }) : super(key: key);
 
   final TabState state;
 
   @override
-  final Size preferredSize = Size.fromHeight(50.0);
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -239,10 +247,12 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
     return Container();
 
   }
-
 }
 
 class _HomepageDrawer extends StatelessWidget {
+  const _HomepageDrawer({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -278,11 +288,13 @@ class _HomepageDrawer extends StatelessWidget {
     );
 
   }
-
 }
 
 class _HomepageFAB extends StatelessWidget {
-  const _HomepageFAB({Key key, @required this.state}) : super(key: key);
+  const _HomepageFAB({
+    Key key,
+    @required this.state,
+  }) : super(key: key);
 
   final TabState state;
 
@@ -307,11 +319,13 @@ class _HomepageFAB extends StatelessWidget {
     return Container();
 
   }
-
 }
 
 class _HomepageBody extends StatelessWidget {
-  _HomepageBody({Key key, @required this.state}) : super(key: key);
+  const _HomepageBody({
+    Key key,
+    @required this.state,
+  }) : super(key: key);
 
   final TabState state;
 

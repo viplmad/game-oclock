@@ -8,8 +8,10 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'item_detail_manager.dart';
 
 abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
-
-  ItemDetailManagerBloc({@required this.itemId, @required this.iCollectionRepository}) : super(Initialised());
+  ItemDetailManagerBloc({
+    @required this.itemId,
+    @required this.iCollectionRepository,
+  }) : super(Initialised());
 
   final int itemId;
   final ICollectionRepository iCollectionRepository;
@@ -61,9 +63,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
     try {
 
       final T updatedItem = await updateFuture(event);
-      yield ItemFieldUpdated<T>(
-        updatedItem,
-      );
+      yield ItemFieldUpdated<T>(updatedItem);
 
     } catch(e) {
 
@@ -77,9 +77,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
     try {
 
       final T updatedItem = await addImage(event);
-      yield ItemImageUpdated<T>(
-        updatedItem,
-      );
+      yield ItemImageUpdated<T>(updatedItem);
 
     } catch(e) {
 
@@ -94,9 +92,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
     try {
 
       final T updatedItem = await updateImageName(event);
-      yield ItemImageUpdated<T>(
-        updatedItem,
-      );
+      yield ItemImageUpdated<T>(updatedItem);
 
     } catch(e) {
 
@@ -111,9 +107,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
     try {
 
       final T updatedItem = await deleteImage(event);
-      yield ItemImageUpdated<T>(
-        updatedItem,
-      );
+      yield ItemImageUpdated<T>(updatedItem);
 
     } catch(e) {
 
@@ -127,5 +121,4 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
   external Future<T> addImage(AddItemImage<T> event);
   external Future<T> deleteImage(DeleteItemImage<T> event);
   external Future<T> updateImageName(UpdateItemImageName<T> event);
-
 }

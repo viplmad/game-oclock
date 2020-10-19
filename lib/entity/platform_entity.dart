@@ -22,12 +22,11 @@ const List<String> types = [
 ];
 
 class PlatformEntity extends CollectionItemEntity {
-
-  PlatformEntity({
+  const PlatformEntity({
     @required int id,
     this.name,
     this.iconFilename,
-    this.type
+    this.type,
   }) : super(id: id);
 
   final String name;
@@ -89,5 +88,4 @@ class PlatformEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

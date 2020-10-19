@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class SystemListManagerBloc extends ItemListManagerBloc<System> {
-
   SystemListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System> {
   @override
   Future<System> createFuture(AddItem event) {
 
-    return iCollectionRepository.createSystem(event.title ?? '');
+    return iCollectionRepository.createSystem(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class SystemListManagerBloc extends ItemListManagerBloc<System> {
     return iCollectionRepository.deleteSystem(event.item.id);
 
   }
-
 }

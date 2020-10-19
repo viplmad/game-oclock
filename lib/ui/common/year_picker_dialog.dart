@@ -5,13 +5,17 @@ import 'package:flutter/rendering.dart';
 
 
 class YearPickerDialog extends StatefulWidget {
-  YearPickerDialog({Key key, this.year}) : super(key: key);
+  const YearPickerDialog({
+    Key key,
+    this.year,
+  }) : super(key: key);
+
   final int year;
 
+  @override
   State<YearPickerDialog> createState() => _YearPickerDialogState();
 }
 class _YearPickerDialogState extends State<YearPickerDialog> {
-
   DateTime _selectedDate;
 
   @override
@@ -79,7 +83,6 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
     );
 
   }
-
 }
 
 const int _yearPickerColumnCount = 3;
@@ -127,7 +130,6 @@ class _YearPicker extends StatefulWidget {
   @override
   _YearPickerState createState() => _YearPickerState();
 }
-
 class _YearPickerState extends State<_YearPicker> {
   ScrollController scrollController;
 

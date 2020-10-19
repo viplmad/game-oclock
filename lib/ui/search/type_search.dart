@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManagerBloc> {
+  const TypeSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   TypeSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
     );
 
   }
-
 }
 
 class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc> {
-
-  TypeLocalSearch({
+  const TypeLocalSearch({
     Key key,
     @required List<PurchaseType> items,
   }) : super(key: key, items: items);
@@ -57,11 +58,7 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, PurchaseType item) {
-
-    return null;
-
-  }
+  void Function() onTap(BuildContext context, PurchaseType item) => null;
 
   @override
   TypeListManagerBloc managerBlocBuilder() {
@@ -81,11 +78,14 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
     );
 
   }
-
 }
 
 class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, TypeListManagerBloc> {
-  const _TypeSearchBody({Key key, @required void Function() Function(BuildContext, PurchaseType) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _TypeSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, PurchaseType) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseTypeString;
@@ -94,10 +94,5 @@ class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseTypeString;
 
   @override
-  Widget cardBuilder(BuildContext context, PurchaseType item) {
-
-    return TypeTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, PurchaseType item) => TypeTheme.itemCard(context, item, onTap);
 }

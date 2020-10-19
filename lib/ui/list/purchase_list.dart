@@ -14,6 +14,9 @@ import 'list.dart';
 
 
 class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
+  const PurchaseAppBar({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = PurchaseTheme.primaryColour;
@@ -23,20 +26,24 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
   @override
   List<String> views(BuildContext context) => PurchaseTheme.views(context);
-
 }
 
 class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
+  const PurchaseFAB({
+    Key key,
+  }) : super(key: key);
 
   @override
   final Color themeColor = PurchaseTheme.primaryColour;
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
-
 }
 
 class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
+  const PurchaseList({
+    Key key,
+  }) : super(key: key);
 
   @override
   final String detailRouteName = purchaseDetailRoute;
@@ -55,12 +62,10 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
     );
 
   }
-
 }
 
 class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
-
-  _PurchaseListBody({
+  const _PurchaseListBody({
     Key key,
     @required List<Purchase> items,
     @required int viewIndex,
@@ -87,24 +92,11 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
-  Widget cardBuilder(BuildContext context, Purchase item) {
-
-    return PurchaseTheme.itemCard(context, item, onTap);
-
-  }
+  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget gridBuilder(BuildContext context, Purchase item) {
-
-    return PurchaseTheme.itemGrid(context, item, onTap);
-
-  }
+  Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 
   @override
-  String viewTitle(BuildContext context) {
-
-    return PurchaseTheme.views(context).elementAt(viewIndex);
-
-  }
-
+  Widget gridBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemGrid(context, item, onTap);
 }

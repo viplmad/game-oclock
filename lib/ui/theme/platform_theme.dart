@@ -9,7 +9,6 @@ import '../common/item_view.dart';
 
 
 class PlatformTheme {
-
   static const Color primaryColour = Colors.black87;
   static const Color accentColour = Colors.black12;
 
@@ -76,5 +75,4 @@ class PlatformTheme {
     return item.name;
 
   }
-
 }

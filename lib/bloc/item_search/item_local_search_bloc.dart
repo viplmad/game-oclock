@@ -6,7 +6,6 @@ import 'item_search.dart';
 
 
 class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
-
   ItemLocalSearchBloc({
     @required this.items,
   });
@@ -14,9 +13,7 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
   final List<T> items;
 
   @override
-  Stream<ItemSearchState> checkConnection() async* {
-
-  }
+  Stream<ItemSearchState> checkConnection() async* {}
 
   @override
   Future<List<T>> getInitialItems() {
@@ -35,5 +32,4 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
     return Future<List<T>>.value(searchItems);
 
   }
-
 }

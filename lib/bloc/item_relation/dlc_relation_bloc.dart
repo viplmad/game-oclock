@@ -11,7 +11,6 @@ import 'item_relation.dart';
 
 
 class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W> {
-
   DLCRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -31,5 +30,4 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
     return super.getRelationStream();
 
   }
-
 }

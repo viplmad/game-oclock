@@ -101,7 +101,6 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
     );
 
   }
-
 }
 
 class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
@@ -154,5 +153,4 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
     ];
 
   }
-
 }

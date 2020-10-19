@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class StoreListBloc extends ItemListBloc<Store> {
-
   StoreListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required StoreListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class StoreListBloc extends ItemListBloc<Store> {
     return iCollectionRepository.getStoresWithView(storeView);
 
   }
-
 }

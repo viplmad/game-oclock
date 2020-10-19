@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class TagDetailBloc extends ItemDetailBloc<Tag> {
-
   TagDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class TagDetailBloc extends ItemDetailBloc<Tag> {
     return iCollectionRepository.getTagWithId(itemId);
 
   }
-
 }

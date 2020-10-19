@@ -8,7 +8,6 @@ import 'item_relation_manager.dart';
 
 
 class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Tag, W> {
-
   TagRelationManagerBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -41,5 +40,4 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
     return super.deleteRelationFuture(event);
 
   }
-
 }

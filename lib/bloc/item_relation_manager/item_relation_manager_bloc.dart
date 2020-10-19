@@ -9,8 +9,10 @@ import 'item_relation_manager.dart';
 
 
 abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
-
-  ItemRelationManagerBloc({@required this.itemId, @required this.iCollectionRepository}) : super(Initialised());
+  ItemRelationManagerBloc({
+    @required this.itemId,
+    @required this.iCollectionRepository,
+  }) : super(Initialised());
 
   final int itemId;
   final ICollectionRepository iCollectionRepository;
@@ -54,13 +56,11 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
     try{
 
       await addRelationFuture(event);
-      yield ItemRelationAdded<W>(
-        event.otherItem,
-      );
+      yield ItemRelationAdded<W>(event.otherItem);
 
     } catch(e) {
 
-      yield ItemRelationNotAdded(e);
+      yield ItemRelationNotAdded(e.toString());
 
     }
 
@@ -71,13 +71,11 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
     try{
 
       await deleteRelationFuture(event);
-      yield ItemRelationDeleted<W>(
-        event.otherItem,
-      );
+      yield ItemRelationDeleted<W>(event.otherItem);
 
     } catch(e) {
 
-      yield ItemRelationNotDeleted(e);
+      yield ItemRelationNotDeleted(e.toString());
 
     }
 
@@ -95,5 +93,4 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
     return Future.error("Relation does not exist");
 
   }
-
 }

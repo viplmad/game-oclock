@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
+  const PlatformSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   PlatformSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
     );
 
   }
-
 }
 
 class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
-
-  PlatformLocalSearch({
+  const PlatformLocalSearch({
     Key key,
     @required List<Platform> items,
   }) : super(key: key, items: items);
@@ -74,11 +75,14 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
     );
 
   }
-
 }
 
 class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
-  const _PlatformSearchBody({Key key, @required void Function() Function(BuildContext, Platform) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _PlatformSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, Platform) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
@@ -87,10 +91,5 @@ class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
 
   @override
-  Widget cardBuilder(BuildContext context, Platform item) {
-
-    return PlatformTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Platform item) => PlatformTheme.itemCard(context, item, onTap);
 }

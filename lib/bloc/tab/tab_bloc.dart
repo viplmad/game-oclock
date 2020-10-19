@@ -6,7 +6,6 @@ import 'tab.dart';
 
 
 class TabBloc extends Bloc<TabEvent, TabState> {
-
   TabBloc() : super(TabState());
 
   @override
@@ -54,5 +53,4 @@ class TabBloc extends Bloc<TabEvent, TabState> {
     );
 
   }
-
 }

@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class DLCListBloc extends ItemListBloc<DLC> {
-
   DLCListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required DLCListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class DLCListBloc extends ItemListBloc<DLC> {
     return iCollectionRepository.getDLCsWithView(dlcView);
 
   }
-
 }

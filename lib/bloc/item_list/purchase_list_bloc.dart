@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class PurchaseListBloc extends ItemListBloc<Purchase> {
-
   PurchaseListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required PurchaseListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
     return iCollectionRepository.getPurchasesWithView(purchaseView);
 
   }
-
 }

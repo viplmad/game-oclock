@@ -11,7 +11,6 @@ import 'item_relation.dart';
 
 
 class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W> {
-
   TagRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -29,5 +28,4 @@ class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W>
     return super.getRelationStream();
 
   }
-
 }

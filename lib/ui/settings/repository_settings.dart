@@ -18,6 +18,9 @@ import '../route_constants.dart';
 
 
 class RepositorySettings extends StatelessWidget {
+  const RepositorySettings({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +49,12 @@ class RepositorySettings extends StatelessWidget {
     );
 
   }
-
 }
 
 class _RepositorySettingsBody extends StatelessWidget {
+  const _RepositorySettingsBody({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -218,16 +223,16 @@ class _RepositorySettingsBody extends StatelessWidget {
         BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
           UpdateRemoteConnectionSettings(
             PostgresInstance(
-              host: _host,
-              port: _port,
-              database: _db,
-              user: _user,
-              password: _pass,
+              _host,
+              _port,
+              _db,
+              _user,
+              _pass,
             ),
             CloudinaryInstance(
-              cloudName: _cloud,
-              apiKey: _apiKey,
-              apiSecret: _apiSecret,
+              _cloud,
+              _apiKey,
+              _apiSecret,
             ),
           ),
         );
@@ -335,11 +340,18 @@ class _RepositorySettingsBody extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ShowHideTextField extends StatefulWidget {
-  const _ShowHideTextField({Key key, @required this.labelText, @required this.initialValue, this.allowObscureText = false, @required this.onSaved, this.keyboardType, this.inputFormatters}) : super(key: key);
+  const _ShowHideTextField({
+    Key key,
+    @required this.labelText,
+    @required this.initialValue,
+    this.allowObscureText = false,
+    @required this.onSaved,
+    this.keyboardType,
+    this.inputFormatters,
+  }) : super(key: key);
 
   final String initialValue;
   final String labelText;
@@ -393,5 +405,4 @@ class _ShowHideTextFieldState extends State<_ShowHideTextField> {
     );
 
   }
-
 }

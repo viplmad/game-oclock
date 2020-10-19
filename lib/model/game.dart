@@ -15,8 +15,7 @@ enum GameView {
 }
 
 class Game extends CollectionItem {
-
-  Game({
+  const Game({
     @required int id,
     this.name,
     this.edition,
@@ -31,7 +30,8 @@ class Game extends CollectionItem {
     this.screenshotFolder,
     this.finishDate,
     this.isBackup,
-  }) : super(id: id);
+  }) : this.uniqueId = 'G$id',
+        super(id: id);
 
   final String name;
   final String edition;
@@ -48,7 +48,7 @@ class Game extends CollectionItem {
   final bool isBackup;
 
   @override
-  String get uniqueId => 'G' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = true;
@@ -173,17 +173,14 @@ class Game extends CollectionItem {
         ' }';
 
   }
-
 }
 
 class GamesData extends ItemData<Game> {
-  GamesData(List<Game> items) : super(items);
+  GamesData(List<Game> items)
+      : this.finishYears = (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort(),
+        super(items);
   
-  List<int> finishYears() {
-    
-    return (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort();
-    
-  }
+  final List<int> finishYears;
 
   int lowPriorityCount() {
     int lowPriorityCount = items.where((item) => item.status == statuses.elementAt(0)).length;
@@ -221,100 +218,74 @@ class GamesData extends ItemData<Game> {
     return ratingSum;
   }
 
-  List<int> intervalRatingCountEqual(List<int> intervals) {
-    List<int> values = List<int>(intervals.length);
+  List<int> yearlyRatingAverage(List<int> years) {
 
-    for(int index = 0; index < intervals.length; index++) {
-      int rating = intervals.elementAt(index);
+    return yearlyFieldSum<int>(
+      years,
+      (Game item) => item.finishDate?.year,
+      0,
+      (Game item) => item.rating,
+      sumOperation: (int yearSum, int length) => (length > 0)? yearSum ~/ length : 0,
+    );
 
-      int intervalSum = items.where((Game item) => item.rating == rating).length;
-
-      values[index] = intervalSum;
-    }
-
-    return values;
-  }
-
-  List<int> intervalReleaseYearCount(List<int> intervals) {
-    List<int> values = List<int>(intervals.length - 1);
-
-    for(int index = 0; index < intervals.length - 1; index++) {
-      int minYear = intervals.elementAt(index);
-      int maxYear = intervals.elementAt(index + 1);
-
-      int intervalCount = items.where((Game item) => minYear < item.releaseYear && item.releaseYear <= maxYear).length;
-
-      values[index] = intervalCount;
-    }
-
-    return values;
-  }
-
-  List<int> intervalTimeCountWithInitialAndLast(List<int> intervals) {
-    List<int> values = List<int>(intervals.length + 1);
-
-    int initialDuration = intervals.first;
-    int initialIntervalCount = items.where((Game item) => item.time <= Duration(hours: initialDuration)).length;
-    values[0] = initialIntervalCount;
-
-    for(int index = 0; index < intervals.length - 1; index++) {
-      int minDuration = intervals.elementAt(index);
-      int maxDuration = intervals.elementAt(index + 1);
-
-      int intervalCount = items.where((Game item) => Duration(hours: minDuration) < item.time && item.time <= Duration(hours: maxDuration)).length;
-
-      values[index + 1] = intervalCount;
-    }
-
-    int lastDuration = intervals.last;
-    int lastIntervalCount = items.where((Game item) => Duration(hours: lastDuration) < item.time).length;
-    values[intervals.length] = lastIntervalCount;
-
-    return values;
   }
 
   List<int> yearlyHoursSum(List<int> years) {
-    List<int> values = List<int>(years.length);
 
-    for(int index = 0; index < years.length; index++) {
-      int year = years.elementAt(index);
+    return yearlyFieldSum<int>(
+      years,
+      (Game item) => item.finishDate?.year,
+      0,
+      (Game item) => item.time.inMinutes,
+      sumOperation: (int yearSum, int length) => yearSum ~/ 60,
+    );
 
-      List<Game> yearItems = items.where((Game item) => item.finishDate?.year == year).toList(growable: false);
-      int minutesSum = yearItems.fold(0, (int previousValue, Game item) => previousValue + item.time.inMinutes);
-      int yearSum = minutesSum ~/ 60;
-
-      values[index] = yearSum;
-    }
-
-    return values;
   }
 
   List<int> yearlyFinishDateCount(List<int> years) {
-    List<int> values = List<int>(years.length);
 
-    for(int index = 0; index < years.length; index++) {
-      int year = years.elementAt(index);
+    return yearlyItemCount(
+      years,
+      (Game item) => item.finishDate?.year,
+    );
 
-      int yearSum = items.where((Game item) => item.finishDate?.year == year).length;
-
-      values[index] = yearSum;
-    }
-
-    return values;
   }
 
   YearData<int> monthlyHoursSum() {
-    YearData<int> yearData = YearData<int>();
 
-    for(int month = 1; month <= 12; month++) {
+    return monthlyFieldSum<int>(
+      (Game item) => item.finishDate?.month,
+      0,
+      (Game item) => item.time.inMinutes,
+      sumOperation: (int monthSum, int length) => monthSum ~/ 60,
+    );
 
-      List<Game> monthItems = items.where((Game item) => item.finishDate?.month == month).toList(growable: false);
-      int minutesSum = monthItems.fold(0, (int previousValue, Game item) => previousValue + item.time.inMinutes);
-      int monthSum = minutesSum ~/ 60;
+  }
 
-      yearData.addData(monthSum);
-    }
+  List<int> intervalRatingCount(List<int> intervals) {
 
-    return yearData;
+    return intervalCountEqual<int>(
+      intervals,
+      (Game item) => item.rating,
+    );
+
+  }
+
+  List<int> intervalReleaseYearCount(List<int> intervals) {
+
+    return intervalCount<int>(
+      intervals,
+      (Game item) => item.releaseYear,
+    );
+
+  }
+
+  List<int> intervalTimeCount(List<int> intervals) {
+
+    return intervalCountWithInitialAndLast<int>(
+      intervals,
+      (Game item) => item.time.inHours,
+    );
+
   }
 }

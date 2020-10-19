@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class OwnedListBloc extends ItemListBloc<Game> {
-
   OwnedListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required OwnedListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class OwnedListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getOwnedWithView(gameView);
 
   }
-
 }

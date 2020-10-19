@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class TagListBloc extends ItemListBloc<Tag> {
-
   TagListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required TagListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class TagListBloc extends ItemListBloc<Tag> {
     return iCollectionRepository.getTagsWithView(tagView);
 
   }
-
 }

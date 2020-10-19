@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class GameSearchBloc extends ItemSearchBloc<Game> {
-
   GameSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class GameSearchBloc extends ItemSearchBloc<Game> {
     return iCollectionRepository.getGamesWithName(query, super.maxResults).first;
 
   }
-
 }

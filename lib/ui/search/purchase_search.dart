@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
+  const PurchaseSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   PurchaseSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
     );
 
   }
-
 }
 
 class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerBloc> {
-
-  PurchaseLocalSearch({
+  const PurchaseLocalSearch({
     Key key,
     @required List<Purchase> items,
   }) : super(key: key, items: items);
@@ -74,11 +75,14 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
     );
 
   }
-
 }
 
 class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
-  const _PurchaseSearchBody({Key key, @required void Function() Function(BuildContext, Purchase) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _PurchaseSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, Purchase) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
@@ -87,10 +91,5 @@ class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;
 
   @override
-  Widget cardBuilder(BuildContext context, Purchase item) {
-
-    return PurchaseTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }

@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 
 
 class GameDetailManagerBloc extends ItemDetailManagerBloc<Game> {
-
   GameDetailManagerBloc({
     @required int itemId,
-    ICollectionRepository iCollectionRepository,
+    @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -41,5 +40,4 @@ class GameDetailManagerBloc extends ItemDetailManagerBloc<Game> {
     return iCollectionRepository.deleteGameCover(itemId, event.imageName);
 
   }
-
 }

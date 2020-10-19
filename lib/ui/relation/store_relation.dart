@@ -11,7 +11,12 @@ import 'relation.dart';
 
 
 class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
-  StorePurchaseRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<Purchase>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+  const StorePurchaseRelationList({
+    Key key,
+    @required String relationName,
+    @required String relationTypeName,
+    List<Widget> Function(List<Purchase>) trailingBuilder,
+  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
   final String detailRouteName = purchaseDetailRoute;
@@ -23,14 +28,14 @@ class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
   final String localSearchRouteName = purchaseLocalSearchRoute;
 
   @override
-  Widget cardBuilder(BuildContext context, Purchase item) {
-
-    return PurchaseTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }
 
 abstract class _StoreRelationList<W extends CollectionItem> extends ItemRelationList<Store, W, StoreRelationBloc<W>, StoreRelationManagerBloc<W>> {
-  _StoreRelationList({Key key, @required String relationName, @required String relationTypeName, List<Widget> Function(List<W>) trailingBuilder}) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+  const _StoreRelationList({
+    Key key,
+    @required String relationName,
+    @required String relationTypeName,
+    List<Widget> Function(List<W>) trailingBuilder,
+  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

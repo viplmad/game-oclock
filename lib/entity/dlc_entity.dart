@@ -22,8 +22,7 @@ const String dlc_finishDateField = 'Finish Date';
 const String dlc_baseGameField = 'Base Game';
 
 class DLCEntity extends CollectionItemEntity {
-
-  DLCEntity({
+  const DLCEntity({
     @required int id,
     this.name,
     this.releaseYear,
@@ -104,5 +103,4 @@ class DLCEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

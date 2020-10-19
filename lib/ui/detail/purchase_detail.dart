@@ -123,7 +123,6 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
     );
 
   }
-
 }
 
 class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
@@ -200,5 +199,4 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
     ];
 
   }
-
 }

@@ -9,8 +9,9 @@ import 'item_list_manager.dart';
 
 
 abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
-
-  ItemListManagerBloc({@required this.iCollectionRepository}) : super(Initialised());
+  ItemListManagerBloc({
+    @required this.iCollectionRepository,
+  }) : super(Initialised());
 
   final ICollectionRepository iCollectionRepository;
 
@@ -53,9 +54,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
     try {
 
       final T item = await createFuture(event);
-      yield ItemAdded<T>(
-        item,
-      );
+      yield ItemAdded<T>(item);
 
     } catch (e) {
 
@@ -70,9 +69,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
     try{
 
       await deleteFuture(event);
-      yield ItemDeleted<T>(
-        event.item,
-      );
+      yield ItemDeleted<T>(event.item);
 
     } catch (e) {
 
@@ -84,5 +81,4 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   Future<T> createFuture(AddItem event);
   Future<dynamic> deleteFuture(DeleteItem<T> event);
-
 }

@@ -2,7 +2,6 @@ import 'package:meta/meta.dart';
 
 
 abstract class IImageConnector {
-
   //#region UPLOAD
   Future<String> setImage({@required String imagePath, @required String tableName, @required String imageName});
   //#endregion UPLOAD
@@ -17,6 +16,5 @@ abstract class IImageConnector {
 
   //#region DOWNLOAD
   String getURI({@required String tableName, @required String imageFilename});
-  //#ENDregion DOWNLOAD
-
+  //#endregion DOWNLOAD
 }

@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class SystemListBloc extends ItemListBloc<System> {
-
   SystemListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required SystemListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class SystemListBloc extends ItemListBloc<System> {
     return iCollectionRepository.getSystemsWithView(systemView);
 
   }
-
 }

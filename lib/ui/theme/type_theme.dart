@@ -6,7 +6,6 @@ import '../common/item_view.dart';
 
 
 class TypeTheme {
-
   static Widget itemCard(BuildContext context, PurchaseType item, void Function() Function(BuildContext, PurchaseType) onTap) {
 
     return ItemCard(
@@ -32,5 +31,4 @@ class TypeTheme {
     return item.name;
 
   }
-
 }

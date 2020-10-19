@@ -9,7 +9,6 @@ import 'connection.dart';
 
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
-
   ConnectionBloc() : super(Connecting());
 
   @override
@@ -72,5 +71,4 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
     }
 
   }
-
 }

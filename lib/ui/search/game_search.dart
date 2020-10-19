@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
+  const GameSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   GameSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
     );
 
   }
-
 }
 
 class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
-
-  GameLocalSearch({
+  const GameLocalSearch({
     Key key,
     @required List<Game> items,
   }) : super(key: key, items: items);
@@ -74,11 +75,14 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
     );
 
   }
-
 }
 
 class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, K, GameListManagerBloc> {
-  const _GameSearchBody({Key key, @required void Function() Function(BuildContext, Game) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _GameSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, Game) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
@@ -87,10 +91,5 @@ class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Gam
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) {
-
-    return GameTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
 }

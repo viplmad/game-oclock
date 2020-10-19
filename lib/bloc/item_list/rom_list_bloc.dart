@@ -11,7 +11,6 @@ import 'item_list.dart';
 
 
 class RomListBloc extends ItemListBloc<Game> {
-
   RomListBloc({
     @required ICollectionRepository iCollectionRepository,
     @required RomListManagerBloc managerBloc,
@@ -32,5 +31,4 @@ class RomListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getRomsWithView(gameView);
 
   }
-
 }

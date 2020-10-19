@@ -7,6 +7,7 @@ import 'localisations_en.dart';
 
 
 abstract class GameCollectionLocalisations {
+  const GameCollectionLocalisations();
 
   static String appTitle = 'Game Collection';
 
@@ -63,7 +64,6 @@ abstract class GameCollectionLocalisations {
   String get generalString;
   String get changeYearString;
   List<String> get shortMonths;
-  String totalString(String typesString);
   //#endregion Common
 
   //#region Game
@@ -90,6 +90,8 @@ abstract class GameCollectionLocalisations {
   String get nextUpViewString;
   String get lastFinishedViewString;
 
+  String gamesFromYearString(int year);
+  String get totalGamesString;
   String get totalGamesPlayedString;
   String get sumTimeString;
   String get avgTimeString;
@@ -101,6 +103,7 @@ abstract class GameCollectionLocalisations {
   String get countByRatingString;
   String get countByFinishDate;
   String get countByTimeString;
+  String get avgRatingByFinishDateString;
   //#endregion Game
 
   //#region DLC
@@ -129,13 +132,18 @@ abstract class GameCollectionLocalisations {
   String get realValueString;
   String get percentageSavedString;
 
+  String purchasesFromYearString(int year);
+  String get totalPurchasesString;
+  String get totalPurchasesWithoutPromotionString;
   String get sumPriceString;
   String get avgPriceString;
+  String get avgPriceWithoutPromotionString;
   String get sumExternalCreditString;
   String get avgExternalCreditString;
   String get sumOriginalPriceString;
   String get avgOriginalPriceString;
   String get avgDiscountString;
+  String get avgDiscountWithoutPromotionString;
   String get sumSavedString;
   String get avgSavedString;
   String get countByYearString;
@@ -145,6 +153,7 @@ abstract class GameCollectionLocalisations {
   String get countByPriceString;
   String get sumPriceByMonthString;
   String get sumOriginalPriceByMonthString;
+  String get sumSavedByMonthString;
   //#endregion Purchase
 
   //#region Store
@@ -210,7 +219,6 @@ abstract class GameCollectionLocalisations {
   static GameCollectionLocalisations of(BuildContext context) {
     return Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
   }
-
 }
 
 class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameCollectionLocalisations> {
@@ -226,6 +234,7 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
       case 'en':
         return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
       case 'es':
+        //TODO
       default:
         return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
     }

@@ -9,7 +9,6 @@ import '../common/item_view.dart';
 
 
 class StoreTheme {
-
   static const Color primaryColour = Colors.blueGrey;
   static const Color accentColour = Colors.grey;
 
@@ -71,5 +70,4 @@ class StoreTheme {
     return item.name;
 
   }
-
 }

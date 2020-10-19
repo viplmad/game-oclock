@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class StoreListManagerBloc extends ItemListManagerBloc<Store> {
-
   StoreListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store> {
   @override
   Future<Store> createFuture(AddItem event) {
 
-    return iCollectionRepository.createStore(event.title ?? '');
+    return iCollectionRepository.createStore(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store> {
     return iCollectionRepository.deleteStore(event.item.id);
 
   }
-
 }

@@ -12,7 +12,7 @@ abstract class RepositorySettingsManagerEvent extends Equatable {
 }
 
 class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
-  UpdateRemoteConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
+  const UpdateRemoteConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
 
   final PostgresInstance postgresInstance;
   final CloudinaryInstance cloudinaryInstance;

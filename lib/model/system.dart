@@ -11,15 +11,15 @@ enum SystemView {
 }
 
 class System extends CollectionItem {
-
-  System({
+  const System({
     @required int id,
     this.name,
     this.iconURL,
     this.iconFilename,
     this.generation,
     this.manufacturer,
-  }) : super(id: id);
+  }) : this.uniqueId = 'Sy$id',
+        super(id: id);
 
   final String name;
   final String iconURL;
@@ -28,7 +28,7 @@ class System extends CollectionItem {
   final String manufacturer;
 
   @override
-  String get uniqueId => 'Sy' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = true;
@@ -105,15 +105,4 @@ class System extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class SystemsData {
-
-  SystemsData({
-    this.systems,
-  });
-
-  final List<System> systems;
-
 }

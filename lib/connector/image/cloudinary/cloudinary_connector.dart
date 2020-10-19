@@ -12,16 +12,15 @@ const String _baseAPIURL = 'https://api.cloudinary.com/v1_1/';
 const String _baseRESURL = 'http://res.cloudinary.com/';
 
 class CloudinaryConnector extends IImageConnector {
-
-  CloudinaryInstance _instance;
-  CloudinaryConnection _connection;
-
   CloudinaryConnector.fromConnectionString(String connectionString) {
 
     this._instance = CloudinaryInstance.fromString(connectionString);
     createConnection();
 
   }
+
+  CloudinaryInstance _instance;
+  CloudinaryConnection _connection;
 
   void createConnection() {
 
@@ -106,18 +105,16 @@ class CloudinaryConnector extends IImageConnector {
 
   }
   //#endregion Helpers
-
 }
 
 const String _cloudinaryURIPattern = "cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$";
 
 class CloudinaryInstance {
+  const CloudinaryInstance(this.cloudName, this.apiKey, this.apiSecret);
 
   final String cloudName;
   final int apiKey;
   final String apiSecret;
-
-  CloudinaryInstance({this.cloudName, this.apiKey, this.apiSecret});
 
   factory CloudinaryInstance.fromString(String connectionString) {
 
@@ -130,9 +127,9 @@ class CloudinaryInstance {
     }
 
     return CloudinaryInstance(
-      cloudName: match.namedGroup('name'),
-      apiKey: int.parse(match.namedGroup('key')),
-      apiSecret: match.namedGroup('secret'),
+      match.namedGroup('name'),
+      int.parse(match.namedGroup('key')),
+      match.namedGroup('secret'),
     );
 
   }
@@ -142,5 +139,4 @@ class CloudinaryInstance {
     return "cloudinary://$apiKey:$apiSecret@$cloudName";
 
   }
-
 }

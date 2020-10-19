@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class PlatformSearchBloc extends ItemSearchBloc<Platform> {
-
   PlatformSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class PlatformSearchBloc extends ItemSearchBloc<Platform> {
     return iCollectionRepository.getPlatformsWithName(query, super.maxResults).first;
 
   }
-
 }

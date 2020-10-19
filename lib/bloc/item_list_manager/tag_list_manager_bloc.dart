@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class TagListManagerBloc extends ItemListManagerBloc<Tag> {
-
   TagListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class TagListManagerBloc extends ItemListManagerBloc<Tag> {
   @override
   Future<Tag> createFuture(AddItem event) {
 
-    return iCollectionRepository.createTag(event.title ?? '');
+    return iCollectionRepository.createTag(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class TagListManagerBloc extends ItemListManagerBloc<Tag> {
     return iCollectionRepository.deleteTag(event.item.id);
 
   }
-
 }

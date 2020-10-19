@@ -12,8 +12,11 @@ import 'item_relation.dart';
 
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
-
-  ItemRelationBloc({@required this.itemId, @required this.iCollectionRepository, @required this.managerBloc}) : super(ItemRelationLoading()) {
+  ItemRelationBloc({
+    @required this.itemId,
+    @required this.iCollectionRepository,
+    @required this.managerBloc,
+  }) : super(ItemRelationLoading()) {
 
     managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
 
@@ -68,9 +71,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
     try {
 
       final List<W> items = await getRelationStream().first;
-      yield ItemRelationLoaded<W>(
-        items,
-      );
+      yield ItemRelationLoaded<W>(items);
 
     } catch (e) {
 
@@ -82,9 +83,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
   Stream<ItemRelationState> _mapUpdateRelationToState(UpdateItemRelation<W> event) async* {
 
-    yield ItemRelationLoaded<W>(
-      event.otherItems,
-    );
+    yield ItemRelationLoaded<W>(event.otherItems);
 
   }
 
@@ -99,9 +98,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
       if(listItem != event.item) {
         items[listItemIndex] = event.item;
 
-        yield ItemRelationLoaded<W>(
-          items,
-        );
+        yield ItemRelationLoaded<W>(items);
       }
 
     }
@@ -129,11 +126,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
 
       final List<W> updatedItems = List.from(items)..add(managerState.otherItem);
 
-      add(
-        UpdateItemRelation<W>(
-          updatedItems,
-        ),
-      );
+      add(UpdateItemRelation<W>(updatedItems));
     }
 
   }
@@ -147,11 +140,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
           .where((W item) => item.id != managerState.otherItem.id)
           .toList(growable: false);
 
-      add(
-        UpdateItemRelation<W>(
-          updatedItems,
-        ),
-      );
+      add(UpdateItemRelation<W>(updatedItems));
     }
 
   }
@@ -170,5 +159,4 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
     return Stream.error("Relation does not exist");
 
   }
-
 }

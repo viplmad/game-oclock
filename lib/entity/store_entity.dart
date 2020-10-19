@@ -15,8 +15,7 @@ const String stor_nameField = 'Name';
 const String stor_iconField = 'Icon';
 
 class StoreEntity extends CollectionItemEntity {
-
-  StoreEntity({
+  const StoreEntity({
     @required int id,
     this.name,
     this.iconFilename,
@@ -76,5 +75,4 @@ class StoreEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

@@ -11,16 +11,16 @@ enum TagView {
 }
 
 class Tag extends CollectionItem {
-
-  Tag({
+  const Tag({
     @required int id,
-    this.name
-  }) : super(id: id);
+    this.name,
+  }) : this.uniqueId = 'Tg$id',
+        super(id: id);
 
   final String name;
 
   @override
-  String get uniqueId => 'Tg' + this.id.toString();
+  final String uniqueId;
 
   @override
   final bool hasImage = false;
@@ -76,15 +76,4 @@ class Tag extends CollectionItem {
         ' }';
 
   }
-
-}
-
-class TagsData {
-
-  TagsData({
-    this.tags,
-  });
-
-  final List<Tag> tags;
-
 }

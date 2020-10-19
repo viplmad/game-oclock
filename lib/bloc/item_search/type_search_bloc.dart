@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class TypeSearchBloc extends ItemSearchBloc<PurchaseType> {
-
   TypeSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class TypeSearchBloc extends ItemSearchBloc<PurchaseType> {
     return iCollectionRepository.getTypesWithName(query, super.maxResults).first;
 
   }
-
 }

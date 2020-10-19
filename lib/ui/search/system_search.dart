@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManagerBloc> {
+  const SystemSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   SystemSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
     );
 
   }
-
 }
 
 class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
-
-  SystemLocalSearch({
+  const SystemLocalSearch({
     Key key,
     @required List<System> items,
   }) : super(key: key, items: items);
@@ -57,11 +58,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, System item) {
-
-    return null;
-
-  }
+  void Function() onTap(BuildContext context, System item) => null;
 
   @override
   SystemListManagerBloc managerBlocBuilder() {
@@ -81,11 +78,14 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
     );
 
   }
-
 }
 
 class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody<System, K, SystemListManagerBloc> {
-  const _SystemSearchBody({Key key, @required void Function() Function(BuildContext, System) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _SystemSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, System) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).systemString;
@@ -94,10 +94,5 @@ class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).systemsString;
 
   @override
-  Widget cardBuilder(BuildContext context, System item) {
-
-    return SystemTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
 }

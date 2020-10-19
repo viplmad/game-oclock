@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 
 
 class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform> {
-
   PlatformDetailManagerBloc({
     @required int itemId,
-    ICollectionRepository iCollectionRepository,
+    @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -41,5 +40,4 @@ class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform> {
     return iCollectionRepository.deletePlatformIcon(itemId, event.imageName);
 
   }
-
 }

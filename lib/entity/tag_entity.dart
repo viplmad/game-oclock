@@ -13,10 +13,9 @@ const tagFields = [
 const tag_nameField = 'Name';
 
 class TagEntity extends CollectionItemEntity {
-
-  TagEntity({
+  const TagEntity({
     @required int id,
-    this.name
+    this.name,
   }) : super(id: id);
 
   final String name;
@@ -69,5 +68,4 @@ class TagEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

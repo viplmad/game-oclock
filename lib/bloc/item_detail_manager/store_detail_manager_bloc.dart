@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 
 
 class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store> {
-
   StoreDetailManagerBloc({
     @required int itemId,
-    ICollectionRepository iCollectionRepository,
+    @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -41,5 +40,4 @@ class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store> {
     return iCollectionRepository.deleteStoreIcon(itemId, event.imageName);
 
   }
-
 }

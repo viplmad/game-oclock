@@ -8,7 +8,6 @@ import 'item_statistics.dart';
 
 
 class GameStatisticsBloc extends ItemStatisticsBloc<Game, GamesData> {
-
   GameStatisticsBloc({
     @required List<Game> items
   }) : super(items: items);
@@ -27,5 +26,4 @@ class GameStatisticsBloc extends ItemStatisticsBloc<Game, GamesData> {
     return Future<GamesData>.value(GamesData(yearItems));
 
   }
-
 }

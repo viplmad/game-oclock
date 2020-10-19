@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class SystemSearchBloc extends ItemSearchBloc<System> {
-
   SystemSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class SystemSearchBloc extends ItemSearchBloc<System> {
     return iCollectionRepository.getSystemsWithName(query, super.maxResults).first;
 
   }
-
 }

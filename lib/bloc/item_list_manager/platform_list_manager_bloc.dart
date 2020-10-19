@@ -8,7 +8,6 @@ import 'item_list_manager.dart';
 
 
 class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
-
   PlatformListManagerBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -16,7 +15,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
   @override
   Future<Platform> createFuture(AddItem event) {
 
-    return iCollectionRepository.createPlatform(event.title ?? '');
+    return iCollectionRepository.createPlatform(event.title?? '');
 
   }
 
@@ -26,5 +25,4 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
     return iCollectionRepository.deletePlatform(event.item.id);
 
   }
-
 }

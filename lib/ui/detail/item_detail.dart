@@ -21,7 +21,7 @@ import '../common/year_picker_dialog.dart';
 
 
 class DetailArguments<T> {
-  DetailArguments({
+  const DetailArguments({
     @required this.item,
     this.onUpdate,
   });
@@ -71,7 +71,6 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
   List<BlocProvider> relationBlocsBuilder();
 
   ItemDetailBody<T, K, S> detailBodyBuilder();
-
 }
 
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
@@ -465,7 +464,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).percentageString(value)
+        GameCollectionLocalisations.of(context).percentageString(value * 100)
         :
         null,
       editable: false,
@@ -539,12 +538,20 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
   List<Widget> itemRelationsBuilder(BuildContext context);
-
 }
 
 class _ItemGenericField<K> extends StatelessWidget {
-
-  _ItemGenericField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.onTap, this.onLongPress, @required this.update, this.extended = false});
+  const _ItemGenericField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    this.shownValue,
+    this.editable = true,
+    @required this.onTap,
+    this.onLongPress,
+    @required this.update,
+    this.extended = false,
+  }) : super(key: key);
 
   final String fieldName;
   final K value;
@@ -560,35 +567,20 @@ class _ItemGenericField<K> extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return extended?
-    InkWell(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
-            child: Text(shownValue?? ''),
-          ),
-        ],
-      ),
-      onTap: editable?
-        () {
-          onTap().then( (K newValue) {
-            if (newValue != null) {
-              update(newValue);
-            }
-          });
-        } : null,
-      onLongPress: onLongPress,
-    )
-    :
-    ListTileTheme.merge(
-      child: ListTile(
-        title: Text(fieldName),
-        trailing: Text(shownValue?? ''),
+      InkWell(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+              child: Text(shownValue?? ''),
+            ),
+          ],
+        ),
         onTap: editable?
           () {
             onTap().then( (K newValue) {
@@ -598,16 +590,37 @@ class _ItemGenericField<K> extends StatelessWidget {
             });
           } : null,
         onLongPress: onLongPress,
-      ),
-    );
+      )
+      :
+      ListTileTheme.merge(
+        child: ListTile(
+          title: Text(fieldName),
+          trailing: Text(shownValue?? ''),
+          onTap: editable?
+            () {
+              onTap().then( (K newValue) {
+                if (newValue != null) {
+                  update(newValue);
+                }
+              });
+            } : null,
+          onLongPress: onLongPress,
+        ),
+      );
 
   }
-
 }
 
 class _ItemTextField extends StatelessWidget {
-
-  _ItemTextField({@required this.fieldName, @required this.value, this.shownValue, this.onLongPress, @required this.update, this.isLongText = false});
+  const _ItemTextField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    this.shownValue,
+    this.onLongPress,
+    @required this.update,
+    this.isLongText = false,
+  }) : super(key: key);
 
   final String fieldName;
   final String value;
@@ -668,12 +681,15 @@ class _ItemTextField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ItemIntField extends StatelessWidget {
-
-  _ItemIntField({@required this.fieldName, @required this.value, @required this.update});
+  const _ItemIntField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final int value;
@@ -708,12 +724,17 @@ class _ItemIntField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ItemDoubleField extends StatelessWidget {
-
-  _ItemDoubleField({@required this.fieldName, @required this.value, this.shownValue, this.editable = true, @required this.update});
+  const _ItemDoubleField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    this.shownValue,
+    this.editable = true,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final double value;
@@ -746,12 +767,15 @@ class _ItemDoubleField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ItemYearField extends StatelessWidget {
-
-  _ItemYearField({@required this.fieldName, @required this.value, @required this.update});
+  const _ItemYearField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final int value;
@@ -778,12 +802,15 @@ class _ItemYearField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ItemDateTimeField extends StatelessWidget {
-
-  _ItemDateTimeField({@required this.fieldName, @required this.value, @required this.update});
+  const _ItemDateTimeField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final DateTime value;
@@ -811,12 +838,15 @@ class _ItemDateTimeField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ItemDurationField extends StatelessWidget {
-
-  _ItemDurationField({@required this.fieldName, @required this.value, @required this.update});
+  const _ItemDurationField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final Duration value;
@@ -849,12 +879,15 @@ class _ItemDurationField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _RatingField extends StatelessWidget {
-
-  _RatingField({@required this.fieldName, @required this.value, this.update});
+  const _RatingField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final int value;
@@ -899,12 +932,15 @@ class _RatingField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _BoolField extends StatelessWidget {
-
-  _BoolField({@required this.fieldName, @required this.value, this.update});
+  const _BoolField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final bool value;
@@ -920,12 +956,17 @@ class _BoolField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _EnumField extends StatelessWidget {
-
-  const _EnumField({Key key, @required this.fieldName, @required this.value, @required this.enumValues, this.enumColours, @required this.update}) : super(key: key);
+  const _EnumField({
+    Key key,
+    @required this.fieldName,
+    @required this.value,
+    @required this.enumValues,
+    this.enumColours,
+    @required this.update,
+  }) : super(key: key);
 
   final String fieldName;
   final String value;
@@ -972,15 +1013,19 @@ class _EnumField extends StatelessWidget {
     );
 
   }
-
 }
 
 class _DurationPickerDialog extends StatefulWidget {
-  _DurationPickerDialog({Key key, this.fieldName, this.duration}) : super(key: key);
+  const _DurationPickerDialog({
+    Key key,
+    @required this.fieldName,
+    @required this.duration,
+  }) : super(key: key);
 
   final String fieldName;
   final Duration duration;
 
+  @override
   State<_DurationPickerDialog> createState() => _DurationPickerDialogState();
 }
 class _DurationPickerDialogState extends State<_DurationPickerDialog> {
@@ -1045,15 +1090,19 @@ class _DurationPickerDialogState extends State<_DurationPickerDialog> {
       ],
     );
   }
-
 }
 
 class _DecimalPickerDialog extends StatefulWidget {
-  _DecimalPickerDialog({Key key, this.fieldName, this.number}) : super(key: key);
+  const _DecimalPickerDialog({
+    Key key,
+    @required this.fieldName,
+    @required this.number,
+  }) : super(key: key);
 
   final String fieldName;
   final double number;
 
+  @override
   State<_DecimalPickerDialog> createState() => _DecimalPickerDialogState();
 }
 class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
@@ -1119,5 +1168,4 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
       ],
     );
   }
-
 }

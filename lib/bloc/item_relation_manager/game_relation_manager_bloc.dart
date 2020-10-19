@@ -8,7 +8,6 @@ import 'item_relation_manager.dart';
 
 
 class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Game, W> {
-
   GameRelationManagerBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -53,5 +52,4 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
     return super.deleteRelationFuture(event);
 
   }
-
 }

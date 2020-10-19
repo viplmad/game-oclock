@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class DLCDetailBloc extends ItemDetailBloc<DLC> {
-
   DLCDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class DLCDetailBloc extends ItemDetailBloc<DLC> {
     return iCollectionRepository.getDLCWithId(itemId);
 
   }
-
 }

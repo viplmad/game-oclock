@@ -6,7 +6,6 @@ import 'repository_settings_manager.dart';
 
 
 class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent, RepositorySettingsManagerState> {
-
   RepositorySettingsManagerBloc() : super(Initialised());
 
   @override
@@ -21,6 +20,8 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
       yield* _mapUpdateLocalToState();
 
     }*/
+
+    yield Initialised();
 
   }
 
@@ -43,5 +44,4 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
     }
 
   }
-
 }

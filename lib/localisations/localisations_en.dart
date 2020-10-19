@@ -126,10 +126,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     'Nov',
     'Dec',
   ];
-  @override
-  String totalString(String typesString) {
-    return 'Total $typesString';
-  }
   //#endregion Common
 
   //#region Game
@@ -177,6 +173,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String lastFinishedViewString = 'Last Finished';
 
   @override
+  String gamesFromYearString(int year) {
+    return 'Finished in $year';
+  }
+  @override
+  String get totalGamesString => 'Total $gamesString';
+  @override
   String get totalGamesPlayedString => 'Total played $gamesString';
   @override
   String get sumTimeString => 'Total $timeFieldString';
@@ -198,6 +200,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   String get countByFinishDate => 'Number of $gamesString by $finishDateFieldString';
   @override
   String get countByTimeString => 'Number of $gamesString by $timeFieldString';
+  @override
+  String get avgRatingByFinishDateString => 'Average $ratingFieldString by $finishDateFieldString';
   //#endregion Game
 
   //#region DLC
@@ -244,9 +248,19 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String percentageSavedString = 'Percentage Saved';
 
   @override
-  String get sumPriceString => 'Total spent';
+  String purchasesFromYearString(int year) {
+    return 'From $year';
+  }
   @override
-  String get avgPriceString => 'Average spent';
+  String get totalPurchasesString => 'Total $purchasesString';
+  @override
+  String get totalPurchasesWithoutPromotionString => '$totalPurchasesString (without Promotions)';
+  @override
+  final String sumPriceString = 'Total spent';
+  @override
+  final String avgPriceString = 'Average spent';
+  @override
+  String get avgPriceWithoutPromotionString => '$avgPriceString (without Promotions)';
   @override
   String get sumExternalCreditString => 'Total $externalCreditsFieldString spent';
   @override
@@ -258,13 +272,15 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get avgDiscountString => 'Average $discountFieldString';
   @override
-  String get sumSavedString => 'Total saved';
+  String get avgDiscountWithoutPromotionString => '$avgDiscountString (without Promotions)';
   @override
-  String get avgSavedString => 'Average saved';
+  final String sumSavedString = 'Total saved';
+  @override
+  final String avgSavedString = 'Average saved';
   @override
   String get countByYearString => 'Number of $purchasesString by year';
   @override
-  String get sumPriceByYearString => 'Total spent by year';
+  final String sumPriceByYearString = 'Total spent by year';
   @override
   String get sumOriginalPriceByYearString => 'Total $originalPriceFieldString by year';
   @override
@@ -272,9 +288,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get countByPriceString => 'Number of $purchasesString by $priceFieldString';
   @override
-  String get sumPriceByMonthString => 'Total spent by month';
+  final String sumPriceByMonthString = 'Total spent by month';
   @override
   String get sumOriginalPriceByMonthString => 'Total $originalPriceFieldString by month';
+  @override
+  String get sumSavedByMonthString => 'Total saved by month';
   //#endregion Purchase
 
   //#region Store

@@ -14,6 +14,9 @@ import '../detail/detail.dart';
 
 
 abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+  const ItemSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +54,15 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
 
   K searchBlocBuilder();
   S managerBlocBuilder();
-  ItemSearchBody<T, K, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 
+  ItemSearchBody<T, K, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 }
 
 abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
-  ItemLocalSearch({Key key, @required this.items}) : super(key: key);
+  const ItemLocalSearch({
+    Key key,
+    @required this.items,
+  }) : super(key: key);
 
   final List<T> items;
 
@@ -105,12 +111,16 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
   }
 
   S managerBlocBuilder();
-  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 
+  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({@required void Function() Function(BuildContext, T) onTap, @required bool allowNewButton});
 }
 
 abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatefulWidget {
-  const ItemSearchBody({Key key, @required this.onTap, this.allowNewButton = false}) : super(key: key);
+  const ItemSearchBody({
+    Key key,
+    @required this.onTap,
+    this.allowNewButton = false,
+  }) : super(key: key);
 
   final void Function() Function(BuildContext, T) onTap;
   final bool allowNewButton;
@@ -282,5 +292,4 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
     );
 
   }
-
 }

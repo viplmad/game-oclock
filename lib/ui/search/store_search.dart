@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
+  const StoreSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   StoreSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
     );
 
   }
-
 }
 
 class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
-
-  StoreLocalSearch({
+  const StoreLocalSearch({
     Key key,
     @required List<Store> items,
   }) : super(key: key, items: items);
@@ -74,11 +75,14 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
     );
 
   }
-
 }
 
 class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, K, StoreListManagerBloc> {
-  const _StoreSearchBody({Key key, @required void Function() Function(BuildContext, Store) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _StoreSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, Store) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
@@ -87,10 +91,5 @@ class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<S
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
 
   @override
-  Widget cardBuilder(BuildContext context, Store item) {
-
-    return StoreTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);
 }

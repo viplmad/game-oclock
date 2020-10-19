@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 
 class BarData {
-
   const BarData({
     @required this.title,
     this.color,
@@ -14,5 +13,4 @@ class BarData {
   final String title;
   final IconData icon;
   final Color color;
-
 }

@@ -6,7 +6,6 @@ import '../common/item_view.dart';
 
 
 class SystemTheme {
-
   static Widget itemCard(BuildContext context, System item, void Function() Function(BuildContext, System) onTap) {
 
     return ItemCard(
@@ -41,5 +40,4 @@ class SystemTheme {
     return item.manufacturer;
 
   }
-
 }

@@ -11,6 +11,9 @@ import 'common/loading_icon.dart';
 
 
 class Connectpage extends StatelessWidget {
+  const Connectpage({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +26,12 @@ class Connectpage extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ConnectpageBody extends StatelessWidget {
+  const _ConnectpageBody({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,5 +110,4 @@ class _ConnectpageBody extends StatelessWidget {
     );
 
   }
-
 }

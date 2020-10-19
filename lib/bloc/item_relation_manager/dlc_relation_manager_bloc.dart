@@ -8,7 +8,6 @@ import 'item_relation_manager.dart';
 
 
 class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<DLC, W> {
-
   DLCRelationManagerBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -45,5 +44,4 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
     return super.deleteRelationFuture(event);
 
   }
-
 }

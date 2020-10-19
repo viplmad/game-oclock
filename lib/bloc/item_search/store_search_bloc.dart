@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class StoreSearchBloc extends ItemSearchBloc<Store> {
-
   StoreSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class StoreSearchBloc extends ItemSearchBloc<Store> {
     return iCollectionRepository.getStoresWithName(query, super.maxResults).first;
 
   }
-
 }

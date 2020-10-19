@@ -15,6 +15,9 @@ import 'search.dart';
 
 
 class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
+  const TagSearch({
+    Key key,
+  }) : super(key: key);
 
   @override
   TagSearchBloc searchBlocBuilder() {
@@ -43,12 +46,10 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
     );
 
   }
-
 }
 
 class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
-
-  TagLocalSearch({
+  const TagLocalSearch({
     Key key,
     @required List<Tag> items,
   }) : super(key: key, items: items);
@@ -57,11 +58,7 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, Tag item) {
-
-    return null;
-
-  }
+  void Function() onTap(BuildContext context, Tag item) => null;
 
   @override
   TagListManagerBloc managerBlocBuilder() {
@@ -81,11 +78,14 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
     );
 
   }
-
 }
 
 class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, K, TagListManagerBloc> {
-  const _TagSearchBody({Key key, @required void Function() Function(BuildContext, Tag) onTap, bool allowNewButton = false}) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+  const _TagSearchBody({
+    Key key,
+    @required void Function() Function(BuildContext, Tag) onTap,
+    bool allowNewButton = false,
+  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).tagString;
@@ -94,10 +94,5 @@ class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, 
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).tagsString;
 
   @override
-  Widget cardBuilder(BuildContext context, Tag item) {
-
-    return TagTheme.itemCard(context, item, onTap);
-
-  }
-
+  Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);
 }

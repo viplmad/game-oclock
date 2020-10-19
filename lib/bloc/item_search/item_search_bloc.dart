@@ -11,8 +11,9 @@ import 'item_search.dart';
 
 
 abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchEvent, ItemSearchState> {
-
-  ItemSearchBloc({@required this.iCollectionRepository}) : super(ItemSearchEmpty<T>());
+  ItemSearchBloc({
+    @required this.iCollectionRepository,
+  }) : super(ItemSearchEmpty<T>());
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
@@ -77,5 +78,4 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
   Future<List<T>> getInitialItems();
   Future<List<T>> getSearchItems(String query);
-
 }

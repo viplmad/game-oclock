@@ -25,8 +25,7 @@ const String purc_discountField = 'Discount';
 const String purc_storeField = 'Store';
 
 class PurchaseEntity extends CollectionItemEntity {
-
-  PurchaseEntity({
+  const PurchaseEntity({
     @required int id,
     this.description,
     this.price,
@@ -113,5 +112,4 @@ class PurchaseEntity extends CollectionItemEntity {
         ' }';
 
   }
-
 }

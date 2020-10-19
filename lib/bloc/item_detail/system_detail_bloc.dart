@@ -11,7 +11,6 @@ import 'item_detail.dart';
 
 
 class SystemDetailBloc extends ItemDetailBloc<System> {
-
   SystemDetailBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
@@ -24,5 +23,4 @@ class SystemDetailBloc extends ItemDetailBloc<System> {
     return iCollectionRepository.getSystemWithId(itemId);
 
   }
-
 }

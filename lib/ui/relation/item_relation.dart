@@ -15,7 +15,12 @@ import '../detail/detail.dart';
 
 
 abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
-  ItemRelationList({Key key, @required this.relationName, @required this.relationTypeName, this.trailingBuilder}) : super(key: key);
+  const ItemRelationList({
+    Key key,
+    @required this.relationName,
+    @required this.relationTypeName,
+    this.trailingBuilder,
+  }) : super(key: key);
 
   final String relationName;
   final String relationTypeName;
@@ -218,11 +223,14 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
   }
 
   Widget cardBuilder(BuildContext context, W item);
-
 }
 
 class _HeaderText extends StatelessWidget {
-  const _HeaderText({Key key, this.text, this.trailingWidget}) : super(key: key);
+  const _HeaderText({
+    Key key,
+    this.text,
+    this.trailingWidget,
+  }) : super(key: key);
 
   final String text;
   final Widget trailingWidget;
@@ -242,7 +250,14 @@ class _HeaderText extends StatelessWidget {
 }
 
 class _ResultsList extends StatelessWidget {
-  const _ResultsList({Key key, @required this.headerText, @required this.resultList, this.linkWidget, this.trailingWidget, this.onListSearch}) : super(key: key);
+  const _ResultsList({
+    Key key,
+    @required this.headerText,
+    @required this.resultList,
+    this.linkWidget,
+    this.trailingWidget,
+    this.onListSearch,
+  }) : super(key: key);
 
   final String headerText;
   final Widget resultList;
@@ -289,7 +304,12 @@ class _ResultsList extends StatelessWidget {
 }
 
 class _LinkButton<W extends CollectionItem> extends StatelessWidget {
-  const _LinkButton({Key key, @required this.typeName, @required this.onSearch, @required this.updateAdd}) : super(key: key);
+  const _LinkButton({
+    Key key,
+    @required this.typeName,
+    @required this.onSearch,
+    @required this.updateAdd,
+  }) : super(key: key);
 
   final String typeName;
   final Future<W> Function() onSearch;
@@ -321,7 +341,16 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
 }
 
 class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
-  _ResultsListSingle({@required this.items, this.relationName, this.relationTypeName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete});
+  const _ResultsListSingle({
+    Key key,
+    @required this.items,
+    this.relationName,
+    this.relationTypeName,
+    @required this.itemBuilder,
+    @required this.onSearch,
+    @required this.updateAdd,
+    @required this.updateDelete,
+  }) : super(key: key);
 
   final List<W> items;
   final String relationName;
@@ -362,11 +391,21 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
     );
 
   }
-
 }
 
 class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
-  _ResultsListMany({@required this.items, this.relationName, this.relationTypeName, @required this.itemBuilder, @required this.onSearch, @required this.updateAdd, @required this.updateDelete, this.trailingBuilder, this.onListSearch});
+  const _ResultsListMany({
+    Key key,
+    @required this.items,
+    this.relationName,
+    this.relationTypeName,
+    @required this.itemBuilder,
+    @required this.onSearch,
+    @required this.updateAdd,
+    @required this.updateDelete,
+    this.trailingBuilder,
+    this.onListSearch,
+  }) : super(key: key);
 
   final List<W> items;
   final String relationName;

@@ -10,7 +10,6 @@ import 'item_search.dart';
 
 
 class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
-
   PurchaseSearchBloc({
     @required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
@@ -28,5 +27,4 @@ class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
     return iCollectionRepository.getPurchasesWithDescription(query, super.maxResults).first;
 
   }
-
 }

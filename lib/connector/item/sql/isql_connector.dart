@@ -2,7 +2,6 @@ import 'package:meta/meta.dart';
 
 
 abstract class ISQLConnector {
-
   Future<dynamic> open();
   Future<dynamic> close();
   bool isOpen();
@@ -31,5 +30,4 @@ abstract class ISQLConnector {
   Future<dynamic> deleteTable({@required String tableName, @required int id});
   Future<dynamic> deleteRelation({@required String leftTableName, @required String rightTableName, @required int leftId, @required int rightId});
   //#endregion DELETE
-
 }

@@ -9,7 +9,6 @@ import 'icollection_repository.dart';
 
 
 class RemoteRepository implements ICollectionRepository {
-
   RemoteRepository._(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
     _iSQLConnector = iSQLConnector;
     _iImageConnector = iImageConnector;
@@ -18,7 +17,7 @@ class RemoteRepository implements ICollectionRepository {
   ISQLConnector _iSQLConnector;
   IImageConnector _iImageConnector;
 
-  factory RemoteRepository({ISQLConnector iSQLConnector, IImageConnector iImageConnector}) {
+  factory RemoteRepository(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
     return RemoteRepository._(
       iSQLConnector,
       iImageConnector,
@@ -1617,10 +1616,9 @@ class RemoteRepository implements ICollectionRepository {
     return id.toString() + '-' + imageName;
 
   }
-
 }
 
-Map<GameView, String> allViewToTable = {
+const Map<GameView, String> allViewToTable = {
   GameView.Main : "All-Main",
   GameView.LastCreated : "All-Last Created",
   GameView.Playing : "All-Playing",
@@ -1629,7 +1627,7 @@ Map<GameView, String> allViewToTable = {
   GameView.Review2019 : "All-2019 In Review",
 };
 
-Map<GameView, String> gameViewToTable = {
+const Map<GameView, String> gameViewToTable = {
   GameView.Main : "Game-Main",
   GameView.LastCreated : "Game-Last Created",
   GameView.Playing : "Game-Playing",
@@ -1638,7 +1636,7 @@ Map<GameView, String> gameViewToTable = {
   GameView.Review2019 : "Game-2019 In Review",
 };
 
-Map<GameView, String> romViewToTable = {
+const Map<GameView, String> romViewToTable = {
   GameView.Main : "Rom-Main",
   GameView.LastCreated : "Rom-Last Created",
   GameView.Playing : "Rom-Playing",
@@ -1647,17 +1645,17 @@ Map<GameView, String> romViewToTable = {
   GameView.Review2019 : "Rom-2019 In Review",
 };
 
-Map<DLCView, String> dlcViewToTable = {
+const Map<DLCView, String> dlcViewToTable = {
   DLCView.Main : "DLC-Main",
   DLCView.LastCreated : "DLC-Last Created",
 };
 
-Map<PlatformView, String> platformViewToTable = {
+const Map<PlatformView, String> platformViewToTable = {
   PlatformView.Main : "Platform-Main",
   PlatformView.LastCreated : "Platform-Last Created",
 };
 
-Map<PurchaseView, String> purchaseViewToTable = {
+const Map<PurchaseView, String> purchaseViewToTable = {
   PurchaseView.Main : "Purchase-Main",
   PurchaseView.LastCreated : "Purchase-Last Created",
   PurchaseView.Pending : "Purchase-Pending",
@@ -1665,22 +1663,22 @@ Map<PurchaseView, String> purchaseViewToTable = {
   PurchaseView.Review2019 : "Purchase-2019 In Review",
 };
 
-Map<StoreView, String> storeViewToTable = {
+const Map<StoreView, String> storeViewToTable = {
   StoreView.Main : "Store-Main",
   StoreView.LastCreated : "Store-Last Created",
 };
 
-Map<SystemView, String> systemViewToTable = {
+const Map<SystemView, String> systemViewToTable = {
   SystemView.Main : "System-Main",
   SystemView.LastCreated : "System-Last Created",
 };
 
-Map<TagView, String> tagViewToTable = {
+const Map<TagView, String> tagViewToTable = {
   TagView.Main : "Tag-Main",
   TagView.LastCreated : "Tag-Last Created",
 };
 
-Map<TypeView, String> typeViewToTable = {
+const Map<TypeView, String> typeViewToTable = {
   TypeView.Main : "Type-Main",
   TypeView.LastCreated : "Type-Last Created",
 };

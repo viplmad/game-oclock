@@ -9,7 +9,6 @@ import '../common/item_view.dart';
 
 
 class GameTheme {
-
   static const Color primaryColour = Colors.red;
   static const Color accentColour = Colors.redAccent;
 
@@ -95,5 +94,4 @@ class GameTheme {
     return (item.status?? '') + ' · ' + item.releaseYear.toString();
 
   }
-
 }
