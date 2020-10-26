@@ -18,6 +18,9 @@ class StoreTheme {
     final ThemeData storeTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
       accentColor: accentColour,
+      colorScheme: contextTheme.colorScheme.copyWith(
+        primary: primaryColour,
+      ),
     );
 
     return storeTheme;

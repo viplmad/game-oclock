@@ -25,6 +25,9 @@ class GameTheme {
     final ThemeData gameTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
       accentColor: accentColour,
+      colorScheme: contextTheme.colorScheme.copyWith(
+        primary: primaryColour,
+      ),
     );
 
     return gameTheme;

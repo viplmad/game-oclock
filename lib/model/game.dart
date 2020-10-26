@@ -11,7 +11,7 @@ enum GameView {
   Playing,
   NextUp,
   LastFinished,
-  Review2019,
+  Review,
 }
 
 class Game extends CollectionItem {

@@ -18,6 +18,9 @@ class PurchaseTheme {
     final ThemeData purchaseTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
       accentColor: accentColour,
+      colorScheme: contextTheme.colorScheme.copyWith(
+        primary: primaryColour,
+      ),
     );
 
     return purchaseTheme;

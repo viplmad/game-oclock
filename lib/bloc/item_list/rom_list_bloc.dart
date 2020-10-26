@@ -31,4 +31,13 @@ class RomListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getRomsWithView(gameView);
 
   }
+
+  @override
+  Stream<List<Game>> getReadYearViewStream(UpdateYearView event) {
+
+    GameView gameView = GameView.values[event.viewIndex];
+
+    return iCollectionRepository.getRomsWithYearView(gameView, event.year);
+
+  }
 }

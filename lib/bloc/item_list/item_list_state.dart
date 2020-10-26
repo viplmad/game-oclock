@@ -14,19 +14,21 @@ abstract class ItemListState extends Equatable {
 class ItemListLoading extends ItemListState {}
 
 class ItemListLoaded<T extends CollectionItem> extends ItemListState {
-  const ItemListLoaded(this.items,[ this.viewIndex = 0, this.style = ListStyle.Card]);
+  const ItemListLoaded(this.items, [this.viewIndex = 0, this.year, this.style = ListStyle.Card]);
 
   final List<T> items;
   final int viewIndex;
+  final int year;
   final ListStyle style;
 
   @override
-  List<Object> get props => [items, viewIndex, style];
+  List<Object> get props => [items, viewIndex, year, style];
 
   @override
   String toString() => 'ItemListLoaded { '
       'items: $items, '
       'viewIndex: $viewIndex, '
+      'year: $year, '
       'style: $style'
       ' }';
 }

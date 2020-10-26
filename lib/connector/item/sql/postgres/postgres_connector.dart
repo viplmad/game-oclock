@@ -114,9 +114,9 @@ class PostgresConnector extends ISQLConnector {
 
   //#region READ
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readTable({@required String tableName, List<String> selectFields, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields, int limitResults}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readTable({@required String tableName, List<String> selectFields, List<dynamic> tableArguments, Map<String, dynamic> whereFieldsAndValues, List<String> sortFields, int limitResults}) {
 
-    String sql = _selectAllStatement(tableName, selectFields) + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) + _orderByStatement(sortFields) + _limitStatement(limitResults);
+    String sql = _selectAllStatement(tableName, selectFields, tableArguments) + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) + _orderByStatement(sortFields) + _limitStatement(limitResults);
 
     return _connection.mappedResultsQuery(sql, substitutionValues: whereFieldsAndValues);
 
@@ -250,9 +250,14 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  String _selectAllStatement(String table, [List<String> fieldNames]) {
+  String _selectAllStatement(String table, [List<String> fieldNames, List<dynamic> tableArguments]) {
 
-    return _selectStatement(fieldNames) + " FROM " + _forceDoubleQuotes(table);
+    String tableString = _forceDoubleQuotes(table);
+    if(tableArguments != null) {
+      tableString += '(' + _forceArgumentsSingleQuotes(tableArguments).join(", ") + ')';
+    }
+
+    return _selectStatement(fieldNames) + " FROM " + tableString;
 
   }
 
@@ -335,9 +340,21 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
+  String _forceSingleQuotes(String text) {
+
+    return "\'" + text + "\'";
+
+  }
+
   List<String> _forceFieldsDoubleQuotes(List<String> fields) {
 
     return fields.map( (String field) => _forceDoubleQuotes(field) ).toList(growable: false);
+
+  }
+
+  List<String> _forceArgumentsSingleQuotes(List<dynamic> arguments) {
+
+    return arguments.map( (dynamic field) => _forceSingleQuotes(field.toString()) ).toList(growable: false);
 
   }
 

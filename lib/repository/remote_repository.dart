@@ -306,12 +306,40 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<List<Game>> getAllWithYearView(GameView gameView, int year, [int limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: allViewToTable[gameView],
+      selectFields: gameFields,
+      limitResults: limit,
+      tableArguments: <int>[
+        year,
+      ],
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
   Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]) {
 
     return _iSQLConnector.readTable(
       tableName: gameViewToTable[gameView],
       selectFields: gameFields,
       limitResults: limit,
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
+  Stream<List<Game>> getOwnedWithYearView(GameView gameView, int year, [int limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: gameViewToTable[gameView],
+      selectFields: gameFields,
+      limitResults: limit,
+      tableArguments: <int>[
+        year,
+      ],
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -328,12 +356,26 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<List<Game>> getRomsWithYearView(GameView gameView, int year, [int limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: romViewToTable[gameView],
+      selectFields: gameFields,
+      limitResults: limit,
+      tableArguments: <int>[
+        year,
+      ],
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
   Stream<Game> getGameWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: gameTable,
       selectFields: gameFields,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleGame );
@@ -413,7 +455,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: dlcTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleDLC );
@@ -471,7 +513,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: platformTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSinglePlatform );
@@ -524,12 +566,26 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
+  Stream<List<Purchase>> getPurchasesWithYearView(PurchaseView purchaseView, int year, [int limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: purchaseViewToTable[purchaseView],
+      selectFields: purchaseFields,
+      limitResults: limit,
+      tableArguments: <int>[
+        year,
+      ],
+    ).asStream().map( _dynamicToListPurchase );
+
+  }
+
+  @override
   Stream<Purchase> getPurchaseWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: purchaseTable,
       selectFields: purchaseFields,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSinglePurchase );
@@ -609,7 +665,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: storeTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleStore );
@@ -653,7 +709,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: systemTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleSystem );
@@ -696,7 +752,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: tagTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleTag );
@@ -740,7 +796,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.readTable(
       tableName: typeTable,
-      whereFieldsAndValues: <String, int> {
+      whereFieldsAndValues: <String, int>{
         IdField : id,
       },
     ).asStream().map( _dynamicToSingleType );
@@ -1624,16 +1680,16 @@ const Map<GameView, String> allViewToTable = {
   GameView.Playing : "All-Playing",
   GameView.NextUp : "All-Next Up",
   GameView.LastFinished : "All-Last Finished",
-  GameView.Review2019 : "All-2019 In Review",
+  GameView.Review : "All-Year In Review",
 };
 
 const Map<GameView, String> gameViewToTable = {
-  GameView.Main : "Game-Main",
-  GameView.LastCreated : "Game-Last Created",
-  GameView.Playing : "Game-Playing",
-  GameView.NextUp : "Game-Next Up",
-  GameView.LastFinished : "Game-Last Finished",
-  GameView.Review2019 : "Game-2019 In Review",
+  GameView.Main : "Owned-Main",
+  GameView.LastCreated : "Owned-Last Created",
+  GameView.Playing : "Owned-Playing",
+  GameView.NextUp : "Owned-Next Up",
+  GameView.LastFinished : "Owned-Last Finished",
+  GameView.Review : "Owned-Year In Review",
 };
 
 const Map<GameView, String> romViewToTable = {
@@ -1642,7 +1698,7 @@ const Map<GameView, String> romViewToTable = {
   GameView.Playing : "Rom-Playing",
   GameView.NextUp : "Rom-Next Up",
   GameView.LastFinished : "Rom-Last Finished",
-  GameView.Review2019 : "Rom-2019 In Review",
+  GameView.Review : "Rom-Year In Review",
 };
 
 const Map<DLCView, String> dlcViewToTable = {
@@ -1660,7 +1716,7 @@ const Map<PurchaseView, String> purchaseViewToTable = {
   PurchaseView.LastCreated : "Purchase-Last Created",
   PurchaseView.Pending : "Purchase-Pending",
   PurchaseView.LastPurchased : "Purchase-Last Purchased",
-  PurchaseView.Review2019 : "Purchase-2019 In Review",
+  PurchaseView.Review : "Purchase-Year In Review",
 };
 
 const Map<StoreView, String> storeViewToTable = {

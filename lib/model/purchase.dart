@@ -10,7 +10,7 @@ enum PurchaseView {
   LastCreated,
   Pending,
   LastPurchased,
-  Review2019,
+  Review,
 }
 
 class Purchase extends CollectionItem {

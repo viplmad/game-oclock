@@ -15,6 +15,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart';
 import '../common/tabs_delegate.dart';
+import '../common/year_picker_dialog.dart';
 import '../statistics/statistics.dart';
 import 'list.dart';
 
@@ -55,6 +56,34 @@ abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game
 
   @override
   final Color themeColor = GameTheme.primaryColour;
+
+  @override
+  void Function(int) onSelected(BuildContext context, List<String> views) {
+
+    return (int selectedViewIndex) async {
+
+      if(selectedViewIndex == views.length - 1) {
+        int year = await showDialog<int>(
+          context: context,
+          builder: (BuildContext context) {
+            return Theme(
+              data: GameTheme.themeData(context),
+              child: YearPickerDialog(),
+            );
+          },
+        );
+
+        if(year != null) {
+          BlocProvider.of<K>(context).add(UpdateYearView(selectedViewIndex, year));
+        }
+      } else {
+
+        BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
+
+      }
+    };
+
+  }
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;

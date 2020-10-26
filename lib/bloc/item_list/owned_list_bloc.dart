@@ -31,4 +31,13 @@ class OwnedListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getOwnedWithView(gameView);
 
   }
+
+  @override
+  Stream<List<Game>> getReadYearViewStream(UpdateYearView event) {
+
+    GameView gameView = GameView.values[event.viewIndex];
+
+    return iCollectionRepository.getOwnedWithYearView(gameView, event.year);
+
+  }
 }

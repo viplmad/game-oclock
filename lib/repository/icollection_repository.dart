@@ -53,8 +53,11 @@ abstract class ICollectionRepository {
   Stream<List<Game>> getAllOwned();
   Stream<List<Game>> getAllRoms();
   Stream<List<Game>> getAllWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> getAllWithYearView(GameView gameView, int year, [int limit]);
   Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> getOwnedWithYearView(GameView gameView, int year, [int limit]);
   Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> getRomsWithYearView(GameView gameView, int year, [int limit]);
   Stream<Game> getGameWithId(int id);
   Stream<List<Platform>> getPlatformsFromGame(int id);
   Stream<List<Purchase>> getPurchasesFromGame(int id);
@@ -78,6 +81,7 @@ abstract class ICollectionRepository {
     //Purchase
   Stream<List<Purchase>> getAllPurchases();
   Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]);
+  Stream<List<Purchase>> getPurchasesWithYearView(PurchaseView purchaseView, int year, [int limit]);
   Stream<Purchase> getPurchaseWithId(int id);
   Stream<Store> getStoreFromPurchase(int storeId);
   Stream<List<Game>> getGamesFromPurchase(int id);

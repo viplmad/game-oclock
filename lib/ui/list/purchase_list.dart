@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/list_style.dart';
 
@@ -10,6 +12,7 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';
+import '../common/year_picker_dialog.dart';
 import 'list.dart';
 
 
@@ -20,6 +23,34 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
   @override
   final Color themeColor = PurchaseTheme.primaryColour;
+
+  @override
+  void Function(int) onSelected(BuildContext context, List<String> views) {
+
+    return (int selectedViewIndex) async {
+
+      if(selectedViewIndex == views.length - 1) {
+        int year = await showDialog<int>(
+          context: context,
+          builder: (BuildContext context) {
+            return Theme(
+              data: PurchaseTheme.themeData(context),
+              child: YearPickerDialog(),
+            );
+          },
+        );
+
+        if(year != null) {
+          BlocProvider.of<PurchaseListBloc>(context).add(UpdateYearView(selectedViewIndex, year));
+        }
+      } else {
+
+        BlocProvider.of<PurchaseListBloc>(context).add(UpdateView(selectedViewIndex));
+
+      }
+    };
+
+  }
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;

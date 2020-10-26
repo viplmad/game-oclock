@@ -31,4 +31,13 @@ class AllListBloc extends ItemListBloc<Game> {
     return iCollectionRepository.getAllWithView(gameView);
 
   }
+
+  @override
+  Stream<List<Game>> getReadYearViewStream(UpdateYearView event) {
+
+    GameView gameView = GameView.values[event.viewIndex];
+
+    return iCollectionRepository.getAllWithYearView(gameView, event.year);
+
+  }
 }

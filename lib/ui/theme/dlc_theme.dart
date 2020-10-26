@@ -18,6 +18,9 @@ class DLCTheme {
     final ThemeData dlcTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
       accentColor: accentColour,
+      colorScheme: contextTheme.colorScheme.copyWith(
+        primary: primaryColour,
+      ),
     );
 
     return dlcTheme;

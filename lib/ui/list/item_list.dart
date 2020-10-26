@@ -51,16 +51,13 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
         _viewActionBuilder(
           context,
           views: views(context),
-          onSelect: (int selectedViewIndex) {
-            BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
-          },
         ),
       ],
     );
 
   }
 
-  Widget _viewActionBuilder(BuildContext context, {List<String> views, void Function(int) onSelect}) {
+  Widget _viewActionBuilder(BuildContext context, {@required List<String> views}) {
 
     return PopupMenuButton<int>(
       icon: Icon(Icons.view_carousel),
@@ -75,8 +72,16 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
           );
         }).toList(growable: false);
       },
-      onSelected: onSelect,
+      onSelected: onSelected(context, views),
     );
+
+  }
+
+  void Function(int) onSelected(BuildContext context, List<String> views) {
+
+    return (int selectedViewIndex) {
+      BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
+    };
 
   }
 

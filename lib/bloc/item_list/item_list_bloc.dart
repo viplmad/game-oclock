@@ -47,6 +47,10 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
       yield* _mapUpdateViewToState(event);
 
+    } else if(event is UpdateYearView) {
+
+      yield* _mapUpdateYearViewToState(event);
+
     } else if(event is UpdateSortOrder) {
 
       yield* _mapUpdateSortOrderToState(event);
@@ -97,6 +101,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
     yield ItemListLoaded<T>(
       event.items,
       event.viewIndex,
+      event.year,
       event.style,
     );
 
@@ -114,11 +119,13 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
         items[listItemIndex] = event.item;
 
         final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+        final int year = (state as ItemListLoaded<T>).year;
         final ListStyle style = (state as ItemListLoaded<T>).style;
 
         yield ItemListLoaded<T>(
           items,
           viewIndex,
+          year,
           style,
         );
       }
@@ -142,6 +149,34 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       yield ItemListLoaded<T>(
         items,
         event.viewIndex,
+        null,
+        style,
+      );
+
+    } catch(e) {
+
+      yield ItemListNotLoaded(e.toString());
+
+    }
+
+  }
+
+  Stream<ItemListState> _mapUpdateYearViewToState(UpdateYearView event) async* {
+
+    ListStyle style;
+    if(state is ItemListLoaded<T>) {
+       style = (state as ItemListLoaded<T>).style;
+    }
+
+    yield ItemListLoading();
+
+    try {
+
+      final List<T> items = await getReadYearViewStream(event).first;
+      yield ItemListLoaded<T>(
+        items,
+        event.viewIndex,
+        event.year,
         style,
       );
 
@@ -159,11 +194,13 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList(growable: false);
 
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final int year = (state as ItemListLoaded<T>).year;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       yield ItemListLoaded<T>(
         reversedItems,
         viewIndex,
+        year,
         style,
       );
     }
@@ -178,10 +215,12 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final int year = (state as ItemListLoaded<T>).year;
 
       yield ItemListLoaded<T>(
         items,
         viewIndex,
+        year,
         updatedStyle,
       );
     }
@@ -206,14 +245,16 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
     if(state is ItemListLoaded<T>) {
       List<T> items = (state as ItemListLoaded<T>).items;
-      int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      ListStyle style = (state as ItemListLoaded<T>).style;
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final int year = (state as ItemListLoaded<T>).year;
+      final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = List.from(items)..add(managerState.item);
 
       add(UpdateItemList<T>(
         updatedItems,
         viewIndex,
+        year,
         style,
       ));
     }
@@ -224,8 +265,9 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
     if(state is ItemListLoaded<T>) {
       List<T> items = (state as ItemListLoaded<T>).items;
-      int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      ListStyle style = (state as ItemListLoaded<T>).style;
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final int year = (state as ItemListLoaded<T>).year;
+      final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = items
           .where((T item) => item.id != managerState.item.id)
@@ -234,6 +276,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
       add(UpdateItemList<T>(
         updatedItems,
         viewIndex,
+        year,
         style,
       ));
     }
@@ -250,4 +293,5 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<List<T>> getReadAllStream();
   Stream<List<T>> getReadViewStream(UpdateView event);
+  external Stream<List<T>> getReadYearViewStream(UpdateYearView event);
 }
