@@ -222,7 +222,7 @@ class GamesData extends ItemData<Game> {
 
     return yearlyFieldSum<int>(
       years,
-      (Game item) => item.finishDate?.year,
+      (Game item, int year) => item.finishDate?.year == year,
       0,
       (Game item) => item.rating,
       sumOperation: (int yearSum, int length) => (length > 0)? yearSum ~/ length : 0,
@@ -234,7 +234,7 @@ class GamesData extends ItemData<Game> {
 
     return yearlyFieldSum<int>(
       years,
-      (Game item) => item.finishDate?.year,
+      (Game item, int year) => item.finishDate?.year == year,
       0,
       (Game item) => item.time.inMinutes,
       sumOperation: (int yearSum, int length) => yearSum ~/ 60,
@@ -246,7 +246,7 @@ class GamesData extends ItemData<Game> {
 
     return yearlyItemCount(
       years,
-      (Game item) => item.finishDate?.year,
+      (Game item, int year) => item.finishDate?.year == year,
     );
 
   }
@@ -254,7 +254,7 @@ class GamesData extends ItemData<Game> {
   YearData<int> monthlyHoursSum() {
 
     return monthlyFieldSum<int>(
-      (Game item) => item.finishDate?.month,
+      (Game item, int month) => item.finishDate?.month == month,
       0,
       (Game item) => item.time.inMinutes,
       sumOperation: (int monthSum, int length) => monthSum ~/ 60,

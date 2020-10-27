@@ -52,11 +52,12 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
 
   @override
-  _DLCListBody itemListBodyBuilder({@required List<DLC> items, @required int viewIndex, @required void Function(DLC) onDelete, @required ListStyle style}) {
+  _DLCListBody itemListBodyBuilder({@required List<DLC> items, @required int viewIndex, int viewYear, @required void Function(DLC) onDelete, @required ListStyle style}) {
 
     return _DLCListBody(
       items: items,
       viewIndex: viewIndex,
+      viewYear: viewYear,
       onDelete: onDelete,
       style: style,
     );
@@ -69,12 +70,14 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
     Key key,
     @required List<DLC> items,
     @required int viewIndex,
+    int viewYear,
     @required void Function(DLC) onDelete,
     @required ListStyle style,
   }) : super(
     key: key,
     items: items,
     viewIndex: viewIndex,
+    viewYear: viewYear,
     onDelete: onDelete,
     style: style,
   );

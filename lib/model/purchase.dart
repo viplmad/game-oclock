@@ -172,7 +172,7 @@ class PurchasesData extends ItemData<Purchase> {
 
     return yearlyItemCount(
       years,
-      (Purchase item) => item.date?.year,
+      (Purchase item, int year) => item.date?.year == year,
     );
 
   }
@@ -181,7 +181,7 @@ class PurchasesData extends ItemData<Purchase> {
 
     return yearlyFieldSum<double>(
       years,
-      (Purchase item) => item.date?.year,
+      (Purchase item, int year) => item.date?.year == year,
       0.0,
       (Purchase item) => item.price,
     );
@@ -192,7 +192,7 @@ class PurchasesData extends ItemData<Purchase> {
 
     return yearlyFieldSum<double>(
       years,
-      (Purchase item) => item.date?.year,
+      (Purchase item, int year) => item.date?.year == year,
       0.0,
       (Purchase item) => item.originalPrice,
     );
@@ -202,7 +202,7 @@ class PurchasesData extends ItemData<Purchase> {
   YearData<int> monthlyCount() {
 
     return monthlyItemCount(
-      (Purchase item) => item.date?.month,
+      (Purchase item, int month) => item.date?.month == month,
     );
 
   }
@@ -210,7 +210,7 @@ class PurchasesData extends ItemData<Purchase> {
   YearData<double> monthlyPriceSum() {
 
     return monthlyFieldSum<double>(
-      (Purchase item) => item.date?.month,
+      (Purchase item, int month) => item.date?.month == month,
       0.0,
       (Purchase item) => item.price,
     );
@@ -220,7 +220,7 @@ class PurchasesData extends ItemData<Purchase> {
   YearData<double> monthlyOriginalPriceSum() {
 
     return monthlyFieldSum<double>(
-      (Purchase item) => item.date?.month,
+      (Purchase item, int month) => item.date?.month == month,
       0.0,
       (Purchase item) => item.originalPrice,
     );
@@ -230,7 +230,7 @@ class PurchasesData extends ItemData<Purchase> {
   YearData<double> monthlySavedSum() {
 
     return monthlyFieldSum<double>(
-      (Purchase item) => item.date?.month,
+      (Purchase item, int month) => item.date?.month == month,
       0.0,
       (Purchase item) => item.originalPrice - item.price,
       sumOperation: (double monthSum, int length) => (length > 0)? monthSum / length : 0,

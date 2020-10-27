@@ -232,11 +232,12 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
   @override
-  _GameListBody<K> itemListBodyBuilder({@required List<Game> items, @required int viewIndex, @required void Function(Game) onDelete, @required ListStyle style}) {
+  _GameListBody<K> itemListBodyBuilder({@required List<Game> items, @required int viewIndex, int viewYear, @required void Function(Game) onDelete, @required ListStyle style}) {
 
     return _GameListBody<K>(
       items: items,
       viewIndex: viewIndex,
+      viewYear: viewYear,
       onDelete: onDelete,
       style: style,
       tabTitle: tabTitle,
@@ -250,6 +251,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
     Key key,
     @required List<Game> items,
     @required int viewIndex,
+    int viewYear,
     @required void Function(Game) onDelete,
     @required ListStyle style,
     @required this.tabTitle,
@@ -257,6 +259,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
     key: key,
     items: items,
     viewIndex: viewIndex,
+    viewYear: viewYear,
     onDelete: onDelete,
     style: style,
   );
@@ -292,7 +295,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   String itemTitle(Game item) => GameTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex);
+  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

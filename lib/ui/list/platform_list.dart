@@ -52,11 +52,12 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 
   @override
-  _PlatformListBody itemListBodyBuilder({@required List<Platform> items, @required int viewIndex, @required void Function(Platform) onDelete, @required ListStyle style}) {
+  _PlatformListBody itemListBodyBuilder({@required List<Platform> items, @required int viewIndex, int viewYear, @required void Function(Platform) onDelete, @required ListStyle style}) {
 
     return _PlatformListBody(
       items: items,
       viewIndex: viewIndex,
+      viewYear: viewYear,
       onDelete: onDelete,
       style: style,
     );
@@ -69,12 +70,14 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
     Key key,
     @required List<Platform> items,
     @required int viewIndex,
+    int viewYear,
     @required void Function(Platform) onDelete,
     @required ListStyle style,
   }) : super(
     key: key,
     items: items,
     viewIndex: viewIndex,
+    viewYear: viewYear,
     onDelete: onDelete,
     style: style,
   );

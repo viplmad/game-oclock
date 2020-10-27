@@ -104,7 +104,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      id: dlcId,
+      whereFieldsAndValues: {
+        IdField : dlcId,
+      },
       fieldName: dlc_baseGameField,
       newValue: gameId,
     );
@@ -220,7 +222,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      id: purchaseId,
+      whereFieldsAndValues: {
+        IdField : purchaseId,
+      },
       fieldName: purc_storeField,
       newValue: storeId,
     );
@@ -824,7 +828,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: gameTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
       returningFields: gameFields,
@@ -837,7 +843,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleDLC ).first;
@@ -849,7 +857,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: platformTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSinglePlatform ).first;
@@ -861,7 +871,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
       returningFields: purchaseFields,
@@ -874,7 +886,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: storeTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleStore ).first;
@@ -886,7 +900,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: systemTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleSystem ).first;
@@ -898,7 +914,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: tagTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleTag ).first;
@@ -910,7 +928,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: typeTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
       fieldName: fieldName,
       newValue: newValue,
     ).asStream().map( _dynamicToSingleType ).first;
@@ -925,7 +945,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: gameTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -959,7 +981,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      id: dlcId,
+      whereFieldsAndValues: {
+        IdField : dlcId,
+      },
       fieldName: dlc_baseGameField,
       newValue: null,
     );
@@ -985,7 +1009,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: dlcTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1009,7 +1035,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: platformTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1033,7 +1061,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: purchaseTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1057,7 +1087,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: storeTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1067,7 +1099,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      id: purchaseId,
+      whereFieldsAndValues: {
+        IdField : purchaseId,
+      },
       fieldName: purc_storeField,
       newValue: null,
     );
@@ -1081,7 +1115,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: systemTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1093,7 +1129,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: tagTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }
@@ -1105,7 +1143,9 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: typeTable,
-      id: id,
+      whereFieldsAndValues: {
+        IdField : id,
+      },
     );
 
   }

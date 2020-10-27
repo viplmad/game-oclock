@@ -23,11 +23,11 @@ abstract class ISQLConnector {
   //#endregion READ
 
   //#region UPDATE
-  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required int id, @required String fieldName, @required T newValue, List<String> returningFields});
+  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues, @required String fieldName, @required T newValue, List<String> returningFields});
   //#endregion UPDATE
 
   //#region DELETE
-  Future<dynamic> deleteTable({@required String tableName, @required int id});
+  Future<dynamic> deleteTable({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues});
   Future<dynamic> deleteRelation({@required String leftTableName, @required String rightTableName, @required int leftId, @required int rightId});
   //#endregion DELETE
 }

@@ -566,6 +566,15 @@ class _ItemGenericField<K> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    void Function() onTapWrapped = editable?
+      () {
+        onTap().then( (K newValue) {
+          if (newValue != null) {
+            update(newValue);
+          }
+        });
+      } : null;
+
     return extended?
       InkWell(
         child: Column(
@@ -581,14 +590,7 @@ class _ItemGenericField<K> extends StatelessWidget {
             ),
           ],
         ),
-        onTap: editable?
-          () {
-            onTap().then( (K newValue) {
-              if (newValue != null) {
-                update(newValue);
-              }
-            });
-          } : null,
+        onTap: onTapWrapped,
         onLongPress: onLongPress,
       )
       :
@@ -596,14 +598,7 @@ class _ItemGenericField<K> extends StatelessWidget {
         child: ListTile(
           title: Text(fieldName),
           trailing: Text(shownValue?? ''),
-          onTap: editable?
-            () {
-              onTap().then( (K newValue) {
-                if (newValue != null) {
-                  update(newValue);
-                }
-              });
-            } : null,
+          onTap: onTapWrapped,
           onLongPress: onLongPress,
         ),
       );
@@ -646,8 +641,6 @@ class _ItemTextField extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
 
-            MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
             return AlertDialog(
               title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
               content: TextField(
@@ -661,13 +654,13 @@ class _ItemTextField extends StatelessWidget {
               ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text(localizations.cancelButtonLabel),
+                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<String>(context);
                   },
                 ),
                 FlatButton(
-                  child: Text(localizations.okButtonLabel),
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<String>(context, fieldController.text.trim());
                   },
@@ -708,15 +701,13 @@ class _ItemIntField extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
 
-            MaterialLocalizations localizations = MaterialLocalizations.of(context);
-
             return NumberPickerDialog.integer(
               title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
               initialIntegerValue: value,
               minValue: 1,
               maxValue: 10,
-              cancelWidget: Text(localizations.cancelButtonLabel),
-              confirmWidget: Text(localizations.okButtonLabel),
+              cancelWidget: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+              confirmWidget: Text(MaterialLocalizations.of(context).okButtonLabel),
             );
           }
         );

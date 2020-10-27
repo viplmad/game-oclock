@@ -191,6 +191,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
             return itemListBodyBuilder(
               items: state.items,
               viewIndex: state.viewIndex,
+              viewYear: state.year,
               onDelete: (T item) {
                 BlocProvider.of<S>(context).add(DeleteItem<T>(item));
               },
@@ -216,7 +217,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, @required void Function(T) onDelete, @required ListStyle style});
+  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, int viewYear, @required void Function(T) onDelete, @required ListStyle style});
 }
 
 abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
@@ -224,12 +225,14 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
     Key key,
     @required this.items,
     @required this.viewIndex,
+    this.viewYear,
     @required this.onDelete,
     @required this.style,
   }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
+  final int viewYear;
   final void Function(T) onDelete;
   final ListStyle style;
 

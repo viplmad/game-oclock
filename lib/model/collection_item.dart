@@ -50,14 +50,14 @@ abstract class ItemData<T extends CollectionItem> {
   final List<T> items;
   int get length => items.length;
 
-  List<int> yearlyItemCount(List<int> years, int Function(T) yearExtractor) {
+  List<int> yearlyItemCount(List<int> years, bool Function(T, int) yearComparator) {
     List<int> values = List<int>(years.length);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
       int year = years.elementAt(yearsIndex);
 
-      int yearCount = items.where((T item) => yearExtractor(item) == year).length;
+      int yearCount = items.where((T item) => yearComparator(item, year)).length;
 
       values[index++] = yearCount;
     }
@@ -65,14 +65,14 @@ abstract class ItemData<T extends CollectionItem> {
     return values;
   }
 
-  List<N> yearlyFieldSum<N extends num>(List<int> years, int Function(T) yearExtractor, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
+  List<N> yearlyFieldSum<N extends num>(List<int> years, bool Function(T, int) yearComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
     List<N> values = List<N>(years.length);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
       int year = years.elementAt(yearsIndex);
 
-      List<T> yearItems = items.where((T item) => yearExtractor(item) == year).toList(growable: false);
+      List<T> yearItems = items.where((T item) => yearComparator(item, year)).toList(growable: false);
       N yearSum = yearItems.fold<N>(foldInitialValue, (N previousValue, T item) => previousValue + fieldExtractor(item));
       if(sumOperation != null) {
         yearSum = sumOperation(yearSum, yearItems.length);
@@ -84,12 +84,12 @@ abstract class ItemData<T extends CollectionItem> {
     return values;
   }
 
-  YearData<int> monthlyItemCount(int Function(T) monthExtractor) {
+  YearData<int> monthlyItemCount(bool Function(T, int) monthComparator) {
     YearData<int> yearData = YearData<int>();
 
     for(int month = 1; month <= 12; month++) {
 
-      int monthCount = items.where((T item) => monthExtractor(item) == month).length;
+      int monthCount = items.where((T item) => monthComparator(item, month)).length;
 
       yearData.addData(monthCount);
     }
@@ -97,12 +97,12 @@ abstract class ItemData<T extends CollectionItem> {
     return yearData;
   }
 
-  YearData<N> monthlyFieldSum<N extends num>(int Function(T) monthExtractor, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
+  YearData<N> monthlyFieldSum<N extends num>(bool Function(T, int) monthComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
     YearData<N> yearData = YearData<N>();
 
     for(int month = 1; month <= 12; month++) {
 
-      List<T> monthItems = items.where((T item) => monthExtractor(item) == month).toList(growable: false);
+      List<T> monthItems = items.where((T item) => monthComparator(item, month)).toList(growable: false);
       N monthSum = monthItems.fold<N>(foldInitialValue, (N previousValue, T item) => previousValue + fieldExtractor(item));
       if(sumOperation != null) {
         monthSum = sumOperation(monthSum, monthItems.length);
