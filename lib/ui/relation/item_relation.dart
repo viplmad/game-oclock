@@ -142,7 +142,20 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Divider(),
-              LinearProgressIndicator(),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: _HeaderText(
+                        text: relationName,
+                      ),
+                    ),
+                    LinearProgressIndicator(),
+                  ],
+                ),
+              ),
             ],
           );
 
@@ -281,11 +294,11 @@ class _ResultsList extends StatelessWidget {
                 child: _HeaderText(
                   text: headerText,
                   trailingWidget: onListSearch != null?
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    tooltip: GameCollectionLocalisations.of(context).searchInListString,
-                    onPressed: onListSearch,
-                  ) : null,
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      tooltip: GameCollectionLocalisations.of(context).searchInListString,
+                      onPressed: onListSearch,
+                    ) : null,
                 ),
               ),
               resultList,

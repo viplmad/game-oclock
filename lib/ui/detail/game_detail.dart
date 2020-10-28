@@ -18,7 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../relation/relation.dart';
 import '../theme/theme.dart';
 import 'item_detail.dart';
-
+import 'game_finish_date_list.dart';
 
 class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
@@ -71,6 +71,11 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
+    FinishGameRelationManagerBloc _finishRelationManagerBloc = FinishGameRelationManagerBloc(
+      itemId: item.id,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+    );
+
     return [
       blocProviderRelationBuilder<Platform>(_platformRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
@@ -95,6 +100,21 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       BlocProvider<GameRelationManagerBloc<Tag>>(
         create: (BuildContext context) {
           return _tagRelationManagerBloc;
+        },
+      ),
+
+      BlocProvider<FinishDateRelationBloc>(
+        create: (BuildContext context) {
+          return FinishDateRelationBloc(
+            itemId: item.id,
+            iCollectionRepository: ICollectionRepository.iCollectionRepository,
+            managerBloc: _finishRelationManagerBloc,
+          )..add(LoadRelation());
+        },
+      ),
+      BlocProvider<FinishGameRelationManagerBloc>(
+        create: (BuildContext context) {
+          return _finishRelationManagerBloc;
         },
       ),
     ];
@@ -199,11 +219,9 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         field: game_screenshotFolderField,
         value: game.screenshotFolder,
       ),
-      itemDateTimeField(
-        context,
-        fieldName: GameCollectionLocalisations.of(context).finishDateFieldString,
-        field: game_finishDateField,
-        value: game.finishDate,
+      GameFinishDateList(
+        fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
+        relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
       ),
       itemBoolField(
         context,

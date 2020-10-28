@@ -34,6 +34,15 @@ const String game_screenshotFolderField = 'Screenshot Folder';
 const String game_finishDateField = 'Finish Date';
 const String game_backupField = 'Backup';
 
+const String finishView = 'FinishGame';
+const String finishTable = 'Finish';
+const List<String> finishFields = [
+  finish_gameField,
+  finish_dateField,
+];
+const String finish_gameField = 'Game_ID';
+const String finish_dateField = 'Date';
+
 const List<String> statuses = [
   "Low Priority",
   "Next Up",

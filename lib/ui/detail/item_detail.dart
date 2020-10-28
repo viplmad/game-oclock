@@ -345,7 +345,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ),
           ListTile(
             title: Text(GameCollectionLocalisations.of(context).deleteImageString),
-            leading: Icon(Icons.delete_outline),
+            leading: Icon(Icons.delete),
             enabled: withImage,
             onTap: () {
               String imageName = imageFilename.split('.').first;

@@ -56,6 +56,7 @@ abstract class GameCollectionLocalisations {
   String get nameFieldString;
   String get releaseYearFieldString;
   String get finishDateFieldString;
+  String get finishDatesFieldString;
 
   String get mainViewString;
   String get lastCreatedViewString;
@@ -194,6 +195,7 @@ abstract class GameCollectionLocalisations {
   String hoursString(int hours);
 
   String editString(String fieldString);
+  String addString(String fieldString);
   String get fieldUpdatedString;
   String get unableToUpdateFieldString;
   String get uploadImageString;

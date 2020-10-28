@@ -99,6 +99,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String releaseYearFieldString = 'Release Year';
   @override
   final String finishDateFieldString = 'Finish Date';
+  @override
+  final String finishDatesFieldString = 'Finish Dates';
 
   @override
   final String mainViewString = 'Main';
@@ -375,6 +377,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String editString(String fieldString) {
     return 'Edit $fieldString';
+  }
+  @override
+  String addString(String fieldString) {
+    return 'Add $fieldString';
   }
   @override
   final String fieldUpdatedString = 'Field updated';
