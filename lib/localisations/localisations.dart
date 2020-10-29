@@ -57,6 +57,7 @@ abstract class GameCollectionLocalisations {
   String get releaseYearFieldString;
   String get finishDateFieldString;
   String get finishDatesFieldString;
+  String get emptyFinishDatesString;
 
   String get mainViewString;
   String get lastCreatedViewString;

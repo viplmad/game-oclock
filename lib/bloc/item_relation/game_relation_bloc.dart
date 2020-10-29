@@ -36,11 +36,11 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
   }
 }
 
-class FinishDateRelationBloc extends RelationBloc<Game, DateTime> {
-  FinishDateRelationBloc({
+class GameFinishDateRelationBloc extends RelationBloc<Game, DateTime> {
+  GameFinishDateRelationBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
-    @required FinishGameRelationManagerBloc managerBloc,
+    @required GameFinishDateRelationManagerBloc managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override

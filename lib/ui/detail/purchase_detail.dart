@@ -125,6 +125,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   }
 }
 
+// ignore: must_be_immutable
 class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   _PurchaseDetailBody({
     Key key,

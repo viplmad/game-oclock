@@ -36,6 +36,10 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
       yield* _mapLoadToState(event);
 
+    } else if(event is ReloadItem) {
+
+      yield* _mapReloadToState(event);
+
     } else if(event is UpdateItem<T>) {
 
       yield* _mapUpdateToState(event);
@@ -63,6 +67,18 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   Stream<ItemDetailState> _mapLoadToState(LoadItem event) async* {
 
     yield ItemLoading();
+
+    yield* _mapAnyLoadToState();
+
+  }
+
+  Stream<ItemDetailState> _mapReloadToState(ReloadItem event) async* {
+
+    yield* _mapAnyLoadToState();
+
+  }
+
+  Stream<ItemDetailState> _mapAnyLoadToState() async* {
 
     try {
 

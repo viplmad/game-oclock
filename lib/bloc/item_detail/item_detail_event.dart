@@ -12,6 +12,8 @@ abstract class ItemDetailEvent extends Equatable {
 
 class LoadItem extends ItemDetailEvent {}
 
+class ReloadItem extends ItemDetailEvent {}
+
 class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
   const UpdateItem(this.item);
 

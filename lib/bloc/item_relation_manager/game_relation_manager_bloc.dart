@@ -54,8 +54,8 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
   }
 }
 
-class FinishGameRelationManagerBloc extends RelationManagerBloc<Game, DateTime> {
-  FinishGameRelationManagerBloc({
+class GameFinishDateRelationManagerBloc extends RelationManagerBloc<Game, DateTime> {
+  GameFinishDateRelationManagerBloc({
     @required int itemId,
     @required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
@@ -63,7 +63,7 @@ class FinishGameRelationManagerBloc extends RelationManagerBloc<Game, DateTime> 
   @override
   Future<dynamic> addRelationFuture(AddRelation<DateTime> event) {
 
-    return iCollectionRepository.relateFinishDate(itemId, event.otherItem);
+    return iCollectionRepository.relateGameFinishDate(itemId, event.otherItem);
 
   }
 

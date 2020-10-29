@@ -18,7 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../relation/relation.dart';
 import '../theme/theme.dart';
 import 'item_detail.dart';
-import 'game_finish_date_list.dart';
+import 'finish_date_list.dart';
 
 class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
@@ -71,7 +71,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
-    FinishGameRelationManagerBloc _finishRelationManagerBloc = FinishGameRelationManagerBloc(
+    GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
@@ -103,16 +103,16 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
         },
       ),
 
-      BlocProvider<FinishDateRelationBloc>(
+      BlocProvider<GameFinishDateRelationBloc>(
         create: (BuildContext context) {
-          return FinishDateRelationBloc(
+          return GameFinishDateRelationBloc(
             itemId: item.id,
             iCollectionRepository: ICollectionRepository.iCollectionRepository,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
       ),
-      BlocProvider<FinishGameRelationManagerBloc>(
+      BlocProvider<GameFinishDateRelationManagerBloc>(
         create: (BuildContext context) {
           return _finishRelationManagerBloc;
         },
@@ -145,6 +145,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   }
 }
 
+// ignore: must_be_immutable
 class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key key,
@@ -221,7 +222,11 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ),
       GameFinishDateList(
         fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
+        value: game.finishDate,
         relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
+        onUpdate: () {
+          BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
+        },
       ),
       itemBoolField(
         context,
@@ -256,4 +261,15 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
     ];
 
   }
+}
+
+// ignore: must_be_immutable
+class GameFinishDateList extends FinishDateList<Game, GameFinishDateRelationBloc, GameFinishDateRelationManagerBloc> {
+  GameFinishDateList({
+    Key key,
+    @required String fieldName,
+    @required DateTime value,
+    @required String relationTypeName,
+    @required void Function() onUpdate,
+  }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
 }

@@ -73,6 +73,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
   ItemDetailBody<T, K, S> detailBodyBuilder();
 }
 
+// ignore: must_be_immutable
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   ItemDetailBody({
     Key key,

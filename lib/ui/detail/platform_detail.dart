@@ -103,6 +103,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   }
 }
 
+// ignore: must_be_immutable
 class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key key,

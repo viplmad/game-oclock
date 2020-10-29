@@ -92,6 +92,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }
 }
 
+// ignore: must_be_immutable
 class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key key,

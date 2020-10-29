@@ -31,3 +31,18 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
   }
 }
+
+class DLCFinishDateRelationBloc extends RelationBloc<DLC, DateTime> {
+  DLCFinishDateRelationBloc({
+    @required int itemId,
+    @required ICollectionRepository iCollectionRepository,
+    @required DLCFinishDateRelationManagerBloc managerBloc,
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+
+  @override
+  Stream<List<DateTime>> getRelationStream() {
+
+    return iCollectionRepository.getFinishDatesFromDLC(itemId);
+
+  }
+}

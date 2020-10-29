@@ -45,3 +45,24 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
   }
 }
+
+class DLCFinishDateRelationManagerBloc extends RelationManagerBloc<DLC, DateTime> {
+  DLCFinishDateRelationManagerBloc({
+    @required int itemId,
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+
+  @override
+  Future<dynamic> addRelationFuture(AddRelation<DateTime> event) {
+
+    return iCollectionRepository.relateDLCFinishDate(itemId, event.otherItem);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteRelation<DateTime> event) {
+
+    return iCollectionRepository.deleteDLCFinishDate(itemId, event.otherItem);
+
+  }
+}

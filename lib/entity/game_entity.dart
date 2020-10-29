@@ -4,6 +4,7 @@ import 'entity.dart';
 
 
 const String gameTable = "Game";
+const String gameTableRead = "_Game";
 
 const List<String> gameFields = [
   IdField,
@@ -34,13 +35,13 @@ const String game_screenshotFolderField = 'Screenshot Folder';
 const String game_finishDateField = 'Finish Date';
 const String game_backupField = 'Backup';
 
-const String finishView = 'FinishGame';
-const String finishTable = 'Finish';
-const List<String> finishFields = [
-  finish_gameField,
+const String gameFinishView = 'Game-Finish';
+const String gameFinishTable = 'GameFinish';
+const List<String> gameFinishFields = [
+  gameFinish_gameField,
   finish_dateField,
 ];
-const String finish_gameField = 'Game_ID';
+const String gameFinish_gameField = 'Game_ID';
 const String finish_dateField = 'Date';
 
 const List<String> statuses = [

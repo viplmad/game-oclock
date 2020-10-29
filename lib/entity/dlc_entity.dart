@@ -4,6 +4,7 @@ import 'entity.dart';
 
 
 const String dlcTable = "DLC";
+const String dlcTableRead = "_DLC";
 
 const List<String> dlcFields = [
   IdField,
@@ -20,6 +21,14 @@ const String dlc_coverField = 'Cover';
 const String dlc_finishDateField = 'Finish Date';
 
 const String dlc_baseGameField = 'Base Game';
+
+const String dlcFinishView = 'DLC-Finish';
+const String dlcFinishTable = 'DLCFinish';
+const List<String> dlcFinishFields = [
+  dlcFinish_dlcField,
+  finish_dateField,
+];
+const String dlcFinish_dlcField = 'DLC_ID';
 
 class DLCEntity extends CollectionItemEntity {
   const DLCEntity({

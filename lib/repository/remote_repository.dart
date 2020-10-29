@@ -126,12 +126,12 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<dynamic> relateFinishDate(int gameId, DateTime date) {
+  Future<dynamic> relateGameFinishDate(int gameId, DateTime date) {
 
     return _iSQLConnector.insertRecord(
-      tableName: finishTable,
+      tableName: gameFinishTable,
       fieldAndValues: <String, dynamic> {
-        finish_gameField : gameId,
+        gameFinish_gameField : gameId,
         finish_dateField : date,
       },
     );
@@ -160,6 +160,19 @@ class RemoteRepository implements ICollectionRepository {
       rightTableName: purchaseTable,
       leftTableId: dlcId,
       rightTableId: purchaseId,
+    );
+
+  }
+
+  @override
+  Future<dynamic> relateDLCFinishDate(int dlcId, DateTime date) {
+
+    return _iSQLConnector.insertRecord(
+      tableName: dlcFinishTable,
+      fieldAndValues: <String, dynamic> {
+        dlcFinish_dlcField : dlcId,
+        finish_dateField : date,
+      },
     );
 
   }
@@ -390,7 +403,7 @@ class RemoteRepository implements ICollectionRepository {
   Stream<Game> getGameWithId(int id) {
 
     return _iSQLConnector.readTable(
-      tableName: gameTable,
+      tableName: gameTableRead,
       selectFields: gameFields,
       whereFieldsAndValues: <String, int>{
         IdField : id,
@@ -452,12 +465,12 @@ class RemoteRepository implements ICollectionRepository {
   Stream<List<DateTime>> getFinishDatesFromGame(int id) {
 
     return _iSQLConnector.readTable(
-      tableName: finishView,
-      selectFields: finishFields,
+      tableName: gameFinishView,
+      selectFields: gameFinishFields,
       whereFieldsAndValues: <String, dynamic>{
-        finish_gameField : id,
+        gameFinish_gameField : id,
       },
-    ).asStream().map( _dynamicToListDateTime );
+    ).asStream().map( (List<Map<String, Map<String, dynamic>>> results) => _dynamicToListDateTime(results, gameFinishTable) );
 
   }
   //#endregion Game
@@ -484,7 +497,7 @@ class RemoteRepository implements ICollectionRepository {
   Stream<DLC> getDLCWithId(int id) {
 
     return _iSQLConnector.readTable(
-      tableName: dlcTable,
+      tableName: dlcTableRead,
       whereFieldsAndValues: <String, int>{
         IdField : id,
       },
@@ -516,6 +529,19 @@ class RemoteRepository implements ICollectionRepository {
       relationId: id,
       selectFields: purchaseFields,
     ).asStream().map( _dynamicToListPurchase );
+
+  }
+
+  @override
+  Stream<List<DateTime>> getFinishDatesFromDLC(int id) {
+
+    return _iSQLConnector.readTable(
+      tableName: dlcFinishView,
+      selectFields: dlcFinishFields,
+      whereFieldsAndValues: <String, dynamic>{
+        dlcFinish_dlcField : id,
+      },
+    ).asStream().map( (List<Map<String, Map<String, dynamic>>> results) => _dynamicToListDateTime(results, dlcFinishTable) );
 
   }
   //#endregion DLC
@@ -1032,9 +1058,9 @@ class RemoteRepository implements ICollectionRepository {
   Future<dynamic> deleteGameFinishDate(int gameId, DateTime date) {
 
     return _iSQLConnector.deleteTable(
-      tableName: finishTable,
+      tableName: gameFinishTable,
       whereFieldsAndValues: {
-        finish_gameField : gameId,
+        gameFinish_gameField : gameId,
         finish_dateField : date,
       },
     );
@@ -1063,6 +1089,19 @@ class RemoteRepository implements ICollectionRepository {
       rightTableName: purchaseTable,
       leftId: dlcId,
       rightId: purchaseId,
+    );
+
+  }
+
+  @override
+  Future<dynamic> deleteDLCFinishDate(int dlcId, DateTime date) {
+
+    return _iSQLConnector.deleteTable(
+      tableName: dlcFinishTable,
+      whereFieldsAndValues: {
+        dlcFinish_dlcField : dlcId,
+        finish_dateField : date,
+      },
     );
 
   }
@@ -1593,11 +1632,11 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  List<DateTime> _dynamicToListDateTime(List<Map<String, Map<String, dynamic>>> results) {
+  List<DateTime> _dynamicToListDateTime(List<Map<String, Map<String, dynamic>>> results, String primaryTableName) {
     List<DateTime> datesList = [];
 
     results.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      DateTime date = CollectionItemEntity.combineMaps(manyMap, finishTable)[finish_dateField];
+      DateTime date = CollectionItemEntity.combineMaps(manyMap, primaryTableName)[finish_dateField];
 
       datesList.add(date);
     });

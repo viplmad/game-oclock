@@ -18,6 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../relation/relation.dart';
 import '../theme/theme.dart';
 import 'item_detail.dart';
+import 'finish_date_list.dart';
 
 
 class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
@@ -61,6 +62,11 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
+    DLCFinishDateRelationManagerBloc _finishRelationManagerBloc = DLCFinishDateRelationManagerBloc(
+      itemId: item.id,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+    );
+
     return [
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
@@ -73,6 +79,21 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
       BlocProvider<DLCRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
           return _purchaseRelationManagerBloc;
+        },
+      ),
+
+      BlocProvider<DLCFinishDateRelationBloc>(
+        create: (BuildContext context) {
+          return DLCFinishDateRelationBloc(
+            itemId: item.id,
+            iCollectionRepository: ICollectionRepository.iCollectionRepository,
+            managerBloc: _finishRelationManagerBloc,
+          )..add(LoadRelation());
+        },
+      ),
+      BlocProvider<DLCFinishDateRelationManagerBloc>(
+        create: (BuildContext context) {
+          return _finishRelationManagerBloc;
         },
       ),
     ];
@@ -103,6 +124,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   }
 }
 
+// ignore: must_be_immutable
 class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key key,
@@ -128,11 +150,13 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
         field: dlc_releaseYearField,
         value: dlc.releaseYear,
       ),
-      itemDateTimeField(
-        context,
-        fieldName: GameCollectionLocalisations.of(context).finishDateFieldString,
-        field: dlc_finishDateField,
+      DLCFinishDateList(
+        fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
         value: dlc.finishDate,
+        relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
+        onUpdate: () {
+          BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
+        },
       ),
     ];
 
@@ -153,4 +177,15 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
     ];
 
   }
+}
+
+// ignore: must_be_immutable
+class DLCFinishDateList extends FinishDateList<DLC, DLCFinishDateRelationBloc, DLCFinishDateRelationManagerBloc> {
+  DLCFinishDateList({
+    Key key,
+    @required String fieldName,
+    @required DateTime value,
+    @required String relationTypeName,
+    @required void Function() onUpdate,
+  }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
 }

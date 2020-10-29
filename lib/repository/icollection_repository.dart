@@ -20,11 +20,13 @@ abstract class ICollectionRepository {
   Future<dynamic> relateGameDLC(int gameId, int dlcId);
   Future<dynamic> relateGameTag(int gameId, int tagId);
 
-  Future<dynamic> relateFinishDate(int gameId, DateTime date);
+  Future<dynamic> relateGameFinishDate(int gameId, DateTime date);
 
     //DLC
   Future<DLC> createDLC(String name);
   Future<dynamic> relateDLCPurchase(int dlcId, int purchaseId);
+
+  Future<dynamic> relateDLCFinishDate(int dlcId, DateTime date);
 
     //Platform
   Future<Platform> createPlatform(String name);
@@ -74,6 +76,8 @@ abstract class ICollectionRepository {
   Stream<DLC> getDLCWithId(int id);
   Stream<Game> getBaseGameFromDLC(int id);
   Stream<List<Purchase>> getPurchasesFromDLC(int id);
+
+  Stream<List<DateTime>> getFinishDatesFromDLC(int id);
 
     //Platform
   Stream<List<Platform>> getAllPlatforms();
@@ -158,6 +162,8 @@ abstract class ICollectionRepository {
     //DLC
   Future<dynamic> deleteDLC(int id);
   Future<dynamic> deleteDLCPurchase(int dlcId, int purchaseId);
+
+  Future<dynamic> deleteDLCFinishDate(int dlcId, DateTime date);
 
     //Platform
   Future<dynamic> deletePlatform(int id);
