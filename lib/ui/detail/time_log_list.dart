@@ -192,7 +192,8 @@ abstract class TimeLogList<T extends CollectionItem, K extends RelationBloc<T, T
                                     builder: (BuildContext context) {
 
                                       return _DurationPickerDialog(
-                                        initialDuration: value,
+                                        fieldName: GameCollectionLocalisations.of(context).timeString,
+                                        initialDuration: Duration.zero,
                                       );
 
                                     },
@@ -250,9 +251,11 @@ abstract class TimeLogList<T extends CollectionItem, K extends RelationBloc<T, T
 class _DurationPickerDialog extends StatefulWidget {
   const _DurationPickerDialog({
     Key key,
+    @required this.fieldName,
     @required this.initialDuration,
   }) : super(key: key);
 
+  final String fieldName;
   final Duration initialDuration;
 
   @override
@@ -274,6 +277,7 @@ class _DurationPickerDialogState extends State<_DurationPickerDialog> {
   Widget build(BuildContext context) {
 
     return AlertDialog(
+      title: Text(widget.fieldName),
       content: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -102,6 +102,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String finishDatesFieldString = 'Finish Dates';
   @override
+  final String timeString = 'Time';
+  @override
   String get emptyFinishDatesString => 'No $finishDatesFieldString yet';
   @override
   String get emptyTimeLogsString => 'No $timeLogsFieldString yet';
