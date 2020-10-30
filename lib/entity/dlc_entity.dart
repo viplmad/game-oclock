@@ -22,13 +22,14 @@ const String dlc_finishDateField = 'Finish Date';
 
 const String dlc_baseGameField = 'Base Game';
 
-const String dlcFinishView = 'DLC-Finish';
 const String dlcFinishTable = 'DLCFinish';
+const String dlcFinishTableRead = 'DLC-Finish';
 const List<String> dlcFinishFields = [
   dlcFinish_dlcField,
-  finish_dateField,
+  dlcFinish_dateField,
 ];
 const String dlcFinish_dlcField = 'DLC_ID';
+const String dlcFinish_dateField = 'Date';
 
 class DLCEntity extends CollectionItemEntity {
   const DLCEntity({

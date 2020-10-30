@@ -21,6 +21,7 @@ abstract class ICollectionRepository {
   Future<dynamic> relateGameTag(int gameId, int tagId);
 
   Future<dynamic> relateGameFinishDate(int gameId, DateTime date);
+  Future<dynamic> relateGameTimeLog(int gameId, DateTime dateTime, Duration duration);
 
     //DLC
   Future<DLC> createDLC(String name);
@@ -69,6 +70,7 @@ abstract class ICollectionRepository {
   Stream<List<Tag>> getTagsFromGame(int id);
 
   Stream<List<DateTime>> getFinishDatesFromGame(int id);
+  Stream<List<TimeLog>> getTimeLogsFromGame(int id);
 
     //DLC
   Stream<List<DLC>> getAllDLCs();
@@ -158,6 +160,7 @@ abstract class ICollectionRepository {
   Future<dynamic> deleteGameTag(int gameId, int tagId);
 
   Future<dynamic> deleteGameFinishDate(int gameId, DateTime date);
+  Future<dynamic> deleteGameTimeLog(int gameId, DateTime dateTime);
 
     //DLC
   Future<dynamic> deleteDLC(int id);

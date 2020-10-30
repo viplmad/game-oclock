@@ -142,20 +142,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Divider(),
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: _HeaderText(
-                        text: relationName,
-                      ),
-                    ),
-                    LinearProgressIndicator(),
-                  ],
-                ),
-              ),
+              LinearProgressIndicator(),
             ],
           );
 

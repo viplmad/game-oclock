@@ -19,6 +19,7 @@ import '../relation/relation.dart';
 import '../theme/theme.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
+import 'time_log_list.dart';
 
 class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
@@ -76,6 +77,11 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       iCollectionRepository: ICollectionRepository.iCollectionRepository,
     );
 
+    GameTimeLogRelationManagerBloc _logRelationManagerBloc = GameTimeLogRelationManagerBloc(
+      itemId: item.id,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+    );
+
     return [
       blocProviderRelationBuilder<Platform>(_platformRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
@@ -115,6 +121,21 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       BlocProvider<GameFinishDateRelationManagerBloc>(
         create: (BuildContext context) {
           return _finishRelationManagerBloc;
+        },
+      ),
+
+      BlocProvider<GameTimeLogRelationBloc>(
+        create: (BuildContext context) {
+          return GameTimeLogRelationBloc(
+            itemId: item.id,
+            iCollectionRepository: ICollectionRepository.iCollectionRepository,
+            managerBloc: _logRelationManagerBloc,
+          )..add(LoadRelation());
+        },
+      ),
+      BlocProvider<GameTimeLogRelationManagerBloc>(
+        create: (BuildContext context) {
+          return _logRelationManagerBloc;
         },
       ),
     ];
@@ -202,11 +223,13 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         field: game_thoughtsField,
         value: game.thoughts,
       ),
-      itemDurationField(
-        context,
-        fieldName: GameCollectionLocalisations.of(context).timeFieldString,
-        field: game_timeField,
+      GameTimeLogList(
+        fieldName: GameCollectionLocalisations.of(context).timeLogsFieldString,
         value: game.time,
+        relationTypeName: GameCollectionLocalisations.of(context).timeLogFieldString,
+        onUpdate: () {
+          BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
+        },
       ),
       itemURLField(
         context,
@@ -269,6 +292,17 @@ class GameFinishDateList extends FinishDateList<Game, GameFinishDateRelationBloc
     Key key,
     @required String fieldName,
     @required DateTime value,
+    @required String relationTypeName,
+    @required void Function() onUpdate,
+  }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
+}
+
+// ignore: must_be_immutable
+class GameTimeLogList extends TimeLogList<Game, GameTimeLogRelationBloc, GameTimeLogRelationManagerBloc> {
+  GameTimeLogList({
+    Key key,
+    @required String fieldName,
+    @required Duration value,
     @required String relationTypeName,
     @required void Function() onUpdate,
   }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);

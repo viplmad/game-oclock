@@ -103,6 +103,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String finishDatesFieldString = 'Finish Dates';
   @override
   String get emptyFinishDatesString => 'No $finishDatesFieldString yet';
+  @override
+  String get emptyTimeLogsString => 'No $timeLogsFieldString yet';
 
   @override
   final String mainViewString = 'Main';
@@ -161,7 +163,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String thoughtsFieldString = 'Thoughts';
   @override
-  final String timeFieldString = 'Play Time';
+  final String timeLogFieldString = 'Time Log';
+  @override
+  final String timeLogsFieldString = 'Play Time';
   @override
   final String saveFolderFieldString = 'Save Folder';
   @override
@@ -185,9 +189,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get totalGamesPlayedString => 'Total played $gamesString';
   @override
-  String get sumTimeString => 'Total $timeFieldString';
+  String get sumTimeString => 'Total $timeLogsFieldString';
   @override
-  String get avgTimeString => 'Average $timeFieldString';
+  String get avgTimeString => 'Average $timeLogsFieldString';
   @override
   String get avgRatingString => 'Average $ratingFieldString';
   @override
@@ -195,15 +199,15 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get countByReleaseYearString => 'Number of $gamesString by $releaseYearFieldString';
   @override
-  String get sumTimeByFinishDateString => 'Total $timeFieldString by $finishDateFieldString';
+  String get sumTimeByFinishDateString => 'Total $timeLogsFieldString by $finishDateFieldString';
   @override
-  String get sumTimeByMonth => 'Total $timeFieldString by month';
+  String get sumTimeByMonth => 'Total $timeLogsFieldString by month';
   @override
   String get countByRatingString => 'Number of $gamesString by $ratingFieldString';
   @override
   String get countByFinishDate => 'Number of $gamesString by $finishDateFieldString';
   @override
-  String get countByTimeString => 'Number of $gamesString by $timeFieldString';
+  String get countByTimeString => 'Number of $gamesString by $timeLogsFieldString';
   @override
   String get avgRatingByFinishDateString => 'Average $ratingFieldString by $finishDateFieldString';
   //#endregion Game
@@ -359,10 +363,16 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     return '$dayString/$monthString/$yearString';
   }
   @override
+  String dateTimeString(DateTime date) {
+    String hourString = date.hour.toString().padLeft(2, '0');
+    String minuteString = date.minute.toString().padLeft(2, '0');
+    return dateString(date) + ' $hourString:$minuteString';
+  }
+  @override
   String durationString(Duration duration) {
     String hoursString = duration.inHours.toString();
     String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
-    return '$hoursString:$minutesString';
+    return '$hoursString h $minutesString min';
   }
   @override
   String yearString(int year) {

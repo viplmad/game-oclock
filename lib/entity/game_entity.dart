@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import 'entity.dart';
@@ -35,14 +36,25 @@ const String game_screenshotFolderField = 'Screenshot Folder';
 const String game_finishDateField = 'Finish Date';
 const String game_backupField = 'Backup';
 
-const String gameFinishView = 'Game-Finish';
 const String gameFinishTable = 'GameFinish';
+const String gameFinishTableRead = 'Game-Finish';
 const List<String> gameFinishFields = [
   gameFinish_gameField,
-  finish_dateField,
+  gameFinish_dateField,
 ];
 const String gameFinish_gameField = 'Game_ID';
-const String finish_dateField = 'Date';
+const String gameFinish_dateField = 'Date';
+
+const String gameLogTable = 'GameLog';
+const String gameLogTableRead = 'Game-Log';
+const List<String> gameLogFields = [
+  gameLog_gameField,
+  gameLog_dateTimeField,
+  gameLog_timeField,
+];
+const String gameLog_gameField = 'Game_ID';
+const String gameLog_dateTimeField = 'DateTime';
+const String gameLog_timeField = 'Time';
 
 const List<String> statuses = [
   "Low Priority",
@@ -170,6 +182,64 @@ class GameEntity extends CollectionItemEntity {
         '$game_screenshotFolderField: $screenshotFolder, '
         '$game_finishDateField: $finishDate, '
         '$game_backupField: $isBackup'
+        ' }';
+
+  }
+}
+
+class TimeLogEntity extends Equatable {
+  const TimeLogEntity({
+    this.dateTime,
+    this.time,
+  });
+
+  final DateTime dateTime;
+  final Duration time;
+
+  static TimeLogEntity fromDynamicMap(Map<String, dynamic> map) {
+
+    return TimeLogEntity(
+      dateTime: map[gameLog_dateTimeField],
+      time: Duration(minutes: map[gameLog_timeField]),
+    );
+
+  }
+
+  Map<String, dynamic> toDynamicMap() {
+
+    return <String, dynamic> {
+      gameLog_dateTimeField : dateTime,
+      gameLog_timeField : time.inSeconds,
+    };
+
+  }
+
+  static List<TimeLogEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<TimeLogEntity> timeLogsList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      TimeLogEntity log = TimeLogEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameLogTable) );
+
+      timeLogsList.add(log);
+    });
+
+    return timeLogsList;
+
+  }
+
+  @override
+  List<Object> get props => [
+    dateTime,
+    time,
+  ];
+
+  @override
+  String toString() {
+
+    return '{$gameLogTable}Entity { '
+        '$gameLog_dateTimeField: $dateTime, '
+        '$gameLog_timeField: $time'
         ' }';
 
   }

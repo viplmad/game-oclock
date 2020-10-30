@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:numberpicker/numberpicker.dart';
+
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
@@ -13,8 +15,8 @@ import '../common/show_snackbar.dart';
 
 
 // ignore: must_be_immutable
-abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T, DateTime>, S extends RelationManagerBloc<T, DateTime>> extends StatelessWidget {
-  FinishDateList({
+abstract class TimeLogList<T extends CollectionItem, K extends RelationBloc<T, TimeLog>, S extends RelationManagerBloc<T, TimeLog>> extends StatelessWidget {
+  TimeLogList({
     Key key,
     @required this.fieldName,
     @required this.value,
@@ -23,7 +25,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
   }) : super(key: key);
 
   final String fieldName;
-  final DateTime value;
+  final Duration value;
   final String relationTypeName;
   final void Function() onUpdate;
 
@@ -32,11 +34,11 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
   @override
   Widget build(BuildContext outerContext) {
 
-    String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value) : '';
+    String shownValue = value != null? GameCollectionLocalisations.of(outerContext).durationString(value) : '';
 
     return BlocListener<S, RelationManagerState>(
       listener: (BuildContext context, RelationManagerState state) {
-        if(state is RelationAdded<DateTime>) {
+        if(state is RelationAdded<TimeLog>) {
           _hasUpdated = true;
 
           String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
@@ -58,7 +60,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
             ),
           );
         }
-        if(state is RelationDeleted<DateTime>) {
+        if(state is RelationDeleted<TimeLog>) {
           _hasUpdated = true;
 
           String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
@@ -87,9 +89,9 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
           trailing: BlocBuilder<K, RelationState>(
             builder: (BuildContext context, RelationState state) {
               String extra = '';
-              if(state is RelationLoaded<DateTime>) {
+              if(state is RelationLoaded<TimeLog>) {
 
-                extra = state.otherItems.length > 1? '(+)' : '';
+                extra = state.otherItems.isNotEmpty? '(' + state.otherItems.length.toString() + ')' : '';
 
               }
 
@@ -117,30 +119,30 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                         cubit: BlocProvider.of<K>(outerContext),
                         builder: (BuildContext context, RelationState state) {
 
-                          if(state is RelationLoaded<DateTime>) {
+                          if(state is RelationLoaded<TimeLog>) {
 
-                            final List<DateTime> values = state.otherItems;
+                            final List<TimeLog> values = state.otherItems;
 
                             if(values.isEmpty) {
-                              return Text(GameCollectionLocalisations.of(context).emptyFinishDatesString);
+                              return Text(GameCollectionLocalisations.of(context).emptyTimeLogsString);
                             }
 
                             return ListView.builder(
                               shrinkWrap: true,
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
-                                DateTime date = values.elementAt(index);
-                                String dateString = GameCollectionLocalisations.of(context).dateString(date);
+                                TimeLog timeLog = values.elementAt(index);
+                                String timeLogString = GameCollectionLocalisations.of(context).dateTimeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
                                   child: ListTile(
-                                    title: Text(dateString),
+                                    title: Text(timeLogString),
                                     trailing: IconButton(
                                       icon: Icon(Icons.link_off),
                                       onPressed: () {
                                         BlocProvider.of<S>(outerContext).add(
-                                          DeleteRelation<DateTime>(date),
+                                          DeleteRelation<TimeLog>(timeLog),
                                         );
                                       },
                                     ),
@@ -176,11 +178,49 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                             firstDate: DateTime(1970),
                             lastDate: DateTime.now(),
                             initialDate: DateTime.now(),
-                          ).then((DateTime value) {
-                            if(value != null) {
-                              BlocProvider.of<S>(outerContext).add(
-                                AddRelation<DateTime>(value),
-                              );
+                          ).then((DateTime date) {
+                            if(date != null) {
+
+                              showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              ).then((TimeOfDay time) {
+                                if(time != null) {
+
+                                  showDialog<Duration>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+
+                                      return _DurationPickerDialog(
+                                        initialDuration: value,
+                                      );
+
+                                    },
+                                  ).then((Duration duration) {
+                                    if(duration != null) {
+
+                                      DateTime dateTime = DateTime(
+                                        date.year,
+                                        date.month,
+                                        date.day,
+                                        time.hour,
+                                        time.minute,
+                                      );
+
+                                      BlocProvider.of<S>(outerContext).add(
+                                        AddRelation<TimeLog>(
+                                          TimeLog(dateTime: dateTime, time: duration),
+                                        ),
+                                      );
+
+                                    }
+                                  });
+
+                                }
+                              });
+
+
+
                             }
                           });
 
@@ -204,5 +244,79 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
       ),
     );
 
+  }
+}
+
+class _DurationPickerDialog extends StatefulWidget {
+  const _DurationPickerDialog({
+    Key key,
+    @required this.initialDuration,
+  }) : super(key: key);
+
+  final Duration initialDuration;
+
+  @override
+  State<_DurationPickerDialog> createState() => _DurationPickerDialogState();
+}
+class _DurationPickerDialogState extends State<_DurationPickerDialog> {
+  int _hours;
+  int _minutes;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _hours = widget.initialDuration.inHours;
+    _minutes = widget.initialDuration.inMinutes - (_hours * 60);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return AlertDialog(
+      content: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          NumberPicker.integer(
+              initialValue: _hours,
+              minValue: 0,
+              maxValue: 1000,
+              highlightSelectedValue: true,
+              onChanged: (num newHours) {
+                setState(() {
+                  _hours = newHours;
+                });
+              }
+          ),
+          Text(':', style: Theme.of(context).textTheme.headline6,),
+          NumberPicker.integer(
+              initialValue: _minutes,
+              minValue: 0,
+              maxValue: 59,
+              highlightSelectedValue: true,
+              onChanged: (num newMin) {
+                setState(() {
+                  _minutes = newMin;
+                });
+              }
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          onPressed: () {
+            Navigator.maybePop<Duration>(context);
+          },
+        ),
+        FlatButton(
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          onPressed: () {
+            Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));
+          },
+        ),
+      ],
+    );
   }
 }

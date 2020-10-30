@@ -74,3 +74,24 @@ class GameFinishDateRelationManagerBloc extends RelationManagerBloc<Game, DateTi
 
   }
 }
+
+class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, TimeLog> {
+  GameTimeLogRelationManagerBloc({
+    @required int itemId,
+    @required ICollectionRepository iCollectionRepository,
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+
+  @override
+  Future<dynamic> addRelationFuture(AddRelation<TimeLog> event) {
+
+    return iCollectionRepository.relateGameTimeLog(itemId, event.otherItem.dateTime, event.otherItem.time);
+
+  }
+
+  @override
+  Future<dynamic> deleteRelationFuture(DeleteRelation<TimeLog> event) {
+
+    return iCollectionRepository.deleteGameTimeLog(itemId, event.otherItem.dateTime);
+
+  }
+}

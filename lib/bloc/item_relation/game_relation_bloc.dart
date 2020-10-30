@@ -50,3 +50,18 @@ class GameFinishDateRelationBloc extends RelationBloc<Game, DateTime> {
 
   }
 }
+
+class GameTimeLogRelationBloc extends RelationBloc<Game, TimeLog> {
+  GameTimeLogRelationBloc({
+    @required int itemId,
+    @required ICollectionRepository iCollectionRepository,
+    @required GameTimeLogRelationManagerBloc managerBloc,
+  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+
+  @override
+  Stream<List<TimeLog>> getRelationStream() {
+
+    return iCollectionRepository.getTimeLogsFromGame(itemId);
+
+  }
+}

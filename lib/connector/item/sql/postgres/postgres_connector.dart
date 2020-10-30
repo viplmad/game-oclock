@@ -205,7 +205,7 @@ class PostgresConnector extends ISQLConnector {
     return _connection.mappedResultsQuery(
       sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue " + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) +  _returningStatement(returningFields),
       substitutionValues: whereFieldsAndValues..addEntries({
-        MapEntry("newValue", !(newValue is Duration)? newValue : (newValue as Duration).inSeconds)
+        MapEntry("newValue", newValue),
       }),
     );
 
@@ -392,7 +392,8 @@ class PostgresConnector extends ISQLConnector {
 
         fieldNamesForSQL += _formattedField + "::float";
 
-      } else if(fieldName == game_timeField) {
+      } else if(fieldName == game_timeField
+          || fieldName == gameLog_timeField) {
 
         fieldNamesForSQL += "(Extract(hours from " + _formattedField + ") * 60 + EXTRACT(minutes from " + _formattedField + "))::int AS " + _forceDoubleQuotes(fieldName);
 

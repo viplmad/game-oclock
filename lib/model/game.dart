@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import 'package:game_collection/entity/entity.dart';
@@ -173,6 +174,65 @@ class Game extends CollectionItem {
         ' }';
 
   }
+}
+
+class TimeLog extends Equatable implements Comparable<TimeLog> {
+  const TimeLog({
+    this.dateTime,
+    this.time,
+  });
+
+  final DateTime dateTime;
+  final Duration time;
+
+  static TimeLog fromEntity(TimeLogEntity entity) {
+
+    return TimeLog(
+      dateTime: entity.dateTime,
+      time: entity.time,
+    );
+
+  }
+
+  TimeLogEntity toEntity() {
+
+    return TimeLogEntity(
+      dateTime: this.dateTime,
+      time: this.time,
+    );
+
+  }
+
+  TimeLog copyWith({
+    DateTime dateTime,
+    Duration time,
+  }) {
+
+    return TimeLog(
+      dateTime: dateTime?? this.dateTime,
+      time: time?? this.time,
+    );
+
+  }
+
+  @override
+  List<Object> get props => [
+    dateTime,
+    time,
+  ];
+
+  @override
+  String toString() {
+
+    return '$gameLogTable { '
+        '$dateTime: $dateTime, '
+        '$game_timeField: $time'
+        ' }';
+
+  }
+
+  @override
+  int compareTo(TimeLog other) => other.dateTime.compareTo(this.dateTime);
 }
 
 class GamesData extends ItemData<Game> {

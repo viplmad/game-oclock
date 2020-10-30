@@ -8,7 +8,7 @@ abstract class RelationManagerState extends Equatable {
   List<Object> get props => [];
 }
 
-class Init extends RelationManagerState {} //TODO
+class Init extends RelationManagerState {}
 
 class RelationAdded<O> extends RelationManagerState {
   const RelationAdded(this.otherItem);

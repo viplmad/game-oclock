@@ -493,16 +493,6 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemDurationField(BuildContext context, {@required String fieldName, @required String field, @required Duration value}) {
-
-    return _ItemDurationField(
-      fieldName: fieldName,
-      value: value,
-      update: _updateFieldFunction<Duration>(context, field),
-    );
-
-  }
-
   Widget itemRatingField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
 
     return _RatingField(
@@ -832,47 +822,6 @@ class _ItemDateTimeField extends StatelessWidget {
   }
 }
 
-class _ItemDurationField extends StatelessWidget {
-  const _ItemDurationField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final Duration value;
-  final void Function(Duration) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<Duration>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).durationString(value)
-        :
-        null,
-      update: update,
-      onTap: () {
-        return showDialog<Duration>(
-          context: context,
-          builder: (BuildContext context) {
-
-            return _DurationPickerDialog(
-              fieldName: fieldName,
-              duration: value,
-            );
-
-          },
-        );
-      },
-    );
-
-  }
-}
-
 class _RatingField extends StatelessWidget {
   const _RatingField({
     Key key,
@@ -1004,83 +953,6 @@ class _EnumField extends StatelessWidget {
       ],
     );
 
-  }
-}
-
-class _DurationPickerDialog extends StatefulWidget {
-  const _DurationPickerDialog({
-    Key key,
-    @required this.fieldName,
-    @required this.duration,
-  }) : super(key: key);
-
-  final String fieldName;
-  final Duration duration;
-
-  @override
-  State<_DurationPickerDialog> createState() => _DurationPickerDialogState();
-}
-class _DurationPickerDialogState extends State<_DurationPickerDialog> {
-  int _hours;
-  int _minutes;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _hours = widget.duration.inHours;
-    _minutes = widget.duration.inMinutes - (_hours * 60);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return AlertDialog(
-      title: Text(GameCollectionLocalisations.of(context).editString(widget.fieldName)),
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          NumberPicker.integer(
-              initialValue: _hours,
-              minValue: 0,
-              maxValue: 1000,
-              highlightSelectedValue: true,
-              onChanged: (num newHours) {
-                setState(() {
-                  _hours = newHours;
-                });
-              }
-          ),
-          Text(':', style: Theme.of(context).textTheme.headline6,),
-          NumberPicker.integer(
-              initialValue: _minutes,
-              minValue: 0,
-              maxValue: 59,
-              highlightSelectedValue: true,
-              onChanged: (num newMin) {
-                setState(() {
-                  _minutes = newMin;
-                });
-              }
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<Duration>(context);
-          },
-        ),
-        FlatButton(
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));
-          },
-        ),
-      ],
-    );
   }
 }
 
