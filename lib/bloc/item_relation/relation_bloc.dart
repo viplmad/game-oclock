@@ -83,7 +83,7 @@ abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEv
 
   Stream<RelationState> _mapUpdateRelationToState(UpdateElementRelation<O> event) async* {
 
-    yield RelationLoaded<O>(event.otherItems..sort());
+    yield RelationLoaded<O>(event.otherItems);
 
   }
 
@@ -126,7 +126,7 @@ abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEv
 
       final List<O> updatedItems = List.from(items)..add(managerState.otherItem);
 
-      add(UpdateElementRelation<O>(updatedItems));
+      add(UpdateElementRelation<O>(updatedItems..sort()));
     }
 
   }
