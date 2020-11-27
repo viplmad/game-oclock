@@ -189,21 +189,20 @@ class PostgresConnector extends ISQLConnector {
 
   //#region UPDATE
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> updateTable<T>({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues, @required String fieldName, @required T newValue, List<String> returningFields}) {
+  Future<dynamic> updateTable<T>({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues, @required String fieldName, @required T newValue}) {
 
     if(newValue == null) {
       return _updateTableToNull(
         tableName: tableName,
         whereFieldsAndValues: whereFieldsAndValues,
         fieldName: fieldName,
-        returningFields: returningFields,
       );
     }
 
     String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(
-      sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue " + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) +  _returningStatement(returningFields),
+      sql + " SET " + _forceDoubleQuotes(fieldName) + " = @newValue " + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null),
       substitutionValues: whereFieldsAndValues..addEntries({
         MapEntry("newValue", newValue),
       }),
@@ -211,12 +210,12 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> _updateTableToNull({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues, @required String fieldName, List<String> returningFields}) {
+  Future<dynamic> _updateTableToNull({@required String tableName, @required Map<String, dynamic> whereFieldsAndValues, @required String fieldName}) {
 
     String sql = _updateStatement(tableName);
 
     return _connection.mappedResultsQuery(
-      sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL " + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null) +  _returningStatement(returningFields),
+      sql + " SET " + _forceDoubleQuotes(fieldName) + " = NULL " + _whereStatement(whereFieldsAndValues?.keys?.toList(growable: false)?? null),
       substitutionValues: whereFieldsAndValues,
     );
 

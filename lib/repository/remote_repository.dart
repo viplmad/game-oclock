@@ -903,116 +903,130 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region UPDATE
   @override
-  Future<Game> updateGame<T>(int id, String fieldName, T newValue) {
+  Future<Game> updateGame<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: gameTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-      returningFields: gameFields,
-    ).asStream().map( _dynamicToSingleGame ).first;
+    );
+
+    return getGameWithId(id).first;
 
   }
 
   @override
-  Future<DLC> updateDLC<T>(int id, String fieldName, T newValue) {
+  Future<DLC> updateDLC<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: dlcTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleDLC ).first;
+    );
+
+    return getDLCWithId(id).first;
 
   }
 
   @override
-  Future<Platform> updatePlatform<T>(int id, String fieldName, T newValue) {
+  Future<Platform> updatePlatform<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: platformTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSinglePlatform ).first;
+    );
+
+    return getPlatformWithId(id).first;
 
   }
 
   @override
-  Future<Purchase> updatePurchase<T>(int id, String fieldName, T newValue) {
+  Future<Purchase> updatePurchase<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: purchaseTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-      returningFields: purchaseFields,
-    ).asStream().map( _dynamicToSinglePurchase ).first;
+    );
+
+    return getPurchaseWithId(id).first;
 
   }
 
   @override
-  Future<Store> updateStore<T>(int id, String fieldName, T newValue) {
+  Future<Store> updateStore<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: storeTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleStore ).first;
+    );
+
+    return getStoreWithId(id).first;
 
   }
 
   @override
-  Future<System> updateSystem<T>(int id, String fieldName, T newValue) {
+  Future<System> updateSystem<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: systemTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleSystem ).first;
+    );
+
+    return getSystemWithId(id).first;
 
   }
 
   @override
-  Future<Tag> updateTag<T>(int id, String fieldName, T newValue) {
+  Future<Tag> updateTag<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: tagTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleTag ).first;
+    );
+
+    return getTagWithId(id).first;
 
   }
 
   @override
-  Future<PurchaseType> updateType<T>(int id, String fieldName, T newValue) {
+  Future<PurchaseType> updateType<T>(int id, String fieldName, T newValue) async {
 
-    return _iSQLConnector.updateTable(
+    await _iSQLConnector.updateTable(
       tableName: typeTable,
       whereFieldsAndValues: {
         IdField : id,
       },
       fieldName: fieldName,
       newValue: newValue,
-    ).asStream().map( _dynamicToSingleType ).first;
+    );
+
+    return getTypeWithId(id).first;
 
   }
   //#endregion UPDATE
