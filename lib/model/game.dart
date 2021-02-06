@@ -232,7 +232,7 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
   }
 
   @override
-  int compareTo(TimeLog other) => other.dateTime.compareTo(this.dateTime);
+  int compareTo(TimeLog other) => this.dateTime.compareTo(other.dateTime);
 }
 
 class GamesData extends ItemData<Game> {

@@ -14,7 +14,7 @@ description: A simple and intuitive game collection manager.
 version: 1.7.3+85
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -46,6 +46,8 @@ dependencies:
   url_launcher: ^5.7.2
   flutter_launcher_icons: ^0.8.1
   charts_flutter: ^0.9.0
+  table_calendar: ^2.3.3
+  flutter_speed_dial: ^1.2.5
 
 dev_dependencies:
   flutter_test:

@@ -9,6 +9,7 @@ import 'settings/settings.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
 import 'statistics/statistics.dart';
+import 'calendar/calendar.dart';
 import 'theme/theme.dart';
 
 
@@ -99,6 +100,13 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           viewTitle: statisticsArguments.viewTitle,
         ),
         themeDataBuilder: PurchaseTheme.themeData,
+      );
+
+    case gameCalendarRoute:
+      return _pageRoute(
+        GameCalendarView(
+          itemId: settings.arguments as int,
+        ),
       );
 
     case gameSearchRoute:

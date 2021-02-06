@@ -14,6 +14,7 @@ import 'package:game_collection/bloc/item_relation/item_relation.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/route_constants.dart';
 
 import '../relation/relation.dart';
 import '../theme/theme.dart';
@@ -146,6 +147,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   _GameDetailBody detailBodyBuilder() {
 
     return _GameDetailBody(
+      itemId: item.id,
       onUpdate: onUpdate,
     );
 
@@ -170,8 +172,11 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key key,
+    @required this.itemId,
     void Function(Game item) onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
+
+  final int itemId;
 
   @override
   String itemTitle(Game item) => GameTheme.itemTitle(item);
@@ -256,6 +261,19 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         fieldName: GameCollectionLocalisations.of(context).backupFieldString,
         field: game_backupField,
         value: game.isBackup,
+      ),
+
+      RaisedButton(
+        child: Text("TEST CALENDAR"),
+        onPressed: () {
+
+          Navigator.pushNamed(
+            context,
+            gameCalendarRoute,
+            arguments: itemId,
+          );
+
+        },
       ),
     ];
 

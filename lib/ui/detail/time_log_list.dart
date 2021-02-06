@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:numberpicker/numberpicker.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_relation/item_relation.dart';
@@ -12,6 +10,7 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
+import '../common/duration_picker_dialog.dart';
 
 
 // ignore: must_be_immutable
@@ -191,7 +190,7 @@ abstract class TimeLogList<T extends CollectionItem, K extends RelationBloc<T, T
                                     context: context,
                                     builder: (BuildContext context) {
 
-                                      return _DurationPickerDialog(
+                                      return DurationPickerDialog(
                                         fieldName: GameCollectionLocalisations.of(context).timeString,
                                         initialDuration: Duration.zero,
                                       );
@@ -245,82 +244,5 @@ abstract class TimeLogList<T extends CollectionItem, K extends RelationBloc<T, T
       ),
     );
 
-  }
-}
-
-class _DurationPickerDialog extends StatefulWidget {
-  const _DurationPickerDialog({
-    Key key,
-    @required this.fieldName,
-    @required this.initialDuration,
-  }) : super(key: key);
-
-  final String fieldName;
-  final Duration initialDuration;
-
-  @override
-  State<_DurationPickerDialog> createState() => _DurationPickerDialogState();
-}
-class _DurationPickerDialogState extends State<_DurationPickerDialog> {
-  int _hours;
-  int _minutes;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _hours = widget.initialDuration.inHours;
-    _minutes = widget.initialDuration.inMinutes - (_hours * 60);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return AlertDialog(
-      title: Text(widget.fieldName),
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          NumberPicker.integer(
-              initialValue: _hours,
-              minValue: 0,
-              maxValue: 1000,
-              highlightSelectedValue: true,
-              onChanged: (num newHours) {
-                setState(() {
-                  _hours = newHours;
-                });
-              }
-          ),
-          Text(':', style: Theme.of(context).textTheme.headline6,),
-          NumberPicker.integer(
-              initialValue: _minutes,
-              minValue: 0,
-              maxValue: 59,
-              highlightSelectedValue: true,
-              onChanged: (num newMin) {
-                setState(() {
-                  _minutes = newMin;
-                });
-              }
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<Duration>(context);
-          },
-        ),
-        FlatButton(
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));
-          },
-        ),
-      ],
-    );
   }
 }
