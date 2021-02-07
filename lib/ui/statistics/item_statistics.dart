@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:charts_flutter/flutter.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/bloc/item_statistics/item_statistics.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/statistics_histogram.dart';
 import '../common/year_picker_dialog.dart';
 
 
@@ -405,64 +404,4 @@ class StatisticsFieldGroup extends StatelessWidget {
     );
 
   }
-}
-
-class StatisticsHistogram<N extends num> extends StatelessWidget {
-  const StatisticsHistogram({
-    Key key,
-    @required this.histogramName,
-    @required this.domainLabels,
-    @required this.values,
-    this.vertical = true,
-    this.hideDomainLabels = false,
-    this.labelAccessor,
-  }) : super(key: key);
-
-  final String histogramName;
-  final List<String> domainLabels;
-  final List<N> values;
-  final bool vertical;
-  final bool hideDomainLabels;
-  final String Function(String, N) labelAccessor;
-
-  @override
-  Widget build(BuildContext context) {
-    List<SeriesElement<N>> data = [];
-
-    for(int index = 0; index < domainLabels.length; index++) {
-      String currentLabel =  domainLabels.elementAt(index);
-      N currentValue = values.elementAt(index);
-
-      SeriesElement<N> seriesElement = SeriesElement<N>(currentLabel, currentValue);
-      data.add(seriesElement);
-    }
-
-    final Series<SeriesElement<N>, String> series = Series<SeriesElement<N>, String>(
-      id: histogramName,
-      colorFn: (_, __) => ColorUtil.fromDartColor(Theme.of(context).primaryColor),
-      domainFn: (SeriesElement<N> element, _) => element.domainLabel,
-      measureFn: (SeriesElement<N> element, _) => element.value,
-      data: data,
-
-      labelAccessorFn: labelAccessor != null? (SeriesElement<N> element, _) => labelAccessor(element.domainLabel, element.value) : null,
-    );
-
-    final List<Series<SeriesElement<N>, String>> seriesList = [
-      series
-    ];
-
-    return BarChart(
-      seriesList,
-      animate: true,
-      vertical: vertical,
-      barRendererDecorator: BarLabelDecorator<String>(),
-      domainAxis: hideDomainLabels? OrdinalAxisSpec(renderSpec: NoneRenderSpec()) : OrdinalAxisSpec(),
-    );
-  }
-}
-class SeriesElement<N extends num> {
-  const SeriesElement(this.domainLabel, this.value);
-
-  final String domainLabel;
-  final N value;
 }

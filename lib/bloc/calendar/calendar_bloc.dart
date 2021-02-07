@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:game_collection/utils/datetime_extension.dart';
 
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/calendar_style.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
@@ -40,6 +41,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     } else if(event is UpdateSelectedDate) {
 
       yield* _mapUpdateSelectedDateToState(event);
+
+    } else if(event is UpdateStyle) {
+
+      yield* _mapUpdateStyleToState(event);
 
     } else if(event is UpdateCalendar) {
 
@@ -78,7 +83,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       List<TimeLog> selectedTimeLogs = List<TimeLog>();
       if(timeLogs.isNotEmpty) {
         timeLogs..sort();
-        selectedDate = timeLogs.first.dateTime;
+        selectedDate = timeLogs.last.dateTime;
         selectedTimeLogs = timeLogs
             .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
             .toList(growable: false);
@@ -104,16 +109,78 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final CalendarStyle style = (state as CalendarLoaded).style;
 
-      final List<TimeLog> selectedTimeLogs = timeLogs
-          .where((TimeLog log) => log.dateTime.isSameDate(event.date))
-          .toList(growable: false);
+      final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
 
       yield CalendarLoaded(
         timeLogs,
         finishDates,
         event.date,
         selectedTimeLogs,
+        style,
+      );
+    }
+
+  }
+
+  List<TimeLog> _selectedTimeLogsInStyle(List<TimeLog> timeLogs, DateTime selectedDate, CalendarStyle style) {
+    List<TimeLog> selectedTimeLogs = List<TimeLog>();
+
+    switch(style) {
+      case CalendarStyle.List:
+        selectedTimeLogs = timeLogs
+            .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
+            .toList(growable: false);
+        break;
+      case CalendarStyle.Graph:
+        DateTime mondayOfSelectedDate;
+        if(selectedDate.weekday == 1) {
+          mondayOfSelectedDate = selectedDate;
+        } else {
+          int daysToRemove = selectedDate.weekday - 1;
+          mondayOfSelectedDate = selectedDate.subtract(Duration(days: daysToRemove));
+        }
+
+        Duration dayDuration = Duration(days: 1);
+        DateTime dateOfWeek = mondayOfSelectedDate;
+        for(int index = 0; index < 7; index++) {
+          Iterable<TimeLog> dayTimeLogs = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(dateOfWeek));
+
+          if(dayTimeLogs.isNotEmpty) {
+            selectedTimeLogs.addAll(dayTimeLogs);
+          } else {
+            selectedTimeLogs.add(
+              TimeLog(dateTime: dateOfWeek, time: Duration()),
+            );
+          }
+
+          dateOfWeek = dateOfWeek.add(dayDuration);
+        }
+        break;
+    }
+
+    return selectedTimeLogs;
+  }
+
+  Stream<CalendarState> _mapUpdateStyleToState(UpdateStyle event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+
+      final rotatingIndex = ((state as CalendarLoaded).style.index + 1) % CalendarStyle.values.length;
+      final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
+
+      final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, selectedDate, updatedStyle);
+
+      yield CalendarLoaded(
+        timeLogs,
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        updatedStyle,
       );
     }
 
@@ -126,6 +193,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       event.finishDates,
       event.selectedDate,
       event.selectedTimeLogs,
+      event.style,
     );
 
   }
@@ -159,6 +227,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.log);
 
@@ -172,6 +241,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         finishDates,
         selectedDate,
         selectedTimeLogs,
+        style,
       ));
     }
 
@@ -184,6 +254,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<TimeLog> updatedTimeLogs = timeLogs
           .where((TimeLog log) => log.dateTime != managerState.log.dateTime)
@@ -196,10 +267,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       }
 
       add(UpdateCalendar(
-          updatedTimeLogs,
-          finishDates,
-          selectedDate,
-          selectedTimeLogs,
+        updatedTimeLogs,
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        style,
       ));
     }
 
@@ -209,17 +281,19 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<DateTime> updatedFinishDates = List.from(finishDates)..add(managerState.date);
 
       add(UpdateCalendar(
-          timeLogs,
-          updatedFinishDates..sort(),
-          selectedDate,
-          selectedTimeLogs,
+        timeLogs,
+        updatedFinishDates..sort(),
+        selectedDate,
+        selectedTimeLogs,
+        style,
       ));
     }
 
@@ -229,19 +303,21 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<DateTime> updatedFinishDates = finishDates
           .where((DateTime date) => date != managerState.date)
           .toList(growable: false);
 
       add(UpdateCalendar(
-          timeLogs,
-          updatedFinishDates,
-          selectedDate,
-          selectedTimeLogs,
+        timeLogs,
+        updatedFinishDates,
+        selectedDate,
+        selectedTimeLogs,
+        style,
       ));
     }
 

@@ -134,6 +134,16 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     'Nov',
     'Dec',
   ];
+  @override
+  final List<String> shortDaysOfWeek = const <String>[
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
   //#endregion Common
 
   //#region Game

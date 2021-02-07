@@ -2,11 +2,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:table_calendar/table_calendar.dart' as tableCalendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:game_collection/utils/datetime_extension.dart';
 
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/calendar_style.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
@@ -16,6 +17,7 @@ import 'package:game_collection/bloc/calendar_manager/calendar_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
+import '../common/statistics_histogram.dart';
 import '../common/duration_picker_dialog.dart';
 
 
@@ -31,12 +33,13 @@ class GameCalendarView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     CalendarManagerBloc _managerBloc = managerBlocBuilder();
+    CalendarBloc _bloc = blocBuilder(_managerBloc);
 
     return MultiBlocProvider(
       providers: [
         BlocProvider<CalendarBloc>(
           create: (BuildContext context) {
-            return blocBuilder(_managerBloc)..add(LoadCalendar());
+            return _bloc..add(LoadCalendar());
           },
         ),
 
@@ -49,6 +52,15 @@ class GameCalendarView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Time Logs & Finish Dates"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.insert_chart),
+              tooltip: 'View as graph',
+              onPressed: () {
+                _bloc.add(UpdateStyle());
+              },
+            ),
+          ],
         ),
         body: bodyBuilder(),
         floatingActionButton: buildSpeedDial(context, _managerBloc),
@@ -186,13 +198,13 @@ class _GameCalendarBody extends StatefulWidget {
   State<_GameCalendarBody> createState() => _GameCalendarBodyState();
 }
 class _GameCalendarBodyState extends State<_GameCalendarBody> {
-  CalendarController _calendarController;
+  tableCalendar.CalendarController _calendarController;
 
   @override
   void initState() {
     super.initState();
 
-    _calendarController = CalendarController();
+    _calendarController = tableCalendar.CalendarController();
   }
 
   @override
@@ -292,7 +304,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
               children: <Widget>[
                 _buildTableCalendar(context, state.timeLogs, state.finishDates, state.selectedDate),
                 const SizedBox(height: 8.0),
-                Expanded(child: _buildEventList(context, state.selectedTimeLogs)),
+                Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
               ],
             );
 
@@ -317,18 +329,21 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     Map<DateTime, List<Duration>> eventsMap = _convertTimeLogsToMap(timeLogs);
     Map<DateTime, List<int>> holidaysMap = _convertFinishDatesToMap(finishDates);
 
-    return TableCalendar(
+    return tableCalendar.TableCalendar(
       calendarController: _calendarController,
       events: eventsMap,
       holidays: holidaysMap,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      calendarStyle: CalendarStyle(
+      startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
+      startDay: DateTime(1970),
+      endDay: DateTime.now(),
+      initialSelectedDay: selectedDate,
+      calendarStyle: tableCalendar.CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         todayColor: Colors.deepOrange[200],
         markersColor: Colors.brown[700],
         outsideDaysVisible: false,
       ),
-      builders: CalendarBuilders(
+      builders: tableCalendar.CalendarBuilders(
         markersBuilder: (context, date, events, holidays) {
           final List<Widget> children = List<Widget>();
 
@@ -345,8 +360,8 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
           if (holidays.isNotEmpty) {
             children.add(
               Positioned(
-                right: -2,
-                top: -2,
+                right: 15,
+                top: 15,
                 child: _buildHolidaysMarker(),
               ),
             );
@@ -395,10 +410,47 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
 
   }
 
+  Widget _buildEventGraph(BuildContext context, List<TimeLog> timeLogs) {
+    List<int> values = List<int>();
+
+    List<DateTime> distinctLogDates = List<DateTime>();
+    timeLogs.forEach((TimeLog log) {
+      if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
+        distinctLogDates.add(log.dateTime);
+      }
+    });
+    distinctLogDates.sort();
+
+    distinctLogDates.forEach((DateTime date) {
+      List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
+      int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
+      daySum = daySum ~/ 60;
+      values.add(daySum);
+    });
+
+    return Container(
+      child: StatisticsHistogram<int>(
+        histogramName: 'histogramName',
+        domainLabels: GameCollectionLocalisations.of(context).shortDaysOfWeek,
+        values: values,
+        vertical: true,
+        hideDomainLabels: false,
+        labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).hoursString(value),
+      ),
+    );
+  }
+
   Map<DateTime, List> _convertTimeLogsToMap(List<TimeLog> timeLogs) {
     Map<DateTime, List<Duration>> map = Map<DateTime, List<Duration>>();
 
-    HashSet<DateTime> distinctLogDates = HashSet.from(timeLogs.map((TimeLog log) => log.dateTime));
+    List<DateTime> distinctLogDates = List<DateTime>();
+    timeLogs.forEach((TimeLog log) {
+      if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
+        distinctLogDates.add(log.dateTime);
+      }
+    });
+    distinctLogDates.sort();
+
     distinctLogDates.forEach((DateTime date) {
       List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
       map[date] = dateDurations;

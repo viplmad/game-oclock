@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:game_collection/model/model.dart';
+import 'package:game_collection/model/calendar_style.dart';
 
 
 abstract class CalendarEvent extends Equatable {
@@ -13,22 +14,24 @@ abstract class CalendarEvent extends Equatable {
 class LoadCalendar extends CalendarEvent {}
 
 class UpdateCalendar extends CalendarEvent {
-  const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs);
+  const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.style);
 
   final List<TimeLog> timeLogs;
   final List<DateTime> finishDates;
   final DateTime selectedDate;
   final List<TimeLog> selectedTimeLogs;
+  final CalendarStyle style;
 
   @override
-  List<Object> get props => [timeLogs, finishDates, selectedDate];
+  List<Object> get props => [timeLogs, finishDates, selectedDate, style];
 
   @override
   String toString() => 'UpdateCalendar { '
       'timeLogs: $timeLogs, '
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
-      'selectedTimeLogs: $selectedTimeLogs'
+      'selectedTimeLogs: $selectedTimeLogs, '
+      'style: $style'
       ' }';
 }
 
@@ -45,3 +48,5 @@ class UpdateSelectedDate extends CalendarEvent {
       'date: $date'
       ' }';
 }
+
+class UpdateStyle extends CalendarEvent {}

@@ -68,6 +68,7 @@ abstract class GameCollectionLocalisations {
   String get generalString;
   String get changeYearString;
   List<String> get shortMonths;
+  List<String> get shortDaysOfWeek;
   //#endregion Common
 
   //#region Game
