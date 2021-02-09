@@ -57,9 +57,7 @@ abstract class GameCollectionLocalisations {
   String get releaseYearFieldString;
   String get finishDateFieldString;
   String get finishDatesFieldString;
-  String get timeString;
   String get emptyFinishDatesString;
-  String get emptyTimeLogsString;
 
   String get mainViewString;
   String get lastCreatedViewString;
@@ -91,6 +89,9 @@ abstract class GameCollectionLocalisations {
   String get saveFolderFieldString;
   String get screenshotFolderFieldString;
   String get backupFieldString;
+  String get calendarViewString;
+  String get editTimeString;
+  String get selectedDateIsFinishDateString;
 
   String get playingViewString;
   String get nextUpViewString;
@@ -193,8 +194,9 @@ abstract class GameCollectionLocalisations {
 
   String euroString(double amount);
   String percentageString(double amount);
+  String timeString(DateTime date);
   String dateString(DateTime date);
-  String dateTimeString(DateTime dateTime);
+  String dateTimeString(DateTime date);
   String durationString(Duration duration);
   String yearString(int year);
   String shortYearString(int year);

@@ -14,12 +14,13 @@ abstract class CalendarState extends Equatable {
 class CalendarLoading extends CalendarState {}
 
 class CalendarLoaded extends CalendarState {
-  const CalendarLoaded(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, [this.style = CalendarStyle.List]);
+  const CalendarLoaded(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, [this.style = CalendarStyle.List]);
 
   final List<TimeLog> timeLogs;
   final List<DateTime> finishDates;
   final DateTime selectedDate;
   final List<TimeLog> selectedTimeLogs;
+  final bool isSelectedDateFinish;
   final CalendarStyle style;
 
   @override
@@ -31,6 +32,7 @@ class CalendarLoaded extends CalendarState {
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
       'selectedTimeLogs: $selectedTimeLogs, '
+      'isSelectedDateFinish: $isSelectedDateFinish, '
       'style: $style'
       ' }';
 }

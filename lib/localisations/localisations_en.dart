@@ -102,11 +102,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String finishDatesFieldString = 'Finish Dates';
   @override
-  final String timeString = 'Time';
-  @override
   String get emptyFinishDatesString => 'No $finishDatesFieldString yet';
-  @override
-  String get emptyTimeLogsString => 'No $timeLogsFieldString yet';
 
   @override
   final String mainViewString = 'Main';
@@ -184,6 +180,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String screenshotFolderFieldString = 'Screenshot Folder';
   @override
   final String backupFieldString = 'Backup';
+  @override
+  String get calendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
+  @override
+  final String editTimeString = 'Time';
+  @override
+  final String selectedDateIsFinishDateString = "Finished this day";
 
   @override
   final String playingViewString = 'Playing';
@@ -368,6 +370,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     return '$amountString %';
   }
   @override
+  String timeString(DateTime date) {
+    String hourString = date.hour.toString().padLeft(2, '0');
+    String minuteString = date.minute.toString().padLeft(2, '0');
+    return '$hourString:$minuteString';
+  }
+  @override
   String dateString(DateTime date) {
     String dayString = date.day.toString();
     String monthString = date.month.toString();
@@ -376,9 +384,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String dateTimeString(DateTime date) {
-    String hourString = date.hour.toString().padLeft(2, '0');
-    String minuteString = date.minute.toString().padLeft(2, '0');
-    return dateString(date) + ' $hourString:$minuteString';
+    return dateString(date) + ' ' + timeString(date);
   }
   @override
   String durationString(Duration duration) {

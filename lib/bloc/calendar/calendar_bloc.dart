@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
+
 import 'package:game_collection/utils/datetime_extension.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -9,7 +10,7 @@ import 'package:game_collection/model/calendar_style.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import '../calendar_manager/calendar_manager.dart';
+import '../item_relation_manager/item_relation_manager.dart';
 import 'calendar.dart';
 
 
@@ -17,17 +18,21 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   CalendarBloc({
     @required this.itemId,
     @required this.iCollectionRepository,
-    @required this.managerBloc,
+    @required this.timeLogManagerBloc,
+    @required this.finishDateManagerBloc,
   }) : super(CalendarLoading()) {
 
-    managerSubscription = managerBloc.listen(mapManagerStateToEvent);
+    timeLogManagerSubscription = timeLogManagerBloc.listen(mapTimeLogManagerStateToEvent);
+    finishDateManagerSubscription = finishDateManagerBloc.listen(mapFinishDateManagerStateToEvent);
 
   }
 
   final int itemId;
   final ICollectionRepository iCollectionRepository;
-  final CalendarManagerBloc managerBloc;
-  StreamSubscription<CalendarManagerState> managerSubscription;
+  final GameTimeLogRelationManagerBloc timeLogManagerBloc;
+  final GameFinishDateRelationManagerBloc finishDateManagerBloc;
+  StreamSubscription<RelationManagerState> timeLogManagerSubscription;
+  StreamSubscription<RelationManagerState> finishDateManagerSubscription;
 
   @override
   Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
@@ -89,11 +94,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             .toList(growable: false);
       }
 
+      bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(selectedDate));
+
       yield CalendarLoaded(
         timeLogs,
         finishDates,
         selectedDate,
         selectedTimeLogs,
+        isSelectedDateFinish,
       );
 
     } catch (e) {
@@ -110,16 +118,204 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final CalendarStyle style = (state as CalendarLoaded).style;
+      final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
+      List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
 
-      final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
+      if((style == CalendarStyle.List) || (style == CalendarStyle.Graph && !event.date.isInWeekOf(previousSelectedDate))) {
+        selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
+      }
+
+      bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(event.date));
 
       yield CalendarLoaded(
         timeLogs,
         finishDates,
         event.date,
         selectedTimeLogs,
+        isSelectedDateFinish,
         style,
       );
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateStyleToState(UpdateStyle event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+
+      final rotatingIndex = ((state as CalendarLoaded).style.index + 1) % CalendarStyle.values.length;
+      final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
+
+      final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, selectedDate, updatedStyle);
+
+      yield CalendarLoaded(
+        timeLogs,
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        updatedStyle,
+      );
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateToState(UpdateCalendar event) async* {
+
+    yield CalendarLoaded(
+      event.timeLogs,
+      event.finishDates,
+      event.selectedDate,
+      event.selectedTimeLogs,
+      event.isSelectedDateFinish,
+      event.style,
+    );
+
+  }
+
+  void mapTimeLogManagerStateToEvent(RelationManagerState managerState) {
+
+    if(managerState is RelationAdded<TimeLog>) {
+
+      _mapAddedTimeLogToEvent(managerState);
+
+    } else if(managerState is RelationDeleted<TimeLog>) {
+
+      _mapDeletedTimeLogToEvent(managerState);
+
+    }
+
+  }
+
+  void mapFinishDateManagerStateToEvent(RelationManagerState managerState) {
+
+    if(managerState is RelationAdded<DateTime>) {
+
+      _mapAddedFinishDateToEvent(managerState);
+
+    } else if(managerState is RelationDeleted<DateTime>) {
+
+      _mapDeletedFinishDateToEvent(managerState);
+
+    }
+
+  }
+
+  void _mapAddedTimeLogToEvent(RelationAdded<TimeLog> managerState) {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final CalendarStyle style = (state as CalendarLoaded).style;
+
+      final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.otherItem);
+
+      if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
+        selectedTimeLogs = List.from(selectedTimeLogs)..add(managerState.otherItem);
+        selectedTimeLogs..sort();
+      }
+
+      add(UpdateCalendar(
+        updatedTimeLogs..sort(),
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        style,
+      ));
+    }
+
+  }
+
+  void _mapDeletedTimeLogToEvent(RelationDeleted<TimeLog> managerState) {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final CalendarStyle style = (state as CalendarLoaded).style;
+
+      final List<TimeLog> updatedTimeLogs = timeLogs
+          .where((TimeLog log) => log.dateTime != managerState.otherItem.dateTime)
+          .toList(growable: false);
+
+      if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
+        selectedTimeLogs = selectedTimeLogs
+            .where((TimeLog log) => log.dateTime != managerState.otherItem.dateTime)
+            .toList(growable: false);
+      }
+
+      add(UpdateCalendar(
+        updatedTimeLogs,
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        style,
+      ));
+    }
+
+  }
+
+  void _mapAddedFinishDateToEvent(RelationAdded<DateTime> managerState) {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final CalendarStyle style = (state as CalendarLoaded).style;
+
+      final List<DateTime> updatedFinishDates = List.from(finishDates)..add(managerState.otherItem);
+
+      isSelectedDateFinish = isSelectedDateFinish || managerState.otherItem.isSameDate(selectedDate);
+
+      add(UpdateCalendar(
+        timeLogs,
+        updatedFinishDates..sort(),
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        style,
+      ));
+    }
+
+  }
+
+  void _mapDeletedFinishDateToEvent(RelationDeleted<DateTime> managerState) {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final CalendarStyle style = (state as CalendarLoaded).style;
+
+      final List<DateTime> updatedFinishDates = finishDates
+          .where((DateTime date) => date != managerState.otherItem)
+          .toList(growable: false);
+
+      isSelectedDateFinish = !(isSelectedDateFinish && managerState.otherItem.isSameDate(selectedDate));
+
+      add(UpdateCalendar(
+        timeLogs,
+        updatedFinishDates,
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        style,
+      ));
     }
 
   }
@@ -134,13 +330,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             .toList(growable: false);
         break;
       case CalendarStyle.Graph:
-        DateTime mondayOfSelectedDate;
-        if(selectedDate.weekday == 1) {
-          mondayOfSelectedDate = selectedDate;
-        } else {
-          int daysToRemove = selectedDate.weekday - 1;
-          mondayOfSelectedDate = selectedDate.subtract(Duration(days: daysToRemove));
-        }
+        DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
 
         Duration dayDuration = Duration(days: 1);
         DateTime dateOfWeek = mondayOfSelectedDate;
@@ -160,173 +350,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         break;
     }
 
-    return selectedTimeLogs;
-  }
-
-  Stream<CalendarState> _mapUpdateStyleToState(UpdateStyle event) async* {
-
-    if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
-
-      final rotatingIndex = ((state as CalendarLoaded).style.index + 1) % CalendarStyle.values.length;
-      final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
-
-      final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, selectedDate, updatedStyle);
-
-      yield CalendarLoaded(
-        timeLogs,
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        updatedStyle,
-      );
-    }
-
-  }
-
-  Stream<CalendarState> _mapUpdateToState(UpdateCalendar event) async* {
-
-    yield CalendarLoaded(
-      event.timeLogs,
-      event.finishDates,
-      event.selectedDate,
-      event.selectedTimeLogs,
-      event.style,
-    );
-
-  }
-
-  void mapManagerStateToEvent(CalendarManagerState managerState) {
-
-    if(managerState is TimeLogAdded) {
-
-      _mapAddedTimeLogToEvent(managerState);
-
-    } else if(managerState is TimeLogDeleted) {
-
-      _mapDeletedTimeLogToEvent(managerState);
-
-    } else if(managerState is FinishDateAdded) {
-
-      _mapAddedFinishDateToEvent(managerState);
-
-    } else  if(managerState is FinishDateDeleted) {
-
-      _mapDeletedFinishDateToEvent(managerState);
-
-    }
-
-  }
-
-  void _mapAddedTimeLogToEvent(TimeLogAdded managerState) {
-
-    if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
-      List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
-      final CalendarStyle style = (state as CalendarLoaded).style;
-
-      final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.log);
-
-      if(managerState.log.dateTime.isSameDate(selectedDate)) {
-        selectedTimeLogs = List.from(selectedTimeLogs)..add(managerState.log);
-        selectedTimeLogs..sort();
-      }
-
-      add(UpdateCalendar(
-        updatedTimeLogs..sort(),
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        style,
-      ));
-    }
-
-  }
-
-  void _mapDeletedTimeLogToEvent(TimeLogDeleted managerState) {
-
-    if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
-      List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
-      final CalendarStyle style = (state as CalendarLoaded).style;
-
-      final List<TimeLog> updatedTimeLogs = timeLogs
-          .where((TimeLog log) => log.dateTime != managerState.log.dateTime)
-          .toList(growable: false);
-
-      if(managerState.log.dateTime.isSameDate(selectedDate)) {
-        selectedTimeLogs = selectedTimeLogs
-            .where((TimeLog log) => log.dateTime != managerState.log.dateTime)
-            .toList(growable: false);
-      }
-
-      add(UpdateCalendar(
-        updatedTimeLogs,
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        style,
-      ));
-    }
-
-  }
-
-  void _mapAddedFinishDateToEvent(FinishDateAdded managerState) {
-
-    if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
-      final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
-      final CalendarStyle style = (state as CalendarLoaded).style;
-
-      final List<DateTime> updatedFinishDates = List.from(finishDates)..add(managerState.date);
-
-      add(UpdateCalendar(
-        timeLogs,
-        updatedFinishDates..sort(),
-        selectedDate,
-        selectedTimeLogs,
-        style,
-      ));
-    }
-
-  }
-
-  void _mapDeletedFinishDateToEvent(FinishDateDeleted managerState) {
-
-    if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
-      final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
-      final CalendarStyle style = (state as CalendarLoaded).style;
-
-      final List<DateTime> updatedFinishDates = finishDates
-          .where((DateTime date) => date != managerState.date)
-          .toList(growable: false);
-
-      add(UpdateCalendar(
-        timeLogs,
-        updatedFinishDates,
-        selectedDate,
-        selectedTimeLogs,
-        style,
-      ));
-    }
-
+    return selectedTimeLogs..sort();
   }
 
   @override
   Future<void> close() {
 
-    managerSubscription?.cancel();
+    timeLogManagerSubscription?.cancel();
+    finishDateManagerSubscription?.cancel();
     return super.close();
 
   }

@@ -107,6 +107,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         GameCalendarView(
           itemId: settings.arguments as int,
         ),
+        themeDataBuilder: GameTheme.themeData,
       );
 
     case gameSearchRoute:

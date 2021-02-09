@@ -14,12 +14,13 @@ abstract class CalendarEvent extends Equatable {
 class LoadCalendar extends CalendarEvent {}
 
 class UpdateCalendar extends CalendarEvent {
-  const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.style);
+  const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.style);
 
   final List<TimeLog> timeLogs;
   final List<DateTime> finishDates;
   final DateTime selectedDate;
   final List<TimeLog> selectedTimeLogs;
+  final bool isSelectedDateFinish;
   final CalendarStyle style;
 
   @override
@@ -31,6 +32,7 @@ class UpdateCalendar extends CalendarEvent {
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
       'selectedTimeLogs: $selectedTimeLogs, '
+      'isSelectedDateFinish: $isSelectedDateFinish, '
       'style: $style'
       ' }';
 }

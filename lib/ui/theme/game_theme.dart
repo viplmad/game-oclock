@@ -94,7 +94,7 @@ class GameTheme {
 
   static String _itemSubtitle(BuildContext context, Game item) {
 
-    return (item.status?? '') + ' · ' + GameCollectionLocalisations.of(context).yearString(item.releaseYear);
+    return (item.status?? '') + ' · ' + (item.releaseYear != null? GameCollectionLocalisations.of(context).yearString(item.releaseYear) : '');
 
   }
 }
