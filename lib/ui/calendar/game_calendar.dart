@@ -403,7 +403,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
         icon: Icon(Icons.link_off),
         onPressed: () {
           BlocProvider.of<GameFinishDateRelationManagerBloc>(context).add(
-            AddRelation<DateTime>(
+            DeleteRelation<DateTime>(
               selectedDate,
             ),
           );
@@ -431,7 +431,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
               icon: Icon(Icons.link_off),
               onPressed: () {
                 BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
-                  AddRelation<TimeLog>(
+                  DeleteRelation<TimeLog>(
                     timeLog,
                   ),
                 );
