@@ -303,7 +303,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<DateTime> updatedFinishDates = finishDates
-          .where((DateTime date) => date != managerState.otherItem)
+          .where((DateTime date) => !date.isSameDate(managerState.otherItem))
           .toList(growable: false);
 
       isSelectedDateFinish = !(isSelectedDateFinish && managerState.otherItem.isSameDate(selectedDate));

@@ -345,18 +345,30 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     Map<DateTime, List<Duration>> eventsMap = _convertTimeLogsToMap(timeLogs);
     Map<DateTime, List<int>> holidaysMap = _convertFinishDatesToMap(finishDates);
 
+    DateTime lastDate = timeLogs.first.dateTime;
+    DateTime firstDate = timeLogs.last.dateTime;
+
     return tableCalendar.TableCalendar(
       calendarController: _calendarController,
       events: eventsMap,
       holidays: holidaysMap,
       startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      startDay: DateTime(1970),
-      endDay: DateTime.now(),
+      startDay: firstDate,
+      endDay: lastDate,
       initialSelectedDay: selectedDate,
       calendarStyle: tableCalendar.CalendarStyle(
         selectedColor: GameTheme.primaryColour,
         todayColor: Colors.yellow[800],
         outsideDaysVisible: false,
+
+      ),
+      availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
+      availableCalendarFormats: const {
+        tableCalendar.CalendarFormat.month: '',
+      },
+      headerStyle: tableCalendar.HeaderStyle(
+        centerHeaderTitle: true,
+        formatButtonVisible: false,
       ),
       builders: tableCalendar.CalendarBuilders(
         markersBuilder: (context, date, events, holidays) {
@@ -367,7 +379,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
               Positioned(
                 right: 1,
                 bottom: 1,
-                child: _buildEventsMarker(date, events),
+                child: _buildEventsMarker(),
               ),
             );
           }
@@ -504,28 +516,12 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     return map;
   }
 
-  Widget _buildEventsMarker(DateTime date, List events) {
+  Widget _buildEventsMarker() {
 
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: _calendarController.isSelected(date)
-            ? Colors.brown[500]
-            : _calendarController.isToday(date)
-            ? Colors.brown[300]
-            : Colors.blue[400],
-      ),
-      width: 16.0,
-      height: 16.0,
-      child: Center(
-        child: Text(
-          '${events.length}',
-          style: TextStyle().copyWith(
-            color: Colors.white,
-            fontSize: 12.0,
-          ),
-        ),
-      ),
+    return Icon(
+      Icons.circle,
+      size: 20.0,
+      color: GameTheme.statusColours.elementAt(GameTheme.statusColours.length - 2),
     );
 
   }

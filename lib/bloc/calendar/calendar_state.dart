@@ -24,7 +24,7 @@ class CalendarLoaded extends CalendarState {
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [timeLogs, finishDates, selectedDate, isSelectedDateFinish, style];
+  List<Object> get props => [timeLogs, finishDates, selectedDate, style];
 
   @override
   String toString() => 'CalendarLoaded { '
