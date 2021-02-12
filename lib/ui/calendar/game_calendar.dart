@@ -23,13 +23,25 @@ import '../common/statistics_histogram.dart';
 import '../common/duration_picker_dialog.dart';
 
 
-class GameCalendarView extends StatelessWidget {
-  const GameCalendarView({
+class GameCalendarArguments {
+  const GameCalendarArguments({
+    @required this.itemId,
+    this.onUpdate,
+  });
+
+  final int itemId;
+  final void Function() onUpdate;
+}
+
+class GameCalendar extends StatelessWidget {
+  const GameCalendar({
     Key key,
     @required this.itemId,
+    this.onUpdate,
   }) : super(key: key);
 
   final int itemId;
+  final void Function() onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +105,6 @@ class GameCalendarView extends StatelessWidget {
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );
-
-  }
-
-  _GameCalendarBody bodyBuilder() {
-
-    return _GameCalendarBody();
 
   }
 
@@ -196,10 +202,20 @@ class GameCalendarView extends StatelessWidget {
 
   }
 
+  _GameCalendarBody bodyBuilder() {
+
+    return _GameCalendarBody(
+      onUpdate: onUpdate,
+    );
+
+  }
+
 }
 
 class _GameCalendarBody extends StatefulWidget {
-  const _GameCalendarBody({Key key}) : super(key: key);
+  const _GameCalendarBody({Key key, @required this.onUpdate}) : super(key: key);
+
+  final void Function() onUpdate;
 
   @override
   State<_GameCalendarBody> createState() => _GameCalendarBodyState();
@@ -207,135 +223,157 @@ class _GameCalendarBody extends StatefulWidget {
 class _GameCalendarBodyState extends State<_GameCalendarBody> {
   tableCalendar.CalendarController _calendarController;
 
+  bool _isUpdated;
+
   @override
   void initState() {
     super.initState();
 
     _calendarController = tableCalendar.CalendarController();
+    _isUpdated = false;
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<GameTimeLogRelationManagerBloc, RelationManagerState>(
-          listener: (BuildContext context, RelationManagerState state) {
-            if(state is RelationAdded<TimeLog>) {
-              String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
+    return WillPopScope(
+      onWillPop: () {
+
+        if(_isUpdated && widget.onUpdate != null) { widget.onUpdate(); }
+        return Future<bool>.value(true);
+
+      },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<GameTimeLogRelationManagerBloc, RelationManagerState>(
+            listener: (BuildContext context, RelationManagerState state) {
+              if(state is RelationAdded<TimeLog>) {
+                _isUpdated = true;
+
+                String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                );
+              }
+              if(state is RelationNotAdded) {
+                String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                  snackBarAction: dialogSnackBarAction(
+                    context,
+                    label: GameCollectionLocalisations.of(context).moreString,
+                    title: message,
+                    content: state.error,
+                  ),
+                );
+              }
+              if(state is RelationDeleted) {
+                _isUpdated = true;
+
+                String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                );
+              }
+              if(state is RelationNotDeleted) {
+                String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                  snackBarAction: dialogSnackBarAction(
+                    context,
+                    label: GameCollectionLocalisations.of(context).moreString,
+                    title: message,
+                    content: state.error,
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<GameFinishDateRelationManagerBloc, RelationManagerState>(
+            listener: (BuildContext context, RelationManagerState state) {
+              if(state is RelationAdded<DateTime>) {
+                _isUpdated = true;
+
+                String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                );
+              }
+              if(state is RelationNotAdded) {
+                String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                  snackBarAction: dialogSnackBarAction(
+                    context,
+                    label: GameCollectionLocalisations.of(context).moreString,
+                    title: message,
+                    content: state.error,
+                  ),
+                );
+              }
+              if(state is RelationDeleted) {
+                _isUpdated = true;
+
+                String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                );
+              }
+              if(state is RelationNotDeleted) {
+                String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                showSnackBar(
+                  scaffoldState: Scaffold.of(context),
+                  message: message,
+                  snackBarAction: dialogSnackBarAction(
+                    context,
+                    label: GameCollectionLocalisations.of(context).moreString,
+                    title: message,
+                    content: state.error,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<CalendarBloc, CalendarState>(
+          builder: (BuildContext context, CalendarState state) {
+
+            if(state is CalendarLoaded) {
+
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  _buildTableCalendar(context, state.timeLogs, state.finishDates, state.selectedDate),
+                  const Divider(height: 4.0),
+                  state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
+                  state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
+                  ListTile(
+                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString),
+                  ),
+                  Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
+                ],
               );
+
             }
-            if(state is RelationNotAdded) {
-              String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
+            if(state is CalendarNotLoaded) {
+
+              return Center(
+                child: Text(state.error),
               );
+
             }
-            if(state is RelationDeleted) {
-              String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-              );
-            }
-            if(state is RelationNotDeleted) {
-              String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
-              );
-            }
+
+            return LoadingIcon();
+
           },
         ),
-        BlocListener<GameFinishDateRelationManagerBloc, RelationManagerState>(
-          listener: (BuildContext context, RelationManagerState state) {
-            if(state is RelationAdded<DateTime>) {
-              String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-              );
-            }
-            if(state is RelationNotAdded) {
-              String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
-              );
-            }
-            if(state is RelationDeleted) {
-              String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-              );
-            }
-            if(state is RelationNotDeleted) {
-              String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
-              showSnackBar(
-                scaffoldState: Scaffold.of(context),
-                message: message,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
-              );
-            }
-          },
-        ),
-      ],
-      child: BlocBuilder<CalendarBloc, CalendarState>(
-        builder: (BuildContext context, CalendarState state) {
-
-          if(state is CalendarLoaded) {
-
-            return Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                _buildTableCalendar(context, state.timeLogs, state.finishDates, state.selectedDate),
-                const Divider(height: 4.0),
-                state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
-                state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
-                Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
-              ],
-            );
-
-          }
-          if(state is CalendarNotLoaded) {
-
-            return Center(
-              child: Text(state.error),
-            );
-
-          }
-
-          return LoadingIcon();
-
-        },
       ),
     );
 
@@ -345,8 +383,12 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     Map<DateTime, List<Duration>> eventsMap = _convertTimeLogsToMap(timeLogs);
     Map<DateTime, List<int>> holidaysMap = _convertFinishDatesToMap(finishDates);
 
-    DateTime lastDate = timeLogs.first.dateTime;
-    DateTime firstDate = timeLogs.last.dateTime;
+    DateTime firstDate = DateTime.now();
+    DateTime lastDate = firstDate;
+    if(timeLogs.isNotEmpty) {
+      firstDate = timeLogs.first.dateTime;
+      lastDate = timeLogs.last.dateTime;
+    }
 
     return tableCalendar.TableCalendar(
       calendarController: _calendarController,
@@ -360,7 +402,6 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
         selectedColor: GameTheme.primaryColour,
         todayColor: Colors.yellow[800],
         outsideDaysVisible: false,
-
       ),
       availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
       availableCalendarFormats: const {
@@ -427,6 +468,12 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
   }
 
   Widget _buildEventList(BuildContext context, List<TimeLog> timeLogs) {
+
+    if(timeLogs.isEmpty) {
+      return Center(
+        child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
+      );
+    }
 
     return ListView.builder(
       shrinkWrap: true,

@@ -210,10 +210,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
       final CalendarStyle style = (state as CalendarLoaded).style;
+
+      if(timeLogs.isEmpty) {
+        selectedDate = managerState.otherItem.dateTime;
+      }
 
       final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.otherItem);
 
@@ -239,7 +243,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
-      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
       final CalendarStyle style = (state as CalendarLoaded).style;
@@ -247,6 +251,12 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<TimeLog> updatedTimeLogs = timeLogs
           .where((TimeLog log) => log.dateTime != managerState.otherItem.dateTime)
           .toList(growable: false);
+
+      if(updatedTimeLogs.isEmpty) {
+        selectedDate = DateTime.now();
+      } else {
+        selectedDate = updatedTimeLogs.last.dateTime;
+      }
 
       if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
         selectedTimeLogs = selectedTimeLogs

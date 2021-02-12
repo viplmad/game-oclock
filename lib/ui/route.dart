@@ -103,9 +103,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameCalendarRoute:
+      GameCalendarArguments gameCalendarArguments = settings.arguments as GameCalendarArguments;
       return _pageRoute(
-        GameCalendarView(
-          itemId: settings.arguments as int,
+        GameCalendar(
+          itemId: gameCalendarArguments.itemId,
+          onUpdate: gameCalendarArguments.onUpdate,
         ),
         themeDataBuilder: GameTheme.themeData,
       );

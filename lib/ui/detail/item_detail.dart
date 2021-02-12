@@ -445,6 +445,20 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
+  Widget itemDurationField(BuildContext context, {@required String fieldName, @required Duration value}) {
+
+    return _ItemGenericField<Duration>(
+      fieldName: fieldName,
+      value: value,
+      shownValue: value != null?
+        GameCollectionLocalisations.of(context).durationString(value)
+        :
+        null,
+      editable: false,
+    );
+
+  }
+
   Widget itemMoneySumField(BuildContext context, {@required String fieldName, @required double value}) {
 
     return _ItemDoubleField(
