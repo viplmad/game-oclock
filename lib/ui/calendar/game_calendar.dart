@@ -355,7 +355,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
                   state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
-                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString),
+                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + " - " + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? " (" + GameCollectionLocalisations.of(context).weekString + ")" : "")),
                   ),
                   Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
                 ],

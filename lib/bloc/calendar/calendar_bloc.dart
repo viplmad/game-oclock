@@ -221,7 +221,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.otherItem);
 
-      if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
+      if((style == CalendarStyle.List && managerState.otherItem.dateTime.isSameDate(selectedDate))
+          || (style == CalendarStyle.Graph && managerState.otherItem.dateTime.isInWeekOf(selectedDate))) {
         selectedTimeLogs = List.from(selectedTimeLogs)..add(managerState.otherItem);
         selectedTimeLogs..sort();
       }
@@ -254,8 +255,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       if(updatedTimeLogs.isEmpty) {
         selectedDate = DateTime.now();
-      } else {
-        selectedDate = updatedTimeLogs.last.dateTime;
       }
 
       if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
