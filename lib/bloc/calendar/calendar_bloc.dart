@@ -51,6 +51,22 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       yield* _mapUpdateStyleToState(event);
 
+    } else if(event is UpdateSelectedDateFirst) {
+
+      yield* _mapUpdateSelectedDateFirstToState(event);
+
+    } else if(event is UpdateSelectedDateLast) {
+
+      yield* _mapUpdateSelectedDateLastToState(event);
+
+    } else if(event is UpdateSelectedDatePrevious) {
+
+      yield* _mapUpdateSelectedDatePreviousToState(event);
+
+    } else if(event is UpdateSelectedDateNext) {
+
+      yield* _mapUpdateSelectedDateNextToState(event);
+
     } else if(event is UpdateCalendar) {
 
       yield* _mapUpdateToState(event);
@@ -135,6 +151,82 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         isSelectedDateFinish,
         style,
       );
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+
+      DateTime firstDate;
+      if(timeLogs.isNotEmpty) {
+        firstDate = timeLogs.first.dateTime;
+      }
+
+      add(UpdateSelectedDate(firstDate));
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+
+      DateTime lastDate;
+      if(timeLogs.isNotEmpty) {
+        lastDate = timeLogs.last.dateTime;
+      }
+
+      add(UpdateSelectedDate(lastDate));
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
+
+      DateTime previousDate;
+      if(timeLogs.isNotEmpty) {
+        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
+
+        for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index --) {
+          TimeLog log = timeLogs.elementAt(index);
+          if(!log.dateTime.isSameDate(previousSelectedDate)) {
+            previousDate = log.dateTime;
+          }
+        }
+      }
+
+      add(UpdateSelectedDate(previousDate?? previousSelectedDate));
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
+
+    if(state is CalendarLoaded) {
+      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
+
+      DateTime nextDate;
+      if(timeLogs.isNotEmpty) {
+        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
+
+        for(int index = selectedIndex + 1; index < timeLogs.length && nextDate == null; index ++) {
+          TimeLog log = timeLogs.elementAt(index);
+          if(!log.dateTime.isSameDate(previousSelectedDate)) {
+            nextDate = log.dateTime;
+          }
+        }
+      }
+
+      add(UpdateSelectedDate(nextDate?? previousSelectedDate));
     }
 
   }

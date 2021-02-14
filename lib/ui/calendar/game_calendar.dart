@@ -82,6 +82,34 @@ class GameCalendar extends StatelessWidget {
           title: Text(GameCollectionLocalisations.of(context).calendarViewString),
           actions: [
             IconButton(
+              icon: Icon(Icons.first_page),
+              tooltip: GameCollectionLocalisations.of(context).firstTimeLog,
+              onPressed: () {
+                _bloc.add(UpdateSelectedDateFirst());
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.navigate_before),
+              tooltip: GameCollectionLocalisations.of(context).previousTimeLog,
+              onPressed: () {
+                _bloc.add(UpdateSelectedDatePrevious());
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.navigate_next),
+              tooltip: GameCollectionLocalisations.of(context).nextTimeLog,
+              onPressed: () {
+                _bloc.add(UpdateSelectedDateNext());
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.last_page),
+              tooltip: GameCollectionLocalisations.of(context).lastTimeLog,
+              onPressed: () {
+                _bloc.add(UpdateSelectedDateLast());
+              },
+            ),
+            IconButton(
               icon: Icon(Icons.insert_chart),
               tooltip: GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
@@ -234,6 +262,12 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
   }
 
   @override
+  void dispose() {
+    _calendarController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     return WillPopScope(
@@ -338,6 +372,15 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
                     content: state.error,
                   ),
                 );
+              }
+            },
+          ),
+          BlocListener<CalendarBloc, CalendarState>(
+            listener: (BuildContext context, CalendarState state) {
+              if(state is CalendarLoaded) {
+                try {
+                  _calendarController.setSelectedDay(state.selectedDate);
+                } catch (NoSuchMethodError) {}
               }
             },
           ),

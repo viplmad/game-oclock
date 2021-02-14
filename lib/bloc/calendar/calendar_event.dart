@@ -51,4 +51,12 @@ class UpdateSelectedDate extends CalendarEvent {
       ' }';
 }
 
+class UpdateSelectedDateFirst extends CalendarEvent {}
+
+class UpdateSelectedDateLast extends CalendarEvent {}
+
+class UpdateSelectedDatePrevious extends CalendarEvent {}
+
+class UpdateSelectedDateNext extends CalendarEvent {}
+
 class UpdateStyle extends CalendarEvent {}
