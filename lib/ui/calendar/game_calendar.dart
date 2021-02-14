@@ -139,15 +139,18 @@ class GameCalendar extends StatelessWidget {
   SpeedDial _buildSpeedDial(BuildContext context, GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishDateRelationManagerBloc finishDateManagerBloc) {
 
     return SpeedDial(
-      animatedIcon: AnimatedIcons.menu_close,
-      animatedIconTheme: IconThemeData(size: 22.0),
+      icon: Icons.add,
+      activeIcon: Icons.remove,
+      tooltip: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).gameCalendarEventsString),
+      overlayColor: Colors.black,
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
+      overlayOpacity: 0.5,
       children: [
         SpeedDialChild(
-          child: Icon(Icons.add_alarm, color: Colors.white),
+          child: Icon(Icons.add_alarm),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
-          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelStyle: TextStyle(color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
@@ -204,9 +207,9 @@ class GameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
-          child: Icon(Icons.event_available, color: Colors.white),
+          child: Icon(Icons.event_available),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).finishDateFieldString),
-          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelStyle: TextStyle(color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 

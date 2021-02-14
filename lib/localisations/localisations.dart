@@ -92,6 +92,7 @@ abstract class GameCollectionLocalisations {
   String get calendarViewString;
   String get editTimeString;
   String get selectedDateIsFinishDateString;
+  String get gameCalendarEventsString;
   String get firstTimeLog;
   String get lastTimeLog;
   String get previousTimeLog;

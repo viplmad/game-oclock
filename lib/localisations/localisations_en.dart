@@ -187,6 +187,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String selectedDateIsFinishDateString = "Finished this day";
   @override
+  final String gameCalendarEventsString = 'Game Event';
+  @override
   String get firstTimeLog => 'First $timeLogsFieldString';
   @override
   String get lastTimeLog => 'Last $timeLogsFieldString';
