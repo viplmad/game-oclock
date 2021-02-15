@@ -434,12 +434,12 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
             W result = items[index];
 
             return DismissibleItem(
-                dismissibleKey: result.id,
-                itemWidget: itemBuilder(context, result),
-                onDismissed: (DismissDirection direction) {
-                  updateDelete(result);
-                },
-                dismissIcon: Icons.link_off,
+              dismissibleKey: result.id,
+              itemWidget: itemBuilder(context, result),
+              onDismissed: (DismissDirection direction) {
+                updateDelete(result);
+              },
+              dismissIcon: Icons.link_off,
             );
 
           },

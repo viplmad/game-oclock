@@ -10,20 +10,22 @@ class DismissibleItem extends StatelessWidget {
     @required this.itemWidget,
     @required this.onDismissed,
     @required this.dismissIcon,
+    this.padding = const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
     this.confirmDismiss,
   }) : super(key: key);
 
   final int dismissibleKey;
   final Widget itemWidget;
   final void Function(DismissDirection direction) onDismissed;
-  final Future<bool> Function(DismissDirection direction) confirmDismiss;
   final IconData dismissIcon;
+  final EdgeInsetsGeometry padding;
+  final Future<bool> Function(DismissDirection direction) confirmDismiss;
 
   @override
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+      padding: padding,
       child: Dismissible(
         key: ValueKey<int>(dismissibleKey),
         background: backgroundBuilder(Alignment.centerLeft),

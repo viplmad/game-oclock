@@ -21,6 +21,7 @@ import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/statistics_histogram.dart';
 import '../common/duration_picker_dialog.dart';
+import '../common/item_view.dart';
 
 
 class GameCalendarArguments {
@@ -528,9 +529,9 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
         TimeLog timeLog = timeLogs.elementAt(index);
         String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
-        return Padding(
-          padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
-          child: ListTile(
+        return DismissibleItem(
+          dismissibleKey: timeLog.dateTime.millisecond,
+          itemWidget: ListTile(
             title: Text(timeLogString),
             trailing: IconButton(
               icon: Icon(Icons.link_off),
@@ -543,6 +544,14 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
               },
             ),
           ),
+          onDismissed: (DismissDirection direction) {
+            BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
+              DeleteRelation<TimeLog>(
+                timeLog,
+              ),
+            );
+          },
+          dismissIcon: Icons.link_off,
         );
       },
     );
