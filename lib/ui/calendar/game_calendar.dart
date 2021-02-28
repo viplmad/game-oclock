@@ -475,8 +475,8 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
           if (holidays.isNotEmpty) {
             children.add(
               Positioned(
-                right: 15,
-                top: 15,
+                right: 1,
+                bottom: 0,
                 child: _buildHolidaysMarker(),
               ),
             );

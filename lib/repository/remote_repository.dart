@@ -1863,6 +1863,7 @@ const Map<GameView, String> allViewToTable = {
   GameView.LastCreated : "All-Last Created",
   GameView.Playing : "All-Playing",
   GameView.NextUp : "All-Next Up",
+  GameView.LastPlayed : "All-Last Played",
   GameView.LastFinished : "All-Last Finished",
   GameView.Review : "All-Year In Review",
 };
@@ -1872,6 +1873,7 @@ const Map<GameView, String> gameViewToTable = {
   GameView.LastCreated : "Owned-Last Created",
   GameView.Playing : "Owned-Playing",
   GameView.NextUp : "Owned-Next Up",
+  GameView.LastPlayed : "Owned-Last Played",
   GameView.LastFinished : "Owned-Last Finished",
   GameView.Review : "Owned-Year In Review",
 };
@@ -1881,6 +1883,7 @@ const Map<GameView, String> romViewToTable = {
   GameView.LastCreated : "Rom-Last Created",
   GameView.Playing : "Rom-Playing",
   GameView.NextUp : "Rom-Next Up",
+  GameView.LastPlayed : "Rom-Last Played",
   GameView.LastFinished : "Rom-Last Finished",
   GameView.Review : "Rom-Year In Review",
 };

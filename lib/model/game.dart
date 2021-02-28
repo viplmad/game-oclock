@@ -11,6 +11,7 @@ enum GameView {
   LastCreated,
   Playing,
   NextUp,
+  LastPlayed,
   LastFinished,
   Review,
 }

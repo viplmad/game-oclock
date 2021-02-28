@@ -51,6 +51,7 @@ class GameTheme {
       GameCollectionLocalisations.of(context).lastCreatedViewString,
       GameCollectionLocalisations.of(context).playingViewString,
       GameCollectionLocalisations.of(context).nextUpViewString,
+      GameCollectionLocalisations.of(context).lastPlayedString,
       GameCollectionLocalisations.of(context).lastFinishedViewString,
       GameCollectionLocalisations.of(context).yearInReviewViewString,
     ];

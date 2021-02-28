@@ -206,6 +206,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String nextUpViewString = 'Next Up';
   @override
+  final String lastPlayedString = 'Last Played';
+  @override
   final String lastFinishedViewString = 'Last Finished';
 
   @override

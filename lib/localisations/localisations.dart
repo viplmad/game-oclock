@@ -102,6 +102,7 @@ abstract class GameCollectionLocalisations {
 
   String get playingViewString;
   String get nextUpViewString;
+  String get lastPlayedString;
   String get lastFinishedViewString;
 
   String gamesFromYearString(int year);
