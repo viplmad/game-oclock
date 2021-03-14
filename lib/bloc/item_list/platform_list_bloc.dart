@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -12,8 +10,8 @@ import 'item_list.dart';
 
 class PlatformListBloc extends ItemListBloc<Platform> {
   PlatformListBloc({
-    @required ICollectionRepository iCollectionRepository,
-    @required PlatformListManagerBloc managerBloc,
+    required ICollectionRepository iCollectionRepository,
+    required PlatformListManagerBloc managerBloc,
   }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override

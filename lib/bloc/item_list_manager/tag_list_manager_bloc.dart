@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -9,13 +7,13 @@ import 'item_list_manager.dart';
 
 class TagListManagerBloc extends ItemListManagerBloc<Tag> {
   TagListManagerBloc({
-    @required ICollectionRepository iCollectionRepository,
+    required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Tag> createFuture(AddItem event) {
+  Future<Tag?> createFuture(AddItem event) {
 
-    return iCollectionRepository.createTag(event.title?? '');
+    return iCollectionRepository.createTag(event.title);
 
   }
 

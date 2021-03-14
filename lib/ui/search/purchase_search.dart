@@ -16,14 +16,14 @@ import 'search.dart';
 
 class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
   const PurchaseSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   PurchaseSearchBloc searchBlocBuilder() {
 
     return PurchaseSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
   PurchaseListManagerBloc managerBlocBuilder() {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _PurchaseSearchBody<PurchaseSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Purchase) onTap, bool allowNewButton}) {
+  _PurchaseSearchBody<PurchaseSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
 
     return _PurchaseSearchBody<PurchaseSearchBloc>(
       onTap: onTap,
@@ -50,8 +50,8 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
 
 class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerBloc> {
   const PurchaseLocalSearch({
-    Key key,
-    @required List<Purchase> items,
+    Key? key,
+    required List<Purchase> items,
   }) : super(key: key, items: items);
 
   @override
@@ -61,13 +61,13 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   PurchaseListManagerBloc managerBlocBuilder() {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>> itemSearchBodyBuilder({void Function() Function(BuildContext, Purchase) onTap, bool allowNewButton}) {
+  _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
 
     return _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>>(
       onTap: onTap,
@@ -79,8 +79,8 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
 
 class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
   const _PurchaseSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, Purchase) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, Purchase) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

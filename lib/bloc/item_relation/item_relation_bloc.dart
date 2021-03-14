@@ -13,9 +13,9 @@ import 'item_relation.dart';
 
 abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationEvent, ItemRelationState> {
   ItemRelationBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
-    @required this.managerBloc,
+    required this.itemId,
+    required this.iCollectionRepository,
+    required this.managerBloc,
   }) : super(ItemRelationLoading()) {
 
     managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
@@ -25,7 +25,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   final int itemId;
   final ICollectionRepository iCollectionRepository;
   final ItemRelationManagerBloc<T, W> managerBloc;
-  StreamSubscription<ItemRelationManagerState> managerSubscription;
+  late StreamSubscription<ItemRelationManagerState> managerSubscription;
 
   @override
   Stream<ItemRelationState> mapEventToState(ItemRelationEvent event) async* {
@@ -51,7 +51,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   Stream<ItemRelationState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield ItemRelationNotLoaded("Connection lost. Trying to reconnect");
+      yield ItemRelationNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
@@ -148,7 +148,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   @override
   Future<void> close() {
 
-    managerSubscription?.cancel();
+    managerSubscription.cancel();
     return super.close();
 
   }
@@ -156,7 +156,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
   @mustCallSuper
   Stream<List<W>> getRelationStream() {
 
-    return Stream.error("Relation does not exist");
+    return Stream.error('Relation does not exist');
 
   }
 }

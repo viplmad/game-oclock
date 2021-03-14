@@ -10,7 +10,7 @@ abstract class RelationState extends Equatable {
 
 class RelationLoading extends RelationState {}
 
-class RelationLoaded<O> extends RelationState {
+class RelationLoaded<O extends Object> extends RelationState {
   const RelationLoaded(this.otherItems);
 
   final List<O> otherItems;

@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,16 +10,16 @@ enum StoreView {
 
 class Store extends CollectionItem {
   const Store({
-    @required int id,
-    this.name,
-    this.iconURL,
-    this.iconFilename,
+    required int id,
+    required this.name,
+    required this.iconURL,
+    required this.iconFilename,
   }) : this.uniqueId = 'St$id',
         super(id: id);
 
   final String name;
-  final String iconURL;
-  final String iconFilename;
+  final String? iconURL;
+  final String? iconFilename;
 
   @override
   final String uniqueId;
@@ -34,7 +32,7 @@ class Store extends CollectionItem {
   @override
   String get queryableTerms => this.name;
 
-  static Store fromEntity(StoreEntity entity, [String iconURL]) {
+  static Store fromEntity(StoreEntity entity, [String? iconURL]) {
 
     return Store(
       id: entity.id,
@@ -58,9 +56,9 @@ class Store extends CollectionItem {
 
   @override
   Store copyWith({
-    String name,
-    String iconURL,
-    String iconFilename,
+    String? name,
+    String? iconURL,
+    String? iconFilename,
   }) {
 
     return Store(
@@ -76,7 +74,6 @@ class Store extends CollectionItem {
   List<Object> get props => [
     id,
     name,
-    iconURL,
   ];
 
   @override

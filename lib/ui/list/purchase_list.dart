@@ -18,7 +18,7 @@ import 'list.dart';
 
 class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
   const PurchaseAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
     return (int selectedViewIndex) async {
 
       if(selectedViewIndex == views.length - 1) {
-        int year = await showDialog<int>(
+        int? year = await showDialog<int>(
           context: context,
           builder: (BuildContext context) {
             return Theme(
@@ -61,7 +61,7 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 
 class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
   const PurchaseFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -73,7 +73,7 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
 
 class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
   const PurchaseList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -83,7 +83,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 
   @override
-  _PurchaseListBody itemListBodyBuilder({@required List<Purchase> items, @required int viewIndex, int viewYear, @required void Function(Purchase) onDelete, @required ListStyle style}) {
+  _PurchaseListBody itemListBodyBuilder({required List<Purchase> items, required int viewIndex, int? viewYear, required void Function(Purchase) onDelete, required ListStyle style}) {
 
     return _PurchaseListBody(
       items: items,
@@ -98,12 +98,12 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
 
 class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   const _PurchaseListBody({
-    Key key,
-    @required List<Purchase> items,
-    @required int viewIndex,
-    int viewYear,
-    @required void Function(Purchase) onDelete,
-    @required ListStyle style,
+    Key? key,
+    required List<Purchase> items,
+    required int viewIndex,
+    int? viewYear,
+    required void Function(Purchase) onDelete,
+    required ListStyle style,
   }) : super(
     key: key,
     items: items,
@@ -126,7 +126,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
+  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear!) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);

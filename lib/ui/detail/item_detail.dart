@@ -22,23 +22,23 @@ import '../common/year_picker_dialog.dart';
 
 class DetailArguments<T> {
   const DetailArguments({
-    @required this.item,
+    required this.item,
     this.onUpdate,
   });
 
   final T item;
-  final void Function(T item) onUpdate;
+  final void Function(T? item)? onUpdate;
 }
 
 abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   const ItemDetail({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
     this.onUpdate,
   }) : super(key: key);
 
   final T item;
-  final void Function(T item) onUpdate;
+  final void Function(T? item)? onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +76,13 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 // ignore: must_be_immutable
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   ItemDetailBody({
-    Key key,
+    Key? key,
     this.onUpdate,
   }) : super(key: key);
 
-  final void Function(T item) onUpdate;
+  final void Function(T? item)? onUpdate;
 
-  T _updatedItem;
+  T? _updatedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +90,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
     return WillPopScope(
       onWillPop: () {
 
-        if(onUpdate != null) { onUpdate(_updatedItem); }
+        if(onUpdate != null) { onUpdate!(_updatedItem); }
         return Future<bool>.value(true);
 
       },
@@ -204,7 +204,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           builder: (BuildContext context, ItemDetailState state) {
             String title = '';
             bool hasImage = false;
-            ItemImage image;
+            ItemImage? image;
 
             if(state is ItemLoaded<T>) {
               title = itemTitle(state.item);
@@ -219,7 +219,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                 collapseMode: CollapseMode.parallax,
                 background: hasImage?
                   CachedImage(
-                    imageURL: image.url,
+                    imageURL: image!.url,
                     fit: BoxFit.cover,
                     applyGradient: true,
                     backgroundColour: Theme.of(context).primaryColor,
@@ -233,7 +233,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                     return _imageActionListBuilder(
                       innerContext,
                       context,
-                      imageFilename: image.filename,
+                      imageFilename: image!.filename,
                     );
 
                   },
@@ -248,7 +248,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget _imageActionListBuilder(BuildContext context, BuildContext outerContext, {String imageFilename}) {
+  Widget _imageActionListBuilder(BuildContext context, BuildContext outerContext, {required String imageFilename}) {
 
     final ImagePicker _picker = ImagePicker();
     final bool withImage = imageFilename.isNotEmpty;
@@ -269,7 +269,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
             onTap: () {
               _picker.getImage(
                   source: ImageSource.gallery,
-              ).then( (PickedFile imagePicked) {
+              ).then( (PickedFile? imagePicked) {
                 if(imagePicked != null) {
 
                   BlocProvider.of<S>(outerContext).add(
@@ -328,7 +328,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                     ],
                   );
                 },
-              ).then( (String newName) {
+              ).then( (String? newName) {
                 if(newName != null) {
 
                   BlocProvider.of<S>(outerContext).add(
@@ -379,7 +379,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemTextField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
+  Widget itemTextField(BuildContext context, {required String fieldName, required String field, required String value}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -389,7 +389,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemURLField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
+  Widget itemURLField(BuildContext context, {required String fieldName, required String field, required String value}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -410,7 +410,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemLongTextField(BuildContext context, {@required String fieldName, @required String field, @required String value}) {
+  Widget itemLongTextField(BuildContext context, {required String fieldName, required String field, required String value}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -421,17 +421,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemIntField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
-
-    return _ItemIntField(
-      fieldName: fieldName,
-      value: value,
-      update: _updateFieldFunction<int>(context, field),
-    );
-
-  }
-
-  Widget itemMoneyField(BuildContext context, {@required String fieldName, @required String field, @required double value}) {
+  Widget itemMoneyField(BuildContext context, {required String fieldName, required String field, required double? value}) {
 
     return _ItemDoubleField(
       fieldName: fieldName,
@@ -445,7 +435,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemDurationField(BuildContext context, {@required String fieldName, @required Duration value}) {
+  Widget itemDurationField(BuildContext context, {required String fieldName, required Duration? value}) {
 
     return _ItemGenericField<Duration>(
       fieldName: fieldName,
@@ -459,7 +449,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemMoneySumField(BuildContext context, {@required String fieldName, @required double value}) {
+  Widget itemMoneySumField(BuildContext context, {required String fieldName, required double? value}) {
 
     return _ItemDoubleField(
       fieldName: fieldName,
@@ -473,7 +463,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemPercentageField(BuildContext context, {@required String fieldName, @required double value}) {
+  Widget itemPercentageField(BuildContext context, {required String fieldName, required double? value}) {
 
     return _ItemDoubleField(
       fieldName: fieldName,
@@ -487,7 +477,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemYearField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
+  Widget itemYearField(BuildContext context, {required String fieldName, required String field, required int? value}) {
 
     return _ItemYearField(
       fieldName: fieldName,
@@ -497,7 +487,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemDateTimeField(BuildContext context, {@required String fieldName, @required String field, @required DateTime value}) {
+  Widget itemDateTimeField(BuildContext context, {required String fieldName, required String field, required DateTime? value}) {
 
     return _ItemDateTimeField(
       fieldName: fieldName,
@@ -507,17 +497,17 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemRatingField(BuildContext context, {@required String fieldName, @required String field, @required int value}) {
+  Widget itemRatingField(BuildContext context, {required String fieldName, required String field, required int? value}) {
 
     return _RatingField(
       fieldName: fieldName,
-      value: value,
+      value: value?? 0,
       update: _updateFieldFunction<int>(context, field),
     );
 
   }
 
-  Widget itemBoolField(BuildContext context, {@required String fieldName, @required String field, @required bool value}) {
+  Widget itemBoolField(BuildContext context, {required String fieldName, required String field, required bool value}) {
 
     return _BoolField(
       fieldName: fieldName,
@@ -527,7 +517,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemChipField(BuildContext context, {@required String fieldName, @required String field, @required String value, @required List<String> possibleValues, List<Color> possibleValuesColours}) {
+  Widget itemChipField(BuildContext context, {required String fieldName, required String field, required String? value, required List<String> possibleValues, required List<Color> possibleValuesColours}) {
 
     return _EnumField(
       fieldName: fieldName,
@@ -547,35 +537,35 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
 class _ItemGenericField<K> extends StatelessWidget {
   const _ItemGenericField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    this.shownValue,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.shownValue,
     this.editable = true,
-    @required this.onTap,
+    this.onTap,
     this.onLongPress,
-    @required this.update,
+    this.update,
     this.extended = false,
   }) : super(key: key);
 
   final String fieldName;
-  final K value;
-  final String shownValue;
+  final K? value;
+  final String? shownValue;
   final bool editable;
-  final Future<K> Function() onTap;
-  final void Function() onLongPress;
-  final void Function(K) update;
+  final Future<K?> Function()? onTap;
+  final void Function()? onLongPress;
+  final void Function(K)? update;
 
   final bool extended;
 
   @override
   Widget build(BuildContext context) {
 
-    void Function() onTapWrapped = editable?
+    void Function()? onTapWrapped = editable?
       () {
-        onTap().then( (K newValue) {
+        onTap!().then( (K? newValue) {
           if (newValue != null) {
-            update(newValue);
+            update!(newValue);
           }
         });
       } : null;
@@ -613,19 +603,19 @@ class _ItemGenericField<K> extends StatelessWidget {
 
 class _ItemTextField extends StatelessWidget {
   const _ItemTextField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
+    Key? key,
+    required this.fieldName,
+    required this.value,
     this.shownValue,
     this.onLongPress,
-    @required this.update,
+    required this.update,
     this.isLongText = false,
   }) : super(key: key);
 
   final String fieldName;
-  final String value;
-  final String shownValue;
-  final void Function() onLongPress;
+  final String? value;
+  final String? shownValue;
+  final void Function()? onLongPress;
   final void Function(String) update;
   final bool isLongText;
 
@@ -640,7 +630,7 @@ class _ItemTextField extends StatelessWidget {
       update: update,
       onTap: () {
         TextEditingController fieldController = TextEditingController();
-        fieldController.text = value;
+        fieldController.text = value?? '';
 
         return showDialog<String>(
           context: context,
@@ -681,62 +671,21 @@ class _ItemTextField extends StatelessWidget {
   }
 }
 
-class _ItemIntField extends StatelessWidget {
-  const _ItemIntField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final int value;
-  final void Function(int) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<int>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value?.toString(),
-      update: update,
-      onTap: () {
-        return showDialog<int>(
-          context: context,
-          builder: (BuildContext context) {
-
-            return NumberPickerDialog.integer(
-              title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
-              initialIntegerValue: value,
-              minValue: 1,
-              maxValue: 10,
-              cancelWidget: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-              confirmWidget: Text(MaterialLocalizations.of(context).okButtonLabel),
-            );
-          }
-        );
-      },
-    );
-
-  }
-}
-
 class _ItemDoubleField extends StatelessWidget {
   const _ItemDoubleField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    this.shownValue,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.shownValue,
     this.editable = true,
-    @required this.update,
+    this.update,
   }) : super(key: key);
 
   final String fieldName;
-  final double value;
-  final String shownValue;
+  final double? value;
+  final String? shownValue;
   final bool editable;
-  final void Function(double) update;
+  final void Function(double)? update;
 
   @override
   Widget build(BuildContext context) {
@@ -754,7 +703,7 @@ class _ItemDoubleField extends StatelessWidget {
 
             return _DecimalPickerDialog(
               fieldName: fieldName,
-              number: value,
+              number: value?? 0,
             );
 
           },
@@ -767,14 +716,14 @@ class _ItemDoubleField extends StatelessWidget {
 
 class _ItemYearField extends StatelessWidget {
   const _ItemYearField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.update,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.update,
   }) : super(key: key);
 
   final String fieldName;
-  final int value;
+  final int? value;
   final void Function(int) update;
 
   @override
@@ -783,7 +732,7 @@ class _ItemYearField extends StatelessWidget {
     return _ItemGenericField<int>(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null? GameCollectionLocalisations.of(context).yearString(value) : null,
+      shownValue: value != null? GameCollectionLocalisations.of(context).yearString(value!) : '',
       update: update,
       onTap: () {
         return showDialog<int>(
@@ -802,14 +751,14 @@ class _ItemYearField extends StatelessWidget {
 
 class _ItemDateTimeField extends StatelessWidget {
   const _ItemDateTimeField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.update,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.update,
   }) : super(key: key);
 
   final String fieldName;
-  final DateTime value;
+  final DateTime? value;
   final void Function(DateTime) update;
 
   @override
@@ -819,7 +768,7 @@ class _ItemDateTimeField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).dateString(value)
+        GameCollectionLocalisations.of(context).dateString(value!)
         :
         null,
       update: update,
@@ -838,10 +787,10 @@ class _ItemDateTimeField extends StatelessWidget {
 
 class _RatingField extends StatelessWidget {
   const _RatingField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    this.update,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.update,
   }) : super(key: key);
 
   final String fieldName;
@@ -870,7 +819,7 @@ class _RatingField extends StatelessWidget {
             color: Colors.yellow,
             borderColor: Colors.orangeAccent,
             size: 35.0,
-            onRated: (double newRating) {
+            onRated: (double? newRating) {
               if (newRating != null) {
 
                 int updatedRating = newRating.toInt();
@@ -891,15 +840,15 @@ class _RatingField extends StatelessWidget {
 
 class _BoolField extends StatelessWidget {
   const _BoolField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
+    Key? key,
+    required this.fieldName,
+    required this.value,
     this.update,
   }) : super(key: key);
 
   final String fieldName;
   final bool value;
-  final Function(bool) update;
+  final Function(bool)? update;
 
   @override
   Widget build(BuildContext context) {
@@ -915,16 +864,16 @@ class _BoolField extends StatelessWidget {
 
 class _EnumField extends StatelessWidget {
   const _EnumField({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.enumValues,
-    this.enumColours,
-    @required this.update,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.enumValues,
+    required this.enumColours,
+    required this.update,
   }) : super(key: key);
 
   final String fieldName;
-  final String value;
+  final String? value;
   final List<String> enumValues;
   final List<Color> enumColours;
   final Function(String) update;
@@ -946,7 +895,7 @@ class _EnumField extends StatelessWidget {
             enumValues.length,
                 (int index) {
               String option = enumValues[index];
-              Color optionColour = enumColours?.elementAt(index);
+              Color optionColour = enumColours.elementAt(index);
 
               return ChoiceChip(
                 label: Text(option),
@@ -972,9 +921,9 @@ class _EnumField extends StatelessWidget {
 
 class _DecimalPickerDialog extends StatefulWidget {
   const _DecimalPickerDialog({
-    Key key,
-    @required this.fieldName,
-    @required this.number,
+    Key? key,
+    required this.fieldName,
+    required this.number,
   }) : super(key: key);
 
   final String fieldName;
@@ -984,8 +933,8 @@ class _DecimalPickerDialog extends StatefulWidget {
   State<_DecimalPickerDialog> createState() => _DecimalPickerDialogState();
 }
 class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
-  int _integerPart;
-  int _decimalPart;
+  int _integerPart = 0;
+  int _decimalPart = 0;
 
   @override
   void initState() {
@@ -1004,27 +953,27 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          NumberPicker.integer(
-              initialValue: _integerPart,
+          NumberPicker(
+              value: _integerPart,
               minValue: 0,
               maxValue: 1000,
-              highlightSelectedValue: true,
+              //TODO highlightSelectedValue: true,
               onChanged: (num newInteger) {
                 setState(() {
-                  _integerPart = newInteger;
+                  _integerPart = newInteger.toInt();
                 });
               }
           ),
           Text('.', style: Theme.of(context).textTheme.headline6,),
-          NumberPicker.integer(
-              initialValue: _decimalPart,
+          NumberPicker(
+              value: _decimalPart,
               minValue: 0,
               maxValue: 99,
-              infiniteLoop: true,
-              highlightSelectedValue: true,
+              //TODO infiniteLoop: true,
+              //TODO highlightSelectedValue: true,
               onChanged: (num newDecimal) {
                 setState(() {
-                  _decimalPart = newDecimal;
+                  _decimalPart = newDecimal.toInt();
                 });
               }
           ),

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import 'package:game_collection/entity/entity.dart';
 
@@ -18,35 +17,35 @@ enum GameView {
 
 class Game extends CollectionItem {
   const Game({
-    @required int id,
-    this.name,
-    this.edition,
-    this.releaseYear,
-    this.coverURL,
-    this.coverFilename,
-    this.status,
-    this.rating,
-    this.thoughts,
-    this.time,
-    this.saveFolder,
-    this.screenshotFolder,
-    this.finishDate,
-    this.isBackup,
+    required int id,
+    required this.name,
+    required this.edition,
+    required this.releaseYear,
+    required this.coverURL,
+    required this.coverFilename,
+    required this.status,
+    required this.rating,
+    required this.thoughts,
+    required this.time,
+    required this.saveFolder,
+    required this.screenshotFolder,
+    required this.finishDate,
+    required this.isBackup,
   }) : this.uniqueId = 'G$id',
         super(id: id);
 
   final String name;
   final String edition;
-  final int releaseYear;
-  final String coverURL;
-  final String coverFilename;
+  final int? releaseYear;
+  final String? coverURL;
+  final String? coverFilename;
   final String status;
   final int rating;
   final String thoughts;
   final Duration time;
   final String saveFolder;
   final String screenshotFolder;
-  final DateTime finishDate;
+  final DateTime? finishDate;
   final bool isBackup;
 
   @override
@@ -60,7 +59,7 @@ class Game extends CollectionItem {
   @override
   String get queryableTerms => [this.name, this.edition].join(',');
 
-  static Game fromEntity(GameEntity entity, [String coverURL]) {
+  static Game fromEntity(GameEntity entity, [String? coverURL]) {
 
     return Game(
       id: entity.id,
@@ -104,19 +103,19 @@ class Game extends CollectionItem {
 
   @override
   Game copyWith({
-    String name,
-    String edition,
-    int releaseYear,
-    String coverURL,
-    String coverName,
-    String status,
-    int rating,
-    String thoughts,
-    Duration time,
-    String saveFolder,
-    String screenshotFolder,
-    DateTime finishDate,
-    bool isBackup,
+    String? name,
+    String? edition,
+    int? releaseYear,
+    String? coverURL,
+    String? coverName,
+    String? status,
+    int? rating,
+    String? thoughts,
+    Duration? time,
+    String? saveFolder,
+    String? screenshotFolder,
+    DateTime? finishDate,
+    bool? isBackup,
   }) {
 
     return Game(
@@ -141,18 +140,6 @@ class Game extends CollectionItem {
   @override
   List<Object> get props => [
     id,
-    name,
-    edition,
-    releaseYear,
-    coverURL,
-    status,
-    rating,
-    thoughts,
-    time,
-    saveFolder,
-    screenshotFolder,
-    finishDate,
-    isBackup,
   ];
 
   @override
@@ -179,8 +166,8 @@ class Game extends CollectionItem {
 
 class TimeLog extends Equatable implements Comparable<TimeLog> {
   const TimeLog({
-    this.dateTime,
-    this.time,
+    required this.dateTime,
+    required this.time,
   });
 
   final DateTime dateTime;
@@ -205,8 +192,8 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
   }
 
   TimeLog copyWith({
-    DateTime dateTime,
-    Duration time,
+    DateTime? dateTime,
+    Duration? time,
   }) {
 
     return TimeLog(
@@ -238,7 +225,7 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
 
 class GamesData extends ItemData<Game> {
   GamesData(List<Game> items)
-      : this.finishYears = (items.map<int>((Game item) => item.finishDate?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort(),
+      : this.finishYears = (items.map<int>((Game item) => item.finishDate != null? item.finishDate!.year : -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
         super(items);
   
   final List<int> finishYears;
@@ -336,7 +323,7 @@ class GamesData extends ItemData<Game> {
 
     return intervalCount<int>(
       intervals,
-      (Game item) => item.releaseYear,
+      (Game item) => item.releaseYear?? -1,
     );
 
   }

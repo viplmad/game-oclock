@@ -16,14 +16,14 @@ import 'search.dart';
 
 class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   PlatformSearchBloc searchBlocBuilder() {
 
     return PlatformSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   PlatformListManagerBloc managerBlocBuilder() {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Platform) onTap, bool allowNewButton}) {
+  _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
 
     return _PlatformSearchBody<PlatformSearchBloc>(
       onTap: onTap,
@@ -50,8 +50,8 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
 
 class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
   const PlatformLocalSearch({
-    Key key,
-    @required List<Platform> items,
+    Key? key,
+    required List<Platform> items,
   }) : super(key: key, items: items);
 
   @override
@@ -61,13 +61,13 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   PlatformListManagerBloc managerBlocBuilder() {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({void Function() Function(BuildContext, Platform) onTap, bool allowNewButton}) {
+  _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
 
     return _PlatformSearchBody<ItemLocalSearchBloc<Platform>>(
       onTap: onTap,
@@ -79,8 +79,8 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
 
 class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
   const _PlatformSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, Platform) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, Platform) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

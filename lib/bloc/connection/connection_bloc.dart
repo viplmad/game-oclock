@@ -60,8 +60,8 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     try {
 
-      ICollectionRepository.iCollectionRepository.reconnect();
-      ICollectionRepository.iCollectionRepository.open();
+      ICollectionRepository.iCollectionRepository!.reconnect();
+      ICollectionRepository.iCollectionRepository!.open();
       yield Connected();
 
     } catch(e) {

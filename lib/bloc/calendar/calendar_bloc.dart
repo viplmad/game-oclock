@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/utils/datetime_extension.dart';
@@ -16,10 +15,10 @@ import 'calendar.dart';
 
 class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   CalendarBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
-    @required this.timeLogManagerBloc,
-    @required this.finishDateManagerBloc,
+    required this.itemId,
+    required this.iCollectionRepository,
+    required this.timeLogManagerBloc,
+    required this.finishDateManagerBloc,
   }) : super(CalendarLoading()) {
 
     timeLogManagerSubscription = timeLogManagerBloc.listen(mapTimeLogManagerStateToEvent);
@@ -31,8 +30,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final ICollectionRepository iCollectionRepository;
   final GameTimeLogRelationManagerBloc timeLogManagerBloc;
   final GameFinishDateRelationManagerBloc finishDateManagerBloc;
-  StreamSubscription<RelationManagerState> timeLogManagerSubscription;
-  StreamSubscription<RelationManagerState> finishDateManagerSubscription;
+  late StreamSubscription<RelationManagerState> timeLogManagerSubscription;
+  late StreamSubscription<RelationManagerState> finishDateManagerSubscription;
 
   @override
   Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
@@ -78,7 +77,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   Stream<CalendarState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield CalendarNotLoaded("Connection lost. Trying to reconnect");
+      yield CalendarNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
@@ -101,7 +100,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<DateTime> finishDates = await getReadAllFinishDatesStream().first;
 
       DateTime selectedDate = DateTime.now();
-      List<TimeLog> selectedTimeLogs = List<TimeLog>();
+      List<TimeLog> selectedTimeLogs = <TimeLog>[];
       if(timeLogs.isNotEmpty) {
         timeLogs..sort();
         selectedDate = timeLogs.last.dateTime;
@@ -160,12 +159,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
 
-      DateTime firstDate;
       if(timeLogs.isNotEmpty) {
-        firstDate = timeLogs.first.dateTime;
-      }
+        DateTime firstDate = timeLogs.first.dateTime;
 
-      add(UpdateSelectedDate(firstDate));
+        add(UpdateSelectedDate(firstDate));
+      }
     }
 
   }
@@ -175,12 +173,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
 
-      DateTime lastDate;
       if(timeLogs.isNotEmpty) {
-        lastDate = timeLogs.last.dateTime;
-      }
+        DateTime lastDate = timeLogs.last.dateTime;
 
-      add(UpdateSelectedDate(lastDate));
+        add(UpdateSelectedDate(lastDate));
+      }
     }
 
   }
@@ -191,7 +188,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
 
-      DateTime previousDate;
+      DateTime? previousDate;
       if(timeLogs.isNotEmpty) {
         int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
 
@@ -214,7 +211,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
       final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
 
-      DateTime nextDate;
+      DateTime? nextDate;
       if(timeLogs.isNotEmpty) {
         int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
 
@@ -422,7 +419,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   List<TimeLog> _selectedTimeLogsInStyle(List<TimeLog> timeLogs, DateTime selectedDate, CalendarStyle style) {
-    List<TimeLog> selectedTimeLogs = List<TimeLog>();
+    List<TimeLog> selectedTimeLogs = <TimeLog>[];
 
     switch(style) {
       case CalendarStyle.List:
@@ -457,8 +454,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   @override
   Future<void> close() {
 
-    timeLogManagerSubscription?.cancel();
-    finishDateManagerSubscription?.cancel();
+    timeLogManagerSubscription.cancel();
+    finishDateManagerSubscription.cancel();
     return super.close();
 
   }

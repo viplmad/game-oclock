@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import 'entity.dart';
 
 
-const String gameTable = "Game";
-const String gameTableRead = "_Game";
+const String gameTable = 'Game';
+const String gameTableRead = '_Game';
 
 const List<String> gameFields = [
   IdField,
@@ -57,40 +56,40 @@ const String gameLog_dateTimeField = 'DateTime';
 const String gameLog_timeField = 'Time';
 
 const List<String> statuses = [
-  "Low Priority",
-  "Next Up",
-  "Playing",
-  "Played",
+  'Low Priority',
+  'Next Up',
+  'Playing',
+  'Played',
 ];
 
 class GameEntity extends CollectionItemEntity {
   const GameEntity({
-    @required int id,
-    this.name,
-    this.edition,
-    this.releaseYear,
-    this.coverFilename,
-    this.status,
-    this.rating,
-    this.thoughts,
-    this.time,
-    this.saveFolder,
-    this.screenshotFolder,
-    this.finishDate,
-    this.isBackup,
+    required int id,
+    required this.name,
+    required this.edition,
+    required this.releaseYear,
+    required this.coverFilename,
+    required this.status,
+    required this.rating,
+    required this.thoughts,
+    required this.time,
+    required this.saveFolder,
+    required this.screenshotFolder,
+    required this.finishDate,
+    required this.isBackup,
   }) : super(id: id);
 
   final String name;
   final String edition;
-  final int releaseYear;
-  final String coverFilename;
+  final int? releaseYear;
+  final String? coverFilename;
   final String status;
   final int rating;
   final String thoughts;
   final Duration time;
   final String saveFolder;
   final String screenshotFolder;
-  final DateTime finishDate;
+  final DateTime? finishDate;
   final bool isBackup;
 
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
@@ -153,16 +152,6 @@ class GameEntity extends CollectionItemEntity {
     id,
     name,
     edition,
-    releaseYear,
-    coverFilename,
-    status,
-    rating,
-    thoughts,
-    time,
-    saveFolder,
-    screenshotFolder,
-    finishDate,
-    isBackup,
   ];
 
   @override
@@ -189,8 +178,8 @@ class GameEntity extends CollectionItemEntity {
 
 class TimeLogEntity extends Equatable {
   const TimeLogEntity({
-    this.dateTime,
-    this.time,
+    required this.dateTime,
+    required this.time,
   });
 
   final DateTime dateTime;

@@ -15,7 +15,7 @@ import 'list.dart';
 
 class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   const PlatformAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
 
 class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
   const PlatformFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 
 class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 
   @override
-  _PlatformListBody itemListBodyBuilder({@required List<Platform> items, @required int viewIndex, int viewYear, @required void Function(Platform) onDelete, @required ListStyle style}) {
+  _PlatformListBody itemListBodyBuilder({required List<Platform> items, required int viewIndex, int? viewYear, required void Function(Platform) onDelete, required ListStyle style}) {
 
     return _PlatformListBody(
       items: items,
@@ -67,12 +67,12 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
 
 class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   const _PlatformListBody({
-    Key key,
-    @required List<Platform> items,
-    @required int viewIndex,
-    int viewYear,
-    @required void Function(Platform) onDelete,
-    @required ListStyle style,
+    Key? key,
+    required List<Platform> items,
+    required int viewIndex,
+    int? viewYear,
+    required void Function(Platform) onDelete,
+    required ListStyle style,
   }) : super(
     key: key,
     items: items,
@@ -92,7 +92,7 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => null;
+  void Function() onStatisticsTap(BuildContext context) => () => {};
 
   @override
   String itemTitle(Platform item) => PlatformTheme.itemTitle(item);

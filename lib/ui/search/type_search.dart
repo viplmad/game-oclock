@@ -16,14 +16,14 @@ import 'search.dart';
 
 class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManagerBloc> {
   const TypeSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   TypeSearchBloc searchBlocBuilder() {
 
     return TypeSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
   TypeListManagerBloc managerBlocBuilder() {
 
     return TypeListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _TypeSearchBody<TypeSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, PurchaseType) onTap, bool allowNewButton}) {
+  _TypeSearchBody<TypeSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
     return _TypeSearchBody<TypeSearchBloc>(
       onTap: onTap,
@@ -50,27 +50,27 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
 
 class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc> {
   const TypeLocalSearch({
-    Key key,
-    @required List<PurchaseType> items,
+    Key? key,
+    required List<PurchaseType> items,
   }) : super(key: key, items: items);
 
   @override
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, PurchaseType item) => null;
+  void Function() onTap(BuildContext context, PurchaseType item) => () => {};
 
   @override
   TypeListManagerBloc managerBlocBuilder() {
 
     return TypeListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _TypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({void Function() Function(BuildContext, PurchaseType) onTap, bool allowNewButton}) {
+  _TypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
     return _TypeSearchBody<ItemLocalSearchBloc<PurchaseType>>(
       onTap: onTap,
@@ -82,8 +82,8 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
 
 class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, TypeListManagerBloc> {
   const _TypeSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, PurchaseType) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, PurchaseType) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

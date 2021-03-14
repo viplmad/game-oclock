@@ -15,7 +15,7 @@ import 'list.dart';
 
 class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   const DLCAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
 
 class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
   const DLCFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
 
 class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
 
   @override
-  _DLCListBody itemListBodyBuilder({@required List<DLC> items, @required int viewIndex, int viewYear, @required void Function(DLC) onDelete, @required ListStyle style}) {
+  _DLCListBody itemListBodyBuilder({required List<DLC> items, required int viewIndex, int? viewYear, required void Function(DLC) onDelete, required ListStyle style}) {
 
     return _DLCListBody(
       items: items,
@@ -67,12 +67,12 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
 
 class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
   const _DLCListBody({
-    Key key,
-    @required List<DLC> items,
-    @required int viewIndex,
-    int viewYear,
-    @required void Function(DLC) onDelete,
-    @required ListStyle style,
+    Key? key,
+    required List<DLC> items,
+    required int viewIndex,
+    int? viewYear,
+    required void Function(DLC) onDelete,
+    required ListStyle style,
   }) : super(
     key: key,
     items: items,
@@ -92,7 +92,7 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => null;
+  void Function() onStatisticsTap(BuildContext context) => () => {};
 
   @override
   String itemTitle(DLC item) => DLCTheme.itemTitle(item);

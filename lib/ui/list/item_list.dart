@@ -19,7 +19,7 @@ import '../statistics/statistics.dart';
 
 abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
   const ItemAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -57,7 +57,7 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
   }
 
-  Widget _viewActionBuilder(BuildContext context, {@required List<String> views}) {
+  Widget _viewActionBuilder(BuildContext context, {required List<String> views}) {
 
     return PopupMenuButton<int>(
       icon: Icon(Icons.view_carousel),
@@ -91,7 +91,7 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
 
 abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
   const ItemFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   Color get themeColor;
@@ -115,7 +115,7 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
 
 abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
   const ItemList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   String get detailRouteName;
@@ -217,22 +217,22 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({@required List<T> items, @required int viewIndex, int viewYear, @required void Function(T) onDelete, @required ListStyle style});
+  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, int? viewYear, required void Function(T) onDelete, required ListStyle style});
 }
 
 abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
   const ItemListBody({
-    Key key,
-    @required this.items,
-    @required this.viewIndex,
+    Key? key,
+    required this.items,
+    required this.viewIndex,
     this.viewYear,
-    @required this.onDelete,
-    @required this.style,
+    required this.onDelete,
+    required this.style,
   }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
-  final int viewYear;
+  final int? viewYear;
   final void Function(T) onDelete;
   final ListStyle style;
 
@@ -321,8 +321,6 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
         );
     }
 
-    return Container();
-
   }
 
   void Function() onTap(BuildContext context, T item) {
@@ -333,7 +331,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
         detailRouteName,
         arguments: DetailArguments<T>(
           item: item,
-          onUpdate: (T updatedItem) {
+          onUpdate: (T? updatedItem) {
 
             if(updatedItem != null) {
 
@@ -384,11 +382,11 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
 class ItemCardView<T extends CollectionItem> extends StatelessWidget {
   const ItemCardView({
-    Key key,
-    @required this.items,
-    @required this.itemBuilder,
-    @required this.onDismiss,
-    @required this.confirmDelete,
+    Key? key,
+    required this.items,
+    required this.itemBuilder,
+    required this.onDismiss,
+    required this.confirmDelete,
   }) : super(key: key);
 
   final List<T> items;
@@ -418,7 +416,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
               builder: (BuildContext context) {
                 return confirmDelete(context, item);
               },
-            );
+            ).then((bool? value) => value?? false);
 
           },
           dismissIcon: Icons.delete,
@@ -432,9 +430,9 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
 
 class ItemGridView<T extends CollectionItem> extends StatelessWidget {
   const ItemGridView({
-    Key key,
-    @required this.items,
-    @required this.itemBuilder,
+    Key? key,
+    required this.items,
+    required this.itemBuilder,
   }) : super(key: key);
 
   final List<T> items;

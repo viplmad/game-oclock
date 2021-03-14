@@ -10,8 +10,8 @@ import 'item_relation_manager.dart';
 
 abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
+    required this.itemId,
+    required this.iCollectionRepository,
   }) : super(Initialised());
 
   final int itemId;
@@ -84,13 +84,13 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
   @mustCallSuper
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    return Future.error("Relation does not exist");
+    return Future.error('Relation does not exist');
 
   }
   @mustCallSuper
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    return Future.error("Relation does not exist");
+    return Future.error('Relation does not exist');
 
   }
 }

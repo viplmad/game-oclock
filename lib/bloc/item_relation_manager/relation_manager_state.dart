@@ -10,7 +10,7 @@ abstract class RelationManagerState extends Equatable {
 
 class Init extends RelationManagerState {}
 
-class RelationAdded<O> extends RelationManagerState {
+class RelationAdded<O extends Object> extends RelationManagerState {
   const RelationAdded(this.otherItem);
 
   final O otherItem;
@@ -38,7 +38,7 @@ class RelationNotAdded extends RelationManagerState {
       ' }';
 }
 
-class RelationDeleted<O> extends RelationManagerState {
+class RelationDeleted<O extends Object> extends RelationManagerState {
   const RelationDeleted(this.otherItem);
 
   final O otherItem;

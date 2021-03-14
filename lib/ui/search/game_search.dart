@@ -16,14 +16,14 @@ import 'search.dart';
 
 class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   const GameSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   GameSearchBloc searchBlocBuilder() {
 
     return GameSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   GameListManagerBloc managerBlocBuilder() {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _GameSearchBody<GameSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Game) onTap, bool allowNewButton}) {
+  _GameSearchBody<GameSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Game) onTap, required bool allowNewButton}) {
 
     return _GameSearchBody<GameSearchBloc>(
       onTap: onTap,
@@ -50,8 +50,8 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
 
 class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   const GameLocalSearch({
-    Key key,
-    @required List<Game> items,
+    Key? key,
+    required List<Game> items,
   }) : super(key: key, items: items);
 
   @override
@@ -61,13 +61,13 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   GameListManagerBloc managerBlocBuilder() {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _GameSearchBody<ItemLocalSearchBloc<Game>> itemSearchBodyBuilder({void Function() Function(BuildContext, Game) onTap, bool allowNewButton}) {
+  _GameSearchBody<ItemLocalSearchBloc<Game>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Game) onTap, required bool allowNewButton}) {
 
     return _GameSearchBody<ItemLocalSearchBloc<Game>>(
       onTap: onTap,
@@ -79,8 +79,8 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
 
 class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, K, GameListManagerBloc> {
   const _GameSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, Game) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, Game) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

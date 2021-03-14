@@ -5,11 +5,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class DismissibleItem extends StatelessWidget {
   const DismissibleItem({
-    Key key,
-    @required this.dismissibleKey,
-    @required this.itemWidget,
-    @required this.onDismissed,
-    @required this.dismissIcon,
+    Key? key,
+    required this.dismissibleKey,
+    required this.itemWidget,
+    required this.onDismissed,
+    required this.dismissIcon,
     this.padding = const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
     this.confirmDismiss,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class DismissibleItem extends StatelessWidget {
   final void Function(DismissDirection direction) onDismissed;
   final IconData dismissIcon;
   final EdgeInsetsGeometry padding;
-  final Future<bool> Function(DismissDirection direction) confirmDismiss;
+  final Future<bool> Function(DismissDirection direction)? confirmDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -59,18 +59,18 @@ class DismissibleItem extends StatelessWidget {
 
 class ItemCard extends StatelessWidget {
   const ItemCard({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.subtitle,
-    @required this.hasImage,
+    required this.hasImage,
     this.imageURL,
-    @required this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final bool hasImage;
-  final String imageURL;
+  final String? imageURL;
   final void Function() onTap;
 
   @override
@@ -93,17 +93,17 @@ class ItemCard extends StatelessWidget {
 
 class _ItemListTile extends StatelessWidget {
   const _ItemListTile({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.subtitle,
-    this.hasImage,
+    required this.hasImage,
     this.imageURL,
   }) : super(key: key);
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final bool hasImage;
-  final String imageURL;
+  final String? imageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,7 @@ class _ItemListTile extends StatelessWidget {
               maxHeight: 80,
             ),
             child: CachedImage(
-              imageURL: imageURL,
+              imageURL: imageURL?? '',
               fit: BoxFit.scaleDown,
               backgroundColour: Colors.white,
               applyGradient: false,
@@ -127,7 +127,7 @@ class _ItemListTile extends StatelessWidget {
           : null,
       title: Text(title),
       subtitle: subtitle != null?
-          Text(subtitle)
+          Text(subtitle!)
           : null,
     );
 
@@ -136,16 +136,16 @@ class _ItemListTile extends StatelessWidget {
 
 class ItemGrid extends StatelessWidget {
   const ItemGrid({
-    Key key,
-    @required this.title,
-    @required this.hasImage,
+    Key? key,
+    required this.title,
+    required this.hasImage,
     this.imageURL,
-    @required this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   final String title;
   final bool hasImage;
-  final String imageURL;
+  final String? imageURL;
   final void Function() onTap;
 
   @override
@@ -166,15 +166,15 @@ class ItemGrid extends StatelessWidget {
 
 class _ItemGridTile extends StatelessWidget {
   const _ItemGridTile({
-    Key key,
-    @required this.title,
-    @required this.hasImage,
+    Key? key,
+    required this.title,
+    required this.hasImage,
     this.imageURL,
   }) : super(key: key);
 
   final String title;
   final bool hasImage;
-  final String imageURL;
+  final String? imageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,7 @@ class _ItemGridTile extends StatelessWidget {
     return GridTile(
       child: hasImage?
         CachedImage(
-          imageURL: imageURL,
+          imageURL: imageURL?? '',
           fit: BoxFit.cover,
           backgroundColour: Colors.black,
           applyGradient: false,
@@ -198,10 +198,10 @@ class _ItemGridTile extends StatelessWidget {
 
 class CachedImage extends StatelessWidget {
   const CachedImage({
-    Key key,
-    @required this.imageURL,
-    @required this.fit,
-    @required this.backgroundColour,
+    Key? key,
+    required this.imageURL,
+    required this.fit,
+    required this.backgroundColour,
     this.applyGradient = false,
   }) : super(key: key);
 
@@ -242,7 +242,7 @@ class CachedImage extends StatelessWidget {
           child: CircularProgressIndicator(value: downloadProgress.progress),
         );
       },
-      errorWidget: (BuildContext context, String url, Object error) => Container(color: backgroundColour),
+      errorWidget: (BuildContext? context, String? url, Object? error) => Container(color: backgroundColour), //TODO null-safety
     );
 
   }
@@ -250,15 +250,15 @@ class CachedImage extends StatelessWidget {
 
 class ItemChip extends StatelessWidget {
   const ItemChip({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.selected = true,
     this.onTap,
   }) : super(key: key);
 
   final String title;
   final bool selected;
-  final void Function(bool) onTap;
+  final void Function(bool)? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,7 @@ import 'common/loading_icon.dart';
 
 class Connectpage extends StatelessWidget {
   const Connectpage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class Connectpage extends StatelessWidget {
 
 class _ConnectpageBody extends StatelessWidget {
   const _ConnectpageBody({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

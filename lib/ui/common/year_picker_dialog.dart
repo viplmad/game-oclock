@@ -8,23 +8,23 @@ import 'package:game_collection/localisations/localisations.dart';
 
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({
-    Key key,
+    Key? key,
     this.year,
   }) : super(key: key);
 
-  final int year;
+  final int? year;
 
   @override
   State<YearPickerDialog> createState() => _YearPickerDialogState();
 }
 class _YearPickerDialogState extends State<YearPickerDialog> {
-  DateTime _selectedDate;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
 
-    _selectedDate = widget.year != null? DateTime(widget.year) : DateTime.now();
+    _selectedDate = widget.year != null? DateTime(widget.year!) : DateTime.now();
   }
 
   @override
@@ -45,7 +45,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(color: Colors.white),),
+                    child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
                   )
                 ],
               ),
@@ -98,18 +98,13 @@ class _YearPicker extends StatefulWidget {
   /// The [currentDate, [firstDate], [lastDate], [selectedDate], and [onChanged]
   /// arguments must be non-null. The [lastDate] must be after the [firstDate].
   _YearPicker({
-    Key key,
-    @required this.firstDate,
-    @required this.lastDate,
-    @required this.initialDate,
-    @required this.selectedDate,
-    @required this.onChanged,
-  }) :  assert(firstDate != null),
-        assert(lastDate != null),
-        assert(initialDate != null),
-        assert(selectedDate != null),
-        assert(onChanged != null),
-        assert(!firstDate.isAfter(lastDate)),
+    Key? key,
+    required this.firstDate,
+    required this.lastDate,
+    required this.initialDate,
+    required this.selectedDate,
+    required this.onChanged,
+  }) :  assert(!firstDate.isAfter(lastDate)),
         super(key: key);
 
   /// The earliest date the user is permitted to pick.
@@ -133,7 +128,7 @@ class _YearPicker extends StatefulWidget {
   _YearPickerState createState() => _YearPickerState();
 }
 class _YearPickerState extends State<_YearPicker> {
-  ScrollController scrollController;
+  ScrollController scrollController = ScrollController();
 
   // The approximate number of years necessary to fill the available space.
   static const int minYears = 18;
@@ -168,9 +163,9 @@ class _YearPickerState extends State<_YearPicker> {
     } else {
       textColor = colorScheme.onSurface.withOpacity(0.87);
     }
-    final TextStyle itemStyle = textTheme.bodyText1?.apply(color: textColor);
+    final TextStyle itemStyle = textTheme.bodyText1!.apply(color: textColor);
 
-    BoxDecoration decoration;
+    BoxDecoration? decoration;
     if (isSelected) {
       decoration = BoxDecoration(
         color: colorScheme.primary,

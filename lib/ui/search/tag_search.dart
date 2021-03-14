@@ -16,14 +16,14 @@ import 'search.dart';
 
 class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   const TagSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   TagSearchBloc searchBlocBuilder() {
 
     return TagSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _TagSearchBody<TagSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Tag) onTap, bool allowNewButton}) {
+  _TagSearchBody<TagSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Tag) onTap, required bool allowNewButton}) {
 
     return _TagSearchBody<TagSearchBloc>(
       onTap: onTap,
@@ -50,27 +50,27 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
 
 class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   const TagLocalSearch({
-    Key key,
-    @required List<Tag> items,
+    Key? key,
+    required List<Tag> items,
   }) : super(key: key, items: items);
 
   @override
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, Tag item) => null;
+  void Function() onTap(BuildContext context, Tag item) => () => {};
 
   @override
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _TagSearchBody<ItemLocalSearchBloc<Tag>> itemSearchBodyBuilder({void Function() Function(BuildContext, Tag) onTap, bool allowNewButton}) {
+  _TagSearchBody<ItemLocalSearchBloc<Tag>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Tag) onTap, required bool allowNewButton}) {
 
     return _TagSearchBody<ItemLocalSearchBloc<Tag>>(
       onTap: onTap,
@@ -82,8 +82,8 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
 
 class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, K, TagListManagerBloc> {
   const _TagSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, Tag) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, Tag) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:game_collection/model/model.dart';
 
@@ -13,9 +12,9 @@ import 'item_detail.dart';
 
 abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
-    @required this.managerBloc,
+    required this.itemId,
+    required this.iCollectionRepository,
+    required this.managerBloc,
   }) : super(ItemLoading()) {
 
     managerSubscription = managerBloc.listen(_mapDetailManagerStateToEvent);
@@ -25,7 +24,7 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   final int itemId;
   final ICollectionRepository iCollectionRepository;
   final ItemDetailManagerBloc<T> managerBloc;
-  StreamSubscription<ItemDetailManagerState> managerSubscription;
+  late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   @override
   Stream<ItemDetailState> mapEventToState(ItemDetailEvent event) async* {
@@ -51,7 +50,7 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   Stream<ItemDetailState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield ItemNotLoaded("Connection lost. Trying to reconnect");
+      yield ItemNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
@@ -82,8 +81,12 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
     try {
 
-      final T item = await getReadStream().first;
-      yield ItemLoaded<T>(item);
+      final T? item = await getReadStream().first;
+      if(item != null) {
+        yield ItemLoaded<T>(item);
+      } else {
+        throw Exception();
+      }
 
     } catch (e) {
 
@@ -128,10 +131,10 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   @override
   Future<void> close() {
 
-    managerSubscription?.cancel();
+    managerSubscription.cancel();
     return super.close();
 
   }
 
-  Stream<T> getReadStream();
+  Stream<T?> getReadStream();
 }

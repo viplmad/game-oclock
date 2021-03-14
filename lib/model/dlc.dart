@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,24 +10,24 @@ enum DLCView {
 
 class DLC extends CollectionItem {
   const DLC({
-    @required int id,
-    this.name,
-    this.releaseYear,
-    this.coverURL,
-    this.coverFilename,
-    this.finishDate,
+    required int id,
+    required this.name,
+    required this.releaseYear,
+    required this.coverURL,
+    required this.coverFilename,
+    required this.finishDate,
 
-    this.baseGame,
+    required this.baseGame,
   }) : this.uniqueId = 'D$id',
         super(id: id);
 
   final String name;
-  final int releaseYear;
-  final String coverURL;
-  final String coverFilename;
-  final DateTime finishDate;
+  final int? releaseYear;
+  final String? coverURL;
+  final String? coverFilename;
+  final DateTime? finishDate;
 
-  final int baseGame;
+  final int? baseGame;
 
   @override
   final String uniqueId;
@@ -42,7 +40,7 @@ class DLC extends CollectionItem {
   @override
   String get queryableTerms => this.name;
 
-  static DLC fromEntity(DLCEntity entity, [String coverURL]) {
+  static DLC fromEntity(DLCEntity entity, [String? coverURL]) {
 
     return DLC(
       id: entity.id,
@@ -74,13 +72,13 @@ class DLC extends CollectionItem {
 
   @override
   DLC copyWith({
-    String name,
-    int releaseYear,
-    String coverURL,
-    String coverName,
-    DateTime finishDate,
+    String? name,
+    int? releaseYear,
+    String? coverURL,
+    String? coverName,
+    DateTime? finishDate,
 
-    int baseGame,
+    int? baseGame,
   }) {
 
     return DLC(
@@ -100,9 +98,6 @@ class DLC extends CollectionItem {
   List<Object> get props => [
     id,
     name,
-    releaseYear,
-    coverURL,
-    finishDate,
   ];
 
   @override

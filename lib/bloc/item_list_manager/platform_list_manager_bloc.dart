@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -9,13 +7,13 @@ import 'item_list_manager.dart';
 
 class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
   PlatformListManagerBloc({
-    @required ICollectionRepository iCollectionRepository,
+    required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Platform> createFuture(AddItem event) {
+  Future<Platform?> createFuture(AddItem event) {
 
-    return iCollectionRepository.createPlatform(event.title?? '');
+    return iCollectionRepository.createPlatform(event.title);
 
   }
 

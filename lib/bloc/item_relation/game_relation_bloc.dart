@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -12,9 +10,9 @@ import 'item_relation.dart';
 
 class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, W> {
   GameRelationBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
-    @required GameRelationManagerBloc<W> managerBloc,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
+    required GameRelationManagerBloc<W> managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
@@ -38,9 +36,9 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
 class GameFinishDateRelationBloc extends RelationBloc<Game, DateTime> {
   GameFinishDateRelationBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
-    @required GameFinishDateRelationManagerBloc managerBloc,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
+    required GameFinishDateRelationManagerBloc managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override

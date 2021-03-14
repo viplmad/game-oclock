@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,18 +10,18 @@ enum PlatformView {
 
 class Platform extends CollectionItem {
   const Platform({
-    @required int id,
-    this.name,
-    this.iconURL,
-    this.iconFilename,
-    this.type,
+    required int id,
+    required this.name,
+    required this.iconURL,
+    required this.iconFilename,
+    required this.type,
   }) : this.uniqueId = 'Pl$id',
         super(id: id);
 
   final String name;
-  final String iconURL;
-  final String iconFilename;
-  final String type;
+  final String? iconURL;
+  final String? iconFilename;
+  final String? type;
 
   @override
   final String uniqueId;
@@ -36,7 +34,7 @@ class Platform extends CollectionItem {
   @override
   String get queryableTerms => this.name;
 
-  static Platform fromEntity(PlatformEntity entity, [String iconURL]) {
+  static Platform fromEntity(PlatformEntity entity, [String? iconURL]) {
 
     return Platform(
       id: entity.id,
@@ -62,10 +60,10 @@ class Platform extends CollectionItem {
 
   @override
   Platform copyWith({
-    String name,
-    String iconURL,
-    String iconName,
-    String type,
+    String? name,
+    String? iconURL,
+    String? iconName,
+    String? type,
   }) {
 
     return Platform(
@@ -82,8 +80,6 @@ class Platform extends CollectionItem {
   List<Object> get props => [
     id,
     name,
-    iconURL,
-    type,
   ];
 
   @override

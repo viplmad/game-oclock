@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String systemTable = "System";
+const String systemTable = 'System';
 
 const List<String> systemTables = [
   IdField,
@@ -19,25 +17,25 @@ const String sys_generationField = 'Generation';
 const String sys_manufacturerField = 'Manufacturer';
 
 List<String> manufacturers = [
-  "Nintendo",
-  "Sony",
-  "Microsoft",
-  "Sega",
+  'Nintendo',
+  'Sony',
+  'Microsoft',
+  'Sega',
 ];
 
 class SystemEntity extends CollectionItemEntity {
   const SystemEntity({
-    @required int id,
-    this.name,
-    this.iconFilename,
-    this.generation,
-    this.manufacturer,
+    required int id,
+    required this.name,
+    required this.iconFilename,
+    required this.generation,
+    required this.manufacturer,
   }) : super(id: id);
 
   final String name;
-  final String iconFilename;
+  final String? iconFilename;
   final int generation;
-  final String manufacturer;
+  final String? manufacturer;
 
   static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
 
@@ -82,9 +80,6 @@ class SystemEntity extends CollectionItemEntity {
   List<Object> get props => [
     id,
     name,
-    iconFilename,
-    generation,
-    manufacturer,
   ];
 
   @override

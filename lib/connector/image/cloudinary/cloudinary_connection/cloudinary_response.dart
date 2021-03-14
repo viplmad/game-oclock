@@ -1,39 +1,42 @@
 class CloudinaryResponse {
-  String publicId;
-  int version;
-  int width;
-  int height;
-  String format;
-  String createdAt;
-  String resourceType;
-  List<Object> tags;
-  int bytes;
-  String type;
-  String etag;
-  String url;
-  String secureUrl;
-  String signature;
-  String originalFilename;
-  String error;
+  bool isError;
+  String? publicId;
+  int? version;
+  int? width;
+  int? height;
+  String? format;
+  String? createdAt;
+  String? resourceType;
+  List<Object>? tags;
+  int? bytes;
+  String? type;
+  String? etag;
+  String? url;
+  String? secureUrl;
+  String? signature;
+  String? originalFilename;
+  String? error;
 
   CloudinaryResponse.fromJsonMap(Map<String, dynamic> map)
-      : publicId = map["public_id"],
-        version = map["version"],
-        width = map["width"],
-        height = map["height"],
-        format = map["format"],
-        createdAt = map["created_at"],
-        resourceType = map["resource_type"],
-        tags = map["tags"],
-        bytes = map["bytes"],
-        type = map["type"],
-        etag = map["etag"],
-        url = map["url"],
-        secureUrl = map["secure_url"],
-        signature = map["signature"],
-        originalFilename = map["original_filename"];
+      : isError = false,
+        publicId = map['public_id'],
+        version = map['version'],
+        width = map['width'],
+        height = map['height'],
+        format = map['format'],
+        createdAt = map['created_at'],
+        resourceType = map['resource_type'],
+        tags = map['tags'],
+        bytes = map['bytes'],
+        type = map['type'],
+        etag = map['etag'],
+        url = map['url'],
+        secureUrl = map['secure_url'],
+        signature = map['signature'],
+        originalFilename = map['original_filename'];
 
-  CloudinaryResponse.fromError(this.error);
+  CloudinaryResponse.fromError(this.error)
+      : isError = true;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

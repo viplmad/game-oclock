@@ -20,38 +20,38 @@ import 'theme/theme.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return MultiBlocProvider(
@@ -65,7 +65,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _allListManagerBloc,
             )..add(LoadItemList());
           },
@@ -73,7 +73,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
             return OwnedListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _ownedListManagerBloc,
             )..add(LoadItemList());
           },
@@ -81,7 +81,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _romListManagerBloc,
             )..add(LoadItemList());
           },
@@ -89,7 +89,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _dlcListManagerBloc,
             )..add(LoadItemList());
           },
@@ -97,7 +97,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _purchaseListManagerBloc,
             )..add(LoadItemList());
           },
@@ -105,7 +105,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _storeListManagerBloc,
             )..add(LoadItemList());
           },
@@ -113,7 +113,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository,
+              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
               managerBloc: _platformListManagerBloc,
             )..add(LoadItemList());
           },
@@ -163,7 +163,7 @@ class Homepage extends StatelessWidget {
 
 class _HomepageBar extends StatelessWidget {
   const _HomepageBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -217,8 +217,8 @@ class _HomepageBar extends StatelessWidget {
 
 class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
   const _HomepageAppBar({
-    Key key,
-    @required this.state,
+    Key? key,
+    required this.state,
   }) : super(key: key);
 
   final TabState state;
@@ -244,14 +244,12 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
         return PlatformAppBar();
     }
 
-    return Container();
-
   }
 }
 
 class _HomepageDrawer extends StatelessWidget {
   const _HomepageDrawer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -292,8 +290,8 @@ class _HomepageDrawer extends StatelessWidget {
 
 class _HomepageFAB extends StatelessWidget {
   const _HomepageFAB({
-    Key key,
-    @required this.state,
+    Key? key,
+    required this.state,
   }) : super(key: key);
 
   final TabState state;
@@ -316,15 +314,13 @@ class _HomepageFAB extends StatelessWidget {
         return PlatformFAB();
     }
 
-    return Container();
-
   }
 }
 
 class _HomepageBody extends StatelessWidget {
   const _HomepageBody({
-    Key key,
-    @required this.state,
+    Key? key,
+    required this.state,
   }) : super(key: key);
 
   final TabState state;
@@ -346,8 +342,6 @@ class _HomepageBody extends StatelessWidget {
       case MainTab.platform:
         return PlatformList();
     }
-
-    return Container();
 
   }
 }

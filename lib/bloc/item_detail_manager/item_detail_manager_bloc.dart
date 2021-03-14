@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -9,8 +8,8 @@ import 'item_detail_manager.dart';
 
 abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
   ItemDetailManagerBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
+    required this.itemId,
+    required this.iCollectionRepository,
   }) : super(Initialised());
 
   final int itemId;
@@ -62,8 +61,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
     try {
 
-      final T updatedItem = await updateFuture(event);
-      yield ItemFieldUpdated<T>(updatedItem);
+      final T? updatedItem = await updateFuture(event);
+      if(updatedItem != null) {
+        yield ItemFieldUpdated<T>(updatedItem);
+      } else {
+        throw Exception();
+      }
 
     } catch(e) {
 
@@ -76,8 +79,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
     try {
 
-      final T updatedItem = await addImage(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      final T? updatedItem = await addImage(event);
+      if(updatedItem != null) {
+        yield ItemImageUpdated<T>(updatedItem);
+      } else {
+        throw Exception();
+      }
 
     } catch(e) {
 
@@ -91,8 +98,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
     try {
 
-      final T updatedItem = await updateImageName(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      final T? updatedItem = await updateImageName(event);
+      if(updatedItem != null) {
+        yield ItemImageUpdated<T>(updatedItem);
+      } else {
+        throw Exception();
+      }
 
     } catch(e) {
 
@@ -106,8 +117,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
     try {
 
-      final T updatedItem = await deleteImage(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      final T? updatedItem = await deleteImage(event);
+      if(updatedItem != null) {
+        yield ItemImageUpdated<T>(updatedItem);
+      } else {
+        throw Exception();
+      }
 
     } catch(e) {
 
@@ -117,8 +132,8 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
   }
 
-  Future<T> updateFuture(UpdateItemField<T> event);
-  external Future<T> addImage(AddItemImage<T> event);
-  external Future<T> deleteImage(DeleteItemImage<T> event);
-  external Future<T> updateImageName(UpdateItemImageName<T> event);
+  Future<T?> updateFuture(UpdateItemField<T> event);
+  external Future<T?> addImage(AddItemImage<T> event);
+  external Future<T?> deleteImage(DeleteItemImage<T> event);
+  external Future<T?> updateImageName(UpdateItemImageName<T> event);
 }

@@ -12,10 +12,10 @@ import 'relation.dart';
 
 class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
   const StorePurchaseRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Purchase>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Purchase>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -33,9 +33,9 @@ class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
 
 abstract class _StoreRelationList<W extends CollectionItem> extends ItemRelationList<Store, W, StoreRelationBloc<W>, StoreRelationManagerBloc<W>> {
   const _StoreRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<W>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<W>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

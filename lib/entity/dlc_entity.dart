@@ -1,10 +1,8 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String dlcTable = "DLC";
-const String dlcTableRead = "_DLC";
+const String dlcTable = 'DLC';
+const String dlcTableRead = '_DLC';
 
 const List<String> dlcFields = [
   IdField,
@@ -33,21 +31,21 @@ const String dlcFinish_dateField = 'Date';
 
 class DLCEntity extends CollectionItemEntity {
   const DLCEntity({
-    @required int id,
-    this.name,
-    this.releaseYear,
-    this.coverFilename,
-    this.finishDate,
+    required int id,
+    required this.name,
+    required this.releaseYear,
+    required this.coverFilename,
+    required this.finishDate,
 
-    this.baseGame,
+    required this.baseGame,
   }) : super(id: id);
 
   final String name;
-  final int releaseYear;
-  final String coverFilename;
-  final DateTime finishDate;
+  final int? releaseYear;
+  final String? coverFilename;
+  final DateTime? finishDate;
 
-  final int baseGame;
+  final int? baseGame;
 
   static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
 
@@ -96,9 +94,6 @@ class DLCEntity extends CollectionItemEntity {
   List<Object> get props => [
     id,
     name,
-    releaseYear,
-    coverFilename,
-    finishDate,
   ];
 
   @override

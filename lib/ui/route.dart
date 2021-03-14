@@ -225,7 +225,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
 }
 
-MaterialPageRoute<T> _pageRoute<T>(Widget child, {ThemeData Function(BuildContext) themeDataBuilder}) {
+MaterialPageRoute<T> _pageRoute<T>(Widget child, {ThemeData Function(BuildContext)? themeDataBuilder}) {
 
   return MaterialPageRoute(
     builder: (BuildContext context) {

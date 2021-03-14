@@ -8,7 +8,7 @@ abstract class RelationManagerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddRelation<O> extends RelationManagerEvent {
+class AddRelation<O extends Object> extends RelationManagerEvent {
   const AddRelation(this.otherItem);
 
   final O otherItem;
@@ -22,7 +22,7 @@ class AddRelation<O> extends RelationManagerEvent {
       ' }';
 }
 
-class DeleteRelation<O> extends RelationManagerEvent {
+class DeleteRelation<O extends Object> extends RelationManagerEvent {
   const DeleteRelation(this.otherItem);
 
   final O otherItem;

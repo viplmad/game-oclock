@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String typeTable = "Type";
+const String typeTable = 'Type';
 
 const List<String> typeFields = [
   IdField,
@@ -14,8 +12,8 @@ const String type_nameField = 'Name';
 
 class PurchaseTypeEntity extends CollectionItemEntity {
   const PurchaseTypeEntity({
-    @required int id,
-    this.name,
+    required int id,
+    required this.name,
   }) : super(id: id);
 
   final String name;

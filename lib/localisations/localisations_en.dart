@@ -185,7 +185,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String editTimeString = 'Time';
   @override
-  final String selectedDateIsFinishDateString = "Finished this day";
+  final String selectedDateIsFinishDateString = 'Finished this day';
   @override
   final String gameCalendarEventsString = 'Game Event';
   @override
@@ -199,7 +199,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get emptyTimeLogsString => 'No $timeLogsFieldString yet';
   @override
-  final String weekString = "Week";
+  final String weekString = 'Week';
 
   @override
   final String playingViewString = 'Playing';
@@ -347,9 +347,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   String get platformsString => _plural(platformString);
 
   @override
-  final String physicalString = "Physical";
+  final String physicalString = 'Physical';
   @override
-  final String digitalString = "Digital";
+  final String digitalString = 'Digital';
   @override
   final String platformTypeFieldString = 'Type';
   //#endregion Platform

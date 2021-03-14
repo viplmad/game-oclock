@@ -10,7 +10,7 @@ abstract class RelationEvent extends Equatable {
 
 class LoadRelation extends RelationEvent {}
 
-class UpdateElementRelation<O> extends RelationEvent {
+class UpdateElementRelation<O extends Object> extends RelationEvent {
   const UpdateElementRelation(this.otherItems);
 
   final List<O> otherItems;
@@ -24,7 +24,7 @@ class UpdateElementRelation<O> extends RelationEvent {
       ' }';
 }
 
-class UpdateRelationElement<O> extends RelationEvent {
+class UpdateRelationElement<O extends Object> extends RelationEvent {
   const UpdateRelationElement(this.oldItem, this.item);
 
   final O oldItem;

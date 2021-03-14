@@ -15,15 +15,15 @@ import '../common/show_snackbar.dart';
 // ignore: must_be_immutable
 abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T, DateTime>, S extends RelationManagerBloc<T, DateTime>> extends StatelessWidget {
   FinishDateList({
-    Key key,
-    @required this.fieldName,
-    @required this.value,
-    @required this.relationTypeName,
-    @required this.onUpdate,
+    Key? key,
+    required this.fieldName,
+    required this.value,
+    required this.relationTypeName,
+    required this.onUpdate,
   }) : super(key: key);
 
   final String fieldName;
-  final DateTime value;
+  final DateTime? value;
   final String relationTypeName;
   final void Function() onUpdate;
 
@@ -32,7 +32,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
   @override
   Widget build(BuildContext outerContext) {
 
-    String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value) : '';
+    String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
 
     return BlocListener<S, RelationManagerState>(
       listener: (BuildContext context, RelationManagerState state) {
@@ -114,7 +114,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                     content: Container(
                       width: double.maxFinite,
                       child: BlocBuilder<K, RelationState>(
-                        cubit: BlocProvider.of<K>(outerContext),
+                        bloc: BlocProvider.of<K>(outerContext),
                         builder: (BuildContext context, RelationState state) {
 
                           if(state is RelationLoaded<DateTime>) {
@@ -176,7 +176,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                             firstDate: DateTime(1970),
                             lastDate: DateTime.now(),
                             initialDate: DateTime.now(),
-                          ).then((DateTime value) {
+                          ).then((DateTime? value) {
                             if(value != null) {
                               BlocProvider.of<S>(outerContext).add(
                                 AddRelation<DateTime>(value),

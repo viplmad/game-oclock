@@ -16,14 +16,14 @@ import 'search.dart';
 
 class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
   const StoreSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   StoreSearchBloc searchBlocBuilder() {
 
     return StoreSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, Store) onTap, bool allowNewButton}) {
+  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Store) onTap, required bool allowNewButton}) {
 
     return _StoreSearchBody<StoreSearchBloc>(
       onTap: onTap,
@@ -50,8 +50,8 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
 
 class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   const StoreLocalSearch({
-    Key key,
-    @required List<Store> items,
+    Key? key,
+    required List<Store> items,
   }) : super(key: key, items: items);
 
   @override
@@ -61,13 +61,13 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({void Function() Function(BuildContext, Store) onTap, bool allowNewButton}) {
+  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Store) onTap, required bool allowNewButton}) {
 
     return _StoreSearchBody<ItemLocalSearchBloc<Store>>(
       onTap: onTap,
@@ -79,8 +79,8 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
 
 class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, K, StoreListManagerBloc> {
   const _StoreSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, Store) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, Store) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

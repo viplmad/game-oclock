@@ -22,8 +22,8 @@ import 'list.dart';
 
 class GameAppBar extends StatelessWidget {
   const GameAppBar({
-    Key key,
-    @required this.gameTab,
+    Key? key,
+    required this.gameTab,
   }) : super(key: key);
 
   final GameTab gameTab;
@@ -40,8 +40,6 @@ class GameAppBar extends StatelessWidget {
         return _RomAppBar();
     }
 
-    return Container();
-
   }
 }
 
@@ -51,7 +49,7 @@ class _RomAppBar extends _GameAppBar<RomListBloc> {}
 
 abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
   const _GameAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -63,7 +61,7 @@ abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game
     return (int selectedViewIndex) async {
 
       if(selectedViewIndex == views.length - 1) {
-        int year = await showDialog<int>(
+        int? year = await showDialog<int>(
           context: context,
           builder: (BuildContext context) {
             return Theme(
@@ -95,8 +93,8 @@ abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game
 
 class GameFAB extends StatelessWidget {
   const GameFAB({
-    Key key,
-    @required this.gameTab,
+    Key? key,
+    required this.gameTab,
   }) : super(key: key);
 
   final GameTab gameTab;
@@ -113,8 +111,6 @@ class GameFAB extends StatelessWidget {
         return _RomFAB();
     }
 
-    return Container();
-
   }
 }
 
@@ -124,7 +120,7 @@ class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 
 abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
   const _GameFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -136,8 +132,8 @@ abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Gam
 
 class GameTabs extends StatelessWidget {
   const GameTabs({
-    Key key,
-    this.gameTab,
+    Key? key,
+    required this.gameTab,
   }) : super(key: key);
 
   final GameTab gameTab;
@@ -155,8 +151,8 @@ class GameTabs extends StatelessWidget {
       initialIndex: gameTab.index,
       child: Builder(
         builder: (BuildContext context) {
-          DefaultTabController.of(context).addListener( () {
-            GameTab newGameTab = GameTab.values.elementAt(DefaultTabController.of(context).index);
+          DefaultTabController.of(context)!.addListener( () {
+            GameTab newGameTab = GameTab.values.elementAt(DefaultTabController.of(context)!.index);
 
             BlocProvider.of<TabBloc>(context).add(UpdateGameTab(newGameTab));
           });
@@ -203,24 +199,24 @@ class GameTabs extends StatelessWidget {
 
 class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {
   const _AllGameList({
-    String tabTitle,
+    required String tabTitle,
   }) : super(tabTitle: tabTitle);
 }
 class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {
   const _OwnedGameList({
-    String tabTitle,
+    required String tabTitle,
   }) : super(tabTitle: tabTitle);
 }
 class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
   const _RomGameList({
-    String tabTitle,
+    required String tabTitle,
   }) : super(tabTitle: tabTitle);
 }
 
 abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
   const _GameList({
-    Key key,
-    this.tabTitle,
+    Key? key,
+    required this.tabTitle,
   }) : super(key: key);
 
   final String tabTitle;
@@ -232,7 +228,7 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
   @override
-  _GameListBody<K> itemListBodyBuilder({@required List<Game> items, @required int viewIndex, int viewYear, @required void Function(Game) onDelete, @required ListStyle style}) {
+  _GameListBody<K> itemListBodyBuilder({required List<Game> items, required int viewIndex, int? viewYear, required void Function(Game) onDelete, required ListStyle style}) {
 
     return _GameListBody<K>(
       items: items,
@@ -248,13 +244,13 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
 
 class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> {
   const _GameListBody({
-    Key key,
-    @required List<Game> items,
-    @required int viewIndex,
-    int viewYear,
-    @required void Function(Game) onDelete,
-    @required ListStyle style,
-    @required this.tabTitle,
+    Key? key,
+    required List<Game> items,
+    required int viewIndex,
+    int? viewYear,
+    required void Function(Game) onDelete,
+    required ListStyle style,
+    required this.tabTitle,
   }) : super(
     key: key,
     items: items,
@@ -295,7 +291,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   String itemTitle(Game item) => GameTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
+  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear!) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

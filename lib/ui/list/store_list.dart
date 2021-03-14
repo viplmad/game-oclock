@@ -15,7 +15,7 @@ import 'list.dart';
 
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   const StoreAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 
 class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   const StoreFAB({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
 
 class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   const StoreList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 
   @override
-  _StoreListBody itemListBodyBuilder({@required List<Store> items, @required int viewIndex, int viewYear, @required void Function(Store) onDelete, @required ListStyle style}) {
+  _StoreListBody itemListBodyBuilder({required List<Store> items, required int viewIndex, int? viewYear, required void Function(Store) onDelete, required ListStyle style}) {
 
     return _StoreListBody(
       items: items,
@@ -67,12 +67,12 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
 
 class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   const _StoreListBody({
-    Key key,
-    @required List<Store> items,
-    @required int viewIndex,
-    int viewYear,
-    @required void Function(Store) onDelete,
-    @required ListStyle style,
+    Key? key,
+    required List<Store> items,
+    required int viewIndex,
+    int? viewYear,
+    required void Function(Store) onDelete,
+    required ListStyle style,
   }) : super(
     key: key,
     items: items,
@@ -92,7 +92,7 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => null;
+  void Function() onStatisticsTap(BuildContext context) => () => {};
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);

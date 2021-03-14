@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -15,14 +13,14 @@ enum PurchaseView {
 
 class Purchase extends CollectionItem {
   const Purchase({
-    @required int id,
-    this.description,
-    this.price,
-    this.externalCredit,
-    this.date,
-    this.originalPrice,
+    required int id,
+    required this.description,
+    required this.price,
+    required this.externalCredit,
+    required this.date,
+    required this.originalPrice,
 
-    this.store,
+    required this.store,
   }) : this.uniqueId = 'Pu$id',
        this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
         super(id: id);
@@ -30,11 +28,11 @@ class Purchase extends CollectionItem {
   final String description;
   final double price;
   final double externalCredit;
-  final DateTime date;
+  final DateTime? date;
   final double originalPrice;
   final double discount;
 
-  final int store;
+  final int? store;
 
   @override
   final String uniqueId;
@@ -42,7 +40,7 @@ class Purchase extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  final ItemImage image = null;
+  ItemImage get image => ItemImage(null, null);
 
   @override
   String get queryableTerms => this.description;
@@ -80,13 +78,13 @@ class Purchase extends CollectionItem {
 
   @override
   Purchase copyWith({
-    String description,
-    double price,
-    double externalCredit,
-    DateTime date,
-    double originalPrice,
+    String? description,
+    double? price,
+    double? externalCredit,
+    DateTime? date,
+    double? originalPrice,
 
-    int store,
+    int? store,
   }) {
 
     return Purchase(
@@ -106,10 +104,6 @@ class Purchase extends CollectionItem {
   List<Object> get props => [
     id,
     description,
-    price,
-    externalCredit,
-    date,
-    originalPrice,
   ];
 
   @override
@@ -130,7 +124,7 @@ class Purchase extends CollectionItem {
 class PurchasesData extends ItemData<Purchase> {
   PurchasesData(List<Purchase> items)
       : this.itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
-        this.years = (items.map<int>((Purchase item) => item.date?.year).toSet()..removeWhere((int year) => year == null)).toList(growable: false)..sort(),
+        this.years = (items.map<int>((Purchase item) => item.date != null? item.date!.year : -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
         super(items);
 
   final List<Purchase> itemsWithoutPromotion;

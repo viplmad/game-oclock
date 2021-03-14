@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-void showSnackBar({@required ScaffoldState scaffoldState, @required String message, int seconds = 3, SnackBarAction snackBarAction}) {
+void showSnackBar({required ScaffoldState scaffoldState, required String message, int seconds = 3, SnackBarAction? snackBarAction}) {
 
   final snackBar = SnackBar(
     behavior: SnackBarBehavior.floating,
@@ -16,7 +16,7 @@ void showSnackBar({@required ScaffoldState scaffoldState, @required String messa
 
 }
 
-SnackBarAction dialogSnackBarAction(BuildContext context, {@required String label, @required String title, @required String content}) {
+SnackBarAction dialogSnackBarAction(BuildContext context, {required String label, required String title, required String content}) {
 
   return SnackBarAction(
     label: label,

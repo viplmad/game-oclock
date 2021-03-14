@@ -46,7 +46,7 @@ class RepositoryPreferences {
           return RepositoryType.Local;
       }
 
-      return null;
+      throw FormatException();
 
     }, onError: (error) => null);
 
@@ -61,13 +61,12 @@ class RepositoryPreferences {
       switch(type) {
         case RepositoryType.Remote:
           return _retrieveRemoteRepository(sharedPreferences);
-          break;
         case RepositoryType.Local:
           //return _retrieveLocalRepository(sharedPreferences);
           break;
       }
 
-      return null;
+      throw FormatException();
 
     }, onError: (error) => null);
 
@@ -112,12 +111,11 @@ class RepositoryPreferences {
 
     return sharedPreferences.getString(_cloudinaryConnectionStringKey).then<CloudinaryInstance>((String value) {
 
-      CloudinaryInstance cloudinaryInstance;
-      if(value != null && value.isNotEmpty) {
-        cloudinaryInstance = CloudinaryInstance.fromString(value);
+      if(value.isNotEmpty) {
+        return CloudinaryInstance.fromString(value);
       }
 
-      return cloudinaryInstance;
+      throw FormatException();
 
     }, onError: (error) => null);
 
@@ -129,12 +127,11 @@ class RepositoryPreferences {
 
     return sharedPreferences.getString(_postgresConnectionStringKey).then<PostgresInstance>((String value) {
 
-      PostgresInstance postgresInstance;
-      if(value != null && value.isNotEmpty) {
-        postgresInstance = PostgresInstance.fromString(value);
+      if(value.isNotEmpty) {
+        return PostgresInstance.fromString(value);
       }
 
-      return postgresInstance;
+      throw FormatException();
 
     }, onError: (error) => null);
 

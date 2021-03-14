@@ -11,7 +11,7 @@ abstract class ItemListManagerEvent extends Equatable {
 }
 
 class AddItem extends ItemListManagerEvent {
-  const AddItem([this.title]);
+  const AddItem([this.title = '']);
 
   final String title;
 

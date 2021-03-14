@@ -12,10 +12,10 @@ import 'relation.dart';
 
 class PurchaseStoreRelationList extends _PurchaseRelationList<Store> {
   const PurchaseStoreRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Store>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Store>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -36,10 +36,10 @@ class PurchaseStoreRelationList extends _PurchaseRelationList<Store> {
 
 class PurchaseGameRelationList extends _PurchaseRelationList<Game> {
   const PurchaseGameRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Game>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -57,10 +57,10 @@ class PurchaseGameRelationList extends _PurchaseRelationList<Game> {
 
 class PurchaseDLCRelationList extends _PurchaseRelationList<DLC> {
   const PurchaseDLCRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<DLC>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<DLC>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -78,10 +78,10 @@ class PurchaseDLCRelationList extends _PurchaseRelationList<DLC> {
 
 class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   const PurchaseTypeRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<PurchaseType>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<PurchaseType>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -94,7 +94,7 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   final String localSearchRouteName = typeLocalSearchRoute;
 
   @override
-  void Function() onTap(BuildContext context, PurchaseType item) => null;
+  void Function() onTap(BuildContext context, PurchaseType item) => () => {};
 
   @override
   Widget cardBuilder(BuildContext context, PurchaseType item) => TypeTheme.itemCard(context, item, onTap);
@@ -102,9 +102,9 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
 
 abstract class _PurchaseRelationList<W extends CollectionItem> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>, PurchaseRelationManagerBloc<W>> {
   const _PurchaseRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<W>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<W>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

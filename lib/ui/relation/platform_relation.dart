@@ -12,10 +12,10 @@ import 'relation.dart';
 
 class PlatformGameRelationList extends _PlatformRelationList<Game> {
   const PlatformGameRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Game>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -33,10 +33,10 @@ class PlatformGameRelationList extends _PlatformRelationList<Game> {
 
 class PlatformSystemRelationList extends _PlatformRelationList<System> {
   const PlatformSystemRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<System>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<System>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -49,7 +49,7 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   final String localSearchRouteName = systemLocalSearchRoute;
 
   @override
-  void Function() onTap(BuildContext context, System item) => null;
+  void Function() onTap(BuildContext context, System item) => () => {};
 
   @override
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
@@ -57,9 +57,9 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
 
 abstract class _PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   const _PlatformRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<W>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<W>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

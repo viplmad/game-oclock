@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class TabsDelegate extends SliverPersistentHeaderDelegate {
   const TabsDelegate({
-    @required this.tabBar,
+    required this.tabBar,
     this.color,
   }) : super();
 
   final TabBar tabBar;
-  final Color color;
+  final Color? color;
 
   @override
   double get minExtent => tabBar.preferredSize.height;

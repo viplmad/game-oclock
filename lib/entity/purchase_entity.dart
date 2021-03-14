@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const purchaseTable = "Purchase";
+const purchaseTable = 'Purchase';
 
 const List<String> purchaseFields = [
   IdField,
@@ -26,23 +24,23 @@ const String purc_storeField = 'Store';
 
 class PurchaseEntity extends CollectionItemEntity {
   const PurchaseEntity({
-    @required int id,
-    this.description,
-    this.price,
-    this.externalCredit,
-    this.date,
-    this.originalPrice,
+    required int id,
+    required this.description,
+    required this.price,
+    required this.externalCredit,
+    required this.date,
+    required this.originalPrice,
 
-    this.store,
+    required this.store,
   }) : super(id: id);
 
   final String description;
   final double price;
   final double externalCredit;
-  final DateTime date;
+  final DateTime? date;
   final double originalPrice;
 
-  final int store;
+  final int? store;
 
   static PurchaseEntity fromDynamicMap(Map<String, dynamic> map) {
 
@@ -93,10 +91,6 @@ class PurchaseEntity extends CollectionItemEntity {
   List<Object> get props => [
     id,
     description,
-    price,
-    externalCredit,
-    date,
-    originalPrice,
   ];
 
   @override

@@ -22,9 +22,9 @@ import 'item_detail.dart';
 
 class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
-    Key key,
-    @required Store item,
-    void Function(Store item) onUpdate,
+    Key? key,
+    required Store item,
+    void Function(Store? item)? onUpdate,
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
@@ -32,7 +32,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     return StoreDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -43,7 +43,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     return StoreDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -53,7 +53,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
     StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return [
@@ -83,7 +83,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository,
+          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -95,8 +95,8 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 // ignore: must_be_immutable
 class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
-    Key key,
-    void Function(Store item) onUpdate,
+    Key? key,
+    void Function(Store? item)? onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
 
   @override

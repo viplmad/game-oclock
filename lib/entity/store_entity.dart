@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String storeTable = "Store";
+const String storeTable = 'Store';
 
 const List<String> storeFields = [
   IdField,
@@ -16,13 +14,13 @@ const String stor_iconField = 'Icon';
 
 class StoreEntity extends CollectionItemEntity {
   const StoreEntity({
-    @required int id,
-    this.name,
-    this.iconFilename,
+    required int id,
+    required this.name,
+    required this.iconFilename,
   }) : super(id: id);
 
   final String name;
-  final String iconFilename;
+  final String? iconFilename;
 
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 

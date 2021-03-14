@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -12,9 +10,9 @@ import 'item_relation.dart';
 
 class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<System, W> {
   SystemRelationBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
-    @required SystemRelationManagerBloc<W> managerBloc,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
+    required SystemRelationManagerBloc<W> managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override

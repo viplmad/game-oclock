@@ -24,9 +24,9 @@ import 'finish_date_list.dart';
 
 class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
-    Key key,
-    @required Game item,
-    void Function(Game item) onUpdate,
+    Key? key,
+    required Game item,
+    void Function(Game? item)? onUpdate,
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
@@ -34,7 +34,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     return GameDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -45,7 +45,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     return GameDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -55,27 +55,27 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 
     GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return [
@@ -109,7 +109,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
         create: (BuildContext context) {
           return GameFinishDateRelationBloc(
             itemId: item.id,
-            iCollectionRepository: ICollectionRepository.iCollectionRepository,
+            iCollectionRepository: ICollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -139,7 +139,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       create: (BuildContext context) {
         return GameRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository,
+          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -151,9 +151,9 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 // ignore: must_be_immutable
 class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
-    Key key,
-    @required this.itemId,
-    void Function(Game item) onUpdate,
+    Key? key,
+    required this.itemId,
+    void Function(Game? item)? onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
 
   final int itemId;
@@ -291,10 +291,10 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
 // ignore: must_be_immutable
 class GameFinishDateList extends FinishDateList<Game, GameFinishDateRelationBloc, GameFinishDateRelationManagerBloc> {
   GameFinishDateList({
-    Key key,
-    @required String fieldName,
-    @required DateTime value,
-    @required String relationTypeName,
-    @required void Function() onUpdate,
+    Key? key,
+    required String fieldName,
+    required DateTime? value,
+    required String relationTypeName,
+    required void Function() onUpdate,
   }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
 }

@@ -11,9 +11,9 @@ import 'statistics.dart';
 
 class GameStatisticsArguments extends StatisticsArguments<Game> {
   const GameStatisticsArguments({
-    @required List<Game> items,
-    @required String viewTitle,
-    @required this.tabTitle,
+    required List<Game> items,
+    required String viewTitle,
+    required this.tabTitle,
   }) : super(items: items, viewTitle: viewTitle);
 
   final String tabTitle;
@@ -21,10 +21,10 @@ class GameStatisticsArguments extends StatisticsArguments<Game> {
 
 class GameStatistics extends ItemStatistics<Game, GamesData, GameStatisticsBloc> {
   const GameStatistics({
-    Key key,
-    @required List<Game> items,
-    @required String viewTitle,
-    @required this.tabTitle,
+    Key? key,
+    required List<Game> items,
+    required String viewTitle,
+    required this.tabTitle,
   }) : super(key: key, items: items, viewTitle: viewTitle);
 
   final String tabTitle;
@@ -51,9 +51,9 @@ class GameStatistics extends ItemStatistics<Game, GamesData, GameStatisticsBloc>
 
 class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatisticsBloc> {
   const _GameStatisticsBody({
-    Key key,
-    @required String viewTitle,
-    @required this.tabTitle,
+    Key? key,
+    required String viewTitle,
+    required this.tabTitle,
   }) : super(key: key, viewTitle: viewTitle);
 
   final String tabTitle;
@@ -95,7 +95,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       ),
       statisticsGroupField(
         groupName: GameCollectionLocalisations.of(context).countByStatusString,
-        fields: [
+        fields: <StatisticsField>[
           statisticsIntField(
             context,
             fieldName: GameCollectionLocalisations.of(context).lowPriorityString,

@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,20 +10,20 @@ enum SystemView {
 
 class System extends CollectionItem {
   const System({
-    @required int id,
-    this.name,
-    this.iconURL,
-    this.iconFilename,
-    this.generation,
-    this.manufacturer,
+    required int id,
+    required this.name,
+    required this.iconURL,
+    required this.iconFilename,
+    required this.generation,
+    required this.manufacturer,
   }) : this.uniqueId = 'Sy$id',
         super(id: id);
 
   final String name;
-  final String iconURL;
-  final String iconFilename;
+  final String? iconURL;
+  final String? iconFilename;
   final int generation;
-  final String manufacturer;
+  final String? manufacturer;
 
   @override
   final String uniqueId;
@@ -38,7 +36,7 @@ class System extends CollectionItem {
   @override
   String get queryableTerms => this.name;
 
-  static System fromEntity(SystemEntity entity, [String iconURL]) {
+  static System fromEntity(SystemEntity entity, [String? iconURL]) {
 
     return System(
       id: entity.id,
@@ -66,11 +64,11 @@ class System extends CollectionItem {
 
   @override
   System copyWith({
-    String name,
-    String iconURL,
-    String iconFilename,
-    int generation,
-    String manufacturer,
+    String? name,
+    String? iconURL,
+    String? iconFilename,
+    int? generation,
+    String? manufacturer,
   }) {
 
     return System(
@@ -88,9 +86,6 @@ class System extends CollectionItem {
   List<Object> get props => [
     id,
     name,
-    iconURL,
-    generation,
-    manufacturer,
   ];
 
   @override

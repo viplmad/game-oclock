@@ -11,9 +11,9 @@ import 'statistics.dart';
 
 class PurchaseStatistics extends ItemStatistics<Purchase, PurchasesData, PurchaseStatisticsBloc> {
   const PurchaseStatistics({
-    Key key,
-    @required List<Purchase> items,
-    @required String viewTitle,
+    Key? key,
+    required List<Purchase> items,
+    required String viewTitle,
   }) : super(key: key, items: items, viewTitle: viewTitle);
 
   @override
@@ -37,8 +37,8 @@ class PurchaseStatistics extends ItemStatistics<Purchase, PurchasesData, Purchas
 
 class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData, PurchaseStatisticsBloc> {
   const _PurchaseStatisticsBody({
-    Key key,
-    @required String viewTitle,
+    Key? key,
+    required String viewTitle,
   }) : super(key: key, viewTitle: viewTitle);
 
   @override

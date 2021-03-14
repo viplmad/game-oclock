@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -8,10 +7,10 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'item_relation_manager.dart';
 
 
-abstract class RelationManagerBloc<T extends CollectionItem, O> extends Bloc<RelationManagerEvent, RelationManagerState> {
+abstract class RelationManagerBloc<T extends CollectionItem, O extends Object> extends Bloc<RelationManagerEvent, RelationManagerState> {
   RelationManagerBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
+    required this.itemId,
+    required this.iCollectionRepository,
   }) : super(Init());
 
   final int itemId;
@@ -83,12 +82,12 @@ abstract class RelationManagerBloc<T extends CollectionItem, O> extends Bloc<Rel
 
   Future<dynamic> addRelationFuture(AddRelation<O> event) {
 
-    return Future.error("Relation does not exist");
+    return Future.error('Relation does not exist');
 
   }
   Future<dynamic> deleteRelationFuture(DeleteRelation<O> event) {
 
-    return Future.error("Relation does not exist");
+    return Future.error('Relation does not exist');
 
   }
 }

@@ -12,10 +12,10 @@ import 'relation.dart';
 
 class DLCGameRelationList extends _DLCRelationList<Game> {
   const DLCGameRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Game>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -36,10 +36,10 @@ class DLCGameRelationList extends _DLCRelationList<Game> {
 
 class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
   const DLCPurchaseRelationList({
-    Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<Purchase>) trailingBuilder,
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<Purchase>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -56,9 +56,10 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
 }
 
 abstract class _DLCRelationList<W extends CollectionItem> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
-  const _DLCRelationList({Key key,
-    @required String relationName,
-    @required String relationTypeName,
-    List<Widget> Function(List<W>) trailingBuilder,
+  const _DLCRelationList({
+    Key? key,
+    required String relationName,
+    required String relationTypeName,
+    List<Widget> Function(List<W>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 }

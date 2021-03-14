@@ -16,14 +16,14 @@ import 'search.dart';
 
 class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   DLCSearchBloc searchBlocBuilder() {
 
     return DLCSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,13 +32,13 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({void Function() Function(BuildContext, DLC) onTap, bool allowNewButton}) {
+  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
 
     return _DLCSearchBody<DLCSearchBloc>(
       onTap: onTap,
@@ -50,8 +50,8 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
 
 class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   const DLCLocalSearch({
-    Key key,
-    @required List<DLC> items,
+    Key? key,
+    required List<DLC> items,
   }) : super(key: key, items: items);
 
   @override
@@ -60,13 +60,13 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   @override DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
 
   @override
-  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({void Function() Function(BuildContext, DLC) onTap, bool allowNewButton}) {
+  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({required void Function() Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
 
     return _DLCSearchBody<ItemLocalSearchBloc<DLC>>(
       onTap: onTap,
@@ -78,8 +78,8 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
 
 class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
   const _DLCSearchBody({
-    Key key,
-    @required void Function() Function(BuildContext, DLC) onTap,
+    Key? key,
+    required void Function() Function(BuildContext, DLC) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

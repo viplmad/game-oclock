@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'item_statistics.dart';
@@ -9,7 +7,7 @@ import 'item_statistics.dart';
 
 class GameStatisticsBloc extends ItemStatisticsBloc<Game, GamesData> {
   GameStatisticsBloc({
-    @required List<Game> items
+    required List<Game> items,
   }) : super(items: items);
 
   @override

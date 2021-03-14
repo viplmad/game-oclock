@@ -23,9 +23,9 @@ import 'finish_date_list.dart';
 
 class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
-    Key key,
-    @required DLC item,
-    void Function(DLC item) onUpdate,
+    Key? key,
+    required DLC item,
+    void Function(DLC? item)? onUpdate,
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
@@ -33,7 +33,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 
     return DLCDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -44,7 +44,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 
     return DLCDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -54,17 +54,17 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 
     DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     DLCFinishDateRelationManagerBloc _finishRelationManagerBloc = DLCFinishDateRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return [
@@ -86,7 +86,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
         create: (BuildContext context) {
           return DLCFinishDateRelationBloc(
             itemId: item.id,
-            iCollectionRepository: ICollectionRepository.iCollectionRepository,
+            iCollectionRepository: ICollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -115,7 +115,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository,
+          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -127,8 +127,8 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 // ignore: must_be_immutable
 class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
-    Key key,
-    void Function(DLC item) onUpdate,
+    Key? key,
+    void Function(DLC? item)? onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
 
   @override
@@ -182,10 +182,10 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
 // ignore: must_be_immutable
 class DLCFinishDateList extends FinishDateList<DLC, DLCFinishDateRelationBloc, DLCFinishDateRelationManagerBloc> {
   DLCFinishDateList({
-    Key key,
-    @required String fieldName,
-    @required DateTime value,
-    @required String relationTypeName,
-    @required void Function() onUpdate,
+    Key? key,
+    required String fieldName,
+    required DateTime? value,
+    required String relationTypeName,
+    required void Function() onUpdate,
   }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
 }

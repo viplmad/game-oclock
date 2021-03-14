@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String tagTable = "Tag";
+const String tagTable = 'Tag';
 
 const tagFields = [
   IdField,
@@ -14,8 +12,8 @@ const tag_nameField = 'Name';
 
 class TagEntity extends CollectionItemEntity {
   const TagEntity({
-    @required int id,
-    this.name,
+    required int id,
+    required this.name,
   }) : super(id: id);
 
   final String name;

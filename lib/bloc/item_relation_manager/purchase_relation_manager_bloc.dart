@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -9,8 +7,8 @@ import 'item_relation_manager.dart';
 
 class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Purchase, W> {
   PurchaseRelationManagerBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override

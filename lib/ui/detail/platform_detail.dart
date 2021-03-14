@@ -22,9 +22,9 @@ import 'item_detail.dart';
 
 class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
-    Key key,
-    @required Platform item,
-    void Function(Platform item) onUpdate,
+    Key? key,
+    required Platform item,
+    void Function(Platform? item)? onUpdate,
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
@@ -32,7 +32,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     return PlatformDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -43,7 +43,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     return PlatformDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -53,12 +53,12 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 
     PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return [
@@ -94,7 +94,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository,
+          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -106,8 +106,8 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 // ignore: must_be_immutable
 class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
-    Key key,
-    void Function(Platform item) onUpdate,
+    Key? key,
+    void Function(Platform? item)? onUpdate,
   }) : super(key: key, onUpdate: onUpdate);
 
   @override

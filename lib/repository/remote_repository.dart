@@ -14,8 +14,8 @@ class RemoteRepository implements ICollectionRepository {
     _iImageConnector = iImageConnector;
   }
 
-  ISQLConnector _iSQLConnector;
-  IImageConnector _iImageConnector;
+  late ISQLConnector _iSQLConnector;
+  late IImageConnector _iImageConnector;
 
   factory RemoteRepository(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
     return RemoteRepository._(
@@ -62,7 +62,7 @@ class RemoteRepository implements ICollectionRepository {
   //#region CREATE
   //#region Game
   @override
-  Future<Game> createGame(String name, String edition) {
+  Future<Game?> createGame(String name, String edition) {
 
     return _iSQLConnector.insertRecord(
       tableName: gameTable,
@@ -155,7 +155,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Future<DLC> createDLC(String name) {
+  Future<DLC?> createDLC(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: dlcTable,
@@ -194,7 +194,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Future<Platform> createPlatform(String name) {
+  Future<Platform?> createPlatform(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: platformTable,
@@ -219,7 +219,7 @@ class RemoteRepository implements ICollectionRepository {
   //#endregion Platform
 
   //#region Purchase
-  Future<Purchase> createPurchase(String description) {
+  Future<Purchase?> createPurchase(String description) {
 
     return _iSQLConnector.insertRecord(
       tableName: purchaseTable,
@@ -246,7 +246,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Future<Store> createStore(String name) {
+  Future<Store?> createStore(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: storeTable,
@@ -274,7 +274,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Future<System> createSystem(String name) {
+  Future<System?> createSystem(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: systemTable,
@@ -288,7 +288,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Tag
   @override
-  Future<Tag> createTag(String name) {
+  Future<Tag?> createTag(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: tagTable,
@@ -302,7 +302,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Type
   @override
-  Future<PurchaseType> createType(String name) {
+  Future<PurchaseType?> createType(String name) {
 
     return _iSQLConnector.insertRecord(
       tableName: typeTable,
@@ -339,10 +339,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getAllWithView(GameView gameView, [int limit]) {
+  Stream<List<Game>> getAllWithView(GameView gameView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: allViewToTable[gameView],
+      tableName: allViewToTable[gameView]!,
       selectFields: gameFields,
       limitResults: limit,
     ).asStream().map( _dynamicToListGame );
@@ -350,35 +350,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getAllWithYearView(GameView gameView, int year, [int limit]) {
+  Stream<List<Game>> getAllWithYearView(GameView gameView, int year, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: allViewToTable[gameView],
-      selectFields: gameFields,
-      limitResults: limit,
-      tableArguments: <int>[
-        year,
-      ],
-    ).asStream().map( _dynamicToListGame );
-
-  }
-
-  @override
-  Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]) {
-
-    return _iSQLConnector.readTable(
-      tableName: gameViewToTable[gameView],
-      selectFields: gameFields,
-      limitResults: limit,
-    ).asStream().map( _dynamicToListGame );
-
-  }
-
-  @override
-  Stream<List<Game>> getOwnedWithYearView(GameView gameView, int year, [int limit]) {
-
-    return _iSQLConnector.readTable(
-      tableName: gameViewToTable[gameView],
+      tableName: allViewToTable[gameView]!,
       selectFields: gameFields,
       limitResults: limit,
       tableArguments: <int>[
@@ -389,10 +364,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]) {
+  Stream<List<Game>> getOwnedWithView(GameView gameView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: romViewToTable[gameView],
+      tableName: gameViewToTable[gameView]!,
       selectFields: gameFields,
       limitResults: limit,
     ).asStream().map( _dynamicToListGame );
@@ -400,10 +375,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Game>> getRomsWithYearView(GameView gameView, int year, [int limit]) {
+  Stream<List<Game>> getOwnedWithYearView(GameView gameView, int year, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: romViewToTable[gameView],
+      tableName: gameViewToTable[gameView]!,
       selectFields: gameFields,
       limitResults: limit,
       tableArguments: <int>[
@@ -414,7 +389,32 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getGameWithId(int id) {
+  Stream<List<Game>> getRomsWithView(GameView gameView, [int? limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: romViewToTable[gameView]!,
+      selectFields: gameFields,
+      limitResults: limit,
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
+  Stream<List<Game>> getRomsWithYearView(GameView gameView, int year, [int? limit]) {
+
+    return _iSQLConnector.readTable(
+      tableName: romViewToTable[gameView]!,
+      selectFields: gameFields,
+      limitResults: limit,
+      tableArguments: <int>[
+        year,
+      ],
+    ).asStream().map( _dynamicToListGame );
+
+  }
+
+  @override
+  Stream<Game?> getGameWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: gameTableRead,
@@ -504,24 +504,24 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Stream<List<DLC>> getAllDLCs([List<String> sortFields]) {
+  Stream<List<DLC>> getAllDLCs() {
 
     return getDLCsWithView(DLCView.Main);
 
   }
 
   @override
-  Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]) {
+  Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: dlcViewToTable[dlcView],
+      tableName: dlcViewToTable[dlcView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListDLC );
 
   }
 
   @override
-  Stream<DLC> getDLCWithId(int id) {
+  Stream<DLC?> getDLCWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: dlcTableRead,
@@ -533,7 +533,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Game> getBaseGameFromDLC(int id) {
+  Stream<Game?> getBaseGameFromDLC(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: gameTable,
@@ -582,17 +582,17 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]) {
+  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: platformViewToTable[platformView],
+      tableName: platformViewToTable[platformView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListPlatform );
 
   }
 
   @override
-  Stream<Platform> getPlatformWithId(int id) {
+  Stream<Platform?> getPlatformWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: platformTable,
@@ -631,17 +631,17 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Purchase
   @override
-  Stream<List<Purchase>> getAllPurchases([List<String> sortFields]) {
+  Stream<List<Purchase>> getAllPurchases() {
 
     return getPurchasesWithView(PurchaseView.Main);
 
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]) {
+  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: purchaseViewToTable[purchaseView],
+      tableName: purchaseViewToTable[purchaseView]!,
       selectFields: purchaseFields,
       limitResults: limit,
     ).asStream().map( _dynamicToListPurchase );
@@ -649,10 +649,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<List<Purchase>> getPurchasesWithYearView(PurchaseView purchaseView, int year, [int limit]) {
+  Stream<List<Purchase>> getPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: purchaseViewToTable[purchaseView],
+      tableName: purchaseViewToTable[purchaseView]!,
       selectFields: purchaseFields,
       limitResults: limit,
       tableArguments: <int>[
@@ -663,7 +663,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Purchase> getPurchaseWithId(int id) {
+  Stream<Purchase?> getPurchaseWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: purchaseTable,
@@ -675,7 +675,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Stream<Store> getStoreFromPurchase(int id) {
+  Stream<Store?> getStoreFromPurchase(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: storeTable,
@@ -727,24 +727,24 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Stream<List<Store>> getAllStores([List<String> sortFields]) {
+  Stream<List<Store>> getAllStores() {
 
     return getStoresWithView(StoreView.Main);
 
   }
 
   @override
-  Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]) {
+  Stream<List<Store>> getStoresWithView(StoreView storeView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: storeViewToTable[storeView],
+      tableName: storeViewToTable[storeView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListStore );
 
   }
 
   @override
-  Stream<Store> getStoreWithId(int id) {
+  Stream<Store?> getStoreWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: storeTable,
@@ -771,24 +771,24 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Stream<List<System>> getAllSystems([List<String> sortFields]) {
+  Stream<List<System>> getAllSystems() {
 
     return getSystemsWithView(SystemView.Main);
 
   }
 
   @override
-  Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]) {
+  Stream<List<System>> getSystemsWithView(SystemView systemView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: systemViewToTable[systemView],
+      tableName: systemViewToTable[systemView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListSystem );
 
   }
 
   @override
-  Stream<System> getSystemWithId(int id) {
+  Stream<System?> getSystemWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: systemTable,
@@ -814,24 +814,24 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Tag
   @override
-  Stream<List<Tag>> getAllTags([List<String> sortFields]) {
+  Stream<List<Tag>> getAllTags() {
 
     return getTagsWithView(TagView.Main);
 
   }
 
   @override
-  Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]) {
+  Stream<List<Tag>> getTagsWithView(TagView tagView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: tagViewToTable[tagView],
+      tableName: tagViewToTable[tagView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListTag );
 
   }
 
   @override
-  Stream<Tag> getTagWithId(int id) {
+  Stream<Tag?> getTagWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: tagTable,
@@ -858,24 +858,24 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Type
   @override
-  Stream<List<PurchaseType>> getAllTypes([List<String> sortFields]) {
+  Stream<List<PurchaseType>> getAllTypes() {
 
     return getTypesWithView(TypeView.Main);
 
   }
 
   @override
-  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]) {
+  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int? limit]) {
 
     return _iSQLConnector.readTable(
-      tableName: typeViewToTable[typeView],
+      tableName: typeViewToTable[typeView]!,
       limitResults: limit,
     ).asStream().map( _dynamicToListType );
 
   }
 
   @override
-  Stream<PurchaseType> getTypeWithId(int id) {
+  Stream<PurchaseType?> getTypeWithId(int id) {
 
     return _iSQLConnector.readTable(
       tableName: typeTable,
@@ -903,7 +903,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region UPDATE
   @override
-  Future<Game> updateGame<T>(int id, String fieldName, T newValue) async {
+  Future<Game?> updateGame<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: gameTable,
@@ -919,7 +919,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<DLC> updateDLC<T>(int id, String fieldName, T newValue) async {
+  Future<DLC?> updateDLC<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: dlcTable,
@@ -935,7 +935,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Platform> updatePlatform<T>(int id, String fieldName, T newValue) async {
+  Future<Platform?> updatePlatform<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: platformTable,
@@ -951,7 +951,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Purchase> updatePurchase<T>(int id, String fieldName, T newValue) async {
+  Future<Purchase?> updatePurchase<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: purchaseTable,
@@ -967,7 +967,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Store> updateStore<T>(int id, String fieldName, T newValue) async {
+  Future<Store?> updateStore<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: storeTable,
@@ -983,7 +983,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<System> updateSystem<T>(int id, String fieldName, T newValue) async {
+  Future<System?> updateSystem<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: systemTable,
@@ -999,7 +999,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Tag> updateTag<T>(int id, String fieldName, T newValue) async {
+  Future<Tag?> updateTag<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: tagTable,
@@ -1015,7 +1015,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<PurchaseType> updateType<T>(int id, String fieldName, T newValue) async {
+  Future<PurchaseType?> updateType<T>(int id, String fieldName, T newValue) async {
 
     await _iSQLConnector.updateTable(
       tableName: typeTable,
@@ -1387,7 +1387,7 @@ class RemoteRepository implements ICollectionRepository {
   //#region IMAGE
   //#region Game
   @override
-  Future<Game> uploadGameCover(int gameId, String uploadImagePath, [String oldImageName]) async {
+  Future<Game?> uploadGameCover(int gameId, String uploadImagePath, [String? oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1407,7 +1407,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Game> renameGameCover(int gameId, String imageName, String newImageName) async {
+  Future<Game?> renameGameCover(int gameId, String imageName, String newImageName) async {
 
     final String coverName = await _iImageConnector.renameImage(
       tableName: gameTable,
@@ -1420,7 +1420,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Game> deleteGameCover(int gameId, String imageName) async {
+  Future<Game?> deleteGameCover(int gameId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: gameTable,
@@ -1434,7 +1434,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region DLC
   @override
-  Future<DLC> uploadDLCCover(int dlcId, String uploadImagePath, [String oldImageName]) async {
+  Future<DLC?> uploadDLCCover(int dlcId, String uploadImagePath, [String? oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1454,7 +1454,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<DLC> renameDLCCover(int dlcId, String imageName, String newImageName) async {
+  Future<DLC?> renameDLCCover(int dlcId, String imageName, String newImageName) async {
 
     final String coverName = await _iImageConnector.renameImage(
       tableName: dlcTable,
@@ -1467,7 +1467,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<DLC> deleteDLCCover(int dlcId, String imageName) async {
+  Future<DLC?> deleteDLCCover(int dlcId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: dlcTable,
@@ -1481,7 +1481,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Platform
   @override
-  Future<Platform> uploadPlatformIcon(int platformId, String uploadImagePath, [String oldImageName]) async {
+  Future<Platform?> uploadPlatformIcon(int platformId, String uploadImagePath, [String? oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1501,7 +1501,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Platform> renamePlatformIcon(int platformId, String imageName, String newImageName) async {
+  Future<Platform?> renamePlatformIcon(int platformId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: platformTable,
@@ -1514,7 +1514,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Platform> deletePlatformIcon(int platformId, String imageName) async {
+  Future<Platform?> deletePlatformIcon(int platformId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: platformTable,
@@ -1528,7 +1528,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region Store
   @override
-  Future<Store> uploadStoreIcon(int storeId, String uploadImagePath, [String oldImageName]) async {
+  Future<Store?> uploadStoreIcon(int storeId, String uploadImagePath, [String? oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1547,7 +1547,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Future<Store> renameStoreIcon(int storeId, String imageName, String newImageName) async {
+  Future<Store?> renameStoreIcon(int storeId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: storeTable,
@@ -1560,7 +1560,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<Store> deleteStoreIcon(int storeId, String imageName) async {
+  Future<Store?> deleteStoreIcon(int storeId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: storeTable,
@@ -1574,7 +1574,7 @@ class RemoteRepository implements ICollectionRepository {
 
   //#region System
   @override
-  Future<System> uploadSystemIcon(int systemId, String uploadImagePath, [String oldImageName]) async {
+  Future<System?> uploadSystemIcon(int systemId, String uploadImagePath, [String? oldImageName]) async {
 
     if(oldImageName != null) {
       await _iImageConnector.deleteImage(
@@ -1594,7 +1594,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<System> renameSystemIcon(int systemId, String imageName, String newImageName) async {
+  Future<System?> renameSystemIcon(int systemId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
       tableName: systemTable,
@@ -1607,7 +1607,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Future<System> deleteSystemIcon(int systemId, String imageName) async {
+  Future<System?> deleteSystemIcon(int systemId, String imageName) async {
 
     await _iImageConnector.deleteImage(
       tableName: systemTable,
@@ -1621,7 +1621,7 @@ class RemoteRepository implements ICollectionRepository {
   //#endregion IMAGE
 
   //#region DOWNLOAD
-  String _getGameCoverURL(String gameCoverName) {
+  String? _getGameCoverURL(String? gameCoverName) {
 
     return gameCoverName != null?
         _iImageConnector.getURI(
@@ -1632,7 +1632,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  String _getDLCCoverURL(String dlcCoverName) {
+  String? _getDLCCoverURL(String? dlcCoverName) {
 
     return dlcCoverName != null?
         _iImageConnector.getURI(
@@ -1643,7 +1643,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  String _getPlatformIconURL(String platformIconName) {
+  String? _getPlatformIconURL(String? platformIconName) {
 
     return platformIconName != null?
         _iImageConnector.getURI(
@@ -1654,7 +1654,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  String _getStoreIconURL(String storeIconName) {
+  String? _getStoreIconURL(String? storeIconName) {
 
     return storeIconName != null?
         _iImageConnector.getURI(
@@ -1665,7 +1665,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  String _getSystemIconURL(String systemIconName) {
+  String? _getSystemIconURL(String? systemIconName) {
 
     return systemIconName != null?
         _iImageConnector.getURI(
@@ -1754,9 +1754,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Game _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
+  Game? _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
 
-    Game singleGame;
+    Game? singleGame;
 
     if(results.isNotEmpty) {
       singleGame = _dynamicToListGame(results).first;
@@ -1766,9 +1766,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  DLC _dynamicToSingleDLC(List<Map<String, Map<String, dynamic>>> results) {
+  DLC? _dynamicToSingleDLC(List<Map<String, Map<String, dynamic>>> results) {
 
-    DLC singleDLC;
+    DLC? singleDLC;
 
     if(results.isNotEmpty) {
       singleDLC = _dynamicToListDLC(results).first;
@@ -1778,9 +1778,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Platform _dynamicToSinglePlatform(List<Map<String, Map<String, dynamic>>> results) {
+  Platform? _dynamicToSinglePlatform(List<Map<String, Map<String, dynamic>>> results) {
 
-    Platform singlePlatform;
+    Platform? singlePlatform;
 
     if(results.isNotEmpty) {
       singlePlatform = _dynamicToListPlatform(results).first;
@@ -1790,9 +1790,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Purchase _dynamicToSinglePurchase(List<Map<String, Map<String, dynamic>>> results) {
+  Purchase? _dynamicToSinglePurchase(List<Map<String, Map<String, dynamic>>> results) {
 
-    Purchase singlePurchase;
+    Purchase? singlePurchase;
 
     if(results.isNotEmpty) {
       singlePurchase = _dynamicToListPurchase(results).first;
@@ -1802,9 +1802,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Store _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
+  Store? _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
 
-    Store singleStore;
+    Store? singleStore;
 
     if(results.isNotEmpty) {
       singleStore = _dynamicToListStore(results).first;
@@ -1814,9 +1814,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  System _dynamicToSingleSystem(List<Map<String, Map<String, dynamic>>> results) {
+  System? _dynamicToSingleSystem(List<Map<String, Map<String, dynamic>>> results) {
 
-    System singleSystem;
+    System? singleSystem;
 
     if(results.isNotEmpty) {
       singleSystem = _dynamicToListSystem(results).first;
@@ -1826,9 +1826,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  Tag _dynamicToSingleTag(List<Map<String, Map<String, dynamic>>> results) {
+  Tag? _dynamicToSingleTag(List<Map<String, Map<String, dynamic>>> results) {
 
-    Tag singleTag;
+    Tag? singleTag;
 
     if(results.isNotEmpty) {
       singleTag = _dynamicToListTag(results).first;
@@ -1838,9 +1838,9 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
-  PurchaseType _dynamicToSingleType(List<Map<String, Map<String, dynamic>>> results) {
+  PurchaseType? _dynamicToSingleType(List<Map<String, Map<String, dynamic>>> results) {
 
-    PurchaseType singleType;
+    PurchaseType? singleType;
 
     if(results.isNotEmpty) {
       singleType = _dynamicToListType(results).first;
@@ -1859,69 +1859,69 @@ class RemoteRepository implements ICollectionRepository {
 }
 
 const Map<GameView, String> allViewToTable = {
-  GameView.Main : "All-Main",
-  GameView.LastCreated : "All-Last Created",
-  GameView.Playing : "All-Playing",
-  GameView.NextUp : "All-Next Up",
-  GameView.LastPlayed : "All-Last Played",
-  GameView.LastFinished : "All-Last Finished",
-  GameView.Review : "All-Year In Review",
+  GameView.Main : 'All-Main',
+  GameView.LastCreated : 'All-Last Created',
+  GameView.Playing : 'All-Playing',
+  GameView.NextUp : 'All-Next Up',
+  GameView.LastPlayed : 'All-Last Played',
+  GameView.LastFinished : 'All-Last Finished',
+  GameView.Review : 'All-Year In Review',
 };
 
 const Map<GameView, String> gameViewToTable = {
-  GameView.Main : "Owned-Main",
-  GameView.LastCreated : "Owned-Last Created",
-  GameView.Playing : "Owned-Playing",
-  GameView.NextUp : "Owned-Next Up",
-  GameView.LastPlayed : "Owned-Last Played",
-  GameView.LastFinished : "Owned-Last Finished",
-  GameView.Review : "Owned-Year In Review",
+  GameView.Main : 'Owned-Main',
+  GameView.LastCreated : 'Owned-Last Created',
+  GameView.Playing : 'Owned-Playing',
+  GameView.NextUp : 'Owned-Next Up',
+  GameView.LastPlayed : 'Owned-Last Played',
+  GameView.LastFinished : 'Owned-Last Finished',
+  GameView.Review : 'Owned-Year In Review',
 };
 
 const Map<GameView, String> romViewToTable = {
-  GameView.Main : "Rom-Main",
-  GameView.LastCreated : "Rom-Last Created",
-  GameView.Playing : "Rom-Playing",
-  GameView.NextUp : "Rom-Next Up",
-  GameView.LastPlayed : "Rom-Last Played",
-  GameView.LastFinished : "Rom-Last Finished",
-  GameView.Review : "Rom-Year In Review",
+  GameView.Main : 'Rom-Main',
+  GameView.LastCreated : 'Rom-Last Created',
+  GameView.Playing : 'Rom-Playing',
+  GameView.NextUp : 'Rom-Next Up',
+  GameView.LastPlayed : 'Rom-Last Played',
+  GameView.LastFinished : 'Rom-Last Finished',
+  GameView.Review : 'Rom-Year In Review',
 };
 
 const Map<DLCView, String> dlcViewToTable = {
-  DLCView.Main : "DLC-Main",
-  DLCView.LastCreated : "DLC-Last Created",
+  DLCView.Main : 'DLC-Main',
+  DLCView.LastCreated : 'DLC-Last Created',
 };
 
 const Map<PlatformView, String> platformViewToTable = {
-  PlatformView.Main : "Platform-Main",
-  PlatformView.LastCreated : "Platform-Last Created",
+  PlatformView.Main : 'Platform-Main',
+  PlatformView.LastCreated : 'Platform-Last Created',
 };
 
 const Map<PurchaseView, String> purchaseViewToTable = {
-  PurchaseView.Main : "Purchase-Main",
-  PurchaseView.LastCreated : "Purchase-Last Created",
-  PurchaseView.Pending : "Purchase-Pending",
-  PurchaseView.LastPurchased : "Purchase-Last Purchased",
-  PurchaseView.Review : "Purchase-Year In Review",
+  PurchaseView.Main : 'Purchase-Main',
+  PurchaseView.LastCreated : 'Purchase-Last Created',
+  PurchaseView.Pending : 'Purchase-Pending',
+  PurchaseView.LastPurchased : 'Purchase-Last Purchased',
+  PurchaseView.Review : 'Purchase-Year In Review',
 };
 
 const Map<StoreView, String> storeViewToTable = {
-  StoreView.Main : "Store-Main",
-  StoreView.LastCreated : "Store-Last Created",
+  StoreView.Main : 'Store-Main',
+  StoreView.LastCreated : 'Store-Last Created',
 };
 
 const Map<SystemView, String> systemViewToTable = {
-  SystemView.Main : "System-Main",
-  SystemView.LastCreated : "System-Last Created",
+  SystemView.Main : 'System-Main',
+  SystemView.LastCreated : 'System-Last Created',
 };
 
 const Map<TagView, String> tagViewToTable = {
-  TagView.Main : "Tag-Main",
-  TagView.LastCreated : "Tag-Last Created",
+  TagView.Main : 'Tag-Main',
+  TagView.LastCreated : 'Tag-Last Created',
 };
 
 const Map<TypeView, String> typeViewToTable = {
-  TypeView.Main : "Type-Main",
-  TypeView.LastCreated : "Type-Last Created",
+  TypeView.Main : 'Type-Main',
+  TypeView.LastCreated : 'Type-Last Created',
 };

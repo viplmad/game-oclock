@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -10,7 +9,7 @@ import 'item_list_manager.dart';
 
 abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
-    @required this.iCollectionRepository,
+    required this.iCollectionRepository,
   }) : super(Initialised());
 
   final ICollectionRepository iCollectionRepository;
@@ -53,8 +52,12 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
     try {
 
-      final T item = await createFuture(event);
-      yield ItemAdded<T>(item);
+      final T? item = await createFuture(event);
+      if(item != null) {
+        yield ItemAdded<T>(item);
+      } else {
+        throw Exception();
+      }
 
     } catch (e) {
 
@@ -79,6 +82,6 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  Future<T> createFuture(AddItem event);
+  Future<T?> createFuture(AddItem event);
   Future<dynamic> deleteFuture(DeleteItem<T> event);
 }

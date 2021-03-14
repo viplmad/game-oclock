@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -14,8 +13,8 @@ import 'item_list.dart';
 
 abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
-    @required this.iCollectionRepository,
-    @required this.managerBloc,
+    required this.iCollectionRepository,
+    required this.managerBloc,
   }) : super(ItemListLoading()) {
 
     managerSubscription = managerBloc.listen(mapListManagerStateToEvent);
@@ -24,7 +23,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   final ICollectionRepository iCollectionRepository;
   final ItemListManagerBloc<T> managerBloc;
-  StreamSubscription<ItemListManagerState> managerSubscription;
+  late StreamSubscription<ItemListManagerState> managerSubscription;
 
   @override
   Stream<ItemListState> mapEventToState(ItemListEvent event) async* {
@@ -66,7 +65,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield ItemListNotLoaded("Connection lost. Trying to reconnect");
+      yield ItemListNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
@@ -136,7 +135,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
 
-    ListStyle style;
+    ListStyle? style;
     if(state is ItemListLoaded<T>) {
        style = (state as ItemListLoaded<T>).style;
     }
@@ -163,7 +162,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<ItemListState> _mapUpdateYearViewToState(UpdateYearView event) async* {
 
-    ListStyle style;
+    ListStyle? style;
     if(state is ItemListLoaded<T>) {
        style = (state as ItemListLoaded<T>).style;
     }
@@ -286,7 +285,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   @override
   Future<void> close() {
 
-    managerSubscription?.cancel();
+    managerSubscription.cancel();
     return super.close();
 
   }

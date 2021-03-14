@@ -13,7 +13,7 @@ void main() => runApp(GameCollection());
 
 class GameCollection extends StatelessWidget {
   const GameCollection({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

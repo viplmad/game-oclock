@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -11,11 +10,11 @@ import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEvent, RelationState> {
+abstract class RelationBloc<T extends CollectionItem, O extends Object> extends Bloc<RelationEvent, RelationState> {
   RelationBloc({
-    @required this.itemId,
-    @required this.iCollectionRepository,
-    @required this.managerBloc,
+    required this.itemId,
+    required this.iCollectionRepository,
+    required this.managerBloc,
   }) : super(RelationLoading()) {
 
     managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
@@ -25,7 +24,7 @@ abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEv
   final int itemId;
   final ICollectionRepository iCollectionRepository;
   final RelationManagerBloc<T, O> managerBloc;
-  StreamSubscription<RelationManagerState> managerSubscription;
+  late StreamSubscription<RelationManagerState> managerSubscription;
 
   @override
   Stream<RelationState> mapEventToState(RelationEvent event) async* {
@@ -51,7 +50,7 @@ abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEv
   Stream<RelationState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield RelationNotLoaded("Connection lost. Trying to reconnect");
+      yield RelationNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
@@ -148,14 +147,14 @@ abstract class RelationBloc<T extends CollectionItem, O> extends Bloc<RelationEv
   @override
   Future<void> close() {
 
-    managerSubscription?.cancel();
+    managerSubscription.cancel();
     return super.close();
 
   }
 
   Stream<List<O>> getRelationStream() {
 
-    return Stream.error("Relation does not exist");
+    return Stream.error('Relation does not exist');
 
   }
 }

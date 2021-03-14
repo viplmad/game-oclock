@@ -5,9 +5,9 @@ import 'package:numberpicker/numberpicker.dart';
 
 class DurationPickerDialog extends StatefulWidget {
   const DurationPickerDialog({
-    Key key,
-    @required this.fieldName,
-    @required this.initialDuration,
+    Key? key,
+    required this.fieldName,
+    required this.initialDuration,
   }) : super(key: key);
 
   final String fieldName;
@@ -17,8 +17,8 @@ class DurationPickerDialog extends StatefulWidget {
   State<DurationPickerDialog> createState() => _DurationPickerDialogState();
 }
 class _DurationPickerDialogState extends State<DurationPickerDialog> {
-  int _hours;
-  int _minutes;
+  int _hours = 0;
+  int _minutes = 0;
 
   @override
   void initState() {
@@ -37,26 +37,26 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          NumberPicker.integer(
-              initialValue: _hours,
+          NumberPicker(
+              value: _hours,
               minValue: 0,
               maxValue: 1000,
-              highlightSelectedValue: true,
+              //TODO highlightSelectedValue: true,
               onChanged: (num newHours) {
                 setState(() {
-                  _hours = newHours;
+                  _hours = newHours.toInt();
                 });
               }
           ),
           Text(':', style: Theme.of(context).textTheme.headline6,),
-          NumberPicker.integer(
-              initialValue: _minutes,
+          NumberPicker(
+              value: _minutes,
               minValue: 0,
               maxValue: 59,
-              highlightSelectedValue: true,
+              //TODO highlightSelectedValue: true,
               onChanged: (num newMin) {
                 setState(() {
-                  _minutes = newMin;
+                  _minutes = newMin.toInt();
                 });
               }
           ),

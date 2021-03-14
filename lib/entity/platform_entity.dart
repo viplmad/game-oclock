@@ -1,9 +1,7 @@
-import 'package:meta/meta.dart';
-
 import 'entity.dart';
 
 
-const String platformTable = "Platform";
+const String platformTable = 'Platform';
 
 const List<String> platformFields = [
   IdField,
@@ -17,21 +15,21 @@ const String plat_iconField = 'Icon';
 const String plat_typeField = 'Type';
 
 const List<String> types = [
-  "Physical",
-  "Digital",
+  'Physical',
+  'Digital',
 ];
 
 class PlatformEntity extends CollectionItemEntity {
   const PlatformEntity({
-    @required int id,
-    this.name,
-    this.iconFilename,
-    this.type,
+    required int id,
+    required this.name,
+    required this.iconFilename,
+    required this.type,
   }) : super(id: id);
 
   final String name;
-  final String iconFilename;
-  final String type;
+  final String? iconFilename;
+  final String? type;
 
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
 
@@ -73,8 +71,6 @@ class PlatformEntity extends CollectionItemEntity {
   List<Object> get props => [
     id,
     name,
-    iconFilename,
-    type,
   ];
 
   @override

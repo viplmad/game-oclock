@@ -37,7 +37,7 @@ class SystemTheme {
 
   static String _getSubtitle(System item) {
 
-    return item.manufacturer;
+    return item.manufacturer?? '';
 
   }
 }

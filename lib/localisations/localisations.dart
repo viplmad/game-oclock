@@ -238,7 +238,12 @@ abstract class GameCollectionLocalisations {
   String get noResultsString;
 
   static GameCollectionLocalisations of(BuildContext context) {
-    return Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
+    GameCollectionLocalisations? localisations = Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
+    if(localisations == null) {
+      throw Exception();
+    }
+
+    return localisations;
   }
 }
 

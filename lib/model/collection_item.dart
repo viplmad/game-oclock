@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:game_collection/entity/entity.dart';
@@ -6,7 +5,7 @@ import 'package:game_collection/entity/entity.dart';
 
 abstract class CollectionItem extends Equatable {
   const CollectionItem({
-    @required this.id,
+    required this.id,
   });
 
   final int id;
@@ -36,7 +35,7 @@ abstract class CollectionItem extends Equatable {
 }
 
 class ItemImage {
-  const ItemImage(String url, String filename)
+  const ItemImage(String? url, String? filename)
       : this.url = url?? '',
         this.filename = filename?? '';
 
@@ -51,7 +50,7 @@ abstract class ItemData<T extends CollectionItem> {
   int get length => items.length;
 
   List<int> yearlyItemCount(List<int> years, bool Function(T, int) yearComparator) {
-    List<int> values = List<int>(years.length);
+    List<int> values = List<int>.filled(years.length, 0);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
@@ -65,15 +64,15 @@ abstract class ItemData<T extends CollectionItem> {
     return values;
   }
 
-  List<N> yearlyFieldSum<N extends num>(List<int> years, bool Function(T, int) yearComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
-    List<N> values = List<N>(years.length);
+  List<N> yearlyFieldSum<N extends num>(List<int> years, bool Function(T, int) yearComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int)? sumOperation}) {
+    List<N> values = List<N>.filled(years.length, 0 as N);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
       int year = years.elementAt(yearsIndex);
 
       List<T> yearItems = items.where((T item) => yearComparator(item, year)).toList(growable: false);
-      N yearSum = yearItems.fold<N>(foldInitialValue, (N previousValue, T item) => previousValue + fieldExtractor(item));
+      N yearSum = yearItems.fold<N>(foldInitialValue, (N previousValue, T item) => (previousValue + fieldExtractor(item)) as N);
       if(sumOperation != null) {
         yearSum = sumOperation(yearSum, yearItems.length);
       }
@@ -97,13 +96,13 @@ abstract class ItemData<T extends CollectionItem> {
     return yearData;
   }
 
-  YearData<N> monthlyFieldSum<N extends num>(bool Function(T, int) monthComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int) sumOperation}) {
+  YearData<N> monthlyFieldSum<N extends num>(bool Function(T, int) monthComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int)? sumOperation}) {
     YearData<N> yearData = YearData<N>();
 
     for(int month = 1; month <= 12; month++) {
 
       List<T> monthItems = items.where((T item) => monthComparator(item, month)).toList(growable: false);
-      N monthSum = monthItems.fold<N>(foldInitialValue, (N previousValue, T item) => previousValue + fieldExtractor(item));
+      N monthSum = monthItems.fold<N>(foldInitialValue, (N previousValue, T item) => (previousValue + fieldExtractor(item)) as N);
       if(sumOperation != null) {
         monthSum = sumOperation(monthSum, monthItems.length);
       }
@@ -115,7 +114,7 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountEqual<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>(intervals.length);
+    List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length; intervalIndex++) {
@@ -130,7 +129,7 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCount<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>(intervals.length - 1);
+    List<int> values = List<int>.filled(intervals.length - 1, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
@@ -146,7 +145,7 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountWithInitial<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>(intervals.length);
+    List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
     N initialElement = intervals.first;
@@ -166,7 +165,7 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountWithLast<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>(intervals.length);
+    List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
@@ -186,7 +185,7 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountWithInitialAndLast<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>(intervals.length + 1);
+    List<int> values = List<int>.filled(intervals.length + 1, 0);
     int index = 0;
 
     N initialElement = intervals.first;
@@ -210,16 +209,16 @@ abstract class ItemData<T extends CollectionItem> {
   }
 }
 
-class YearData<T> {
+class YearData<N extends num> {
   YearData() {
-    values = List<T>(12);
+    values = List<N>.filled(12, 0 as N);
     _month = 0;
   }
 
-  List<T> values;
-  int _month;
+  late List<N> values;
+  late int _month;
 
-  void addData(T data) {
+  void addData(N data) {
     if(_month < 12) {
       values[_month++] = data;
     }

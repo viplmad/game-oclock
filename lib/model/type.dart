@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,8 +10,8 @@ enum TypeView {
 
 class PurchaseType extends CollectionItem {
   const PurchaseType({
-    @required int id,
-    this.name,
+    required int id,
+    required this.name,
   }) : this.uniqueId = 'Ty$id',
         super(id: id);
 
@@ -25,7 +23,7 @@ class PurchaseType extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  final ItemImage image = null;
+  ItemImage get image => ItemImage(null, null);
 
   @override
   String get queryableTerms => this.name;
@@ -51,7 +49,7 @@ class PurchaseType extends CollectionItem {
 
   @override
   PurchaseType copyWith({
-    String name,
+    String? name,
   }) {
 
     return PurchaseType(

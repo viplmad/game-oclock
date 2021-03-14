@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import '../iimage_connector.dart';
 
 import 'cloudinary_connection/cloudinary_connection.dart';
@@ -19,8 +17,8 @@ class CloudinaryConnector extends IImageConnector {
 
   }
 
-  CloudinaryInstance _instance;
-  CloudinaryConnection _connection;
+  late CloudinaryInstance _instance;
+  late CloudinaryConnection _connection;
 
   void createConnection() {
 
@@ -34,7 +32,7 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region UPLOAD
   @override
-  Future<String> setImage({@required String imagePath, @required String tableName, @required String imageName}) {
+  Future<String> setImage({required String imagePath, required String tableName, required String imageName}) {
 
     return _connection.uploadImage(
       imagePath,
@@ -47,7 +45,7 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region RENAME
   @override
-  Future<String> renameImage({@required String tableName, @required String oldImageName, @required String newImageName}) {
+  Future<String> renameImage({required String tableName, required String oldImageName, required String newImageName}) {
 
     return _connection.renameImage(
       folder: tableName,
@@ -60,7 +58,7 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteImage({@required String tableName, @required String imageName}) {
+  Future<dynamic> deleteImage({required String tableName, required String imageName}) {
 
     return _connection.deleteImage(
       folder: tableName,
@@ -72,7 +70,7 @@ class CloudinaryConnector extends IImageConnector {
 
   //#region DOWNLOAD
   @override
-  String getURI({@required String tableName, @required String imageFilename}) {
+  String getURI({required String tableName, required String imageFilename}) {
 
     String baseURL = getCompleteResURL(tableName, imageFilename);
 
@@ -93,7 +91,7 @@ class CloudinaryConnector extends IImageConnector {
 
   String getCompleteAPIURL() {
 
-    String url = _baseAPIURL + _instance.cloudName + "/image/upload";
+    String url = _baseAPIURL + _instance.cloudName + '/image/upload';
 
     return url;
 
@@ -101,13 +99,18 @@ class CloudinaryConnector extends IImageConnector {
 
   String getFilename(CloudinaryResponse response) {
 
-    return response.publicId.split('/').last + '.' + response.format;
+    String filename = '';
+    if(!response.isError) {
+      filename = response.publicId!.split('/').last + '.' + response.format!;
+    }
+
+    return filename;
 
   }
   //#endregion Helpers
 }
 
-const String _cloudinaryURIPattern = "cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$";
+const String _cloudinaryURIPattern = 'cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$';
 
 class CloudinaryInstance {
   const CloudinaryInstance(this.cloudName, this.apiKey, this.apiSecret);
@@ -120,23 +123,23 @@ class CloudinaryInstance {
 
     RegExp pattern = RegExp(_cloudinaryURIPattern);
 
-    RegExpMatch match = pattern.firstMatch(connectionString);
+    RegExpMatch? match = pattern.firstMatch(connectionString);
 
     if (match == null) {
-      throw Exception("Could not parse Cloudinary connection string.");
+      throw FormatException('Could not parse Cloudinary connection string.');
     }
 
     return CloudinaryInstance(
-      match.namedGroup('name'),
-      int.parse(match.namedGroup('key')),
-      match.namedGroup('secret'),
+      match.namedGroup('name')?? '',
+      int.parse(match.namedGroup('key')?? '-1'),
+      match.namedGroup('secret')?? '',
     );
 
   }
 
   String connectionString() {
 
-    return "cloudinary://$apiKey:$apiSecret@$cloudName";
+    return 'cloudinary://$apiKey:$apiSecret@$cloudName';
 
   }
 }

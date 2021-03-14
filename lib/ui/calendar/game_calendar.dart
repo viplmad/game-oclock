@@ -26,37 +26,38 @@ import '../common/item_view.dart';
 
 class GameCalendarArguments {
   const GameCalendarArguments({
-    @required this.itemId,
+    required this.itemId,
     this.onUpdate,
   });
 
   final int itemId;
-  final void Function() onUpdate;
+  final void Function()? onUpdate;
 }
 
 class GameCalendar extends StatelessWidget {
   const GameCalendar({
-    Key key,
-    @required this.itemId,
+    Key? key,
+    required this.itemId,
     this.onUpdate,
   }) : super(key: key);
 
   final int itemId;
-  final void Function() onUpdate;
+  final void Function()? onUpdate;
 
   @override
   Widget build(BuildContext context) {
 
     GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
+    // ignore: close_sinks
     CalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
 
     return MultiBlocProvider(
@@ -130,7 +131,7 @@ class GameCalendar extends StatelessWidget {
 
     return CalendarBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository,
+      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );
@@ -160,13 +161,13 @@ class GameCalendar extends StatelessWidget {
               firstDate: DateTime(1970),
               lastDate: DateTime.now(),
               initialDate: DateTime.now(),
-            ).then((DateTime date) {
+            ).then((DateTime? date) {
               if(date != null) {
 
                 showTimePicker(
                   context: context,
                   initialTime: TimeOfDay.now(),
-                ).then((TimeOfDay time) {
+                ).then((TimeOfDay? time) {
                   if(time != null) {
 
                     showDialog<Duration>(
@@ -179,7 +180,7 @@ class GameCalendar extends StatelessWidget {
                         );
 
                       },
-                    ).then((Duration duration) {
+                    ).then((Duration? duration) {
                       if(duration != null) {
 
                         DateTime dateTime = DateTime(
@@ -219,7 +220,7 @@ class GameCalendar extends StatelessWidget {
               firstDate: DateTime(1970),
               lastDate: DateTime.now(),
               initialDate: DateTime.now(),
-            ).then((DateTime value) {
+            ).then((DateTime? value) {
               if(value != null) {
                 finishDateManagerBloc.add(
                   AddRelation<DateTime>(value),
@@ -245,31 +246,22 @@ class GameCalendar extends StatelessWidget {
 }
 
 class _GameCalendarBody extends StatefulWidget {
-  const _GameCalendarBody({Key key, @required this.onUpdate}) : super(key: key);
+  const _GameCalendarBody({
+    Key? key,
+    required this.onUpdate
+  }) : super(key: key);
 
-  final void Function() onUpdate;
+  final void Function()? onUpdate;
 
   @override
   State<_GameCalendarBody> createState() => _GameCalendarBodyState();
 }
 class _GameCalendarBodyState extends State<_GameCalendarBody> {
-  tableCalendar.CalendarController _calendarController;
+  bool _isUpdated = false;
 
-  bool _isUpdated;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _calendarController = tableCalendar.CalendarController();
-    _isUpdated = false;
-  }
-
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
-  }
+  //TODO
+  DateTime _selectedDate = DateTime.now();
+  DateTime _focusedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +269,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     return WillPopScope(
       onWillPop: () {
 
-        if(_isUpdated && widget.onUpdate != null) { widget.onUpdate(); }
+        if(_isUpdated && widget.onUpdate != null) { widget.onUpdate!(); }
         return Future<bool>.value(true);
 
       },
@@ -379,15 +371,6 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
               }
             },
           ),
-          BlocListener<CalendarBloc, CalendarState>(
-            listener: (BuildContext context, CalendarState state) {
-              if(state is CalendarLoaded) {
-                try {
-                  _calendarController.setSelectedDay(state.selectedDate);
-                } catch (NoSuchMethodError) {}
-              }
-            },
-          ),
         ],
         child: BlocBuilder<CalendarBloc, CalendarState>(
           builder: (BuildContext context, CalendarState state) {
@@ -402,7 +385,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
                   state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
-                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + " - " + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? " (" + GameCollectionLocalisations.of(context).weekString + ")" : "")),
+                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).weekString + ')' : '')),
                   ),
                   Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
                 ],
@@ -427,9 +410,6 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
   }
 
   Widget _buildTableCalendar(BuildContext context, List<TimeLog> timeLogs, List<DateTime> finishDates, DateTime selectedDate) {
-    Map<DateTime, List<Duration>> eventsMap = _convertTimeLogsToMap(timeLogs);
-    Map<DateTime, List<int>> holidaysMap = _convertFinishDatesToMap(finishDates);
-
     DateTime firstDate = DateTime.now();
     DateTime lastDate = firstDate;
     if(timeLogs.isNotEmpty) {
@@ -437,17 +417,37 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
       lastDate = timeLogs.last.dateTime;
     }
 
-    return tableCalendar.TableCalendar(
-      calendarController: _calendarController,
-      events: eventsMap,
-      holidays: holidaysMap,
+    return tableCalendar.TableCalendar<TimeLog>(
+      firstDay: firstDate,
+      lastDay: lastDate,
+      focusedDay: _focusedDate,
+      selectedDayPredicate: (DateTime day) {
+        return day.isSameDate(_selectedDate);
+      },
+      holidayPredicate: (DateTime date) {
+        return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
+      },
+      onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+        BlocProvider.of<CalendarBloc>(context).add(
+          UpdateSelectedDate(
+            _selectedDate,
+          ),
+        );
+        /*if (!selectedDay.isSameDate(_selectedDate)) {
+          setState(() {
+            _selectedDate = selectedDay;
+            _focusedDate = focusedDay;
+          });
+        }*/
+      },
       startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      startDay: firstDate,
-      endDay: lastDate,
-      initialSelectedDay: selectedDate,
+      onPageChanged: (DateTime focusedDay) {
+        _focusedDate = focusedDay;
+      },
       calendarStyle: tableCalendar.CalendarStyle(
-        selectedColor: GameTheme.primaryColour,
-        todayColor: Colors.yellow[800],
+        //TODO selectedColor: GameTheme.primaryColour,
+        //TODO todayColor: Colors.yellow[800],
+        isTodayHighlighted: true,
         outsideDaysVisible: false,
       ),
       availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
@@ -455,43 +455,31 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
         tableCalendar.CalendarFormat.month: '',
       },
       headerStyle: tableCalendar.HeaderStyle(
-        centerHeaderTitle: true,
+        titleCentered: true,
         formatButtonVisible: false,
       ),
-      builders: tableCalendar.CalendarBuilders(
-        markersBuilder: (context, date, events, holidays) {
-          final List<Widget> children = List<Widget>();
+      calendarBuilders: tableCalendar.CalendarBuilders<TimeLog>(
+        holidayBuilder: (BuildContext context, DateTime day, DateTime focusedDay) {
+          return Positioned(//TODO test
+            right: 1,
+            bottom: 0,
+            child: _buildHolidaysMarker(),
+          );
+        },
+        markerBuilder: (BuildContext context, DateTime date, List<TimeLog> events) {
+          Widget marker = Container();
 
           if (events.isNotEmpty) {
-            children.add(
-              Positioned(
-                right: 1,
-                bottom: 1,
-                child: _buildEventsMarker(),
-              ),
+            marker = Positioned(
+              right: 1,
+              bottom: 1,
+              child: _buildEventsMarker(),
             );
           }
 
-          if (holidays.isNotEmpty) {
-            children.add(
-              Positioned(
-                right: 1,
-                bottom: 0,
-                child: _buildHolidaysMarker(),
-              ),
-            );
-          }
-
-          return children;
+          return marker;
         },
       ),
-      onDaySelected: (DateTime day, List events, List holidays) {
-        BlocProvider.of<CalendarBloc>(context).add(
-          UpdateSelectedDate(
-            day,
-          ),
-        );
-      },
     );
   }
 
@@ -559,9 +547,9 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
   }
 
   Widget _buildEventGraph(BuildContext context, List<TimeLog> timeLogs) {
-    List<int> values = List<int>();
+    List<int> values = <int>[];
 
-    List<DateTime> distinctLogDates = List<DateTime>();
+    List<DateTime> distinctLogDates = <DateTime>[];
     timeLogs.forEach((TimeLog log) {
       if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
         distinctLogDates.add(log.dateTime);
@@ -585,37 +573,6 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
         labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
       ),
     );
-  }
-
-  Map<DateTime, List> _convertTimeLogsToMap(List<TimeLog> timeLogs) {
-    Map<DateTime, List<Duration>> map = Map<DateTime, List<Duration>>();
-
-    List<DateTime> distinctLogDates = List<DateTime>();
-    timeLogs.forEach((TimeLog log) {
-      if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
-        distinctLogDates.add(log.dateTime);
-      }
-    });
-    distinctLogDates.sort();
-
-    distinctLogDates.forEach((DateTime date) {
-      List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
-      map[date] = dateDurations;
-    });
-
-    return map;
-  }
-
-  Map<DateTime, List> _convertFinishDatesToMap(List<DateTime> finishDates) {
-    Map<DateTime, List<int>> map = Map<DateTime, List<int>>();
-
-    finishDates.forEach((DateTime date) {
-      List<int> notEmptyList = List<int>();
-      notEmptyList.add(0);
-      map[date] = notEmptyList;
-    });
-
-    return map;
   }
 
   Widget _buildEventsMarker() {

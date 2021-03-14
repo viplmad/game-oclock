@@ -14,8 +14,8 @@ import '../common/year_picker_dialog.dart';
 
 class StatisticsArguments<T> {
   const StatisticsArguments({
-    @required this.items,
-    @required this.viewTitle,
+    required this.items,
+    required this.viewTitle,
   });
 
   final List<T> items;
@@ -24,9 +24,9 @@ class StatisticsArguments<T> {
 
 abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
   const ItemStatistics({
-    Key key,
-    @required this.items,
-    @required this.viewTitle,
+    Key? key,
+    required this.items,
+    required this.viewTitle,
   }) : super(key: key);
 
   final List<T> items;
@@ -51,8 +51,8 @@ abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K
 
 abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
   const ItemStatisticsBody({
-    Key key,
-    @required this.viewTitle,
+    Key? key,
+    required this.viewTitle,
   }) : super(key: key);
 
   final String viewTitle;
@@ -73,7 +73,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
           ),
           BlocBuilder<K, ItemStatisticsState>(
             builder: (BuildContext context, ItemStatisticsState state) {
-              int selectedYear;
+              int? selectedYear;
               if(state is ItemYearStatisticsLoaded<D>) {
                 selectedYear = state.year;
               }
@@ -82,14 +82,14 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
                 icon: Icon(Icons.date_range),
                 tooltip: GameCollectionLocalisations.of(context).changeYearString,
                 onPressed: () {
-                  showDialog<int>(
+                  showDialog<int?>(
                     context: context,
                     builder: (BuildContext context) {
                       return YearPickerDialog(
                         year: selectedYear,
                       );
                     },
-                  ).then( (int year) {
+                  ).then( (int? year) {
                     if (year != null) {
                       BlocProvider.of<K>(context).add(LoadYearItemStatistics(year));
                     }
@@ -165,7 +165,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsIntField(BuildContext context, {@required String fieldName, @required int value, int total}) {
+  StatisticsField statisticsIntField(BuildContext context, {required String fieldName, required int value, int? total}) {
 
     return StatisticsField(
       fieldName: fieldName,
@@ -178,7 +178,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsDoubleField({@required String fieldName, @required double value, int total}) {
+  StatisticsField statisticsDoubleField({required String fieldName, required double value}) {
 
     return StatisticsField(
       fieldName: fieldName,
@@ -187,19 +187,16 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsDurationField(BuildContext context, {@required String fieldName, @required Duration value}) {
+  StatisticsField statisticsDurationField(BuildContext context, {required String fieldName, required Duration value}) {
 
     return StatisticsField(
       fieldName: fieldName,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).durationString(value)
-        :
-        '',
+      shownValue: GameCollectionLocalisations.of(context).durationString(value),
     );
 
   }
 
-  Widget statisticsMoneyField(BuildContext context, {@required String fieldName, @required double value, double total}) {
+  StatisticsField statisticsMoneyField(BuildContext context, {required String fieldName, required double value, double? total}) {
 
     return StatisticsField(
       fieldName: fieldName,
@@ -212,19 +209,16 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsPercentageField(BuildContext context, {@required String fieldName, @required double value}) {
+  StatisticsField statisticsPercentageField(BuildContext context, {required String fieldName, required double value}) {
 
     return StatisticsField(
       fieldName: fieldName,
-      shownValue: value != null?
-      GameCollectionLocalisations.of(context).percentageString(value * 100)
-          :
-      '',
+      shownValue: GameCollectionLocalisations.of(context).percentageString(value * 100),
     );
 
   }
 
-  Widget statisticsGroupField({@required String groupName, @required List<StatisticsField> fields}) {
+  Widget statisticsGroupField({required String groupName, required List<StatisticsField> fields}) {
 
     return StatisticsFieldGroup(
       groupName: groupName,
@@ -233,7 +227,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsHistogram<N extends num>({@required double height, @required String histogramName, @required List<String> domainLabels, @required List<N> values, bool vertical = true, bool hideDomainLabels = false, String Function(String, N) labelAccessor}) {
+  Widget statisticsHistogram<N extends num>({required double height, required String histogramName, required List<String> domainLabels, required List<N> values, bool vertical = true, bool hideDomainLabels = false, String Function(String, N)? labelAccessor}) {
 
     return ListTile(
       title: Text(histogramName),
@@ -253,7 +247,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabels<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>(intervals.length - 1);
+    List<String> labels = List<String>.filled(intervals.length - 1, '');
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
@@ -275,7 +269,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabelsWithInitial<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>(intervals.length);
+    List<String> labels = List<String>.filled(intervals.length, '');
     int index = 0;
 
     String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
@@ -294,7 +288,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabelsWithLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>(intervals.length);
+    List<String> labels = List<String>.filled(intervals.length, '');
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
@@ -313,7 +307,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabelsWithInitialAndLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>(intervals.length + 1);
+    List<String> labels = List<String>.filled(intervals.length + 1, '');
     int index = 0;
 
     String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
@@ -361,15 +355,15 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
 class StatisticsField extends StatelessWidget {
   const StatisticsField({
-    Key key,
-    @required this.fieldName,
-    @required this.shownValue,
+    Key? key,
+    required this.fieldName,
+    required this.shownValue,
     this.shownPercentage,
   }) : super(key: key);
 
   final String fieldName;
   final String shownValue;
-  final String shownPercentage;
+  final String? shownPercentage;
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +371,7 @@ class StatisticsField extends StatelessWidget {
     return ListTileTheme.merge(
       child: ListTile(
         title: Text(fieldName),
-        trailing: Text((shownValue?? '') + (shownPercentage != null? ' - ' + shownPercentage : '')),
+        trailing: Text(shownValue + (shownPercentage != null? ' - ' + shownPercentage! : '')),
       ),
     );
 
@@ -386,9 +380,9 @@ class StatisticsField extends StatelessWidget {
 
 class StatisticsFieldGroup extends StatelessWidget {
   const StatisticsFieldGroup({
-    Key key,
-    @required this.groupName,
-    @required this.fields,
+    Key? key,
+    required this.groupName,
+    required this.fields,
   }) : super(key: key);
 
   final String groupName;

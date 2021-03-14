@@ -30,7 +30,7 @@ class AddItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
   const AddItemImage(this.imagePath, [this.oldImageName]);
 
   final String imagePath;
-  final String oldImageName;
+  final String? oldImageName;
 
   @override
   List<Object> get props => [imagePath];

@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'item_search.dart';
@@ -7,8 +5,8 @@ import 'item_search.dart';
 
 class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
   ItemLocalSearchBloc({
-    @required this.items,
-  });
+    required this.items,
+  }) : super(iCollectionRepository: null);
 
   final List<T> items;
 

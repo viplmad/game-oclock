@@ -5,10 +5,10 @@ import 'package:charts_flutter/flutter.dart';
 
 class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({
-    Key key,
-    @required this.histogramName,
-    @required this.domainLabels,
-    @required this.values,
+    Key? key,
+    required this.histogramName,
+    required this.domainLabels,
+    required this.values,
     this.vertical = true,
     this.hideDomainLabels = false,
     this.labelAccessor,
@@ -19,7 +19,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   final List<N> values;
   final bool vertical;
   final bool hideDomainLabels;
-  final String Function(String, N) labelAccessor;
+  final String Function(String, N)? labelAccessor;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       measureFn: (_SeriesElement<N> element, _) => element.value,
       data: data,
 
-      labelAccessorFn: labelAccessor != null? (_SeriesElement<N> element, _) => labelAccessor(element.domainLabel, element.value) : null,
+      labelAccessorFn: labelAccessor != null? (_SeriesElement<N> element, _) => labelAccessor!(element.domainLabel, element.value) : null,
     );
 
     final List<Series<_SeriesElement<N>, String>> seriesList = [

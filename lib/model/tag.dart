@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -12,8 +10,8 @@ enum TagView {
 
 class Tag extends CollectionItem {
   const Tag({
-    @required int id,
-    this.name,
+    required int id,
+    required this.name,
   }) : this.uniqueId = 'Tg$id',
         super(id: id);
 
@@ -25,7 +23,7 @@ class Tag extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  final ItemImage image = null;
+  ItemImage get image => ItemImage(null, null);
 
   @override
   String get queryableTerms => this.name;
@@ -51,7 +49,7 @@ class Tag extends CollectionItem {
 
   @override
   Tag copyWith({
-    String name,
+    String? name,
   }) {
 
     return Tag(

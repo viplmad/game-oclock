@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -9,13 +7,13 @@ import 'item_list_manager.dart';
 
 class PurchaseListManagerBloc extends ItemListManagerBloc<Purchase> {
   PurchaseListManagerBloc({
-    @required ICollectionRepository iCollectionRepository,
+    required ICollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Purchase> createFuture(AddItem event) {
+  Future<Purchase?> createFuture(AddItem event) {
 
-    return iCollectionRepository.createPurchase(event.title?? '');
+    return iCollectionRepository.createPurchase(event.title);
 
   }
 

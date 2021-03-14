@@ -19,7 +19,7 @@ import '../route_constants.dart';
 
 class RepositorySettings extends StatelessWidget {
   const RepositorySettings({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -53,7 +53,7 @@ class RepositorySettings extends StatelessWidget {
 
 class _RepositorySettingsBody extends StatelessWidget {
   const _RepositorySettingsBody({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -85,9 +85,9 @@ class _RepositorySettingsBody extends StatelessWidget {
           },
           child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
             builder: (BuildContext context, RepositorySettingsState state) {
-              PostgresInstance postgresInstance;
-              CloudinaryInstance cloudinaryInstance;
-              RepositoryType radioGroup;
+              PostgresInstance? postgresInstance;
+              CloudinaryInstance? cloudinaryInstance;
+              RepositoryType radioGroup = RepositoryType.Remote;
 
               if(state is RepositorySettingsLoading) {
 
@@ -140,17 +140,17 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _remoteExpansionPanel(BuildContext context, RepositoryType radioGroup, [PostgresInstance postgresInstance, CloudinaryInstance cloudinaryInstance]) {
+  ExpansionPanel _remoteExpansionPanel(BuildContext context, RepositoryType radioGroup, [PostgresInstance? postgresInstance, CloudinaryInstance? cloudinaryInstance]) {
 
-    String _host;
-    int _port;
-    String _db;
-    String _user;
-    String _pass;
+    String _host = '';
+    int _port = -1;
+    String _db = '';
+    String _user = '';
+    String _pass = '';
 
-    String _cloud;
-    int _apiKey;
-    String _apiSecret;
+    String _cloud = '';
+    int _apiKey = -1;
+    String _apiSecret = '';
 
     return _repositoryExpansionPanel(
       context,
@@ -161,61 +161,61 @@ class _RepositorySettingsBody extends StatelessWidget {
         _headerText(context, 'Postgres'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).hostString,
-          initialValue: postgresInstance?.host,
-          onSaved: (String value) {
-            _host = value;
+          initialValue: (postgresInstance != null)? postgresInstance.host : _host,
+          onSaved: (String? value) {
+            _host = value?? _host;
           },
         ),
         _numberFormField(
           labelText: GameCollectionLocalisations.of(context).portString,
-          initialValue: postgresInstance?.port,
-          onSaved: (String value) {
-            _port = int.parse(value);
+          initialValue: (postgresInstance != null)? postgresInstance.port : _port,
+          onSaved: (String? value) {
+            _port = int.parse(value?? _port.toString());
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).databaseString,
-          initialValue: postgresInstance?.database,
-          onSaved: (String value) {
-            _db = value;
+          initialValue: (postgresInstance != null)? postgresInstance.database : _db,
+          onSaved: (String? value) {
+            _db = value?? _db;
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).userString,
-          initialValue: postgresInstance?.user,
-          onSaved: (String value) {
-            _user = value;
+          initialValue: (postgresInstance != null)? postgresInstance.user : _user,
+          onSaved: (String? value) {
+            _user = value?? _user;
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).passwordString,
-          initialValue: postgresInstance?.password,
+          initialValue: (postgresInstance != null)? postgresInstance.password : _pass,
           obscureText: true,
-          onSaved: (String value) {
-            _pass = value;
+          onSaved: (String? value) {
+            _pass = value?? _pass;
           },
         ),
         _headerText(context, 'Cloudinary'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).cloudNameString,
-          initialValue: cloudinaryInstance?.cloudName,
-          onSaved: (String value) {
-            _cloud = value;
+          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.cloudName : _cloud,
+          onSaved: (String? value) {
+            _cloud = value?? _cloud;
           },
         ),
         _numberFormField(
           labelText: GameCollectionLocalisations.of(context).apiKeyString,
-          initialValue: cloudinaryInstance?.apiKey,
-          onSaved: (String value) {
-            _apiKey = int.parse(value);
+          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.apiKey : _apiKey,
+          onSaved: (String? value) {
+            _apiKey = int.parse(value?? _apiKey.toString());
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).apiSecretString,
-          initialValue: cloudinaryInstance?.apiSecret,
+          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.apiSecret : _apiSecret,
           obscureText: true,
-          onSaved: (String value) {
-            _apiSecret = value;
+          onSaved: (String? value) {
+            _apiSecret = value?? _apiSecret;
           },
         ),
       ],
@@ -262,7 +262,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget _textFormField({String labelText, String initialValue, bool obscureText = false, void Function(String) onSaved}) {
+  Widget _textFormField({required String labelText, required String initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
 
     return _ShowHideTextField(
       labelText: labelText,
@@ -274,11 +274,11 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget _numberFormField({String labelText, int initialValue, bool obscureText = false, void Function(String) onSaved}) {
+  Widget _numberFormField({required String labelText, required int initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
 
     return _ShowHideTextField(
       labelText: labelText,
-      initialValue: initialValue != null? initialValue.toString() : '',
+      initialValue: initialValue.toString(),
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.number,
@@ -289,7 +289,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _repositoryExpansionPanel(BuildContext context, {RepositoryType radioGroup, RepositoryType radioValue, String title, List<Widget> textForms, void Function() onUpdate}) {
+  ExpansionPanel _repositoryExpansionPanel(BuildContext context, {required RepositoryType radioGroup, required RepositoryType radioValue, required String title, required List<Widget> textForms, required void Function() onUpdate}) {
 
     final _formKey = GlobalKey<FormState>();
 
@@ -326,8 +326,8 @@ class _RepositorySettingsBody extends StatelessWidget {
                   elevation: 1.0,
                   highlightElevation: 2.0,
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
+                    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
                       onUpdate();
                     }
                   },
@@ -344,11 +344,11 @@ class _RepositorySettingsBody extends StatelessWidget {
 
 class _ShowHideTextField extends StatefulWidget {
   const _ShowHideTextField({
-    Key key,
-    @required this.labelText,
-    @required this.initialValue,
+    Key? key,
+    required this.labelText,
+    required this.initialValue,
     this.allowObscureText = false,
-    @required this.onSaved,
+    required this.onSaved,
     this.keyboardType,
     this.inputFormatters,
   }) : super(key: key);
@@ -356,9 +356,9 @@ class _ShowHideTextField extends StatefulWidget {
   final String initialValue;
   final String labelText;
   final bool allowObscureText;
-  final void Function(String) onSaved;
-  final TextInputType keyboardType;
-  final List<TextInputFormatter> inputFormatters;
+  final void Function(String?) onSaved;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<_ShowHideTextField> createState() => _ShowHideTextFieldState();
@@ -395,7 +395,7 @@ class _ShowHideTextFieldState extends State<_ShowHideTextField> {
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,
         validator: (value) {
-          if (value.isEmpty) {
+          if (value!.isEmpty) {
             return GameCollectionLocalisations.of(context).enterTextString;
           }
           return null;

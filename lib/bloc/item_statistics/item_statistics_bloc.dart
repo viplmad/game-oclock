@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_collection/model/model.dart';
@@ -10,7 +9,7 @@ import 'item_statistics.dart';
 
 abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
   ItemStatisticsBloc({
-    @required this.items,
+    required this.items,
   }) : super(ItemStatisticsLoading());
 
   final List<T> items;

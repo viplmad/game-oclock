@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -9,8 +7,8 @@ import 'item_relation_manager.dart';
 
 class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<DLC, W> {
   DLCRelationManagerBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -48,8 +46,8 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
 class DLCFinishDateRelationManagerBloc extends RelationManagerBloc<DLC, DateTime> {
   DLCFinishDateRelationManagerBloc({
-    @required int itemId,
-    @required ICollectionRepository iCollectionRepository,
+    required int itemId,
+    required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
