@@ -175,7 +175,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           if(state is ItemNotAdded) {
             String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
             showSnackBar(
-              scaffoldState: Scaffold.of(context),
+              context,
               message: message,
               seconds: 2,
               snackBarAction: dialogSnackBarAction(

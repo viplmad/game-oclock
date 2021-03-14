@@ -129,7 +129,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
         if(state is ItemAdded<T>) {
           String message = GameCollectionLocalisations.of(context).addedString(currentTypeString);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             seconds: 2,
             snackBarAction: SnackBarAction(
@@ -149,7 +149,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
         if(state is ItemNotAdded) {
           String message = GameCollectionLocalisations.of(context).unableToAddString(currentTypeString);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
@@ -163,7 +163,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
         if(state is ItemDeleted<T>) {
           String message = GameCollectionLocalisations.of(context).deletedString(currentTypeString);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             seconds: 2,
           );
@@ -171,7 +171,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
         if(state is ItemNotDeleted) {
           String message = GameCollectionLocalisations.of(context).unableToDeleteString(currentTypeString);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
@@ -217,7 +217,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, int? viewYear, required void Function(T) onDelete, required ListStyle style});
+  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
 }
 
 abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
@@ -225,14 +225,14 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
     Key? key,
     required this.items,
     required this.viewIndex,
-    this.viewYear,
+    required this.viewYear,
     required this.onDelete,
     required this.style,
   }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
-  final int? viewYear;
+  final int viewYear;
   final void Function(T) onDelete;
   final ListStyle style;
 

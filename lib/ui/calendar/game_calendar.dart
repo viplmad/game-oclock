@@ -245,23 +245,16 @@ class GameCalendar extends StatelessWidget {
 
 }
 
-class _GameCalendarBody extends StatefulWidget {
-  const _GameCalendarBody({
+// ignore: must_be_immutable
+class _GameCalendarBody extends StatelessWidget {
+  _GameCalendarBody({
     Key? key,
     required this.onUpdate
   }) : super(key: key);
 
   final void Function()? onUpdate;
 
-  @override
-  State<_GameCalendarBody> createState() => _GameCalendarBodyState();
-}
-class _GameCalendarBodyState extends State<_GameCalendarBody> {
   bool _isUpdated = false;
-
-  //TODO
-  DateTime _selectedDate = DateTime.now();
-  DateTime _focusedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +262,7 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     return WillPopScope(
       onWillPop: () {
 
-        if(_isUpdated && widget.onUpdate != null) { widget.onUpdate!(); }
+        if(_isUpdated && onUpdate != null) { onUpdate!(); }
         return Future<bool>.value(true);
 
       },
@@ -282,14 +275,14 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
 
                 String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                 );
               }
               if(state is RelationNotAdded) {
                 String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                   snackBarAction: dialogSnackBarAction(
                     context,
@@ -304,14 +297,14 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
 
                 String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                 );
               }
               if(state is RelationNotDeleted) {
                 String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                   snackBarAction: dialogSnackBarAction(
                     context,
@@ -330,14 +323,14 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
 
                 String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                 );
               }
               if(state is RelationNotAdded) {
                 String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                   snackBarAction: dialogSnackBarAction(
                     context,
@@ -352,14 +345,14 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
 
                 String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                 );
               }
               if(state is RelationNotDeleted) {
                 String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
-                  scaffoldState: Scaffold.of(context),
+                  context,
                   message: message,
                   snackBarAction: dialogSnackBarAction(
                     context,
@@ -420,9 +413,9 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
     return tableCalendar.TableCalendar<TimeLog>(
       firstDay: firstDate,
       lastDay: lastDate,
-      focusedDay: _focusedDate,
+      focusedDay: selectedDate,
       selectedDayPredicate: (DateTime day) {
-        return day.isSameDate(_selectedDate);
+        return day.isSameDate(selectedDate);
       },
       holidayPredicate: (DateTime date) {
         return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
@@ -430,20 +423,11 @@ class _GameCalendarBodyState extends State<_GameCalendarBody> {
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         BlocProvider.of<CalendarBloc>(context).add(
           UpdateSelectedDate(
-            _selectedDate,
+            selectedDay,
           ),
         );
-        /*if (!selectedDay.isSameDate(_selectedDate)) {
-          setState(() {
-            _selectedDate = selectedDay;
-            _focusedDate = focusedDay;
-          });
-        }*/
       },
       startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      onPageChanged: (DateTime focusedDay) {
-        _focusedDate = focusedDay;
-      },
       calendarStyle: tableCalendar.CalendarStyle(
         //TODO selectedColor: GameTheme.primaryColour,
         //TODO todayColor: Colors.yellow[800],

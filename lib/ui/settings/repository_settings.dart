@@ -72,7 +72,7 @@ class _RepositorySettingsBody extends StatelessWidget {
             if(state is RepositorySettingsNotUpdated) {
               String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
               showSnackBar(
-                scaffoldState: Scaffold.of(context),
+                context,
                 message: message,
                 snackBarAction: dialogSnackBarAction(
                   context,

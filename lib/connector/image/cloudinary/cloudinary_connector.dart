@@ -7,7 +7,7 @@ import 'cloudinary_connection/cloudinary_response.dart';
 
 
 const String _baseAPIURL = 'https://api.cloudinary.com/v1_1/';
-const String _baseRESURL = 'http://res.cloudinary.com/';
+const String _baseRESURL = 'https://res.cloudinary.com/';
 
 class CloudinaryConnector extends IImageConnector {
   CloudinaryConnector.fromConnectionString(String connectionString) {

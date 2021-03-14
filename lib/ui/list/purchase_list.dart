@@ -83,7 +83,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 
   @override
-  _PurchaseListBody itemListBodyBuilder({required List<Purchase> items, required int viewIndex, int? viewYear, required void Function(Purchase) onDelete, required ListStyle style}) {
+  _PurchaseListBody itemListBodyBuilder({required List<Purchase> items, required int viewIndex, required int viewYear, required void Function(Purchase) onDelete, required ListStyle style}) {
 
     return _PurchaseListBody(
       items: items,
@@ -101,7 +101,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
     Key? key,
     required List<Purchase> items,
     required int viewIndex,
-    int? viewYear,
+    required int viewYear,
     required void Function(Purchase) onDelete,
     required ListStyle style,
   }) : super(
@@ -126,7 +126,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear!) + ')' : '');
+  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-void showSnackBar({required ScaffoldState scaffoldState, required String message, int seconds = 3, SnackBarAction? snackBarAction}) {
+void showSnackBar(BuildContext context, {required String message, int seconds = 3, SnackBarAction? snackBarAction}) {
 
   final snackBar = SnackBar(
     behavior: SnackBarBehavior.floating,
@@ -11,8 +11,10 @@ void showSnackBar({required ScaffoldState scaffoldState, required String message
     padding: const EdgeInsets.only(left: 16.0, right: 8.0),
   );
 
-  scaffoldState.hideCurrentSnackBar();
-  scaffoldState.showSnackBar(snackBar);
+  ScaffoldMessengerState messengerState = ScaffoldMessenger.of(context);
+
+  //messengerState.hideCurrentSnackBar();
+  messengerState.showSnackBar(snackBar);
 
 }
 

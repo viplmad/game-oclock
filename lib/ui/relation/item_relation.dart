@@ -40,7 +40,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
         if(state is ItemRelationAdded<W>) {
           String message = GameCollectionLocalisations.of(context).linkedString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: SnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
@@ -59,7 +59,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
         if(state is ItemRelationNotAdded) {
           String message = GameCollectionLocalisations.of(context).unableToLinkString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
@@ -72,7 +72,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
         if(state is ItemRelationDeleted<W>) {
           String message = GameCollectionLocalisations.of(context).unlinkedString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: SnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
@@ -91,7 +91,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
         if(state is ItemRelationNotDeleted) {
           String message = GameCollectionLocalisations.of(context).unableToUnlinkString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,

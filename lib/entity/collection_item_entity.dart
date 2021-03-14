@@ -12,12 +12,12 @@ abstract class CollectionItemEntity extends Equatable {
 
   Map<String, dynamic> toDynamicMap();
 
-  static Map<String, dynamic> combineMaps(Map<String?, Map<String, dynamic>> manyMap, String primaryTableName) {
+  static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
     Map<String, dynamic> _combinedMaps = Map<String, dynamic>();
-    manyMap.forEach((String? table, Map<String, dynamic> map) {
+    manyMap.forEach((String table, Map<String, dynamic> map) {
 
-      if(table == null || table == primaryTableName) {
+      if(table.isEmpty || table == primaryTableName) {
         _combinedMaps.addAll( map );
       }
 

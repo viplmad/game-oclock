@@ -77,7 +77,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
   ItemDetailBody({
     Key? key,
-    this.onUpdate,
+    required this.onUpdate,
   }) : super(key: key);
 
   final void Function(T? item)? onUpdate;
@@ -101,14 +101,14 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
             String message = GameCollectionLocalisations.of(context).fieldUpdatedString;
             showSnackBar(
-              scaffoldState: Scaffold.of(context),
+              context,
               message: message,
             );
           }
           if(state is ItemFieldNotUpdated) {
             String message = GameCollectionLocalisations.of(context).unableToUpdateFieldString;
             showSnackBar(
-              scaffoldState: Scaffold.of(context),
+              context,
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
@@ -123,14 +123,14 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
             String message = GameCollectionLocalisations.of(context).imageUpdatedString;
             showSnackBar(
-              scaffoldState: Scaffold.of(context),
+              context,
               message: message,
             );
           }
           if(state is ItemImageNotUpdated) {
             String message = GameCollectionLocalisations.of(context).unableToUpdateImageString;
             showSnackBar(
-              scaffoldState: Scaffold.of(context),
+              context,
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
@@ -401,7 +401,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         } else {
           String message = GameCollectionLocalisations.of(context).unableToLaunchString(value);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
           );
         }

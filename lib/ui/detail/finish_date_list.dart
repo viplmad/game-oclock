@@ -41,14 +41,14 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
 
           String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
           );
         }
         if(state is RelationNotAdded) {
           String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
@@ -63,14 +63,14 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
 
           String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
           );
         }
         if(state is RelationNotDeleted) {
           String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
           showSnackBar(
-            scaffoldState: Scaffold.of(context),
+            context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
