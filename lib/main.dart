@@ -37,8 +37,10 @@ class GameCollection extends StatelessWidget {
         const GameCollectionLocalisationsDelegate(),
       ],
       supportedLocales: [
-        const Locale('en', ''),
-        const Locale('es', ''),
+        const Locale('en', 'GB'),
+        const Locale('es', 'ES'),
+        const Locale('en'),
+        const Locale('es'),
       ],
     );
 
