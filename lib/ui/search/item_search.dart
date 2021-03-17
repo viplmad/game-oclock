@@ -250,14 +250,16 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
     return SizedBox(
       width: double.maxFinite,
-      child: FlatButton(
+      child: TextButton(
         child: Text(GameCollectionLocalisations.of(context).newWithTitleString(widget.typeName(context), query)),
-        color: Colors.white,
         onPressed: () {
 
           BlocProvider.of<S>(context).add(AddItem(query));
 
         },
+        style: TextButton.styleFrom(
+          primary: Colors.white,
+        ),
       ),
     );
 

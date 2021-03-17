@@ -29,7 +29,7 @@ class RepositoryPreferences {
 
       return value == _trueValue;
 
-    }, onError: (error) => null);
+    }, onError: (error) => false);
 
   }
 

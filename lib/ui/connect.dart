@@ -81,13 +81,13 @@ class _ConnectpageBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(GameCollectionLocalisations.of(context).failedConnectionString),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text(GameCollectionLocalisations.of(context).retryString),
                       onPressed: () {
                         BlocProvider.of<ConnectionBloc>(context).add(Reconnect());
                       },
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text(GameCollectionLocalisations.of(context).changeRepositoryString),
                       onPressed: () {
                         Navigator.pushReplacementNamed(

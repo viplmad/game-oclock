@@ -320,11 +320,9 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-      child: RaisedButton.icon(
+      child: ElevatedButton.icon(
         label: Text(GameCollectionLocalisations.of(context).linkString(typeName)),
         icon: Icon(Icons.link),
-        elevation: 1.0,
-        highlightElevation: 2.0,
         onPressed: () {
 
           onSearch().then( (W? result) {
@@ -334,6 +332,15 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
           });
 
         },
+        style: ElevatedButton.styleFrom().copyWith(
+          elevation: MaterialStateProperty.resolveWith<double?>( (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return 2.0;
+            }
+
+            return 1.0;
+          }),
+        ),
       ),
     );
 

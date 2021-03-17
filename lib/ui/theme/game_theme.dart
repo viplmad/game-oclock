@@ -28,6 +28,11 @@ class GameTheme {
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+
+        ),
+      ),
     );
 
     return gameTheme;

@@ -317,20 +317,28 @@ class _RepositorySettingsBody extends StatelessWidget {
               width: double.maxFinite,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  color: Theme.of(context).primaryColor,
+                child: ElevatedButton(
                   child: Text(
                     GameCollectionLocalisations.of(context).saveString,
                     style: TextStyle(color: Colors.white),
                   ),
-                  elevation: 1.0,
-                  highlightElevation: 2.0,
                   onPressed: () {
                     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       onUpdate();
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                  ).copyWith(
+                    elevation: MaterialStateProperty.resolveWith<double?>( (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return 2.0;
+                      }
+
+                      return 1.0;
+                    }),
+                  ),
                 ),
               ),
             ),

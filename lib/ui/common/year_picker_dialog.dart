@@ -65,13 +65,13 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
             ),
             ButtonBar(
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<int>(context);
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(MaterialLocalizations.of(context).okButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<int>(context, _selectedDate.year);

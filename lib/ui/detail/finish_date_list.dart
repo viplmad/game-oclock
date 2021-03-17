@@ -168,7 +168,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                       ),
                     ),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: Text(GameCollectionLocalisations.of(context).addString(relationTypeName)),
                         onPressed: () {
 
@@ -184,7 +184,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
 
                         },
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text(MaterialLocalizations.of(context).okButtonLabel),
                         onPressed: () {
                           Navigator.maybePop(context);

@@ -286,18 +286,20 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
         subtitle: Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<bool>(context);
           },
         ),
-        RaisedButton(
+        TextButton(
           child: Text(GameCollectionLocalisations.of(context).deleteString, style: TextStyle(color: Colors.white)),
           onPressed: () {
             Navigator.maybePop<bool>(context, true);
           },
-          color: Colors.red,
+          style: TextButton.styleFrom(
+            primary: Colors.red,
+          ),
         )
       ],
     );

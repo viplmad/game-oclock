@@ -314,13 +314,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                       ),
                     ),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
                         onPressed: () {
                           Navigator.maybePop<String>(context);
                         },
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text(MaterialLocalizations.of(context).okButtonLabel),
                         onPressed: () {
                           Navigator.maybePop<String>(context, fieldController.text.trim());
@@ -649,13 +649,13 @@ class _ItemTextField extends StatelessWidget {
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<String>(context);
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(MaterialLocalizations.of(context).okButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<String>(context, fieldController.text.trim());
@@ -979,13 +979,13 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<double>(context);
           },
         ),
-        FlatButton(
+        TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () {
             Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + '.' + _decimalPart.toString().padLeft(2, '0')));

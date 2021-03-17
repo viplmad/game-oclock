@@ -63,13 +63,13 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           onPressed: () {
             Navigator.maybePop<Duration>(context);
           },
         ),
-        FlatButton(
+        TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () {
             Navigator.maybePop<Duration>(context, Duration(hours: _hours, minutes: _minutes));

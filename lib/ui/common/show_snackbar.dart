@@ -36,7 +36,7 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {required String label
               ],
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(MaterialLocalizations.of(context).okButtonLabel),
                 onPressed: () {
                   Navigator.maybePop<bool>(context, true);
