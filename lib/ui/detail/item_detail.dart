@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import './smooth_star_rating/smooth_star_rating.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,6 +16,7 @@ import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dar
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
+import '../common/show_date_picker.dart';
 import '../common/item_view.dart';
 import '../common/year_picker_dialog.dart';
 
@@ -773,10 +774,8 @@ class _ItemDateTimeField extends StatelessWidget {
         null,
       update: update,
       onTap: () {
-        return showDatePicker(
+        return showGameDatePicker(
           context: context,
-          firstDate: DateTime(1970),
-          lastDate: DateTime.now(),
           initialDate: value?? DateTime.now(),
         );
       },

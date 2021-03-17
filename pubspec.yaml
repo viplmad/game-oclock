@@ -26,7 +26,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  encrypted_shared_preferences: ^1.0.7
+  shared_preferences: ^2.0.4
 
   # BLoC pattern
   bloc: ^7.0.0-nullsafety.3
@@ -39,19 +39,15 @@ dependencies:
   dio: ^4.0.0-beta7
 
   # Front-end
-  smooth_star_rating: ^1.0.0
+  #smooth_star_rating: ^1.0.0
   numberpicker: ^2.0.0
   image_picker: ^0.7.2+1
-  cached_network_image: ^2.0.0
+  cached_network_image: ^3.0.0-nullsafety
   url_launcher: ^6.0.2
   flutter_launcher_icons: ^0.9.0
   charts_flutter: ^0.10.0
   table_calendar: ^3.0.0-nullsafety.1
-  #flutter_speed_dial: ^2.0.0
-  flutter_speed_dial:
-    git:
-      url: https://github.com/darioielardi/flutter_speed_dial.git
-      ref: master
+  flutter_speed_dial: ^3.0.5
 
 dev_dependencies:
   flutter_test:

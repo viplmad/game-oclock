@@ -1,4 +1,4 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import './encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
 import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
 import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';

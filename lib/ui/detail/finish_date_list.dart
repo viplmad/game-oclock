@@ -10,6 +10,7 @@ import 'package:game_collection/bloc/item_relation_manager/item_relation_manager
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
+import '../common/show_date_picker.dart';
 
 
 // ignore: must_be_immutable
@@ -171,11 +172,8 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                         child: Text(GameCollectionLocalisations.of(context).addString(relationTypeName)),
                         onPressed: () {
 
-                          showDatePicker(
+                          showGameDatePicker(
                             context: context,
-                            firstDate: DateTime(1970),
-                            lastDate: DateTime.now(),
-                            initialDate: DateTime.now(),
                           ).then((DateTime? value) {
                             if(value != null) {
                               BlocProvider.of<S>(outerContext).add(

@@ -19,6 +19,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../theme/theme.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
+import '../common/show_date_picker.dart';
 import '../common/statistics_histogram.dart';
 import '../common/duration_picker_dialog.dart';
 import '../common/item_view.dart';
@@ -156,11 +157,8 @@ class GameCalendar extends StatelessWidget {
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
-            showDatePicker(
+            showGameDatePicker(
               context: context,
-              firstDate: DateTime(1970),
-              lastDate: DateTime.now(),
-              initialDate: DateTime.now(),
             ).then((DateTime? date) {
               if(date != null) {
 
@@ -215,11 +213,8 @@ class GameCalendar extends StatelessWidget {
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
-            showDatePicker(
+            showGameDatePicker(
               context: context,
-              firstDate: DateTime(1970),
-              lastDate: DateTime.now(),
-              initialDate: DateTime.now(),
             ).then((DateTime? value) {
               if(value != null) {
                 finishDateManagerBloc.add(

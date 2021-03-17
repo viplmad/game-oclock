@@ -186,21 +186,23 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
 
       DateTime? previousDate;
       if(timeLogs.isNotEmpty) {
-        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
+        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(selectedDate));
+        selectedIndex = (selectedIndex.isNegative)? timeLogs.length : selectedIndex;
 
         for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index --) {
           TimeLog log = timeLogs.elementAt(index);
-          if(!log.dateTime.isSameDate(previousSelectedDate)) {
+
+          if(log.dateTime.isBefore(selectedDate)) {
             previousDate = log.dateTime;
           }
         }
       }
 
-      add(UpdateSelectedDate(previousDate?? previousSelectedDate));
+      add(UpdateSelectedDate(previousDate?? selectedDate));
     }
 
   }
@@ -209,21 +211,23 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
-      final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
 
       DateTime? nextDate;
       if(timeLogs.isNotEmpty) {
-        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(previousSelectedDate));
+        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(selectedDate));
+        selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
 
         for(int index = selectedIndex + 1; index < timeLogs.length && nextDate == null; index ++) {
           TimeLog log = timeLogs.elementAt(index);
-          if(!log.dateTime.isSameDate(previousSelectedDate)) {
+
+          if(log.dateTime.isAfter(selectedDate)) {
             nextDate = log.dateTime;
           }
         }
       }
 
-      add(UpdateSelectedDate(nextDate?? previousSelectedDate));
+      add(UpdateSelectedDate(nextDate?? selectedDate));
     }
 
   }
