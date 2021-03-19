@@ -12,9 +12,12 @@ class PlatformTheme {
   static const Color primaryColour = Colors.black87;
   static const Color accentColour = Colors.black12;
 
+  static const Color physicalTypeColour = Colors.blueAccent;
+  static const Color digitalTypeColour = Colors.deepPurpleAccent;
+
   static const List<Color> typeColours = [
-    Colors.blueAccent,
-    Colors.deepPurpleAccent,
+    physicalTypeColour,
+    digitalTypeColour,
   ];
 
   static ThemeData themeData(BuildContext context) {

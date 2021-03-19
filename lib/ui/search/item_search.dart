@@ -258,6 +258,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
         },
         style: TextButton.styleFrom(
+          primary: Colors.black87,
           backgroundColor: Colors.white,
         ),
       ),

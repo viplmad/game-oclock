@@ -332,7 +332,10 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
           });
 
         },
-        style: ElevatedButton.styleFrom().copyWith(
+        style: ElevatedButton.styleFrom(
+          onPrimary: Colors.black87,
+          primary: Colors.grey[300],
+        ).copyWith(
           elevation: MaterialStateProperty.resolveWith<double?>( (Set<MaterialState> states) {
             if (states.contains(MaterialState.pressed)) {
               return 2.0;

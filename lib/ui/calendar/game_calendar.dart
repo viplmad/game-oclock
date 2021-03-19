@@ -145,7 +145,7 @@ class GameCalendar extends StatelessWidget {
       icon: Icons.add,
       activeIcon: Icons.remove,
       tooltip: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).gameCalendarEventsString),
-      overlayColor: Colors.black,
+      overlayColor: Colors.black87,
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
       overlayOpacity: 0.5,

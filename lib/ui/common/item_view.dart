@@ -187,11 +187,11 @@ class _ItemGridTile extends StatelessWidget {
         CachedImage(
           imageURL: imageURL?? '',
           fit: BoxFit.cover,
-          backgroundColour: Colors.black,
+          backgroundColour: Colors.black87,
           applyGradient: false,
         ) : Container(),
       footer: Container(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black87.withOpacity(0.5),
         child: Text(title, style: TextStyle(fontSize: 18.0, color: Colors.white),),
       ),
     );
@@ -225,7 +225,7 @@ class CachedImage extends StatelessWidget {
   Widget _getGradientImage() {
 
     return Container(
-      color: Colors.black,
+      color: Colors.black87,
       child: Opacity(
         opacity: 0.75,
         child: _getCachedImage(),
