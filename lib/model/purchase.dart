@@ -128,7 +128,7 @@ class Purchase extends CollectionItem {
 class PurchasesData extends ItemData<Purchase> {
   PurchasesData(List<Purchase> items)
       : this.itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
-        this.years = (items.map<int>((Purchase item) => item.date != null? item.date!.year : -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
+        this.years = (items.map<int>((Purchase item) => item.date?.year?? -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
         super(items);
 
   final List<Purchase> itemsWithoutPromotion;

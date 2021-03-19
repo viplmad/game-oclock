@@ -237,7 +237,7 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
 
 class GamesData extends ItemData<Game> {
   GamesData(List<Game> items)
-      : this.finishYears = (items.map<int>((Game item) => item.finishDate != null? item.finishDate!.year : -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
+      : this.finishYears = (items.map<int>((Game item) => item.finishDate?.year?? -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
         super(items);
   
   final List<int> finishYears;

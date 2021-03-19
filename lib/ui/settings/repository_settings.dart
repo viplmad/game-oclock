@@ -161,35 +161,35 @@ class _RepositorySettingsBody extends StatelessWidget {
         _headerText(context, 'Postgres'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).hostString,
-          initialValue: (postgresInstance != null)? postgresInstance.host : _host,
+          initialValue: postgresInstance?.host,
           onSaved: (String? value) {
             _host = value?? _host;
           },
         ),
         _numberFormField(
           labelText: GameCollectionLocalisations.of(context).portString,
-          initialValue: (postgresInstance != null)? postgresInstance.port : _port,
+          initialValue: postgresInstance?.port,
           onSaved: (String? value) {
             _port = int.parse(value?? _port.toString());
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).databaseString,
-          initialValue: (postgresInstance != null)? postgresInstance.database : _db,
+          initialValue: postgresInstance?.database,
           onSaved: (String? value) {
             _db = value?? _db;
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).userString,
-          initialValue: (postgresInstance != null)? postgresInstance.user : _user,
+          initialValue: postgresInstance?.user,
           onSaved: (String? value) {
             _user = value?? _user;
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).passwordString,
-          initialValue: (postgresInstance != null)? postgresInstance.password : _pass,
+          initialValue: postgresInstance?.password,
           obscureText: true,
           onSaved: (String? value) {
             _pass = value?? _pass;
@@ -198,21 +198,21 @@ class _RepositorySettingsBody extends StatelessWidget {
         _headerText(context, 'Cloudinary'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).cloudNameString,
-          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.cloudName : _cloud,
+          initialValue: cloudinaryInstance?.cloudName,
           onSaved: (String? value) {
             _cloud = value?? _cloud;
           },
         ),
         _numberFormField(
           labelText: GameCollectionLocalisations.of(context).apiKeyString,
-          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.apiKey : _apiKey,
+          initialValue: cloudinaryInstance?.apiKey,
           onSaved: (String? value) {
             _apiKey = int.parse(value?? _apiKey.toString());
           },
         ),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).apiSecretString,
-          initialValue: (cloudinaryInstance != null)? cloudinaryInstance.apiSecret : _apiSecret,
+          initialValue: cloudinaryInstance?.apiSecret,
           obscureText: true,
           onSaved: (String? value) {
             _apiSecret = value?? _apiSecret;
@@ -262,11 +262,11 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget _textFormField({required String labelText, required String initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
+  Widget _textFormField({required String labelText, required String? initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
 
     return _ShowHideTextField(
       labelText: labelText,
-      initialValue: initialValue,
+      initialValue: initialValue?? '',
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.text,
@@ -274,11 +274,11 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  Widget _numberFormField({required String labelText, required int initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
+  Widget _numberFormField({required String labelText, required int? initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
 
     return _ShowHideTextField(
       labelText: labelText,
-      initialValue: initialValue.toString(),
+      initialValue: initialValue?.toString()?? '',
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.number,
