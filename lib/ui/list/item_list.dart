@@ -325,7 +325,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
   }
 
-  void Function() onTap(BuildContext context, T item) {
+  void Function()? onTap(BuildContext context, T item) {
 
     return () {
       Navigator.pushNamed(
@@ -345,6 +345,45 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
         ),
       );
     };
+
+  }
+
+  void Function()? onLongTap(BuildContext context, T item) {
+
+    return null;
+
+    //TODO
+    /*int duplicateKey = 0;
+    int deleteKey = 1;
+
+    return () {
+      showMenu<int>(
+        context: context,
+        position: position,
+        items: <PopupMenuItem<int>>[
+          PopupMenuItem<int>(
+            child: ListTile(
+              title: Text(GameCollectionLocalisations.of(context).duplicateString),
+            ),
+            value: duplicateKey,
+          ),
+          PopupMenuItem<int>(
+            child: ListTile(
+              title: Text(GameCollectionLocalisations.of(context).deleteString),
+            ),
+            value: deleteKey,
+          ),
+        ],
+      ).then((int? value) => {
+        if(value != null) {
+          if(value == duplicateKey) {
+            onDuplicate(item);
+          } else if(value == deleteKey) {
+            onDelete(item);
+          }
+        }
+      });
+    };*/
 
   }
 

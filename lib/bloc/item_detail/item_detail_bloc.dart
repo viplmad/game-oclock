@@ -17,7 +17,7 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
     required this.managerBloc,
   }) : super(ItemLoading()) {
 
-    managerSubscription = managerBloc.listen(_mapDetailManagerStateToEvent);
+    managerSubscription = managerBloc.stream.listen(_mapDetailManagerStateToEvent);
 
   }
 

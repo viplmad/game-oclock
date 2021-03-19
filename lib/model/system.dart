@@ -86,6 +86,9 @@ class System extends CollectionItem {
   List<Object> get props => [
     id,
     name,
+    iconURL?? '',
+    generation,
+    manufacturer?? '',
   ];
 
   @override

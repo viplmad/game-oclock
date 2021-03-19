@@ -51,18 +51,19 @@ class PlatformTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Platform item, void Function() Function(BuildContext, Platform) onTap) {
+  static Widget itemCard(BuildContext context, Platform item, void Function()? Function(BuildContext, Platform) onTap, [void Function()? Function(BuildContext, Platform)? onLongPress]) {
 
     return ItemCard(
       title: itemTitle(item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemGrid(BuildContext context, Platform item, void Function() Function(BuildContext, Platform) onTap) {
+  static Widget itemGrid(BuildContext context, Platform item, void Function()? Function(BuildContext, Platform) onTap) {
 
     return ItemGrid(
       title: itemTitle(item),

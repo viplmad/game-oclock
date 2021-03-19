@@ -294,7 +294,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap, onLongTap);
 
   @override
   Widget gridBuilder(BuildContext context, Game item) => GameTheme.itemGrid(context, item, onTap);

@@ -139,7 +139,7 @@ class _SmoothStarRatingState extends State<SmoothStarRating> {
           if (newRating > widget.starCount) {
             newRating = widget.starCount.toDouble();
           }
-          if (newRating < 0) {
+          if (newRating < 0 || newRating == currentRating) {
             newRating = 0.0;
           }
           setState(() {
@@ -187,7 +187,7 @@ class _SmoothStarRatingState extends State<SmoothStarRating> {
         if (newRating > widget.starCount) {
           newRating = widget.starCount.toDouble();
         }
-        if (newRating < 0) {
+        if (newRating < 0 || newRating == currentRating) {
           newRating = 0.0;
         }
         newRating = normalizeRating(newRating);

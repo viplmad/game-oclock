@@ -18,7 +18,7 @@ abstract class ItemRelationBloc<T extends CollectionItem, W extends CollectionIt
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
 
-    managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
+    managerSubscription = managerBloc.stream.listen(mapRelationManagerStateToEvent);
 
   }
 

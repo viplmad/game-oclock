@@ -74,6 +74,7 @@ class Store extends CollectionItem {
   List<Object> get props => [
     id,
     name,
+    iconURL?? '',
   ];
 
   @override

@@ -799,39 +799,37 @@ class _RatingField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GestureDetector(
-      child: Column(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-                child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-              ),
-            ],
-          ),
-          SmoothStarRating(
-            allowHalfRating: false,
-            starCount: 10,
-            rating: value.roundToDouble(),
-            color: Colors.yellow,
-            borderColor: Colors.orangeAccent,
-            size: 35.0,
-            onRated: (double? newRating) {
-              if (newRating != null) {
+    return Column(
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+              child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
+            ),
+          ],
+        ),
+        SmoothStarRating(
+          allowHalfRating: false,
+          starCount: 10,
+          rating: value.roundToDouble(),
+          color: Colors.yellow,
+          borderColor: Colors.orangeAccent,
+          size: 35.0,
+          onRated: (double? newRating) {
+            if (newRating != null) {
 
-                int updatedRating = newRating.toInt();
-                if(updatedRating == value) {
-                  updatedRating = 0;
-                }
-
-                update(updatedRating);
+              int updatedRating = newRating.toInt();
+              if(updatedRating == value) {
+                updatedRating = 0;
               }
-            },
-          ),
-        ],
-      ),
+
+              update(updatedRating);
+            }
+          },
+        ),
+      ],
     );
 
   }

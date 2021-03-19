@@ -98,6 +98,9 @@ class DLC extends CollectionItem {
   List<Object> get props => [
     id,
     name,
+    releaseYear?? -1,
+    coverURL?? '',
+    finishDate?? DateTime(1970),
   ];
 
   @override

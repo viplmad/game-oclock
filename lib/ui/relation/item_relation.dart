@@ -199,7 +199,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  void Function() onTap(BuildContext context, W item) {
+  void Function()? onTap(BuildContext context, W item) {
 
     return () {
       Navigator.pushNamed(

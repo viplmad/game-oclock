@@ -94,7 +94,7 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   final String localSearchRouteName = typeLocalSearchRoute;
 
   @override
-  void Function() onTap(BuildContext context, PurchaseType item) => () => {};
+  void Function()? onTap(BuildContext context, PurchaseType item) => null;
 
   @override
   Widget cardBuilder(BuildContext context, PurchaseType item) => TypeTheme.itemCard(context, item, onTap);

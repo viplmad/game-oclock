@@ -30,12 +30,12 @@ dependencies:
   flutter_string_encryption: ^0.3.1
 
   # BLoC pattern
-  bloc: ^7.0.0-nullsafety.3
-  flutter_bloc: ^7.0.0-nullsafety.5
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.0
   equatable: ^2.0.0
 
   # Back-end
-  postgres: ^2.3.0-null-safety.2
+  postgres: ^2.3.0
   http: ^0.13.0
   dio: ^4.0.0-beta7
 

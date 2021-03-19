@@ -412,9 +412,6 @@ class _GameCalendarBody extends StatelessWidget {
       selectedDayPredicate: (DateTime day) {
         return day.isSameDate(selectedDate);
       },
-      holidayPredicate: (DateTime date) {
-        return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
-      },
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         BlocProvider.of<CalendarBloc>(context).add(
           UpdateSelectedDate(
@@ -422,42 +419,58 @@ class _GameCalendarBody extends StatelessWidget {
           ),
         );
       },
+      eventLoader: (DateTime date) {
+        return timeLogs.where((TimeLog log) => date.isSameDate(log.dateTime)).toList(growable: false);
+      },
+      holidayPredicate: (DateTime date) {
+        return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
+      },
       startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      calendarStyle: tableCalendar.CalendarStyle(
-        //TODO selectedColor: GameTheme.primaryColour,
-        //TODO todayColor: Colors.yellow[800],
-        isTodayHighlighted: true,
-        outsideDaysVisible: false,
-      ),
+      weekendDays: const [
+        DateTime.saturday,
+        DateTime.sunday
+      ],
+      pageJumpingEnabled: true,
       availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
       availableCalendarFormats: const {
         tableCalendar.CalendarFormat.month: '',
       },
-      headerStyle: tableCalendar.HeaderStyle(
+      headerStyle: const tableCalendar.HeaderStyle(
         titleCentered: true,
         formatButtonVisible: false,
       ),
-      calendarBuilders: tableCalendar.CalendarBuilders<TimeLog>(
-        holidayBuilder: (BuildContext context, DateTime day, DateTime focusedDay) {
-          return Positioned(//TODO test
-            right: 1,
-            bottom: 0,
-            child: _buildHolidaysMarker(),
-          );
-        },
-        markerBuilder: (BuildContext context, DateTime date, List<TimeLog> events) {
-          Widget marker = Container();
-
-          if (events.isNotEmpty) {
-            marker = Positioned(
-              right: 1,
-              bottom: 1,
-              child: _buildEventsMarker(),
-            );
-          }
-
-          return marker;
-        },
+      rowHeight: 65.0,
+      calendarStyle: tableCalendar.CalendarStyle(
+        isTodayHighlighted: true,
+        outsideDaysVisible: false,
+        todayDecoration: BoxDecoration(
+          color: Colors.yellow[800],
+          shape: BoxShape.circle,
+        ),
+        selectedDecoration: const BoxDecoration(
+          color: GameTheme.primaryColour,
+          shape: BoxShape.circle,
+        ),
+        ///EVENTS
+        markersMaxCount: 1,
+        markersAlignment: Alignment.bottomRight,
+        markerSizeScale: 0.35,
+        markerDecoration: const BoxDecoration(
+          color: GameTheme.playingStatusColour,
+          shape: BoxShape.circle,
+        ),
+        ///HOLIDAY
+        holidayDecoration: const BoxDecoration(
+          color: GameTheme.playedStatusColour,
+          shape: BoxShape.circle,
+        ),
+        holidayTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
+        ///WEEKEND
+        weekendDecoration: BoxDecoration(
+          color: Colors.grey.withAlpha(50),
+          shape: BoxShape.circle,
+        ),
+        weekendTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
       ),
     );
   }
@@ -476,7 +489,7 @@ class _GameCalendarBody extends StatelessWidget {
           );
         },
       ),
-      tileColor: GameTheme.statusColours.last,
+      tileColor: GameTheme.playedStatusColour,
     );
 
   }
@@ -552,26 +565,6 @@ class _GameCalendarBody extends StatelessWidget {
         labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
       ),
     );
-  }
-
-  Widget _buildEventsMarker() {
-
-    return Icon(
-      Icons.circle,
-      size: 20.0,
-      color: GameTheme.statusColours.elementAt(GameTheme.statusColours.length - 2),
-    );
-
-  }
-
-  Widget _buildHolidaysMarker() {
-
-    return Icon(
-      Icons.add_box,
-      size: 20.0,
-      color: GameTheme.statusColours.last,
-    );
-
   }
 
 }

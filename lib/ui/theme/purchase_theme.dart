@@ -49,18 +49,19 @@ class PurchaseTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Purchase item, void Function() Function(BuildContext, Purchase) onTap) {
+  static Widget itemCard(BuildContext context, Purchase item, void Function()? Function(BuildContext, Purchase) onTap, [void Function()? Function(BuildContext, Purchase)? onLongPress]) {
 
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
       hasImage: item.hasImage,
       onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemGrid(BuildContext context, Purchase item, void Function() Function(BuildContext, Purchase) onTap) {
+  static Widget itemGrid(BuildContext context, Purchase item, void Function()? Function(BuildContext, Purchase) onTap) {
 
     return ItemGrid(
       title: itemTitle(item),

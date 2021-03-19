@@ -12,11 +12,16 @@ class GameTheme {
   static const Color primaryColour = Colors.red;
   static const Color accentColour = Colors.redAccent;
 
+  static const Color lowPriorityStatusColour = Colors.grey;
+  static const Color nextUpStatusColour = Colors.redAccent;
+  static const Color playingStatusColour = Colors.blueAccent;
+  static const Color playedStatusColour = Colors.greenAccent;
+
   static const List<Color> statusColours = <Color>[
-    Colors.grey,
-    Colors.redAccent,
-    Colors.blueAccent,
-    Colors.greenAccent,
+    lowPriorityStatusColour,
+    nextUpStatusColour,
+    playingStatusColour,
+    playedStatusColour,
   ];
 
   static ThemeData themeData(BuildContext context) {
@@ -63,7 +68,7 @@ class GameTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Game item, Function(BuildContext, Game) onTap) {
+  static Widget itemCard(BuildContext context, Game item, void Function()? Function(BuildContext, Game) onTap, [void Function()? Function(BuildContext, Game)? onLongPress]) {
 
     return ItemCard(
       title: itemTitle(item),
@@ -71,11 +76,12 @@ class GameTheme {
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemGrid(BuildContext context, Game item, void Function() Function(BuildContext, Game) onTap) {
+  static Widget itemGrid(BuildContext context, Game item, void Function()? Function(BuildContext, Game) onTap) {
 
     return ItemGrid(
       title: itemTitle(item),

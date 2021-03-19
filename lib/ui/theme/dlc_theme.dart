@@ -46,18 +46,19 @@ class DLCTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, DLC item, void Function() Function(BuildContext, DLC) onTap) {
+  static Widget itemCard(BuildContext context, DLC item, void Function()? Function(BuildContext, DLC) onTap, [void Function()? Function(BuildContext, DLC)? onLongPress]) {
 
     return ItemCard(
       title: itemTitle(item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemGrid(BuildContext context, DLC item, void Function() Function(BuildContext, DLC) onTap) {
+  static Widget itemGrid(BuildContext context, DLC item, void Function()? Function(BuildContext, DLC) onTap) {
 
     return ItemGrid(
       title: itemTitle(item),

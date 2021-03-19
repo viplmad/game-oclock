@@ -49,7 +49,7 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   final String localSearchRouteName = systemLocalSearchRoute;
 
   @override
-  void Function() onTap(BuildContext context, System item) => () => {};
+  void Function()? onTap(BuildContext context, System item) => null;
 
   @override
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);

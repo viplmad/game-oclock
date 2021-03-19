@@ -33,7 +33,7 @@ class AddItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
   final String? oldImageName;
 
   @override
-  List<Object> get props => [imagePath];
+  List<Object> get props => [imagePath, oldImageName?? ''];
 
   @override
   String toString() => 'AddItemImage { '

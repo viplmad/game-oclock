@@ -140,6 +140,18 @@ class Game extends CollectionItem {
   @override
   List<Object> get props => [
     id,
+    name,
+    edition,
+    releaseYear?? -1,
+    coverURL?? '',
+    status,
+    rating,
+    thoughts,
+    time,
+    saveFolder,
+    screenshotFolder,
+    finishDate?? DateTime(1970),
+    isBackup,
   ];
 
   @override

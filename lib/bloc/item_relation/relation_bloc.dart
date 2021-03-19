@@ -17,7 +17,7 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
     required this.managerBloc,
   }) : super(RelationLoading()) {
 
-    managerSubscription = managerBloc.listen(mapRelationManagerStateToEvent);
+    managerSubscription = managerBloc.stream.listen(mapRelationManagerStateToEvent);
 
   }
 

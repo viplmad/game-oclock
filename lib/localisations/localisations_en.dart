@@ -75,6 +75,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
 
   @override
+  final String duplicateString = 'Duplicate';
+  @override
   final String deleteString = 'Delete';
   @override
   String deleteDialogTitle(String itemString) {

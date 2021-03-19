@@ -21,8 +21,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required this.finishDateManagerBloc,
   }) : super(CalendarLoading()) {
 
-    timeLogManagerSubscription = timeLogManagerBloc.listen(mapTimeLogManagerStateToEvent);
-    finishDateManagerSubscription = finishDateManagerBloc.listen(mapFinishDateManagerStateToEvent);
+    timeLogManagerSubscription = timeLogManagerBloc.stream.listen(mapTimeLogManagerStateToEvent);
+    finishDateManagerSubscription = finishDateManagerBloc.stream.listen(mapFinishDateManagerStateToEvent);
 
   }
 

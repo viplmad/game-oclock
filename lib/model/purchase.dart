@@ -104,6 +104,10 @@ class Purchase extends CollectionItem {
   List<Object> get props => [
     id,
     description,
+    price,
+    externalCredit,
+    date?? DateTime(1970),
+    originalPrice,
   ];
 
   @override

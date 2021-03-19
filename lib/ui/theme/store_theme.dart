@@ -46,18 +46,19 @@ class StoreTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Store item, void Function() Function(BuildContext, Store) onTap) {
+  static Widget itemCard(BuildContext context, Store item, void Function()? Function(BuildContext, Store) onTap, [void Function()? Function(BuildContext, Store)? onLongPress]) {
 
     return ItemCard(
       title: itemTitle(item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemGrid(BuildContext context, Store item, void Function() Function(BuildContext, Store) onTap) {
+  static Widget itemGrid(BuildContext context, Store item, void Function()? Function(BuildContext, Store) onTap) {
 
     return ItemGrid(
       title: itemTitle(item),

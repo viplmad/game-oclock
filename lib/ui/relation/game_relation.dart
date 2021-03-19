@@ -91,7 +91,7 @@ class GameTagRelationList extends _GameRelationList<Tag> {
   final String localSearchRouteName = tagLocalSearchRoute;
 
   @override
-  void Function() onTap(BuildContext context, Tag item) => () => {};
+  void Function()? onTap(BuildContext context, Tag item) => null;
 
   @override
   Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);

@@ -80,6 +80,8 @@ class Platform extends CollectionItem {
   List<Object> get props => [
     id,
     name,
+    iconURL?? '',
+    type?? '',
   ];
 
   @override

@@ -43,6 +43,7 @@ abstract class GameCollectionLocalisations {
   String deletedString(String typeString);
   String unableToDeleteString(String typeString);
 
+  String get duplicateString;
   String get deleteString;
   String deleteDialogTitle(String itemString);
   String get deleteDialogSubtitle;

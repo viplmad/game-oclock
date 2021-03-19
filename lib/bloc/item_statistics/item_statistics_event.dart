@@ -16,7 +16,7 @@ class LoadYearItemStatistics extends ItemStatisticsEvent {
   final int year;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [year];
 
   @override
   String toString() => 'LoadYearItemStatistics { '
