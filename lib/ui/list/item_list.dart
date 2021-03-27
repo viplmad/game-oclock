@@ -486,7 +486,7 @@ class ItemGridView<T extends CollectionItem> extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
       ),
       itemBuilder: (BuildContext context, int index) {
         T item = items[index];
