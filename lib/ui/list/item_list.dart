@@ -293,7 +293,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
           },
         ),
         TextButton(
-          child: Text(GameCollectionLocalisations.of(context).deleteString, style: TextStyle(color: Colors.white)),
+          child: Text(GameCollectionLocalisations.of(context).deleteString),
           onPressed: () {
             Navigator.maybePop<bool>(context, true);
           },
