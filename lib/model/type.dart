@@ -69,7 +69,7 @@ class PurchaseType extends CollectionItem {
   String toString() {
 
     return '$typeTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$type_nameField: $name'
         ' }';
 

@@ -4,7 +4,7 @@ import 'entity.dart';
 const String typeTable = 'Type';
 
 const List<String> typeFields = [
-  IdField,
+  idField,
   type_nameField,
 ];
 
@@ -21,7 +21,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   static PurchaseTypeEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
-      id: map[IdField],
+      id: map[idField],
       name: map[type_nameField],
     );
 
@@ -31,7 +31,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IdField : id,
+      idField : id,
       type_nameField : name,
     };
 
@@ -61,7 +61,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$typeTable}Entity { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$type_nameField: $name'
         ' }';
 

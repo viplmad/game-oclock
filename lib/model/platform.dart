@@ -88,7 +88,7 @@ class Platform extends CollectionItem {
   String toString() {
 
     return '$platformTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$plat_nameField: $name, '
         '$plat_iconField: $iconURL, '
         '$plat_typeField: $type'

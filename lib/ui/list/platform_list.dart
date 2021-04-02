@@ -92,7 +92,7 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => () => {};
+  final String calendarRouteName = '';
 
   @override
   String itemTitle(Platform item) => PlatformTheme.itemTitle(item);

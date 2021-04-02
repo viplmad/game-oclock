@@ -69,7 +69,7 @@ class Tag extends CollectionItem {
   String toString() {
 
     return '$tagTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$tag_nameField: $name'
         ' }';
 

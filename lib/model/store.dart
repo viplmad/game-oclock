@@ -81,7 +81,7 @@ class Store extends CollectionItem {
   String toString() {
 
     return '$storeTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$stor_nameField: $name, '
         '$stor_iconField: $iconURL'
         ' }';

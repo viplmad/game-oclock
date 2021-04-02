@@ -30,4 +30,8 @@ extension DateOnlyCompare on DateTime {
 
     return resultFound;
   }
+
+  DateTime toDate() {
+    return DateTime(this.year, this.month, this.day);
+  }
 }

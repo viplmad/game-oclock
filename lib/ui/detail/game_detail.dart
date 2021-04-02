@@ -18,7 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../relation/relation.dart';
 import '../theme/theme.dart';
-import '../calendar/game_calendar.dart';
+import '../calendar/calendar.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
@@ -233,8 +233,8 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
           onTap: () {
             Navigator.pushNamed(
               context,
-              gameCalendarRoute,
-              arguments: GameCalendarArguments(
+              gameSingleCalendarRoute,
+              arguments: SingleGameCalendarArguments(
                 itemId: itemId,
                 onUpdate: () {
 

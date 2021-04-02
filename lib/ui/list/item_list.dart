@@ -239,6 +239,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   String get detailRouteName;
   String get localSearchRouteName;
   String get statisticsRouteName;
+  String get calendarRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -261,6 +262,12 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
                     icon: Icon(Icons.insert_chart),
                     tooltip: GameCollectionLocalisations.of(context).statsInViewString,
                     onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
+                  ) : Container(),
+                calendarRouteName.isNotEmpty?
+                  IconButton(
+                    icon: Icon(Icons.date_range),
+                    tooltip: GameCollectionLocalisations.of(context).statsInViewString,
+                    onPressed: _onCalendarTap(context),
                   ) : Container(),
               ],
             ),
@@ -414,6 +421,17 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
   }
 
+  void Function() _onCalendarTap(BuildContext context) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        calendarRouteName,
+      );
+    };
+
+  }
+
   String itemTitle(T item);
   String viewTitle(BuildContext context);
 
@@ -442,7 +460,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        T item = items[index];
+        T item = items.elementAt(index);
 
         return DismissibleItem(
           dismissibleKey: item.id,

@@ -28,7 +28,7 @@ abstract class CollectionItem extends Equatable {
   String toString() {
 
     return 'CollectionItem { '
-        '$IdField: $id'
+        '$idField: $id'
         ' }';
 
   }

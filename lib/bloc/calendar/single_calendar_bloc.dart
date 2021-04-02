@@ -10,11 +10,11 @@ import 'package:game_collection/model/calendar_style.dart';
 import 'package:game_collection/repository/icollection_repository.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
-import 'calendar.dart';
+import 'single_calendar.dart';
 
 
-class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
-  CalendarBloc({
+class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> {
+  SingleCalendarBloc({
     required this.itemId,
     required this.iCollectionRepository,
     required this.timeLogManagerBloc,
@@ -34,7 +34,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   late StreamSubscription<RelationManagerState> finishDateManagerSubscription;
 
   @override
-  Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
+  Stream<SingleCalendarState> mapEventToState(SingleCalendarEvent event) async* {
 
     yield* _checkConnection();
 
@@ -74,7 +74,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _checkConnection() async* {
+  Stream<SingleCalendarState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
       yield CalendarNotLoaded('Connection lost. Trying to reconnect');
@@ -90,7 +90,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapLoadToState() async* {
+  Stream<SingleCalendarState> _mapLoadToState() async* {
 
     yield CalendarLoading();
 
@@ -127,7 +127,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateToState(UpdateSelectedDate event) async* {
+  Stream<SingleCalendarState> _mapUpdateSelectedDateToState(UpdateSelectedDate event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -154,7 +154,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
+  Stream<SingleCalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -168,7 +168,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
+  Stream<SingleCalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -182,7 +182,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
+  Stream<SingleCalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -207,7 +207,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
+  Stream<SingleCalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -232,7 +232,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateStyleToState(UpdateStyle event) async* {
+  Stream<SingleCalendarState> _mapUpdateStyleToState(UpdateStyle event) async* {
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
@@ -257,7 +257,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateToState(UpdateCalendar event) async* {
+  Stream<SingleCalendarState> _mapUpdateToState(UpdateCalendar event) async* {
 
     yield CalendarLoaded(
       event.timeLogs,

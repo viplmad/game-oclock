@@ -4,16 +4,16 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/calendar_style.dart';
 
 
-abstract class CalendarEvent extends Equatable {
-  const CalendarEvent();
+abstract class SingleCalendarEvent extends Equatable {
+  const SingleCalendarEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadCalendar extends CalendarEvent {}
+class LoadCalendar extends SingleCalendarEvent {}
 
-class UpdateCalendar extends CalendarEvent {
+class UpdateCalendar extends SingleCalendarEvent {
   const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.style);
 
   final List<TimeLog> timeLogs;
@@ -37,7 +37,7 @@ class UpdateCalendar extends CalendarEvent {
       ' }';
 }
 
-class UpdateSelectedDate extends CalendarEvent {
+class UpdateSelectedDate extends SingleCalendarEvent {
   const UpdateSelectedDate(this.date);
 
   final DateTime date;
@@ -51,12 +51,12 @@ class UpdateSelectedDate extends CalendarEvent {
       ' }';
 }
 
-class UpdateSelectedDateFirst extends CalendarEvent {}
+class UpdateSelectedDateFirst extends SingleCalendarEvent {}
 
-class UpdateSelectedDateLast extends CalendarEvent {}
+class UpdateSelectedDateLast extends SingleCalendarEvent {}
 
-class UpdateSelectedDatePrevious extends CalendarEvent {}
+class UpdateSelectedDatePrevious extends SingleCalendarEvent {}
 
-class UpdateSelectedDateNext extends CalendarEvent {}
+class UpdateSelectedDateNext extends SingleCalendarEvent {}
 
-class UpdateStyle extends CalendarEvent {}
+class UpdateStyle extends SingleCalendarEvent {}

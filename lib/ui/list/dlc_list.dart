@@ -92,7 +92,7 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => () => {};
+  final String calendarRouteName = '';
 
   @override
   String itemTitle(DLC item) => DLCTheme.itemTitle(item);

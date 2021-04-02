@@ -202,6 +202,7 @@ abstract class ICollectionRepository {
   Stream<List<PurchaseType>> getTypesWithName(String name, int maxResults);
   //#endregion SEARCH
 
+  Stream<List<GameWithLogs>> getGamesWithTimeLogsWithYear(int year);
 
   //#region IMAGE
     //Game

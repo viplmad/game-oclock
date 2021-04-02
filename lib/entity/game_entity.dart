@@ -7,7 +7,7 @@ const String gameTable = 'Game';
 const String gameTableRead = '_Game';
 
 const List<String> gameFields = [
-  IdField,
+  idField,
   game_nameField,
   game_editionField,
   game_releaseYearField,
@@ -95,7 +95,7 @@ class GameEntity extends CollectionItemEntity {
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameEntity(
-      id: map[IdField],
+      id: map[idField],
       name: map[game_nameField],
       edition: map[game_editionField],
       releaseYear: map[game_releaseYearField],
@@ -116,7 +116,7 @@ class GameEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IdField : id,
+      idField : id,
       game_nameField : name,
       game_editionField : edition,
       game_releaseYearField : releaseYear,
@@ -158,7 +158,7 @@ class GameEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$gameTable}Entity { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
@@ -229,6 +229,70 @@ class TimeLogEntity extends Equatable {
     return '{$gameLogTable}Entity { '
         '$gameLog_dateTimeField: $dateTime, '
         '$gameLog_timeField: $time'
+        ' }';
+
+  }
+}
+
+// ignore: must_be_immutable
+class GameWithLogsEntity extends Equatable {
+  GameWithLogsEntity({
+    required this.game,
+    List<TimeLogEntity>? timeLogs,
+  }) {
+
+    this.timeLogs = timeLogs?? [];
+
+  }
+
+  final GameEntity game;
+  late List<TimeLogEntity> timeLogs;
+
+  void addTimeLog(TimeLogEntity timeLog) {
+    timeLogs.add(timeLog);
+  }
+
+  static List<GameWithLogsEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+
+    List<GameWithLogsEntity> gamesWithLogsList = [];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+
+      Map<String, dynamic> gameMap = manyMap[gameTable]!;
+      gameMap["Time"] = 0;
+      GameEntity gameEntity = GameEntity.fromDynamicMap(gameMap);
+
+      Map<String, dynamic> timeLogMap = CollectionItemEntity.combineMaps(manyMap, gameLogTable);
+      TimeLogEntity timeLogEntity = TimeLogEntity.fromDynamicMap(timeLogMap);
+
+      GameWithLogsEntity gameWithLogs;
+      try {
+        gameWithLogs = gamesWithLogsList.singleWhere((GameWithLogsEntity tempGameWithLogs) => tempGameWithLogs.game.id == gameEntity.id);
+      } catch(IterableElementError) {
+        gameWithLogs = GameWithLogsEntity(game: gameEntity);
+        gamesWithLogsList.add(gameWithLogs);
+      }
+
+      gameWithLogs.addTimeLog(timeLogEntity);
+
+    });
+
+    return gamesWithLogsList;
+
+  }
+
+  @override
+  List<Object> get props => [
+    game,
+    timeLogs,
+  ];
+
+  @override
+  String toString() {
+
+    return 'GameWithLogsEntity { '
+        'game: $game, '
+        'timeLogs: $timeLogs'
         ' }';
 
   }

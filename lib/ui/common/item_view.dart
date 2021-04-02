@@ -62,6 +62,7 @@ class ItemCard extends StatelessWidget {
     Key? key,
     required this.title,
     this.subtitle,
+    this.trailing,
     required this.hasImage,
     this.imageURL,
     required this.onTap,
@@ -70,6 +71,7 @@ class ItemCard extends StatelessWidget {
 
   final String title;
   final String? subtitle;
+  final String? trailing;
   final bool hasImage;
   final String? imageURL;
   final void Function()? onTap;
@@ -83,6 +85,7 @@ class ItemCard extends StatelessWidget {
         child: _ItemListTile(
           title: title,
           subtitle: subtitle,
+          trailing: trailing,
           hasImage: hasImage,
           imageURL: imageURL,
         ),
@@ -99,12 +102,14 @@ class _ItemListTile extends StatelessWidget {
     Key? key,
     required this.title,
     this.subtitle,
+    this.trailing,
     required this.hasImage,
     this.imageURL,
   }) : super(key: key);
 
   final String title;
   final String? subtitle;
+  final String? trailing;
   final bool hasImage;
   final String? imageURL;
 
@@ -131,6 +136,9 @@ class _ItemListTile extends StatelessWidget {
       title: Text(title),
       subtitle: subtitle != null?
           Text(subtitle!)
+          : null,
+      trailing: trailing != null?
+      Text(trailing!)
           : null,
     );
 

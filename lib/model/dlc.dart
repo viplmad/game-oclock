@@ -107,7 +107,7 @@ class DLC extends CollectionItem {
   String toString() {
 
     return '$dlcTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverURL, '

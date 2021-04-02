@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_collection/utils/datetime_extension.dart';
+
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -158,7 +160,7 @@ class Game extends CollectionItem {
   String toString() {
 
     return '$gameTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$game_nameField: $name, '
         '$game_editionField: $edition, '
         '$game_releaseYearField: $releaseYear, '
@@ -233,6 +235,62 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
 
   @override
   int compareTo(TimeLog other) => this.dateTime.compareTo(other.dateTime);
+}
+
+// ignore: must_be_immutable
+class GameWithLogs extends Equatable {
+  GameWithLogs({
+    required this.game,
+    required this.timeLogs,
+  }) {
+
+    this.logDates = timeLogs.map<DateTime>((TimeLog log) => log.dateTime.toDate()).toSet();
+
+  }
+
+  final Game game;
+  final List<TimeLog> timeLogs;
+  late Set<DateTime> logDates;
+
+  int totalTimeSeconds() {
+
+    return timeLogs.fold<int>(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
+
+  }
+
+  static GameWithLogs fromEntity(GameWithLogsEntity entity, [String? coverURL]) {
+
+    return GameWithLogs(
+      game: Game.fromEntity(entity.game, coverURL),
+      timeLogs: entity.timeLogs.map<TimeLog>( TimeLog.fromEntity ).toList(),
+    );
+
+  }
+
+  GameWithLogsEntity toEntity() {
+
+    return GameWithLogsEntity(
+      game: this.game.toEntity(),
+      timeLogs: this.timeLogs.map<TimeLogEntity>((TimeLog log) => log.toEntity()).toList(growable: false),
+    );
+
+  }
+
+  @override
+  List<Object> get props => [
+    game,
+    timeLogs,
+  ];
+
+  @override
+  String toString() {
+
+    return 'GameWithLogs { '
+        'game: $game, '
+        'timeLogs: $timeLogs'
+        ' }';
+
+  }
 }
 
 class GamesData extends ItemData<Game> {

@@ -27,7 +27,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   shared_preferences: ^2.0.4
-  encrypt: ^5.0.0-beta.1
+  encrypt: ^5.0.0
 
   # BLoC pattern
   bloc: ^7.0.0
@@ -37,13 +37,13 @@ dependencies:
   # Back-end
   postgres: ^2.3.0
   http: ^0.13.0
-  dio: ^4.0.0-beta7
+  dio: ^4.0.0
 
   # Front-end
   #smooth_star_rating: ^1.0.0
   numberpicker: ^2.0.0
   image_picker: ^0.7.2+1
-  cached_network_image: ^3.0.0-nullsafety
+  cached_network_image: ^3.0.0
   url_launcher: ^6.0.2
   flutter_launcher_icons: ^0.9.0
   charts_flutter: ^0.10.0

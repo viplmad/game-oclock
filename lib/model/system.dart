@@ -95,7 +95,7 @@ class System extends CollectionItem {
   String toString() {
 
     return '$systemTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$sys_nameField: $name, '
         '$sys_iconField: $iconURL, '
         '$sys_generationField: $generation, '

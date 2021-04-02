@@ -114,7 +114,7 @@ class Purchase extends CollectionItem {
   String toString() {
 
     return '$purchaseTable { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$purc_descriptionField: $description, '
         '$purc_priceField: $price, '
         '$purc_externalCreditField: $externalCredit, '

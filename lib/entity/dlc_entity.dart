@@ -5,7 +5,7 @@ const String dlcTable = 'DLC';
 const String dlcTableRead = '_DLC';
 
 const List<String> dlcFields = [
-  IdField,
+  idField,
   dlc_nameField,
   dlc_releaseYearField,
   dlc_coverField,
@@ -50,7 +50,7 @@ class DLCEntity extends CollectionItemEntity {
   static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCEntity(
-      id: map[IdField],
+      id: map[idField],
       name: map[dlc_nameField],
       releaseYear: map[dlc_releaseYearField],
       coverFilename: map[dlc_coverField],
@@ -65,7 +65,7 @@ class DLCEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IdField : id,
+      idField : id,
       dlc_nameField : name,
       dlc_releaseYearField : releaseYear,
       dlc_coverField : coverFilename,
@@ -100,7 +100,7 @@ class DLCEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$dlcTable}Entity { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$dlc_nameField: $name, '
         '$dlc_releaseYearField: $releaseYear, '
         '$dlc_coverField: $coverFilename, '

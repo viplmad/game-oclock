@@ -4,7 +4,7 @@ import 'entity.dart';
 const String storeTable = 'Store';
 
 const List<String> storeFields = [
-  IdField,
+  idField,
   stor_nameField,
   stor_iconField,
 ];
@@ -25,7 +25,7 @@ class StoreEntity extends CollectionItemEntity {
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
-      id: map[IdField],
+      id: map[idField],
       name: map[stor_nameField],
       iconFilename: map[stor_iconField],
     );
@@ -36,7 +36,7 @@ class StoreEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      IdField : id,
+      idField : id,
       stor_nameField : name,
       stor_iconField : iconFilename,
     };
@@ -67,7 +67,7 @@ class StoreEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$storeTable}Entity { '
-        '$IdField: $id, '
+        '$idField: $id, '
         '$stor_nameField: $name, '
         '$stor_iconField: $iconFilename'
         ' }';

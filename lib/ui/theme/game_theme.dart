@@ -81,6 +81,20 @@ class GameTheme {
 
   }
 
+  static Widget itemCardWithTime(BuildContext context, Game item, Duration totalTime, void Function()? Function(BuildContext, Game) onTap, [void Function()? Function(BuildContext, Game)? onLongPress]) {
+
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle: _itemSubtitle(context, item),
+      trailing: GameCollectionLocalisations.of(context).durationString(totalTime),
+      hasImage: item.hasImage,
+      imageURL: item.image.url,
+      onTap: onTap(context, item),
+      onLongPress: onLongPress != null? onLongPress(context, item) : null,
+    );
+
+  }
+
   static Widget itemGrid(BuildContext context, Game item, void Function()? Function(BuildContext, Game) onTap) {
 
     return ItemGrid(

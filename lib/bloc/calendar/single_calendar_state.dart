@@ -4,16 +4,16 @@ import 'package:game_collection/model/model.dart';
 import 'package:game_collection/model/calendar_style.dart';
 
 
-abstract class CalendarState extends Equatable {
-  const CalendarState();
+abstract class SingleCalendarState extends Equatable {
+  const SingleCalendarState();
 
   @override
   List<Object> get props => [];
 }
 
-class CalendarLoading extends CalendarState {}
+class CalendarLoading extends SingleCalendarState {}
 
-class CalendarLoaded extends CalendarState {
+class CalendarLoaded extends SingleCalendarState {
   const CalendarLoaded(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, [this.style = CalendarStyle.List]);
 
   final List<TimeLog> timeLogs;
@@ -37,7 +37,7 @@ class CalendarLoaded extends CalendarState {
       ' }';
 }
 
-class CalendarNotLoaded extends CalendarState {
+class CalendarNotLoaded extends SingleCalendarState {
   const CalendarNotLoaded(this.error);
 
   final String error;

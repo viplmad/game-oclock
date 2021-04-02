@@ -11,7 +11,7 @@ import 'package:game_collection/model/calendar_style.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
 
-import 'package:game_collection/bloc/calendar/calendar.dart';
+import 'package:game_collection/bloc/calendar/single_calendar.dart';
 import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
@@ -25,8 +25,8 @@ import '../common/duration_picker_dialog.dart';
 import '../common/item_view.dart';
 
 
-class GameCalendarArguments {
-  const GameCalendarArguments({
+class SingleGameCalendarArguments {
+  const SingleGameCalendarArguments({
     required this.itemId,
     this.onUpdate,
   });
@@ -35,8 +35,8 @@ class GameCalendarArguments {
   final void Function()? onUpdate;
 }
 
-class GameCalendar extends StatelessWidget {
-  const GameCalendar({
+class SingleGameCalendar extends StatelessWidget {
+  const SingleGameCalendar({
     Key? key,
     required this.itemId,
     this.onUpdate,
@@ -48,22 +48,21 @@ class GameCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
+    final GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
       itemId: itemId,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
+    final GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
       itemId: itemId,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    // ignore: close_sinks
-    CalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
+    final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CalendarBloc>(
+        BlocProvider<SingleCalendarBloc>(
           create: (BuildContext context) {
             return _bloc..add(LoadCalendar());
           },
@@ -128,9 +127,9 @@ class GameCalendar extends StatelessWidget {
 
   }
 
-  CalendarBloc blocBuilder(GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishDateRelationManagerBloc finishDateManagerBloc) {
+  SingleCalendarBloc blocBuilder(GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishDateRelationManagerBloc finishDateManagerBloc) {
 
-    return CalendarBloc(
+    return SingleCalendarBloc(
       itemId: itemId,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
       timeLogManagerBloc: timeLogManagerBloc,
@@ -230,9 +229,9 @@ class GameCalendar extends StatelessWidget {
 
   }
 
-  _GameCalendarBody bodyBuilder() {
+  _SingleGameCalendarBody bodyBuilder() {
 
-    return _GameCalendarBody(
+    return _SingleGameCalendarBody(
       onUpdate: onUpdate,
     );
 
@@ -241,10 +240,10 @@ class GameCalendar extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class _GameCalendarBody extends StatelessWidget {
-  _GameCalendarBody({
+class _SingleGameCalendarBody extends StatelessWidget {
+  _SingleGameCalendarBody({
     Key? key,
-    required this.onUpdate
+    required this.onUpdate,
   }) : super(key: key);
 
   final void Function()? onUpdate;
@@ -360,8 +359,8 @@ class _GameCalendarBody extends StatelessWidget {
             },
           ),
         ],
-        child: BlocBuilder<CalendarBloc, CalendarState>(
-          builder: (BuildContext context, CalendarState state) {
+        child: BlocBuilder<SingleCalendarBloc, SingleCalendarState>(
+          builder: (BuildContext context, SingleCalendarState state) {
 
             if(state is CalendarLoaded) {
 
@@ -413,7 +412,7 @@ class _GameCalendarBody extends StatelessWidget {
         return day.isSameDate(selectedDate);
       },
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-        BlocProvider.of<CalendarBloc>(context).add(
+        BlocProvider.of<SingleCalendarBloc>(context).add(
           UpdateSelectedDate(
             selectedDay,
           ),

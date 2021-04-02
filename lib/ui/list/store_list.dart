@@ -92,7 +92,7 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   final String statisticsRouteName = '';
 
   @override
-  void Function() onStatisticsTap(BuildContext context) => () => {};
+  final String calendarRouteName = '';
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);

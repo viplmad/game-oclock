@@ -123,6 +123,9 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   final String statisticsRouteName = purchaseStatisticsRoute;
 
   @override
+  final String calendarRouteName = '';
+
+  @override
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override

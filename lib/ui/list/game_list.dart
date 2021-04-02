@@ -271,6 +271,9 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   @override
   final String statisticsRouteName = gameStatisticsRoute;
 
+  @override
+  final String calendarRouteName = gameMultiCalendarRoute;
+
   void Function() onStatisticsTap(BuildContext context) {
 
     return () {
