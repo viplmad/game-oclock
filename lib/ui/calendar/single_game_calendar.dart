@@ -81,7 +81,7 @@ class SingleGameCalendar extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).calendarViewString),
+          title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
           actions: [
             IconButton(
               icon: Icon(Icons.first_page),

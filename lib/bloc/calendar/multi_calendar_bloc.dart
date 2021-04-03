@@ -19,6 +19,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
   }) : super(CalendarLoading());
 
   final ICollectionRepository iCollectionRepository;
+  final Set<int> yearsLoaded = Set<int>();
 
   @override
   Stream<MultiCalendarState> mapEventToState(MultiCalendarEvent event) async* {
@@ -57,6 +58,10 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
       yield* _mapUpdateToState(event);
 
+    } else if(event is UpdateListItem) {
+
+      yield* _mapUpdateListItemToState(event);
+
     }
 
   }
@@ -79,11 +84,29 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
   Stream<MultiCalendarState> _mapLoadToState(LoadCalendar event) async* {
 
+    if(event.year <= DateTime.now().year && yearsLoaded.add(event.year)) {
+
+      if(state is CalendarLoaded) {
+
+        yield* _mapLoadAdditionalCalendar(event.year);
+
+      } else {
+
+        yield* _mapLoadInitialCalendar(event.year);
+
+      }
+
+    }
+
+  }
+
+  Stream<MultiCalendarState> _mapLoadInitialCalendar(int year) async* {
+
     yield CalendarLoading();
 
     try {
 
-      final List<GameWithLogs> gamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(event.year).first;
+      final List<GameWithLogs> gamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
       final Set<DateTime> logDates = gamesWithLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameWithLogs gameWithLogs) => previousDates..addAll(gameWithLogs.logDates));
 
       DateTime selectedDate = DateTime.now();
@@ -107,15 +130,61 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
         }
       }
 
-      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds());
+      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
       Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
 
       yield CalendarLoaded(
         gamesWithLogs,
         logDates,
         selectedDate,
+        selectedDate,
         selectedGamesWithLogs,
         selectedTotalTime,
+      );
+
+    } catch (e) {
+
+      yield CalendarNotLoaded(e.toString());
+
+    }
+
+  }
+
+  Stream<MultiCalendarState> _mapLoadAdditionalCalendar(int year) async* {
+
+    try {
+
+      List<GameWithLogs> gamesWithLogs = List.from((state as CalendarLoaded).gamesWithLogs);
+      Set<DateTime> logDates = SplayTreeSet.from((state as CalendarLoaded).logDates);
+      final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+      final List<GameWithLogs> selectedGamesWithLogs = (state as CalendarLoaded).selectedGamesWithLogs;
+      final Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
+      final CalendarStyle style = (state as CalendarLoaded).style;
+
+      final DateTime focusedDate = DateTime(year, DateTime.december, 1);
+
+      final List<GameWithLogs> yearGamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
+
+      for(GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
+        try {
+          GameWithLogs gameWithLogs = gamesWithLogs.singleWhere((GameWithLogs tempGameWithLogs) => tempGameWithLogs.game.id == yearGameWithLogs.game.id);
+          gameWithLogs.timeLogs.addAll(yearGameWithLogs.timeLogs);
+        } catch(IterableElementError) {
+          gamesWithLogs.add(yearGameWithLogs);
+        }
+      }
+
+      final Set<DateTime> yearLogDates = yearGamesWithLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameWithLogs yearGameWithLogs) => previousDates..addAll(yearGameWithLogs.logDates));
+      logDates.addAll(yearLogDates);
+
+      yield CalendarLoaded(
+        gamesWithLogs,
+        logDates,
+        focusedDate,
+        selectedDate,
+        selectedGamesWithLogs,
+        selectedTotalTime,
+        style,
       );
 
     } catch (e) {
@@ -132,14 +201,9 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
       final List<GameWithLogs> gamesWithLogs = (state as CalendarLoaded).gamesWithLogs;
       final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final CalendarStyle style = (state as CalendarLoaded).style;
-      //final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
       List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
 
       final DateTime selectedDate = event.date;
-
-      /*if((style == CalendarStyle.List) || (style == CalendarStyle.Graph && !event.date.isInWeekOf(previousSelectedDate))) {
-        selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
-      }*/
 
       if(logDates.isNotEmpty && logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
         for(GameWithLogs gameWithLogs in gamesWithLogs) {
@@ -156,12 +220,13 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
         }
       }
 
-      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds());
+      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
       Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
 
       yield CalendarLoaded(
         gamesWithLogs,
         logDates,
+        selectedDate,
         selectedDate,
         selectedGamesWithLogs,
         selectedTotalTime,
@@ -280,6 +345,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
     yield CalendarLoaded(
       event.gamesWithLogs,
       event.logDates,
+      event.focusedDate,
       event.selectedDate,
       event.selectedGamesWithLogs,
       event.selectedTotalTime,
@@ -288,38 +354,43 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
   }
 
-  /*List<TimeLog> _selectedTimeLogsInStyle(List<TimeLog> timeLogs, DateTime selectedDate, CalendarStyle style) {
-    List<TimeLog> selectedTimeLogs = <TimeLog>[];
+  Stream<MultiCalendarState> _mapUpdateListItemToState(UpdateListItem event) async* {
 
-    switch(style) {
-      case CalendarStyle.List:
-        selectedTimeLogs = timeLogs
-            .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
-            .toList(growable: false);
-        break;
-      case CalendarStyle.Graph:
-        DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
+    if(state is CalendarLoaded) {
+      List<GameWithLogs> gamesWithLogs = List.from((state as CalendarLoaded).gamesWithLogs);
+      List<GameWithLogs> selectedGamesWithLogs = List.from((state as CalendarLoaded).selectedGamesWithLogs);
 
-        Duration dayDuration = Duration(days: 1);
-        DateTime dateOfWeek = mondayOfSelectedDate;
-        for(int index = 0; index < 7; index++) {
-          Iterable<TimeLog> dayTimeLogs = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(dateOfWeek));
+      final int listItemIndex = gamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
+      final int selectedListItemIndex = selectedGamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
+      final GameWithLogs listItem = gamesWithLogs.elementAt(listItemIndex);
 
-          if(dayTimeLogs.isNotEmpty) {
-            selectedTimeLogs.addAll(dayTimeLogs);
-          } else {
-            selectedTimeLogs.add(
-              TimeLog(dateTime: dateOfWeek, time: Duration()),
-            );
-          }
+      if(listItem.game != event.item) {
+        gamesWithLogs[listItemIndex] = GameWithLogs(game: event.item, timeLogs: listItem.timeLogs);
 
-          dateOfWeek = dateOfWeek.add(dayDuration);
+        if(selectedListItemIndex >= 0) {
+          selectedGamesWithLogs[selectedListItemIndex] = gamesWithLogs[listItemIndex];
         }
-        break;
+
+        final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
+        final DateTime focusedDate = (state as CalendarLoaded).focusedDate;
+        final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
+        final Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
+        final CalendarStyle style = (state as CalendarLoaded).style;
+
+        yield CalendarLoaded(
+          gamesWithLogs,
+          logDates,
+          focusedDate,
+          selectedDate,
+          selectedGamesWithLogs,
+          selectedTotalTime,
+          style,
+        );
+      }
+
     }
 
-    return selectedTimeLogs..sort();
-  }*/
+  }
 
   @override
   Future<void> close() {

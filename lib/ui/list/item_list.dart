@@ -266,7 +266,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
                 calendarRouteName.isNotEmpty?
                   IconButton(
                     icon: Icon(Icons.date_range),
-                    tooltip: GameCollectionLocalisations.of(context).statsInViewString,
+                    tooltip: GameCollectionLocalisations.of(context).calendarView,
                     onPressed: _onCalendarTap(context),
                   ) : Container(),
               ],

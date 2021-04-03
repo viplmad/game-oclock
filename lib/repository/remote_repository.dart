@@ -1394,7 +1394,7 @@ class RemoteRepository implements ICollectionRepository {
       leftTableId: gameLog_gameField,
       rightTableId: idField,
       leftSelectFields: gameLogFields,
-      rightSelectFields: List.of(gameFields)..remove(game_timeField),
+      rightSelectFields: List.from(gameFields)..remove(game_timeField),
       where: "date_part(\'year\', \"DateTime\") = @year",
       fieldsAndValues: {
         'year' : year,

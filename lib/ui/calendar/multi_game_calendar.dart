@@ -39,7 +39,7 @@ class MultiGameCalendar extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).calendarViewString),
+          title: Text(GameCollectionLocalisations.of(context).multiCalendarViewString),
           actions: [
             IconButton(
               icon: Icon(Icons.first_page),
@@ -69,13 +69,13 @@ class MultiGameCalendar extends StatelessWidget {
                 _bloc.add(UpdateSelectedDateLast());
               },
             ),
-            IconButton(
+            /*IconButton(
               icon: Icon(Icons.insert_chart),
               tooltip: GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
                 _bloc.add(UpdateStyle());
               },
-            ),
+            ),*/
           ],
         ),
         body: bodyBuilder(),
@@ -109,7 +109,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              _buildTableCalendar(context, state.logDates, state.selectedDate),
+              _buildTableCalendar(context, state.logDates, state.focusedDate, state.selectedDate),
               const Divider(height: 4.0),
               ListTile(
                 title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).weekString + ')' : '')),
@@ -135,18 +135,16 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, DateTime selectedDate) {
-    DateTime firstDate = DateTime.now();
-    DateTime lastDate = firstDate;
+  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, DateTime focusedDate, DateTime selectedDate) {
+    DateTime lastDate = DateTime.now();
     if(logDates.isNotEmpty) {
-      firstDate = logDates.first;
       lastDate = logDates.last;
     }
 
     return tableCalendar.TableCalendar<DateTime>(
-      firstDay: firstDate,
+      firstDay: DateTime(1970),
       lastDay: lastDate,
-      focusedDay: selectedDate,
+      focusedDay: focusedDate,
       selectedDayPredicate: (DateTime day) {
         return day.isSameDate(selectedDate);
       },
@@ -158,7 +156,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return logDates. where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
+        return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
       },
       startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
       weekendDays: const [
@@ -174,6 +172,13 @@ class _MultiGameCalendarBody extends StatelessWidget {
         titleCentered: true,
         formatButtonVisible: false,
       ),
+      onPageChanged: (DateTime date) {
+        BlocProvider.of<MultiCalendarBloc>(context).add(
+          LoadCalendar(
+            date.year,
+          ),
+        );
+      },
       rowHeight: 65.0,
       calendarStyle: tableCalendar.CalendarStyle(
         isTodayHighlighted: true,
@@ -226,7 +231,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
-          child: GameTheme.itemCardWithTime(context, gameWithLogs.game, Duration(seconds: gameWithLogs.totalTimeSeconds()), onTap),
+          child: GameTheme.itemCardWithTime(context, gameWithLogs.game, Duration(seconds: gameWithLogs.totalTimeSeconds), onTap),
         );
       },
     );
@@ -241,16 +246,19 @@ class _MultiGameCalendarBody extends StatelessWidget {
         gameDetailRoute,
         arguments: DetailArguments<Game>(
           item: item,
-          // TODO update if on tap
-          /*onUpdate: (Game? updatedItem) {
+          onUpdate: (Game? updatedItem) {
 
             if(updatedItem != null) {
 
-              BlocProvider.of<K>(context).add(UpdateListItem<T>(updatedItem));
+              BlocProvider.of<MultiCalendarBloc>(context).add(
+                UpdateListItem(
+                  updatedItem,
+                ),
+              );
 
             }
 
-          },*/
+          },
         ),
       );
     };

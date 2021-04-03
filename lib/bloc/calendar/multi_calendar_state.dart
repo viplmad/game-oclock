@@ -14,24 +14,27 @@ abstract class MultiCalendarState extends Equatable {
 class CalendarLoading extends MultiCalendarState {}
 
 class CalendarLoaded extends MultiCalendarState {
-  const CalendarLoaded(this.gamesWithLogs, this.logDates, this.selectedDate, this.selectedGamesWithLogs, this.selectedTotalTime, [this.style = CalendarStyle.List]);
+  const CalendarLoaded(this.gamesWithLogs, this.logDates, this.focusedDate, this.selectedDate, this.selectedGamesWithLogs, this.selectedTotalTime, [this.style = CalendarStyle.List]);
 
   final List<GameWithLogs> gamesWithLogs;
   final Set<DateTime> logDates;
+  final DateTime focusedDate;
   final DateTime selectedDate;
   final List<GameWithLogs> selectedGamesWithLogs;
   final Duration selectedTotalTime;
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [gamesWithLogs, logDates, selectedDate, style];
+  List<Object> get props => [gamesWithLogs, logDates, focusedDate, selectedDate, style];
 
   @override
   String toString() => 'UpdateCalendar { '
       'gamesWithLogs: $gamesWithLogs, '
       'logDates: $logDates, '
+      'focusedDate: $focusedDate, '
       'selectedDate: $selectedDate, '
-      'selectedLogs: $selectedGamesWithLogs, '
+      'selectedGameWithLogs: $selectedGamesWithLogs, '
+      'selectedTotalTime: $selectedTotalTime, '
       'style: $style'
       ' }';
 }

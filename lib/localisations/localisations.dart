@@ -33,6 +33,7 @@ abstract class GameCollectionLocalisations {
   String get changeOrderString;
   String get changeStyleString;
   String get changeViewString;
+  String get calendarView;
   String get searchInViewString;
   String get statsInViewString;
 
@@ -90,7 +91,8 @@ abstract class GameCollectionLocalisations {
   String get saveFolderFieldString;
   String get screenshotFolderFieldString;
   String get backupFieldString;
-  String get calendarViewString;
+  String get singleCalendarViewString;
+  String get multiCalendarViewString;
   String get editTimeString;
   String get selectedDateIsFinishDateString;
   String get gameCalendarEventsString;

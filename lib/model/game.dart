@@ -242,21 +242,14 @@ class GameWithLogs extends Equatable {
   GameWithLogs({
     required this.game,
     required this.timeLogs,
-  }) {
-
-    this.logDates = timeLogs.map<DateTime>((TimeLog log) => log.dateTime.toDate()).toSet();
-
-  }
+  });
 
   final Game game;
   final List<TimeLog> timeLogs;
-  late Set<DateTime> logDates;
 
-  int totalTimeSeconds() {
+  Set<DateTime> get logDates => timeLogs.map<DateTime>((TimeLog log) => log.dateTime.toDate()).toSet();
 
-    return timeLogs.fold<int>(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
-
-  }
+  int get totalTimeSeconds => timeLogs.fold<int>(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
 
   static GameWithLogs fromEntity(GameWithLogsEntity entity, [String? coverURL]) {
 

@@ -47,6 +47,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String changeViewString = 'Change View';
   @override
+  final String calendarView = 'Calendar View';
+  @override
   final String searchInViewString = 'Search in View';
   @override
   final String statsInViewString = 'Stats in View';
@@ -183,7 +185,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String backupFieldString = 'Backup';
   @override
-  String get calendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
+  String get singleCalendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
+  @override
+  String get multiCalendarViewString => '$timeLogsFieldString';
   @override
   final String editTimeString = 'Time';
   @override
@@ -199,7 +203,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get nextTimeLog => 'Next $timeLogsFieldString';
   @override
-  String get emptyTimeLogsString => 'No $timeLogsFieldString yet';
+  String get emptyTimeLogsString => 'No $timeLogsFieldString';
   @override
   final String weekString = 'Week';
 

@@ -253,7 +253,7 @@ class CachedImage extends StatelessWidget {
           child: CircularProgressIndicator(value: downloadProgress.progress),
         );
       },
-      errorWidget: (BuildContext? context, String? url, Object? error) => Container(color: backgroundColour), //TODO null-safety
+      errorWidget: (BuildContext context, String url, dynamic error) => Container(color: backgroundColour),
     );
 
   }

@@ -26,24 +26,27 @@ class LoadCalendar extends MultiCalendarEvent {
 }
 
 class UpdateCalendar extends MultiCalendarEvent {
-  const UpdateCalendar(this.gamesWithLogs, this.logDates, this.selectedDate, this.selectedGamesWithLogs, this.selectedTotalTime, this.style);
+  const UpdateCalendar(this.gamesWithLogs, this.logDates, this.focusedDate, this.selectedDate, this.selectedGamesWithLogs, this.selectedTotalTime, this.style);
 
   final List<GameWithLogs> gamesWithLogs;
   final Set<DateTime> logDates;
+  final DateTime focusedDate;
   final DateTime selectedDate;
   final List<GameWithLogs> selectedGamesWithLogs;
   final Duration selectedTotalTime;
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [logDates, selectedDate, style];
+  List<Object> get props => [gamesWithLogs, logDates, focusedDate, selectedDate, style];
 
   @override
   String toString() => 'UpdateCalendar { '
       'gamesWithLogs: $gamesWithLogs, '
       'logDates: $logDates, '
+      'focusedDate: $focusedDate, '
       'selectedDate: $selectedDate, '
-      'selectedLogs: $selectedGamesWithLogs, '
+      'selectedGameWithLogs: $selectedGamesWithLogs, '
+      'selectedTotalTime: $selectedTotalTime, '
       'style: $style'
       ' }';
 }
@@ -71,3 +74,17 @@ class UpdateSelectedDatePrevious extends MultiCalendarEvent {}
 class UpdateSelectedDateNext extends MultiCalendarEvent {}
 
 class UpdateStyle extends MultiCalendarEvent {}
+
+class UpdateListItem extends MultiCalendarEvent {
+  const UpdateListItem(this.item);
+
+  final Game item;
+
+  @override
+  List<Object> get props => [item];
+
+  @override
+  String toString() => 'UpdateListItem { '
+      'item: $item'
+      ' }';
+}

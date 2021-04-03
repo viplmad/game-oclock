@@ -228,7 +228,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ),
       ListTileTheme.merge(
         child: ListTile(
-          title: Text(GameCollectionLocalisations.of(context).calendarViewString),
+          title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
           trailing: Icon(Icons.arrow_forward),
           onTap: () {
             Navigator.pushNamed(
