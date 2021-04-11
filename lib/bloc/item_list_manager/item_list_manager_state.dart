@@ -7,7 +7,7 @@ abstract class ItemListManagerState extends Equatable {
   const ItemListManagerState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class Initialised extends ItemListManagerState {}
@@ -18,7 +18,7 @@ class ItemAdded<T extends CollectionItem> extends ItemListManagerState {
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'ItemAdded { '
@@ -32,7 +32,7 @@ class ItemNotAdded extends ItemListManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemNotAdded { '
@@ -46,7 +46,7 @@ class ItemDeleted<T extends CollectionItem> extends ItemListManagerState {
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'ItemDeleted { '
@@ -60,7 +60,7 @@ class ItemNotDeleted extends ItemListManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemNotDeleted { '

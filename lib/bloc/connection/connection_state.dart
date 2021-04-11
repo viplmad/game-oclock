@@ -5,7 +5,7 @@ abstract class ConnectState extends Equatable {
   const ConnectState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class Connecting extends ConnectState {}
@@ -20,7 +20,7 @@ class FailedConnection extends ConnectState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'FailedConnection { '

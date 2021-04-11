@@ -10,7 +10,7 @@ extension DateOnlyCompare on DateTime {
     if(this.weekday == 1) {
       mondayOfDate = this;
     } else {
-      int daysToRemove = this.weekday - 1;
+      final int daysToRemove = this.weekday - 1;
       mondayOfDate = this.subtract(Duration(days: daysToRemove));
     }
 
@@ -20,7 +20,7 @@ extension DateOnlyCompare on DateTime {
   bool isInWeekOf(DateTime other) {
     bool resultFound = false;
 
-    Duration dayDuration = Duration(days: 1);
+    final Duration dayDuration = const Duration(days: 1);
     DateTime dateInWeek = other.getMondayOfWeek();
     for(int index = 0; index < 7 && !resultFound; index++) {
       resultFound = this.isSameDate(dateInWeek);

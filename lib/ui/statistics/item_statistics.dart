@@ -63,9 +63,9 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
     return Scaffold(
       appBar: AppBar(
         title: Text(typesName(context) + ' - ' + viewTitle),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.all_inbox),
+            icon: const Icon(Icons.all_inbox),
             tooltip: GameCollectionLocalisations.of(context).generalString,
             onPressed: () {
               BlocProvider.of<K>(context).add(LoadGeneralItemStatistics());
@@ -74,12 +74,12 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
           BlocBuilder<K, ItemStatisticsState>(
             builder: (BuildContext context, ItemStatisticsState state) {
               int? selectedYear;
-              if(state is ItemYearStatisticsLoaded<D>) {
+              if(state is ItemYearStatisticsLoaded<T, D>) {
                 selectedYear = state.year;
               }
 
               return IconButton(
-                icon: Icon(Icons.date_range),
+                icon: const Icon(Icons.date_range),
                 tooltip: GameCollectionLocalisations.of(context).changeYearString,
                 onPressed: () {
                   showDialog<int?>(
@@ -104,13 +104,13 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
       body: BlocBuilder<K, ItemStatisticsState>(
         builder: (BuildContext context, ItemStatisticsState state) {
 
-          if(state is ItemGeneralStatisticsLoaded<D>) {
+          if(state is ItemGeneralStatisticsLoaded<T, D>) {
 
             return Column(
               children: <Widget>[
                 Container(
                   child: ListTile(
-                    leading: Icon(Icons.all_inbox),
+                    leading: const Icon(Icons.all_inbox),
                     title: Text(GameCollectionLocalisations.of(context).generalString),
                   ),
                   color: Colors.grey,
@@ -118,7 +118,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
                 Expanded(
                   child: Scrollbar(
                     child: ListView(
-                      children: [
+                      children: <Widget>[
                         Column(
                           children: statisticsGeneralFieldsBuilder(context, state.itemData),
                         ),
@@ -130,13 +130,13 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
             );
 
           }
-          if(state is ItemYearStatisticsLoaded<D>) {
+          if(state is ItemYearStatisticsLoaded<T, D>) {
 
             return Column(
               children: <Widget>[
                 Container(
                   child: ListTile(
-                    leading: Icon(Icons.date_range),
+                    leading: const Icon(Icons.date_range),
                     title: Text(fromYearTitle(context, state.year)),
                   ),
                   color: Colors.grey,
@@ -144,7 +144,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
                 Expanded(
                   child: Scrollbar(
                     child: ListView(
-                      children: [
+                      children: <Widget>[
                         Column(
                           children: statisticsYearFieldsBuilder(context, state.itemData),
                         ),
@@ -157,7 +157,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
           }
 
-          return LinearProgressIndicator();
+          return const LinearProgressIndicator();
 
         },
       ),
@@ -247,14 +247,14 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabels<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>.filled(intervals.length - 1, '');
+    final List<String> labels = List<String>.filled(intervals.length - 1, '');
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
+      final String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
@@ -269,17 +269,17 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabelsWithInitial<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>.filled(intervals.length, '');
+    final List<String> labels = List<String>.filled(intervals.length, '');
     int index = 0;
 
-    String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
+    final String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
     labels[index++] = initialIntervalLabel;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
+      final String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
@@ -288,41 +288,41 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
   }
 
   List<String> formatIntervalLabelsWithLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>.filled(intervals.length, '');
+    final List<String> labels = List<String>.filled(intervals.length, '');
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
+      final String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
 
-    String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
+    final String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
     labels[index] = lastIntervalLabel;
 
     return labels;
   }
 
   List<String> formatIntervalLabelsWithInitialAndLast<N extends num>(List<N> intervals, String Function(N) formatValue) {
-    List<String> labels = List<String>.filled(intervals.length + 1, '');
+    final List<String> labels = List<String>.filled(intervals.length + 1, '');
     int index = 0;
 
-    String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
+    final String initialIntervalLabel = _formatIntervalInitialLabel<N>(intervals.first, formatValue);
     labels[index++] = initialIntervalLabel;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
+      final String intervalLabel = _formatIntervalLabel<N>(min, max, formatValue);
 
       labels[index++] = intervalLabel;
     }
 
-    String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
+    final String lastIntervalLabel = _formatIntervalLastLabel<N>(intervals.last, formatValue);
     labels[index] = lastIntervalLabel;
 
     return labels;

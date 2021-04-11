@@ -9,7 +9,7 @@ import 'ui/route.dart';
 import 'ui/route_constants.dart';
 
 
-void main() => runApp(GameCollection());
+void main() => runApp(const GameCollection());
 
 class GameCollection extends StatelessWidget {
   const GameCollection({
@@ -18,7 +18,7 @@ class GameCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
+    SystemChrome.setPreferredOrientations(<DeviceOrientation>[
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
@@ -30,17 +30,17 @@ class GameCollection extends StatelessWidget {
       ),
       initialRoute: connectRoute,
       onGenerateRoute: onGenerateRoute,
-      localizationsDelegates: [
+      localizationsDelegates: <LocalizationsDelegate<dynamic>>[
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         const GameCollectionLocalisationsDelegate(),
       ],
-      supportedLocales: [
-        const Locale('en', 'GB'),
-        const Locale('es', 'ES'),
-        const Locale('en'),
-        const Locale('es'),
+      supportedLocales: const <Locale>[
+        Locale('en', 'GB'),
+        Locale('es', 'ES'),
+        Locale('en'),
+        Locale('es'),
       ],
     );
 

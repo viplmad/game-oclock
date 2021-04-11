@@ -14,7 +14,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherId = event.otherItem.id;
+    final int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:
@@ -28,7 +28,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherId = event.otherItem.id;
+    final int otherId = event.otherItem.id;
 
     switch(W) {
       case Game:

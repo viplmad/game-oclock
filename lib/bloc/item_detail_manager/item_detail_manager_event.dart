@@ -7,7 +7,7 @@ abstract class ItemDetailManagerEvent extends Equatable {
   const ItemDetailManagerEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class UpdateItemField<T extends CollectionItem> extends ItemDetailManagerEvent {
@@ -17,7 +17,7 @@ class UpdateItemField<T extends CollectionItem> extends ItemDetailManagerEvent {
   final dynamic value;
 
   @override
-  List<Object> get props => [field, value];
+  List<Object> get props => <Object>[field, value as Object];
 
   @override
   String toString() => 'UpdateItemField { '
@@ -33,7 +33,7 @@ class AddItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
   final String? oldImageName;
 
   @override
-  List<Object> get props => [imagePath, oldImageName?? ''];
+  List<Object> get props => <Object>[imagePath, oldImageName?? ''];
 
   @override
   String toString() => 'AddItemImage { '
@@ -48,7 +48,7 @@ class UpdateItemImageName<T extends CollectionItem> extends ItemDetailManagerEve
   final String newImageName;
 
   @override
-  List<Object> get props => [oldImageName, newImageName];
+  List<Object> get props => <Object>[oldImageName, newImageName];
 
   @override
   String toString() => 'UpdateItemImageName { '
@@ -63,7 +63,7 @@ class DeleteItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
   final String imageName;
 
   @override
-  List<Object> get props => [imageName];
+  List<Object> get props => <Object>[imageName];
 
   @override
   String toString() => 'DeleteItemImage { '

@@ -41,7 +41,7 @@ class DismissibleItem extends StatelessWidget {
   Widget backgroundBuilder(AlignmentGeometry alignment) {
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.red,
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
       ),
@@ -81,7 +81,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
         child: _ItemListTile(
           title: title,
           subtitle: subtitle,
@@ -92,7 +92,7 @@ class ItemCard extends StatelessWidget {
         onTap: onTap,
         onLongPress: onLongPress,
       ),
-      margin: EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(0.0),
     );
   }
 }
@@ -119,7 +119,7 @@ class _ItemListTile extends StatelessWidget {
     return ListTile(
       leading: hasImage?
           ConstrainedBox(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               minWidth: 100,
               minHeight: 44,
               maxWidth: 100,
@@ -163,7 +163,7 @@ class ItemGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(4.0),),
+        borderRadius: const BorderRadius.all(Radius.circular(4.0),),
         child: _ItemGridTile(
           title: title,
           hasImage: hasImage,
@@ -200,7 +200,7 @@ class _ItemGridTile extends StatelessWidget {
         ) : Container(),
       footer: Container(
         color: Colors.black87.withOpacity(0.5),
-        child: Text(title, style: TextStyle(fontSize: 18.0, color: Colors.white),),
+        child: Text(title, style: const TextStyle(fontSize: 18.0, color: Colors.white),),
       ),
     );
 
@@ -248,7 +248,7 @@ class CachedImage extends StatelessWidget {
       imageUrl: imageURL,
       fit: fit,
       useOldImageOnUrlChange: true,
-      progressIndicatorBuilder: (context, url, downloadProgress) {
+      progressIndicatorBuilder: (BuildContext context, String url, DownloadProgress downloadProgress) {
         return Center(
           child: CircularProgressIndicator(value: downloadProgress.progress),
         );

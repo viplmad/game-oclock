@@ -44,10 +44,10 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
   @override
   Widget build(BuildContext context) {
 
-    S _managerBloc = managerBlocBuilder();
+    final S _managerBloc = managerBlocBuilder();
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<K>(
           create: (BuildContext context) {
             return detailBlocBuilder(_managerBloc)..add(LoadItem());
@@ -69,7 +69,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 
   K detailBlocBuilder(S managerBloc);
   S managerBlocBuilder();
-  List<BlocProvider> relationBlocsBuilder();
+  List<BlocProvider<dynamic>> relationBlocsBuilder();
 
   ItemDetailBody<T, K, S> detailBodyBuilder();
 }
@@ -100,14 +100,14 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           if(state is ItemFieldUpdated<T>) {
             _updatedItem = state.item;
 
-            String message = GameCollectionLocalisations.of(context).fieldUpdatedString;
+            final String message = GameCollectionLocalisations.of(context).fieldUpdatedString;
             showSnackBar(
               context,
               message: message,
             );
           }
           if(state is ItemFieldNotUpdated) {
-            String message = GameCollectionLocalisations.of(context).unableToUpdateFieldString;
+            final String message = GameCollectionLocalisations.of(context).unableToUpdateFieldString;
             showSnackBar(
               context,
               message: message,
@@ -122,14 +122,14 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           if(state is ItemImageUpdated<T>) {
             _updatedItem = state.item;
 
-            String message = GameCollectionLocalisations.of(context).imageUpdatedString;
+            final String message = GameCollectionLocalisations.of(context).imageUpdatedString;
             showSnackBar(
               context,
               message: message,
             );
           }
           if(state is ItemImageNotUpdated) {
-            String message = GameCollectionLocalisations.of(context).unableToUpdateImageString;
+            final String message = GameCollectionLocalisations.of(context).unableToUpdateImageString;
             showSnackBar(
               context,
               message: message,
@@ -145,7 +145,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         child: NestedScrollView(
           headerSliverBuilder: _appBarBuilder,
           body: ListView(
-            children: [
+            children: <Widget>[
               BlocBuilder<K, ItemDetailState> (
                 builder: (BuildContext context, ItemDetailState state) {
 
@@ -188,12 +188,12 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         pinned: true,
         snap: false,
         bottom: PreferredSize(
-          preferredSize: Size(double.maxFinite, 1.0,),
+          preferredSize: const Size(double.maxFinite, 1.0,),
           child: BlocBuilder<K, ItemDetailState> (
             builder: (BuildContext context, ItemDetailState state) {
 
               if(state is ItemLoading) {
-                return LinearProgressIndicator();
+                return const LinearProgressIndicator();
               }
 
               return Container();
@@ -260,13 +260,13 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ListTile(
             title: Text(withImage? imageFilename : ''),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             title: withImage?
               Text(GameCollectionLocalisations.of(context).replaceImageString)
               :
               Text(GameCollectionLocalisations.of(context).uploadImageString),
-            leading: Icon(Icons.file_upload),
+            leading: const Icon(Icons.file_upload),
             onTap: () {
               _picker.getImage(
                   source: ImageSource.gallery,
@@ -288,11 +288,11 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ),
           ListTile(
             title: Text(GameCollectionLocalisations.of(context).renameImageString),
-            leading: Icon(Icons.edit),
+            leading: const Icon(Icons.edit),
             enabled: withImage,
             onTap: () {
-              TextEditingController fieldController = TextEditingController();
-              String imageName = imageFilename.split('.').first;
+              final TextEditingController fieldController = TextEditingController();
+              final String imageName = imageFilename.split('.').first;
               fieldController.text = imageName.split('-').last.split('_').first;
 
               showDialog<String>(
@@ -347,10 +347,10 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
           ),
           ListTile(
             title: Text(GameCollectionLocalisations.of(context).deleteImageString),
-            leading: Icon(Icons.delete),
+            leading: const Icon(Icons.delete),
             enabled: withImage,
             onTap: () {
-              String imageName = imageFilename.split('.').first;
+              final String imageName = imageFilename.split('.').first;
 
               BlocProvider.of<S>(outerContext).add(
                 DeleteItemImage<T>(
@@ -400,7 +400,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         if (await canLaunch(value)) {
           await launch(value);
         } else {
-          String message = GameCollectionLocalisations.of(context).unableToLaunchString(value);
+          final String message = GameCollectionLocalisations.of(context).unableToLaunchString(value);
           showSnackBar(
             context,
             message: message,
@@ -562,7 +562,7 @@ class _ItemGenericField<K> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    void Function()? onTapWrapped = editable?
+    final void Function()? onTapWrapped = editable?
       () {
         onTap!().then( (K? newValue) {
           if (newValue != null) {
@@ -630,7 +630,7 @@ class _ItemTextField extends StatelessWidget {
       extended: isLongText,
       update: update,
       onTap: () {
-        TextEditingController fieldController = TextEditingController();
+        final TextEditingController fieldController = TextEditingController();
         fieldController.text = value?? '';
 
         return showDialog<String>(
@@ -891,12 +891,12 @@ class _EnumField extends StatelessWidget {
           children: List<Widget>.generate(
             enumValues.length,
                 (int index) {
-              String option = enumValues[index];
-              Color optionColour = enumColours.elementAt(index);
+              final String option = enumValues[index];
+              final Color optionColour = enumColours.elementAt(index);
 
               return ChoiceChip(
                 label: Text(option),
-                labelStyle: TextStyle(color: Colors.black87),
+                labelStyle: const TextStyle(color: Colors.black87),
                 selected: value == option,
                 selectedColor: optionColour.withOpacity(0.5),
                 pressElevation: 2.0,

@@ -8,7 +8,7 @@ abstract class MultiCalendarEvent extends Equatable {
   const MultiCalendarEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadCalendar extends MultiCalendarEvent {
@@ -17,7 +17,7 @@ class LoadCalendar extends MultiCalendarEvent {
   final int year;
 
   @override
-  List<Object> get props => [year];
+  List<Object> get props => <Object>[year];
 
   @override
   String toString() => 'LoadCalendar { '
@@ -37,7 +37,7 @@ class UpdateCalendar extends MultiCalendarEvent {
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [gamesWithLogs, logDates, focusedDate, selectedDate, style];
+  List<Object> get props => <Object>[gamesWithLogs, logDates, focusedDate, selectedDate, style];
 
   @override
   String toString() => 'UpdateCalendar { '
@@ -57,7 +57,7 @@ class UpdateSelectedDate extends MultiCalendarEvent {
   final DateTime date;
 
   @override
-  List<Object> get props => [date];
+  List<Object> get props => <Object>[date];
 
   @override
   String toString() => 'UpdateSelectedDate { '
@@ -81,7 +81,7 @@ class UpdateListItem extends MultiCalendarEvent {
   final Game item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'UpdateListItem { '

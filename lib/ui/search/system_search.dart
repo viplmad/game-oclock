@@ -58,7 +58,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   final String detailRouteName = '';
 
   @override
-  void Function() onTap(BuildContext context, System item) => () => {};
+  void Function() onTap(BuildContext context, System item) => () {};
 
   @override
   SystemListManagerBloc managerBlocBuilder() {

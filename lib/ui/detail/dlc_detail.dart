@@ -50,24 +50,24 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   }
 
   @override
-  List<BlocProvider> relationBlocsBuilder() {
+  List<BlocProvider<dynamic>> relationBlocsBuilder() {
 
-    DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
+    final DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
+    final DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    DLCFinishDateRelationManagerBloc _finishRelationManagerBloc = DLCFinishDateRelationManagerBloc(
+    final DLCFinishDateRelationManagerBloc _finishRelationManagerBloc = DLCFinishDateRelationManagerBloc(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return [
+    return <BlocProvider<dynamic>>[
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
 
@@ -137,7 +137,7 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, DLC dlc) {
 
-    return [
+    return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
@@ -165,7 +165,7 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
 
-    return [
+    return <Widget>[
       DLCGameRelationList(
         relationName: GameCollectionLocalisations.of(context).baseGameFieldString,
         relationTypeName: GameCollectionLocalisations.of(context).gameString,

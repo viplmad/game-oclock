@@ -241,7 +241,7 @@ abstract class GameCollectionLocalisations {
   String get noResultsString;
 
   static GameCollectionLocalisations of(BuildContext context) {
-    GameCollectionLocalisations? localisations = Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
+    final GameCollectionLocalisations? localisations = Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
     if(localisations == null) {
       throw Exception();
     }
@@ -254,18 +254,18 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
   const GameCollectionLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   Future<GameCollectionLocalisations> load(Locale locale) {
 
     switch (locale.languageCode) {
       case 'en':
-        return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
+        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
       case 'es':
         //TODO
       default:
-        return SynchronousFuture<GameCollectionLocalisations>(GameCollectionLocalisationsEn());
+        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
     }
 
   }

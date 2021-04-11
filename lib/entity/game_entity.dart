@@ -6,7 +6,7 @@ import 'entity.dart';
 const String gameTable = 'Game';
 const String gameTableRead = '_Game';
 
-const List<String> gameFields = [
+const List<String> gameFields = <String>[
   idField,
   game_nameField,
   game_editionField,
@@ -37,7 +37,7 @@ const String game_backupField = 'Backup';
 
 const String gameFinishTable = 'GameFinish';
 const String gameFinishTableRead = 'Game-Finish';
-const List<String> gameFinishFields = [
+const List<String> gameFinishFields = <String>[
   gameFinish_gameField,
   gameFinish_dateField,
 ];
@@ -46,7 +46,7 @@ const String gameFinish_dateField = 'Date';
 
 const String gameLogTable = 'GameLog';
 const String gameLogTableRead = 'Game-Log';
-const List<String> gameLogFields = [
+const List<String> gameLogFields = <String>[
   gameLog_gameField,
   gameLog_dateTimeField,
   gameLog_timeField,
@@ -55,7 +55,7 @@ const String gameLog_gameField = 'Game_ID';
 const String gameLog_dateTimeField = 'DateTime';
 const String gameLog_timeField = 'Time';
 
-const List<String> statuses = [
+const List<String> statuses = <String>[
   'Low Priority',
   'Next Up',
   'Playing',
@@ -95,19 +95,19 @@ class GameEntity extends CollectionItemEntity {
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameEntity(
-      id: map[idField],
-      name: map[game_nameField],
-      edition: map[game_editionField],
-      releaseYear: map[game_releaseYearField],
-      coverFilename: map[game_coverField],
-      status: map[game_statusField],
-      rating: map[game_ratingField],
-      thoughts: map[game_thoughtsField],
-      time: Duration(minutes: map[game_timeField]),
-      saveFolder: map[game_saveFolderField],
-      screenshotFolder: map[game_screenshotFolderField],
-      finishDate: map[game_finishDateField],
-      isBackup: map[game_backupField],
+      id: map[idField] as int,
+      name: map[game_nameField] as String,
+      edition: map[game_editionField] as String,
+      releaseYear: map[game_releaseYearField] as int?,
+      coverFilename: map[game_coverField] as String?,
+      status: map[game_statusField] as String,
+      rating: map[game_ratingField] as int,
+      thoughts: map[game_thoughtsField] as String,
+      time: Duration(minutes: map[game_timeField] as int),
+      saveFolder: map[game_saveFolderField] as String,
+      screenshotFolder: map[game_screenshotFolderField] as String,
+      finishDate: map[game_finishDateField] as DateTime?,
+      isBackup: map[game_backupField] as bool,
     );
 
   }
@@ -135,10 +135,10 @@ class GameEntity extends CollectionItemEntity {
 
   static List<GameEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<GameEntity> gamesList = [];
+    final List<GameEntity> gamesList = <GameEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameTable) );
+      final GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameTable) );
 
       gamesList.add(game);
     });
@@ -148,7 +148,7 @@ class GameEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
     edition,
@@ -188,8 +188,8 @@ class TimeLogEntity extends Equatable {
   static TimeLogEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return TimeLogEntity(
-      dateTime: map[gameLog_dateTimeField],
-      time: Duration(minutes: map[gameLog_timeField]),
+      dateTime: map[gameLog_dateTimeField] as DateTime,
+      time: Duration(minutes: map[gameLog_timeField] as int),
     );
 
   }
@@ -205,10 +205,10 @@ class TimeLogEntity extends Equatable {
 
   static List<TimeLogEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<TimeLogEntity> timeLogsList = [];
+    final List<TimeLogEntity> timeLogsList = <TimeLogEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      TimeLogEntity log = TimeLogEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameLogTable) );
+      final TimeLogEntity log = TimeLogEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, gameLogTable) );
 
       timeLogsList.add(log);
     });
@@ -218,7 +218,7 @@ class TimeLogEntity extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     dateTime,
     time,
   ];
@@ -241,7 +241,7 @@ class GameWithLogsEntity extends Equatable {
     List<TimeLogEntity>? timeLogs,
   }) {
 
-    this.timeLogs = timeLogs?? [];
+    this.timeLogs = timeLogs?? <TimeLogEntity>[];
 
   }
 
@@ -254,16 +254,16 @@ class GameWithLogsEntity extends Equatable {
 
   static List<GameWithLogsEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<GameWithLogsEntity> gamesWithLogsList = [];
+    final List<GameWithLogsEntity> gamesWithLogsList = <GameWithLogsEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
 
-      Map<String, dynamic> gameMap = manyMap[gameTable]!;
-      gameMap["Time"] = 0;
-      GameEntity gameEntity = GameEntity.fromDynamicMap(gameMap);
+      final Map<String, dynamic> gameMap = manyMap[gameTable]!;
+      gameMap[game_timeField] = 0;
+      final GameEntity gameEntity = GameEntity.fromDynamicMap(gameMap);
 
-      Map<String, dynamic> timeLogMap = CollectionItemEntity.combineMaps(manyMap, gameLogTable);
-      TimeLogEntity timeLogEntity = TimeLogEntity.fromDynamicMap(timeLogMap);
+      final Map<String, dynamic> timeLogMap = CollectionItemEntity.combineMaps(manyMap, gameLogTable);
+      final TimeLogEntity timeLogEntity = TimeLogEntity.fromDynamicMap(timeLogMap);
 
       GameWithLogsEntity gameWithLogs;
       try {
@@ -282,7 +282,7 @@ class GameWithLogsEntity extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     game,
     timeLogs,
   ];

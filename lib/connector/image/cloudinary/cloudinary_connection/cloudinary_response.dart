@@ -19,27 +19,27 @@ class CloudinaryResponse {
 
   CloudinaryResponse.fromJsonMap(Map<String, dynamic> map)
       : isError = false,
-        publicId = map['public_id'],
-        version = map['version'],
-        width = map['width'],
-        height = map['height'],
-        format = map['format'],
-        createdAt = map['created_at'],
-        resourceType = map['resource_type'],
-        tags = map['tags'],
-        bytes = map['bytes'],
-        type = map['type'],
-        etag = map['etag'],
-        url = map['url'],
-        secureUrl = map['secure_url'],
-        signature = map['signature'],
-        originalFilename = map['original_filename'];
+        publicId = map['public_id'] as String,
+        version = map['version'] as int,
+        width = map['width'] as int,
+        height = map['height'] as int,
+        format = map['format'] as String,
+        createdAt = map['created_at'] as String,
+        resourceType = map['resource_type'] as String,
+        tags = map['tags'] as List<Object>,
+        bytes = map['bytes'] as int,
+        type = map['type'] as String,
+        etag = map['etag'] as String,
+        url = map['url'] as String,
+        secureUrl = map['secure_url'] as String,
+        signature = map['signature'] as String,
+        originalFilename = map['original_filename'] as String;
 
   CloudinaryResponse.fromError(this.error)
       : isError = true;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['public_id'] = publicId;
     data['version'] = version;
     data['width'] = width;

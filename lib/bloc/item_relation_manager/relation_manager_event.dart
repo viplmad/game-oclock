@@ -5,7 +5,7 @@ abstract class RelationManagerEvent extends Equatable {
   const RelationManagerEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AddRelation<O extends Object> extends RelationManagerEvent {
@@ -14,7 +14,7 @@ class AddRelation<O extends Object> extends RelationManagerEvent {
   final O otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'AddItemRelation { '
@@ -28,7 +28,7 @@ class DeleteRelation<O extends Object> extends RelationManagerEvent {
   final O otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'DeleteItemRelation { '

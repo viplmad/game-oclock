@@ -59,7 +59,7 @@ class Game extends CollectionItem {
   ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
 
   @override
-  String get queryableTerms => [this.name, this.edition].join(',');
+  String get queryableTerms => <String>[this.name, this.edition].join(',');
 
   static Game fromEntity(GameEntity entity, [String? coverURL]) {
 
@@ -140,7 +140,7 @@ class Game extends CollectionItem {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
     edition,
@@ -218,7 +218,7 @@ class TimeLog extends Equatable implements Comparable<TimeLog> {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     dateTime,
     time,
   ];
@@ -270,7 +270,7 @@ class GameWithLogs extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     game,
     timeLogs,
   ];
@@ -294,37 +294,37 @@ class GamesData extends ItemData<Game> {
   final List<int> finishYears;
 
   int lowPriorityCount() {
-    int lowPriorityCount = items.where((item) => item.status == statuses.elementAt(0)).length;
+    final int lowPriorityCount = items.where((Game item) => item.status == statuses.elementAt(0)).length;
 
     return lowPriorityCount;
   }
 
   int nextUpCount() {
-    int nextUpCount = items.where((Game item) => item.status == statuses.elementAt(1)).length;
+    final int nextUpCount = items.where((Game item) => item.status == statuses.elementAt(1)).length;
 
     return nextUpCount;
   }
 
   int playingCount() {
-    int playingCount = items.where((Game item) => item.status == statuses.elementAt(2)).length;
+    final int playingCount = items.where((Game item) => item.status == statuses.elementAt(2)).length;
 
     return playingCount;
   }
 
   int playedCount() {
-    int playedCount = items.where((Game item) => item.status == statuses.elementAt(3)).length;
+    final int playedCount = items.where((Game item) => item.status == statuses.elementAt(3)).length;
 
     return playedCount;
   }
 
   int minutesSum() {
-    int minutesSum = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.time.inMinutes);
+    final int minutesSum = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.time.inMinutes);
 
     return minutesSum;
   }
 
   int ratingSum() {
-    int ratingSum = items.fold(0, (int previousValue, Game item) => previousValue + item.rating);
+    final int ratingSum = items.fold(0, (int previousValue, Game item) => previousValue + item.rating);
 
     return ratingSum;
   }

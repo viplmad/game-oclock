@@ -7,7 +7,7 @@ abstract class ItemRelationState extends Equatable {
   const ItemRelationState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class ItemRelationLoading extends ItemRelationState {}
@@ -18,7 +18,7 @@ class ItemRelationLoaded<W extends CollectionItem> extends ItemRelationState {
   final List<W> otherItems;
 
   @override
-  List<Object> get props => [otherItems];
+  List<Object> get props => <Object>[otherItems];
 
   @override
   String toString() => 'ItemRelationLoaded { '
@@ -32,7 +32,7 @@ class ItemRelationNotLoaded extends ItemRelationState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemRelationNotLoaded { '

@@ -3,12 +3,12 @@ import 'entity.dart';
 
 const String tagTable = 'Tag';
 
-const tagFields = [
+const List<String> tagFields = <String>[
   idField,
   tag_nameField,
 ];
 
-const tag_nameField = 'Name';
+const String tag_nameField = 'Name';
 
 class TagEntity extends CollectionItemEntity {
   const TagEntity({
@@ -21,8 +21,8 @@ class TagEntity extends CollectionItemEntity {
   static TagEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return TagEntity(
-      id: map[idField],
-      name: map[tag_nameField],
+      id: map[idField] as int,
+      name: map[tag_nameField] as String,
     );
 
   }
@@ -39,10 +39,10 @@ class TagEntity extends CollectionItemEntity {
 
   static List<TagEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<TagEntity> tagsList = [];
+    final List<TagEntity> tagsList = <TagEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      TagEntity tag = TagEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, tagTable) );
+      final TagEntity tag = TagEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, tagTable) );
 
       tagsList.add(tag);
     });
@@ -52,7 +52,7 @@ class TagEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

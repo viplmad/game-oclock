@@ -22,7 +22,7 @@ class CloudinaryConnector extends IImageConnector {
 
   void createConnection() {
 
-    this._connection = new CloudinaryConnection(
+    this._connection = CloudinaryConnection(
       _instance.apiKey.toString(),
       _instance.apiSecret,
       _instance.cloudName,
@@ -72,7 +72,7 @@ class CloudinaryConnector extends IImageConnector {
   @override
   String getURI({required String tableName, required String imageFilename}) {
 
-    String baseURL = getCompleteResURL(tableName, imageFilename);
+    final String baseURL = getCompleteResURL(tableName, imageFilename);
 
     return baseURL;
 
@@ -83,7 +83,7 @@ class CloudinaryConnector extends IImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageFilename) {
 
-    String url = _baseRESURL + _instance.cloudName + '/image/upload/$folderName/$imageFilename';
+    final String url = _baseRESURL + _instance.cloudName + '/image/upload/$folderName/$imageFilename';
 
     return url;
 
@@ -91,7 +91,7 @@ class CloudinaryConnector extends IImageConnector {
 
   String getCompleteAPIURL() {
 
-    String url = _baseAPIURL + _instance.cloudName + '/image/upload';
+    final String url = _baseAPIURL + _instance.cloudName + '/image/upload';
 
     return url;
 
@@ -121,12 +121,12 @@ class CloudinaryInstance {
 
   factory CloudinaryInstance.fromString(String connectionString) {
 
-    RegExp pattern = RegExp(_cloudinaryURIPattern);
+    final RegExp pattern = RegExp(_cloudinaryURIPattern);
 
-    RegExpMatch? match = pattern.firstMatch(connectionString);
+    final RegExpMatch? match = pattern.firstMatch(connectionString);
 
     if (match == null) {
-      throw FormatException('Could not parse Cloudinary connection string.');
+      throw const FormatException('Could not parse Cloudinary connection string.');
     }
 
     return CloudinaryInstance(

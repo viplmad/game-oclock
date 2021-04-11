@@ -42,7 +42,10 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield ItemNotAdded(e.toString());
+
       }
     }
 

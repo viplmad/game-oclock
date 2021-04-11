@@ -3,7 +3,7 @@ import 'entity.dart';
 
 const String typeTable = 'Type';
 
-const List<String> typeFields = [
+const List<String> typeFields = <String>[
   idField,
   type_nameField,
 ];
@@ -21,8 +21,8 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   static PurchaseTypeEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
-      id: map[idField],
-      name: map[type_nameField],
+      id: map[idField] as int,
+      name: map[type_nameField] as String,
     );
 
   }
@@ -39,10 +39,10 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   static List<PurchaseTypeEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<PurchaseTypeEntity> typesList = [];
+    final List<PurchaseTypeEntity> typesList = <PurchaseTypeEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      PurchaseTypeEntity type = PurchaseTypeEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, typeTable) );
+      final PurchaseTypeEntity type = PurchaseTypeEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, typeTable) );
 
       typesList.add(type);
     });
@@ -52,7 +52,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

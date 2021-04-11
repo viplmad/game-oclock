@@ -24,7 +24,7 @@ class TypeListBloc extends ItemListBloc<PurchaseType> {
   @override
   Stream<List<PurchaseType>> getReadViewStream(UpdateView event) {
 
-    TypeView typeView = TypeView.values[event.viewIndex];
+    final TypeView typeView = TypeView.values[event.viewIndex];
 
     return iCollectionRepository.getTypesWithView(typeView);
 

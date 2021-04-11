@@ -50,14 +50,17 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
   Stream<RelationState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield RelationNotLoaded('Connection lost. Trying to reconnect');
+      yield const RelationNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield RelationNotLoaded(e.toString());
+
       }
     }
 
@@ -89,7 +92,7 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
   Stream<RelationState> _mapUpdateItemToState(UpdateRelationElement<O> event) async* {
 
     if(state is RelationLoaded<O>) {
-      List<O> items = List.from((state as RelationLoaded<O>).otherItems);
+      final List<O> items = List<O>.from((state as RelationLoaded<O>).otherItems);
 
       final int listItemIndex = items.indexWhere((O element) => element == event.oldItem);
       final O listItem = items.elementAt(listItemIndex);
@@ -121,9 +124,9 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
   void _mapAddedToEvent(RelationAdded<O> managerState) {
 
     if(state is RelationLoaded<O>) {
-      List<O> items = (state as RelationLoaded<O>).otherItems;
+      final List<O> items = (state as RelationLoaded<O>).otherItems;
 
-      final List<O> updatedItems = List.from(items)..add(managerState.otherItem);
+      final List<O> updatedItems = List<O>.from(items)..add(managerState.otherItem);
 
       add(UpdateElementRelation<O>(updatedItems..sort()));
     }
@@ -133,7 +136,7 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
   void _mapDeletedToEvent(RelationDeleted<O> managerState) {
 
     if(state is RelationLoaded<O>) {
-      List<O> items = (state as RelationLoaded<O>).otherItems;
+      final List<O> items = (state as RelationLoaded<O>).otherItems;
 
       final List<O> updatedItems = items
           .where((O element) => element != managerState.otherItem)
@@ -154,7 +157,7 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
 
   Stream<List<O>> getRelationStream() {
 
-    return Stream.error('Relation does not exist');
+    return Stream<List<O>>.error('Relation does not exist');
 
   }
 }

@@ -14,7 +14,7 @@ class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationMan
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    int otherId = event.otherItem.id;
+    final int otherId = event.otherItem.id;
 
     switch(W) {
       case Purchase:
@@ -28,7 +28,7 @@ class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationMan
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    int otherId = event.otherItem.id;
+    final int otherId = event.otherItem.id;
 
     switch(W) {
       case Purchase:

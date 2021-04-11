@@ -22,10 +22,10 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return searchBlocBuilder()..add(SearchTextChanged());
+            return searchBlocBuilder()..add(const SearchTextChanged());
           },
         ),
 
@@ -72,12 +72,12 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<ItemLocalSearchBloc<T>>(
           create: (BuildContext context) {
             return ItemLocalSearchBloc<T>(
               items: items,
-            )..add(SearchTextChanged());
+            )..add(const SearchTextChanged());
           },
         ),
 
@@ -102,7 +102,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: DetailArguments(
+        arguments: DetailArguments<T>(
           item: item,
         ),
       );
@@ -159,8 +159,8 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           },
           maxLines: 1,
           decoration: InputDecoration(
-            border: UnderlineInputBorder(),
-            prefixIcon: Icon(Icons.search),
+            border: const UnderlineInputBorder(),
+            prefixIcon: const Icon(Icons.search),
             hintText: GameCollectionLocalisations.of(context).searchString(widget.typesName(context)),
           ),
         ),
@@ -173,7 +173,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
           }
           if(state is ItemNotAdded) {
-            String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
+            final String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
             showSnackBar(
               context,
               message: message,
@@ -218,7 +218,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
                 }
 
-                return LinearProgressIndicator();
+                return const LinearProgressIndicator();
 
               },
             ),
@@ -233,7 +233,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
 
     return <Widget> [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         tooltip: GameCollectionLocalisations.of(context).clearSearchString,
         onPressed: () {
           _textEditingController.clear();
@@ -281,7 +281,7 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
           padding: const EdgeInsets.all(8.0),
           itemCount: results.length,
           itemBuilder: (BuildContext context, int index) {
-            T result = results[index];
+            final T result = results[index];
 
             return Padding(
               padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),

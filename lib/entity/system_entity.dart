@@ -3,7 +3,7 @@ import 'entity.dart';
 
 const String systemTable = 'System';
 
-const List<String> systemTables = [
+const List<String> systemTables = <String>[
   idField,
   sys_nameField,
   sys_iconField,
@@ -16,7 +16,7 @@ const String sys_iconField = 'Icon';
 const String sys_generationField = 'Generation';
 const String sys_manufacturerField = 'Manufacturer';
 
-List<String> manufacturers = [
+List<String> manufacturers = <String>[
   'Nintendo',
   'Sony',
   'Microsoft',
@@ -40,11 +40,11 @@ class SystemEntity extends CollectionItemEntity {
   static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return SystemEntity(
-      id: map[idField],
-      name: map[sys_nameField],
-      iconFilename: map[sys_iconField],
-      generation: map[sys_generationField],
-      manufacturer: map[sys_manufacturerField],
+      id: map[idField] as int,
+      name: map[sys_nameField] as String,
+      iconFilename: map[sys_iconField] as String?,
+      generation: map[sys_generationField] as int,
+      manufacturer: map[sys_manufacturerField] as String?,
     );
 
   }
@@ -64,10 +64,10 @@ class SystemEntity extends CollectionItemEntity {
 
   static List<SystemEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<SystemEntity> systemsList = [];
+    final List<SystemEntity> systemsList = <SystemEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, systemTable) );
+      final SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, systemTable) );
 
       systemsList.add(system);
     });
@@ -77,7 +77,7 @@ class SystemEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

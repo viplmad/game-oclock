@@ -8,31 +8,36 @@ abstract class SingleCalendarState extends Equatable {
   const SingleCalendarState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class CalendarLoading extends SingleCalendarState {}
 
 class CalendarLoaded extends SingleCalendarState {
-  const CalendarLoaded(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, [this.style = CalendarStyle.List]);
+  // ignore: avoid_positional_boolean_parameters
+  const CalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, [this.style = CalendarStyle.List]);
 
   final List<TimeLog> timeLogs;
+  final Set<DateTime> logDates;
   final List<DateTime> finishDates;
   final DateTime selectedDate;
   final List<TimeLog> selectedTimeLogs;
   final bool isSelectedDateFinish;
+  final Duration selectedTotalTime;
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [timeLogs, finishDates, selectedDate, style];
+  List<Object> get props => <Object>[timeLogs, logDates, finishDates, selectedDate, style];
 
   @override
   String toString() => 'CalendarLoaded { '
       'timeLogs: $timeLogs, '
+      'logDates: $logDates, '
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
       'selectedTimeLogs: $selectedTimeLogs, '
       'isSelectedDateFinish: $isSelectedDateFinish, '
+      'selectedTotalTime: $selectedTotalTime, '
       'style: $style'
       ' }';
 }
@@ -43,7 +48,7 @@ class CalendarNotLoaded extends SingleCalendarState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'CalendarNotLoaded { '

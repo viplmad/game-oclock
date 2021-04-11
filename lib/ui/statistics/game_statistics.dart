@@ -66,14 +66,14 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   @override
   List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, GamesData data) {
-    int totalItems = data.length;
+    final int totalItems = data.length;
 
-    int playingCount = data.playingCount();
-    int playedCount = data.playedCount();
-    int playingPlayedCount = playingCount + playedCount;
-    int minutesSum = data.minutesSum();
+    final int playingCount = data.playingCount();
+    final int playedCount = data.playedCount();
+    final int playingPlayedCount = playingCount + playedCount;
+    final int minutesSum = data.minutesSum();
 
-    return [
+    return <Widget>[
       statisticsIntField(
         context,
         fieldName: GameCollectionLocalisations.of(context).totalGamesString,
@@ -122,13 +122,13 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
           ),
         ],
       ),
-      Divider(),
+      const Divider(),
       _countByReleaseYear(context, data),
-      Divider(),
+      const Divider(),
       _avgRatingByFinishDate(context, data),
-      Divider(),
+      const Divider(),
       _sumTimeByFinishDate(context, data),
-      Divider(),
+      const Divider(),
       _countByFinishDate(context, data),
     ];
 
@@ -136,14 +136,14 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   @override
   List<Widget> statisticsYearFieldsBuilder(BuildContext context, GamesData data) {
-    int totalItems = data.length;
+    final int totalItems = data.length;
 
-    int playingCount = data.playingCount();
-    int playedCount = data.playedCount();
-    int playingPlayedCount = playingCount + playedCount;
-    int minutesSum = data.minutesSum();
+    final int playingCount = data.playingCount();
+    final int playedCount = data.playedCount();
+    final int playingPlayedCount = playingCount + playedCount;
+    final int minutesSum = data.minutesSum();
 
-    return [
+    return <Widget>[
       statisticsIntField(
         context,
         fieldName: GameCollectionLocalisations.of(context).totalGamesPlayedString,
@@ -163,13 +163,13 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
         fieldName: GameCollectionLocalisations.of(context).avgRatingString,
         value: (playingPlayedCount > 0)? data.ratingSum() / playingPlayedCount : 0,
       ),
-      Divider(),
+      const Divider(),
       _countByRating(context, data),
-      Divider(),
+      const Divider(),
       _countByReleaseYear(context, data),
-      Divider(),
+      const Divider(),
       _countByTime(context, data),
-      Divider(),
+      const Divider(),
       _sumTimeByMonth(context, data),
     ];
 
@@ -178,8 +178,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   //#region Common
   Widget _countByReleaseYear(BuildContext context, GamesData data) {
 
-    List<int> intervals = [1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020];
-    List<String> domainLabels = formatIntervalLabels<int>(
+    final List<int> intervals = <int>[1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020];
+    final List<String> domainLabels = formatIntervalLabels<int>(
       intervals,
       (int element) => GameCollectionLocalisations.of(context).shortYearString(element),
     );
@@ -196,8 +196,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   Widget _countByRating(BuildContext context, GamesData data) {
 
-    List<int> intervals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> intervals = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       intervals,
       (int element) => element.toString(),
     );
@@ -214,8 +214,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   Widget _countByTime(BuildContext context, GamesData data) {
 
-    List<int> intervals = [0, 5, 10, 15, 20, 25, 30, 40, 50, 100];
-    List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<int>(
+    final List<int> intervals = <int>[0, 5, 10, 15, 20, 25, 30, 40, 50, 100];
+    final List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<int>(
       intervals,
       (int element) => element.toString(),
     );
@@ -235,8 +235,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
   //#region General
   Widget _avgRatingByFinishDate(BuildContext context, GamesData data) {
 
-    List<int> finishYears = data.finishYears;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> finishYears = data.finishYears;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );
@@ -254,8 +254,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   Widget _sumTimeByFinishDate(BuildContext context, GamesData data) {
 
-    List<int> finishYears = data.finishYears;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> finishYears = data.finishYears;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );
@@ -273,8 +273,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
 
   Widget _countByFinishDate(BuildContext context, GamesData data) {
 
-    List<int> finishYears = data.finishYears;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> finishYears = data.finishYears;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );

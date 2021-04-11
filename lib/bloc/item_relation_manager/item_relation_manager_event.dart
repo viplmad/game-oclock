@@ -7,7 +7,7 @@ abstract class ItemRelationManagerEvent extends Equatable {
   const ItemRelationManagerEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AddItemRelation<W extends CollectionItem> extends ItemRelationManagerEvent {
@@ -16,7 +16,7 @@ class AddItemRelation<W extends CollectionItem> extends ItemRelationManagerEvent
   final W otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'AddItemRelation { '
@@ -30,7 +30,7 @@ class DeleteItemRelation<W extends CollectionItem> extends ItemRelationManagerEv
   final W otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'DeleteItemRelation { '

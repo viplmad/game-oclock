@@ -1,0 +1,23 @@
+include: package:pedantic/analysis_options.1.8.0.yaml
+
+analyzer:
+  exclude: [build/**]
+  strong-mode:
+    implicit-casts: false
+
+linter:
+  rules:
+    - prefer_single_quotes
+    - prefer_final_locals
+    - prefer_final_in_for_each
+    - avoid_type_to_string
+    - always_declare_return_types
+    - annotate_overrides
+    - prefer_final_fields
+    - avoid_print
+    - always_specify_types
+    - avoid_positional_boolean_parameters
+    - prefer_const_constructors
+    - no_runtimeType_toString
+    - avoid_renaming_method_parameters
+    - sized_box_for_whitespace

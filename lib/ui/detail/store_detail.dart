@@ -49,14 +49,14 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }
 
   @override
-  List<BlocProvider> relationBlocsBuilder() {
+  List<BlocProvider<dynamic>> relationBlocsBuilder() {
 
-    StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
+    final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return [
+    return <BlocProvider<dynamic>>[
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
 
       BlocProvider<StoreRelationManagerBloc<Purchase>>(
@@ -105,7 +105,7 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Store store) {
 
-    return [
+    return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
@@ -119,7 +119,7 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
 
-    return [
+    return <Widget>[
       StorePurchaseRelationList(
         relationName: GameCollectionLocalisations.of(context).purchasesString,
         relationTypeName: GameCollectionLocalisations.of(context).purchaseString,
@@ -132,10 +132,10 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
             totalValue += purchase.originalPrice;
           });
 
-          double totalSaved = totalValue - totalSpent;
-          double totalPercentageSaved = totalValue > 0? (1 - totalSpent / totalValue) : 0;
+          final double totalSaved = totalValue - totalSpent;
+          final double totalPercentageSaved = totalValue > 0? (1 - totalSpent / totalValue) : 0;
 
-          return [
+          return <Widget>[
             itemMoneySumField(
               context,
               fieldName: GameCollectionLocalisations.of(context).totalMoneySpentString,

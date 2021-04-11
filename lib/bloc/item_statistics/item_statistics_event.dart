@@ -5,7 +5,7 @@ abstract class ItemStatisticsEvent extends Equatable {
   const ItemStatisticsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadGeneralItemStatistics extends ItemStatisticsEvent {}
@@ -16,7 +16,7 @@ class LoadYearItemStatistics extends ItemStatisticsEvent {
   final int year;
 
   @override
-  List<Object> get props => [year];
+  List<Object> get props => <Object>[year];
 
   @override
   String toString() => 'LoadYearItemStatistics { '

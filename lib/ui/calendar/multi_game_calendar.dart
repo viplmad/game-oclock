@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:table_calendar/table_calendar.dart' as tableCalendar;
+import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
 import 'package:game_collection/utils/datetime_extension.dart';
 
@@ -33,37 +33,37 @@ class MultiGameCalendar extends StatelessWidget {
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return BlocProvider(
+    return BlocProvider<MultiCalendarBloc>(
       create: (BuildContext context) {
         return _bloc..add(LoadCalendar(DateTime.now().year));
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).multiCalendarViewString),
-          actions: [
+          actions: <IconButton>[
             IconButton(
-              icon: Icon(Icons.first_page),
+              icon: const Icon(Icons.first_page),
               tooltip: GameCollectionLocalisations.of(context).firstTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateFirst());
               },
             ),
             IconButton(
-              icon: Icon(Icons.navigate_before),
+              icon: const Icon(Icons.navigate_before),
               tooltip: GameCollectionLocalisations.of(context).previousTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDatePrevious());
               },
             ),
             IconButton(
-              icon: Icon(Icons.navigate_next),
+              icon: const Icon(Icons.navigate_next),
               tooltip: GameCollectionLocalisations.of(context).nextTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateNext());
               },
             ),
             IconButton(
-              icon: Icon(Icons.last_page),
+              icon: const Icon(Icons.last_page),
               tooltip: GameCollectionLocalisations.of(context).lastTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateLast());
@@ -128,7 +128,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
         }
 
-        return LoadingIcon();
+        return const LoadingIcon();
 
       },
     );
@@ -141,7 +141,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       lastDate = logDates.last;
     }
 
-    return tableCalendar.TableCalendar<DateTime>(
+    return table_calendar.TableCalendar<DateTime>(
       firstDay: DateTime(1970),
       lastDay: lastDate,
       focusedDay: focusedDate,
@@ -158,17 +158,17 @@ class _MultiGameCalendarBody extends StatelessWidget {
       eventLoader: (DateTime date) {
         return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
       },
-      startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      weekendDays: const [
+      startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
+      weekendDays: const <int>[
         DateTime.saturday,
         DateTime.sunday
       ],
       pageJumpingEnabled: true,
-      availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
-      availableCalendarFormats: const {
-        tableCalendar.CalendarFormat.month: '',
+      availableGestures: table_calendar.AvailableGestures.horizontalSwipe,
+      availableCalendarFormats: const <table_calendar.CalendarFormat, String>{
+        table_calendar.CalendarFormat.month: '',
       },
-      headerStyle: const tableCalendar.HeaderStyle(
+      headerStyle: const table_calendar.HeaderStyle(
         titleCentered: true,
         formatButtonVisible: false,
       ),
@@ -180,7 +180,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         );
       },
       rowHeight: 65.0,
-      calendarStyle: tableCalendar.CalendarStyle(
+      calendarStyle: table_calendar.CalendarStyle(
         isTodayHighlighted: true,
         outsideDaysVisible: false,
         todayDecoration: BoxDecoration(
@@ -204,13 +204,13 @@ class _MultiGameCalendarBody extends StatelessWidget {
           color: GameTheme.playedStatusColour,
           shape: BoxShape.circle,
         ),
-        holidayTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
+        holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
         ///WEEKEND
         weekendDecoration: BoxDecoration(
           color: Colors.grey.withAlpha(50),
           shape: BoxShape.circle,
         ),
-        weekendTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
+        weekendTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
       ),
     );
   }
@@ -227,7 +227,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       shrinkWrap: true,
       itemCount: gamesWithLogs.length,
       itemBuilder: (BuildContext context, int index) {
-        GameWithLogs gameWithLogs = gamesWithLogs.elementAt(index);
+        final GameWithLogs gameWithLogs = gamesWithLogs.elementAt(index);
 
         return Padding(
           padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),

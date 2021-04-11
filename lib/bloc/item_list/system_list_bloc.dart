@@ -24,7 +24,7 @@ class SystemListBloc extends ItemListBloc<System> {
   @override
   Stream<List<System>> getReadViewStream(UpdateView event) {
 
-    SystemView systemView = SystemView.values[event.viewIndex];
+    final SystemView systemView = SystemView.values[event.viewIndex];
 
     return iCollectionRepository.getSystemsWithView(systemView);
 

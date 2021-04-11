@@ -8,7 +8,7 @@ abstract class ItemListState extends Equatable {
   const ItemListState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class ItemListLoading extends ItemListState {}
@@ -24,7 +24,7 @@ class ItemListLoaded<T extends CollectionItem> extends ItemListState {
   final ListStyle style;
 
   @override
-  List<Object> get props => [items, viewIndex, year, style];
+  List<Object> get props => <Object>[items, viewIndex, year, style];
 
   @override
   String toString() => 'ItemListLoaded { '
@@ -41,7 +41,7 @@ class ItemListNotLoaded extends ItemListState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemListNotLoaded { '

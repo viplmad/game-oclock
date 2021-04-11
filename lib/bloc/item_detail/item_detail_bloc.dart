@@ -50,14 +50,17 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
   Stream<ItemDetailState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield ItemNotLoaded('Connection lost. Trying to reconnect');
+      yield const ItemNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield ItemNotLoaded(e.toString());
+
       }
     }
 

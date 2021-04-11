@@ -30,12 +30,12 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
     return (int selectedViewIndex) async {
 
       if(selectedViewIndex == views.length - 1) {
-        int? year = await showDialog<int>(
+        final int? year = await showDialog<int>(
           context: context,
           builder: (BuildContext context) {
             return Theme(
               data: PurchaseTheme.themeData(context),
-              child: YearPickerDialog(),
+              child: const YearPickerDialog(),
             );
           },
         );

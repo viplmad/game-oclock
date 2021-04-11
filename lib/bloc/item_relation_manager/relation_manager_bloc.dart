@@ -45,6 +45,9 @@ abstract class RelationManagerBloc<T extends CollectionItem, O extends Object> e
         await iCollectionRepository.open();
 
       } catch(e) {
+
+        yield RelationNotAdded(e.toString());
+
       }
     }
 
@@ -82,12 +85,12 @@ abstract class RelationManagerBloc<T extends CollectionItem, O extends Object> e
 
   Future<dynamic> addRelationFuture(AddRelation<O> event) {
 
-    return Future.error('Relation does not exist');
+    return Future<dynamic>.error('Relation does not exist');
 
   }
   Future<dynamic> deleteRelationFuture(DeleteRelation<O> event) {
 
-    return Future.error('Relation does not exist');
+    return Future<dynamic>.error('Relation does not exist');
 
   }
 }

@@ -33,9 +33,9 @@ class GameTheme {
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
       ),
-      textButtonTheme: TextButtonThemeData(
+      textButtonTheme: const TextButtonThemeData(
         style: ButtonStyle(
-
+          //TODO ?
         ),
       ),
     );

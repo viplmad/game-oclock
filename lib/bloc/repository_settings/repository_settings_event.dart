@@ -7,7 +7,7 @@ abstract class RepositorySettingsEvent extends Equatable {
   const RepositorySettingsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadRepositorySettings extends RepositorySettingsEvent {}
@@ -18,7 +18,7 @@ class UpdateRepositorySettingsRadio extends RepositorySettingsEvent {
   final RepositoryType radio;
 
   @override
-  List<Object> get props => [radio];
+  List<Object> get props => <Object>[radio];
 
   @override
   String toString() => 'UpdateRepositorySettingsRadio { '

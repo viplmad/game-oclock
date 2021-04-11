@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 
@@ -77,14 +78,17 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
   Stream<SingleCalendarState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield CalendarNotLoaded('Connection lost. Trying to reconnect');
+      yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield CalendarNotLoaded(e.toString());
+
       }
     }
 
@@ -96,27 +100,34 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     try {
 
-      List<TimeLog> timeLogs = await getReadAllTimeLogsStream().first;
+      final List<TimeLog> timeLogs = await getReadAllTimeLogsStream().first;
       final List<DateTime> finishDates = await getReadAllFinishDatesStream().first;
+
+      final Set<DateTime> logDates = timeLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, TimeLog log) => previousDates..add(log.dateTime));
 
       DateTime selectedDate = DateTime.now();
       List<TimeLog> selectedTimeLogs = <TimeLog>[];
-      if(timeLogs.isNotEmpty) {
-        timeLogs..sort();
-        selectedDate = timeLogs.last.dateTime;
+      if(logDates.isNotEmpty) {
+        selectedDate = logDates.last;
+
         selectedTimeLogs = timeLogs
             .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
-            .toList(growable: false);
+            .toList(growable: false)..sort();
       }
 
-      bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(selectedDate));
+      final bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(selectedDate));
+
+      final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
+      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
 
       yield CalendarLoaded(
         timeLogs,
+        logDates,
         finishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
       );
 
     } catch (e) {
@@ -131,23 +142,30 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final CalendarStyle style = (state as CalendarLoaded).style;
       final DateTime previousSelectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
+      Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
 
       if((style == CalendarStyle.List) || (style == CalendarStyle.Graph && !event.date.isInWeekOf(previousSelectedDate))) {
         selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
+
+        final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
+        selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
       }
 
-      bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(event.date));
+      final bool isSelectedDateFinish = finishDates.any((DateTime date) => date.isSameDate(event.date));
 
       yield CalendarLoaded(
         timeLogs,
+        logDates,
         finishDates,
         event.date,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         style,
       );
     }
@@ -157,10 +175,10 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
   Stream<SingleCalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
 
     if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
 
-      if(timeLogs.isNotEmpty) {
-        DateTime firstDate = timeLogs.first.dateTime;
+      if(logDates.isNotEmpty) {
+        final DateTime firstDate = logDates.first;
 
         add(UpdateSelectedDate(firstDate));
       }
@@ -171,10 +189,10 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
   Stream<SingleCalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
 
     if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
 
-      if(timeLogs.isNotEmpty) {
-        DateTime lastDate = timeLogs.last.dateTime;
+      if(logDates.isNotEmpty) {
+        final DateTime lastDate = logDates.last;
 
         add(UpdateSelectedDate(lastDate));
       }
@@ -185,19 +203,20 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
   Stream<SingleCalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
 
     if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
 
       DateTime? previousDate;
-      if(timeLogs.isNotEmpty) {
-        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(selectedDate));
-        selectedIndex = (selectedIndex.isNegative)? timeLogs.length : selectedIndex;
+      if(logDates.isNotEmpty) {
+        final List<DateTime> listLogDates = logDates.toList(growable: false);
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
+        selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
 
-        for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index --) {
-          TimeLog log = timeLogs.elementAt(index);
+        for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
+          final DateTime date = listLogDates.elementAt(index);
 
-          if(log.dateTime.isBefore(selectedDate)) {
-            previousDate = log.dateTime;
+          if(date.isBefore(selectedDate)) {
+            previousDate = date;
           }
         }
       }
@@ -210,19 +229,20 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
   Stream<SingleCalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
 
     if(state is CalendarLoaded) {
-      final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
 
       DateTime? nextDate;
-      if(timeLogs.isNotEmpty) {
-        int selectedIndex = timeLogs.indexWhere((TimeLog log) => log.dateTime.isSameDate(selectedDate));
+      if(logDates.isNotEmpty) {
+        final List<DateTime> listLogDates = logDates.toList(growable: false);
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
 
-        for(int index = selectedIndex + 1; index < timeLogs.length && nextDate == null; index ++) {
-          TimeLog log = timeLogs.elementAt(index);
+        for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {
+          final DateTime date = listLogDates.elementAt(index);
 
-          if(log.dateTime.isAfter(selectedDate)) {
-            nextDate = log.dateTime;
+          if(date.isAfter(selectedDate)) {
+            nextDate = date;
           }
         }
       }
@@ -236,21 +256,27 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
 
-      final rotatingIndex = ((state as CalendarLoaded).style.index + 1) % CalendarStyle.values.length;
+      final int rotatingIndex = ((state as CalendarLoaded).style.index + 1) % CalendarStyle.values.length;
       final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
 
       final List<TimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, selectedDate, updatedStyle);
 
+      final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
+      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+
       yield CalendarLoaded(
         timeLogs,
+        logDates,
         finishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         updatedStyle,
       );
     }
@@ -261,10 +287,12 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     yield CalendarLoaded(
       event.timeLogs,
+      event.logDates,
       event.finishDates,
       event.selectedDate,
       event.selectedTimeLogs,
       event.isSelectedDateFinish,
+      event.selectedTotalTime,
       event.style,
     );
 
@@ -302,30 +330,38 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
       final CalendarStyle style = (state as CalendarLoaded).style;
 
       if(timeLogs.isEmpty) {
         selectedDate = managerState.otherItem.dateTime;
       }
 
-      final List<TimeLog> updatedTimeLogs = List.from(timeLogs)..add(managerState.otherItem);
+      final List<TimeLog> updatedTimeLogs = List<TimeLog>.from(timeLogs)..add(managerState.otherItem);
+      final Set<DateTime> updatedLogDates = SplayTreeSet<DateTime>.from(logDates)..add(managerState.otherItem.dateTime);
 
       if((style == CalendarStyle.List && managerState.otherItem.dateTime.isSameDate(selectedDate))
           || (style == CalendarStyle.Graph && managerState.otherItem.dateTime.isInWeekOf(selectedDate))) {
-        selectedTimeLogs = List.from(selectedTimeLogs)..add(managerState.otherItem);
+        selectedTimeLogs = List<TimeLog>.from(selectedTimeLogs)..add(managerState.otherItem);
         selectedTimeLogs..sort();
+
+        final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
+        selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
       }
 
       add(UpdateCalendar(
-        updatedTimeLogs..sort(),
+        updatedTimeLogs,
+        updatedLogDates,
         finishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         style,
       ));
     }
@@ -336,15 +372,21 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
       final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<TimeLog> updatedTimeLogs = timeLogs
           .where((TimeLog log) => log.dateTime != managerState.otherItem.dateTime)
           .toList(growable: false);
+
+      if(!updatedTimeLogs.any((TimeLog log) => log.dateTime.isSameDate(managerState.otherItem.dateTime))) {
+        logDates.removeWhere((DateTime date) => date.isSameDate(managerState.otherItem.dateTime));
+      }
 
       if(updatedTimeLogs.isEmpty) {
         selectedDate = DateTime.now();
@@ -354,14 +396,18 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
         selectedTimeLogs = selectedTimeLogs
             .where((TimeLog log) => log.dateTime != managerState.otherItem.dateTime)
             .toList(growable: false);
+
+        selectedTotalTime = Duration(seconds: selectedTotalTime.inSeconds - managerState.otherItem.time.inSeconds);
       }
 
       add(UpdateCalendar(
         updatedTimeLogs,
+        logDates,
         finishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         style,
       ));
     }
@@ -372,22 +418,26 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
       final CalendarStyle style = (state as CalendarLoaded).style;
 
-      final List<DateTime> updatedFinishDates = List.from(finishDates)..add(managerState.otherItem);
+      final List<DateTime> updatedFinishDates = List<DateTime>.from(finishDates)..add(managerState.otherItem);
 
       isSelectedDateFinish = isSelectedDateFinish || managerState.otherItem.isSameDate(selectedDate);
 
       add(UpdateCalendar(
         timeLogs,
-        updatedFinishDates..sort(),
+        logDates,
+        updatedFinishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         style,
       ));
     }
@@ -398,10 +448,12 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
     if(state is CalendarLoaded) {
       final List<TimeLog> timeLogs = (state as CalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final List<DateTime> finishDates = (state as CalendarLoaded).finishDates;
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final List<TimeLog> selectedTimeLogs = (state as CalendarLoaded).selectedTimeLogs;
       bool isSelectedDateFinish = (state as CalendarLoaded).isSelectedDateFinish;
+      final Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
       final CalendarStyle style = (state as CalendarLoaded).style;
 
       final List<DateTime> updatedFinishDates = finishDates
@@ -412,10 +464,12 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
 
       add(UpdateCalendar(
         timeLogs,
+        logDates,
         updatedFinishDates,
         selectedDate,
         selectedTimeLogs,
         isSelectedDateFinish,
+        selectedTotalTime,
         style,
       ));
     }
@@ -432,18 +486,18 @@ class SingleCalendarBloc extends Bloc<SingleCalendarEvent, SingleCalendarState> 
             .toList(growable: false);
         break;
       case CalendarStyle.Graph:
-        DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
+        final DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
 
-        Duration dayDuration = Duration(days: 1);
+        final Duration dayDuration = const Duration(days: 1);
         DateTime dateOfWeek = mondayOfSelectedDate;
         for(int index = 0; index < 7; index++) {
-          Iterable<TimeLog> dayTimeLogs = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(dateOfWeek));
+          final Iterable<TimeLog> dayTimeLogs = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(dateOfWeek));
 
           if(dayTimeLogs.isNotEmpty) {
             selectedTimeLogs.addAll(dayTimeLogs);
           } else {
             selectedTimeLogs.add(
-              TimeLog(dateTime: dateOfWeek, time: Duration()),
+              TimeLog(dateTime: dateOfWeek, time: const Duration()),
             );
           }
 

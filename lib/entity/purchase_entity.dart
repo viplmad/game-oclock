@@ -1,9 +1,9 @@
 import 'entity.dart';
 
 
-const purchaseTable = 'Purchase';
+const String purchaseTable = 'Purchase';
 
-const List<String> purchaseFields = [
+const List<String> purchaseFields = <String>[
   idField,
   purc_descriptionField,
   purc_priceField,
@@ -45,14 +45,14 @@ class PurchaseEntity extends CollectionItemEntity {
   static PurchaseEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseEntity(
-      id: map[idField],
-      description: map[purc_descriptionField],
-      price: map[purc_priceField],
-      externalCredit: map[purc_externalCreditField],
-      date: map[purc_dateField],
-      originalPrice: map[purc_originalPriceField],
+      id: map[idField] as int,
+      description: map[purc_descriptionField] as String,
+      price: map[purc_priceField] as double,
+      externalCredit: map[purc_externalCreditField] as double,
+      date: map[purc_dateField] as DateTime?,
+      originalPrice: map[purc_originalPriceField] as double,
 
-      store: map[purc_storeField],
+      store: map[purc_storeField] as int?,
     );
 
   }
@@ -75,10 +75,10 @@ class PurchaseEntity extends CollectionItemEntity {
 
   static List<PurchaseEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<PurchaseEntity> purchasesList = [];
+    final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, purchaseTable) );
+      final PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, purchaseTable) );
 
       purchasesList.add(purchase);
     });
@@ -88,7 +88,7 @@ class PurchaseEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     description,
   ];

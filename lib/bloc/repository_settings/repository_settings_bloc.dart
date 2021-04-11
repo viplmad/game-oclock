@@ -29,7 +29,7 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
     yield RepositorySettingsLoading();
 
-    bool existsConnection = await RepositoryPreferences.existsRepository();
+    final bool existsConnection = await RepositoryPreferences.existsRepository();
     if(!existsConnection) {
 
       yield EmptyRepositorySettings();
@@ -38,7 +38,7 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
       try {
 
-        RepositoryType repositoryType = await RepositoryPreferences.retrieveRepositoryType();
+        final RepositoryType repositoryType = await RepositoryPreferences.retrieveRepositoryType();
 
         yield* _mapRepositoryTypeToState(repositoryType);
 

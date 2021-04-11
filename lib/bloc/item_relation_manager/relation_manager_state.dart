@@ -5,7 +5,7 @@ abstract class RelationManagerState extends Equatable {
   const RelationManagerState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class Init extends RelationManagerState {}
@@ -16,7 +16,7 @@ class RelationAdded<O extends Object> extends RelationManagerState {
   final O otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'ItemRelationAdded { '
@@ -30,7 +30,7 @@ class RelationNotAdded extends RelationManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemRelationNotAdded { '
@@ -44,7 +44,7 @@ class RelationDeleted<O extends Object> extends RelationManagerState {
   final O otherItem;
 
   @override
-  List<Object> get props => [otherItem];
+  List<Object> get props => <Object>[otherItem];
 
   @override
   String toString() => 'ItemRelationDeleted { '
@@ -58,7 +58,7 @@ class RelationNotDeleted extends RelationManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemRelationNotDeleted { '

@@ -4,7 +4,7 @@ import 'entity.dart';
 const String dlcTable = 'DLC';
 const String dlcTableRead = '_DLC';
 
-const List<String> dlcFields = [
+const List<String> dlcFields = <String>[
   idField,
   dlc_nameField,
   dlc_releaseYearField,
@@ -22,7 +22,7 @@ const String dlc_baseGameField = 'Base Game';
 
 const String dlcFinishTable = 'DLCFinish';
 const String dlcFinishTableRead = 'DLC-Finish';
-const List<String> dlcFinishFields = [
+const List<String> dlcFinishFields = <String>[
   dlcFinish_dlcField,
   dlcFinish_dateField,
 ];
@@ -50,13 +50,13 @@ class DLCEntity extends CollectionItemEntity {
   static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCEntity(
-      id: map[idField],
-      name: map[dlc_nameField],
-      releaseYear: map[dlc_releaseYearField],
-      coverFilename: map[dlc_coverField],
-      finishDate: map[dlc_finishDateField],
+      id: map[idField] as int,
+      name: map[dlc_nameField] as String,
+      releaseYear: map[dlc_releaseYearField] as int?,
+      coverFilename: map[dlc_coverField] as String?,
+      finishDate: map[dlc_finishDateField] as DateTime?,
 
-      baseGame: map[dlc_baseGameField],
+      baseGame: map[dlc_baseGameField] as int?,
     );
 
   }
@@ -78,10 +78,10 @@ class DLCEntity extends CollectionItemEntity {
 
   static List<DLCEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<DLCEntity> dlcsList = [];
+    final List<DLCEntity> dlcsList = <DLCEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      DLCEntity dlc = DLCEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, dlcTable) );
+      final DLCEntity dlc = DLCEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, dlcTable) );
 
       dlcsList.add(dlc);
     });
@@ -91,7 +91,7 @@ class DLCEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

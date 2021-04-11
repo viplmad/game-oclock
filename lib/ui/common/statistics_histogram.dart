@@ -23,13 +23,13 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<_SeriesElement<N>> data = [];
+    final List<_SeriesElement<N>> data = <_SeriesElement<N>>[];
 
     for(int index = 0; index < domainLabels.length; index++) {
-      String currentLabel =  domainLabels.elementAt(index);
-      N currentValue = values.elementAt(index);
+      final String currentLabel =  domainLabels.elementAt(index);
+      final N currentValue = values.elementAt(index);
 
-      _SeriesElement<N> seriesElement = _SeriesElement<N>(currentLabel, currentValue);
+      final _SeriesElement<N> seriesElement = _SeriesElement<N>(currentLabel, currentValue);
       data.add(seriesElement);
     }
 
@@ -43,7 +43,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       labelAccessorFn: labelAccessor != null? (_SeriesElement<N> element, _) => labelAccessor!(element.domainLabel, element.value) : null,
     );
 
-    final List<Series<_SeriesElement<N>, String>> seriesList = [
+    final List<Series<_SeriesElement<N>, String>> seriesList = <Series<_SeriesElement<N>, String>>[
       series
     ];
 
@@ -52,7 +52,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       animate: true,
       vertical: vertical,
       barRendererDecorator: BarLabelDecorator<String>(),
-      domainAxis: hideDomainLabels? OrdinalAxisSpec(renderSpec: NoneRenderSpec()) : OrdinalAxisSpec(),
+      domainAxis: hideDomainLabels? const OrdinalAxisSpec(renderSpec: NoneRenderSpec<String>()) : const OrdinalAxisSpec(),
     );
   }
 }

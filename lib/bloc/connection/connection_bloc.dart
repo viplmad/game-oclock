@@ -30,7 +30,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     yield Connecting();
 
-    bool existsConnection = await RepositoryPreferences.existsRepository();
+    final bool existsConnection = await RepositoryPreferences.existsRepository();
     if(!existsConnection) {
 
       yield NonexistentConnection();
@@ -39,7 +39,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
       try {
 
-        ICollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
+        final ICollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
         ICollectionRepository.iCollectionRepository = iCollectionRepository;
         await iCollectionRepository.open();
         yield Connected();
@@ -61,7 +61,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
     try {
 
       ICollectionRepository.iCollectionRepository!.reconnect();
-      ICollectionRepository.iCollectionRepository!.open();
+      await ICollectionRepository.iCollectionRepository!.open();
       yield Connected();
 
     } catch(e) {

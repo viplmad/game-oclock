@@ -21,7 +21,7 @@ class EncryptedSharedPreferences {
   }
 
   Encrypter _getEncrypter(SharedPreferences prefs) {
-    String? randomKey = prefs.getString(randomKeyKey);
+    final String? randomKey = prefs.getString(randomKeyKey);
 
     Key key;
     if(randomKey == null) {
@@ -48,12 +48,12 @@ class EncryptedSharedPreferences {
     final String encryptedValue = encrypted.base64;
 
     /// Add generated random IV to a list
-    List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? [];
+    final List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? <String>[];
     randomKeyList.add(ivValue);
     await prefs.setStringList(randomKeyListKey, randomKeyList);
 
     /// Save random key list index, We used encrypted value as key so we could use that to access it later
-    int index = randomKeyList.length - 1;
+    final int index = randomKeyList.length - 1;
     await prefs.setString(encryptedValue, index.toString());
 
     /// Save encrypted value
@@ -66,16 +66,16 @@ class EncryptedSharedPreferences {
     final SharedPreferences prefs = await getInstance();
 
     /// Get encrypted value
-    String? encryptedValue = prefs.getString(key);
+    final String? encryptedValue = prefs.getString(key);
 
     if (encryptedValue != null) {
       /// Get random key list index using the encrypted value as key
-      String indexString = prefs.getString(encryptedValue)!;
-      int index = int.parse(indexString);
+      final String indexString = prefs.getString(encryptedValue)!;
+      final int index = int.parse(indexString);
 
       /// Get random key from random key list using the index
-      List<String> randomKeyList = prefs.getStringList(randomKeyListKey)!;
-      String ivValue = randomKeyList[index];
+      final List<String> randomKeyList = prefs.getStringList(randomKeyListKey)!;
+      final String ivValue = randomKeyList[index];
 
       final Encrypter encrypter = _getEncrypter(prefs);
 
@@ -95,7 +95,7 @@ class EncryptedSharedPreferences {
     return await prefs.clear();
   }
 
-  Future reload() async {
+  Future<void> reload() async {
     final SharedPreferences prefs = await getInstance();
 
     /// Reload

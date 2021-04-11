@@ -20,7 +20,7 @@ abstract class CollectionItem extends Equatable {
   CollectionItem copyWith();
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
   ];
 
@@ -50,13 +50,13 @@ abstract class ItemData<T extends CollectionItem> {
   int get length => items.length;
 
   List<int> yearlyItemCount(List<int> years, bool Function(T, int) yearComparator) {
-    List<int> values = List<int>.filled(years.length, 0);
+    final List<int> values = List<int>.filled(years.length, 0);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
-      int year = years.elementAt(yearsIndex);
+      final int year = years.elementAt(yearsIndex);
 
-      int yearCount = items.where((T item) => yearComparator(item, year)).length;
+      final int yearCount = items.where((T item) => yearComparator(item, year)).length;
 
       values[index++] = yearCount;
     }
@@ -65,13 +65,13 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<N> yearlyFieldSum<N extends num>(List<int> years, bool Function(T, int) yearComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int)? sumOperation}) {
-    List<N> values = List<N>.filled(years.length, 0 as N);
+    final List<N> values = List<N>.filled(years.length, 0 as N);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
-      int year = years.elementAt(yearsIndex);
+      final int year = years.elementAt(yearsIndex);
 
-      List<T> yearItems = items.where((T item) => yearComparator(item, year)).toList(growable: false);
+      final List<T> yearItems = items.where((T item) => yearComparator(item, year)).toList(growable: false);
       N yearSum = yearItems.fold<N>(foldInitialValue, (N previousValue, T item) => (previousValue + fieldExtractor(item)) as N);
       if(sumOperation != null) {
         yearSum = sumOperation(yearSum, yearItems.length);
@@ -84,11 +84,11 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   YearData<int> monthlyItemCount(bool Function(T, int) monthComparator) {
-    YearData<int> yearData = YearData<int>();
+    final YearData<int> yearData = YearData<int>();
 
     for(int month = 1; month <= 12; month++) {
 
-      int monthCount = items.where((T item) => monthComparator(item, month)).length;
+      final int monthCount = items.where((T item) => monthComparator(item, month)).length;
 
       yearData.addData(monthCount);
     }
@@ -97,11 +97,11 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   YearData<N> monthlyFieldSum<N extends num>(bool Function(T, int) monthComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int)? sumOperation}) {
-    YearData<N> yearData = YearData<N>();
+    final YearData<N> yearData = YearData<N>();
 
     for(int month = 1; month <= 12; month++) {
 
-      List<T> monthItems = items.where((T item) => monthComparator(item, month)).toList(growable: false);
+      final List<T> monthItems = items.where((T item) => monthComparator(item, month)).toList(growable: false);
       N monthSum = monthItems.fold<N>(foldInitialValue, (N previousValue, T item) => (previousValue + fieldExtractor(item)) as N);
       if(sumOperation != null) {
         monthSum = sumOperation(monthSum, monthItems.length);
@@ -114,13 +114,13 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountEqual<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>.filled(intervals.length, 0);
+    final List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length; intervalIndex++) {
-      N element = intervals.elementAt(intervalIndex);
+      final N element = intervals.elementAt(intervalIndex);
 
-      int intervalCount = items.where((T item) => fieldExtractor(item) == element).length;
+      final int intervalCount = items.where((T item) => fieldExtractor(item) == element).length;
 
       values[index++] = intervalCount;
     }
@@ -129,14 +129,14 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCount<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>.filled(intervals.length - 1, 0);
+    final List<int> values = List<int>.filled(intervals.length - 1, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
+      final int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
 
       values[index++] = intervalCount;
     }
@@ -145,18 +145,18 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountWithInitial<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>.filled(intervals.length, 0);
+    final List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
-    N initialElement = intervals.first;
-    int initialIntervalCount = items.where((T item) => fieldExtractor(item) <= initialElement).length;
+    final N initialElement = intervals.first;
+    final int initialIntervalCount = items.where((T item) => fieldExtractor(item) <= initialElement).length;
     values[index++] = initialIntervalCount;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
+      final int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
 
       values[index++] = intervalCount;
     }
@@ -165,44 +165,44 @@ abstract class ItemData<T extends CollectionItem> {
   }
 
   List<int> intervalCountWithLast<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>.filled(intervals.length, 0);
+    final List<int> values = List<int>.filled(intervals.length, 0);
     int index = 0;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
+      final int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
 
       values[index++] = intervalCount;
     }
 
-    N lastElement = intervals.last;
-    int lastIntervalCount = items.where((T item) => lastElement < fieldExtractor(item)).length;
+    final N lastElement = intervals.last;
+    final int lastIntervalCount = items.where((T item) => lastElement < fieldExtractor(item)).length;
     values[index] = lastIntervalCount;
 
     return values;
   }
 
   List<int> intervalCountWithInitialAndLast<N extends num>(List<N> intervals, N Function(T) fieldExtractor) {
-    List<int> values = List<int>.filled(intervals.length + 1, 0);
+    final List<int> values = List<int>.filled(intervals.length + 1, 0);
     int index = 0;
 
-    N initialElement = intervals.first;
-    int initialIntervalCount = items.where((T item) => fieldExtractor(item) <= initialElement).length;
+    final N initialElement = intervals.first;
+    final int initialIntervalCount = items.where((T item) => fieldExtractor(item) <= initialElement).length;
     values[index++] = initialIntervalCount;
 
     for(int intervalIndex = 0; intervalIndex < intervals.length - 1; intervalIndex++) {
-      N min = intervals.elementAt(intervalIndex);
-      N max = intervals.elementAt(intervalIndex + 1);
+      final N min = intervals.elementAt(intervalIndex);
+      final N max = intervals.elementAt(intervalIndex + 1);
 
-      int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
+      final int intervalCount = items.where((T item) => min < fieldExtractor(item) && fieldExtractor(item) <= max).length;
 
       values[index++] = intervalCount;
     }
 
-    N lastElement = intervals.last;
-    int lastIntervalCount = items.where((T item) => lastElement < fieldExtractor(item)).length;
+    final N lastElement = intervals.last;
+    final int lastIntervalCount = items.where((T item) => lastElement < fieldExtractor(item)).length;
     values[index] = lastIntervalCount;
 
     return values;

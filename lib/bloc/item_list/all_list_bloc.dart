@@ -24,7 +24,7 @@ class AllListBloc extends ItemListBloc<Game> {
   @override
   Stream<List<Game>> getReadViewStream(UpdateView event) {
 
-    GameView gameView = GameView.values[event.viewIndex];
+    final GameView gameView = GameView.values[event.viewIndex];
 
     return iCollectionRepository.getAllWithView(gameView);
 
@@ -33,7 +33,7 @@ class AllListBloc extends ItemListBloc<Game> {
   @override
   Stream<List<Game>> getReadYearViewStream(UpdateYearView event) {
 
-    GameView gameView = GameView.values[event.viewIndex];
+    final GameView gameView = GameView.values[event.viewIndex];
 
     return iCollectionRepository.getAllWithYearView(gameView, event.year);
 

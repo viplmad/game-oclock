@@ -31,23 +31,24 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
   bool _hasUpdated = false;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext outerContext) {
 
-    String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
+    final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
 
     return BlocListener<S, RelationManagerState>(
       listener: (BuildContext context, RelationManagerState state) {
         if(state is RelationAdded<DateTime>) {
           _hasUpdated = true;
 
-          String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
         if(state is RelationNotAdded) {
-          String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -62,14 +63,14 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
         if(state is RelationDeleted<DateTime>) {
           _hasUpdated = true;
 
-          String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
         if(state is RelationNotDeleted) {
-          String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -130,15 +131,15 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                               shrinkWrap: true,
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
-                                DateTime date = values.elementAt(index);
-                                String dateString = GameCollectionLocalisations.of(context).dateString(date);
+                                final DateTime date = values.elementAt(index);
+                                final String dateString = GameCollectionLocalisations.of(context).dateString(date);
 
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
                                   child: ListTile(
                                     title: Text(dateString),
                                     trailing: IconButton(
-                                      icon: Icon(Icons.link_off),
+                                      icon: const Icon(Icons.link_off),
                                       onPressed: () {
                                         BlocProvider.of<S>(outerContext).add(
                                           DeleteRelation<DateTime>(date),
@@ -160,7 +161,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              LinearProgressIndicator(),
+                              const LinearProgressIndicator(),
                             ],
                           );
                         },

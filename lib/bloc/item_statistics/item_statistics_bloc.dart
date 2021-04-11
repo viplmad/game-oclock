@@ -7,7 +7,7 @@ import 'package:game_collection/model/model.dart';
 import 'item_statistics.dart';
 
 
-abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
+abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData<T>> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
   ItemStatisticsBloc({
     required this.items,
   }) : super(ItemStatisticsLoading());
@@ -36,7 +36,7 @@ abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> 
     try {
 
       final D itemData = await getGeneralItemData();
-      yield ItemGeneralStatisticsLoaded<D>(itemData);
+      yield ItemGeneralStatisticsLoaded<T, D>(itemData);
 
     } catch (e) {
 
@@ -53,7 +53,7 @@ abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData> 
     try {
 
       final D itemData = await getItemData(event);
-      yield ItemYearStatisticsLoaded<D>(
+      yield ItemYearStatisticsLoaded<T, D>(
         itemData,
         event.year,
       );

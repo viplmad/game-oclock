@@ -40,7 +40,7 @@ class Purchase extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  ItemImage get image => ItemImage(null, null);
+  ItemImage get image => const ItemImage(null, null);
 
   @override
   String get queryableTerms => this.description;
@@ -101,7 +101,7 @@ class Purchase extends CollectionItem {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     description,
     price,
@@ -137,31 +137,31 @@ class PurchasesData extends ItemData<Purchase> {
   int get lengthWithoutPromotion => itemsWithoutPromotion.length;
 
   double priceSum() {
-    double priceSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
+    final double priceSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.price);
 
     return priceSum;
   }
 
   double externalCreditSum() {
-    double externalCreditSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.externalCredit);
+    final double externalCreditSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.externalCredit);
 
     return externalCreditSum;
   }
 
   double originalPriceSum() {
-    double originalPriceSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.originalPrice);
+    final double originalPriceSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.originalPrice);
 
     return originalPriceSum;
   }
 
   double discountSum() {
-    double discountSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
+    final double discountSum = items.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
 
     return discountSum;
   }
 
   double discountSumWithoutPromotion() {
-    double discountSum = itemsWithoutPromotion.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
+    final double discountSum = itemsWithoutPromotion.fold(0.0, (double previousValue, Purchase item) => previousValue + item.discount);
 
     return discountSum;
   }

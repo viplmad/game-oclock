@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:table_calendar/table_calendar.dart' as tableCalendar;
+import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:game_collection/utils/datetime_extension.dart';
@@ -61,7 +61,7 @@ class SingleGameCalendar extends StatelessWidget {
     final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<SingleCalendarBloc>(
           create: (BuildContext context) {
             return _bloc..add(LoadCalendar());
@@ -82,37 +82,37 @@ class SingleGameCalendar extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
-          actions: [
+          actions: <IconButton>[
             IconButton(
-              icon: Icon(Icons.first_page),
+              icon: const Icon(Icons.first_page),
               tooltip: GameCollectionLocalisations.of(context).firstTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateFirst());
               },
             ),
             IconButton(
-              icon: Icon(Icons.navigate_before),
+              icon: const Icon(Icons.navigate_before),
               tooltip: GameCollectionLocalisations.of(context).previousTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDatePrevious());
               },
             ),
             IconButton(
-              icon: Icon(Icons.navigate_next),
+              icon: const Icon(Icons.navigate_next),
               tooltip: GameCollectionLocalisations.of(context).nextTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateNext());
               },
             ),
             IconButton(
-              icon: Icon(Icons.last_page),
+              icon: const Icon(Icons.last_page),
               tooltip: GameCollectionLocalisations.of(context).lastTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateLast());
               },
             ),
             IconButton(
-              icon: Icon(Icons.insert_chart),
+              icon: const Icon(Icons.insert_chart),
               tooltip: GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
                 _bloc.add(UpdateStyle());
@@ -148,11 +148,11 @@ class SingleGameCalendar extends StatelessWidget {
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
       overlayOpacity: 0.5,
-      children: [
+      children: <SpeedDialChild>[
         SpeedDialChild(
-          child: Icon(Icons.add_alarm),
+          child: const Icon(Icons.add_alarm),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
@@ -180,7 +180,7 @@ class SingleGameCalendar extends StatelessWidget {
                     ).then((Duration? duration) {
                       if(duration != null) {
 
-                        DateTime dateTime = DateTime(
+                        final DateTime dateTime = DateTime(
                           date.year,
                           date.month,
                           date.day,
@@ -206,9 +206,9 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
-          child: Icon(Icons.event_available),
+          child: const Icon(Icons.event_available),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).finishDateFieldString),
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
@@ -261,20 +261,20 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
       },
       child: MultiBlocListener(
-        listeners: [
+        listeners: <BlocListener<dynamic, dynamic>>[
           BlocListener<GameTimeLogRelationManagerBloc, RelationManagerState>(
             listener: (BuildContext context, RelationManagerState state) {
               if(state is RelationAdded<TimeLog>) {
                 _isUpdated = true;
 
-                String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
               if(state is RelationNotAdded) {
-                String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
                   message: message,
@@ -289,14 +289,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
               if(state is RelationDeleted) {
                 _isUpdated = true;
 
-                String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
               if(state is RelationNotDeleted) {
-                String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
                   message: message,
@@ -315,14 +315,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
               if(state is RelationAdded<DateTime>) {
                 _isUpdated = true;
 
-                String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
               if(state is RelationNotAdded) {
-                String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
                   message: message,
@@ -337,14 +337,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
               if(state is RelationDeleted) {
                 _isUpdated = true;
 
-                String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
               if(state is RelationNotDeleted) {
-                String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
                   message: message,
@@ -367,12 +367,13 @@ class _SingleGameCalendarBody extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  _buildTableCalendar(context, state.timeLogs, state.finishDates, state.selectedDate),
+                  _buildTableCalendar(context, state.logDates, state.finishDates, state.selectedDate),
                   const Divider(height: 4.0),
                   state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
                     title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).weekString + ')' : '')),
+                    trailing: Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)),
                   ),
                   Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
                 ],
@@ -387,7 +388,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
             }
 
-            return LoadingIcon();
+            return const LoadingIcon();
 
           },
         ),
@@ -396,15 +397,15 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildTableCalendar(BuildContext context, List<TimeLog> timeLogs, List<DateTime> finishDates, DateTime selectedDate) {
+  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, List<DateTime> finishDates, DateTime selectedDate) {
     DateTime firstDate = DateTime.now();
     DateTime lastDate = firstDate;
-    if(timeLogs.isNotEmpty) {
-      firstDate = timeLogs.first.dateTime;
-      lastDate = timeLogs.last.dateTime;
+    if(logDates.isNotEmpty) {
+      firstDate = logDates.first;
+      lastDate = logDates.last;
     }
 
-    return tableCalendar.TableCalendar<TimeLog>(
+    return table_calendar.TableCalendar<DateTime>(
       firstDay: firstDate,
       lastDay: lastDate,
       focusedDay: selectedDate,
@@ -419,27 +420,27 @@ class _SingleGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return timeLogs.where((TimeLog log) => date.isSameDate(log.dateTime)).toList(growable: false);
+        return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
       },
       holidayPredicate: (DateTime date) {
         return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
       },
-      startingDayOfWeek: tableCalendar.StartingDayOfWeek.monday,
-      weekendDays: const [
+      startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
+      weekendDays: const <int>[
         DateTime.saturday,
         DateTime.sunday
       ],
       pageJumpingEnabled: true,
-      availableGestures: tableCalendar.AvailableGestures.horizontalSwipe,
-      availableCalendarFormats: const {
-        tableCalendar.CalendarFormat.month: '',
+      availableGestures: table_calendar.AvailableGestures.horizontalSwipe,
+      availableCalendarFormats: const <table_calendar.CalendarFormat, String>{
+        table_calendar.CalendarFormat.month: '',
       },
-      headerStyle: const tableCalendar.HeaderStyle(
+      headerStyle: const table_calendar.HeaderStyle(
         titleCentered: true,
         formatButtonVisible: false,
       ),
       rowHeight: 65.0,
-      calendarStyle: tableCalendar.CalendarStyle(
+      calendarStyle: table_calendar.CalendarStyle(
         isTodayHighlighted: true,
         outsideDaysVisible: false,
         todayDecoration: BoxDecoration(
@@ -463,13 +464,13 @@ class _SingleGameCalendarBody extends StatelessWidget {
           color: GameTheme.playedStatusColour,
           shape: BoxShape.circle,
         ),
-        holidayTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
+        holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
         ///WEEKEND
         weekendDecoration: BoxDecoration(
           color: Colors.grey.withAlpha(50),
           shape: BoxShape.circle,
         ),
-        weekendTextStyle: const TextStyle(color: const Color(0xFF5A5A5A)),
+        weekendTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
       ),
     );
   }
@@ -479,7 +480,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
     return ListTile(
       title: Text(GameCollectionLocalisations.of(context).selectedDateIsFinishDateString),
       trailing: IconButton(
-        icon: Icon(Icons.link_off),
+        icon: const Icon(Icons.link_off),
         onPressed: () {
           BlocProvider.of<GameFinishDateRelationManagerBloc>(context).add(
             DeleteRelation<DateTime>(
@@ -505,15 +506,15 @@ class _SingleGameCalendarBody extends StatelessWidget {
       shrinkWrap: true,
       itemCount: timeLogs.length,
       itemBuilder: (BuildContext context, int index) {
-        TimeLog timeLog = timeLogs.elementAt(index);
-        String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
+        final TimeLog timeLog = timeLogs.elementAt(index);
+        final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
         return DismissibleItem(
           dismissibleKey: timeLog.dateTime.millisecond,
           itemWidget: ListTile(
             title: Text(timeLogString),
             trailing: IconButton(
-              icon: Icon(Icons.link_off),
+              icon: const Icon(Icons.link_off),
               onPressed: () {
                 BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
                   DeleteRelation<TimeLog>(
@@ -538,9 +539,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
   }
 
   Widget _buildEventGraph(BuildContext context, List<TimeLog> timeLogs) {
-    List<int> values = <int>[];
+    final List<int> values = <int>[];
 
-    List<DateTime> distinctLogDates = <DateTime>[];
+    final List<DateTime> distinctLogDates = <DateTime>[];
     timeLogs.forEach((TimeLog log) {
       if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
         distinctLogDates.add(log.dateTime);
@@ -549,8 +550,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
     distinctLogDates.sort();
 
     distinctLogDates.forEach((DateTime date) {
-      List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
-      int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
+      final List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
+      final int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
       values.add(daySum);
     });
 

@@ -5,7 +5,7 @@ abstract class ConnectionEvent extends Equatable {
   const ConnectionEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class Connect extends ConnectionEvent {}

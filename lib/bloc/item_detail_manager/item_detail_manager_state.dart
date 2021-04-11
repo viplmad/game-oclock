@@ -7,7 +7,7 @@ abstract class ItemDetailManagerState extends Equatable {
   const ItemDetailManagerState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class Initialised extends ItemDetailManagerState {}
@@ -18,7 +18,7 @@ class ItemFieldUpdated<T extends CollectionItem> extends ItemDetailManagerState 
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'ItemFieldUpdated { '
@@ -32,7 +32,7 @@ class ItemFieldNotUpdated extends ItemDetailManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemFieldNotUpdated { '
@@ -46,7 +46,7 @@ class ItemImageUpdated<T extends CollectionItem> extends ItemDetailManagerState 
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'ItemImageUpdated { '
@@ -60,7 +60,7 @@ class ItemImageNotUpdated extends ItemDetailManagerState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemImageNotUpdated { '

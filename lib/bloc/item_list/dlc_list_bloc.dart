@@ -24,7 +24,7 @@ class DLCListBloc extends ItemListBloc<DLC> {
   @override
   Stream<List<DLC>> getReadViewStream(UpdateView event) {
 
-    DLCView dlcView = DLCView.values[event.viewIndex];
+    final DLCView dlcView = DLCView.values[event.viewIndex];
 
     return iCollectionRepository.getDLCsWithView(dlcView);
 

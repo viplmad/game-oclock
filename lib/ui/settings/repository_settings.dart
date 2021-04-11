@@ -26,7 +26,7 @@ class RepositorySettings extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<RepositorySettingsBloc>(
           create: (BuildContext context) {
             return RepositorySettingsBloc()..add(LoadRepositorySettings());
@@ -44,7 +44,7 @@ class RepositorySettings extends StatelessWidget {
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
         ),
-        body: _RepositorySettingsBody(),
+        body: const _RepositorySettingsBody(),
       ),
     );
 
@@ -70,7 +70,7 @@ class _RepositorySettingsBody extends StatelessWidget {
               );
             }
             if(state is RepositorySettingsNotUpdated) {
-              String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
+              final String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
               showSnackBar(
                 context,
                 message: message,
@@ -91,7 +91,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
               if(state is RepositorySettingsLoading) {
 
-                return LinearProgressIndicator();
+                return const LinearProgressIndicator();
 
               }
               if(state is EmptyRepositorySettings) {
@@ -111,7 +111,7 @@ class _RepositorySettingsBody extends StatelessWidget {
                     if(!isExpanded) {
 
                       BlocProvider.of<RepositorySettingsBloc>(context).add(
-                        UpdateRepositorySettingsRadio(RepositoryType.Remote),
+                        const UpdateRepositorySettingsRadio(RepositoryType.Remote),
                       );
 
                     }
@@ -119,14 +119,14 @@ class _RepositorySettingsBody extends StatelessWidget {
                     if(!isExpanded) {
 
                       BlocProvider.of<RepositorySettingsBloc>(context).add(
-                        UpdateRepositorySettingsRadio(RepositoryType.Local),
+                        const UpdateRepositorySettingsRadio(RepositoryType.Local),
                       );
 
                     }
                   }
 
                 },
-                children: [
+                children: <ExpansionPanel>[
                   _remoteExpansionPanel(context, radioGroup, postgresInstance, cloudinaryInstance),
                   //_localRepositoryPanel(context, radioGroup),
                 ],
@@ -157,7 +157,7 @@ class _RepositorySettingsBody extends StatelessWidget {
       title: GameCollectionLocalisations.of(context).remoteRepositoryString,
       radioGroup: radioGroup,
       radioValue: RepositoryType.Remote,
-      textForms: [
+      textForms: <Widget>[
         _headerText(context, 'Postgres'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).hostString,
@@ -282,7 +282,7 @@ class _RepositorySettingsBody extends StatelessWidget {
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.number,
-      inputFormatters: [
+      inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
       ],
     );
@@ -291,7 +291,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   ExpansionPanel _repositoryExpansionPanel(BuildContext context, {required RepositoryType radioGroup, required RepositoryType radioValue, required String title, required List<Widget> textForms, required void Function() onUpdate}) {
 
-    final _formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
     return ExpansionPanel(
       isExpanded: radioGroup == radioValue,
@@ -320,7 +320,7 @@ class _RepositorySettingsBody extends StatelessWidget {
                 child: ElevatedButton(
                   child: Text(
                     GameCollectionLocalisations.of(context).saveString,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
                     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
@@ -386,13 +386,13 @@ class _ShowHideTextFieldState extends State<_ShowHideTextField> {
         maxLines: 1,
         decoration: InputDecoration(
           labelText: widget.labelText,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           suffixIcon: widget.allowObscureText? IconButton(
             tooltip: obscureText?
               GameCollectionLocalisations.of(context).showString
               :
               GameCollectionLocalisations.of(context).hideString,
-            icon: obscureText? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+            icon: obscureText? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
             onPressed: () {
               setState(() {
                 obscureText = !obscureText;
@@ -402,7 +402,7 @@ class _ShowHideTextFieldState extends State<_ShowHideTextField> {
         ),
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,
-        validator: (value) {
+        validator: (String? value) {
           if (value!.isEmpty) {
             return GameCollectionLocalisations.of(context).enterTextString;
           }

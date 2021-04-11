@@ -65,14 +65,17 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield ItemListNotLoaded('Connection lost. Trying to reconnect');
+      yield const ItemListNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield ItemListNotLoaded(e.toString());
+
       }
     }
 
@@ -109,7 +112,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _mapUpdateItemToState(UpdateListItem<T> event) async* {
 
     if(state is ItemListLoaded<T>) {
-      List<T> items = List.from((state as ItemListLoaded<T>).items);
+      final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
 
       final int listItemIndex = items.indexWhere((T item) => item.id == event.item.id);
       final T listItem = items.elementAt(listItemIndex);
@@ -209,7 +212,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   Stream<ItemListState> _mapUpdateStyleToState(UpdateStyle event) async* {
 
     if(state is ItemListLoaded<T>) {
-      final rotatingIndex = ((state as ItemListLoaded<T>).style.index + 1) % ListStyle.values.length;
+      final int rotatingIndex = ((state as ItemListLoaded<T>).style.index + 1) % ListStyle.values.length;
       final ListStyle updatedStyle = ListStyle.values.elementAt(rotatingIndex);
 
       final List<T> items = (state as ItemListLoaded<T>).items;
@@ -243,12 +246,12 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   void _mapAddedToEvent(ItemAdded<T> managerState) {
 
     if(state is ItemListLoaded<T>) {
-      List<T> items = (state as ItemListLoaded<T>).items;
+      final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
-      final List<T> updatedItems = List.from(items)..add(managerState.item);
+      final List<T> updatedItems = List<T>.from(items)..add(managerState.item);
 
       add(UpdateItemList<T>(
         updatedItems,
@@ -263,7 +266,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
   void _mapDeletedToEvent(ItemDeleted<T> managerState) {
 
     if(state is ItemListLoaded<T>) {
-      List<T> items = (state as ItemListLoaded<T>).items;
+      final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
       final ListStyle style = (state as ItemListLoaded<T>).style;

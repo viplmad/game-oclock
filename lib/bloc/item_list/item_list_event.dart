@@ -8,7 +8,7 @@ abstract class ItemListEvent extends Equatable {
   const ItemListEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadItemList extends ItemListEvent {}
@@ -22,7 +22,7 @@ class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
   final ListStyle style;
 
   @override
-  List<Object> get props => [items, viewIndex, year, style];
+  List<Object> get props => <Object>[items, viewIndex, year, style];
 
   @override
   String toString() => 'UpdateItemList { '
@@ -39,7 +39,7 @@ class UpdateListItem<T extends CollectionItem> extends ItemListEvent {
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'UpdateItemList { '
@@ -53,7 +53,7 @@ class UpdateView extends ItemListEvent {
   final int viewIndex;
 
   @override
-  List<Object> get props => [viewIndex];
+  List<Object> get props => <Object>[viewIndex];
 
   @override
   String toString() => 'UpdateView { '
@@ -68,7 +68,7 @@ class UpdateYearView extends ItemListEvent {
   final int year;
 
   @override
-  List<Object> get props => [viewIndex, year];
+  List<Object> get props => <Object>[viewIndex, year];
 
   @override
   String toString() => 'UpdateView { '

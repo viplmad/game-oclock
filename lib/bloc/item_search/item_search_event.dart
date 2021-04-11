@@ -5,7 +5,7 @@ abstract class ItemSearchEvent extends Equatable {
   const ItemSearchEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class SearchTextChanged extends ItemSearchEvent {
@@ -14,7 +14,7 @@ class SearchTextChanged extends ItemSearchEvent {
   final String query;
 
   @override
-  List<Object> get props => [query];
+  List<Object> get props => <Object>[query];
 
   @override
   String toString() => 'SearchTextChanged { '

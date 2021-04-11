@@ -66,7 +66,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: gameTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         game_nameField : name,
         game_editionField : edition,
       },
@@ -104,7 +104,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : dlcId,
       },
       fieldName: dlc_baseGameField,
@@ -130,7 +130,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: gameFinishTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         gameFinish_gameField : gameId,
         gameFinish_dateField : date,
       },
@@ -143,7 +143,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: gameLogTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         gameLog_gameField : gameId,
         gameLog_dateTimeField : dateTime,
         gameLog_timeField : duration.inSeconds,
@@ -159,7 +159,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: dlcTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         dlc_nameField : name,
       },
     ).asStream().map( _dynamicToSingleDLC ).first;
@@ -183,7 +183,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: dlcFinishTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         dlcFinish_dlcField : dlcId,
         dlcFinish_dateField : date,
       },
@@ -198,7 +198,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: platformTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         plat_nameField : name,
       },
     ).asStream().map( _dynamicToSinglePlatform ).first;
@@ -219,11 +219,12 @@ class RemoteRepository implements ICollectionRepository {
   //#endregion Platform
 
   //#region Purchase
+  @override
   Future<Purchase?> createPurchase(String description) {
 
     return _iSQLConnector.insertRecord(
       tableName: purchaseTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         purc_descriptionField : description,
       },
       returningFields: purchaseFields,
@@ -250,7 +251,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: storeTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         stor_nameField : name,
       },
     ).asStream().map( _dynamicToSingleStore ).first;
@@ -262,7 +263,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : purchaseId,
       },
       fieldName: purc_storeField,
@@ -278,7 +279,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: systemTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         sys_nameField : name,
       },
     ).asStream().map( _dynamicToSingleSystem ).first;
@@ -292,7 +293,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: tagTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         tag_nameField : name,
       },
     ).asStream().map( _dynamicToSingleTag ).first;
@@ -306,7 +307,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.insertRecord(
       tableName: typeTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         type_nameField : name,
       },
     ).asStream().map( _dynamicToSingleType ).first;
@@ -675,6 +676,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
+  @override
   Stream<Store?> getStoreFromPurchase(int id) {
 
     return _iSQLConnector.readWeakRelation(
@@ -907,7 +909,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: gameTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -923,7 +925,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: dlcTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -939,7 +941,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: platformTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -955,7 +957,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -971,7 +973,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: storeTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -987,7 +989,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: systemTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -1003,7 +1005,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: tagTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -1019,7 +1021,7 @@ class RemoteRepository implements ICollectionRepository {
 
     await _iSQLConnector.updateTable(
       tableName: typeTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
       fieldName: fieldName,
@@ -1038,7 +1040,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: gameTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1074,7 +1076,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: dlcTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : dlcId,
       },
       fieldName: dlc_baseGameField,
@@ -1100,7 +1102,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: gameFinishTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         gameFinish_gameField : gameId,
         gameFinish_dateField : date,
       },
@@ -1113,7 +1115,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: gameLogTable,
-      fieldsAndValues: <String, dynamic> {
+      fieldsAndValues: <String, dynamic>{
         gameLog_gameField : gameId,
         gameLog_dateTimeField : dateTime,
       },
@@ -1128,7 +1130,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: dlcTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1152,7 +1154,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: dlcFinishTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         dlcFinish_dlcField : dlcId,
         dlcFinish_dateField : date,
       },
@@ -1167,7 +1169,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: platformTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1193,7 +1195,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: purchaseTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1219,7 +1221,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: storeTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1231,7 +1233,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.updateTable(
       tableName: purchaseTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : purchaseId,
       },
       fieldName: purc_storeField,
@@ -1247,7 +1249,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: systemTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1261,7 +1263,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: tagTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1275,7 +1277,7 @@ class RemoteRepository implements ICollectionRepository {
 
     return _iSQLConnector.deleteTable(
       tableName: typeTable,
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         idField : id,
       },
     );
@@ -1394,12 +1396,12 @@ class RemoteRepository implements ICollectionRepository {
       leftTableId: gameLog_gameField,
       rightTableId: idField,
       leftSelectFields: gameLogFields,
-      rightSelectFields: List.from(gameFields)..remove(game_timeField),
+      rightSelectFields: List<String>.from(gameFields)..remove(game_timeField),
       where: "date_part(\'year\', \"DateTime\") = @year",
-      fieldsAndValues: {
+      fieldsAndValues: <String, dynamic>{
         'year' : year,
       },
-      sortFields: [gameLog_gameField],
+      sortFields: <String>[gameLog_gameField],
     ).asStream().map( _dynamicToListGamesWithLogs );
 
   }
@@ -1567,6 +1569,7 @@ class RemoteRepository implements ICollectionRepository {
 
   }
 
+  @override
   Future<Store?> renameStoreIcon(int storeId, String imageName, String newImageName) async {
 
     final String iconName = await _iImageConnector.renameImage(
@@ -1707,10 +1710,10 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   List<DateTime> _dynamicToListDateTime(List<Map<String, Map<String, dynamic>>> results, String primaryTableName, String dateField) {
-    List<DateTime> datesList = [];
+    final List<DateTime> datesList = <DateTime>[];
 
     results.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      DateTime date = CollectionItemEntity.combineMaps(manyMap, primaryTableName)[dateField];
+      final DateTime date = CollectionItemEntity.combineMaps(manyMap, primaryTableName)[dateField] as DateTime;
 
       datesList.add(date);
     });
@@ -1886,7 +1889,7 @@ class RemoteRepository implements ICollectionRepository {
   }
 }
 
-const Map<GameView, String> allViewToTable = {
+const Map<GameView, String> allViewToTable = <GameView, String>{
   GameView.Main : 'All-Main',
   GameView.LastCreated : 'All-Last Created',
   GameView.Playing : 'All-Playing',
@@ -1896,7 +1899,7 @@ const Map<GameView, String> allViewToTable = {
   GameView.Review : 'All-Year In Review',
 };
 
-const Map<GameView, String> gameViewToTable = {
+const Map<GameView, String> gameViewToTable = <GameView, String>{
   GameView.Main : 'Owned-Main',
   GameView.LastCreated : 'Owned-Last Created',
   GameView.Playing : 'Owned-Playing',
@@ -1906,7 +1909,7 @@ const Map<GameView, String> gameViewToTable = {
   GameView.Review : 'Owned-Year In Review',
 };
 
-const Map<GameView, String> romViewToTable = {
+const Map<GameView, String> romViewToTable = <GameView, String>{
   GameView.Main : 'Rom-Main',
   GameView.LastCreated : 'Rom-Last Created',
   GameView.Playing : 'Rom-Playing',
@@ -1916,17 +1919,17 @@ const Map<GameView, String> romViewToTable = {
   GameView.Review : 'Rom-Year In Review',
 };
 
-const Map<DLCView, String> dlcViewToTable = {
+const Map<DLCView, String> dlcViewToTable = <DLCView, String>{
   DLCView.Main : 'DLC-Main',
   DLCView.LastCreated : 'DLC-Last Created',
 };
 
-const Map<PlatformView, String> platformViewToTable = {
+const Map<PlatformView, String> platformViewToTable = <PlatformView, String>{
   PlatformView.Main : 'Platform-Main',
   PlatformView.LastCreated : 'Platform-Last Created',
 };
 
-const Map<PurchaseView, String> purchaseViewToTable = {
+const Map<PurchaseView, String> purchaseViewToTable = <PurchaseView, String>{
   PurchaseView.Main : 'Purchase-Main',
   PurchaseView.LastCreated : 'Purchase-Last Created',
   PurchaseView.Pending : 'Purchase-Pending',
@@ -1934,22 +1937,22 @@ const Map<PurchaseView, String> purchaseViewToTable = {
   PurchaseView.Review : 'Purchase-Year In Review',
 };
 
-const Map<StoreView, String> storeViewToTable = {
+const Map<StoreView, String> storeViewToTable = <StoreView, String>{
   StoreView.Main : 'Store-Main',
   StoreView.LastCreated : 'Store-Last Created',
 };
 
-const Map<SystemView, String> systemViewToTable = {
+const Map<SystemView, String> systemViewToTable = <SystemView, String>{
   SystemView.Main : 'System-Main',
   SystemView.LastCreated : 'System-Last Created',
 };
 
-const Map<TagView, String> tagViewToTable = {
+const Map<TagView, String> tagViewToTable = <TagView, String>{
   TagView.Main : 'Tag-Main',
   TagView.LastCreated : 'Tag-Last Created',
 };
 
-const Map<TypeView, String> typeViewToTable = {
+const Map<TypeView, String> typeViewToTable = <TypeView, String>{
   TypeView.Main : 'Type-Main',
   TypeView.LastCreated : 'Type-Last Created',
 };

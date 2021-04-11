@@ -7,7 +7,7 @@ abstract class TabEvent extends Equatable {
   const TabEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class UpdateTab extends TabEvent {
@@ -17,7 +17,7 @@ class UpdateTab extends TabEvent {
   final GameTab gameTab;
 
   @override
-  List<Object> get props => [mainTab, gameTab];
+  List<Object> get props => <Object>[mainTab, gameTab];
 
   @override
   String toString() => 'UpdateTab { '
@@ -32,7 +32,7 @@ class UpdateMainTab extends TabEvent {
   final MainTab mainTab;
 
   @override
-  List<Object> get props => [mainTab];
+  List<Object> get props => <Object>[mainTab];
 
   @override
   String toString() => 'UpdateMainTab { '
@@ -46,7 +46,7 @@ class UpdateGameTab extends TabEvent {
   final GameTab gameTab;
 
   @override
-  List<Object> get props => [gameTab];
+  List<Object> get props => <Object>[gameTab];
 
   @override
   String toString() => 'UpdateGameTab { '

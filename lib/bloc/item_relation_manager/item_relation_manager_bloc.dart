@@ -45,7 +45,10 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield ItemRelationNotAdded(e.toString());
+
       }
     }
 
@@ -84,13 +87,13 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
   @mustCallSuper
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    return Future.error('Relation does not exist');
+    return Future<dynamic>.error('Relation does not exist');
 
   }
   @mustCallSuper
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    return Future.error('Relation does not exist');
+    return Future<dynamic>.error('Relation does not exist');
 
   }
 }

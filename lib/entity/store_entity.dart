@@ -3,7 +3,7 @@ import 'entity.dart';
 
 const String storeTable = 'Store';
 
-const List<String> storeFields = [
+const List<String> storeFields = <String>[
   idField,
   stor_nameField,
   stor_iconField,
@@ -25,9 +25,9 @@ class StoreEntity extends CollectionItemEntity {
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
-      id: map[idField],
-      name: map[stor_nameField],
-      iconFilename: map[stor_iconField],
+      id: map[idField] as int,
+      name: map[stor_nameField] as String,
+      iconFilename: map[stor_iconField] as String?,
     );
 
   }
@@ -45,10 +45,10 @@ class StoreEntity extends CollectionItemEntity {
 
   static List<StoreEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<StoreEntity> storesList = [];
+    final List<StoreEntity> storesList = <StoreEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, storeTable) );
+      final StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, storeTable) );
 
       storesList.add(store);
     });
@@ -58,7 +58,7 @@ class StoreEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

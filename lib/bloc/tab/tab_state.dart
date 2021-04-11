@@ -10,7 +10,7 @@ class TabState extends Equatable {
   final GameTab gameTab;
 
   @override
-  List<Object> get props => [mainTab, gameTab];
+  List<Object> get props => <Object>[mainTab, gameTab];
 
   @override
   String toString() => 'TabUpdated { '

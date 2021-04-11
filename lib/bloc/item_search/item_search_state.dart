@@ -7,16 +7,17 @@ abstract class ItemSearchState extends Equatable {
   const ItemSearchState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class ItemSearchEmpty<T extends CollectionItem> extends ItemSearchState {
+  // ignore: always_specify_types
   const ItemSearchEmpty([this.suggestions = const []]);
 
   final List<T> suggestions;
 
   @override
-  List<Object> get props => [suggestions];
+  List<Object> get props => <Object>[suggestions];
 
   @override
   String toString() => 'ItemSearchEmpty { '
@@ -32,7 +33,7 @@ class ItemSearchSuccess<T extends CollectionItem> extends ItemSearchState {
   final List<T> results;
 
   @override
-  List<Object> get props => [results];
+  List<Object> get props => <Object>[results];
 
   @override
   String toString() => 'ItemSearchSuccess { '
@@ -46,7 +47,7 @@ class ItemSearchError extends ItemSearchState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'ItemSearchError { '

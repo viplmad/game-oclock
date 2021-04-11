@@ -14,7 +14,7 @@ abstract class CollectionItemEntity extends Equatable {
 
   static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
-    Map<String, dynamic> _combinedMaps = Map<String, dynamic>();
+    final Map<String, dynamic> _combinedMaps = Map<String, dynamic>();
     manyMap.forEach((String table, Map<String, dynamic> map) {
 
       if(table.isEmpty || table == primaryTableName) {
@@ -28,7 +28,7 @@ abstract class CollectionItemEntity extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
   ];
 

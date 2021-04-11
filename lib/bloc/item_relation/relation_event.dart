@@ -5,7 +5,7 @@ abstract class RelationEvent extends Equatable {
   const RelationEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadRelation extends RelationEvent {}
@@ -16,7 +16,7 @@ class UpdateElementRelation<O extends Object> extends RelationEvent {
   final List<O> otherItems;
 
   @override
-  List<Object> get props => [otherItems];
+  List<Object> get props => <Object>[otherItems];
 
   @override
   String toString() => 'UpdateItemRelation { '
@@ -31,7 +31,7 @@ class UpdateRelationElement<O extends Object> extends RelationEvent {
   final O item;
 
   @override
-  List<Object> get props => [oldItem, item];
+  List<Object> get props => <Object>[oldItem, item];
 
   @override
   String toString() => 'UpdateRelationItem { '

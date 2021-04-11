@@ -16,7 +16,7 @@ class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
   @override
   Future<List<T>> getInitialItems() {
 
-    return Future<List<T>>.value([]);
+    return Future<List<T>>.value(<T>[]);
 
   }
 

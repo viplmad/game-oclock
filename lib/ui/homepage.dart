@@ -26,36 +26,36 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
+    final AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
+    final OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
+    final RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
+    final DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
+    final PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
+    final StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
+    final PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<TabBloc>(
           create: (BuildContext context) {
             return TabBloc();
@@ -155,7 +155,7 @@ class Homepage extends StatelessWidget {
           },
         ),
       ],
-      child: _HomepageBar(),
+      child: const _HomepageBar(),
     );
 
   }
@@ -169,7 +169,7 @@ class _HomepageBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    List<BarData> barDatum = [
+    final List<BarData> barDatum = <BarData>[
       GameTheme.barData(context),
       DLCTheme.barData(context),
       PurchaseTheme.barData(context),
@@ -184,19 +184,19 @@ class _HomepageBar extends StatelessWidget {
           appBar: _HomepageAppBar(
             state: state,
           ),
-          drawer: _HomepageDrawer(),
+          drawer: const _HomepageDrawer(),
           body: _HomepageBody(
             state: state,
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.shifting,
             currentIndex: state.mainTab.index,
-            onTap: (index) {
-              MainTab newMainTab = MainTab.values.elementAt(index);
+            onTap: (int index) {
+              final MainTab newMainTab = MainTab.values.elementAt(index);
 
               BlocProvider.of<TabBloc>(context).add(UpdateMainTab(newMainTab));
             },
-            items: barDatum.map<BottomNavigationBarItem>( (barItem) {
+            items: barDatum.map<BottomNavigationBarItem>( (BarData barItem) {
               return BottomNavigationBarItem(
                 label: barItem.title,
                 icon: Icon(barItem.icon),
@@ -235,13 +235,13 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
           gameTab: state.gameTab,
         );
       case MainTab.dlc:
-        return DLCAppBar();
+        return const DLCAppBar();
       case MainTab.purchase:
-        return PurchaseAppBar();
+        return const PurchaseAppBar();
       case MainTab.store:
-        return StoreAppBar();
+        return const StoreAppBar();
       case MainTab.platform:
-        return PlatformAppBar();
+        return const PlatformAppBar();
     }
 
   }
@@ -262,7 +262,7 @@ class _HomepageDrawer extends StatelessWidget {
           DrawerHeader(
             child: Text(
               GameCollectionLocalisations.appTitle,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),
@@ -272,7 +272,7 @@ class _HomepageDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: const Icon(Icons.settings),
             title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
             onTap: () {
               Navigator.pushNamed(
@@ -305,13 +305,13 @@ class _HomepageFAB extends StatelessWidget {
           gameTab: state.gameTab,
         );
       case MainTab.dlc:
-        return DLCFAB();
+        return const DLCFAB();
       case MainTab.purchase:
-        return PurchaseFAB();
+        return const PurchaseFAB();
       case MainTab.store:
-        return StoreFAB();
+        return const StoreFAB();
       case MainTab.platform:
-        return PlatformFAB();
+        return const PlatformFAB();
     }
 
   }
@@ -334,13 +334,13 @@ class _HomepageBody extends StatelessWidget {
           gameTab: state.gameTab,
         );
       case MainTab.dlc:
-        return DLCList();
+        return const DLCList();
       case MainTab.purchase:
-        return PurchaseList();
+        return const PurchaseList();
       case MainTab.store:
-        return StoreList();
+        return const StoreList();
       case MainTab.platform:
-        return PlatformList();
+        return const PlatformList();
     }
 
   }

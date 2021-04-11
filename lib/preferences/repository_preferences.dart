@@ -23,19 +23,19 @@ const String _trueValue = '1';
 class RepositoryPreferences {
   static Future<bool> existsRepository(){
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_repositorySetKey).then<bool>((String value) {
 
       return value == _trueValue;
 
-    }, onError: (error) => false);
+    }, onError: () => false);
 
   }
 
   static Future<RepositoryType> retrieveRepositoryType() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_typeRepositoryKey).then<RepositoryType>((String value) {
 
@@ -46,15 +46,15 @@ class RepositoryPreferences {
           return RepositoryType.Local;
       }
 
-      throw FormatException();
+      throw const FormatException();
 
-    }, onError: (error) => null);
+    });
 
   }
 
   static Future<ICollectionRepository> retrieveRepository() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return retrieveRepositoryType().then<ICollectionRepository>((RepositoryType type) {
 
@@ -66,15 +66,15 @@ class RepositoryPreferences {
           break;
       }
 
-      throw FormatException();
+      throw const FormatException();
 
-    }, onError: (error) => null);
+    });
 
   }
 
   static Future<bool> setRepositoryExist() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.setString(
       _repositorySetKey,
@@ -85,7 +85,7 @@ class RepositoryPreferences {
 
   static Future<bool> setRepositoryTypeRemote() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.setString(
       _typeRepositoryKey,
@@ -96,7 +96,7 @@ class RepositoryPreferences {
 
   static Future<bool> setRepositoryTypeLocal() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.setString(
       _typeRepositoryKey,
@@ -107,7 +107,7 @@ class RepositoryPreferences {
 
   static Future<CloudinaryInstance> retrieveCloudinaryInstance() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_cloudinaryConnectionStringKey).then<CloudinaryInstance>((String value) {
 
@@ -115,15 +115,15 @@ class RepositoryPreferences {
         return CloudinaryInstance.fromString(value);
       }
 
-      throw FormatException();
+      throw const FormatException();
 
-    }, onError: (error) => null);
+    });
 
   }
 
   static Future<PostgresInstance> retrievePostgresInstance() {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_postgresConnectionStringKey).then<PostgresInstance>((String value) {
 
@@ -131,17 +131,17 @@ class RepositoryPreferences {
         return PostgresInstance.fromString(value);
       }
 
-      throw FormatException();
+      throw const FormatException();
 
-    }, onError: (error) => null);
+    });
 
   }
 
   static Future<bool> setCloudinaryConnector(CloudinaryInstance cloudinaryInstance) {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    String connectionString = cloudinaryInstance.connectionString();
+    final String connectionString = cloudinaryInstance.connectionString();
 
     return sharedPreferences.setString(
       _cloudinaryConnectionStringKey,
@@ -152,9 +152,9 @@ class RepositoryPreferences {
 
   static Future<bool> setPostgresConnector(PostgresInstance postgresInstance) {
 
-    EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    String connectionString = postgresInstance.connectionString();
+    final String connectionString = postgresInstance.connectionString();
 
     return sharedPreferences.setString(
       _postgresConnectionStringKey,
@@ -187,7 +187,7 @@ class RepositoryPreferences {
 
       return CloudinaryConnector.fromConnectionString(value);
 
-    }, onError: (error) => null);
+    }, onError: () => null);
 
   }
 
@@ -197,7 +197,7 @@ class RepositoryPreferences {
 
       return PostgresConnector.fromConnectionString(value);
 
-    }, onError: (error) => null);
+    }, onError: () => null);
 
   }
 }

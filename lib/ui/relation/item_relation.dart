@@ -38,7 +38,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if(state is ItemRelationAdded<W>) {
-          String message = GameCollectionLocalisations.of(context).linkedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).linkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -57,7 +57,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotAdded) {
-          String message = GameCollectionLocalisations.of(context).unableToLinkString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).unableToLinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -70,7 +70,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationDeleted<W>) {
-          String message = GameCollectionLocalisations.of(context).unlinkedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).unlinkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -89,7 +89,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           );
         }
         if(state is ItemRelationNotDeleted) {
-          String message = GameCollectionLocalisations.of(context).unableToUnlinkString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context).unableToUnlinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -141,8 +141,8 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Divider(),
-              LinearProgressIndicator(),
+              const Divider(),
+              const LinearProgressIndicator(),
             ],
           );
 
@@ -187,7 +187,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
 
   }
 
-  Future<Object?> Function() _onLocalSearchTap(BuildContext context, List<W> items) {
+  Future<dynamic> Function() _onLocalSearchTap(BuildContext context, List<W> items) {
 
     return () {
       return Navigator.pushNamed(
@@ -205,7 +205,7 @@ abstract class ItemRelationList<T extends CollectionItem, W extends CollectionIt
       Navigator.pushNamed(
         context,
         detailRouteName,
-        arguments: DetailArguments(
+        arguments: DetailArguments<W>(
           item: item,
           onUpdate: (W? updatedItem) {
 
@@ -271,9 +271,9 @@ class _ResultsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Divider(),
+        const Divider(),
         Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
           child: Column(
             children: <Widget>[
               Padding(
@@ -282,7 +282,7 @@ class _ResultsList extends StatelessWidget {
                   text: headerText,
                   trailingWidget: onListSearch != null?
                     IconButton(
-                      icon: Icon(Icons.search),
+                      icon: const Icon(Icons.search),
                       tooltip: GameCollectionLocalisations.of(context).searchInListString,
                       onPressed: onListSearch,
                     ) : Container(),
@@ -322,7 +322,7 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: ElevatedButton.icon(
         label: Text(GameCollectionLocalisations.of(context).linkString(typeName)),
-        icon: Icon(Icons.link),
+        icon: const Icon(Icons.link),
         onPressed: () {
 
           onSearch().then( (W? result) {
@@ -377,10 +377,10 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
       headerText: relationName,
       resultList: ListView.builder(
         shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          W result = items[index];
+          final W result = items[index];
 
           return DismissibleItem(
             dismissibleKey: result.id,
@@ -439,10 +439,10 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
         ),
         child: ListView.builder(
           shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
-            W result = items[index];
+            final W result = items[index];
 
             return DismissibleItem(
               dismissibleKey: result.id,

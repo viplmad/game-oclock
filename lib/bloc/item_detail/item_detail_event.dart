@@ -7,7 +7,7 @@ abstract class ItemDetailEvent extends Equatable {
   const ItemDetailEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadItem extends ItemDetailEvent {}
@@ -20,7 +20,7 @@ class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'UpdateItem { '

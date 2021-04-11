@@ -61,12 +61,12 @@ abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game
     return (int selectedViewIndex) async {
 
       if(selectedViewIndex == views.length - 1) {
-        int? year = await showDialog<int>(
+        final int? year = await showDialog<int>(
           context: context,
           builder: (BuildContext context) {
             return Theme(
               data: GameTheme.themeData(context),
-              child: YearPickerDialog(),
+              child: const YearPickerDialog(),
             );
           },
         );
@@ -140,7 +140,7 @@ class GameTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> tabTitles = [
+    final List<String> tabTitles = <String>[
       GameCollectionLocalisations.of(context).allString,
       GameCollectionLocalisations.of(context).ownedString,
       GameCollectionLocalisations.of(context).romsString,
@@ -152,7 +152,7 @@ class GameTabs extends StatelessWidget {
       child: Builder(
         builder: (BuildContext context) {
           DefaultTabController.of(context)!.addListener( () {
-            GameTab newGameTab = GameTab.values.elementAt(DefaultTabController.of(context)!.index);
+            final GameTab newGameTab = GameTab.values.elementAt(DefaultTabController.of(context)!.index);
 
             BlocProvider.of<TabBloc>(context).add(UpdateGameTab(newGameTab));
           });
@@ -177,7 +177,7 @@ class GameTabs extends StatelessWidget {
               ];
             },
             body: TabBarView(
-              children: [
+              children: <Widget>[
                 _AllGameList(
                   tabTitle: tabTitles.elementAt(0),
                 ),
@@ -274,6 +274,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   @override
   final String calendarRouteName = gameMultiCalendarRoute;
 
+  @override
   void Function() onStatisticsTap(BuildContext context) {
 
     return () {

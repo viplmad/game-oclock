@@ -24,7 +24,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
   @override
   Stream<List<Purchase>> getReadViewStream(UpdateView event) {
 
-    PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
+    final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
     return iCollectionRepository.getPurchasesWithView(purchaseView);
 
@@ -33,7 +33,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
   @override
   Stream<List<Purchase>> getReadYearViewStream(UpdateYearView event) {
 
-    PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
+    final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
     return iCollectionRepository.getPurchasesWithYearView(purchaseView, event.year);
 

@@ -17,18 +17,20 @@ class BaseApi {
   }
 
   Future<Response<T>> httpGet<T>(String url, {Map<String, dynamic>? params}) async {
-    Dio dio = await getApiClient();
-    if (params != null)
+    final Dio dio = await getApiClient();
+    if (params != null) {
       return await dio.get(url, queryParameters: params);
-    else
+    } else {
       return await dio.get(url);
+    }
   }
 
   Future<Response<T>> httpPost<T>(String url, Map<String, dynamic>? params) async {
-    Dio dio = await getApiClient();
-    if (params != null)
+    final Dio dio = await getApiClient();
+    if (params != null) {
       return await dio.post(url, data: params);
-    else
+    } else {
       return await dio.post(url);
+    }
   }
 }

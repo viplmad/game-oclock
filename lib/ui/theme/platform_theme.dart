@@ -15,7 +15,7 @@ class PlatformTheme {
   static const Color physicalTypeColour = Colors.blueAccent;
   static const Color digitalTypeColour = Colors.deepPurpleAccent;
 
-  static const List<Color> typeColours = [
+  static const List<Color> typeColours = <Color>[
     physicalTypeColour,
     digitalTypeColour,
   ];

@@ -24,7 +24,7 @@ class StoreListBloc extends ItemListBloc<Store> {
   @override
   Stream<List<Store>> getReadViewStream(UpdateView event) {
 
-    StoreView storeView = StoreView.values[event.viewIndex];
+    final StoreView storeView = StoreView.values[event.viewIndex];
 
     return iCollectionRepository.getStoresWithView(storeView);
 

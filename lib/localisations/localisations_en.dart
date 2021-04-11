@@ -383,25 +383,25 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String euroString(double amount) {
-    String amountString = amount.toStringAsFixed(2);
+    final String amountString = amount.toStringAsFixed(2);
     return '$amountString €';
   }
   @override
   String percentageString(double amount) {
-    String amountString = amount.toStringAsFixed(2);
+    final String amountString = amount.toStringAsFixed(2);
     return '$amountString %';
   }
   @override
   String timeString(DateTime date) {
-    String hourString = date.hour.toString().padLeft(2, '0');
-    String minuteString = date.minute.toString().padLeft(2, '0');
+    final String hourString = date.hour.toString().padLeft(2, '0');
+    final String minuteString = date.minute.toString().padLeft(2, '0');
     return '$hourString:$minuteString';
   }
   @override
   String dateString(DateTime date) {
-    String dayString = date.day.toString();
-    String monthString = date.month.toString();
-    String yearString = date.year.toString();
+    final String dayString = date.day.toString();
+    final String monthString = date.month.toString();
+    final String yearString = date.year.toString();
     return '$dayString/$monthString/$yearString';
   }
   @override
@@ -410,8 +410,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    String hoursString = duration.inHours.toString();
-    String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
+    final String hoursString = duration.inHours.toString();
+    final String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
     return '$hoursString h $minutesString min';
   }
   @override
@@ -422,6 +422,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   String shortYearString(int year) {
     return '\'' + year.toString().substring(2);
   }
+  @override
   String hoursString(int hours) {
     return '$hours h';
   }

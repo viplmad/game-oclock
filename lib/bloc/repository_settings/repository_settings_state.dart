@@ -10,7 +10,7 @@ abstract class RepositorySettingsState extends Equatable {
   const RepositorySettingsState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class RepositorySettingsLoading extends RepositorySettingsState {}
@@ -26,7 +26,7 @@ class RemoteRepositorySettingsLoaded extends RepositorySettingsState {
   final RepositoryType radio = RepositoryType.Remote;
 
   @override
-  List<Object> get props => [postgresInstance, cloudinaryInstance];
+  List<Object> get props => <Object>[postgresInstance, cloudinaryInstance];
 
   @override
   String toString() => 'UpdatePostgresConnectionSettings { '

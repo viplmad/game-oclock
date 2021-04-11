@@ -24,7 +24,7 @@ class TagListBloc extends ItemListBloc<Tag> {
   @override
   Stream<List<Tag>> getReadViewStream(UpdateView event) {
 
-    TagView tagView = TagView.values[event.viewIndex];
+    final TagView tagView = TagView.values[event.viewIndex];
 
     return iCollectionRepository.getTagsWithView(tagView);
 

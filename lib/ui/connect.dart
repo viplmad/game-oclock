@@ -22,7 +22,7 @@ class Connectpage extends StatelessWidget {
       create: (BuildContext context) {
         return ConnectionBloc()..add(Connect());
       },
-      child: _ConnectpageBody(),
+      child: const _ConnectpageBody(),
     );
 
   }
@@ -65,8 +65,8 @@ class _ConnectpageBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
+                    const Padding(
+                      padding: EdgeInsets.all(12.0),
                       child: LoadingIcon(),
                     ),
                     Text(GameCollectionLocalisations.of(context).connectingString),
@@ -79,7 +79,7 @@ class _ConnectpageBody extends StatelessWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     Text(GameCollectionLocalisations.of(context).failedConnectionString),
                     ElevatedButton(
                       child: Text(GameCollectionLocalisations.of(context).retryString),

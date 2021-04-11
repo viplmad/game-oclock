@@ -20,7 +20,7 @@ class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W>
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getBaseGameFromDLC(itemId).map<List<Game>>( (Game? game) => game != null? [game] : [] ) as Stream<List<W>>;
+        return iCollectionRepository.getBaseGameFromDLC(itemId).map<List<Game>>( (Game? game) => game != null? <Game>[game] : <Game>[] ) as Stream<List<W>>;
       case Purchase:
         return iCollectionRepository.getPurchasesFromDLC(itemId) as Stream<List<W>>;
     }

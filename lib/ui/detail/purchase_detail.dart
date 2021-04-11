@@ -49,29 +49,29 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   }
 
   @override
-  List<BlocProvider> relationBlocsBuilder() {
+  List<BlocProvider<dynamic>> relationBlocsBuilder() {
 
-    PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
+    final PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
+    final PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
+    final PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
+    final PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return [
+    return <BlocProvider<dynamic>>[
       blocProviderRelationBuilder<Store>(_storeRelationManagerBloc),
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
@@ -138,7 +138,7 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Purchase purchase) {
 
-    return [
+    return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).descriptionFieldString,
@@ -180,7 +180,7 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
 
-    return [
+    return <Widget>[
       PurchaseStoreRelationList(
         relationName: GameCollectionLocalisations.of(context).storeString,
         relationTypeName: GameCollectionLocalisations.of(context).storeString,

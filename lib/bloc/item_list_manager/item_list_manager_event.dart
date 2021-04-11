@@ -7,7 +7,7 @@ abstract class ItemListManagerEvent extends Equatable {
   const ItemListManagerEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AddItem extends ItemListManagerEvent {
@@ -16,7 +16,7 @@ class AddItem extends ItemListManagerEvent {
   final String title;
 
   @override
-  List<Object> get props => [title];
+  List<Object> get props => <Object>[title];
 
   @override
   String toString() => 'AddItem { '
@@ -30,7 +30,7 @@ class DeleteItem<T extends CollectionItem> extends ItemListManagerEvent {
   final T item;
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'DeleteItem { '

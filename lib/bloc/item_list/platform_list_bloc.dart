@@ -24,7 +24,7 @@ class PlatformListBloc extends ItemListBloc<Platform> {
   @override
   Stream<List<Platform>> getReadViewStream(UpdateView event) {
 
-    PlatformView platformView = PlatformView.values[event.viewIndex];
+    final PlatformView platformView = PlatformView.values[event.viewIndex];
 
     return iCollectionRepository.getPlatformsWithView(platformView);
 

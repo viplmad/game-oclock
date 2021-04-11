@@ -8,7 +8,7 @@ abstract class RepositorySettingsManagerEvent extends Equatable {
   const RepositorySettingsManagerEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
@@ -18,7 +18,7 @@ class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
   final CloudinaryInstance cloudinaryInstance;
 
   @override
-  List<Object> get props => [postgresInstance, cloudinaryInstance];
+  List<Object> get props => <Object>[postgresInstance, cloudinaryInstance];
 
   @override
   String toString() => 'UpdatePostgresConnectionSettings { '

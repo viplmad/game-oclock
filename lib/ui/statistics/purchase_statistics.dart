@@ -49,17 +49,17 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
 
   @override
   List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, PurchasesData data) {
-    int totalItems = data.length;
+    final int totalItems = data.length;
 
-    double priceSum = data.priceSum();
-    double originalPriceSum = data.originalPriceSum();
-    double externalCreditSum = data.externalCreditSum();
+    final double priceSum = data.priceSum();
+    final double originalPriceSum = data.originalPriceSum();
+    final double externalCreditSum = data.externalCreditSum();
 
-    double savedSum = originalPriceSum - priceSum;
+    final double savedSum = originalPriceSum - priceSum;
 
-    int totalItemsWithoutPromotion = data.lengthWithoutPromotion;
+    final int totalItemsWithoutPromotion = data.lengthWithoutPromotion;
 
-    return [
+    return <Widget>[
       statisticsIntField(
         context,
         fieldName: GameCollectionLocalisations.of(context).totalPurchasesString,
@@ -125,13 +125,13 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         fieldName: GameCollectionLocalisations.of(context).avgSavedString,
         value: (totalItems > 0)? savedSum / totalItems : 0,
       ),
-      Divider(),
+      const Divider(),
       _countByYear(context, data),
-      Divider(),
+      const Divider(),
       _countByPrice(context, data),
-      Divider(),
+      const Divider(),
       _sumPriceByYear(context, data),
-      Divider(),
+      const Divider(),
       _sumOriginalPriceByYear(context, data),
     ];
 
@@ -139,17 +139,17 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
 
   @override
   List<Widget> statisticsYearFieldsBuilder(BuildContext context, PurchasesData data) {
-    int totalItems = data.length;
+    final int totalItems = data.length;
 
-    double priceSum = data.priceSum();
-    double externalCreditSum = data.externalCreditSum();
-    double originalPriceSum = data.originalPriceSum();
+    final double priceSum = data.priceSum();
+    final double externalCreditSum = data.externalCreditSum();
+    final double originalPriceSum = data.originalPriceSum();
 
-    double savedSum = originalPriceSum - priceSum;
+    final double savedSum = originalPriceSum - priceSum;
 
-    int totalItemsWithoutPromotion = data.lengthWithoutPromotion;
+    final int totalItemsWithoutPromotion = data.lengthWithoutPromotion;
 
-    return [
+    return <Widget>[
       statisticsIntField(
         context,
         fieldName: GameCollectionLocalisations.of(context).totalPurchasesString,
@@ -215,15 +215,15 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         fieldName: GameCollectionLocalisations.of(context).avgSavedString,
         value: (totalItems > 0)? savedSum / totalItems : 0,
       ),
-      Divider(),
+      const Divider(),
       _countByMonth(context, data),
-      Divider(),
+      const Divider(),
       _countByPrice(context, data),
-      Divider(),
+      const Divider(),
       _sumPriceByMonth(context, data),
-      Divider(),
+      const Divider(),
       _sumOriginalPriceByMonth(context, data),
-      Divider(),
+      const Divider(),
       _sumSavedByMonth(context, data),
     ];
 
@@ -232,8 +232,8 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
   //#region Common
   Widget _countByPrice(BuildContext context, PurchasesData data) {
 
-    List<double> intervals = [0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0];
-    List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<double>(
+    final List<double> intervals = <double>[0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0];
+    final List<String> domainLabels = formatIntervalLabelsWithInitialAndLast<double>(
       intervals,
       (double element) => element.toStringAsFixed(0),
     );
@@ -252,8 +252,8 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
   //#region General
   Widget _countByYear(BuildContext context, PurchasesData data) {
 
-    List<int> years = data.years;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> years = data.years;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );
@@ -270,8 +270,8 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
 
   Widget _sumPriceByYear(BuildContext context, PurchasesData data) {
 
-    List<int> years = data.years;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> years = data.years;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );
@@ -288,8 +288,8 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
 
   Widget _sumOriginalPriceByYear(BuildContext context, PurchasesData data) {
 
-    List<int> years = data.years;
-    List<String> domainLabels = formatIntervalLabelsEqual<int>(
+    final List<int> years = data.years;
+    final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
       (int element) => GameCollectionLocalisations.of(context).yearString(element),
     );

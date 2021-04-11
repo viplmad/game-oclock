@@ -51,34 +51,34 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   }
 
   @override
-  List<BlocProvider> relationBlocsBuilder() {
+  List<BlocProvider<dynamic>> relationBlocsBuilder() {
 
-    GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
+    final GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
+    final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
+    final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
+    final GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
+    final GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return [
+    return <BlocProvider<dynamic>>[
       blocProviderRelationBuilder<Platform>(_platformRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
       blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
@@ -164,7 +164,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Game game) {
 
-    return [
+    return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
@@ -188,7 +188,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         fieldName: GameCollectionLocalisations.of(context).statusFieldString,
         field: game_statusField,
         value: game.status,
-        possibleValues: [
+        possibleValues: <String>[
           GameCollectionLocalisations.of(context).lowPriorityString,
           GameCollectionLocalisations.of(context).nextUpString,
           GameCollectionLocalisations.of(context).playingString,
@@ -229,7 +229,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ListTileTheme.merge(
         child: ListTile(
           title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
-          trailing: Icon(Icons.arrow_forward),
+          trailing: const Icon(Icons.arrow_forward),
           onTap: () {
             Navigator.pushNamed(
               context,
@@ -266,7 +266,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
 
-    return [
+    return <Widget>[
       GamePlatformRelationList(
         relationName: GameCollectionLocalisations.of(context).platformsString,
         relationTypeName: GameCollectionLocalisations.of(context).platformString,

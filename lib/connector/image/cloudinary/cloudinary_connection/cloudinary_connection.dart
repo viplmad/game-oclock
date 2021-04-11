@@ -8,16 +8,16 @@ import 'cloudinary_response.dart';
 
 
 class CloudinaryConnection extends BaseApi {
-  String _cloudName;
-  String _apiKey;
-  String _apiSecret;
+  final String _cloudName;
+  final String _apiKey;
+  final String _apiSecret;
 
   CloudinaryConnection(this._apiKey, this._apiSecret, this._cloudName);
 
   Future<CloudinaryResponse> uploadImage(String imagePath, {String? imageName, String? folder}) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    final int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = new Map();
+    final Map<String, dynamic> params = Map<String, dynamic>();
 
     params['api_key'] = _apiKey;
     params['timestamp'] = timeStamp;
@@ -36,27 +36,26 @@ class CloudinaryConnection extends BaseApi {
 
     params['signature'] = getSignature(timeStamp, params);
 
-    FormData formData = FormData.fromMap(params);
+    final FormData formData = FormData.fromMap(params);
 
-    Dio dio = await getApiClient();
+    final Dio dio = await getApiClient();
 
     try {
 
-      Response response = await dio.post(_cloudName + '/image/upload', data: formData);
-      return CloudinaryResponse.fromJsonMap(response.data);
+      final Response<Map<String, dynamic>> response = await dio.post<Map<String, dynamic>>(_cloudName + '/image/upload', data: formData);
+      return CloudinaryResponse.fromJsonMap(response.data!);
 
-    } catch (error, stackTrace) {
+    } catch (error) {
 
-      print('Exception occurred: $error stackTrace: $stackTrace');
       return CloudinaryResponse.fromError('$error');
 
     }
   }
 
   Future<CloudinaryResponse> renameImage({required String imageName, required String newImageName, required String folder}) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    final int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = new Map();
+    final Map<String, dynamic> params = Map<String, dynamic>();
 
     params['api_key'] = _apiKey;
     params['timestamp'] = timeStamp;
@@ -66,18 +65,17 @@ class CloudinaryConnection extends BaseApi {
 
     params['signature'] = getSignature(timeStamp, params);
 
-    FormData formData = FormData.fromMap(params);
+    final FormData formData = FormData.fromMap(params);
 
-    Dio dio = await getApiClient();
+    final Dio dio = await getApiClient();
 
     try{
 
-      Response response = await dio.post(_cloudName + '/image/rename', data: formData);
-      return CloudinaryResponse.fromJsonMap(response.data);
+      final Response<Map<String, dynamic>> response = await dio.post<Map<String, dynamic>>(_cloudName + '/image/rename', data: formData);
+      return CloudinaryResponse.fromJsonMap(response.data!);
 
-    } catch(error, stackTrace) {
+    } catch(error) {
 
-      print('Exception occurred: $error stackTrace: $stackTrace');
       return CloudinaryResponse.fromError('$error');
 
     }
@@ -85,9 +83,9 @@ class CloudinaryConnection extends BaseApi {
   }
 
   Future<CloudinaryResponse> deleteImage({required String imageName, required String folder}) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    final int timeStamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = new Map();
+    final Map<String, dynamic> params = Map<String, dynamic>();
 
     params['api_key'] = _apiKey;
     params['timestamp'] = timeStamp;
@@ -96,18 +94,17 @@ class CloudinaryConnection extends BaseApi {
 
     params['signature'] = getSignature(timeStamp, params);
 
-    FormData formData = FormData.fromMap(params);
+    final FormData formData = FormData.fromMap(params);
 
-    Dio dio = await getApiClient();
+    final Dio dio = await getApiClient();
 
     try{
 
-      Response response = await dio.post(_cloudName + '/image/destroy', data: formData);
-      return CloudinaryResponse.fromJsonMap(response.data);
+      final Response<Map<String, dynamic>> response = await dio.post<Map<String, dynamic>>(_cloudName + '/image/destroy', data: formData);
+      return CloudinaryResponse.fromJsonMap(response.data!);
 
-    } catch(error, stackTrace) {
+    } catch(error) {
 
-      print('Exception occurred: $error stackTrace: $stackTrace');
       return CloudinaryResponse.fromError('$error');
 
     }
@@ -115,19 +112,19 @@ class CloudinaryConnection extends BaseApi {
 
   String getSignature(int timestamp, Map<String, dynamic> paramsMap) {
 
-    Map<String, dynamic> cleanParamsMap = Map.from( paramsMap );
+    final Map<String, dynamic> cleanParamsMap = Map<String, dynamic>.from( paramsMap );
     cleanParamsMap.remove('file');
     cleanParamsMap.remove('resource_type');
     cleanParamsMap.remove('api_key');
     cleanParamsMap['timestamp'] = timestamp;
 
-    List<String> sortedParams = cleanParamsMap.keys.toList(growable: false);
+    final List<String> sortedParams = cleanParamsMap.keys.toList(growable: false);
     sortedParams.sort();
 
-    StringBuffer signBuffer = new StringBuffer();
+    final StringBuffer signBuffer = StringBuffer();
     for(int i = 0; i < sortedParams.length; i++) {
-      String param = sortedParams[i];
-      String value = cleanParamsMap[param].toString();
+      final String param = sortedParams[i];
+      final String value = cleanParamsMap[param].toString();
 
       signBuffer.write(param + '=' + value);
 
@@ -137,7 +134,7 @@ class CloudinaryConnection extends BaseApi {
     }
     signBuffer.write(_apiSecret);
 
-    List<int> bytes = utf8.encode(signBuffer.toString().trim()); // data being hashed
+    final List<int> bytes = utf8.encode(signBuffer.toString().trim()); // data being hashed
 
     return sha1.convert(bytes).toString();
 

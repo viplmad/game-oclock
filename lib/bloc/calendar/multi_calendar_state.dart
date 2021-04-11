@@ -8,7 +8,7 @@ abstract class MultiCalendarState extends Equatable {
   const MultiCalendarState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class CalendarLoading extends MultiCalendarState {}
@@ -25,10 +25,10 @@ class CalendarLoaded extends MultiCalendarState {
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [gamesWithLogs, logDates, focusedDate, selectedDate, style];
+  List<Object> get props => <Object>[gamesWithLogs, logDates, focusedDate, selectedDate, style];
 
   @override
-  String toString() => 'UpdateCalendar { '
+  String toString() => 'CalendarLoaded { '
       'gamesWithLogs: $gamesWithLogs, '
       'logDates: $logDates, '
       'focusedDate: $focusedDate, '
@@ -45,7 +45,7 @@ class CalendarNotLoaded extends MultiCalendarState {
   final String error;
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 
   @override
   String toString() => 'CalendarNotLoaded { '

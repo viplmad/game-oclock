@@ -49,19 +49,19 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   }
 
   @override
-  List<BlocProvider> relationBlocsBuilder() {
+  List<BlocProvider<dynamic>> relationBlocsBuilder() {
 
-    PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
+    final PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
+    final PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return [
+    return <BlocProvider<dynamic>>[
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<System>(_systemRelationManagerBloc),
 
@@ -116,7 +116,7 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Platform platform) {
 
-    return [
+    return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
@@ -128,7 +128,7 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
         fieldName: GameCollectionLocalisations.of(context).platformTypeFieldString,
         field: plat_typeField,
         value: platform.type,
-        possibleValues: [
+        possibleValues: <String>[
           GameCollectionLocalisations.of(context).physicalString,
           GameCollectionLocalisations.of(context).digitalString,
         ],
@@ -141,7 +141,7 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
 
-    return [
+    return <Widget>[
       PlatformGameRelationList(
         relationName: GameCollectionLocalisations.of(context).gamesString,
         relationTypeName: GameCollectionLocalisations.of(context).gameString,

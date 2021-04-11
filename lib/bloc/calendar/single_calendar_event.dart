@@ -8,31 +8,36 @@ abstract class SingleCalendarEvent extends Equatable {
   const SingleCalendarEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoadCalendar extends SingleCalendarEvent {}
 
 class UpdateCalendar extends SingleCalendarEvent {
-  const UpdateCalendar(this.timeLogs, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.style);
+  // ignore: avoid_positional_boolean_parameters
+  const UpdateCalendar(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, this.style);
 
   final List<TimeLog> timeLogs;
+  final Set<DateTime> logDates;
   final List<DateTime> finishDates;
   final DateTime selectedDate;
   final List<TimeLog> selectedTimeLogs;
   final bool isSelectedDateFinish;
+  final Duration selectedTotalTime;
   final CalendarStyle style;
 
   @override
-  List<Object> get props => [timeLogs, finishDates, selectedDate, style];
+  List<Object> get props => <Object>[timeLogs, logDates, finishDates, selectedDate, style];
 
   @override
   String toString() => 'UpdateCalendar { '
       'timeLogs: $timeLogs, '
+      'logDates: $logDates, '
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
       'selectedTimeLogs: $selectedTimeLogs, '
       'isSelectedDateFinish: $isSelectedDateFinish, '
+      'selectedTotalTime: $selectedTotalTime, '
       'style: $style'
       ' }';
 }
@@ -43,7 +48,7 @@ class UpdateSelectedDate extends SingleCalendarEvent {
   final DateTime date;
 
   @override
-  List<Object> get props => [date];
+  List<Object> get props => <Object>[date];
 
   @override
   String toString() => 'UpdateSelectedDate { '

@@ -35,14 +35,14 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
       backgroundColor: themeColor,
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.sort_by_alpha),
+          icon: const Icon(Icons.sort_by_alpha),
           tooltip: GameCollectionLocalisations.of(context).changeOrderString,
           onPressed: () {
             BlocProvider.of<K>(context).add(UpdateSortOrder());
           },
         ),
         IconButton(
-          icon: Icon(Icons.grid_on),
+          icon: const Icon(Icons.grid_on),
           tooltip: GameCollectionLocalisations.of(context).changeStyleString,
           onPressed: () {
             BlocProvider.of<K>(context).add(UpdateStyle());
@@ -60,7 +60,7 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
   Widget _viewActionBuilder(BuildContext context, {required List<String> views}) {
 
     return PopupMenuButton<int>(
-      icon: Icon(Icons.view_carousel),
+      icon: const Icon(Icons.view_carousel),
       tooltip: GameCollectionLocalisations.of(context).changeViewString,
       itemBuilder: (BuildContext context) {
         return views.map( (String view) {
@@ -101,10 +101,10 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
 
     return FloatingActionButton(
       tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
       backgroundColor: themeColor,
       onPressed: () {
-        BlocProvider.of<S>(context).add(AddItem());
+        BlocProvider.of<S>(context).add(const AddItem());
       },
     );
 
@@ -122,12 +122,12 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   @override
   Widget build(BuildContext context) {
-    String currentTypeString = typeName(context);
+    final String currentTypeString = typeName(context);
 
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if(state is ItemAdded<T>) {
-          String message = GameCollectionLocalisations.of(context).addedString(currentTypeString);
+          final String message = GameCollectionLocalisations.of(context).addedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -138,7 +138,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
-                  arguments: DetailArguments(
+                  arguments: DetailArguments<T>(
                     item: state.item,
                   )
                 );
@@ -147,7 +147,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemNotAdded) {
-          String message = GameCollectionLocalisations.of(context).unableToAddString(currentTypeString);
+          final String message = GameCollectionLocalisations.of(context).unableToAddString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -161,7 +161,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemDeleted<T>) {
-          String message = GameCollectionLocalisations.of(context).deletedString(currentTypeString);
+          final String message = GameCollectionLocalisations.of(context).deletedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -169,7 +169,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
           );
         }
         if(state is ItemNotDeleted) {
-          String message = GameCollectionLocalisations.of(context).unableToDeleteString(currentTypeString);
+          final String message = GameCollectionLocalisations.of(context).unableToDeleteString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -207,7 +207,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
           }
 
-          return LoadingIcon();
+          return const LoadingIcon();
 
         },
       ),
@@ -253,19 +253,19 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   tooltip: GameCollectionLocalisations.of(context).searchInViewString,
                   onPressed: items.isNotEmpty? _onSearchTap(context) : null,
                 ),
                 statisticsRouteName.isNotEmpty?
                   IconButton(
-                    icon: Icon(Icons.insert_chart),
+                    icon: const Icon(Icons.insert_chart),
                     tooltip: GameCollectionLocalisations.of(context).statsInViewString,
                     onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
                   ) : Container(),
                 calendarRouteName.isNotEmpty?
                   IconButton(
-                    icon: Icon(Icons.date_range),
+                    icon: const Icon(Icons.date_range),
                     tooltip: GameCollectionLocalisations.of(context).calendarView,
                     onPressed: _onCalendarTap(context),
                   ) : Container(),
@@ -460,7 +460,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        T item = items.elementAt(index);
+        final T item = items.elementAt(index);
 
         return DismissibleItem(
           dismissibleKey: item.id,
@@ -507,7 +507,7 @@ class ItemGridView<T extends CollectionItem> extends StatelessWidget {
         crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
       ),
       itemBuilder: (BuildContext context, int index) {
-        T item = items[index];
+        final T item = items[index];
 
         return itemBuilder(context, item);
 

@@ -52,6 +52,9 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
         await iCollectionRepository.open();
 
       } catch(e) {
+
+        yield ItemFieldNotUpdated(e.toString());
+
       }
     }
 

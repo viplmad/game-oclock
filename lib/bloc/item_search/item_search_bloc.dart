@@ -35,7 +35,7 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
   Stream<ItemSearchState> checkConnection() async* {
 
     if(iCollectionRepository!.isClosed()) {
-      yield ItemSearchError('Connection lost. Trying to reconnect');
+      yield const ItemSearchError('Connection lost. Trying to reconnect');
 
       try {
 
@@ -43,6 +43,9 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
         await iCollectionRepository!.open();
 
       } catch(e) {
+
+        yield ItemSearchError(e.toString());
+
       }
     }
 
@@ -54,7 +57,7 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
 
     try {
 
-      final query = event.query;
+      final String query = event.query;
       if(query.isEmpty) {
 
         final List<T> initialItems = await getInitialItems();

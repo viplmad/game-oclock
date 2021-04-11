@@ -23,7 +23,7 @@ class PurchaseType extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  ItemImage get image => ItemImage(null, null);
+  ItemImage get image => const ItemImage(null, null);
 
   @override
   String get queryableTerms => this.name;
@@ -60,7 +60,7 @@ class PurchaseType extends CollectionItem {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

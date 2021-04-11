@@ -95,7 +95,7 @@ class DLC extends CollectionItem {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
     releaseYear?? -1,

@@ -3,7 +3,7 @@ import 'entity.dart';
 
 const String platformTable = 'Platform';
 
-const List<String> platformFields = [
+const List<String> platformFields = <String>[
   idField,
   plat_nameField,
   plat_iconField,
@@ -14,7 +14,7 @@ const String plat_nameField = 'Name';
 const String plat_iconField = 'Icon';
 const String plat_typeField = 'Type';
 
-const List<String> types = [
+const List<String> types = <String>[
   'Physical',
   'Digital',
 ];
@@ -34,14 +34,15 @@ class PlatformEntity extends CollectionItemEntity {
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
-      id: map[idField],
-      name: map[plat_nameField],
-      iconFilename: map[plat_iconField],
-      type: map[plat_typeField],
+      id: map[idField] as int,
+      name: map[plat_nameField] as String,
+      iconFilename: map[plat_iconField] as String?,
+      type: map[plat_typeField] as String?,
     );
 
   }
 
+  @override
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
@@ -55,10 +56,10 @@ class PlatformEntity extends CollectionItemEntity {
 
   static List<PlatformEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    List<PlatformEntity> platformsList = [];
+    final List<PlatformEntity> platformsList = <PlatformEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      PlatformEntity platform = PlatformEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, platformTable) );
+      final PlatformEntity platform = PlatformEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, platformTable) );
 
       platformsList.add(platform);
     });
@@ -68,7 +69,7 @@ class PlatformEntity extends CollectionItemEntity {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
     id,
     name,
   ];

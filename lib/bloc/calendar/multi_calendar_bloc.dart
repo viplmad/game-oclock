@@ -69,14 +69,17 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
   Stream<MultiCalendarState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
-      yield CalendarNotLoaded('Connection lost. Trying to reconnect');
+      yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
         iCollectionRepository.reconnect();
         await iCollectionRepository.open();
 
-      } catch(e) {
+      } catch (e) {
+
+        yield CalendarNotLoaded(e.toString());
+
       }
     }
 
@@ -107,16 +110,19 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
     try {
 
       final List<GameWithLogs> gamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
+
       final Set<DateTime> logDates = gamesWithLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameWithLogs gameWithLogs) => previousDates..addAll(gameWithLogs.logDates));
 
       DateTime selectedDate = DateTime.now();
-      List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
+      final List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
       if(logDates.isNotEmpty) {
         selectedDate = logDates.last;
 
         if(logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
-          for(GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<TimeLog> logs = gameWithLogs.timeLogs.where((TimeLog log) => log.dateTime.isSameDate(selectedDate)).toList(growable: false);
+          for(final GameWithLogs gameWithLogs in gamesWithLogs) {
+            final List<TimeLog> logs = gameWithLogs.timeLogs
+                .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
+                .toList(growable: false);
 
             if(logs.isNotEmpty) {
               selectedGamesWithLogs.add(
@@ -130,8 +136,8 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
         }
       }
 
-      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
-      Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+      final int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
+      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
 
       yield CalendarLoaded(
         gamesWithLogs,
@@ -154,8 +160,8 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
     try {
 
-      List<GameWithLogs> gamesWithLogs = List.from((state as CalendarLoaded).gamesWithLogs);
-      Set<DateTime> logDates = SplayTreeSet.from((state as CalendarLoaded).logDates);
+      final List<GameWithLogs> gamesWithLogs = List<GameWithLogs>.from((state as CalendarLoaded).gamesWithLogs);
+      final Set<DateTime> logDates = SplayTreeSet<DateTime>.from((state as CalendarLoaded).logDates);
       final DateTime selectedDate = (state as CalendarLoaded).selectedDate;
       final List<GameWithLogs> selectedGamesWithLogs = (state as CalendarLoaded).selectedGamesWithLogs;
       final Duration selectedTotalTime = (state as CalendarLoaded).selectedTotalTime;
@@ -165,9 +171,9 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
       final List<GameWithLogs> yearGamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
 
-      for(GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
+      for(final GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
         try {
-          GameWithLogs gameWithLogs = gamesWithLogs.singleWhere((GameWithLogs tempGameWithLogs) => tempGameWithLogs.game.id == yearGameWithLogs.game.id);
+          final GameWithLogs gameWithLogs = gamesWithLogs.singleWhere((GameWithLogs tempGameWithLogs) => tempGameWithLogs.game.id == yearGameWithLogs.game.id);
           gameWithLogs.timeLogs.addAll(yearGameWithLogs.timeLogs);
         } catch(IterableElementError) {
           gamesWithLogs.add(yearGameWithLogs);
@@ -201,12 +207,12 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
       final List<GameWithLogs> gamesWithLogs = (state as CalendarLoaded).gamesWithLogs;
       final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
       final CalendarStyle style = (state as CalendarLoaded).style;
-      List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
+      final List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
 
       final DateTime selectedDate = event.date;
 
       if(logDates.isNotEmpty && logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
-        for(GameWithLogs gameWithLogs in gamesWithLogs) {
+        for(final GameWithLogs gameWithLogs in gamesWithLogs) {
           final List<TimeLog> logs = gameWithLogs.timeLogs.where((TimeLog log) => log.dateTime.isSameDate(selectedDate)).toList(growable: false);
 
           if(logs.isNotEmpty) {
@@ -220,8 +226,8 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
         }
       }
 
-      int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
-      Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+      final int selectedTotalTimeSeconds = selectedGamesWithLogs.fold(0, (int previousSeconds, GameWithLogs gameWithLogs) => previousSeconds + gameWithLogs.totalTimeSeconds);
+      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
 
       yield CalendarLoaded(
         gamesWithLogs,
@@ -242,7 +248,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
       final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
 
       if(logDates.isNotEmpty) {
-        DateTime firstDate = logDates.first;
+        final DateTime firstDate = logDates.first;
 
         add(UpdateSelectedDate(firstDate));
       }
@@ -256,7 +262,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
       final Set<DateTime> logDates = (state as CalendarLoaded).logDates;
 
       if(logDates.isNotEmpty) {
-        DateTime lastDate = logDates.last;
+        final DateTime lastDate = logDates.last;
 
         add(UpdateSelectedDate(lastDate));
       }
@@ -272,12 +278,12 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
       DateTime? previousDate;
       if(logDates.isNotEmpty) {
-        List<DateTime> listLogDates = logDates.toList(growable: false);
+        final List<DateTime> listLogDates = logDates.toList(growable: false);
         int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
 
         for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
-          DateTime date = listLogDates.elementAt(index);
+          final DateTime date = listLogDates.elementAt(index);
 
           if(date.isBefore(selectedDate)) {
             previousDate = date;
@@ -298,12 +304,12 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
       DateTime? nextDate;
       if(logDates.isNotEmpty) {
-        List<DateTime> listLogDates = logDates.toList(growable: false);
+        final List<DateTime> listLogDates = logDates.toList(growable: false);
         int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
 
         for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {
-          DateTime date = listLogDates.elementAt(index);
+          final DateTime date = listLogDates.elementAt(index);
 
           if(date.isAfter(selectedDate)) {
             nextDate = date;
@@ -357,8 +363,8 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
   Stream<MultiCalendarState> _mapUpdateListItemToState(UpdateListItem event) async* {
 
     if(state is CalendarLoaded) {
-      List<GameWithLogs> gamesWithLogs = List.from((state as CalendarLoaded).gamesWithLogs);
-      List<GameWithLogs> selectedGamesWithLogs = List.from((state as CalendarLoaded).selectedGamesWithLogs);
+      final List<GameWithLogs> gamesWithLogs = List<GameWithLogs>.from((state as CalendarLoaded).gamesWithLogs);
+      final List<GameWithLogs> selectedGamesWithLogs = List<GameWithLogs>.from((state as CalendarLoaded).selectedGamesWithLogs);
 
       final int listItemIndex = gamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
       final int selectedListItemIndex = selectedGamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
