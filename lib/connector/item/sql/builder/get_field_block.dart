@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'query_builder_options.dart';
 import 'query_builder.dart';
 import 'validator.dart';
-import 'util.dart';
 
 class FieldNode {
   FieldNode(this.name, this.alias);
@@ -23,15 +22,15 @@ class GetFieldBlock extends Block {
 
   /// Add the given fields to the result.
   /// @param fields A collection of fields to add
-  void setFields(Iterable<String> fields) {
+  void setFields(Iterable<String> fields, String? tableName) {
     for (final String field in fields) {
-      setField(field, null);
+      setField(field, null, tableName);
     }
   }
 
-  void setFieldsFromFieldNodeList(Iterable<FieldNode> fields) {
+  void setFieldsFromFieldNodeList(Iterable<FieldNode> fields, String? tableName) {
     for (final FieldNode field in fields) {
-      setField(field.name, field.alias);
+      setField(field.name, field.alias, tableName);
     }
   }
 
@@ -42,11 +41,14 @@ class GetFieldBlock extends Block {
   /// Add the given field to the final result.
   /// @param field Field to add
   /// @param alias Field's alias
-  void setField(String field, String? alias) {
+  void setField(String field, String? alias, String? tableName) {
     String fieldValue = Validator.sanitizeField(field.trim(), options);
 
     final String? aliasValue =
         alias != null ? Validator.sanitizeFieldAlias(alias, options) : null;
+
+    final String? tableNameValue =
+        tableName != null ? Validator.sanitizeTableAlias(tableName, options) : null;
 
     /// quote table and field string with dot, example:
     /// db.select().fields(['tablename.fieldname']).from('tablename') result in
@@ -59,6 +61,8 @@ class GetFieldBlock extends Block {
             .join(
                 '${options.fieldAliasQuoteCharacter}${options.fieldsTablesSeparator}${options.fieldAliasQuoteCharacter}');
       }
+    } else if(tableNameValue != null) {
+      fieldValue = tableNameValue + options.fieldsTablesSeparator + fieldValue;
     }
 
     /// allow alias in fields, example:
@@ -100,7 +104,7 @@ class GetFieldBlock extends Block {
 
       sb.write(field.name);
 
-      if (!Util.isEmpty(field.alias)) {
+      if (field.alias != null && field.alias!.isNotEmpty) {
         sb.write(' AS ');
         sb.write(field.alias);
       }

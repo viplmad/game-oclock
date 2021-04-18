@@ -49,7 +49,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
   }
 
   @override
-  List<BlocProvider<dynamic>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
 
     final PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
       itemId: item.id,
@@ -71,7 +71,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return <BlocProvider<dynamic>>[
+    return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Store>(_storeRelationManagerBloc),
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),

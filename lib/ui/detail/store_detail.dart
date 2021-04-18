@@ -49,14 +49,14 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }
 
   @override
-  List<BlocProvider<dynamic>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
 
     final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return <BlocProvider<dynamic>>[
+    return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
 
       BlocProvider<StoreRelationManagerBloc<Purchase>>(

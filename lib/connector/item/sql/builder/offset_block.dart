@@ -5,7 +5,7 @@ import 'query_builder_options.dart';
 /// OFFSET x
 class OffsetBlock extends Block {
   OffsetBlock(QueryBuilderOptions? options) :
-        offset = 0,
+        offset = -1,
         super(options);
   final String text = 'OFFSET';
   int offset;

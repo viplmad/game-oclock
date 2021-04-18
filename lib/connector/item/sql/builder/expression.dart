@@ -128,12 +128,12 @@ class Expression {
         nodeStr = doString(child);
 
         // wrap nested expressions in brackets
-        if (!Util.isEmpty(nodeStr)) {
+        if (nodeStr.isNotEmpty) {
           nodeStr = '($nodeStr)';
         }
       }
 
-      if (!Util.isEmpty(nodeStr)) {
+      if (nodeStr.isNotEmpty) {
         if (sb.length > 0) {
           sb.write(' ');
           sb.write(child.type);

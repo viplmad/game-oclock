@@ -3,10 +3,6 @@
 class Util {
   Util._();
 
-  static bool isEmpty(String? str) { // TODO remove
-    return str == null || str.isEmpty;
-  }
-
   static String join(String separator, Iterable<String> values) {
     final StringBuffer sb = StringBuffer();
     for (final String value in values) {
@@ -21,7 +17,7 @@ class Util {
   static String joinNonEmpty(String separator, Iterable<String> values) {
     final StringBuffer sb = StringBuffer();
     for (final String value in values) {
-      if (!isEmpty(value)) {
+      if (value.isNotEmpty) {
         if (sb.length > 0) {
           sb.write(separator);
         }

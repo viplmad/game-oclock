@@ -2,6 +2,7 @@ import 'package:postgres/postgres.dart';
 
 import 'package:game_collection/entity/entity.dart';
 
+import '../builder/builder.dart';
 import '../isql_connector.dart';
 
 
@@ -11,14 +12,18 @@ class PostgresConnector extends ISQLConnector {
     this._instance = PostgresInstance.fromString(connectionString);
     createConnection();
 
+    this._queryBuilderOptions.allowAliasInFields = false;
+    this._queryBuilderOptions.quoteStringWithFieldsTablesSeparator = false;
+
   }
 
   late PostgresInstance _instance;
   late PostgreSQLConnection _connection;
+  final QueryBuilderOptions _queryBuilderOptions = QueryBuilderOptions();
 
   void createConnection() {
 
-    _connection = PostgreSQLConnection(
+    this._connection = PostgreSQLConnection(
       _instance.host,
       _instance.port,
       _instance.database,
@@ -119,6 +124,28 @@ class PostgresConnector extends ISQLConnector {
   Future<List<Map<String, Map<String, dynamic>>>> readTable({required String tableName, List<String>? selectFields, List<dynamic>? tableArguments, Map<String, dynamic>? fieldsAndValues, List<String>? sortFields, int? limitResults}) {
 
     final String sql = _selectAllStatement(tableName, selectFields, tableArguments) + _whereStatement(fieldsAndValues?.keys.toList(growable: false)) + _orderByStatement(sortFields) + _limitStatement(limitResults);
+
+    /*QueryBuilder queryBuilder = FluentQuery
+        .select(options: this._queryBuilderOptions)
+        .fields(selectFields ?? <String>[], tableName: 'a')
+        .from(tableName, alias: 'a');
+    if(fieldsAndValues != null) {
+      for(final String field in fieldsAndValues.keys) {
+        queryBuilder = queryBuilder.where('$field = @$field');
+      }
+    }
+
+    if(sortFields != null) {
+      for(final String field in sortFields) {
+        queryBuilder = queryBuilder.order(field);
+      }
+    }
+
+    if(limitResults != null) {
+      queryBuilder = queryBuilder.limit(limitResults);
+    }
+
+    final String tempSql = queryBuilder.toSql();*/
 
     return _connection.mappedResultsQuery(
       sql,

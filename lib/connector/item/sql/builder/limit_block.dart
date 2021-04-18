@@ -5,7 +5,7 @@ import 'query_builder.dart';
 /// LIMIT
 class LimitBlock extends Block {
   LimitBlock(QueryBuilderOptions? options) :
-        limit = 0,
+        limit = -1,
         super(options);
   final String text = 'LIMIT';
   int limit;

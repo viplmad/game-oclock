@@ -125,7 +125,7 @@ abstract class QueryBuilder {
   //
   // GET FIELDS
   //
-  QueryBuilder field(String field, {String? alias}) {
+  QueryBuilder field(String field, {String? alias, String? tableName}) {
     throw UnsupportedOperationException('`fieldWithAlias` not implemented');
   }
 
@@ -133,7 +133,7 @@ abstract class QueryBuilder {
     throw UnsupportedOperationException('`fieldSubQueryWithAlias` not implemented');
   }
 
-  QueryBuilder fields(Iterable<String> fields) {
+  QueryBuilder fields(Iterable<String> fields, {String? tableName}) {
     throw UnsupportedOperationException('`fields` not implemented');
   }
 

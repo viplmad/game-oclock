@@ -55,7 +55,7 @@ class Homepage extends StatelessWidget {
     );
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<TabBloc>(
           create: (BuildContext context) {
             return TabBloc();

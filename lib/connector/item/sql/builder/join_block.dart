@@ -4,7 +4,6 @@ import 'query_builder.dart';
 import 'join_type.dart';
 import 'validator.dart';
 import 'expression.dart';
-import 'util.dart';
 
 class JoinNode {
   JoinNode(this.table, this.alias, this.condition, this.type);
@@ -75,7 +74,7 @@ class JoinBlock extends Block {
         sb.write(')');
       }
 
-      if (!Util.isEmpty(j.alias)) {
+      if (j.alias != null && j.alias!.isNotEmpty) {
         sb.write(' ');
         sb.write(j.alias);
       }
@@ -88,7 +87,7 @@ class JoinBlock extends Block {
           conditionStr = j.condition.toString();
         }
 
-        if (!Util.isEmpty(conditionStr)) {
+        if (conditionStr.isNotEmpty) {
           sb.write(' ON (');
           sb.write(conditionStr);
           sb.write(')');

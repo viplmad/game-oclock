@@ -26,7 +26,7 @@ class RepositorySettings extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<RepositorySettingsBloc>(
           create: (BuildContext context) {
             return RepositorySettingsBloc()..add(LoadRepositorySettings());

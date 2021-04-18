@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:charts_flutter/flutter.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 
 class StatisticsHistogram<N extends num> extends StatelessWidget {
@@ -33,26 +33,64 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       data.add(seriesElement);
     }
 
-    final Series<_SeriesElement<N>, String> series = Series<_SeriesElement<N>, String>(
-      id: histogramName,
-      colorFn: (_, __) => ColorUtil.fromDartColor(Theme.of(context).primaryColor),
-      domainFn: (_SeriesElement<N> element, _) => element.domainLabel,
-      measureFn: (_SeriesElement<N> element, _) => element.value,
-      data: data,
-
-      labelAccessorFn: labelAccessor != null? (_SeriesElement<N> element, _) => labelAccessor!(element.domainLabel, element.value) : null,
+    final BarChartData barData = BarChartData(
+      barTouchData: BarTouchData(
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipItem: (BarChartGroupData group, int groupIndex, BarChartRodData rod, int rodIndex) {
+            return BarTooltipItem(
+              data.elementAt(groupIndex).domainLabel + '\n',
+              const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: (rod.y).toString(),
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            );
+          }),
+        touchCallback: (BarTouchResponse barTouchResponse) {},
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          getTitles: (double value) {
+            return data.where((_SeriesElement<N> element) => (element.value as int).toDouble() == value).first.domainLabel;
+          },
+          getTextStyles: (double value) {
+            return const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+          },
+          margin: 16,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true, //TODO
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      barGroups: data.map((_SeriesElement<N> e) {
+        return BarChartGroupData(
+          x: e.value as int,
+          barRods: <BarChartRodData>[
+            BarChartRodData(
+              y: (e.value as int).toDouble(),
+            ),
+          ],
+        );
+      }).toList(growable: false),
     );
 
-    final List<Series<_SeriesElement<N>, String>> seriesList = <Series<_SeriesElement<N>, String>>[
-      series
-    ];
-
     return BarChart(
-      seriesList,
-      animate: true,
-      vertical: vertical,
-      barRendererDecorator: BarLabelDecorator<String>(),
-      domainAxis: hideDomainLabels? const OrdinalAxisSpec(renderSpec: NoneRenderSpec<String>()) : const OrdinalAxisSpec(),
+      barData,
     );
   }
 }

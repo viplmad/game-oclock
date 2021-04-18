@@ -49,7 +49,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
   }
 
   @override
-  List<BlocProvider<dynamic>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
 
     final PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemId: item.id,
@@ -61,7 +61,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    return <BlocProvider<dynamic>>[
+    return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
       blocProviderRelationBuilder<System>(_systemRelationManagerBloc),
 

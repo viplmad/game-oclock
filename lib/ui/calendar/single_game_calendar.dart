@@ -61,7 +61,7 @@ class SingleGameCalendar extends StatelessWidget {
     final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<SingleCalendarBloc>(
           create: (BuildContext context) {
             return _bloc..add(LoadCalendar());

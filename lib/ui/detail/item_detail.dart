@@ -47,7 +47,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
     final S _managerBloc = managerBlocBuilder();
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
             return detailBlocBuilder(_managerBloc)..add(LoadItem());
@@ -69,7 +69,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 
   K detailBlocBuilder(S managerBloc);
   S managerBlocBuilder();
-  List<BlocProvider<dynamic>> relationBlocsBuilder();
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder();
 
   ItemDetailBody<T, K, S> detailBodyBuilder();
 }

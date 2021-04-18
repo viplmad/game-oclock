@@ -22,7 +22,7 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
             return searchBlocBuilder()..add(const SearchTextChanged());
@@ -72,7 +72,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
+      providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<ItemLocalSearchBloc<T>>(
           create: (BuildContext context) {
             return ItemLocalSearchBloc<T>(

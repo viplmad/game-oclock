@@ -77,9 +77,9 @@ class Select extends QueryBuilder {
   // GET
   //
   @override
-  QueryBuilder field(String field, {String? alias}) {
+  QueryBuilder field(String field, {String? alias, String? tableName}) {
     final GetFieldBlock block = blocks[2] as GetFieldBlock;
-    block.setField(field, alias);
+    block.setField(field, alias, tableName);
     return this;
   }
 
@@ -91,9 +91,9 @@ class Select extends QueryBuilder {
   }
 
   @override
-  QueryBuilder fields(Iterable<String> fields) {
+  QueryBuilder fields(Iterable<String> fields, {String? tableName}) {
     final GetFieldBlock block = blocks[2] as GetFieldBlock;
-    block.setFields(fields);
+    block.setFields(fields, tableName);
     return this;
   }
 

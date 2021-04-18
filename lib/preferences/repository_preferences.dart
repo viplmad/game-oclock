@@ -29,7 +29,7 @@ class RepositoryPreferences {
 
       return value == _trueValue;
 
-    }, onError: () => false);
+    }, onError: (Object error) => false);
 
   }
 
@@ -48,7 +48,7 @@ class RepositoryPreferences {
 
       throw const FormatException();
 
-    });
+    }, onError: (Object error) => null);
 
   }
 
@@ -68,7 +68,7 @@ class RepositoryPreferences {
 
       throw const FormatException();
 
-    });
+    }, onError: (Object error) => null);
 
   }
 
@@ -117,7 +117,7 @@ class RepositoryPreferences {
 
       throw const FormatException();
 
-    });
+    }, onError: (Object error) => null);
 
   }
 
@@ -133,7 +133,7 @@ class RepositoryPreferences {
 
       throw const FormatException();
 
-    });
+    }, onError: (Object error) => null);
 
   }
 
@@ -187,7 +187,7 @@ class RepositoryPreferences {
 
       return CloudinaryConnector.fromConnectionString(value);
 
-    }, onError: () => null);
+    }, onError: (Object error) => null);
 
   }
 
@@ -197,7 +197,7 @@ class RepositoryPreferences {
 
       return PostgresConnector.fromConnectionString(value);
 
-    }, onError: () => null);
+    }, onError: (Object error) => null);
 
   }
 }

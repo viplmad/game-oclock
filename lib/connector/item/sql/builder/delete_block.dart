@@ -11,7 +11,6 @@ class DeleteBlock extends Block {
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    assert(!Util.isEmpty(text));
     return text;
   }
 }
