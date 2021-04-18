@@ -2,10 +2,11 @@ name: Flutter CI
 
 # This workflow is triggered on pushes to the repository.
 
+# Controls when the action will run. 
 on:
+  # Triggers the workflow on push or pull request events but only for the bloc-pattern branch
   push:
-    branches:
-    - bloc_pattern
+    branches: [ bloc-pattern ]
     
 # on: push    # Default will running for every branch.
     
