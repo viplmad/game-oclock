@@ -21,6 +21,7 @@ jobs:
     - uses: actions/setup-java@v2.0.0
       with:
         java-version: '11'
+        distribution: 'adopt'
     
     # Setup the flutter environment.
     - uses: subosito/flutter-action@v1.4.0
