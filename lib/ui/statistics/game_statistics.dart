@@ -189,7 +189,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       histogramName: GameCollectionLocalisations.of(context).countByReleaseYearString,
       domainLabels: domainLabels,
       values: data.intervalReleaseYearCount(intervals),
-      labelAccessor: (String domainLabel, int value) => '$value',
+      labelAccessor: (int value) => '$value',
     );
 
   }
@@ -207,7 +207,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       histogramName: GameCollectionLocalisations.of(context).countByRatingString,
       domainLabels: domainLabels,
       values: data.intervalRatingCount(intervals),
-      labelAccessor: (String domainLabel, int value) => '$value',
+      labelAccessor: (int value) => '$value',
     );
 
   }
@@ -226,7 +226,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       domainLabels: domainLabels,
       values: data.intervalTimeCount(intervals),
       vertical: false,
-      labelAccessor: (String domainLabel, int value) => '$value',
+      labelAccessor: (int value) => '$value',
     );
 
   }
@@ -247,7 +247,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
         histogramName: GameCollectionLocalisations.of(context).avgRatingByFinishDateString,
         domainLabels: domainLabels,
         values: data.yearlyRatingAverage(finishYears),
-        labelAccessor: (String domainLabel, int value) => '$value',
+        labelAccessor: (int value) => '$value',
       ) : Container();
 
   }
@@ -266,7 +266,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
         histogramName: GameCollectionLocalisations.of(context).sumTimeByFinishDateString,
         domainLabels: domainLabels,
         values: data.yearlyHoursSum(finishYears),
-        labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).hoursString(value),
+        labelAccessor: (int value) => GameCollectionLocalisations.of(context).hoursString(value),
       ) : Container();
 
   }
@@ -285,7 +285,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
         histogramName: GameCollectionLocalisations.of(context).countByFinishDate,
         domainLabels: domainLabels,
         values: data.yearlyFinishDateCount(finishYears),
-        labelAccessor: (String domainLabel, int value) => '$value',
+        labelAccessor: (int value) => '$value',
       ) : Container();
 
   }
@@ -299,7 +299,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       histogramName: GameCollectionLocalisations.of(context).sumTimeByMonth,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyHoursSum().values,
-      labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).hoursString(value),
+      labelAccessor: (int value) => GameCollectionLocalisations.of(context).hoursString(value),
     );
 
   }

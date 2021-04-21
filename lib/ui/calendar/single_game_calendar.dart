@@ -562,7 +562,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
         values: values,
         vertical: true,
         hideDomainLabels: false,
-        labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+        valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
       ),
     );
   }

@@ -11,7 +11,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     required this.values,
     this.vertical = true,
     this.hideDomainLabels = false,
-    this.labelAccessor,
+    this.valueFormatter,
   }) : super(key: key);
 
   final String histogramName;
@@ -19,26 +19,34 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   final List<N> values;
   final bool vertical;
   final bool hideDomainLabels;
-  final String Function(String, N)? labelAccessor;
+  final String Function(N)? valueFormatter;
 
   @override
   Widget build(BuildContext context) {
-    final List<_SeriesElement<N>> data = <_SeriesElement<N>>[];
+    final String Function(N) labelAccessor = valueFormatter?? (N value) => value.toString();
 
+    final List<_SeriesElement<N>> data = <_SeriesElement<N>>[];
+    N max = values.first;
     for(int index = 0; index < domainLabels.length; index++) {
-      final String currentLabel =  domainLabels.elementAt(index);
+      final String currentLabel = domainLabels.elementAt(index);
       final N currentValue = values.elementAt(index);
 
-      final _SeriesElement<N> seriesElement = _SeriesElement<N>(currentLabel, currentValue);
+      final _SeriesElement<N> seriesElement = _SeriesElement<N>(index, currentLabel, currentValue);
       data.add(seriesElement);
+
+      if(currentValue > max) {
+        max = currentValue;
+      }
     }
 
     final BarChartData barData = BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
           getTooltipItem: (BarChartGroupData group, int groupIndex, BarChartRodData rod, int rodIndex) {
+            final _SeriesElement<N> element = data.elementAt(groupIndex);
+
             return BarTooltipItem(
-              data.elementAt(groupIndex).domainLabel + '\n',
+              element.domainLabel + '\n',
               const TextStyle(
                 color: Colors.black87,
                 fontWeight: FontWeight.bold,
@@ -46,7 +54,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: (rod.y).toString(),
+                  text: labelAccessor(element.value),
                   style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 16,
@@ -63,40 +71,60 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
         bottomTitles: SideTitles(
           showTitles: true,
           getTitles: (double value) {
-            return data.where((_SeriesElement<N> element) => (element.value as int).toDouble() == value).first.domainLabel;
+            final _SeriesElement<N> element = data.elementAt(value.toInt());
+            return element.domainLabel;
           },
           getTextStyles: (double value) {
-            return const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+            return const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14);
           },
           margin: 16,
         ),
         leftTitles: SideTitles(
-          showTitles: true, //TODO
+          showTitles: true,
+          interval: max / 3,
+          getTitles: (double value) {
+            return labelAccessor(value.toInt() as N);
+          },
+          reservedSize: 48,
+          margin: 16,
+        ),
+        rightTitles: SideTitles(
+          showTitles: false,
+          margin: 16,
+        ),
+        topTitles: SideTitles(
+          showTitles: false,
+          margin: 16,
         ),
       ),
       borderData: FlBorderData(
         show: false,
       ),
-      barGroups: data.map((_SeriesElement<N> e) {
+      barGroups: data.map((_SeriesElement<N> element) {
         return BarChartGroupData(
-          x: e.value as int,
+          x: element.index,
           barRods: <BarChartRodData>[
             BarChartRodData(
-              y: (e.value as int).toDouble(),
+              y: element.value.toDouble(),
+              width: 30,
             ),
           ],
         );
       }).toList(growable: false),
     );
 
-    return BarChart(
-      barData,
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 16.0),
+      child: BarChart(
+        barData,
+      ),
     );
   }
 }
 class _SeriesElement<N extends num> {
-  const _SeriesElement(this.domainLabel, this.value);
+  const _SeriesElement(this.index, this.domainLabel, this.value);
 
+  final int index;
   final String domainLabel;
   final N value;
 }

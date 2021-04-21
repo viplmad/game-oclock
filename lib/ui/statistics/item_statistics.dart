@@ -227,7 +227,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
   }
 
-  Widget statisticsHistogram<N extends num>({required double height, required String histogramName, required List<String> domainLabels, required List<N> values, bool vertical = true, bool hideDomainLabels = false, String Function(String, N)? labelAccessor}) {
+  Widget statisticsHistogram<N extends num>({required double height, required String histogramName, required List<String> domainLabels, required List<N> values, bool vertical = true, bool hideDomainLabels = false, String Function(N)? labelAccessor}) {
 
     return ListTile(
       title: Text(histogramName),
@@ -239,7 +239,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
           values: values,
           vertical: vertical,
           hideDomainLabels: hideDomainLabels,
-          labelAccessor: labelAccessor,
+          valueFormatter: labelAccessor,
         ),
       ),
     );

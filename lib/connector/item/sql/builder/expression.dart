@@ -1,6 +1,5 @@
 import 'query_builder_options.dart';
 import 'validator.dart';
-import 'util.dart';
 
 enum ExpressionType { AND, OR }
 

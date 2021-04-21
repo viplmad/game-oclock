@@ -244,7 +244,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       domainLabels: domainLabels,
       values: data.intervalPriceCount(intervals),
       vertical: false,
-      labelAccessor: (String domainLabel, int value) => '$value',
+      labelAccessor: (int value) => '$value',
     );
   }
   //#endregion Common
@@ -264,7 +264,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         histogramName: GameCollectionLocalisations.of(context).countByYearString,
         domainLabels: domainLabels,
         values: data.yearlyCount(years),
-        labelAccessor: (String domainLabel, int value) => '$value',
+        labelAccessor: (int value) => '$value',
       ) : Container();
   }
 
@@ -282,7 +282,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         histogramName: GameCollectionLocalisations.of(context).sumPriceByYearString,
         domainLabels: domainLabels,
         values: data.yearlyPriceSum(years),
-        labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
+        labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
       ) : Container();
   }
 
@@ -300,7 +300,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByYearString,
         domainLabels: domainLabels,
         values: data.yearlyOriginalPriceSum(years),
-        labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
+        labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
       ) : Container();
   }
   //#endregion General
@@ -313,7 +313,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).countByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyCount().values,
-      labelAccessor: (String domainLabel, int value) => '$value',
+      labelAccessor: (int value) => '$value',
     );
   }
 
@@ -324,7 +324,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumPriceByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyPriceSum().values,
-      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
 
@@ -335,7 +335,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyOriginalPriceSum().values,
-      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
 
@@ -346,7 +346,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumSavedByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlySavedSum().values,
-      labelAccessor: (String domainLabel, double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
     );
   }
   //#endregion Year
