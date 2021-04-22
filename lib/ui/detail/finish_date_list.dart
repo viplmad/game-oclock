@@ -113,7 +113,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                   },
                   child: AlertDialog(
                     title: Text(fieldName),
-                    content: Container(
+                    content: SizedBox(
                       width: double.maxFinite,
                       child: BlocBuilder<K, RelationState>(
                         bloc: BlocProvider.of<K>(outerContext),

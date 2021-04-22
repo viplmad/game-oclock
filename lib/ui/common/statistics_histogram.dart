@@ -39,6 +39,8 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       }
     }
 
+    final double interval = max / 3;
+
     final BarChartData barData = BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
@@ -81,7 +83,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
         ),
         leftTitles: SideTitles(
           showTitles: true,
-          interval: max / 3,
+          interval: interval,
           getTitles: (double value) {
             return labelAccessor(value.toInt() as N);
           },
@@ -96,6 +98,10 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
           showTitles: false,
           margin: 16,
         ),
+      ),
+      gridData: FlGridData(
+        show: true,
+        horizontalInterval: interval,
       ),
       borderData: FlBorderData(
         show: false,
@@ -114,7 +120,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 24.0),
       child: BarChart(
         barData,
       ),

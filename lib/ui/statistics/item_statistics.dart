@@ -231,7 +231,7 @@ abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T
 
     return ListTile(
       title: Text(histogramName),
-      subtitle: Container(
+      subtitle: SizedBox(
         height: height,
         child: StatisticsHistogram<N>(
           histogramName: histogramName,
