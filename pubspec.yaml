@@ -49,8 +49,8 @@ dependencies:
   table_calendar: ^3.0.0
   flutter_speed_dial: ^3.0.5
 
-  fl_chart: ^0.35.0
-  #charts_flutter: ^0.10.0
+  #fl_chart: ^0.35.0
+  charts_flutter: ^0.10.0
 
 dev_dependencies:
   flutter_test:

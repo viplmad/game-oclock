@@ -36,7 +36,7 @@ jobs:
     - run: flutter pub get
     
     # Build apk.
-    - run: flutter build apk
+    - run: flutter build apk --no-sound-null-safety
       env:
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
