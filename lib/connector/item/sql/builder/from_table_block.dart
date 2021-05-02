@@ -23,8 +23,8 @@ class FromTableBlock extends TableBlockBase {
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    assert(mTables.isNotEmpty);
-    final String tables = super.buildStr(queryBuilder);
-    return '$text $tables';
+    assert(tables.isNotEmpty);
+    final String tablesString = super.buildStr(queryBuilder);
+    return '$text $tablesString';
   }
 }

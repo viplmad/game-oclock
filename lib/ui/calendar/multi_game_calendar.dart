@@ -17,7 +17,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart';
 import '../common/loading_icon.dart';
-import '../common/statistics_histogram.dart';
+//import '../common/statistics_histogram.dart';
 import '../detail/detail.dart';
 
 

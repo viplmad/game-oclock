@@ -10,15 +10,15 @@ class SetNode {
 /// Base class for setting fields to values (used for INSERT and UPDATE queries)
 abstract class SetFieldBlockBase extends Block {
   SetFieldBlockBase(QueryBuilderOptions? options) :
-        this.mFields = <SetNode>[],
+        this.fields = <SetNode>[],
         super(options);
-  final List<SetNode> mFields; // TODO
+  final List<SetNode> fields;
 
   /// Update the given field with the given value.
   /// @param field Field to set value for.
   /// @param value Value to set.
   /// @param <T> Type of the Value.
   void setFieldValue(String field, dynamic value) {
-    mFields.add(SetNode(field, value));
+    fields.add(SetNode(field, value));
   }
 }

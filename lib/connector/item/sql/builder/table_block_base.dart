@@ -13,10 +13,10 @@ class TableNode {
 /// Table base class
 abstract class TableBlockBase extends Block {
   TableBlockBase(QueryBuilderOptions? options) :
-        this.mTables = <TableNode>[],
+        this.tables = <TableNode>[],
         super(options);
 
-  final List<TableNode> mTables; // TODO
+  final List<TableNode> tables;
 
   void setTable(String table, String? alias) {
     final String tbl = Validator.sanitizeTable(table, options);
@@ -30,15 +30,15 @@ abstract class TableBlockBase extends Block {
   }
 
   void setFromRaw(String fromRawSqlString) {
-    mTables.add(TableNode('', '', fromRawSql: fromRawSqlString));
+    tables.add(TableNode('', '', fromRawSql: fromRawSqlString));
   }
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    assert(mTables.isNotEmpty);
+    assert(tables.isNotEmpty);
 
     final StringBuffer sb = StringBuffer();
-    for (final TableNode tab in mTables) {
+    for (final TableNode tab in tables) {
       if (tab.fromRawSql == null) {
         if (sb.length > 0) {
           sb.write(', ');
@@ -66,6 +66,6 @@ abstract class TableBlockBase extends Block {
   }
 
   void doSetTable(Object table, String alias) {
-    mTables.add(TableNode(table, alias));
+    tables.add(TableNode(table, alias));
   }
 }

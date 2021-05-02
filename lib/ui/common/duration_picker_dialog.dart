@@ -41,7 +41,6 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
               value: _hours,
               minValue: 0,
               maxValue: 1000,
-              //TODO highlightSelectedValue: true,
               onChanged: (num newHours) {
                 setState(() {
                   _hours = newHours.toInt();
@@ -53,7 +52,6 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
               value: _minutes,
               minValue: 0,
               maxValue: 59,
-              //TODO highlightSelectedValue: true,
               onChanged: (num newMin) {
                 setState(() {
                   _minutes = newMin.toInt();

@@ -11,15 +11,15 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    if (mFields.isEmpty) {
+    if (fields.isEmpty) {
       return '';
     }
 
-    final String fields = Util.join(', ', buildFieldNames(mFields));
+    final String fieldsJoined = Util.join(', ', buildFieldNames(fields));
 
-    final String values = Util.join(', ', buildFieldValuesForSubstitution(mFields));
+    final String valuesJoined = Util.join(', ', buildFieldValuesForSubstitution(fields));
 
-    final String sql = '($fields) VALUES ($values)';
+    final String sql = '($fieldsJoined) VALUES ($valuesJoined)';
 
     return sql;
   }
@@ -27,11 +27,11 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
   @override
   Map<String, dynamic> buildSubstitutionValues() {
     final Map<String, dynamic> result = <String, dynamic>{};
-    if (mFields.isEmpty) {
+    if (fields.isEmpty) {
       return result;
     }
 
-    for (final SetNode item in mFields) {
+    for (final SetNode item in fields) {
       final String v = Validator.formatValue(item.value, options);
       result.addAll(<String, dynamic>{'${item.field}': v});
     }

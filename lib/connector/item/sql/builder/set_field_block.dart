@@ -9,10 +9,10 @@ class SetFieldBlock extends SetFieldBlockBase {
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    assert(mFields.isNotEmpty);
+    assert(fields.isNotEmpty);
 
     final StringBuffer sb = StringBuffer();
-    for (final SetNode item in mFields) {
+    for (final SetNode item in fields) {
       if (sb.length > 0) {
         sb.write(', ');
       }
@@ -30,11 +30,11 @@ class SetFieldBlock extends SetFieldBlockBase {
   @override
   Map<String, dynamic> buildSubstitutionValues() {
     final Map<String, dynamic> result = <String, dynamic>{};
-    if (mFields.isEmpty) {
+    if (fields.isEmpty) {
       return result;
     }
 
-    for (final SetNode item in mFields) {
+    for (final SetNode item in fields) {
       final String v = Validator.formatValue(item.value, options);
       result.addAll(<String, dynamic>{'${item.field}': v});
     }

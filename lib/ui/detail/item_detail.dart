@@ -954,7 +954,6 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
               value: _integerPart,
               minValue: 0,
               maxValue: 1000,
-              //TODO highlightSelectedValue: true,
               onChanged: (num newInteger) {
                 setState(() {
                   _integerPart = newInteger.toInt();
@@ -966,8 +965,7 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
               value: _decimalPart,
               minValue: 0,
               maxValue: 99,
-              //TODO infiniteLoop: true,
-              //TODO highlightSelectedValue: true,
+              infiniteLoop: true,
               onChanged: (num newDecimal) {
                 setState(() {
                   _decimalPart = newDecimal.toInt();
