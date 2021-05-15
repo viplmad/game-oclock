@@ -20,13 +20,13 @@ class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pu
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromPurchase(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllGamesFromPurchase(itemId) as Stream<List<W>>;
       case DLC:
-        return iCollectionRepository.getDLCsFromPurchase(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllDLCsFromPurchase(itemId) as Stream<List<W>>;
       case Store:
-        return iCollectionRepository.getStoreFromPurchase(itemId).map<List<Store>>( (Store? store) => store != null? <Store>[store] : <Store>[] ) as Stream<List<W>>;
+        return iCollectionRepository.findStoreFromPurchase(itemId).map<List<Store>>( (Store? store) => store != null? <Store>[store] : <Store>[] ) as Stream<List<W>>;
       case PurchaseType:
-        return iCollectionRepository.getTypesFromPurchase(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPurchaseTypesFromPurchase(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

@@ -15,14 +15,14 @@ class PlatformSearchBloc extends ItemSearchBloc<Platform> {
   @override
   Future<List<Platform>> getInitialItems() {
 
-    return iCollectionRepository!.getPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Platform>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getPlatformsWithName(query, super.maxResults).first;
+    return iCollectionRepository!.findAllPlatformsByName(query, super.maxResults).first;
 
   }
 }

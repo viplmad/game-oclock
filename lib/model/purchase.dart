@@ -113,13 +113,13 @@ class Purchase extends CollectionItem {
   @override
   String toString() {
 
-    return '$purchaseTable { '
-        '$idField: $id, '
-        '$purc_descriptionField: $description, '
-        '$purc_priceField: $price, '
-        '$purc_externalCreditField: $externalCredit, '
-        '$purc_dateField: $date, '
-        '$purc_originalPriceField: $originalPrice'
+    return 'Purchase { '
+        'Id: $id, '
+        'Description: $description, '
+        'Price: $price, '
+        'External Credit: $externalCredit, '
+        'Date: $date, '
+        'Original Price: $originalPrice'
         ' }';
 
   }
@@ -244,4 +244,12 @@ class PurchasesData extends ItemData<Purchase> {
     );
 
   }
+}
+
+class PurchaseUpdateProperties {
+  final bool dateToNull;
+
+  const PurchaseUpdateProperties({
+    this.dateToNull = false,
+  });
 }

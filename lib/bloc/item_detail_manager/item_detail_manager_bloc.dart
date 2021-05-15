@@ -6,7 +6,7 @@ import 'package:game_collection/repository/icollection_repository.dart';
 
 import 'item_detail_manager.dart';
 
-abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
+abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
   ItemDetailManagerBloc({
     required this.itemId,
     required this.iCollectionRepository,
@@ -20,7 +20,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
     yield* _checkConnection();
 
-    if(event is UpdateItemField<T>) {
+    if(event is UpdateItemField<T, P>) {
 
       yield* _mapUpdateFieldToState(event);
 
@@ -60,7 +60,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
   }
 
-  Stream<ItemDetailManagerState> _mapUpdateFieldToState(UpdateItemField<T> event) async* {
+  Stream<ItemDetailManagerState> _mapUpdateFieldToState(UpdateItemField<T, P> event) async* {
 
     try {
 
@@ -76,6 +76,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
       yield ItemFieldNotUpdated(e.toString());
 
     }
+
   }
 
   Stream<ItemDetailManagerState> _mapAddImageToState(AddItemImage<T> event) async* {
@@ -135,7 +136,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem> extends Bloc<Item
 
   }
 
-  Future<T?> updateFuture(UpdateItemField<T> event);
+  Future<T?> updateFuture(UpdateItemField<T, P> event);
   external Future<T?> addImage(AddItemImage<T> event);
   external Future<T?> deleteImage(DeleteItemImage<T> event);
   external Future<T?> updateImageName(UpdateItemImageName<T> event);

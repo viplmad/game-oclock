@@ -17,7 +17,7 @@ class TagListBloc extends ItemListBloc<Tag> {
   @override
   Stream<List<Tag>> getReadAllStream() {
 
-    return iCollectionRepository.getAllTags();
+    return iCollectionRepository.findAllGameTags();
 
   }
 
@@ -26,7 +26,7 @@ class TagListBloc extends ItemListBloc<Tag> {
 
     final TagView tagView = TagView.values[event.viewIndex];
 
-    return iCollectionRepository.getTagsWithView(tagView);
+    return iCollectionRepository.findAllGameTagsWithView(tagView);
 
   }
 }

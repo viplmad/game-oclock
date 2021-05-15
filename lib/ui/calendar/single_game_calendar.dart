@@ -53,7 +53,7 @@ class SingleGameCalendar extends StatelessWidget {
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    final GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
+    final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: itemId,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
@@ -73,7 +73,7 @@ class SingleGameCalendar extends StatelessWidget {
             return _timeLogRelationManagerBloc;
           },
         ),
-        BlocProvider<GameFinishDateRelationManagerBloc>(
+        BlocProvider<GameFinishRelationManagerBloc>(
           create: (BuildContext context) {
             return _finishRelationManagerBloc;
           },
@@ -127,7 +127,7 @@ class SingleGameCalendar extends StatelessWidget {
 
   }
 
-  SingleCalendarBloc blocBuilder(GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishDateRelationManagerBloc finishDateManagerBloc) {
+  SingleCalendarBloc blocBuilder(GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishRelationManagerBloc finishDateManagerBloc) {
 
     return SingleCalendarBloc(
       itemId: itemId,
@@ -138,7 +138,7 @@ class SingleGameCalendar extends StatelessWidget {
 
   }
 
-  SpeedDial _buildSpeedDial(BuildContext context, GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishDateRelationManagerBloc finishDateManagerBloc) {
+  SpeedDial _buildSpeedDial(BuildContext context, GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishRelationManagerBloc finishDateManagerBloc) {
 
     return SpeedDial(
       icon: Icons.add,
@@ -189,8 +189,8 @@ class SingleGameCalendar extends StatelessWidget {
                         );
 
                         timeLogManagerBloc.add(
-                          AddRelation<TimeLog>(
-                            TimeLog(dateTime: dateTime, time: duration),
+                          AddRelation<GameTimeLog>(
+                            GameTimeLog(dateTime: dateTime, time: duration),
                           ),
                         );
 
@@ -264,7 +264,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
         listeners: <BlocListener<dynamic, dynamic>>[
           BlocListener<GameTimeLogRelationManagerBloc, RelationManagerState>(
             listener: (BuildContext context, RelationManagerState state) {
-              if(state is RelationAdded<TimeLog>) {
+              if(state is RelationAdded<GameTimeLog>) {
                 _isUpdated = true;
 
                 final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
@@ -310,7 +310,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
               }
             },
           ),
-          BlocListener<GameFinishDateRelationManagerBloc, RelationManagerState>(
+          BlocListener<GameFinishRelationManagerBloc, RelationManagerState>(
             listener: (BuildContext context, RelationManagerState state) {
               if(state is RelationAdded<DateTime>) {
                 _isUpdated = true;
@@ -397,7 +397,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, List<DateTime> finishDates, DateTime selectedDate) {
+  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, List<GameFinish> finishDates, DateTime selectedDate) {
     DateTime firstDate = DateTime.now();
     DateTime lastDate = firstDate;
     if(logDates.isNotEmpty) {
@@ -423,7 +423,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
         return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
       },
       holidayPredicate: (DateTime date) {
-        return finishDates.any((DateTime finishDate) => date.isSameDate(finishDate));
+        return finishDates.any((GameFinish finish) => date.isSameDate(finish.dateTime));
       },
       startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
       weekendDays: const <int>[
@@ -482,7 +482,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
       trailing: IconButton(
         icon: const Icon(Icons.link_off),
         onPressed: () {
-          BlocProvider.of<GameFinishDateRelationManagerBloc>(context).add(
+          BlocProvider.of<GameFinishRelationManagerBloc>(context).add(
             DeleteRelation<DateTime>(
               selectedDate,
             ),
@@ -494,7 +494,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildEventList(BuildContext context, List<TimeLog> timeLogs) {
+  Widget _buildEventList(BuildContext context, List<GameTimeLog> timeLogs) {
 
     if(timeLogs.isEmpty) {
       return Center(
@@ -506,7 +506,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
       shrinkWrap: true,
       itemCount: timeLogs.length,
       itemBuilder: (BuildContext context, int index) {
-        final TimeLog timeLog = timeLogs.elementAt(index);
+        final GameTimeLog timeLog = timeLogs.elementAt(index);
         final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
         return DismissibleItem(
@@ -517,7 +517,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
               icon: const Icon(Icons.link_off),
               onPressed: () {
                 BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
-                  DeleteRelation<TimeLog>(
+                  DeleteRelation<GameTimeLog>(
                     timeLog,
                   ),
                 );
@@ -526,7 +526,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           ),
           onDismissed: (DismissDirection direction) {
             BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
-              DeleteRelation<TimeLog>(
+              DeleteRelation<GameTimeLog>(
                 timeLog,
               ),
             );
@@ -538,11 +538,11 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildEventGraph(BuildContext context, List<TimeLog> timeLogs) {
+  Widget _buildEventGraph(BuildContext context, List<GameTimeLog> timeLogs) {
     final List<int> values = <int>[];
 
     final List<DateTime> distinctLogDates = <DateTime>[];
-    timeLogs.forEach((TimeLog log) {
+    timeLogs.forEach((GameTimeLog log) {
       if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
         distinctLogDates.add(log.dateTime);
       }
@@ -550,7 +550,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
     distinctLogDates.sort();
 
     distinctLogDates.forEach((DateTime date) {
-      final List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
+      final List<Duration> dateDurations = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDate(date)).map((GameTimeLog log) => log.time).toList(growable: false);
       final int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
       values.add(daySum);
     });

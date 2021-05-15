@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -22,7 +20,7 @@ import '../calendar/calendar.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
+class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
     required Game item,
@@ -73,7 +71,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    final GameFinishDateRelationManagerBloc _finishRelationManagerBloc = GameFinishDateRelationManagerBloc(
+    final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
@@ -105,16 +103,16 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
         },
       ),
 
-      BlocProvider<GameFinishDateRelationBloc>(
+      BlocProvider<GameFinishRelationBloc>(
         create: (BuildContext context) {
-          return GameFinishDateRelationBloc(
+          return GameFinishRelationBloc(
             itemId: item.id,
             iCollectionRepository: ICollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
       ),
-      BlocProvider<GameFinishDateRelationManagerBloc>(
+      BlocProvider<GameFinishRelationManagerBloc>(
         create: (BuildContext context) {
           return _finishRelationManagerBloc;
         },
@@ -149,7 +147,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
 }
 
 // ignore: must_be_immutable
-class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
+class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key? key,
     required this.itemId,
@@ -168,25 +166,30 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
-        field: game_nameField,
         value: game.name,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(name: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).editionFieldString,
-        field: game_editionField,
         value: game.edition,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(edition: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemYearField(
         context,
         fieldName: GameCollectionLocalisations.of(context).releaseYearFieldString,
-        field: game_releaseYearField,
         value: game.releaseYear,
+        item: game,
+        itemUpdater: (int newValue) => game.copyWith(releaseYear: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemChipField(
         context,
         fieldName: GameCollectionLocalisations.of(context).statusFieldString,
-        field: game_statusField,
         value: game.status,
         possibleValues: <String>[
           GameCollectionLocalisations.of(context).lowPriorityString,
@@ -195,36 +198,50 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
           GameCollectionLocalisations.of(context).playedString,
         ],
         possibleValuesColours: GameTheme.statusColours,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(status: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemRatingField(
         context,
         fieldName: GameCollectionLocalisations.of(context).ratingFieldString,
-        field: game_ratingField,
         value: game.rating,
+        item: game,
+        itemUpdater: (int newValue) => game.copyWith(rating: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemLongTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).thoughtsFieldString,
-        field: game_thoughtsField,
         value: game.thoughts,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(thoughts: newValue),
+        updateProperties: const GameUpdateProperties(),
+
       ),
       itemURLField(
         context,
         fieldName: GameCollectionLocalisations.of(context).saveFolderFieldString,
-        field: game_saveFolderField,
         value: game.saveFolder,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(saveFolder: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemURLField(
         context,
         fieldName: GameCollectionLocalisations.of(context).screenshotFolderFieldString,
-        field: game_screenshotFolderField,
         value: game.screenshotFolder,
+        item: game,
+        itemUpdater: (String newValue) => game.copyWith(screenshotFolder: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       itemBoolField(
         context,
         fieldName: GameCollectionLocalisations.of(context).backupFieldString,
-        field: game_backupField,
         value: game.isBackup,
+        item: game,
+        itemUpdater: (bool newValue) => game.copyWith(isBackup: newValue),
+        updateProperties: const GameUpdateProperties(),
       ),
       ListTileTheme.merge(
         child: ListTile(
@@ -289,7 +306,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
 }
 
 // ignore: must_be_immutable
-class GameFinishDateList extends FinishDateList<Game, GameFinishDateRelationBloc, GameFinishDateRelationManagerBloc> {
+class GameFinishDateList extends FinishList<Game, GameFinish, GameFinishRelationBloc, GameFinishRelationManagerBloc> {
   GameFinishDateList({
     Key? key,
     required String fieldName,
@@ -297,4 +314,7 @@ class GameFinishDateList extends FinishDateList<Game, GameFinishDateRelationBloc
     required String relationTypeName,
     required void Function() onUpdate,
   }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
+
+  @override
+  GameFinish createFinish(DateTime dateTime) => GameFinish(dateTime: dateTime);
 }

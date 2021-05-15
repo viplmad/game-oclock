@@ -120,8 +120,8 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
         if(logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
           for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<TimeLog> logs = gameWithLogs.timeLogs
-                .where((TimeLog log) => log.dateTime.isSameDate(selectedDate))
+            final List<GameTimeLog> logs = gameWithLogs.timeLogs
+                .where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate))
                 .toList(growable: false);
 
             if(logs.isNotEmpty) {
@@ -213,7 +213,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
       if(logDates.isNotEmpty && logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
         for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-          final List<TimeLog> logs = gameWithLogs.timeLogs.where((TimeLog log) => log.dateTime.isSameDate(selectedDate)).toList(growable: false);
+          final List<GameTimeLog> logs = gameWithLogs.timeLogs.where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate)).toList(growable: false);
 
           if(logs.isNotEmpty) {
             selectedGamesWithLogs.add(
@@ -407,7 +407,7 @@ class MultiCalendarBloc extends Bloc<MultiCalendarEvent, MultiCalendarState> {
 
   Stream<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
 
-    return iCollectionRepository.getGamesWithTimeLogsWithYear(year);
+    return iCollectionRepository.findAllGamesWithTimeLogsByYear(year);
 
   }
 }

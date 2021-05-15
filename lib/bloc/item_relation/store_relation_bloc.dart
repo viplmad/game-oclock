@@ -20,7 +20,7 @@ class StoreRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Store
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.getPurchasesFromStore(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPurchasesFromStore(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

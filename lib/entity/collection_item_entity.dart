@@ -27,6 +27,28 @@ abstract class CollectionItemEntity extends Equatable {
 
   }
 
+  Map<String, dynamic> getCreateDynamicMap() {
+    return Map<String, dynamic>();
+  }
+
+  void putCreateMapValueNullable(Map<String, dynamic> createMap, String field, dynamic value) {
+    if(value != null) {
+      createMap[field] = value;
+    }
+  }
+
+  void putUpdateMapValue(Map<String, dynamic> updateMap, String field, dynamic value, dynamic updatedValue) {
+    if(value != updatedValue) {
+      updateMap[field] = updatedValue;
+    }
+  }
+
+  void putUpdateMapValueNullable(Map<String, dynamic> updateMap, String field, dynamic value, dynamic updatedValue, {required bool updatedValueCanBeNull}) {
+    if(value != updatedValue && (updatedValue == null && updatedValueCanBeNull) && (updatedValue != null && !updatedValueCanBeNull)) {
+      updateMap[field] = updatedValue;
+    }
+  }
+
   @override
   List<Object> get props => <Object>[
     id,

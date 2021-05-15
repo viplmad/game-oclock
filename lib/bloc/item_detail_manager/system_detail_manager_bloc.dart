@@ -5,16 +5,16 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'item_detail_manager.dart';
 
 
-class SystemDetailManagerBloc extends ItemDetailManagerBloc<System> {
+class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemUpdateProperties> {
   SystemDetailManagerBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<System?> updateFuture(UpdateItemField<System> event) {
+  Future<System?> updateFuture(UpdateItemField<System, SystemUpdateProperties> event) {
 
-    return iCollectionRepository.updateSystem(itemId, event.field, event.value);
+    return iCollectionRepository.updateSystem(event.item, event.updatedItem, event.updateProperties);
 
   }
 

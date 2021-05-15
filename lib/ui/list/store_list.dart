@@ -37,6 +37,9 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   final Color themeColor = StoreTheme.primaryColour;
 
   @override
+  Store createItem() => const Store(id: -1, name: '', iconURL: null, iconFilename: null);
+
+  @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 }
 

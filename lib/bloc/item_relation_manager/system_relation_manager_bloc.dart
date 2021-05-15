@@ -32,7 +32,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.deletePlatformSystem(otherId, itemId);
+        return iCollectionRepository.unrelatePlatformSystem(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

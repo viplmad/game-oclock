@@ -20,7 +20,7 @@ class TypeRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purcha
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.getPurchasesFromType(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPurchasesFromPurchaseType(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

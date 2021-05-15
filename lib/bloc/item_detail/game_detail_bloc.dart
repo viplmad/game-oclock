@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class GameDetailBloc extends ItemDetailBloc<Game> {
+class GameDetailBloc extends ItemDetailBloc<Game, GameUpdateProperties> {
   GameDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class GameDetailBloc extends ItemDetailBloc<Game> {
   @override
   Stream<Game?> getReadStream() {
 
-    return iCollectionRepository.getGameWithId(itemId);
+    return iCollectionRepository.findGameById(itemId);
 
   }
 }

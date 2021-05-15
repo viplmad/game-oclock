@@ -94,5 +94,8 @@ class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).systemsString;
 
   @override
+  System createItem(String query) => System(id: -1, name: query, iconURL: null, iconFilename: null, generation: 0, manufacturer: null);
+
+  @override
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
 }

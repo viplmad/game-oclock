@@ -15,14 +15,14 @@ class SystemSearchBloc extends ItemSearchBloc<System> {
   @override
   Future<List<System>> getInitialItems() {
 
-    return iCollectionRepository!.getSystemsWithView(SystemView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllSystemsWithView(SystemView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<System>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getSystemsWithName(query, super.maxResults).first;
+    return iCollectionRepository!.findAllSystemsByName(query, super.maxResults).first;
 
   }
 }

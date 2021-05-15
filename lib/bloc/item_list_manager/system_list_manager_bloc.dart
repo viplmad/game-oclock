@@ -11,16 +11,16 @@ class SystemListManagerBloc extends ItemListManagerBloc<System> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<System?> createFuture(AddItem event) {
+  Future<System?> createFuture(AddItem<System> event) {
 
-    return iCollectionRepository.createSystem(event.title);
+    return iCollectionRepository.createSystem(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<System> event) {
 
-    return iCollectionRepository.deleteSystem(event.item.id);
+    return iCollectionRepository.deleteSystemById(event.item.id);
 
   }
 }

@@ -1,20 +1,7 @@
+import 'package:game_collection/model/model.dart';
+
 import 'entity.dart';
 
-
-const String systemTable = 'System';
-
-const List<String> systemTables = <String>[
-  idField,
-  sys_nameField,
-  sys_iconField,
-  sys_generationField,
-  sys_manufacturerField,
-];
-
-const String sys_nameField = 'Name';
-const String sys_iconField = 'Icon';
-const String sys_generationField = 'Generation';
-const String sys_manufacturerField = 'Manufacturer';
 
 List<String> manufacturers = <String>[
   'Nintendo',
@@ -22,6 +9,38 @@ List<String> manufacturers = <String>[
   'Microsoft',
   'Sega',
 ];
+
+class SystemEntityData {
+  SystemEntityData._();
+  
+  static const String table = 'System';
+  
+  static const String relationField = table + '_ID';
+
+  static const String _nameField = 'Name';
+  static const String _iconField = 'Icon';
+  static const String _generationField = 'Generation';
+  static const String _manufacturerField = 'Manufacturer';
+
+  static const String searchField = _nameField;
+  static const String imageField = _iconField;
+
+  static const Map<String, Type> fields = <String, Type>{
+    idField : int,
+    _nameField : String,
+    _iconField : String,
+    _generationField : int,
+    _manufacturerField : String,
+  };
+  
+  static Map<String, dynamic> getIdMap(int id) {
+
+    return <String, dynamic>{
+      idField : id,
+    };
+
+  }
+}
 
 class SystemEntity extends CollectionItemEntity {
   const SystemEntity({
@@ -41,10 +60,10 @@ class SystemEntity extends CollectionItemEntity {
 
     return SystemEntity(
       id: map[idField] as int,
-      name: map[sys_nameField] as String,
-      iconFilename: map[sys_iconField] as String?,
-      generation: map[sys_generationField] as int,
-      manufacturer: map[sys_manufacturerField] as String?,
+      name: map[SystemEntityData._nameField] as String,
+      iconFilename: map[SystemEntityData._iconField] as String?,
+      generation: map[SystemEntityData._generationField] as int,
+      manufacturer: map[SystemEntityData._manufacturerField] as String?,
     );
 
   }
@@ -54,11 +73,39 @@ class SystemEntity extends CollectionItemEntity {
 
     return <String, dynamic> {
       idField : id,
-      sys_nameField : name,
-      sys_iconField : iconFilename,
-      sys_generationField : generation,
-      sys_manufacturerField : manufacturer,
+      SystemEntityData._nameField : name,
+      SystemEntityData._iconField : iconFilename,
+      SystemEntityData._generationField : generation,
+      SystemEntityData._manufacturerField : manufacturer,
     };
+
+  }
+  
+  @override
+  Map<String, dynamic> getCreateDynamicMap() {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      SystemEntityData._nameField : name,
+      SystemEntityData._generationField : generation,
+    };
+
+    putCreateMapValueNullable(createMap, SystemEntityData._iconField, iconFilename);
+    putCreateMapValueNullable(createMap, SystemEntityData._manufacturerField, manufacturer);
+
+    return createMap;
+    
+  }
+
+  Map<String, dynamic> getUpdateDynamicMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
+
+    final Map<String, dynamic> updateMap = <String, dynamic>{};
+
+    putUpdateMapValue(updateMap, SystemEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValueNullable(updateMap, SystemEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValue(updateMap, SystemEntityData._generationField, generation, updatedEntity.generation);
+    putUpdateMapValueNullable(updateMap, SystemEntityData._manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
+
+    return updateMap;
 
   }
 
@@ -67,7 +114,7 @@ class SystemEntity extends CollectionItemEntity {
     final List<SystemEntity> systemsList = <SystemEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, systemTable) );
+      final SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, SystemEntityData.table) );
 
       systemsList.add(system);
     });
@@ -85,12 +132,12 @@ class SystemEntity extends CollectionItemEntity {
   @override
   String toString() {
 
-    return '{$systemTable}Entity { '
+    return '{$SystemEntityData.table}Entity { '
         '$idField: $id, '
-        '$sys_nameField: $name, '
-        '$sys_iconField: $iconFilename, '
-        '$sys_generationField: $generation, '
-        '$sys_manufacturerField: $manufacturer'
+        '{$SystemEntityData._nameField}: $name, '
+        '{$SystemEntityData._iconField}: $iconFilename, '
+        '{$SystemEntityData._generationField}: $generation, '
+        '{$SystemEntityData._manufacturerField}: $manufacturer'
         ' }';
 
   }

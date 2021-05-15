@@ -20,7 +20,7 @@ class TagRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Tag, W>
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromTag(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllGamesFromGameTag(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

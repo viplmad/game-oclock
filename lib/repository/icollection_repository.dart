@@ -14,216 +14,216 @@ abstract class ICollectionRepository {
 
   //#region CREATE
     //Game
-  Future<Game?> createGame(String name, String edition);
+  Future<Game?> createGame(Game game);
   Future<dynamic> relateGamePlatform(int gameId, int platformId);
   Future<dynamic> relateGamePurchase(int gameId, int purchaseId);
   Future<dynamic> relateGameDLC(int gameId, int dlcId);
   Future<dynamic> relateGameTag(int gameId, int tagId);
 
-  Future<dynamic> relateGameFinishDate(int gameId, DateTime date);
-  Future<dynamic> relateGameTimeLog(int gameId, DateTime dateTime, Duration duration);
+  Future<dynamic> createGameFinish(int gameId, GameFinish finish);
+  Future<dynamic> createGameTimeLog(int gameId, GameTimeLog timeLog);
 
     //DLC
-  Future<DLC?> createDLC(String name);
+  Future<DLC?> createDLC(DLC dlc);
   Future<dynamic> relateDLCPurchase(int dlcId, int purchaseId);
 
-  Future<dynamic> relateDLCFinishDate(int dlcId, DateTime date);
+  Future<dynamic> createDLCFinish(int dlcId, DLCFinish finish);
 
     //Platform
-  Future<Platform?> createPlatform(String name);
+  Future<Platform?> createPlatform(Platform platform);
   Future<dynamic> relatePlatformSystem(int platformId, int systemId);
 
     //Purchase
-  Future<Purchase?> createPurchase(String description);
+  Future<Purchase?> createPurchase(Purchase purchase);
   Future<dynamic> relatePurchaseType(int purchaseId, int typeId);
 
     //Store
-  Future<Store?> createStore(String name);
+  Future<Store?> createStore(Store store);
   Future<dynamic> relateStorePurchase(int storeId, int purchaseId);
 
     //System
-  Future<System?> createSystem(String name);
+  Future<System?> createSystem(System system);
 
     //Tag
-  Future<Tag?> createTag(String name);
+  Future<Tag?> createGameTag(Tag tag);
 
     //Type
-  Future<PurchaseType?> createType(String name);
+  Future<PurchaseType?> createPurchaseType(PurchaseType type);
   //#endregion CREATE
 
 
   //#region READ
     //Game
-  Stream<List<Game>> getAllGames();
-  Stream<List<Game>> getAllOwned();
-  Stream<List<Game>> getAllRoms();
-  Stream<List<Game>> getAllWithView(GameView gameView, [int limit]);
-  Stream<List<Game>> getAllWithYearView(GameView gameView, int year, [int limit]);
-  Stream<List<Game>> getOwnedWithView(GameView gameView, [int limit]);
-  Stream<List<Game>> getOwnedWithYearView(GameView gameView, int year, [int limit]);
-  Stream<List<Game>> getRomsWithView(GameView gameView, [int limit]);
-  Stream<List<Game>> getRomsWithYearView(GameView gameView, int year, [int limit]);
-  Stream<Game?> getGameWithId(int id);
-  Stream<List<Platform>> getPlatformsFromGame(int id);
-  Stream<List<Purchase>> getPurchasesFromGame(int id);
-  Stream<List<DLC>> getDLCsFromGame(int id);
-  Stream<List<Tag>> getTagsFromGame(int id);
+  Stream<List<Game>> findAllGames();
+  Stream<List<Game>> findAllOwnedGames();
+  Stream<List<Game>> findAllRomGames();
+  Stream<List<Game>> findAllGamesWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> findAllGamesWithYearView(GameView gameView, int year, [int limit]);
+  Stream<List<Game>> findAllOwnedGamesWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> findAllOwnedGamesWithYearView(GameView gameView, int year, [int limit]);
+  Stream<List<Game>> findAllRomGamesWithView(GameView gameView, [int limit]);
+  Stream<List<Game>> findAllRomGamesWithYearView(GameView gameView, int year, [int limit]);
+  Stream<Game?> findGameById(int id);
+  Stream<List<Platform>> findAllPlatformsFromGame(int id);
+  Stream<List<Purchase>> findAllPurchasesFromGame(int id);
+  Stream<List<DLC>> findAllDLCsFromGame(int id);
+  Stream<List<Tag>> findAllGameTagsFromGame(int id);
 
-  Stream<List<DateTime>> getFinishDatesFromGame(int id);
-  Stream<List<TimeLog>> getTimeLogsFromGame(int id);
+  Stream<List<GameFinish>> findAllGameFinishFromGame(int id);
+  Stream<List<GameTimeLog>> findAllGameTimeLogsFromGame(int id);
 
     //DLC
-  Stream<List<DLC>> getAllDLCs();
-  Stream<List<DLC>> getDLCsWithView(DLCView dlcView, [int limit]);
-  Stream<DLC?> getDLCWithId(int id);
-  Stream<Game?> getBaseGameFromDLC(int id);
-  Stream<List<Purchase>> getPurchasesFromDLC(int id);
+  Stream<List<DLC>> findAllDLCs();
+  Stream<List<DLC>> findAllDLCsWithView(DLCView dlcView, [int limit]);
+  Stream<DLC?> findDLCById(int id);
+  Stream<Game?> findBaseGameFromDLC(int id);
+  Stream<List<Purchase>> findAllPurchasesFromDLC(int id);
 
-  Stream<List<DateTime>> getFinishDatesFromDLC(int id);
+  Stream<List<DLCFinish>> findAllDLCFinishFromDLC(int id);
 
     //Platform
-  Stream<List<Platform>> getAllPlatforms();
-  Stream<List<Platform>> getPlatformsWithView(PlatformView platformView, [int limit]);
-  Stream<Platform?> getPlatformWithId(int id);
-  Stream<List<Game>> getGamesFromPlatform(int id);
-  Stream<List<System>> getSystemsFromPlatform(int id);
+  Stream<List<Platform>> findAllPlatforms();
+  Stream<List<Platform>> findAllPlatformsWithView(PlatformView platformView, [int limit]);
+  Stream<Platform?> findPlatformById(int id);
+  Stream<List<Game>> findAllGamesFromPlatform(int id);
+  Stream<List<System>> findAllSystemsFromPlatform(int id);
 
     //Purchase
-  Stream<List<Purchase>> getAllPurchases();
-  Stream<List<Purchase>> getPurchasesWithView(PurchaseView purchaseView, [int limit]);
-  Stream<List<Purchase>> getPurchasesWithYearView(PurchaseView purchaseView, int year, [int limit]);
-  Stream<Purchase?> getPurchaseWithId(int id);
-  Stream<Store?> getStoreFromPurchase(int storeId);
-  Stream<List<Game>> getGamesFromPurchase(int id);
-  Stream<List<DLC>> getDLCsFromPurchase(int id);
-  Stream<List<PurchaseType>> getTypesFromPurchase(int id);
+  Stream<List<Purchase>> findAllPurchases();
+  Stream<List<Purchase>> findAllPurchasesWithView(PurchaseView purchaseView, [int limit]);
+  Stream<List<Purchase>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int limit]);
+  Stream<Purchase?> findPurchaseById(int id);
+  Stream<Store?> findStoreFromPurchase(int storeId);
+  Stream<List<Game>> findAllGamesFromPurchase(int id);
+  Stream<List<DLC>> findAllDLCsFromPurchase(int id);
+  Stream<List<PurchaseType>> findAllPurchaseTypesFromPurchase(int id);
 
     //Store
-  Stream<List<Store>> getAllStores();
-  Stream<List<Store>> getStoresWithView(StoreView storeView, [int limit]);
-  Stream<Store?> getStoreWithId(int id);
-  Stream<List<Purchase>> getPurchasesFromStore(int id);
+  Stream<List<Store>> findAllStores();
+  Stream<List<Store>> findAllStoresWithView(StoreView storeView, [int limit]);
+  Stream<Store?> findStoreById(int id);
+  Stream<List<Purchase>> findAllPurchasesFromStore(int storeId);
 
     //System
-  Stream<List<System>> getAllSystems();
-  Stream<List<System>> getSystemsWithView(SystemView systemView, [int limit]);
-  Stream<System?> getSystemWithId(int id);
-  Stream<List<Platform>> getPlatformsFromSystem(int id);
+  Stream<List<System>> findAllSystems();
+  Stream<List<System>> findAllSystemsWithView(SystemView systemView, [int limit]);
+  Stream<System?> findSystemById(int id);
+  Stream<List<Platform>> findAllPlatformsFromSystem(int id);
 
     //Tag
-  Stream<List<Tag>> getAllTags();
-  Stream<List<Tag>> getTagsWithView(TagView tagView, [int limit]);
-  Stream<Tag?> getTagWithId(int id);
-  Stream<List<Game>> getGamesFromTag(int id);
+  Stream<List<Tag>> findAllGameTags();
+  Stream<List<Tag>> findAllGameTagsWithView(TagView tagView, [int limit]);
+  Stream<Tag?> findGameTagById(int id);
+  Stream<List<Game>> findAllGamesFromGameTag(int id);
 
     //Type
-  Stream<List<PurchaseType>> getAllTypes();
-  Stream<List<PurchaseType>> getTypesWithView(TypeView typeView, [int limit]);
-  Stream<PurchaseType?> getTypeWithId(int id);
-  Stream<List<Purchase>> getPurchasesFromType(int id);
+  Stream<List<PurchaseType>> findAllPurchaseTypes();
+  Stream<List<PurchaseType>> findAllPurchaseTypesWithView(TypeView typeView, [int limit]);
+  Stream<PurchaseType?> findPurchaseTypeById(int id);
+  Stream<List<Purchase>> findAllPurchasesFromPurchaseType(int id);
   //#endregion READ
 
 
   //#region UPDATE
     //Game
-  Future<Game?> updateGame<T>(int id, String fieldName, T newValue);
+  Future<Game?> updateGame<T>(Game game, Game updatedGame, GameUpdateProperties updateProperties);
 
     //DLC
-  Future<DLC?> updateDLC<T>(int id, String fieldName, T newValue);
+  Future<DLC?> updateDLC(DLC dlc, DLC updatedDlc, DLCUpdateProperties updateProperties);
 
     //Platform
-  Future<Platform?> updatePlatform<T>(int id, String fieldName, T newValue);
+  Future<Platform?> updatePlatform(Platform platform, Platform updatedPlatform, PlatformUpdateProperties updateProperties);
 
     //Purchase
-  Future<Purchase?> updatePurchase<T>(int id, String fieldName, T newValue);
+  Future<Purchase?> updatePurchase(Purchase purchase, Purchase updatedPurchase, PurchaseUpdateProperties updateProperties);
 
     //Store
-  Future<Store?> updateStore<T>(int id, String fieldName, T newValue);
+  Future<Store?> updateStore(Store store, Store updatedStore, StoreUpdateProperties updateProperties);
 
     //System
-  Future<System?> updateSystem<T>(int id, String fieldName, T newValue);
+  Future<System?> updateSystem(System system, System updatedSystem, SystemUpdateProperties updateProperties);
 
     //Tag
-  Future<Tag?> updateTag<T>(int id, String fieldName, T newValue);
+  Future<Tag?> updateGameTag(Tag tag, Tag updatedTag, GameTagUpdateProperties updateProperties);
 
     //Type
-  Future<PurchaseType?> updateType<T>(int id, String fieldName, T newValue);
+  Future<PurchaseType?> updatePurchaseType(PurchaseType type, PurchaseType updatedType, PurchaseTypeUpdateProperties updateProperties);
   //#endregion UPDATE
 
 
   //#region DELETE
     //Game
-  Future<dynamic> deleteGame(int id);
-  Future<dynamic> deleteGamePlatform(int gameId, int platformId);
-  Future<dynamic> deleteGamePurchase(int gameId, int purchaseId);
-  Future<dynamic> deleteGameDLC(int dlcId);
-  Future<dynamic> deleteGameTag(int gameId, int tagId);
+  Future<dynamic> deleteGameById(int id);
+  Future<dynamic> unrelateGamePlatform(int gameId, int platformId);
+  Future<dynamic> unrelateGamePurchase(int gameId, int purchaseId);
+  Future<dynamic> unrelateGameDLC(int dlcId);
+  Future<dynamic> unrelateGameTag(int gameId, int tagId);
 
-  Future<dynamic> deleteGameFinishDate(int gameId, DateTime date);
-  Future<dynamic> deleteGameTimeLog(int gameId, DateTime dateTime);
+  Future<dynamic> deleteGameFinishById(int gameId, DateTime date);
+  Future<dynamic> deleteGameTimeLogById(int gameId, DateTime dateTime);
 
     //DLC
-  Future<dynamic> deleteDLC(int id);
-  Future<dynamic> deleteDLCPurchase(int dlcId, int purchaseId);
+  Future<dynamic> deleteDLCById(int id);
+  Future<dynamic> unrelateDLCPurchase(int dlcId, int purchaseId);
 
-  Future<dynamic> deleteDLCFinishDate(int dlcId, DateTime date);
+  Future<dynamic> deleteDLCFinishById(int dlcId, DateTime date);
 
     //Platform
-  Future<dynamic> deletePlatform(int id);
-  Future<dynamic> deletePlatformSystem(int platformId, int systemId);
+  Future<dynamic> deletePlatformById(int id);
+  Future<dynamic> unrelatePlatformSystem(int platformId, int systemId);
 
     //Purchase
-  Future<dynamic> deletePurchase(int id);
-  Future<dynamic> deletePurchaseType(int purchaseId, int typeId);
+  Future<dynamic> deletePurchaseById(int id);
+  Future<dynamic> unrelatePurchaseType(int purchaseId, int typeId);
 
     //Store
-  Future<dynamic> deleteStore(int id);
-  Future<dynamic> deleteStorePurchase(int purchaseId);
+  Future<dynamic> deleteStoreById(int id);
+  Future<dynamic> unrelateStorePurchase(int purchaseId);
 
     //System
-  Future<dynamic> deleteSystem(int id);
+  Future<dynamic> deleteSystemById(int id);
 
     //Tag
-  Future<dynamic> deleteTag(int id);
+  Future<dynamic> deleteGameTagById(int id);
 
     //Type
-  Future<dynamic> deleteType(int id);
+  Future<dynamic> deletePurchaseTypeById(int id);
   //#endregion DELETE
 
 
   //#region SEARCH
-  Stream<List<Game>> getGamesWithName(String name, int maxResults);
-  Stream<List<DLC>> getDLCsWithName(String name, int maxResults);
-  Stream<List<Platform>> getPlatformsWithName(String name, int maxResults);
-  Stream<List<Purchase>> getPurchasesWithDescription(String description, int maxResults);
-  Stream<List<Store>> getStoresWithName(String name, int maxResults);
-  Stream<List<System>> getSystemsWithName(String name, int maxResults);
-  Stream<List<Tag>> getTagsWithName(String name, int maxResults);
-  Stream<List<PurchaseType>> getTypesWithName(String name, int maxResults);
+  Stream<List<Game>> findAllGamesByName(String name, int maxResults);
+  Stream<List<DLC>> findAllDLCsByName(String name, int maxResults);
+  Stream<List<Platform>> findAllPlatformsByName(String name, int maxResults);
+  Stream<List<Purchase>> findAllPurchasesByDescription(String description, int maxResults);
+  Stream<List<Store>> findAllStoresByName(String name, int maxResults);
+  Stream<List<System>> findAllSystemsByName(String name, int maxResults);
+  Stream<List<Tag>> findAllGameTagsByName(String name, int maxResults);
+  Stream<List<PurchaseType>> findAllPurchaseTypesByName(String name, int maxResults);
   //#endregion SEARCH
 
-  Stream<List<GameWithLogs>> getGamesWithTimeLogsWithYear(int year);
+  Stream<List<GameWithLogs>> findAllGamesWithTimeLogsByYear(int year);
 
   //#region IMAGE
     //Game
-  Future<Game?> uploadGameCover(int gameId, String uploadImagePath, [String? oldImageName]);
-  Future<Game?> renameGameCover(int gameId, String imageName, String newImageName);
-  Future<Game?> deleteGameCover(int gameId, String imageName);
+  Future<Game?> uploadGameCover(int id, String uploadImagePath, [String? oldImageName]);
+  Future<Game?> renameGameCover(int id, String imageName, String newImageName);
+  Future<Game?> deleteGameCover(int id, String imageName);
     //DLC
-  Future<DLC?> uploadDLCCover(int dlcId, String uploadImagePath, [String? oldImageName]);
-  Future<DLC?> renameDLCCover(int dlcId, String imageName, String newImageName);
-  Future<DLC?> deleteDLCCover(int dlcId, String imageName);
+  Future<DLC?> uploadDLCCover(int id, String uploadImagePath, [String? oldImageName]);
+  Future<DLC?> renameDLCCover(int id, String imageName, String newImageName);
+  Future<DLC?> deleteDLCCover(int id, String imageName);
     //Platform
-  Future<Platform?> uploadPlatformIcon(int platformId, String uploadImagePath, [String? oldImageName]);
-  Future<Platform?> renamePlatformIcon(int platformId, String imageName, String newImageName);
-  Future<Platform?> deletePlatformIcon(int platformId, String imageName);
+  Future<Platform?> uploadPlatformIcon(int id, String uploadImagePath, [String? oldImageName]);
+  Future<Platform?> renamePlatformIcon(int id, String imageName, String newImageName);
+  Future<Platform?> deletePlatformIcon(int id, String imageName);
     //Store
-  Future<Store?> uploadStoreIcon(int storeId, String uploadImagePath, [String? oldImageName]);
-  Future<Store?> renameStoreIcon(int storeId, String imageName, String newImageName);
-  Future<Store?> deleteStoreIcon(int storeId, String imageName);
+  Future<Store?> uploadStoreIcon(int id, String uploadImagePath, [String? oldImageName]);
+  Future<Store?> renameStoreIcon(int id, String imageName, String newImageName);
+  Future<Store?> deleteStoreIcon(int id, String imageName);
     //System
-  Future<System?> uploadSystemIcon(int systemId, String uploadImagePath, [String? oldImageName]);
-  Future<System?> renameSystemIcon(int systemId, String imageName, String newImageName);
-  Future<System?> deleteSystemIcon(int systemId, String imageName);
+  Future<System?> uploadSystemIcon(int id, String uploadImagePath, [String? oldImageName]);
+  Future<System?> renameSystemIcon(int id, String imageName, String newImageName);
+  Future<System?> deleteSystemIcon(int id, String imageName);
   //#endregion IMAGE
 }

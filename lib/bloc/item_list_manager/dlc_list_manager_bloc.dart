@@ -11,16 +11,16 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<DLC?> createFuture(AddItem event) {
+  Future<DLC?> createFuture(AddItem<DLC> event) {
 
-    return iCollectionRepository.createDLC(event.title);
+    return iCollectionRepository.createDLC(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<DLC> event) {
 
-    return iCollectionRepository.deleteDLC(event.item.id);
+    return iCollectionRepository.deleteDLCById(event.item.id);
 
   }
 }

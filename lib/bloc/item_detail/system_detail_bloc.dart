@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class SystemDetailBloc extends ItemDetailBloc<System> {
+class SystemDetailBloc extends ItemDetailBloc<System, Object> {
   SystemDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class SystemDetailBloc extends ItemDetailBloc<System> {
   @override
   Stream<System?> getReadStream() {
 
-    return iCollectionRepository.getSystemWithId(itemId);
+    return iCollectionRepository.findSystemById(itemId);
 
   }
 }

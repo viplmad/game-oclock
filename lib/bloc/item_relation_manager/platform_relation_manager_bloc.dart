@@ -34,9 +34,9 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGamePlatform(otherId, itemId);
+        return iCollectionRepository.unrelateGamePlatform(otherId, itemId);
       case System:
-        return iCollectionRepository.deletePlatformSystem(itemId, otherId);
+        return iCollectionRepository.unrelatePlatformSystem(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

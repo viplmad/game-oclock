@@ -29,16 +29,16 @@ class GameListManagerBloc extends ItemListManagerBloc<Game> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Game?> createFuture(AddItem event) {
+  Future<Game?> createFuture(AddItem<Game> event) {
 
-    return iCollectionRepository.createGame(event.title, '');
+    return iCollectionRepository.createGame(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Game> event) {
 
-    return iCollectionRepository.deleteGame(event.item.id);
+    return iCollectionRepository.deleteGameById(event.item.id);
 
   }
 }

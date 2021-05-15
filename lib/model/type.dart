@@ -68,10 +68,15 @@ class PurchaseType extends CollectionItem {
   @override
   String toString() {
 
-    return '$typeTable { '
-        '$idField: $id, '
-        '$type_nameField: $name'
+    return 'Purchase Type { '
+        'Id: $id, '
+        'Name: $name'
         ' }';
 
   }
+}
+
+class PurchaseTypeUpdateProperties {
+
+  const PurchaseTypeUpdateProperties();
 }

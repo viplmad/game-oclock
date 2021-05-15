@@ -94,5 +94,8 @@ class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, 
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).tagsString;
 
   @override
+  Tag createItem(String query) => Tag(id: -1, name: query);
+
+  @override
   Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);
 }

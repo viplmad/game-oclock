@@ -43,6 +43,28 @@ class ItemImage {
   final String filename;
 }
 
+abstract class CollectionItemFinish extends Equatable {
+  const CollectionItemFinish({
+    required this.dateTime,
+  });
+
+  final DateTime dateTime;
+
+  @override
+  List<Object> get props => <Object>[
+    dateTime,
+  ];
+
+  @override
+  String toString() {
+
+    return 'CollectionItemFinish { '
+        'DateTime: $dateTime'
+        ' }';
+
+  }
+}
+
 abstract class ItemData<T extends CollectionItem> {
   const ItemData(this.items);
 

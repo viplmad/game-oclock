@@ -94,13 +94,23 @@ class System extends CollectionItem {
   @override
   String toString() {
 
-    return '$systemTable { '
-        '$idField: $id, '
-        '$sys_nameField: $name, '
-        '$sys_iconField: $iconURL, '
-        '$sys_generationField: $generation, '
-        '$sys_manufacturerField: $manufacturer'
+    return 'System { '
+        'Id: $id, '
+        'Name: $name, '
+        'Icon URL: $iconURL, '
+        'Generation: $generation, '
+        'Manufacturer: $manufacturer'
         ' }';
 
   }
+}
+
+class SystemUpdateProperties {
+  final bool iconURLToNull;
+  final bool manufacturerToNull;
+
+  const SystemUpdateProperties({
+    this.iconURLToNull = false,
+    this.manufacturerToNull = false,
+  });
 }

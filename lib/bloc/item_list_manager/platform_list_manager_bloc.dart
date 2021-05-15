@@ -11,16 +11,16 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Platform?> createFuture(AddItem event) {
+  Future<Platform?> createFuture(AddItem<Platform> event) {
 
-    return iCollectionRepository.createPlatform(event.title);
+    return iCollectionRepository.createPlatform(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Platform> event) {
 
-    return iCollectionRepository.deletePlatform(event.item.id);
+    return iCollectionRepository.deletePlatformById(event.item.id);
 
   }
 }

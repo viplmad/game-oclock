@@ -17,7 +17,7 @@ class OwnedListBloc extends ItemListBloc<Game> {
   @override
   Stream<List<Game>> getReadAllStream() {
 
-    return iCollectionRepository.getAllOwned();
+    return iCollectionRepository.findAllOwnedGames();
 
   }
 
@@ -26,7 +26,7 @@ class OwnedListBloc extends ItemListBloc<Game> {
 
     final GameView gameView = GameView.values[event.viewIndex];
 
-    return iCollectionRepository.getOwnedWithView(gameView);
+    return iCollectionRepository.findAllOwnedGamesWithView(gameView);
 
   }
 
@@ -35,7 +35,7 @@ class OwnedListBloc extends ItemListBloc<Game> {
 
     final GameView gameView = GameView.values[event.viewIndex];
 
-    return iCollectionRepository.getOwnedWithYearView(gameView, event.year);
+    return iCollectionRepository.findAllOwnedGamesWithYearView(gameView, event.year);
 
   }
 }

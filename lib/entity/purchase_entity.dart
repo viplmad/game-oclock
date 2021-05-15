@@ -1,26 +1,45 @@
+import 'package:game_collection/model/model.dart';
+
 import 'entity.dart';
 
 
-const String purchaseTable = 'Purchase';
+class PurchaseEntityData {
+  PurchaseEntityData._();
+  
+  static const String table = 'Purchase';
+  
+  static const String relationField = table + '_ID';
 
-const List<String> purchaseFields = <String>[
-  idField,
-  purc_descriptionField,
-  purc_priceField,
-  purc_externalCreditField,
-  purc_dateField,
-  purc_originalPriceField,
-  purc_storeField,
-];
+  static const String _descriptionField = 'Description';
+  static const String _priceField = 'Price';
+  static const String _externalCreditField = 'External Credit';
+  static const String _dateField = 'Date';
+  static const String _originalPriceField = 'Original Price';
 
-const String purc_descriptionField = 'Description';
-const String purc_priceField = 'Price';
-const String purc_externalCreditField = 'External Credit';
-const String purc_dateField = 'Date';
-const String purc_originalPriceField = 'Original Price';
-const String purc_discountField = 'Discount';
+  static const String _storeField = 'Store';
 
-const String purc_storeField = 'Store';
+  static const String searchField = _descriptionField;
+  static const String storeField = _storeField;
+
+  static const Map<String, Type> fields = <String, Type>{
+    idField : int,
+    _descriptionField: String,
+    _priceField : double,
+    _externalCreditField : double,
+    _dateField : DateTime,
+    _originalPriceField : double,
+
+    _storeField : int,
+  };
+  
+  static Map<String, dynamic> getIdMap(int id) {
+
+    return <String, dynamic>{
+      idField : id,
+    };
+
+  }
+}
 
 class PurchaseEntity extends CollectionItemEntity {
   const PurchaseEntity({
@@ -46,13 +65,13 @@ class PurchaseEntity extends CollectionItemEntity {
 
     return PurchaseEntity(
       id: map[idField] as int,
-      description: map[purc_descriptionField] as String,
-      price: map[purc_priceField] as double,
-      externalCredit: map[purc_externalCreditField] as double,
-      date: map[purc_dateField] as DateTime?,
-      originalPrice: map[purc_originalPriceField] as double,
+      description: map[PurchaseEntityData._descriptionField] as String,
+      price: map[PurchaseEntityData._priceField] as double,
+      externalCredit: map[PurchaseEntityData._externalCreditField] as double,
+      date: map[PurchaseEntityData._dateField] as DateTime?,
+      originalPrice: map[PurchaseEntityData._originalPriceField] as double,
 
-      store: map[purc_storeField] as int?,
+      store: map[PurchaseEntityData._storeField] as int?,
     );
 
   }
@@ -62,14 +81,44 @@ class PurchaseEntity extends CollectionItemEntity {
 
     return <String, dynamic> {
       idField : id,
-      purc_descriptionField : description,
-      purc_priceField : price,
-      purc_externalCreditField : externalCredit,
-      purc_dateField : date,
-      purc_originalPriceField : originalPrice,
+      PurchaseEntityData._descriptionField : description,
+      PurchaseEntityData._priceField : price,
+      PurchaseEntityData._externalCreditField : externalCredit,
+      PurchaseEntityData._dateField : date,
+      PurchaseEntityData._originalPriceField : originalPrice,
 
-      purc_storeField : store,
+      PurchaseEntityData._storeField : store,
     };
+
+  }
+  
+  @override
+  Map<String, dynamic> getCreateDynamicMap() {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      PurchaseEntityData._descriptionField : description,
+      PurchaseEntityData._priceField : price,
+      PurchaseEntityData._externalCreditField : externalCredit,
+      PurchaseEntityData._originalPriceField : originalPrice,
+    };
+
+    putCreateMapValueNullable(createMap, PurchaseEntityData._dateField, date);
+    putCreateMapValueNullable(createMap, PurchaseEntityData._storeField, store);
+
+    return createMap;
+  }
+
+  Map<String, dynamic> getUpdateDynamicMap(PurchaseEntity updatedEntity, PurchaseUpdateProperties updateProperties) {
+
+    final Map<String, dynamic> updateMap = <String, dynamic>{};
+
+    putUpdateMapValue(updateMap, PurchaseEntityData._descriptionField, description, updatedEntity.description);
+    putUpdateMapValue(updateMap, PurchaseEntityData._priceField, price, updatedEntity.price);
+    putUpdateMapValue(updateMap, PurchaseEntityData._externalCreditField, externalCredit, updatedEntity.externalCredit);
+    putUpdateMapValueNullable(updateMap, PurchaseEntityData._dateField, date, updatedEntity.date, updatedValueCanBeNull: updateProperties.dateToNull);
+    putUpdateMapValue(updateMap, PurchaseEntityData._originalPriceField, originalPrice, updatedEntity.originalPrice);
+
+    return updateMap;
 
   }
 
@@ -78,7 +127,7 @@ class PurchaseEntity extends CollectionItemEntity {
     final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, purchaseTable) );
+      final PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
 
       purchasesList.add(purchase);
     });
@@ -96,13 +145,13 @@ class PurchaseEntity extends CollectionItemEntity {
   @override
   String toString() {
 
-    return '{$purchaseTable}Entity { '
+    return '{$PurchaseEntityData.table}Entity { '
         '$idField: $id, '
-        '$purc_descriptionField: $description, '
-        '$purc_priceField: $price, '
-        '$purc_externalCreditField: $externalCredit, '
-        '$purc_dateField: $date, '
-        '$purc_originalPriceField: $originalPrice'
+        '{$PurchaseEntityData._descriptionField}: $description, '
+        '{$PurchaseEntityData._priceField}: $price, '
+        '{$PurchaseEntityData._externalCreditField}: $externalCredit, '
+        '{$PurchaseEntityData._dateField}: $date, '
+        '{$PurchaseEntityData._originalPriceField}: $originalPrice'
         ' }';
 
   }

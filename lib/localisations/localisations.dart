@@ -263,7 +263,7 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
       case 'en':
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
       case 'es':
-        //TODO
+        //TODO spanish localisation
       default:
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
     }

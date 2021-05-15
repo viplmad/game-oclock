@@ -17,7 +17,7 @@ class RomListBloc extends ItemListBloc<Game> {
   @override
   Stream<List<Game>> getReadAllStream() {
 
-    return iCollectionRepository.getAllRoms();
+    return iCollectionRepository.findAllRomGames();
 
   }
 
@@ -26,7 +26,7 @@ class RomListBloc extends ItemListBloc<Game> {
 
     final GameView gameView = GameView.values[event.viewIndex];
 
-    return iCollectionRepository.getRomsWithView(gameView);
+    return iCollectionRepository.findAllRomGamesWithView(gameView);
 
   }
 
@@ -35,7 +35,7 @@ class RomListBloc extends ItemListBloc<Game> {
 
     final GameView gameView = GameView.values[event.viewIndex];
 
-    return iCollectionRepository.getRomsWithYearView(gameView, event.year);
+    return iCollectionRepository.findAllRomGamesWithYearView(gameView, event.year);
 
   }
 }

@@ -32,7 +32,7 @@ class TypeRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.deletePurchaseType(otherId, itemId);
+        return iCollectionRepository.unrelatePurchaseType(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

@@ -128,6 +128,7 @@ abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc
   String typeName(BuildContext context);
   String typesName(BuildContext context);
 
+  T createItem(String query);
   Widget cardBuilder(BuildContext context, T item);
 
   @override
@@ -254,7 +255,9 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
         child: Text(GameCollectionLocalisations.of(context).newWithTitleString(widget.typeName(context), query)),
         onPressed: () {
 
-          BlocProvider.of<S>(context).add(AddItem(query));
+          BlocProvider.of<S>(context).add(
+            AddItem<T>(widget.createItem(query)),
+          );
 
         },
         style: TextButton.styleFrom(

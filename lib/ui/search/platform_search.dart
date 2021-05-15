@@ -91,5 +91,8 @@ class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
 
   @override
+  Platform createItem(String query) => Platform(id: -1, name: query, iconURL: null, iconFilename: null, type: null);
+
+  @override
   Widget cardBuilder(BuildContext context, Platform item) => PlatformTheme.itemCard(context, item, onTap);
 }

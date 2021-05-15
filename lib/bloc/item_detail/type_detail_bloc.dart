@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
+class TypeDetailBloc extends ItemDetailBloc<PurchaseType, Object> {
   TypeDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class TypeDetailBloc extends ItemDetailBloc<PurchaseType> {
   @override
   Stream<PurchaseType?> getReadStream() {
 
-    return iCollectionRepository.getTypeWithId(itemId);
+    return iCollectionRepository.findPurchaseTypeById(itemId);
 
   }
 }

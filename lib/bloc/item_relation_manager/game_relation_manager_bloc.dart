@@ -38,13 +38,13 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.deleteGameDLC(otherId);
+        return iCollectionRepository.unrelateGameDLC(otherId);
       case Purchase:
-        return iCollectionRepository.deleteGamePurchase(itemId, otherId);
+        return iCollectionRepository.unrelateGamePurchase(itemId, otherId);
       case Platform:
-        return iCollectionRepository.deleteGamePlatform(itemId, otherId);
+        return iCollectionRepository.unrelateGamePlatform(itemId, otherId);
       case Tag:
-        return iCollectionRepository.deleteGameTag(itemId, otherId);
+        return iCollectionRepository.unrelateGameTag(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);
@@ -52,44 +52,44 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
   }
 }
 
-class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, TimeLog> {
+class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, GameTimeLog> {
   GameTimeLogRelationManagerBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<dynamic> addRelationFuture(AddRelation<TimeLog> event) {
+  Future<dynamic> addRelationFuture(AddRelation<GameTimeLog> event) {
 
-    return iCollectionRepository.relateGameTimeLog(itemId, event.otherItem.dateTime, event.otherItem.time);
+    return iCollectionRepository.createGameTimeLog(itemId, event.otherItem);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteRelation<TimeLog> event) {
+  Future<dynamic> deleteRelationFuture(DeleteRelation<GameTimeLog> event) {
 
-    return iCollectionRepository.deleteGameTimeLog(itemId, event.otherItem.dateTime);
+    return iCollectionRepository.deleteGameTimeLogById(itemId, event.otherItem.dateTime);
 
   }
 }
 
-class GameFinishDateRelationManagerBloc extends RelationManagerBloc<Game, DateTime> {
-  GameFinishDateRelationManagerBloc({
+class GameFinishRelationManagerBloc extends RelationManagerBloc<Game, GameFinish> {
+  GameFinishRelationManagerBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<dynamic> addRelationFuture(AddRelation<DateTime> event) {
+  Future<dynamic> addRelationFuture(AddRelation<GameFinish> event) {
 
-    return iCollectionRepository.relateGameFinishDate(itemId, event.otherItem);
+    return iCollectionRepository.createGameFinish(itemId, event.otherItem);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteRelation<DateTime> event) {
+  Future<dynamic> deleteRelationFuture(DeleteRelation<GameFinish> event) {
 
-    return iCollectionRepository.deleteGameFinishDate(itemId, event.otherItem);
+    return iCollectionRepository.deleteGameFinishById(itemId, event.otherItem.dateTime);
 
   }
 }

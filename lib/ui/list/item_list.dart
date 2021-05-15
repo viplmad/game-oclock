@@ -104,12 +104,15 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
       child: const Icon(Icons.add),
       backgroundColor: themeColor,
       onPressed: () {
-        BlocProvider.of<S>(context).add(const AddItem());
+        BlocProvider.of<S>(context).add(
+          AddItem<T>(createItem()),
+        );
       },
     );
 
   }
 
+  T createItem();
   String typeName(BuildContext context);
 }
 

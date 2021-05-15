@@ -17,7 +17,7 @@ class TypeListBloc extends ItemListBloc<PurchaseType> {
   @override
   Stream<List<PurchaseType>> getReadAllStream() {
 
-    return iCollectionRepository.getAllTypes();
+    return iCollectionRepository.findAllPurchaseTypes();
 
   }
 
@@ -26,7 +26,7 @@ class TypeListBloc extends ItemListBloc<PurchaseType> {
 
     final TypeView typeView = TypeView.values[event.viewIndex];
 
-    return iCollectionRepository.getTypesWithView(typeView);
+    return iCollectionRepository.findAllPurchaseTypesWithView(typeView);
 
   }
 }

@@ -28,7 +28,7 @@ class Tag extends CollectionItem {
   @override
   String get queryableTerms => this.name;
 
-  static Tag fromEntity(TagEntity entity) {
+  static Tag fromEntity(GameTagEntity entity) {
 
     return Tag(
       id: entity.id,
@@ -38,9 +38,9 @@ class Tag extends CollectionItem {
   }
 
   @override
-  TagEntity toEntity() {
+  GameTagEntity toEntity() {
 
-    return TagEntity(
+    return GameTagEntity(
       id: this.id,
       name: this.name,
     );
@@ -68,10 +68,15 @@ class Tag extends CollectionItem {
   @override
   String toString() {
 
-    return '$tagTable { '
-        '$idField: $id, '
-        '$tag_nameField: $name'
+    return 'Game Tag { '
+        'Id: $id, '
+        'Name: $name'
         ' }';
 
   }
+}
+
+class GameTagUpdateProperties {
+
+  const GameTagUpdateProperties();
 }

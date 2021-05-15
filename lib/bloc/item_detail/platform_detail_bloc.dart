@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetailBloc extends ItemDetailBloc<Platform> {
+class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformUpdateProperties> {
   PlatformDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class PlatformDetailBloc extends ItemDetailBloc<Platform> {
   @override
   Stream<Platform?> getReadStream() {
 
-    return iCollectionRepository.getPlatformWithId(itemId);
+    return iCollectionRepository.findPlatformById(itemId);
 
   }
 }

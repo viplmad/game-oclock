@@ -20,7 +20,7 @@ class SystemRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Syst
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.getPlatformsFromSystem(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPlatformsFromSystem(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

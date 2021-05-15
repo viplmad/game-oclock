@@ -17,7 +17,7 @@ class StoreListBloc extends ItemListBloc<Store> {
   @override
   Stream<List<Store>> getReadAllStream() {
 
-    return iCollectionRepository.getAllStores();
+    return iCollectionRepository.findAllStores();
 
   }
 
@@ -26,7 +26,7 @@ class StoreListBloc extends ItemListBloc<Store> {
 
     final StoreView storeView = StoreView.values[event.viewIndex];
 
-    return iCollectionRepository.getStoresWithView(storeView);
+    return iCollectionRepository.findAllStoresWithView(storeView);
 
   }
 }

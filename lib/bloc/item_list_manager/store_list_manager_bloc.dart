@@ -11,16 +11,16 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Store?> createFuture(AddItem event) {
+  Future<Store?> createFuture(AddItem<Store> event) {
 
-    return iCollectionRepository.createStore(event.title);
+    return iCollectionRepository.createStore(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Store> event) {
 
-    return iCollectionRepository.deleteStore(event.item.id);
+    return iCollectionRepository.deleteStoreById(event.item.id);
 
   }
 }

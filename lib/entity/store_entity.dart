@@ -1,16 +1,35 @@
+import 'package:game_collection/model/model.dart';
+
 import 'entity.dart';
 
 
-const String storeTable = 'Store';
+class StoreEntityData {
+  StoreEntityData._();
+  
+  static const String table = 'Store';
+  
+  static const String relationField = table + '_ID';
 
-const List<String> storeFields = <String>[
-  idField,
-  stor_nameField,
-  stor_iconField,
-];
+  static const String _nameField = 'Name';
+  static const String _iconField = 'Icon';
 
-const String stor_nameField = 'Name';
-const String stor_iconField = 'Icon';
+  static const String searchField = _nameField;
+  static const String imageField = _iconField;
+
+  static const Map<String, Type> fields = <String, Type>{
+    idField : int,
+    _nameField : String,
+    _iconField : String,
+  };
+  
+  static Map<String, dynamic> getIdMap(int id) {
+
+    return <String, dynamic>{
+      idField : id,
+    };
+
+  }
+}
 
 class StoreEntity extends CollectionItemEntity {
   const StoreEntity({
@@ -26,8 +45,8 @@ class StoreEntity extends CollectionItemEntity {
 
     return StoreEntity(
       id: map[idField] as int,
-      name: map[stor_nameField] as String,
-      iconFilename: map[stor_iconField] as String?,
+      name: map[StoreEntityData._nameField] as String,
+      iconFilename: map[StoreEntityData._iconField] as String?,
     );
 
   }
@@ -37,10 +56,34 @@ class StoreEntity extends CollectionItemEntity {
 
     return <String, dynamic> {
       idField : id,
-      stor_nameField : name,
-      stor_iconField : iconFilename,
+      StoreEntityData._nameField : name,
+      StoreEntityData._iconField : iconFilename,
     };
 
+  }
+  
+  @override
+  Map<String, dynamic> getCreateDynamicMap() {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      StoreEntityData._nameField : name,
+    };
+
+    putCreateMapValueNullable(createMap, StoreEntityData._iconField, iconFilename);
+
+    return createMap;
+
+  }
+
+  Map<String, dynamic> getUpdateDynamicMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
+
+    final Map<String, dynamic> updateMap = <String, dynamic>{};
+
+    putUpdateMapValue(updateMap, StoreEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValueNullable(updateMap, StoreEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+
+    return updateMap;
+    
   }
 
   static List<StoreEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
@@ -48,7 +91,7 @@ class StoreEntity extends CollectionItemEntity {
     final List<StoreEntity> storesList = <StoreEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, storeTable) );
+      final StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, StoreEntityData.table) );
 
       storesList.add(store);
     });
@@ -66,10 +109,10 @@ class StoreEntity extends CollectionItemEntity {
   @override
   String toString() {
 
-    return '{$storeTable}Entity { '
+    return '{$StoreEntityData.table}Entity { '
         '$idField: $id, '
-        '$stor_nameField: $name, '
-        '$stor_iconField: $iconFilename'
+        '{$StoreEntityData._nameField}: $name, '
+        '{$StoreEntityData._iconField}: $iconFilename'
         ' }';
 
   }

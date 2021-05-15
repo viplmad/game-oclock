@@ -11,16 +11,16 @@ class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<PurchaseType?> createFuture(AddItem event) {
+  Future<PurchaseType?> createFuture(AddItem<PurchaseType> event) {
 
-    return iCollectionRepository.createType(event.title);
+    return iCollectionRepository.createPurchaseType(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<PurchaseType> event) {
 
-    return iCollectionRepository.deleteType(event.item.id);
+    return iCollectionRepository.deletePurchaseTypeById(event.item.id);
 
   }
 }

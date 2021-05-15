@@ -17,7 +17,7 @@ class PlatformListBloc extends ItemListBloc<Platform> {
   @override
   Stream<List<Platform>> getReadAllStream() {
 
-    return iCollectionRepository.getAllPlatforms();
+    return iCollectionRepository.findAllPlatforms();
 
   }
 
@@ -26,7 +26,7 @@ class PlatformListBloc extends ItemListBloc<Platform> {
 
     final PlatformView platformView = PlatformView.values[event.viewIndex];
 
-    return iCollectionRepository.getPlatformsWithView(platformView);
+    return iCollectionRepository.findAllPlatformsWithView(platformView);
 
   }
 }

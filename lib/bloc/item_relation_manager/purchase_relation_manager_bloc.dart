@@ -38,13 +38,13 @@ class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGamePurchase(otherId, itemId);
+        return iCollectionRepository.unrelateGamePurchase(otherId, itemId);
       case DLC:
-        return iCollectionRepository.deleteDLCPurchase(otherId, itemId);
+        return iCollectionRepository.unrelateDLCPurchase(otherId, itemId);
       case Store:
-        return iCollectionRepository.deleteStorePurchase(itemId);
+        return iCollectionRepository.unrelateStorePurchase(itemId);
       case PurchaseType:
-        return iCollectionRepository.deletePurchaseType(itemId, otherId);
+        return iCollectionRepository.unrelatePurchaseType(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

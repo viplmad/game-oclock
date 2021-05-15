@@ -19,7 +19,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
     yield* _checkConnection();
 
-    if(event is AddItem) {
+    if(event is AddItem<T>) {
 
       yield* _mapAddItemToState(event);
 
@@ -51,7 +51,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  Stream<ItemListManagerState> _mapAddItemToState(AddItem event) async* {
+  Stream<ItemListManagerState> _mapAddItemToState(AddItem<T> event) async* {
 
     try {
 
@@ -85,6 +85,6 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  Future<T?> createFuture(AddItem event);
+  Future<T?> createFuture(AddItem<T> event);
   Future<dynamic> deleteFuture(DeleteItem<T> event);
 }

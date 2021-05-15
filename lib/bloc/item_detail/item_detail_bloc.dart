@@ -10,7 +10,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends CollectionItem, P extends Object> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
     required this.itemId,
     required this.iCollectionRepository,
@@ -23,7 +23,7 @@ abstract class ItemDetailBloc<T extends CollectionItem> extends Bloc<ItemDetailE
 
   final int itemId;
   final ICollectionRepository iCollectionRepository;
-  final ItemDetailManagerBloc<T> managerBloc;
+  final ItemDetailManagerBloc<T, P> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   @override

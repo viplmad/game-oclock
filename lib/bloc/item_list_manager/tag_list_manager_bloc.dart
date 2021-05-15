@@ -11,16 +11,16 @@ class TagListManagerBloc extends ItemListManagerBloc<Tag> {
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Tag?> createFuture(AddItem event) {
+  Future<Tag?> createFuture(AddItem<Tag> event) {
 
-    return iCollectionRepository.createTag(event.title);
+    return iCollectionRepository.createGameTag(event.item);
 
   }
 
   @override
   Future<dynamic> deleteFuture(DeleteItem<Tag> event) {
 
-    return iCollectionRepository.deleteTag(event.item.id);
+    return iCollectionRepository.deleteGameTagById(event.item.id);
 
   }
 }

@@ -10,19 +10,21 @@ abstract class ItemDetailManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateItemField<T extends CollectionItem> extends ItemDetailManagerEvent {
-  const UpdateItemField(this.field, this.value);
+class UpdateItemField<T extends CollectionItem, P extends Object> extends ItemDetailManagerEvent {
+  const UpdateItemField(this.item, this.updatedItem, this.updateProperties);
 
-  final String field;
-  final dynamic value;
+  final T item;
+  final T updatedItem;
+  final P updateProperties;
 
   @override
-  List<Object> get props => <Object>[field, value as Object];
+  List<Object> get props => <Object>[item, updatedItem, updateProperties];
 
   @override
   String toString() => 'UpdateItemField { '
-      'field: $field, '
-      'value: $value'
+      'item: $item, '
+      'updateItem: $updatedItem, '
+      'updateProperties: $updateProperties'
       ' }';
 }
 

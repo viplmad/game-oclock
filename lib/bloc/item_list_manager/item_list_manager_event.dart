@@ -10,17 +10,17 @@ abstract class ItemListManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItem extends ItemListManagerEvent {
-  const AddItem([this.title = '']);
+class AddItem<T extends CollectionItem> extends ItemListManagerEvent {
+  const AddItem(this.item);
 
-  final String title;
+  final T item;
 
   @override
-  List<Object> get props => <Object>[title];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'AddItem { '
-      'title: $title'
+      'item: $item'
       ' }';
 }
 

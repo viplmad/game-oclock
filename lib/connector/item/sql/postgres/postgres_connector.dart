@@ -76,44 +76,30 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  //#region CREATE
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> insertRecord({required String tableName, required Map<String, dynamic> fieldsAndValues, List<String>? returningFields}) {
+  /// Revise fields and values map to take into account special cases not covered by postgres connector (mainly Duration)
+  void _reviseFieldsAndValues(Map<String, dynamic> fieldsAndValues) {
 
-    final String sql = _insertStatement(tableName);
-
-    String fieldNamesForSQL = '';
-    String fieldValuesForSQL = '';
     fieldsAndValues.forEach( (String fieldName, dynamic value) {
 
-      fieldNamesForSQL += _forceDoubleQuotes(fieldName) + ', ';
-
-      fieldValuesForSQL += '@' + fieldName + ', ';
+      if(dynamic is Duration) {
+        fieldsAndValues[fieldName] = (dynamic as Duration).inSeconds;
+      }
 
     });
-    fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
-    fieldValuesForSQL = fieldValuesForSQL.substring(0, fieldValuesForSQL.length-2);
-
-    return _connection.mappedResultsQuery(
-      sql + ' (' + fieldNamesForSQL + ') VALUES(' + fieldValuesForSQL + ') ' + _returningStatement(returningFields),
-      substitutionValues: fieldsAndValues,
-    );
 
   }
 
+  //#region CREATE
   @override
-  Future<dynamic> insertRelation({required String leftTableName, required String rightTableName, required int leftTableId, required int rightTableId}) {
+  Future<List<Map<String, Map<String, dynamic>>>> insertRecord({required String tableName, required Map<String, dynamic> fieldsAndValues, String? idField}) {
 
-    final String relationTable = _relationTable(leftTableName, rightTableName);
+    _reviseFieldsAndValues(fieldsAndValues);
 
-    final String sql = _insertStatement(relationTable);
+    final QueryBuilder queryBuilder = FluentQuery.insert().into(tableName).setAll(fieldsAndValues);
 
     return _connection.mappedResultsQuery(
-      sql + ' VALUES(@leftId, @rightId) ',
-      substitutionValues: <String, dynamic>{
-        'leftId' : leftTableId,
-        'rightId' : rightTableId,
-      },
+      queryBuilder.toSql() + (idField != null? ' RETURNING ' + idField : ''),
+      substitutionValues: fieldsAndValues,
     );
 
   }
@@ -121,9 +107,9 @@ class PostgresConnector extends ISQLConnector {
 
   //#region READ
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readTable({required String tableName, List<String>? selectFields, List<dynamic>? tableArguments, Map<String, dynamic>? fieldsAndValues, List<String>? sortFields, int? limitResults}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readTable({required String tableName, Map<String, Type>? selectFields, List<dynamic>? tableArguments, Map<String, dynamic>? whereFieldsAndValues, List<String>? sortFields, int? limitResults}) {
 
-    final String sql = _selectAllStatement(tableName, selectFields, tableArguments) + _whereStatement(fieldsAndValues?.keys.toList(growable: false)) + _orderByStatement(sortFields) + _limitStatement(limitResults);
+    final String sql = _selectAllStatement(tableName, selectFields, tableArguments) + _whereStatement(whereFieldsAndValues?.keys.toList(growable: false)) + _orderByStatement(sortFields) + _limitStatement(limitResults);
 
     /*QueryBuilder queryBuilder = FluentQuery
         .select(options: this._queryBuilderOptions)
@@ -149,13 +135,13 @@ class PostgresConnector extends ISQLConnector {
 
     return _connection.mappedResultsQuery(
       sql,
-      substitutionValues: fieldsAndValues,
+      substitutionValues: whereFieldsAndValues,
     );
 
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableId, required String rightTableId, required List<String> leftSelectFields, required List<String> rightSelectFields, required String where, Map<String, dynamic>? fieldsAndValues, List<String>? sortFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableId, required String rightTableId, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required String where, Map<String, dynamic>? fieldsAndValues, List<String>? sortFields}) {
 
     final String leftAlias = 'a';
     final String rightAlias = 'b';
@@ -169,22 +155,18 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String leftTableName, required String rightTableName, required bool leftResults, required int relationId, List<String>? selectFields, List<String>? sortFields}) {
-
-    final String relationTable = _relationTable(leftTableName, rightTableName);
-    final String leftIdField = _relationIdField(leftTableName);
-    final String rightIdField = _relationIdField(rightTableName);
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String relationField, required int relationId, Map<String, Type>? selectFields, List<String>? sortFields}) {
 
     final String sql = _selectJoinStatement(
-      leftResults? leftTableName : rightTableName,
+      tableName,
       relationTable,
       idField,
-      leftResults? leftIdField : rightIdField,
+      relationField,
       selectFields,
     );
 
     return _connection.mappedResultsQuery(
-      sql + ' WHERE + ' + _forceDoubleQuotes(leftResults? rightIdField : leftIdField) + ' = @relationId ' + _orderByStatement(sortFields),
+      sql + ' WHERE + ' + _forceDoubleQuotes(relationField) + ' = @relationId ' + _orderByStatement(sortFields),
       substitutionValues: <String, dynamic>{
         'relationId' : relationId,
       },
@@ -193,7 +175,7 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, List<String>? selectFields, List<String>? sortFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, Map<String, Type>? selectFields, List<String>? sortFields}) {
 
     String sql = _selectStatement(selectFields, (primaryResults? 'a' : 'b'));
 
@@ -210,11 +192,11 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readTableSearch({required String tableName, required String searchField, required String query, List<String>? fieldNames, required int limitResults}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readTableSearch({required String tableName, required String searchField, required String query, Map<String, Type>? fields, required int limitResults}) {
 
     query = _searchableQuery(query);
 
-    final String sql = _selectAllStatement(tableName, fieldNames);
+    final String sql = _selectAllStatement(tableName, fields);
 
     return _connection.mappedResultsQuery(
       sql + ' WHERE ' + _forceDoubleQuotes(searchField) + ' ILIKE @query LIMIT ' + limitResults.toString(),
@@ -228,34 +210,33 @@ class PostgresConnector extends ISQLConnector {
 
   //#region UPDATE
   @override
-  Future<dynamic> updateTable<T>({required String tableName, required Map<String, dynamic> fieldsAndValues, required String fieldName, required T? newValue}) {
+  Future<dynamic> updateTable<T>({required String tableName, required Map<String, dynamic> whereFieldsAndValues, required Map<String, dynamic> fieldsAndValues}) {
 
-    if(newValue == null) {
-      return _updateTableToNull(
-        tableName: tableName,
-        whereFieldsAndValues: fieldsAndValues,
-        fieldName: fieldName,
-      );
-    }
+    _reviseFieldsAndValues(fieldsAndValues);
 
-    final String sql = _updateStatement(tableName);
+    QueryBuilder queryBuilder = FluentQuery.update().into(tableName).setAll(fieldsAndValues);
+    whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
+
+      final String _formattedField = _forceDoubleQuotes(fieldName);
+
+      String value;
+      if(fieldValue == null) {
+
+        value = 'NULL';
+
+      } else {
+
+        value = '@' + fieldName;
+
+      }
+
+      queryBuilder = queryBuilder.where(_formattedField + ' = ' + value);
+
+    });
 
     return _connection.mappedResultsQuery(
-      sql + ' SET ' + _forceDoubleQuotes(fieldName) + ' = @newValue ' + _whereStatement(fieldsAndValues.keys.toList(growable: false)),
-      substitutionValues: fieldsAndValues..addEntries(<MapEntry<String, dynamic>>{
-        MapEntry<String, dynamic>('newValue', newValue),
-      }),
-    );
-
-  }
-
-  Future<dynamic> _updateTableToNull({required String tableName, required Map<String, dynamic> whereFieldsAndValues, required String fieldName}) {
-
-    final String sql = _updateStatement(tableName);
-
-    return _connection.mappedResultsQuery(
-      sql + ' SET ' + _forceDoubleQuotes(fieldName) + ' = NULL ' + _whereStatement(whereFieldsAndValues.keys.toList(growable: false)),
-      substitutionValues: whereFieldsAndValues,
+      queryBuilder.toSql(),
+      substitutionValues: whereFieldsAndValues..addEntries(fieldsAndValues.entries),
     );
 
   }
@@ -263,32 +244,31 @@ class PostgresConnector extends ISQLConnector {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteTable({required String tableName, required Map<String, dynamic> fieldsAndValues}) {
+  Future<dynamic> deleteRecord({required String tableName, required Map<String, dynamic> whereFieldsAndValues}) {
 
-    final String sql = _deleteStatement(tableName);
+    QueryBuilder queryBuilder = FluentQuery.delete().from(tableName);
+    whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
+
+      final String _formattedField = _forceDoubleQuotes(fieldName);
+
+      String value;
+      if(fieldValue == null) {
+
+        value = 'NULL';
+
+      } else {
+
+        value = '@' + fieldName;
+
+      }
+
+      queryBuilder = queryBuilder.where(_formattedField + ' = ' + value);
+
+    });
 
     return _connection.mappedResultsQuery(
-      sql + _whereStatement(fieldsAndValues.keys.toList(growable: false)),
-      substitutionValues: fieldsAndValues,
-    );
-
-  }
-
-  @override
-  Future<dynamic> deleteRelation({required String leftTableName, required String rightTableName, required int leftId, required int rightId}) {
-
-    final String relationTable = _relationTable(leftTableName, rightTableName);
-    final String leftIdField = _relationIdField(leftTableName);
-    final String rightIdField = _relationIdField(rightTableName);
-
-    final String sql = _deleteStatement(relationTable);
-
-    return _connection.mappedResultsQuery(
-      sql + ' WHERE + ' + _forceDoubleQuotes(leftIdField) + ' = @leftId AND ' + _forceDoubleQuotes(rightIdField) + ' = @rightId ',
-      substitutionValues: <String, dynamic>{
-        'leftId' : leftId,
-        'rightId' : rightId,
-      },
+      queryBuilder.toSql(),
+      substitutionValues: whereFieldsAndValues,
     );
 
   }
@@ -296,29 +276,29 @@ class PostgresConnector extends ISQLConnector {
 
 
   //#region Helpers
-  String _selectStatement([List<String>? fieldNames, String alias = '']) {
+  String _selectStatement([Map<String, Type>? fields, String alias = '']) {
 
     String selection = ' * ';
-    if(fieldNames != null) {
-      selection = _formatSelectionFields(fieldNames, alias);
+    if(fields != null) {
+      selection = _formatSelectionFields(fields, alias);
     }
 
     return 'SELECT ' + selection;
 
   }
 
-  String _selectAllStatement(String table, [List<String>? fieldNames, List<dynamic>? tableArguments]) {
+  String _selectAllStatement(String table, [Map<String, Type>? fields, List<dynamic>? tableArguments]) {
 
     String tableString = _forceDoubleQuotes(table);
     if(tableArguments != null) {
       tableString += '(' + _forceArgumentsSingleQuotes(tableArguments).join(', ') + ')';
     }
 
-    return _selectStatement(fieldNames) + ' FROM ' + tableString;
+    return _selectStatement(fields) + ' FROM ' + tableString;
 
   }
 
-  String _selectJoinStatement(String leftTable, String rightTable, String leftTableId, String rightTableId, [List<String>? selectFields]) {
+  String _selectJoinStatement(String leftTable, String rightTable, String leftTableId, String rightTableId, [Map<String, Type>? selectFields]) {
 
     return _selectStatement(selectFields) + ' FROM ' + _forceDoubleQuotes(leftTable) + ' JOIN ' + _forceDoubleQuotes(rightTable) + ' ON ' + _forceDoubleQuotes(leftTableId) + ' = ' + _forceDoubleQuotes(rightTableId) + ' ';
 
@@ -364,35 +344,6 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  String _updateStatement(String table) {
-
-    return 'UPDATE ' + _forceDoubleQuotes(table);
-
-  }
-
-  String _insertStatement(String table) {
-
-    return 'INSERT INTO ' + _forceDoubleQuotes(table);
-
-  }
-
-  String _deleteStatement(String table) {
-
-    return 'DELETE FROM ' + _forceDoubleQuotes(table);
-
-  }
-
-  String _returningStatement([List<String>? fieldNames]) {
-
-    String selection = ' * ';
-    if(fieldNames != null) {
-      selection = _formatSelectionFields(fieldNames);
-    }
-
-    return ' RETURNING ' + selection;
-
-  }
-
   String _searchableQuery(String query) {
 
     return '%' + query + '%';
@@ -423,23 +374,20 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  String _formatSelectionFields(List<String> fieldNames, [String alias = '']) {
+  String _formatSelectionFields(Map<String, Type> fields, [String alias = '']) {
 
     alias = (alias.isNotEmpty)? alias + '.' : '';
 
     String fieldNamesForSQL = '';
-    fieldNames.forEach( (String fieldName) {
+    fields.forEach( (String fieldName, Type fieldType) {
 
       final String _formattedField = alias + _forceDoubleQuotes(fieldName);
 
-      if(fieldName == purc_priceField
-          || fieldName == purc_externalCreditField
-          || fieldName == purc_originalPriceField) {
+      if(fieldType == double) {
 
         fieldNamesForSQL += _formattedField + '::float';
 
-      } else if(fieldName == game_timeField
-          || fieldName == gameLog_timeField) {
+      } else if(fieldType == Duration) {
 
         fieldNamesForSQL += '(Extract(hours from ' + _formattedField + ') * 60 + EXTRACT(minutes from ' + _formattedField + '))::int AS ' + _forceDoubleQuotes(fieldName);
 
@@ -456,18 +404,6 @@ class PostgresConnector extends ISQLConnector {
     fieldNamesForSQL = fieldNamesForSQL.substring(0, fieldNamesForSQL.length-2);
 
     return fieldNamesForSQL;
-
-  }
-
-  String _relationTable(String leftTable, String rightTable) {
-
-    return leftTable + '-' + rightTable;
-
-  }
-
-  String _relationIdField(String table) {
-
-    return table + '_' + idField;
 
   }
   //#endregion Helpers

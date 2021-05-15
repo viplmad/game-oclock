@@ -37,6 +37,9 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
   final Color themeColor = PlatformTheme.primaryColour;
 
   @override
+  Platform createItem() => const Platform(id: -1, name: '', iconURL: null, iconFilename: null, type: null);
+
+  @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 }
 

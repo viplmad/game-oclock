@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -20,7 +18,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
+class StoreDetail extends ItemDetail<Store, StoreUpdateProperties, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
     Key? key,
     required Store item,
@@ -93,7 +91,7 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 }
 
 // ignore: must_be_immutable
-class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
+class _StoreDetailBody extends ItemDetailBody<Store, StoreUpdateProperties, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key? key,
     void Function(Store? item)? onUpdate,
@@ -109,8 +107,10 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
-        field: stor_nameField,
         value: store.name,
+        item: store,
+        itemUpdater: (String newValue) => store.copyWith(name: newValue),
+        updateProperties: const StoreUpdateProperties(),
       ),
     ];
 

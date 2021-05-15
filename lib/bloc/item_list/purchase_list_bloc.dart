@@ -17,7 +17,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
   @override
   Stream<List<Purchase>> getReadAllStream() {
 
-    return iCollectionRepository.getAllPurchases();
+    return iCollectionRepository.findAllPurchases();
 
   }
 
@@ -26,7 +26,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
 
     final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
-    return iCollectionRepository.getPurchasesWithView(purchaseView);
+    return iCollectionRepository.findAllPurchasesWithView(purchaseView);
 
   }
 
@@ -35,7 +35,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
 
     final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
-    return iCollectionRepository.getPurchasesWithYearView(purchaseView, event.year);
+    return iCollectionRepository.findAllPurchasesWithYearView(purchaseView, event.year);
 
   }
 }

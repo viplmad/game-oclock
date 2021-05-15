@@ -20,13 +20,13 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.getDLCsFromGame(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllDLCsFromGame(itemId) as Stream<List<W>>;
       case Purchase:
-        return iCollectionRepository.getPurchasesFromGame(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPurchasesFromGame(itemId) as Stream<List<W>>;
       case Platform:
-        return iCollectionRepository.getPlatformsFromGame(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllPlatformsFromGame(itemId) as Stream<List<W>>;
       case Tag:
-        return iCollectionRepository.getTagsFromGame(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllGameTagsFromGame(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();
@@ -34,17 +34,17 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
   }
 }
 
-class GameFinishDateRelationBloc extends RelationBloc<Game, DateTime> {
-  GameFinishDateRelationBloc({
+class GameFinishRelationBloc extends RelationBloc<Game, GameFinish> {
+  GameFinishRelationBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
-    required GameFinishDateRelationManagerBloc managerBloc,
+    required GameFinishRelationManagerBloc managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
   @override
-  Stream<List<DateTime>> getRelationStream() {
+  Stream<List<GameFinish>> getRelationStream() {
 
-    return iCollectionRepository.getFinishDatesFromGame(itemId);
+    return iCollectionRepository.findAllGameFinishFromGame(itemId);
 
   }
 }

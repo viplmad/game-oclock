@@ -15,14 +15,14 @@ class TagSearchBloc extends ItemSearchBloc<Tag> {
   @override
   Future<List<Tag>> getInitialItems() {
 
-    return iCollectionRepository!.getTagsWithView(TagView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllGameTagsWithView(TagView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Tag>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getTagsWithName(query, super.maxResults).first;
+    return iCollectionRepository!.findAllGameTagsByName(query, super.maxResults).first;
 
   }
 }

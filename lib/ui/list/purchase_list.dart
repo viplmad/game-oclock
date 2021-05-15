@@ -68,6 +68,9 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
   final Color themeColor = PurchaseTheme.primaryColour;
 
   @override
+  Purchase createItem() => const Purchase(id: -1, description: '', price: 0.0, externalCredit: 0.0, date: null, originalPrice: 0.0, store: null);
+
+  @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 }
 

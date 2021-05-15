@@ -5,16 +5,16 @@ import 'package:game_collection/repository/icollection_repository.dart';
 import 'item_detail_manager.dart';
 
 
-class TagDetailManagerBloc extends ItemDetailManagerBloc<Tag> {
+class TagDetailManagerBloc extends ItemDetailManagerBloc<Tag, GameTagUpdateProperties> {
   TagDetailManagerBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<Tag?> updateFuture(UpdateItemField<Tag> event) {
+  Future<Tag?> updateFuture(UpdateItemField<Tag, GameTagUpdateProperties> event) {
 
-    return iCollectionRepository.updateTag(itemId, event.field, event.value);
+    return iCollectionRepository.updateGameTag(event.item, event.updatedItem, event.updateProperties);
 
   }
 }

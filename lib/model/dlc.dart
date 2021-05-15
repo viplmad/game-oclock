@@ -75,7 +75,7 @@ class DLC extends CollectionItem {
     String? name,
     int? releaseYear,
     String? coverURL,
-    String? coverName,
+    String? coverFilename,
     DateTime? finishDate,
 
     int? baseGame,
@@ -86,7 +86,7 @@ class DLC extends CollectionItem {
       name: name?? this.name,
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
-      coverFilename: coverName?? this.coverFilename,
+      coverFilename: coverFilename?? this.coverFilename,
       finishDate: finishDate?? this.finishDate,
 
       baseGame: baseGame?? this.baseGame,
@@ -106,13 +106,29 @@ class DLC extends CollectionItem {
   @override
   String toString() {
 
-    return '$dlcTable { '
-        '$idField: $id, '
-        '$dlc_nameField: $name, '
-        '$dlc_releaseYearField: $releaseYear, '
-        '$dlc_coverField: $coverURL, '
-        '$dlc_finishDateField: $finishDate'
+    return 'DLC { '
+        'Id: $id, '
+        'Name: $name, '
+        'Release Year: $releaseYear, '
+        'Cover URL: $coverURL, '
+        'Finish Date: $finishDate'
         ' }';
 
   }
+}
+
+class DLCUpdateProperties {
+  final bool releaseYearToNull;
+  final bool coverURLToNull;
+  final bool coverFilenameToNull;
+  final bool finishDateToNull;
+  final bool baseGameToNull;
+
+  const DLCUpdateProperties({
+    this.releaseYearToNull = false,
+    this.coverURLToNull = false,
+    this.coverFilenameToNull = false,
+    this.finishDateToNull = false,
+    this.baseGameToNull = false,
+  });
 }

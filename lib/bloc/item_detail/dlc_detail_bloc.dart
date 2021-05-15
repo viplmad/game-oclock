@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class DLCDetailBloc extends ItemDetailBloc<DLC> {
+class DLCDetailBloc extends ItemDetailBloc<DLC, DLCUpdateProperties> {
   DLCDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class DLCDetailBloc extends ItemDetailBloc<DLC> {
   @override
   Stream<DLC?> getReadStream() {
 
-    return iCollectionRepository.getDLCWithId(itemId);
+    return iCollectionRepository.findDLCById(itemId);
 
   }
 }

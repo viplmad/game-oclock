@@ -87,12 +87,22 @@ class Platform extends CollectionItem {
   @override
   String toString() {
 
-    return '$platformTable { '
+    return 'Platform { '
         '$idField: $id, '
-        '$plat_nameField: $name, '
-        '$plat_iconField: $iconURL, '
-        '$plat_typeField: $type'
+        'Name: $name, '
+        'Icon URL: $iconURL, '
+        'Type: $type'
         ' }';
 
   }
+}
+
+class PlatformUpdateProperties {
+  final bool iconURLToNull;
+  final bool typeToNull;
+
+  const PlatformUpdateProperties({
+    this.iconURLToNull = false,
+    this.typeToNull = false,
+  });
 }

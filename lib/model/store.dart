@@ -80,11 +80,19 @@ class Store extends CollectionItem {
   @override
   String toString() {
 
-    return '$storeTable { '
-        '$idField: $id, '
-        '$stor_nameField: $name, '
-        '$stor_iconField: $iconURL'
+    return 'Store { '
+        'Id: $id, '
+        'Name: $name, '
+        'Icon URL: $iconURL'
         ' }';
 
   }
+}
+
+class StoreUpdateProperties {
+  final bool iconURLToNull;
+
+  const StoreUpdateProperties({
+    this.iconURLToNull = false,
+  });
 }

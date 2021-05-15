@@ -17,7 +17,7 @@ class SystemListBloc extends ItemListBloc<System> {
   @override
   Stream<List<System>> getReadAllStream() {
 
-    return iCollectionRepository.getAllSystems();
+    return iCollectionRepository.findAllSystems();
 
   }
 
@@ -26,7 +26,7 @@ class SystemListBloc extends ItemListBloc<System> {
 
     final SystemView systemView = SystemView.values[event.viewIndex];
 
-    return iCollectionRepository.getSystemsWithView(systemView);
+    return iCollectionRepository.findAllSystemsWithView(systemView);
 
   }
 }

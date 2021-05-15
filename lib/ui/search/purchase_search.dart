@@ -91,5 +91,8 @@ class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearch
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;
 
   @override
+  Purchase createItem(String query) => Purchase(id: -1, description: query, price: 0.0, externalCredit: 0.0, date: null, originalPrice: 0.0, store: null);
+
+  @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }

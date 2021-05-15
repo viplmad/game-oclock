@@ -20,9 +20,9 @@ class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Pl
 
     switch(W) {
       case Game:
-        return iCollectionRepository.getGamesFromPlatform(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllGamesFromPlatform(itemId) as Stream<List<W>>;
       case System:
-        return iCollectionRepository.getSystemsFromPlatform(itemId) as Stream<List<W>>;
+        return iCollectionRepository.findAllSystemsFromPlatform(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

@@ -1,7 +1,3 @@
-import 'package:equatable/equatable.dart';
-
-import 'package:game_collection/utils/datetime_extension.dart';
-
 import 'package:game_collection/entity/entity.dart';
 
 import 'model.dart';
@@ -109,7 +105,7 @@ class Game extends CollectionItem {
     String? edition,
     int? releaseYear,
     String? coverURL,
-    String? coverName,
+    String? coverFilename,
     String? status,
     int? rating,
     String? thoughts,
@@ -126,7 +122,7 @@ class Game extends CollectionItem {
       edition: edition?? this.edition,
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
-      coverFilename: coverName?? this.coverFilename,
+      coverFilename: coverFilename?? this.coverFilename,
       status: status?? this.status,
       rating: rating?? this.rating,
       thoughts: thoughts?? this.thoughts,
@@ -159,128 +155,20 @@ class Game extends CollectionItem {
   @override
   String toString() {
 
-    return '$gameTable { '
-        '$idField: $id, '
-        '$game_nameField: $name, '
-        '$game_editionField: $edition, '
-        '$game_releaseYearField: $releaseYear, '
-        '$game_coverField: $coverURL, '
-        '$game_statusField: $status, '
-        '$game_ratingField: $rating, '
-        '$game_thoughtsField: $thoughts, '
-        '$game_timeField: $time, '
-        '$game_saveFolderField: $saveFolder, '
-        '$game_screenshotFolderField: $screenshotFolder, '
-        '$game_finishDateField: $finishDate, '
-        '$game_backupField: $isBackup'
-        ' }';
-
-  }
-}
-
-class TimeLog extends Equatable implements Comparable<TimeLog> {
-  const TimeLog({
-    required this.dateTime,
-    required this.time,
-  });
-
-  final DateTime dateTime;
-  final Duration time;
-
-  static TimeLog fromEntity(TimeLogEntity entity) {
-
-    return TimeLog(
-      dateTime: entity.dateTime,
-      time: entity.time,
-    );
-
-  }
-
-  TimeLogEntity toEntity() {
-
-    return TimeLogEntity(
-      dateTime: this.dateTime,
-      time: this.time,
-    );
-
-  }
-
-  TimeLog copyWith({
-    DateTime? dateTime,
-    Duration? time,
-  }) {
-
-    return TimeLog(
-      dateTime: dateTime?? this.dateTime,
-      time: time?? this.time,
-    );
-
-  }
-
-  @override
-  List<Object> get props => <Object>[
-    dateTime,
-    time,
-  ];
-
-  @override
-  String toString() {
-
-    return '$gameLogTable { '
-        '$dateTime: $dateTime, '
-        '$game_timeField: $time'
-        ' }';
-
-  }
-
-  @override
-  int compareTo(TimeLog other) => this.dateTime.compareTo(other.dateTime);
-}
-
-// ignore: must_be_immutable
-class GameWithLogs extends Equatable {
-  GameWithLogs({
-    required this.game,
-    required this.timeLogs,
-  });
-
-  final Game game;
-  final List<TimeLog> timeLogs;
-
-  Set<DateTime> get logDates => timeLogs.map<DateTime>((TimeLog log) => log.dateTime.toDate()).toSet();
-
-  int get totalTimeSeconds => timeLogs.fold<int>(0, (int previousSeconds, TimeLog log) => previousSeconds + log.time.inSeconds);
-
-  static GameWithLogs fromEntity(GameWithLogsEntity entity, [String? coverURL]) {
-
-    return GameWithLogs(
-      game: Game.fromEntity(entity.game, coverURL),
-      timeLogs: entity.timeLogs.map<TimeLog>( TimeLog.fromEntity ).toList(),
-    );
-
-  }
-
-  GameWithLogsEntity toEntity() {
-
-    return GameWithLogsEntity(
-      game: this.game.toEntity(),
-      timeLogs: this.timeLogs.map<TimeLogEntity>((TimeLog log) => log.toEntity()).toList(growable: false),
-    );
-
-  }
-
-  @override
-  List<Object> get props => <Object>[
-    game,
-    timeLogs,
-  ];
-
-  @override
-  String toString() {
-
-    return 'GameWithLogs { '
-        'game: $game, '
-        'timeLogs: $timeLogs'
+    return 'Game { '
+        'Id: $id, '
+        'Name: $name, '
+        'Edition: $edition, '
+        'Release Year: $releaseYear, '
+        'Cover URL: $coverURL, '
+        'Status: $status, '
+        'Rating: $rating, '
+        'Thoughts: $thoughts, '
+        'Time: $time, '
+        'Save Folder: $saveFolder, '
+        'Screenshot Folder: $screenshotFolder, '
+        'Finish Date: $finishDate, '
+        'Backup: $isBackup'
         ' }';
 
   }
@@ -399,4 +287,16 @@ class GamesData extends ItemData<Game> {
     );
 
   }
+}
+
+class GameUpdateProperties {
+  final bool releaseYearToNull;
+  final bool coverURLToNull;
+  final bool finishDateToNull;
+
+  const GameUpdateProperties({
+    this.releaseYearToNull = false,
+    this.coverURLToNull = false,
+    this.finishDateToNull = false,
+  });
 }

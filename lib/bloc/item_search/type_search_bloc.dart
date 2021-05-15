@@ -15,14 +15,14 @@ class TypeSearchBloc extends ItemSearchBloc<PurchaseType> {
   @override
   Future<List<PurchaseType>> getInitialItems() {
 
-    return iCollectionRepository!.getTypesWithView(TypeView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllPurchaseTypesWithView(TypeView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<PurchaseType>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getTypesWithName(query, super.maxResults).first;
+    return iCollectionRepository!.findAllPurchaseTypesByName(query, super.maxResults).first;
 
   }
 }

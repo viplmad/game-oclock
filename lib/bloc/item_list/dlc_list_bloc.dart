@@ -17,7 +17,7 @@ class DLCListBloc extends ItemListBloc<DLC> {
   @override
   Stream<List<DLC>> getReadAllStream() {
 
-    return iCollectionRepository.getAllDLCs();
+    return iCollectionRepository.findAllDLCs();
 
   }
 
@@ -26,7 +26,7 @@ class DLCListBloc extends ItemListBloc<DLC> {
 
     final DLCView dlcView = DLCView.values[event.viewIndex];
 
-    return iCollectionRepository.getDLCsWithView(dlcView);
+    return iCollectionRepository.findAllDLCsWithView(dlcView);
 
   }
 }

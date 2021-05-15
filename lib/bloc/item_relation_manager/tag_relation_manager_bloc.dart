@@ -32,7 +32,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGameTag(otherId, itemId);
+        return iCollectionRepository.unrelateGameTag(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

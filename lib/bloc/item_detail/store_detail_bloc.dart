@@ -8,7 +8,7 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class StoreDetailBloc extends ItemDetailBloc<Store> {
+class StoreDetailBloc extends ItemDetailBloc<Store, StoreUpdateProperties> {
   StoreDetailBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
@@ -18,7 +18,7 @@ class StoreDetailBloc extends ItemDetailBloc<Store> {
   @override
   Stream<Store?> getReadStream() {
 
-    return iCollectionRepository.getStoreWithId(itemId);
+    return iCollectionRepository.findStoreById(itemId);
 
   }
 }

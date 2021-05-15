@@ -15,14 +15,14 @@ class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
   @override
   Future<List<Purchase>> getInitialItems() {
 
-    return iCollectionRepository!.getPurchasesWithView(PurchaseView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllPurchasesWithView(PurchaseView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Purchase>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getPurchasesWithDescription(query, super.maxResults).first;
+    return iCollectionRepository!.findAllPurchasesByDescription(query, super.maxResults).first;
 
   }
 }

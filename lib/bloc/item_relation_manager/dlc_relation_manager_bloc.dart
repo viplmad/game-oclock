@@ -34,9 +34,9 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.deleteGameDLC(itemId);
+        return iCollectionRepository.unrelateGameDLC(itemId);
       case Purchase:
-        return iCollectionRepository.deleteDLCPurchase(itemId, otherId);
+        return iCollectionRepository.unrelateDLCPurchase(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);
@@ -44,23 +44,23 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
   }
 }
 
-class DLCFinishDateRelationManagerBloc extends RelationManagerBloc<DLC, DateTime> {
-  DLCFinishDateRelationManagerBloc({
+class DLCFinishRelationManagerBloc extends RelationManagerBloc<DLC, DLCFinish> {
+  DLCFinishRelationManagerBloc({
     required int itemId,
     required ICollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
-  Future<dynamic> addRelationFuture(AddRelation<DateTime> event) {
+  Future<dynamic> addRelationFuture(AddRelation<DLCFinish> event) {
 
-    return iCollectionRepository.relateDLCFinishDate(itemId, event.otherItem);
+    return iCollectionRepository.createDLCFinish(itemId, event.otherItem);
 
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteRelation<DateTime> event) {
+  Future<dynamic> deleteRelationFuture(DeleteRelation<DLCFinish> event) {
 
-    return iCollectionRepository.deleteDLCFinishDate(itemId, event.otherItem);
+    return iCollectionRepository.deleteDLCFinishById(itemId, event.otherItem.dateTime);
 
   }
 }

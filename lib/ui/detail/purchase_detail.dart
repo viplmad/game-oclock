@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -20,7 +18,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   const PurchaseDetail({
     Key? key,
     required Purchase item,
@@ -126,7 +124,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDe
 }
 
 // ignore: must_be_immutable
-class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdateProperties, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   _PurchaseDetailBody({
     Key? key,
     void Function(Purchase? item)? onUpdate,
@@ -142,32 +140,42 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).descriptionFieldString,
-        field: purc_descriptionField,
         value: purchase.description,
+        item: purchase,
+        itemUpdater: (String newValue) => purchase.copyWith(description: newValue),
+        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
         fieldName: GameCollectionLocalisations.of(context).priceFieldString,
-        field: purc_priceField,
         value: purchase.price,
+        item: purchase,
+        itemUpdater: (double newValue) => purchase.copyWith(price: newValue),
+        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
         fieldName: GameCollectionLocalisations.of(context).externalCreditsFieldString,
-        field: purc_externalCreditField,
         value: purchase.externalCredit,
+        item: purchase,
+        itemUpdater: (double newValue) => purchase.copyWith(externalCredit: newValue),
+        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemDateTimeField(
         context,
         fieldName: GameCollectionLocalisations.of(context).purchaseDateFieldString,
-        field: purc_dateField,
         value: purchase.date,
+        item: purchase,
+        itemUpdater: (DateTime newValue) => purchase.copyWith(date: newValue),
+        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
         fieldName: GameCollectionLocalisations.of(context).originalPriceFieldString,
-        field: purc_originalPriceField,
         value: purchase.originalPrice,
+        item: purchase,
+        itemUpdater: (double newValue) => purchase.copyWith(originalPrice: newValue),
+        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemPercentageField(
         context,

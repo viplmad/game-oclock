@@ -15,14 +15,14 @@ class StoreSearchBloc extends ItemSearchBloc<Store> {
   @override
   Future<List<Store>> getInitialItems() {
 
-    return iCollectionRepository!.getStoresWithView(StoreView.LastCreated, super.maxSuggestions).first;
+    return iCollectionRepository!.findAllStoresWithView(StoreView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Store>> getSearchItems(String query) {
 
-    return iCollectionRepository!.getStoresWithName(query, super.maxResults).first;
+    return iCollectionRepository!.findAllStoresByName(query, super.maxResults).first;
 
   }
 }

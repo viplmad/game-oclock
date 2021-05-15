@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -20,7 +18,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
     Key? key,
     required Platform item,
@@ -104,7 +102,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDe
 }
 
 // ignore: must_be_immutable
-class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformUpdateProperties, PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
     void Function(Platform? item)? onUpdate,
@@ -120,19 +118,23 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
-        field: plat_nameField,
         value: platform.name,
+        item: platform,
+        itemUpdater: (String newValue) => platform.copyWith(name: newValue),
+        updateProperties: const PlatformUpdateProperties(),
       ),
       itemChipField(
         context,
         fieldName: GameCollectionLocalisations.of(context).platformTypeFieldString,
-        field: plat_typeField,
         value: platform.type,
         possibleValues: <String>[
           GameCollectionLocalisations.of(context).physicalString,
           GameCollectionLocalisations.of(context).digitalString,
         ],
         possibleValuesColours: PlatformTheme.typeColours,
+        item: platform,
+        itemUpdater: (String newValue) => platform.copyWith(type: newValue),
+        updateProperties: const PlatformUpdateProperties(),
       ),
     ];
 

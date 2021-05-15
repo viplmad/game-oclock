@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
-
 import 'package:game_collection/model/model.dart';
 
 import 'package:game_collection/repository/icollection_repository.dart';
@@ -21,7 +19,7 @@ import 'item_detail.dart';
 import 'finish_date_list.dart';
 
 
-class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
+class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
     Key? key,
     required DLC item,
@@ -62,7 +60,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
 
-    final DLCFinishDateRelationManagerBloc _finishRelationManagerBloc = DLCFinishDateRelationManagerBloc(
+    final DLCFinishRelationManagerBloc _finishRelationManagerBloc = DLCFinishRelationManagerBloc(
       itemId: item.id,
       iCollectionRepository: ICollectionRepository.iCollectionRepository!,
     );
@@ -82,16 +80,16 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
         },
       ),
 
-      BlocProvider<DLCFinishDateRelationBloc>(
+      BlocProvider<DLCFinishRelationBloc>(
         create: (BuildContext context) {
-          return DLCFinishDateRelationBloc(
+          return DLCFinishRelationBloc(
             itemId: item.id,
             iCollectionRepository: ICollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
       ),
-      BlocProvider<DLCFinishDateRelationManagerBloc>(
+      BlocProvider<DLCFinishRelationManagerBloc>(
         create: (BuildContext context) {
           return _finishRelationManagerBloc;
         },
@@ -125,7 +123,7 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
 }
 
 // ignore: must_be_immutable
-class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
+class _DLCDetailBody extends ItemDetailBody<DLC, DLCUpdateProperties, DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
     void Function(DLC? item)? onUpdate,
@@ -141,16 +139,20 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
-        field: dlc_nameField,
         value: dlc.name,
+        item: dlc,
+        itemUpdater: (String newValue) => dlc.copyWith(name: newValue),
+        updateProperties: const DLCUpdateProperties(),
       ),
       itemYearField(
         context,
         fieldName: GameCollectionLocalisations.of(context).releaseYearFieldString,
-        field: dlc_releaseYearField,
         value: dlc.releaseYear,
+        item: dlc,
+        itemUpdater: (int newValue) => dlc.copyWith(releaseYear: newValue),
+        updateProperties: const DLCUpdateProperties(),
       ),
-      DLCFinishDateList(
+      DLCFinishList(
         fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
         value: dlc.finishDate,
         relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
@@ -180,12 +182,15 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
 }
 
 // ignore: must_be_immutable
-class DLCFinishDateList extends FinishDateList<DLC, DLCFinishDateRelationBloc, DLCFinishDateRelationManagerBloc> {
-  DLCFinishDateList({
+class DLCFinishList extends FinishList<DLC, DLCFinish, DLCFinishRelationBloc, DLCFinishRelationManagerBloc> {
+  DLCFinishList({
     Key? key,
     required String fieldName,
     required DateTime? value,
     required String relationTypeName,
     required void Function() onUpdate,
   }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
+
+  @override
+  DLCFinish createFinish(DateTime dateTime) => DLCFinish(dateTime: dateTime);
 }

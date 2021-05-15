@@ -37,6 +37,9 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
   final Color themeColor = DLCTheme.primaryColour;
 
   @override
+  DLC createItem() => const DLC(id: -1, name: '', releaseYear: null, coverURL: null, coverFilename: null, finishDate: null, baseGame: null);
+
+  @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
 }
 

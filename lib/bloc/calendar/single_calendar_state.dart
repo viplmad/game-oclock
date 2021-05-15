@@ -17,11 +17,11 @@ class CalendarLoaded extends SingleCalendarState {
   // ignore: avoid_positional_boolean_parameters
   const CalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, [this.style = CalendarStyle.List]);
 
-  final List<TimeLog> timeLogs;
+  final List<GameTimeLog> timeLogs;
   final Set<DateTime> logDates;
-  final List<DateTime> finishDates;
+  final List<GameFinish> finishDates;
   final DateTime selectedDate;
-  final List<TimeLog> selectedTimeLogs;
+  final List<GameTimeLog> selectedTimeLogs;
   final bool isSelectedDateFinish;
   final Duration selectedTotalTime;
   final CalendarStyle style;

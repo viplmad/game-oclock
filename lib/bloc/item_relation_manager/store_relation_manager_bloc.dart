@@ -32,7 +32,7 @@ class StoreRelationManagerBloc<W extends CollectionItem> extends ItemRelationMan
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.deleteStorePurchase(otherId);
+        return iCollectionRepository.unrelateStorePurchase(otherId);
     }
 
     return super.deleteRelationFuture(event);
