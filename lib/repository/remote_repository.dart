@@ -396,6 +396,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: GamePlatformRelationData.table,
+      joinField: PlatformEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
       selectFields: PlatformEntityData.fields,
@@ -409,6 +410,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: GamePurchaseRelationData.table,
+      joinField: PurchaseEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
       selectFields: PurchaseEntityData.fields,
@@ -436,6 +438,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameTagEntityData.table,
       relationTable: GameTagRelationData.table,
+      joinField: GameTagEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
       selectFields: GameTagEntityData.fields,
@@ -520,6 +523,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
+      joinField: PurchaseEntityData.relationField,
       relationField: DLCEntityData.relationField,
       relationId: id,
       selectFields: PurchaseEntityData.fields,
@@ -579,6 +583,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePlatformRelationData.table,
+      joinField: GameEntityData.relationField,
       relationField: PlatformEntityData.relationField,
       relationId: id,
       selectFields: GameEntityData.fields,
@@ -592,6 +597,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: SystemEntityData.table,
       relationTable: PlatformSystemRelationData.table,
+      joinField: SystemEntityData.relationField,
       relationField: PlatformEntityData.relationField,
       relationId: id,
       selectFields: SystemEntityData.fields,
@@ -666,6 +672,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePurchaseRelationData.table,
+      joinField: GameEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
       selectFields: GameEntityData.fields,
@@ -679,6 +686,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: DLCEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
+      joinField: DLCEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
       selectFields: DLCEntityData.fields,
@@ -692,6 +700,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseTypeEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
+      joinField: PurchaseTypeEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
       selectFields: PurchaseTypeEntityData.fields,
@@ -783,6 +792,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: PlatformSystemRelationData.table,
+      joinField: PlatformEntityData.relationField,
       relationField: SystemEntityData.relationField,
       relationId: id,
       selectFields: PlatformEntityData.fields,
@@ -829,6 +839,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GameTagRelationData.table,
+      joinField: GameEntityData.relationField,
       relationField: GameTagEntityData.relationField,
       relationId: id,
       selectFields: GameEntityData.fields,
@@ -874,6 +885,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
+      joinField: PurchaseEntityData.relationField,
       relationField: PurchaseTypeEntityData.relationField,
       relationId: id,
       selectFields: PurchaseEntityData.fields,

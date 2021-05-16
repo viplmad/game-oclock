@@ -126,11 +126,9 @@ class WhereBlock extends Block {
 
     for (final WhereNode item in wheres) {
       if (item.operator != null) {
-        final String v = Validator.formatValue(item.param, options);
-
         final String substitutionValue = _getSubstitutionValue(item.text);
 
-        result.addAll(<String, dynamic>{'$substitutionValue': v});
+        result.addAll(<String, dynamic>{'$substitutionValue': item.param});
       }
     }
 

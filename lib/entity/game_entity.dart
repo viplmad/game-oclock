@@ -100,7 +100,7 @@ class GameEntity extends CollectionItemEntity {
       status: map[GameEntityData._statusField] as String,
       rating: map[GameEntityData._ratingField] as int,
       thoughts: map[GameEntityData._thoughtsField] as String,
-      time: map[GameEntityData._timeField] as Duration,
+      time: Duration(seconds: map[GameEntityData._timeField] as int),
       saveFolder: map[GameEntityData._saveFolderField] as String,
       screenshotFolder: map[GameEntityData._screenshotFolderField] as String,
       finishDate: map[GameEntityData._finishDateField] as DateTime?,

@@ -42,7 +42,7 @@ class GameTimeLogEntity extends Equatable {
 
     return GameTimeLogEntity(
       dateTime: map[GameTimeLogEntityData._dateTimeField] as DateTime,
-      time: map[GameTimeLogEntityData._timeField] as Duration,
+      time: Duration(seconds: map[GameTimeLogEntityData._timeField] as int),
     );
 
   }

@@ -31,9 +31,10 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
       return result;
     }
 
-    for (final SetNode item in fields) {
-      final String v = Validator.formatValue(item.value, options);
-      result.addAll(<String, dynamic>{'${item.field}': v});
+    for(int index = 0; index < fields.length; index++) {
+      final SetNode item = fields.elementAt(index);
+
+      result.addAll(<String, dynamic>{'param${index}': item.value});
     }
 
     return result;
@@ -41,8 +42,8 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
 
   List<String> buildFieldValuesForSubstitution(List<SetNode> nodes) {
     final List<String> values = <String>[];
-    for (final SetNode item in nodes) {
-      values.add('@${item.field}');
+    for(int index = 0; index < nodes.length; index++) {
+      values.add('@param${index}');
     }
     return values;
   }

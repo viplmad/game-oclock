@@ -81,8 +81,8 @@ class PostgresConnector extends ISQLConnector {
 
     fieldsAndValues.forEach( (String fieldName, dynamic value) {
 
-      if(dynamic is Duration) {
-        fieldsAndValues[fieldName] = (dynamic as Duration).inSeconds;
+      if(value is Duration) {
+        fieldsAndValues[fieldName] = value.inSeconds;
       }
 
     });
@@ -98,8 +98,8 @@ class PostgresConnector extends ISQLConnector {
     final QueryBuilder queryBuilder = FluentQuery.insert().into(tableName).setAll(fieldsAndValues);
 
     return _connection.mappedResultsQuery(
-      queryBuilder.toSql() + (idField != null? ' RETURNING ' + idField : ''),
-      substitutionValues: fieldsAndValues,
+      queryBuilder.toSql() + (idField != null? ' RETURNING ' + _forceDoubleQuotes(idField) : ''),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
     );
 
   }
@@ -155,13 +155,13 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String relationField, required int relationId, Map<String, Type>? selectFields, List<String>? sortFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String joinField, required String relationField, required int relationId, Map<String, Type>? selectFields, List<String>? sortFields}) {
 
     final String sql = _selectJoinStatement(
       tableName,
       relationTable,
       idField,
-      relationField,
+      joinField,
       selectFields,
     );
 
