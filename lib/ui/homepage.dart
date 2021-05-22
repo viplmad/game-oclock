@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/app_tab.dart';
-import 'package:game_collection/model/bar_data.dart';
+import 'package:backend/repository/repository.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/bloc/tab/tab.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/model/app_tab.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
-
+import 'common/bar_data.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({

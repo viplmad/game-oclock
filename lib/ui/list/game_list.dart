@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/app_tab.dart';
+import 'package:backend/model/model.dart';
+import 'package:backend/model/list_style.dart';
+import 'package:backend/model/app_tab.dart';
 
-import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/tab/tab.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

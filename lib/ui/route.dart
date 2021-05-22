@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
 import 'route_constants.dart';
 import 'connect.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/bar_data.dart';
+import 'package:backend/model/model.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
+import '../common/bar_data.dart';
 
 
 class PurchaseTheme {

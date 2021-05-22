@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/repository/repository.dart';
 
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

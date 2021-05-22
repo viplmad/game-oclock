@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/bloc/connection/connection.dart';
+import 'package:backend/bloc/connection/connection.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

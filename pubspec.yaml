@@ -12,6 +12,7 @@ description: A simple and intuitive game collection manager.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.9.1+110
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -26,21 +27,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  shared_preferences: ^2.0.4
-  encrypt: ^5.0.0
-
   # BLoC pattern
-  bloc: ^7.0.0
   flutter_bloc: ^7.0.0
-  equatable: ^2.0.0
 
   # Back-end
-  postgres: ^2.3.0
-  http: ^0.13.0
-  dio: ^4.0.0
+  backend:
+    path: ./backend
 
   # Front-end
-  #smooth_star_rating: ^1.0.0
+  smooth_star_rating:
+    path: ./smooth_star_rating
   numberpicker: ^2.0.0
   image_picker: ^0.7.2+1
   cached_network_image: ^3.0.0

@@ -1,0 +1,32 @@
+name: backend
+description: A new Flutter package project.
+
+# The following defines the version and build number for your package.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  # BLoC pattern
+  bloc: ^7.0.0
+  equatable: ^2.0.0
+
+  # Encrypted shared preferences
+  encrypted_shared_preferences:
+    path: ../encrypted_shared_preferences
+
+  # Database and Image connection
+  postgres: ^2.3.0
+  http: ^0.13.0
+  dio: ^4.0.0
+  sql_builder:
+    path: ../sql_builder
+
+dev_dependencies:
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec

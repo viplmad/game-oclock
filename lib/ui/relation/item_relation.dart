@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

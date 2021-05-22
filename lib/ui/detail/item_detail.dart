@@ -4,14 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
-import './smooth_star_rating/smooth_star_rating.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
+import 'package:backend/bloc/item_detail/item_detail.dart';
+import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

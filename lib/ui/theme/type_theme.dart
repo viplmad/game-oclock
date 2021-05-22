@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
 import '../common/item_view.dart';
 

@@ -3,13 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/connector/image/cloudinary/cloudinary_connector.dart';
-import 'package:game_collection/connector/item/sql/postgres/postgres_connector.dart';
+import 'package:backend/connector/connector.dart';
 
-import 'package:game_collection/model/repository_type.dart';
+import 'package:backend/model/repository_type.dart';
 
-import 'package:game_collection/bloc/repository_settings/repository_settings.dart';
-import 'package:game_collection/bloc/repository_settings_manager/repository_settings_manager.dart';
+import 'package:backend/bloc/repository_settings/repository_settings.dart';
+import 'package:backend/bloc/repository_settings_manager/repository_settings_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

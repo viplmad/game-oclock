@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
+import 'package:backend/model/model.dart';
+import 'package:backend/model/list_style.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

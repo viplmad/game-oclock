@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart';

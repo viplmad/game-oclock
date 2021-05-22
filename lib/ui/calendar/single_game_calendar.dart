@@ -6,13 +6,13 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:game_collection/utils/datetime_extension.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/calendar_style.dart';
+import 'package:backend/model/model.dart';
+import 'package:backend/model/calendar_style.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/repository/repository.dart';
 
-import 'package:game_collection/bloc/calendar/single_calendar.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/calendar/single_calendar.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -64,7 +64,7 @@ class SingleGameCalendar extends StatelessWidget {
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<SingleCalendarBloc>(
           create: (BuildContext context) {
-            return _bloc..add(LoadCalendar());
+            return _bloc..add(LoadSingleCalendar());
           },
         ),
 
@@ -115,7 +115,7 @@ class SingleGameCalendar extends StatelessWidget {
               icon: const Icon(Icons.insert_chart),
               tooltip: GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
-                _bloc.add(UpdateStyle());
+                _bloc.add(UpdateCalendarStyle());
               },
             ),
           ],
@@ -359,10 +359,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
             },
           ),
         ],
-        child: BlocBuilder<SingleCalendarBloc, SingleCalendarState>(
-          builder: (BuildContext context, SingleCalendarState state) {
+        child: BlocBuilder<SingleCalendarBloc, CalendarState>(
+          builder: (BuildContext context, CalendarState state) {
 
-            if(state is CalendarLoaded) {
+            if(state is SingleCalendarLoaded) {
 
               return Column(
                 mainAxisSize: MainAxisSize.max,

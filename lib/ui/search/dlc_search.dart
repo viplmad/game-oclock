@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/repository/repository.dart';
 
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -88,10 +88,10 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, 
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
-  
+
   @override
   DLC createItem(String query) => DLC(id: -1, name: query, releaseYear: null, coverURL: null, coverFilename: null, finishDate: null, baseGame: null);
-  
+
   @override
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
 }
