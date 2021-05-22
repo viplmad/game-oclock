@@ -8,7 +8,7 @@ import 'delete.dart';
 
 /// API-functions exposed.
 class FluentQuery {
-  FluentQuery();
+  FluentQuery._();
 
   /// Starts a new expression with the provided options.
   /// @param options Options to use for expression generation.
