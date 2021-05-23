@@ -17,7 +17,7 @@ dependencies:
 
   # Encrypted shared preferences
   encrypted_shared_preferences:
-    path: ../encrypted_shared_preferences
+    git: https://github.com/viplmad/encrypted_shared_preferences.git
 
   # Database and Image connection
   postgres: ^2.3.0

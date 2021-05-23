@@ -36,7 +36,9 @@ dependencies:
 
   # Front-end
   smooth_star_rating:
-    path: ./smooth_star_rating
+    git:
+      url: https://github.com/viplmad/smoothratingbar.git
+      ref: dev
   numberpicker: ^2.0.0
   image_picker: ^0.7.2+1
   cached_network_image: ^3.0.0

@@ -137,10 +137,12 @@ packages:
   encrypted_shared_preferences:
     dependency: transitive
     description:
-      path: encrypted_shared_preferences
-      relative: true
-    source: path
-    version: "0.0.1"
+      path: "."
+      ref: HEAD
+      resolved-ref: cd4419fd4b388421060ba3748406669513442484
+      url: "https://github.com/viplmad/encrypted_shared_preferences.git"
+    source: git
+    version: "1.0.7"
   equatable:
     dependency: transitive
     description:
@@ -498,10 +500,12 @@ packages:
   smooth_star_rating:
     dependency: "direct main"
     description:
-      path: smooth_star_rating
-      relative: true
-    source: path
-    version: "0.0.1"
+      path: "."
+      ref: dev
+      resolved-ref: "4f87d2b6a64a293d23d95b130c547619d4f82ccf"
+      url: "https://github.com/viplmad/smoothratingbar.git"
+    source: git
+    version: "1.1.1"
   source_span:
     dependency: transitive
     description:
