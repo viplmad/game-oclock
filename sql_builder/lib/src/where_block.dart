@@ -75,7 +75,8 @@ class WhereBlock extends Block {
         if (where.operator == null) {
           sb.write(where.text.replaceAll('?', Validator.formatValue(where.param, options)));
         } else {
-          sb.write('${where.text}');
+          final String text = Validator.formatString(where.text, options);
+          sb.write('$text');
           sb.write(' ${where.operator} ');
 
           final String substitutionValue = _getSubstitutionValue(where.text);

@@ -83,12 +83,7 @@ class PostgresConnector extends ISQLConnector {
   @override
   Future<List<Map<String, Map<String, dynamic>>>> insertRecord({required String tableName, required Map<String, dynamic> fieldsAndValues, String? idField}) {
 
-    fieldsAndValues = _reviseFieldsAndValues(fieldsAndValues);
-
-    final QueryBuilder queryBuilder = FluentQuery
-      .insert()
-      .into(tableName)
-      .setAll(fieldsAndValues);
+    final QueryBuilder queryBuilder = insertQueryBuilder(tableName, fieldsAndValues);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql() + (idField != null? ' RETURNING ' + _forceDoubleQuotes(idField) : ''),
@@ -102,6 +97,104 @@ class PostgresConnector extends ISQLConnector {
   @override
   Future<List<Map<String, Map<String, dynamic>>>> readTable({required String tableName, required Map<String, Type> selectFieldsAndTypes, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields, int? limit}) {
 
+    final QueryBuilder queryBuilder = selectTableQueryBuilder(tableName, selectFieldsAndTypes, whereFieldsAndValues, orderFields, limit);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required String where, List<String>? orderFields}) {
+
+    final QueryBuilder queryBuilder = selectJoinQueryBuilder(leftTable, rightTable, leftTableIdField, rightTableIdField, leftSelectFields, rightSelectFields, where, orderFields);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
+
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, joinField, relationField, relationId, selectFieldsAndTypes, orderFields);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
+
+    final QueryBuilder queryBuilder = selectWeakRelationQueryBuilder(primaryTable, subordinateTable, relationField, relationId, primaryResults, selectFieldsAndTypes, orderFields);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readTableSearch({required String tableName, required Map<String, Type> selectFieldsAndTypes, required String searchField, required String query, required int limit}) {
+
+    final QueryBuilder queryBuilder = selectLikeQueryBuilder(tableName, selectFieldsAndTypes, searchField, query, limit);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+  //#endregion READ
+
+  //#region UPDATE
+  @override
+  Future<dynamic> updateTable<T>({required String tableName, required Map<String, dynamic> setFieldsAndValues, required Map<String, dynamic> whereFieldsAndValues}) {
+
+    final QueryBuilder queryBuilder = updateQueryBuilder(tableName, setFieldsAndValues, whereFieldsAndValues);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteRecord({required String tableName, required Map<String, dynamic> whereFieldsAndValues}) {
+
+    final QueryBuilder queryBuilder = deleteQueryBuilder(tableName, whereFieldsAndValues);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+  //#endregion DELETE
+
+  //#region Query Builders
+  QueryBuilder insertQueryBuilder(String tableName, Map<String, dynamic> fieldsAndValues) {
+    fieldsAndValues = _reviseFieldsAndValues(fieldsAndValues);
+
+    final QueryBuilder queryBuilder = FluentQuery
+      .insert()
+      .into(tableName)
+      .setAll(fieldsAndValues);
+    return queryBuilder;
+  }
+
+  QueryBuilder selectTableQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields, int? limit) {
     final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     QueryBuilder queryBuilder = FluentQuery
@@ -127,17 +220,10 @@ class PostgresConnector extends ISQLConnector {
     if(limit != null) {
       queryBuilder = queryBuilder.limit(limit);
     }
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
 
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required String where, List<String>? orderFields}) {
-
+  QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, String where, List<String>? orderFields) {
     final List<String> leftFields = _reviseFieldsAndTypes(leftSelectFields);
     final List<String> rightFields = _reviseFieldsAndTypes(rightSelectFields);
 
@@ -154,17 +240,10 @@ class PostgresConnector extends ISQLConnector {
         queryBuilder = queryBuilder.order(field);
       }
     }
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
 
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
-
+  QueryBuilder selectRelationQueryBuilder(String tableName, String relationTable, String joinField, String relationField, int relationId, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
     final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     QueryBuilder queryBuilder = FluentQuery
@@ -179,17 +258,10 @@ class PostgresConnector extends ISQLConnector {
         queryBuilder = queryBuilder.order(field);
       }
     }
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
 
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
-
+  QueryBuilder selectWeakRelationQueryBuilder(String primaryTable, String subordinateTable, String relationField, int relationId, bool primaryResults, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
     final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     QueryBuilder queryBuilder = FluentQuery
@@ -204,17 +276,10 @@ class PostgresConnector extends ISQLConnector {
         queryBuilder = queryBuilder.order(field);
       }
     }
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
 
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readTableSearch({required String tableName, required Map<String, Type> selectFieldsAndTypes, required String searchField, required String query, required int limit}) {
-
+  QueryBuilder selectLikeQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, String searchField, String query, int limit) {
     final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     final QueryBuilder queryBuilder = FluentQuery
@@ -223,19 +288,10 @@ class PostgresConnector extends ISQLConnector {
       .fields(fields)
       .whereSafe(searchField, OPERATOR_ILIKE, _searchableQuery(query))
       .limit(limit);
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
-  //#endregion READ
 
-  //#region UPDATE
-  @override
-  Future<dynamic> updateTable<T>({required String tableName, required Map<String, dynamic> setFieldsAndValues, required Map<String, dynamic> whereFieldsAndValues}) {
-
+  QueryBuilder updateQueryBuilder(String tableName, Map<String, dynamic> setFieldsAndValues, Map<String, dynamic> whereFieldsAndValues) {
     setFieldsAndValues = _reviseFieldsAndValues(setFieldsAndValues); // TODO check it makes nulls
 
     QueryBuilder queryBuilder = FluentQuery
@@ -249,19 +305,10 @@ class PostgresConnector extends ISQLConnector {
       queryBuilder = queryBuilder.whereSafe(fieldName, OPERATOR_EQ, fieldValue);
 
     });
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
-  //#endregion UPDATE
 
-  //#region DELETE
-  @override
-  Future<dynamic> deleteRecord({required String tableName, required Map<String, dynamic> whereFieldsAndValues}) {
-
+  QueryBuilder deleteQueryBuilder(String tableName, Map<String, dynamic> whereFieldsAndValues) {
     QueryBuilder queryBuilder = FluentQuery
       .delete()
       .from(tableName);
@@ -272,15 +319,9 @@ class PostgresConnector extends ISQLConnector {
       queryBuilder = queryBuilder.whereSafe(fieldName, OPERATOR_EQ, fieldValue);
 
     });
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
+    return queryBuilder;
   }
-  //#endregion DELETE
-
+  //#endregion Query Builders
 
   //#region Helpers
   /// Revise fields and values map to take into account special cases not covered by postgres connector (mainly Duration)
