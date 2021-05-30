@@ -68,8 +68,8 @@ class WhereBlock extends Block {
 
     final int length = wheres.length;
 
-    for (int i = 0; i < length; i++) {
-      final WhereNode where = wheres[i];
+    for (int index = 0; index < length; index++) {
+      final WhereNode where = wheres.elementAt(index);
 
       if (where.groupDivider == null) {
         if (where.operator == null) {
@@ -79,11 +79,10 @@ class WhereBlock extends Block {
           sb.write('$text');
           sb.write(' ${where.operator} ');
 
-          final String substitutionValue = _getSubstitutionValue(where.text);
-          sb.write('@$substitutionValue');
+          sb.write('@param${index}');
         }
 
-        if (i < length - 1) {
+        if (index < length - 1) {
           sb.write(' ${where.andOr} ');
         }
       } else {
@@ -93,7 +92,7 @@ class WhereBlock extends Block {
           str = str.substring(0, lastIndexOf);
           sb.clear();
           String andOr = where.andOr;
-          if (i == length - 1) {
+          if (index == length - 1) {
             andOr = '';
           }
           sb.write(' $str ) $andOr ');
@@ -106,18 +105,6 @@ class WhereBlock extends Block {
     return 'WHERE $sb';
   }
 
-  String _getSubstitutionValue(String text) {
-    String substitutionValue = text;
-    if (text.contains('.') == true) {
-      final List<String> parts = text.split('.');
-      substitutionValue = parts[1];
-    }
-    if (text.startsWith('"') == true && text.endsWith('"') == true) {
-      substitutionValue = substitutionValue.substring(1, substitutionValue.length - 1);
-    }
-    return substitutionValue;
-  }
-
   @override
   Map<String, dynamic> buildSubstitutionValues() {
     final Map<String, dynamic> result = <String, dynamic>{};
@@ -125,11 +112,10 @@ class WhereBlock extends Block {
       return result;
     }
 
-    for (final WhereNode item in wheres) {
+    for(int index = 0; index < wheres.length; index++) {
+      final WhereNode item = wheres.elementAt(index);
       if (item.operator != null) {
-        final String substitutionValue = _getSubstitutionValue(item.text);
-
-        result.addAll(<String, dynamic>{'$substitutionValue': item.param});
+        result.addAll(<String, dynamic>{'param${index}': item.param});
       }
     }
 

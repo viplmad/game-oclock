@@ -135,4 +135,28 @@ class Validator {
   static String formatArray(List<Object> values, QueryBuilderOptions options) {
     return formatIterable(values, options);
   }
+
+  static String sanitizeTableDotField(String? tableName, String field, QueryBuilderOptions options) {
+
+    String fieldValue = Validator.sanitizeField(field.trim(), options);
+
+    final String? tableNameValue =
+        tableName != null ? Validator.sanitizeTableAlias(tableName, options) : null;
+
+    /// quote table and field string with dot, example:
+    /// "tablename"."fieldname"
+    if (options.quoteStringWithFieldsTablesSeparator) {
+      if (fieldValue.contains(options.fieldsTablesSeparator)) {
+        fieldValue = fieldValue
+            .split(options.fieldsTablesSeparator)
+            .map((String f) => f)
+            .join(
+                '${options.fieldAliasQuoteCharacter}${options.fieldsTablesSeparator}${options.fieldAliasQuoteCharacter}');
+      }
+    } else if(tableNameValue != null) {
+      fieldValue = tableNameValue + options.fieldsTablesSeparator + fieldValue;
+    }
+
+    return fieldValue;
+  }
 }

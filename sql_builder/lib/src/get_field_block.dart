@@ -18,7 +18,6 @@ class GetFieldBlock extends Block {
         super(options);
   final List<FieldNode> fields;
   final HashMap<String, String?> fieldAliases;
-  String? fieldRawSql;
 
   /// Add the given fields to the result.
   /// @param fields A collection of fields to add
@@ -35,35 +34,17 @@ class GetFieldBlock extends Block {
   }
 
   void setFieldRaw(String setFieldRawSql) {
-    fieldRawSql = setFieldRawSql;
+    doSetField(setFieldRawSql, null);
   }
 
   /// Add the given field to the final result.
   /// @param field Field to add
   /// @param alias Field's alias
   void setField(String field, String? alias, String? tableName) {
-    String fieldValue = Validator.sanitizeField(field.trim(), options);
+    String fieldValue = Validator.sanitizeTableDotField(tableName, field, options);
 
     final String? aliasValue =
         alias != null ? Validator.sanitizeFieldAlias(alias, options) : null;
-
-    final String? tableNameValue =
-        tableName != null ? Validator.sanitizeTableAlias(tableName, options) : null;
-
-    /// quote table and field string with dot, example:
-    /// db.select().fields(['tablename.fieldname']).from('tablename') result in
-    ///  SELECT "tablename"."fieldname" FROM tablename
-    if (options.quoteStringWithFieldsTablesSeparator) {
-      if (fieldValue.contains(options.fieldsTablesSeparator)) {
-        fieldValue = fieldValue
-            .split(options.fieldsTablesSeparator)
-            .map((String f) => f)
-            .join(
-                '${options.fieldAliasQuoteCharacter}${options.fieldsTablesSeparator}${options.fieldAliasQuoteCharacter}');
-      }
-    } else if(tableNameValue != null) {
-      fieldValue = tableNameValue + options.fieldsTablesSeparator + fieldValue;
-    }
 
     /// allow alias in fields, example:
     /// db.select().fields(['tablename.fieldname as f']).from('tablename') result in
@@ -88,9 +69,6 @@ class GetFieldBlock extends Block {
 
   @override
   String buildStr(QueryBuilder queryBuilder) {
-    if (fieldRawSql != null) {
-      return fieldRawSql!;
-    }
 
     if (fields.isEmpty) {
       return '*';

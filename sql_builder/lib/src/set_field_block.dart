@@ -12,7 +12,9 @@ class SetFieldBlock extends SetFieldBlockBase {
     assert(fields.isNotEmpty);
 
     final StringBuffer sb = StringBuffer();
-    for (final SetNode item in fields) {
+    for(int index = 0; index < fields.length; index++) {
+      final SetNode item = fields.elementAt(index);
+
       if (sb.length > 0) {
         sb.write(', ');
       }
@@ -21,7 +23,7 @@ class SetFieldBlock extends SetFieldBlockBase {
 
       sb.write(field);
       sb.write(' = ');
-      sb.write('@${item.field}');
+      sb.write('@param${index}');
     }
 
     return 'SET $sb';
@@ -34,10 +36,12 @@ class SetFieldBlock extends SetFieldBlockBase {
       return result;
     }
 
-    for (final SetNode item in fields) {
-      final String v = Validator.formatValue(item.value, options);
-      result.addAll(<String, dynamic>{'${item.field}': v});
+    for(int index = 0; index < fields.length; index++) {
+      final SetNode item = fields.elementAt(index);
+
+      result.addAll(<String, dynamic>{'param${index}': item.value});
     }
+
     return result;
   }
 }

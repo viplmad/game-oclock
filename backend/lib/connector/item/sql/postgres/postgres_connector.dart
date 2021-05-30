@@ -86,7 +86,7 @@ class PostgresConnector extends ISQLConnector {
     final QueryBuilder queryBuilder = insertQueryBuilder(tableName, fieldsAndValues);
 
     return _connection.mappedResultsQuery(
-      queryBuilder.toSql() + (idField != null? ' RETURNING ' + _forceDoubleQuotes(idField) : ''),
+      queryBuilder.toSql() + (idField != null? ' RETURNING ' + Validator.sanitizeTableDotField(tableName, idField, this._queryBuilderOptions) : ''),
       substitutionValues: queryBuilder.buildSubstitutionValues(),
     );
 
@@ -195,18 +195,18 @@ class PostgresConnector extends ISQLConnector {
   }
 
   QueryBuilder selectTableQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields, int? limit) {
-    final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
-
     QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
-      .from(tableName)
-      .fields(fields);
+      .from(tableName);
+
+    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
 
     if(whereFieldsAndValues != null) {
       whereFieldsAndValues = _reviseFieldsAndValues(whereFieldsAndValues);
       whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
 
-        queryBuilder = queryBuilder.whereSafe(fieldName, OPERATOR_EQ, fieldValue);
+        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+        queryBuilder = queryBuilder.whereSafe(sanitizedField, OPERATOR_EQ, fieldValue);
 
       });
     }
@@ -224,16 +224,16 @@ class PostgresConnector extends ISQLConnector {
   }
 
   QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, String where, List<String>? orderFields) {
-    final List<String> leftFields = _reviseFieldsAndTypes(leftSelectFields);
-    final List<String> rightFields = _reviseFieldsAndTypes(rightSelectFields);
 
     QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .from(leftTable)
-      .join(rightTable, '$leftTableIdField = $rightTableIdField', type: JoinType.LEFT)
-      .fields(leftFields, tableName: leftTable)
-      .fields(rightFields, tableName: rightTable)
-      .whereRaw(where);
+      .join(rightTable, '$leftTableIdField = $rightTableIdField', type: JoinType.LEFT);
+
+    _buildFieldsFromMap(queryBuilder, leftTable, leftSelectFields);
+    _buildFieldsFromMap(queryBuilder, rightTable, rightSelectFields);
+
+    queryBuilder.whereRaw(where);
 
     if(orderFields != null) {
       for(final String field in orderFields) {
@@ -244,14 +244,19 @@ class PostgresConnector extends ISQLConnector {
   }
 
   QueryBuilder selectRelationQueryBuilder(String tableName, String relationTable, String joinField, String relationField, int relationId, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-    final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
-      .from(tableName)
-      .join(relationTable, '$joinField = $relationField')
-      .fields(fields)
-      .whereSafe(relationField, OPERATOR_EQ, relationId);
+      .from(tableName);
+
+    final String onTable = Validator.sanitizeTableDotField(tableName, idField, this._queryBuilderOptions);
+    final String onRelation = Validator.sanitizeTableDotField(relationTable, joinField, this._queryBuilderOptions);
+    queryBuilder.join(relationTable, '$onTable = $onRelation');
+
+    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
+
+    final String sanitizedWhere = Validator.sanitizeTableDotField(relationTable, relationField, this._queryBuilderOptions);
+    queryBuilder.whereSafe(sanitizedWhere, OPERATOR_EQ, relationId);
 
     if(orderFields != null) {
       for(final String field in orderFields) {
@@ -262,14 +267,19 @@ class PostgresConnector extends ISQLConnector {
   }
 
   QueryBuilder selectWeakRelationQueryBuilder(String primaryTable, String subordinateTable, String relationField, int relationId, bool primaryResults, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-    final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
-      .from(subordinateTable)
-      .join(primaryTable, '$subordinateTable.$relationField = $primaryTable.$idField')
-      .fields(fields, tableName: (primaryResults? primaryTable : subordinateTable))
-      .whereSafe((primaryResults? subordinateTable : primaryTable) + '.' + _forceDoubleQuotes(idField), OPERATOR_EQ, relationId);
+      .from(subordinateTable);
+
+    final String onSubordinate = Validator.sanitizeTableDotField(subordinateTable, relationField, this._queryBuilderOptions);
+    final String onPrimary = Validator.sanitizeTableDotField(primaryTable, idField, this._queryBuilderOptions);
+    queryBuilder.join(primaryTable, '$onSubordinate = $onPrimary');
+
+    _buildFieldsFromMap(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
+
+    final String sanitizedWhere = Validator.sanitizeTableDotField((primaryResults? subordinateTable : primaryTable), idField, this._queryBuilderOptions);
+    queryBuilder.whereSafe(sanitizedWhere, OPERATOR_EQ, relationId);
 
     if(orderFields != null) {
       for(final String field in orderFields) {
@@ -280,12 +290,14 @@ class PostgresConnector extends ISQLConnector {
   }
 
   QueryBuilder selectLikeQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, String searchField, String query, int limit) {
-    final List<String> fields = _reviseFieldsAndTypes(selectFieldsAndTypes);
 
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
-      .from(tableName)
-      .fields(fields)
+      .from(tableName);
+
+    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
+
+    queryBuilder
       .whereSafe(searchField, OPERATOR_ILIKE, _searchableQuery(query))
       .limit(limit);
     return queryBuilder;
@@ -339,29 +351,30 @@ class PostgresConnector extends ISQLConnector {
 
   }
 
-  List<String> _reviseFieldsAndTypes(Map<String, Type> fieldsAndTypes) {
+  void _buildFieldsFromMap(QueryBuilder queryBuilder, String tableName, Map<String, Type> fieldsAndTypes) {
 
-    final List<String> fields = <String>[];
     fieldsAndTypes.forEach( (String fieldName, Type fieldType) {
 
-      final String escapedField = _forceDoubleQuotes(fieldName);
-
-      String formattedField = escapedField;
       if(fieldType == double) {
 
-        formattedField += escapedField + '::float';
+        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+        final String rawDoubleField = sanitizedField + '::float';
+        queryBuilder.fieldRaw(rawDoubleField);
 
       } else if(fieldType == Duration) {
 
-        formattedField += '(Extract(hours from ' + escapedField + ') * 60 + EXTRACT(minutes from ' + escapedField + '))::int AS ' + _forceDoubleQuotes(fieldName);
+        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+        final String fieldValue = Validator.sanitizeField(fieldName.trim(), this._queryBuilderOptions);
+        final String rawDurationField = '(Extract(hours from ' + sanitizedField + ') * 60 + EXTRACT(minutes from ' + sanitizedField + '))::int AS ' + fieldValue;
+        queryBuilder.fieldRaw(rawDurationField);
+
+      } else {
+
+        queryBuilder.field(fieldName, tableName: tableName);
 
       }
 
-      fields.add(formattedField);
-
     });
-
-    return fields;
 
   }
 
@@ -380,12 +393,6 @@ class PostgresConnector extends ISQLConnector {
   String _searchableQuery(String query) {
 
     return '%' + query + '%';
-
-  }
-
-  String _forceDoubleQuotes(String text) {
-
-    return '\"' + text + '\"';
 
   }
   //#endregion Helpers

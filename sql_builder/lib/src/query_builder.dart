@@ -78,7 +78,7 @@ abstract class QueryBuilder {
       }
     }
 
-    return result;
+    return result.trim();
   }
 
   Map<String, dynamic> buildSubstitutionValues() {
