@@ -14,8 +14,8 @@ abstract class ISQLConnector {
   //#region READ
   Future<List<Map<String, Map<String, dynamic>>>> readTable({required String tableName, required Map<String, Type> selectFieldsAndTypes, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields, int? limit});
   Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required String where, List<String>? orderFields});
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields});
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields});
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields});
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields});
   Future<List<Map<String, Map<String, dynamic>>>> readTableSearch({required String tableName, required Map<String, Type> selectFieldsAndTypes, required String searchField, required String query, required int limit});
   //#endregion READ
 

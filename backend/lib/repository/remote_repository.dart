@@ -389,6 +389,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: GamePlatformRelationData.table,
+      idField: idField,
       joinField: PlatformEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
@@ -403,6 +404,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: GamePurchaseRelationData.table,
+      idField: idField,
       joinField: PurchaseEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
@@ -417,6 +419,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
+      idField: idField,
       relationField: DLCEntityData.baseGameField,
       relationId: id,
       primaryResults: false,
@@ -431,6 +434,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameTagEntityData.table,
       relationTable: GameTagRelationData.table,
+      idField: idField,
       joinField: GameTagEntityData.relationField,
       relationField: GameEntityData.relationField,
       relationId: id,
@@ -502,6 +506,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
+      idField: idField,
       relationField: DLCEntityData.baseGameField,
       relationId: dlcId,
       primaryResults: true,
@@ -516,6 +521,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
+      idField: idField,
       joinField: PurchaseEntityData.relationField,
       relationField: DLCEntityData.relationField,
       relationId: id,
@@ -576,6 +582,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePlatformRelationData.table,
+      idField: idField,
       joinField: GameEntityData.relationField,
       relationField: PlatformEntityData.relationField,
       relationId: id,
@@ -590,6 +597,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: SystemEntityData.table,
       relationTable: PlatformSystemRelationData.table,
+      idField: idField,
       joinField: SystemEntityData.relationField,
       relationField: PlatformEntityData.relationField,
       relationId: id,
@@ -649,6 +657,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
+      idField: idField,
       relationField: PurchaseEntityData.storeField,
       relationId: storeId,
       primaryResults: true,
@@ -663,6 +672,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePurchaseRelationData.table,
+      idField: idField,
       joinField: GameEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
@@ -677,6 +687,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: DLCEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
+      idField: idField,
       joinField: DLCEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
@@ -691,6 +702,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseTypeEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
+      idField: idField,
       joinField: PurchaseTypeEntityData.relationField,
       relationField: PurchaseEntityData.relationField,
       relationId: id,
@@ -737,6 +749,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
+      idField: idField,
       relationField: PurchaseEntityData.storeField,
       relationId: storeId,
       primaryResults: false,
@@ -783,6 +796,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: PlatformSystemRelationData.table,
+      idField: idField,
       joinField: PlatformEntityData.relationField,
       relationField: SystemEntityData.relationField,
       relationId: id,
@@ -830,6 +844,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GameTagRelationData.table,
+      idField: idField,
       joinField: GameEntityData.relationField,
       relationField: GameTagEntityData.relationField,
       relationId: id,
@@ -876,6 +891,7 @@ class RemoteRepository implements ICollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
+      idField: idField,
       joinField: PurchaseEntityData.relationField,
       relationField: PurchaseTypeEntityData.relationField,
       relationId: id,

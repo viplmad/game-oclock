@@ -23,7 +23,7 @@ class SetFieldBlock extends SetFieldBlockBase {
 
       sb.write(field);
       sb.write(' = ');
-      sb.write('@param${index}');
+      sb.write('@setParam${index}');
     }
 
     return 'SET $sb';
@@ -39,7 +39,7 @@ class SetFieldBlock extends SetFieldBlockBase {
     for(int index = 0; index < fields.length; index++) {
       final SetNode item = fields.elementAt(index);
 
-      result.addAll(<String, dynamic>{'param${index}': item.value});
+      result.addAll(<String, dynamic>{'setParam${index}': item.value});
     }
 
     return result;

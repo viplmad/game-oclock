@@ -34,7 +34,7 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
     for(int index = 0; index < fields.length; index++) {
       final SetNode item = fields.elementAt(index);
 
-      result.addAll(<String, dynamic>{'param${index}': item.value});
+      result.addAll(<String, dynamic>{'insertParam${index}': item.value});
     }
 
     return result;
@@ -43,7 +43,7 @@ class InsertFieldValueBlock extends SetFieldBlockBase {
   List<String> buildFieldValuesForSubstitution(List<SetNode> nodes) {
     final List<String> values = <String>[];
     for(int index = 0; index < nodes.length; index++) {
-      values.add('@param${index}');
+      values.add('@insertParam${index}');
     }
     return values;
   }

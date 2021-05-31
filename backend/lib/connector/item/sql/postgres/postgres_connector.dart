@@ -1,8 +1,6 @@
 import 'package:postgres/postgres.dart';
 import 'package:sql_builder/sql_builder.dart';
 
-import 'package:backend/entity/entity.dart';
-
 import '../isql_connector.dart';
 
 
@@ -119,9 +117,9 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
 
-    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, joinField, relationField, relationId, selectFieldsAndTypes, orderFields);
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, idField, joinField, relationField, relationId, selectFieldsAndTypes, orderFields);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -131,9 +129,9 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
 
-    final QueryBuilder queryBuilder = selectWeakRelationQueryBuilder(primaryTable, subordinateTable, relationField, relationId, primaryResults, selectFieldsAndTypes, orderFields);
+    final QueryBuilder queryBuilder = selectWeakRelationQueryBuilder(primaryTable, subordinateTable, idField, relationField, relationId, primaryResults, selectFieldsAndTypes, orderFields);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -184,210 +182,185 @@ class PostgresConnector extends ISQLConnector {
   //#endregion DELETE
 
   //#region Query Builders
-  QueryBuilder insertQueryBuilder(String tableName, Map<String, dynamic> fieldsAndValues) {
-    fieldsAndValues = _reviseFieldsAndValues(fieldsAndValues);
-
+  QueryBuilder insertQueryBuilder(String tableName, Map<String, dynamic> insertFieldsAndValues) {
     final QueryBuilder queryBuilder = FluentQuery
       .insert()
-      .into(tableName)
-      .setAll(fieldsAndValues);
+      .into(tableName);
+
+    _buildSet(queryBuilder, insertFieldsAndValues);
+
     return queryBuilder;
   }
 
   QueryBuilder selectTableQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields, int? limit) {
-    QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(tableName);
-
-    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
-
-    if(whereFieldsAndValues != null) {
-      whereFieldsAndValues = _reviseFieldsAndValues(whereFieldsAndValues);
-      whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
-
-        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
-        queryBuilder = queryBuilder.whereSafe(sanitizedField, OPERATOR_EQ, fieldValue);
-
-      });
-    }
-
-    if(orderFields != null) {
-      for(final String field in orderFields) {
-        queryBuilder = queryBuilder.order(field);
-      }
-    }
-
-    if(limit != null) {
-      queryBuilder = queryBuilder.limit(limit);
-    }
-    return queryBuilder;
-  }
-
-  QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, String where, List<String>? orderFields) {
-
-    QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(leftTable)
-      .join(rightTable, '$leftTableIdField = $rightTableIdField', type: JoinType.LEFT);
-
-    _buildFieldsFromMap(queryBuilder, leftTable, leftSelectFields);
-    _buildFieldsFromMap(queryBuilder, rightTable, rightSelectFields);
-
-    queryBuilder.whereRaw(where);
-
-    if(orderFields != null) {
-      for(final String field in orderFields) {
-        queryBuilder = queryBuilder.order(field);
-      }
-    }
-    return queryBuilder;
-  }
-
-  QueryBuilder selectRelationQueryBuilder(String tableName, String relationTable, String joinField, String relationField, int relationId, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-
-    QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(tableName);
-
-    final String onTable = Validator.sanitizeTableDotField(tableName, idField, this._queryBuilderOptions);
-    final String onRelation = Validator.sanitizeTableDotField(relationTable, joinField, this._queryBuilderOptions);
-    queryBuilder.join(relationTable, '$onTable = $onRelation');
-
-    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
-
-    final String sanitizedWhere = Validator.sanitizeTableDotField(relationTable, relationField, this._queryBuilderOptions);
-    queryBuilder.whereSafe(sanitizedWhere, OPERATOR_EQ, relationId);
-
-    if(orderFields != null) {
-      for(final String field in orderFields) {
-        queryBuilder = queryBuilder.order(field);
-      }
-    }
-    return queryBuilder;
-  }
-
-  QueryBuilder selectWeakRelationQueryBuilder(String primaryTable, String subordinateTable, String relationField, int relationId, bool primaryResults, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-
-    QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(subordinateTable);
-
-    final String onSubordinate = Validator.sanitizeTableDotField(subordinateTable, relationField, this._queryBuilderOptions);
-    final String onPrimary = Validator.sanitizeTableDotField(primaryTable, idField, this._queryBuilderOptions);
-    queryBuilder.join(primaryTable, '$onSubordinate = $onPrimary');
-
-    _buildFieldsFromMap(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
-
-    final String sanitizedWhere = Validator.sanitizeTableDotField((primaryResults? subordinateTable : primaryTable), idField, this._queryBuilderOptions);
-    queryBuilder.whereSafe(sanitizedWhere, OPERATOR_EQ, relationId);
-
-    if(orderFields != null) {
-      for(final String field in orderFields) {
-        queryBuilder = queryBuilder.order(field);
-      }
-    }
-    return queryBuilder;
-  }
-
-  QueryBuilder selectLikeQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, String searchField, String query, int limit) {
-
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .from(tableName);
 
-    _buildFieldsFromMap(queryBuilder, tableName, selectFieldsAndTypes);
+    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
+    _buildWhere(queryBuilder, tableName, whereFieldsAndValues);
+    _buildOrder(queryBuilder, orderFields);
+    _buildLimit(queryBuilder, limit);
 
-    queryBuilder
-      .whereSafe(searchField, OPERATOR_ILIKE, _searchableQuery(query))
-      .limit(limit);
+    return queryBuilder;
+  }
+
+  QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, String where, List<String>? orderFields) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(leftTable);
+
+    _buildJoin(queryBuilder, rightTable, rightTableIdField, leftTable, leftTableIdField, joinType: JoinType.LEFT);
+    _buildFields(queryBuilder, leftTable, leftSelectFields);
+    _buildFields(queryBuilder, rightTable, rightSelectFields);
+    queryBuilder.whereRaw(where);
+    _buildOrder(queryBuilder, orderFields);
+
+    return queryBuilder;
+  }
+
+  QueryBuilder selectRelationQueryBuilder(String tableName, String relationTable, String idField, String joinField, String relationField, int relationId, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(tableName);
+
+    _buildJoin(queryBuilder, relationTable, tableName, joinField, idField);
+    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
+    _buildWhere(queryBuilder, relationTable, <String, dynamic> { relationField : relationId });
+    _buildOrder(queryBuilder, orderFields);
+
+    return queryBuilder;
+  }
+
+  // ignore: avoid_positional_boolean_parameters
+  QueryBuilder selectWeakRelationQueryBuilder(String primaryTable, String subordinateTable, String idField, String relationField, int relationId, bool primaryResults, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(subordinateTable);
+
+    _buildJoin(queryBuilder, primaryTable, subordinateTable, idField, relationField);
+    _buildFields(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
+    _buildWhere(queryBuilder, (primaryResults? subordinateTable : primaryTable), <String, dynamic> { idField : relationId });
+    _buildOrder(queryBuilder, orderFields);
+
+    return queryBuilder;
+  }
+
+  QueryBuilder selectLikeQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, String searchField, String query, int limit) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(tableName);
+
+    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
+    final String sanitizedField = Validator.sanitizeTableDotField(tableName, searchField, this._queryBuilderOptions);
+    queryBuilder.whereSafe(sanitizedField, OPERATOR_ILIKE, _searchableQuery(query));
+    _buildLimit(queryBuilder, limit);
+
     return queryBuilder;
   }
 
   QueryBuilder updateQueryBuilder(String tableName, Map<String, dynamic> setFieldsAndValues, Map<String, dynamic> whereFieldsAndValues) {
-    setFieldsAndValues = _reviseFieldsAndValues(setFieldsAndValues); // TODO check it makes nulls
+    final QueryBuilder queryBuilder = FluentQuery
+      .update(options: this._queryBuilderOptions)
+      .table(tableName);
 
-    QueryBuilder queryBuilder = FluentQuery
-      .update()
-      .into(tableName)
-      .setAll(setFieldsAndValues);
+    _buildSet(queryBuilder, setFieldsAndValues);
+    _buildWhere(queryBuilder, null, whereFieldsAndValues);
 
-    whereFieldsAndValues = _reviseFieldsAndValues(whereFieldsAndValues);
-    whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
-
-      queryBuilder = queryBuilder.whereSafe(fieldName, OPERATOR_EQ, fieldValue);
-
-    });
     return queryBuilder;
   }
 
   QueryBuilder deleteQueryBuilder(String tableName, Map<String, dynamic> whereFieldsAndValues) {
-    QueryBuilder queryBuilder = FluentQuery
-      .delete()
+    final QueryBuilder queryBuilder = FluentQuery
+      .delete(options: this._queryBuilderOptions)
       .from(tableName);
 
-    whereFieldsAndValues = _reviseFieldsAndValues(whereFieldsAndValues);
-    whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
+    _buildWhere(queryBuilder, null, whereFieldsAndValues);
 
-      queryBuilder = queryBuilder.whereSafe(fieldName, OPERATOR_EQ, fieldValue);
-
-    });
     return queryBuilder;
   }
   //#endregion Query Builders
 
   //#region Helpers
-  /// Revise fields and values map to take into account special cases not covered by postgres connector (mainly Duration)
-  Map<String, dynamic> _reviseFieldsAndValues(Map<String, dynamic> fieldsAndValues) {
-
-    fieldsAndValues.forEach( (String fieldName, dynamic value) {
-
-      if(value is Duration) {
-        fieldsAndValues[fieldName] = value.inSeconds;
-      }
-
-    });
-
-    return fieldsAndValues;
-
+  void _buildJoin(QueryBuilder queryBuilder, String joinTableName, String primaryTableName, String joinField, String primaryField, {JoinType joinType = JoinType.INNER}) {
+    final String onPrimary = Validator.sanitizeTableDotField(primaryTableName, primaryField, this._queryBuilderOptions);
+    final String onJoin = Validator.sanitizeTableDotField(joinTableName, joinField, this._queryBuilderOptions);
+    queryBuilder.join(joinTableName, '$onPrimary = $onJoin', type: joinType);
   }
 
-  void _buildFieldsFromMap(QueryBuilder queryBuilder, String tableName, Map<String, Type> fieldsAndTypes) {
-
-    fieldsAndTypes.forEach( (String fieldName, Type fieldType) {
-
-      if(fieldType == double) {
+  void _buildFields(QueryBuilder queryBuilder, String? tableName, Map<String, Type>? selectFieldsAndTypes) {
+    if(selectFieldsAndTypes != null) {
+      selectFieldsAndTypes.forEach( (String fieldName, Type fieldType) {
 
         final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
-        final String rawDoubleField = sanitizedField + '::float';
-        queryBuilder.fieldRaw(rawDoubleField);
 
-      } else if(fieldType == Duration) {
+        if(fieldType == double) {
 
-        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
-        final String fieldValue = Validator.sanitizeField(fieldName.trim(), this._queryBuilderOptions);
-        final String rawDurationField = '(Extract(hours from ' + sanitizedField + ') * 60 + EXTRACT(minutes from ' + sanitizedField + '))::int AS ' + fieldValue;
-        queryBuilder.fieldRaw(rawDurationField);
+          final String rawDoubleField = sanitizedField + '::float';
+          queryBuilder.fieldRaw(rawDoubleField);
 
-      } else {
+        } else if(fieldType == Duration) {
 
-        queryBuilder.field(fieldName, tableName: tableName);
+          final String fieldValue = Validator.sanitizeField(fieldName.trim(), this._queryBuilderOptions);
+          final String rawDurationField = '(Extract(hours from ' + sanitizedField + ') * 60 + EXTRACT(minutes from ' + sanitizedField + '))::int AS ' + fieldValue;
+          queryBuilder.fieldRaw(rawDurationField);
 
-      }
+        } else {
 
-    });
+          queryBuilder.fieldRaw(sanitizedField);
 
-  }
+        }
 
-  dynamic _reviseValue(dynamic fieldValue) {
-    dynamic value;
-
-    if(fieldValue == null) {
-      value = 'NULL';
-    } else {
-      value = fieldValue;
+      });
     }
+  }
 
-    return value;
+  void _buildWhere(QueryBuilder queryBuilder, String? tableName, Map<String, dynamic>? whereFieldsAndValues) {
+    if(whereFieldsAndValues != null) {
+      whereFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
+
+        // Revise fields and values map to take into account special cases not covered by postgres connector (mainly Duration)
+        if(fieldValue == null) {
+          fieldValue = 'NULL';
+        } else if(fieldValue is Duration) {
+          fieldValue = fieldValue.inSeconds;
+        }
+
+        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+        queryBuilder.whereSafe(sanitizedField, OPERATOR_EQ, fieldValue);
+
+      });
+    }
+  }
+
+  void _buildSet(QueryBuilder queryBuilder, Map<String, dynamic>? setFieldsAndValues) {
+    if(setFieldsAndValues != null) {
+      setFieldsAndValues.forEach( (String fieldName, dynamic fieldValue) {
+
+        if(fieldValue == null) {
+          fieldValue = 'NULL';
+        } else if(fieldValue is Duration) {
+          fieldValue = fieldValue.inSeconds;
+        }
+
+        queryBuilder.set(fieldName, fieldValue);
+
+      });
+    }
+  }
+
+  void _buildOrder(QueryBuilder queryBuilder, List<String>? orderFields) {
+    if(orderFields != null) {
+      for(final String field in orderFields) {
+        queryBuilder.order(field);
+      }
+    }
+  }
+
+  void _buildLimit(QueryBuilder queryBuilder, int? limit) {
+    if(limit != null) {
+      queryBuilder.limit(limit);
+    }
   }
 
   String _searchableQuery(String query) {

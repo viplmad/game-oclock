@@ -79,7 +79,7 @@ class WhereBlock extends Block {
           sb.write('$text');
           sb.write(' ${where.operator} ');
 
-          sb.write('@param${index}');
+          sb.write('@whereParam${index}');
         }
 
         if (index < length - 1) {
@@ -115,7 +115,7 @@ class WhereBlock extends Block {
     for(int index = 0; index < wheres.length; index++) {
       final WhereNode item = wheres.elementAt(index);
       if (item.operator != null) {
-        result.addAll(<String, dynamic>{'param${index}': item.param});
+        result.addAll(<String, dynamic>{'whereParam${index}': item.param});
       }
     }
 
