@@ -50,13 +50,16 @@ void main() {
 
   test('sql select 3', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
-    final String insertSql = 'SELECT "Store"."ID" FROM "Purchase"  INNER JOIN "Store" ON ("Purchase"."Store" = "Store"."ID") WHERE "Purchase"."ID" = @whereParam0';
+    final String insertSql = 'SELECT "Store"."ID" FROM "Store"  INNER JOIN "Purchase" ON ("Store"."ID" = "Purchase"."Store") WHERE "Purchase"."ID" = @whereParam0';
 
     final Map<String, Type> selectFieldsAndTypes = <String, Type>{
       'ID': String,
     };
     final int relationId = 1;
-    final QueryBuilder generatedQueryBuilder = connector.selectWeakRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', relationId, true, selectFieldsAndTypes, null);
+    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
+      'ID': relationId,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFieldsAndTypes, whereFieldsAndValues, null, primaryResults: true);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -82,7 +85,10 @@ void main() {
       'Backup': bool,
     };
     final int relationId = 1;
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', 'Purchase_ID', relationId, selectFieldsAndTypes, null);
+    final Map<String, dynamic> whereFieldsAndVales = <String, dynamic>{
+      'Purchase_ID': relationId,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFieldsAndTypes, whereFieldsAndVales, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -97,7 +103,10 @@ void main() {
       'Name': String,
     };
     final int relationId = 1;
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', 'Purchase_ID', relationId, selectFieldsAndTypes, null);
+    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
+      'Purchase_ID': relationId,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFieldsAndTypes, whereFieldsAndValues, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -112,7 +121,10 @@ void main() {
       'Name': String,
     };
     final int relationId = 1;
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', 'Purchase_ID', relationId, selectFieldsAndTypes, null);
+    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
+      'Purchase_ID': relationId,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFieldsAndTypes, whereFieldsAndValues, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -145,9 +157,9 @@ void main() {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'UPDATE "Purchase"  SET "Date" = @setParam0 WHERE "ID" = @whereParam0';
 
-    final DateTime setValue = DateTime.now();
+    final DateTime newDate = DateTime.now();
     final Map<String, dynamic> setFieldsAndValues = <String, dynamic>{
-      'Date': setValue,
+      'Date': newDate,
     };
     final int itemId = 1;
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
@@ -156,16 +168,16 @@ void main() {
     final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereFieldsAndValues);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
-    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : setValue, 'whereParam0' : itemId}));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newDate, 'whereParam0' : itemId}));
   });
 
   test('sql update 1', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'UPDATE "Purchase"  SET "Price" = @setParam0, "Date" = @setParam1 WHERE "ID" = @whereParam0';
 
-    final double setValue0 = 5.60;
+    final double newPrice = 5.60;
     final Map<String, dynamic> setFieldsAndValues = <String, dynamic>{
-      'Price': setValue0,
+      'Price': newPrice,
       'Date': null,
     };
     final int itemId = 1;
@@ -175,52 +187,95 @@ void main() {
     final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereFieldsAndValues);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
-    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : setValue0, 'setParam1' : 'NULL', 'whereParam0' : itemId}));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newPrice, 'setParam1' : 'NULL', 'whereParam0' : itemId}));
   });
 
   test('sql insert 1', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'INSERT INTO "Purchase" ("Description", "Price", "Date") VALUES (@insertParam0, @insertParam1, @insertParam2)';
 
-    final String insertParam0 = 'description';
-    final double insertParam1 = 5.60;
-    final DateTime insertParam2 = DateTime.now();
+    final String newDescription = 'description';
+    final double newPrice = 5.60;
+    final DateTime newDate = DateTime.now();
     final Map<String, dynamic> insertFieldsAndValues = <String, dynamic>{
-      'Description': insertParam0,
-      'Price': insertParam1,
-      'Date': insertParam2,
+      'Description': newDescription,
+      'Price': newPrice,
+      'Date': newDate,
     };
     final QueryBuilder generatedQueryBuilder = connector.insertQueryBuilder('Purchase', insertFieldsAndValues);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
-    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'insertParam0' : insertParam0, 'insertParam1' : insertParam1, 'insertParam2' : insertParam2}));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'insertParam0' : newDescription, 'insertParam1' : newPrice, 'insertParam2' : newDate}));
   });
 
   test('sql delete 1', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'DELETE FROM "Platform"  WHERE "ID" = @whereParam0';
 
-    final int whereParam0 = 1;
+    final int itemId = 1;
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': whereParam0,
+      'ID': itemId,
     };
     final QueryBuilder generatedQueryBuilder = connector.deleteQueryBuilder('Platform', whereFieldsAndValues);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
-    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : whereParam0}));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
   });
 
   test('sql select 9', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'SELECT "Platform"."Name" FROM "Platform"  WHERE "Platform"."Name" ILIKE @whereParam0 LIMIT 10';
 
-    final String whereParam0 = 'smth';
+    final String name = 'smth';
     final Map<String, Type> selectFieldsAndTypes = <String, Type>{
       'Name': String,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectLikeQueryBuilder('Platform', selectFieldsAndTypes, 'Name', whereParam0, 10);
+    final QueryBuilder generatedQueryBuilder = connector.selectLikeQueryBuilder('Platform', selectFieldsAndTypes, 'Name', name, 10);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
-    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : '%$whereParam0%'}));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : '%$name%'}));
+  });
+
+  test('sql select 10', () {
+    final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
+    final String insertSql = 'SELECT "DLC"."Name" FROM "Game"  INNER JOIN "DLC" ON ("Game"."ID" = "DLC"."Base Game") WHERE "Game"."ID" = @whereParam0';
+
+    final Map<String, Type> selectFieldsAndTypes = <String, Type>{
+      'Name': String,
+    };
+    final int itemId = 1;
+    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
+      'ID': itemId,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFieldsAndTypes, whereFieldsAndValues, null, primaryResults: false);
+
+    expect(generatedQueryBuilder.toSql(), equals(insertSql));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
+  });
+
+  test('sql select 11', () {
+    final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
+    final String insertSql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", "Game"."Backup", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date" FROM "Game"';
+
+    final Map<String, Type> selectFieldsAndTypes = <String, Type>{
+      'ID': String,
+      'Name': String,
+      'Edition': String,
+      'Release Year': int,
+      'Cover': String,
+      'Status': String,
+      'Rating': int,
+      'Thoughts': String,
+      'Save Folder': String,
+      'Screenshot Folder': String,
+      'Backup': bool,
+    };
+    final List<String> rawSelects = <String>[
+      'COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time"',
+      '( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date"',
+    ];
+    final QueryBuilder generatedQueryBuilder = connector.selectSpecial('Game', selectFieldsAndTypes, rawSelects, null, null);
+
+    expect(generatedQueryBuilder.toSql(), equals(insertSql));
   });
 }

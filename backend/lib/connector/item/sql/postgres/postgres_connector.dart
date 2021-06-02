@@ -1,3 +1,4 @@
+import 'package:backend/entity/collection_item_entity.dart';
 import 'package:postgres/postgres.dart';
 import 'package:sql_builder/sql_builder.dart';
 
@@ -105,33 +106,33 @@ class PostgresConnector extends ISQLConnector {
   }
 
   @override
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Map<String, Type> selectFieldsAndTypes, required Map<String, dynamic> whereFieldsAndValues, List<String>? orderFields}) {
+
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, idField, joinField, selectFieldsAndTypes, whereFieldsAndValues, orderFields);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, required Map<String, dynamic> whereFieldsAndValues, List<String>? orderFields}) {
+
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(primaryTable, subordinateTable, idField, joinField, selectFieldsAndTypes, whereFieldsAndValues, orderFields, primaryResults: primaryResults);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
   Future<List<Map<String, Map<String, dynamic>>>> readJoinTable({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required String where, List<String>? orderFields}) {
 
     final QueryBuilder queryBuilder = selectJoinQueryBuilder(leftTable, rightTable, leftTableIdField, rightTableIdField, leftSelectFields, rightSelectFields, where, orderFields);
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
-  }
-
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required String relationField, required int relationId, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
-
-    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, idField, joinField, relationField, relationId, selectFieldsAndTypes, orderFields);
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
-  }
-
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String relationField, required int relationId, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, List<String>? orderFields}) {
-
-    final QueryBuilder queryBuilder = selectWeakRelationQueryBuilder(primaryTable, subordinateTable, idField, relationField, relationId, primaryResults, selectFieldsAndTypes, orderFields);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -205,6 +206,34 @@ class PostgresConnector extends ISQLConnector {
     return queryBuilder;
   }
 
+  QueryBuilder selectSpecial(String tableName, Map<String, Type> selectFieldsAndTypes, List<String> rawSelects, Map<String, dynamic>? whereFieldsAndValues, List<String>? orderFields) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(tableName);
+
+    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
+    rawSelects.forEach((String rawSelect) {
+      queryBuilder.fieldRaw(rawSelect);
+    });
+    _buildWhere(queryBuilder, tableName, whereFieldsAndValues);
+    _buildOrder(queryBuilder, orderFields);
+
+    return queryBuilder;
+  }
+
+  QueryBuilder selectRelationQueryBuilder(String primaryTable, String subordinateTable, String idField, String joinField, Map<String, Type> selectFieldsAndTypes, Map<String, dynamic> whereFieldsAndValues, List<String>? orderFields, {bool primaryResults = true}) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .from(primaryTable);
+
+    _buildJoin(queryBuilder, subordinateTable, primaryTable, joinField, idField);
+    _buildFields(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
+    _buildWhere(queryBuilder, (primaryResults? subordinateTable : primaryTable), whereFieldsAndValues);
+    _buildOrder(queryBuilder, orderFields);
+
+    return queryBuilder;
+  }
+
   QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, String where, List<String>? orderFields) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
@@ -214,33 +243,6 @@ class PostgresConnector extends ISQLConnector {
     _buildFields(queryBuilder, leftTable, leftSelectFields);
     _buildFields(queryBuilder, rightTable, rightSelectFields);
     queryBuilder.whereRaw(where);
-    _buildOrder(queryBuilder, orderFields);
-
-    return queryBuilder;
-  }
-
-  QueryBuilder selectRelationQueryBuilder(String tableName, String relationTable, String idField, String joinField, String relationField, int relationId, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-    final QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(tableName);
-
-    _buildJoin(queryBuilder, relationTable, tableName, joinField, idField);
-    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
-    _buildWhere(queryBuilder, relationTable, <String, dynamic> { relationField : relationId });
-    _buildOrder(queryBuilder, orderFields);
-
-    return queryBuilder;
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  QueryBuilder selectWeakRelationQueryBuilder(String primaryTable, String subordinateTable, String idField, String relationField, int relationId, bool primaryResults, Map<String, Type> selectFieldsAndTypes, List<String>? orderFields) {
-    final QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(subordinateTable);
-
-    _buildJoin(queryBuilder, primaryTable, subordinateTable, idField, relationField);
-    _buildFields(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
-    _buildWhere(queryBuilder, (primaryResults? subordinateTable : primaryTable), <String, dynamic> { idField : relationId });
     _buildOrder(queryBuilder, orderFields);
 
     return queryBuilder;

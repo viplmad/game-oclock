@@ -391,8 +391,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GamePlatformRelationData.table,
       idField: idField,
       joinField: PlatformEntityData.relationField,
-      relationField: GameEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        GameEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PlatformEntityData.fields,
     ).asStream().map( _dynamicToListPlatform );
 
@@ -406,8 +407,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GamePurchaseRelationData.table,
       idField: idField,
       joinField: PurchaseEntityData.relationField,
-      relationField: GameEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        GameEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -420,8 +422,10 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
       idField: idField,
-      relationField: DLCEntityData.baseGameField,
-      relationId: id,
+      joinField: DLCEntityData.baseGameField,
+      whereFieldsAndValues: <String, dynamic>{
+        DLCEntityData.baseGameField : id,
+      },
       primaryResults: false,
       selectFieldsAndTypes: DLCEntityData.fields,
     ).asStream().map( _dynamicToListDLC );
@@ -436,8 +440,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GameTagRelationData.table,
       idField: idField,
       joinField: GameTagEntityData.relationField,
-      relationField: GameEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        GameEntityData.relationField : id,
+      },
       selectFieldsAndTypes: GameTagEntityData.fields,
     ).asStream().map( _dynamicToListGameTag );
 
@@ -507,8 +512,10 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
       idField: idField,
-      relationField: DLCEntityData.baseGameField,
-      relationId: dlcId,
+      joinField: DLCEntityData.baseGameField,
+      whereFieldsAndValues: <String, dynamic>{
+        idField : dlcId,
+      },
       primaryResults: true,
       selectFieldsAndTypes: GameEntityData.fields,
     ).asStream().map( _dynamicToSingleGame );
@@ -523,8 +530,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: DLCPurchaseRelationData.table,
       idField: idField,
       joinField: PurchaseEntityData.relationField,
-      relationField: DLCEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        DLCEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -584,8 +592,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GamePlatformRelationData.table,
       idField: idField,
       joinField: GameEntityData.relationField,
-      relationField: PlatformEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PlatformEntityData.relationField : id,
+      },
       selectFieldsAndTypes: GameEntityData.fields,
     ).asStream().map( _dynamicToListGame );
 
@@ -599,8 +608,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: PlatformSystemRelationData.table,
       idField: idField,
       joinField: SystemEntityData.relationField,
-      relationField: PlatformEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PlatformEntityData.relationField : id,
+      },
       selectFieldsAndTypes: SystemEntityData.fields,
     ).asStream().map( _dynamicToListSystem );
 
@@ -652,14 +662,16 @@ class RemoteRepository implements ICollectionRepository {
   }
 
   @override
-  Stream<Store?> findStoreFromPurchase(int storeId) {
+  Stream<Store?> findStoreFromPurchase(int id) {
 
     return _iSQLConnector.readWeakRelation(
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
       idField: idField,
-      relationField: PurchaseEntityData.storeField,
-      relationId: storeId,
+      joinField: PurchaseEntityData.storeField,
+      whereFieldsAndValues: <String, dynamic>{
+        idField : id,
+      },
       primaryResults: true,
       selectFieldsAndTypes: StoreEntityData.fields,
     ).asStream().map( _dynamicToSingleStore );
@@ -674,8 +686,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GamePurchaseRelationData.table,
       idField: idField,
       joinField: GameEntityData.relationField,
-      relationField: PurchaseEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PurchaseEntityData.relationField : id,
+      },
       selectFieldsAndTypes: GameEntityData.fields,
     ).asStream().map( _dynamicToListGame );
 
@@ -689,8 +702,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: DLCPurchaseRelationData.table,
       idField: idField,
       joinField: DLCEntityData.relationField,
-      relationField: PurchaseEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PurchaseEntityData.relationField : id,
+      },
       selectFieldsAndTypes: DLCEntityData.fields,
     ).asStream().map( _dynamicToListDLC );
 
@@ -704,8 +718,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: PurchaseTypeRelationData.table,
       idField: idField,
       joinField: PurchaseTypeEntityData.relationField,
-      relationField: PurchaseEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PurchaseEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PurchaseTypeEntityData.fields,
     ).asStream().map( _dynamicToListPurchaseType );
 
@@ -750,8 +765,10 @@ class RemoteRepository implements ICollectionRepository {
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
       idField: idField,
-      relationField: PurchaseEntityData.storeField,
-      relationId: storeId,
+      joinField: PurchaseEntityData.storeField,
+      whereFieldsAndValues: <String, dynamic>{
+        PurchaseEntityData.storeField : storeId,
+      },
       primaryResults: false,
       selectFieldsAndTypes: PurchaseEntityData.fields,
     ).asStream().map( _dynamicToListPurchase );
@@ -798,8 +815,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: PlatformSystemRelationData.table,
       idField: idField,
       joinField: PlatformEntityData.relationField,
-      relationField: SystemEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        SystemEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PlatformEntityData.fields,
     ).asStream().map( _dynamicToListPlatform );
 
@@ -846,8 +864,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: GameTagRelationData.table,
       idField: idField,
       joinField: GameEntityData.relationField,
-      relationField: GameTagEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        GameTagEntityData.relationField : id,
+      },
       selectFieldsAndTypes: GameEntityData.fields,
     ).asStream().map( _dynamicToListGame );
   }
@@ -893,8 +912,9 @@ class RemoteRepository implements ICollectionRepository {
       relationTable: PurchaseTypeRelationData.table,
       idField: idField,
       joinField: PurchaseEntityData.relationField,
-      relationField: PurchaseTypeEntityData.relationField,
-      relationId: id,
+      whereFieldsAndValues: <String, dynamic>{
+        PurchaseTypeEntityData.relationField : id,
+      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
     ).asStream().map( _dynamicToListPurchase );
 
