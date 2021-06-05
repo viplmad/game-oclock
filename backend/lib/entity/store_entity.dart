@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -10,23 +11,24 @@ class StoreEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
   static const String _iconField = 'Icon';
 
-  static const String searchField = _nameField;
   static const String imageField = _iconField;
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
     _iconField : String,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -44,8 +46,8 @@ class StoreEntity extends CollectionItemEntity {
   static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
-      id: map[idField] as int,
-      name: map[StoreEntityData._nameField] as String,
+      id: map[StoreEntityData.idField] as int,
+      name: map[StoreEntityData.nameField] as String,
       iconFilename: map[StoreEntityData._iconField] as String?,
     );
 
@@ -55,8 +57,8 @@ class StoreEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      StoreEntityData._nameField : name,
+      StoreEntityData.idField : id,
+      StoreEntityData.nameField : name,
       StoreEntityData._iconField : iconFilename,
     };
 
@@ -66,7 +68,7 @@ class StoreEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      StoreEntityData._nameField : name,
+      StoreEntityData.nameField : name,
     };
 
     putCreateMapValueNullable(createMap, StoreEntityData._iconField, iconFilename);
@@ -79,7 +81,7 @@ class StoreEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, StoreEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, StoreEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, StoreEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
 
     return updateMap;
@@ -110,7 +112,7 @@ class StoreEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$StoreEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$StoreEntityData.idField}: $id, '
         '{$StoreEntityData._nameField}: $name, '
         '{$StoreEntityData._iconField}: $iconFilename'
         ' }';

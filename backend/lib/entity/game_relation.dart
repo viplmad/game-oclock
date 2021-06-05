@@ -1,3 +1,5 @@
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
@@ -14,9 +16,19 @@ class GamePlatformRelationData {
     _platformField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int gameId, int platformId) {
+  static Query getIdQuery(int gameId, int platformId) {
 
-    return <String, dynamic>{
+    final Query idQuery = Query();
+    idQuery.addAnd(_gameField, gameId);
+    idQuery.addAnd(_platformField, platformId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int gameId, int platformId) {
+
+        return <String, dynamic>{
       _gameField : gameId,
       _platformField : platformId,
     };
@@ -37,7 +49,17 @@ class GamePurchaseRelationData {
     _purchaseField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int gameId, int purchaseId) {
+  static Query getIdQuery(int gameId, int purchaseId) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_gameField, gameId);
+    idQuery.addAnd(_purchaseField, purchaseId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int gameId, int purchaseId) {
 
     return <String, dynamic>{
       _gameField : gameId,
@@ -60,7 +82,17 @@ class GameTagRelationData {
     _tagField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int gameId, int tagId) {
+  static Query getIdQuery(int gameId, int tagId) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_gameField, gameId);
+    idQuery.addAnd(_tagField, tagId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int gameId, int tagId) {
 
     return <String, dynamic>{
       _gameField : gameId,

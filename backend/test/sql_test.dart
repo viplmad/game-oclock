@@ -1,6 +1,7 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'package:backend/connector/item/sql/postgres/postgres_connector.dart';
+import 'package:backend/query/query.dart';
 import 'package:sql_builder/sql_builder.dart';
 
 void main() {
@@ -56,10 +57,9 @@ void main() {
       'ID': String,
     };
     final int relationId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': relationId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFieldsAndTypes, whereFieldsAndValues, null, null, primaryResults: true);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', relationId);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFieldsAndTypes, whereQuery, null, null, primaryResults: true);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -85,10 +85,9 @@ void main() {
       'Backup': bool,
     };
     final int relationId = 1;
-    final Map<String, dynamic> whereFieldsAndVales = <String, dynamic>{
-      'Purchase_ID': relationId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFieldsAndTypes, whereFieldsAndVales, null, null);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('Purchase_ID', relationId);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFieldsAndTypes, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -103,10 +102,9 @@ void main() {
       'Name': String,
     };
     final int relationId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'Purchase_ID': relationId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFieldsAndTypes, whereFieldsAndValues, null, null);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('Purchase_ID', relationId);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFieldsAndTypes, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -121,10 +119,9 @@ void main() {
       'Name': String,
     };
     final int relationId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'Purchase_ID': relationId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFieldsAndTypes, whereFieldsAndValues, null, null);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('Purchase_ID', relationId);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFieldsAndTypes, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -144,10 +141,9 @@ void main() {
       'Store': int,
     };
     final int itemId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': itemId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase', selectFieldsAndTypes, whereFieldsAndValues, null, null);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', itemId);
+    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase', selectFieldsAndTypes, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -162,10 +158,9 @@ void main() {
       'Date': newDate,
     };
     final int itemId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': itemId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereFieldsAndValues);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', itemId);
+    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newDate, 'whereParam0' : itemId}));
@@ -181,10 +176,9 @@ void main() {
       'Date': null,
     };
     final int itemId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': itemId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereFieldsAndValues);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', itemId);
+    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newPrice, 'setParam1' : 'NULL', 'whereParam0' : itemId}));
@@ -213,10 +207,9 @@ void main() {
     final String insertSql = 'DELETE FROM "Platform"  WHERE "ID" = @whereParam0';
 
     final int itemId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': itemId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.deleteQueryBuilder('Platform', whereFieldsAndValues);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', itemId);
+    final QueryBuilder generatedQueryBuilder = connector.deleteQueryBuilder('Platform', whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -226,11 +219,13 @@ void main() {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String insertSql = 'SELECT "Platform"."Name" FROM "Platform"  WHERE "Platform"."Name" ILIKE @whereParam0 LIMIT 10';
 
-    final String name = 'smth';
     final Map<String, Type> selectFieldsAndTypes = <String, Type>{
       'Name': String,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectLikeQueryBuilder('Platform', selectFieldsAndTypes, 'Name', name, 10);
+    final String name = 'smth';
+    final Query whereQuery = Query();
+    whereQuery.addAnd('Name', name, QueryComparator.LIKE);
+    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Platform', selectFieldsAndTypes, whereQuery, null, 10);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : '%$name%'}));
@@ -244,10 +239,9 @@ void main() {
       'Name': String,
     };
     final int itemId = 1;
-    final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
-      'ID': itemId,
-    };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFieldsAndTypes, whereFieldsAndValues, null, null, primaryResults: false);
+    final Query whereQuery = Query();
+    whereQuery.addAnd('ID', itemId);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFieldsAndTypes, whereQuery, null, null, primaryResults: false);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));

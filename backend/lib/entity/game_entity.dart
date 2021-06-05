@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -18,7 +19,8 @@ class GameEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
   static const String _editionField = 'Edition';
   static const String _releaseYearField = 'Release Year';
   static const String _coverField = 'Cover';
@@ -31,12 +33,11 @@ class GameEntityData {
   static const String _finishDateField = 'Finish Date';
   static const String _backupField = 'Backup';
 
-  static const String searchField = _nameField;
   static const String imageField = _coverField;
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
     _editionField : String,
     _releaseYearField : int,
     _coverField : String,
@@ -50,11 +51,12 @@ class GameEntityData {
     _backupField : bool,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -92,8 +94,8 @@ class GameEntity extends CollectionItemEntity {
   static GameEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameEntity(
-      id: map[idField] as int,
-      name: map[GameEntityData._nameField] as String,
+      id: map[GameEntityData.idField] as int,
+      name: map[GameEntityData.nameField] as String,
       edition: map[GameEntityData._editionField] as String,
       releaseYear: map[GameEntityData._releaseYearField] as int?,
       coverFilename: map[GameEntityData._coverField] as String?,
@@ -113,8 +115,8 @@ class GameEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      GameEntityData._nameField : name,
+      GameEntityData.idField : id,
+      GameEntityData.nameField : name,
       GameEntityData._editionField : edition,
       GameEntityData._releaseYearField : releaseYear,
       GameEntityData._coverField: coverFilename,
@@ -134,7 +136,7 @@ class GameEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      GameEntityData._nameField : name,
+      GameEntityData.nameField : name,
       GameEntityData._editionField : edition,
       GameEntityData._statusField : status,
       GameEntityData._ratingField : rating,
@@ -157,7 +159,7 @@ class GameEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, GameEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, GameEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValue(updateMap, GameEntityData._editionField, edition, updatedEntity.edition);
     putUpdateMapValueNullable(updateMap, GameEntityData._releaseYearField, releaseYear, updatedEntity.releaseYear, updatedValueCanBeNull: updateProperties.releaseYearToNull);
     putUpdateMapValueNullable(updateMap, GameEntityData._coverField, coverFilename, updatedEntity.coverFilename, updatedValueCanBeNull: updateProperties.coverURLToNull);
@@ -198,7 +200,7 @@ class GameEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$GameEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$GameEntityData.idField}: $id, '
         '{$GameEntityData._nameField}: $name, '
         '{$GameEntityData._editionField}: $edition, '
         '{$GameEntityData._releaseYearField}: $releaseYear, '

@@ -30,8 +30,12 @@ class WhereBlock extends Block {
     doSetWhere(condition, param, andOr);
   }
 
-  void setWhereRaw(String whereRawSql, [String andOr = 'AND']) {
-    wheresRawSql.add(WhereRawNode(whereRawSql, andOr));
+  void setWhereRaw(String whereRawSql) {
+    wheresRawSql.add(WhereRawNode(whereRawSql, 'AND'));
+  }
+
+  void setOrWhereRaw(String whereRawSql) {
+    wheresRawSql.add(WhereRawNode(whereRawSql, 'OR'));
   }
 
   void setWhereSafe(String field, String operator, dynamic value) {

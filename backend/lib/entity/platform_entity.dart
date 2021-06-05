@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -15,25 +16,26 @@ class PlatformEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
   static const String _iconField = 'Icon';
   static const String _typeField = 'Type';
 
-  static const String searchField = _nameField;
   static const String imageField = _iconField;
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
     _iconField : String,
     _typeField : String,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -53,8 +55,8 @@ class PlatformEntity extends CollectionItemEntity {
   static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
-      id: map[idField] as int,
-      name: map[PlatformEntityData._nameField] as String,
+      id: map[PlatformEntityData.idField] as int,
+      name: map[PlatformEntityData.nameField] as String,
       iconFilename: map[PlatformEntityData._iconField] as String?,
       type: map[PlatformEntityData._typeField] as String?,
     );
@@ -65,8 +67,8 @@ class PlatformEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      PlatformEntityData._nameField : name,
+      PlatformEntityData.idField : id,
+      PlatformEntityData.nameField : name,
       PlatformEntityData._iconField : iconFilename,
       PlatformEntityData._typeField : type,
     };
@@ -77,7 +79,7 @@ class PlatformEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      PlatformEntityData._nameField : name,
+      PlatformEntityData.nameField : name,
     };
 
     putCreateMapValueNullable(createMap, PlatformEntityData._iconField, iconFilename);
@@ -91,7 +93,7 @@ class PlatformEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, PlatformEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, PlatformEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, PlatformEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
     putUpdateMapValueNullable(updateMap, PlatformEntityData._typeField, type, updatedEntity.type, updatedValueCanBeNull: updateProperties.typeToNull);
 
@@ -123,7 +125,7 @@ class PlatformEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$PlatformEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$PlatformEntityData.idField}: $id, '
         '{$PlatformEntityData._nameField}: $name, '
         '{$PlatformEntityData._iconField}: $iconFilename, '
         '{$PlatformEntityData._typeField}: $type'

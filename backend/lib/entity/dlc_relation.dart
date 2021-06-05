@@ -1,9 +1,11 @@
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
 class DLCPurchaseRelationData {
   DLCPurchaseRelationData._();
-  
+
   static const String table = 'DLC-Purchase';
 
   static const String _dlcField = DLCEntityData.relationField;
@@ -14,7 +16,17 @@ class DLCPurchaseRelationData {
     _purchaseField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int dlcId, int purchaseId) {
+  static Query getIdQuery(int dlcId, int purchaseId) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_dlcField, dlcId);
+    idQuery.addAnd(_purchaseField, purchaseId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int dlcId, int purchaseId) {
 
     return <String, dynamic>{
       _dlcField : dlcId,

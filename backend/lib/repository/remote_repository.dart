@@ -1,8 +1,8 @@
 import 'package:backend/connector/connector.dart';
 
 import 'package:backend/entity/entity.dart';
-
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'collection_repository.dart';
 
@@ -64,8 +64,9 @@ class RemoteRepository implements CollectionRepository {
   Future<Game?> createGame(Game game) {
 
     return _createCollectionItem<Game>(
-      newItem: game,
       tableName: GameEntityData.table,
+      newItem: game,
+      idField: GameEntityData.idField,
       findItemById: findGameById,
     );
 
@@ -74,9 +75,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateGamePlatform(int gameId, int platformId) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: GamePlatformRelationData.table,
-      fieldsAndValues: GamePlatformRelationData.getIdMap(gameId, platformId),
+      insertFieldsAndValues: GamePlatformRelationData.getCreateDynamicMap(gameId, platformId),
     );
 
   }
@@ -84,9 +85,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateGamePurchase(int gameId, int purchaseId) {
 
-     return _iSQLConnector.insertRecord(
+     return _iSQLConnector.create(
       tableName: GamePurchaseRelationData.table,
-      fieldsAndValues: GamePurchaseRelationData.getIdMap(gameId, purchaseId),
+      insertFieldsAndValues: GamePurchaseRelationData.getCreateDynamicMap(gameId, purchaseId),
     );
 
   }
@@ -94,12 +95,12 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateGameDLC(int gameId, int dlcId) {
 
-    return _iSQLConnector.updateTable(
+    return _iSQLConnector.update(
       tableName: DLCEntityData.table,
-      whereFieldsAndValues: DLCEntityData.getIdMap(dlcId),
       setFieldsAndValues: <String, dynamic> {
         DLCEntityData.baseGameField : gameId,
       },
+      whereQuery: DLCEntityData.getIdQuery(dlcId),
     );
 
   }
@@ -107,9 +108,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateGameTag(int gameId, int tagId) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: GameTagRelationData.table,
-      fieldsAndValues: GameTagRelationData.getIdMap(gameId, tagId),
+      insertFieldsAndValues: GameTagRelationData.getCreateDynamicMap(gameId, tagId),
     );
 
   }
@@ -117,9 +118,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> createGameFinish(int gameId, GameFinish finish) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: GameFinishEntityData.table,
-      fieldsAndValues: finish.toEntity().getCreateDynamicMap(gameId),
+      insertFieldsAndValues: finish.toEntity().getCreateDynamicMap(gameId),
     );
 
   }
@@ -127,9 +128,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> createGameTimeLog(int gameId, GameTimeLog timeLog) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: GameTimeLogEntityData.table,
-      fieldsAndValues: timeLog.toEntity().getCreateDynamicMap(gameId),
+      insertFieldsAndValues: timeLog.toEntity().getCreateDynamicMap(gameId),
     );
 
   }
@@ -140,8 +141,9 @@ class RemoteRepository implements CollectionRepository {
   Future<DLC?> createDLC(DLC dlc) {
 
     return _createCollectionItem<DLC>(
-      newItem: dlc,
       tableName: DLCEntityData.table,
+      newItem: dlc,
+      idField: DLCEntityData.idField,
       findItemById: findDLCById,
     );
 
@@ -150,9 +152,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateDLCPurchase(int dlcId, int purchaseId) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: DLCPurchaseRelationData.table,
-      fieldsAndValues: DLCPurchaseRelationData.getIdMap(dlcId, purchaseId),
+      insertFieldsAndValues: DLCPurchaseRelationData.getCreateDynamicMap(dlcId, purchaseId),
     );
 
   }
@@ -160,9 +162,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> createDLCFinish(int dlcId, DLCFinish finish) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: DLCFinishEntityData.table,
-      fieldsAndValues: finish.toEntity().getCreateDynamicMap(dlcId),
+      insertFieldsAndValues: finish.toEntity().getCreateDynamicMap(dlcId),
     );
 
   }
@@ -173,8 +175,9 @@ class RemoteRepository implements CollectionRepository {
   Future<Platform?> createPlatform(Platform platform) {
 
     return _createCollectionItem<Platform>(
-      newItem: platform,
       tableName: PlatformEntityData.table,
+      newItem: platform,
+      idField: PlatformEntityData.idField,
       findItemById: findPlatformById,
     );
 
@@ -183,9 +186,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relatePlatformSystem(int platformId, int systemId) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: PlatformSystemRelationData.table,
-      fieldsAndValues: PlatformSystemRelationData.getIdMap(platformId, systemId),
+      insertFieldsAndValues: PlatformSystemRelationData.getCreateDynamicMap(platformId, systemId),
     );
 
   }
@@ -196,8 +199,9 @@ class RemoteRepository implements CollectionRepository {
   Future<Purchase?> createPurchase(Purchase purchase) {
 
     return _createCollectionItem<Purchase>(
-      newItem: purchase,
       tableName: PurchaseEntityData.table,
+      newItem: purchase,
+      idField: PurchaseEntityData.idField,
       findItemById: findPurchaseById,
     );
 
@@ -206,9 +210,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relatePurchaseType(int purchaseId, int typeId) {
 
-    return _iSQLConnector.insertRecord(
+    return _iSQLConnector.create(
       tableName: PurchaseTypeRelationData.table,
-      fieldsAndValues: PurchaseTypeRelationData.getIdMap(purchaseId, typeId),
+      insertFieldsAndValues: PurchaseTypeRelationData.getCreateDynamicMap(purchaseId, typeId),
     );
 
   }
@@ -219,8 +223,9 @@ class RemoteRepository implements CollectionRepository {
   Future<Store?> createStore(Store store) {
 
     return _createCollectionItem<Store>(
-      newItem: store,
       tableName: StoreEntityData.table,
+      newItem: store,
+      idField: StoreEntityData.idField,
       findItemById: findStoreById,
     );
 
@@ -229,12 +234,12 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> relateStorePurchase(int storeId, int purchaseId) {
 
-    return _iSQLConnector.updateTable(
+    return _iSQLConnector.update(
       tableName: PurchaseEntityData.table,
-      whereFieldsAndValues: PurchaseEntityData.getIdMap(purchaseId),
       setFieldsAndValues: <String, dynamic> {
         PurchaseEntityData.storeField : storeId,
       },
+      whereQuery: PurchaseEntityData.getIdQuery(purchaseId),
     );
 
   }
@@ -245,8 +250,9 @@ class RemoteRepository implements CollectionRepository {
   Future<System?> createSystem(System system) {
 
     return _createCollectionItem<System>(
-      newItem: system,
       tableName: SystemEntityData.table,
+      newItem: system,
+      idField: StoreEntityData.idField,
       findItemById: findSystemById,
     );
 
@@ -258,8 +264,9 @@ class RemoteRepository implements CollectionRepository {
   Future<Tag?> createGameTag(Tag tag) {
 
     return _createCollectionItem<Tag>(
-      newItem: tag,
       tableName: GameTagEntityData.table,
+      newItem: tag,
+      idField: GameTagEntityData.idField,
       findItemById: findGameTagById,
     );
 
@@ -271,8 +278,9 @@ class RemoteRepository implements CollectionRepository {
   Future<PurchaseType?> createPurchaseType(PurchaseType type) {
 
     return _createCollectionItem<PurchaseType>(
-      newItem: type,
       tableName: PurchaseTypeEntityData.table,
+      newItem: type,
+      idField: PurchaseTypeEntityData.idField,
       findItemById: findPurchaseTypeById,
     );
 
@@ -306,7 +314,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllGamesWithView(GameView gameView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: allViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -317,8 +325,8 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read function or migrate sqlfunction to dart
-    return _iSQLConnector.readTable(
+    // TODO read sql function
+    return _iSQLConnector.read(
       tableName: allViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -329,7 +337,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllOwnedGamesWithView(GameView gameView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: ownedViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -340,8 +348,8 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllOwnedGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read function or migrate sqlfunction to dart
-    return _iSQLConnector.readTable(
+    // TODO read sql function
+    return _iSQLConnector.read(
       tableName: ownedViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -352,7 +360,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllRomGamesWithView(GameView gameView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: romViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -363,8 +371,8 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllRomGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read function or migrate sqlfunction to dart
-    return _iSQLConnector.readTable(
+    // TODO read sql function
+    return _iSQLConnector.read(
       tableName: romViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
@@ -375,10 +383,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<Game?> findGameById(int id) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: GameEntityData.readTable,
       selectFieldsAndTypes: GameEntityData.fields,
-      whereFieldsAndValues: GameEntityData.getIdMap(id),
+      whereQuery: GameEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSingleGame );
 
   }
@@ -389,12 +397,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: GamePlatformRelationData.table,
-      idField: idField,
+      idField: PlatformEntityData.idField,
       joinField: PlatformEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        GameEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PlatformEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameEntityData.relationField, id),
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -405,12 +412,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: GamePurchaseRelationData.table,
-      idField: idField,
+      idField: PurchaseEntityData.idField,
       joinField: PurchaseEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        GameEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameEntityData.relationField, id),
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -421,13 +427,12 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
-      idField: idField,
+      idField: GameEntityData.idField,
       joinField: DLCEntityData.baseGameField,
-      whereFieldsAndValues: <String, dynamic>{
-        DLCEntityData.baseGameField : id,
-      },
-      primaryResults: false,
       selectFieldsAndTypes: DLCEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(DLCEntityData.baseGameField, id),
+      primaryResults: false,
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -438,12 +443,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameTagEntityData.table,
       relationTable: GameTagRelationData.table,
-      idField: idField,
+      idField: GameTagEntityData.idField,
       joinField: GameTagEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        GameEntityData.relationField : id,
-      },
       selectFieldsAndTypes: GameTagEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameEntityData.relationField, id),
     ).asStream().map( _dynamicToListGameTag );
 
   }
@@ -451,12 +455,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<GameFinish>> findAllGameFinishFromGame(int id) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: GameFinishEntityData.readTable,
       selectFieldsAndTypes: GameFinishEntityData.fields,
-      whereFieldsAndValues: <String, dynamic>{
-        GameEntityData.relationField : id,
-      },
+      whereQuery: Query()
+        ..addAnd(GameEntityData.relationField, id),
     ).asStream().map( _dynamicToListGameFinish );
 
   }
@@ -464,12 +467,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<GameTimeLog>> findAllGameTimeLogsFromGame(int id) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: GameTimeLogEntityData.readTable,
       selectFieldsAndTypes: GameTimeLogEntityData.fields,
-      whereFieldsAndValues: <String, dynamic>{
-        GameEntityData.relationField : id,
-      },
+      whereQuery: Query()
+        ..addAnd(GameEntityData.relationField, id),
     ).asStream().map( _dynamicToListTimeLog );
 
   }
@@ -486,9 +488,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<DLC>> findAllDLCsWithView(DLCView dlcView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: DLCEntityData.fields,
+    return _iSQLConnector.read(
       tableName: dlcViewToTable[dlcView]!,
+      selectFieldsAndTypes: DLCEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListDLC );
 
@@ -497,10 +499,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<DLC?> findDLCById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: DLCEntityData.fields,
+    return _iSQLConnector.read(
       tableName: DLCEntityData.readTable,
-      whereFieldsAndValues: DLCEntityData.getIdMap(id),
+      selectFieldsAndTypes: DLCEntityData.fields,
+      whereQuery: DLCEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSingleDLC );
 
   }
@@ -511,13 +513,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: GameEntityData.table,
       subordinateTable: DLCEntityData.table,
-      idField: idField,
+      idField: GameEntityData.idField,
       joinField: DLCEntityData.baseGameField,
-      whereFieldsAndValues: <String, dynamic>{
-        idField : dlcId,
-      },
-      primaryResults: true,
       selectFieldsAndTypes: GameEntityData.fields,
+      whereQuery: DLCEntityData.getIdQuery(dlcId),
+      primaryResults: true,
     ).asStream().map( _dynamicToSingleGame );
 
   }
@@ -528,12 +528,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
-      idField: idField,
+      idField: PurchaseEntityData.idField,
       joinField: PurchaseEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        DLCEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(DLCEntityData.relationField, id),
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -541,12 +540,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<DLCFinish>> findAllDLCFinishFromDLC(int id) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: DLCFinishEntityData.readTable,
       selectFieldsAndTypes: DLCFinishEntityData.fields,
-      whereFieldsAndValues: <String, dynamic>{
-        DLCEntityData.relationField : id,
-      },
+      whereQuery: Query()
+        ..addAnd(DLCEntityData.relationField, id),
     ).asStream().map( _dynamicToListDLCFinish );
 
   }
@@ -563,9 +561,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Platform>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: PlatformEntityData.fields,
+    return _iSQLConnector.read(
       tableName: platformViewToTable[platformView]!,
+      selectFieldsAndTypes: PlatformEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPlatform );
 
@@ -574,12 +572,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<Platform?> findPlatformById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: PlatformEntityData.fields,
+    return _iSQLConnector.read(
       tableName: PlatformEntityData.table,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      selectFieldsAndTypes: PlatformEntityData.fields,
+      whereQuery: PlatformEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSinglePlatform );
 
   }
@@ -590,12 +586,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePlatformRelationData.table,
-      idField: idField,
+      idField: GameEntityData.idField,
       joinField: GameEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PlatformEntityData.relationField : id,
-      },
       selectFieldsAndTypes: GameEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PlatformEntityData.relationField, id),
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -606,12 +601,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: SystemEntityData.table,
       relationTable: PlatformSystemRelationData.table,
-      idField: idField,
+      idField: SystemEntityData.idField,
       joinField: SystemEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PlatformEntityData.relationField : id,
-      },
       selectFieldsAndTypes: SystemEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PlatformEntityData.relationField, id),
     ).asStream().map( _dynamicToListSystem );
 
   }
@@ -628,7 +622,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Purchase>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: purchaseViewToTable[purchaseView]!,
       selectFieldsAndTypes: PurchaseEntityData.fields,
       limit: limit,
@@ -639,8 +633,8 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Purchase>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
 
-    // TODO read function or migrate sqlfunction to dart
-    return _iSQLConnector.readTable(
+    // TODO read sql function
+    return _iSQLConnector.read(
       tableName: purchaseViewToTable[purchaseView]!,
       selectFieldsAndTypes: PurchaseEntityData.fields,
       limit: limit,
@@ -651,12 +645,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<Purchase?> findPurchaseById(int id) {
 
-    return _iSQLConnector.readTable(
+    return _iSQLConnector.read(
       tableName: PurchaseEntityData.table,
       selectFieldsAndTypes: PurchaseEntityData.fields,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      whereQuery: PurchaseEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSinglePurchase );
 
   }
@@ -667,13 +659,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
-      idField: idField,
+      idField: StoreEntityData.idField,
       joinField: PurchaseEntityData.storeField,
-      whereFieldsAndValues: <String, dynamic>{
-        idField : id,
-      },
-      primaryResults: true,
       selectFieldsAndTypes: StoreEntityData.fields,
+      whereQuery: PurchaseEntityData.getIdQuery(id),
+      primaryResults: true,
     ).asStream().map( _dynamicToSingleStore );
 
   }
@@ -684,12 +674,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GamePurchaseRelationData.table,
-      idField: idField,
+      idField: GameEntityData.idField,
       joinField: GameEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PurchaseEntityData.relationField : id,
-      },
       selectFieldsAndTypes: GameEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseEntityData.relationField, id),
     ).asStream().map( _dynamicToListGame );
 
   }
@@ -700,12 +689,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: DLCEntityData.table,
       relationTable: DLCPurchaseRelationData.table,
-      idField: idField,
+      idField: DLCEntityData.idField,
       joinField: DLCEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PurchaseEntityData.relationField : id,
-      },
       selectFieldsAndTypes: DLCEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseEntityData.relationField, id),
     ).asStream().map( _dynamicToListDLC );
 
   }
@@ -716,12 +704,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseTypeEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
-      idField: idField,
+      idField: PurchaseTypeEntityData.idField,
       joinField: PurchaseTypeEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PurchaseEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PurchaseTypeEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseEntityData.relationField, id),
     ).asStream().map( _dynamicToListPurchaseType );
 
   }
@@ -738,9 +725,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Store>> findAllStoresWithView(StoreView storeView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: StoreEntityData.fields,
+    return _iSQLConnector.read(
       tableName: storeViewToTable[storeView]!,
+      selectFieldsAndTypes: StoreEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListStore );
   }
@@ -748,12 +735,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<Store?> findStoreById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: StoreEntityData.fields,
+    return _iSQLConnector.read(
       tableName: StoreEntityData.table,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      selectFieldsAndTypes: StoreEntityData.fields,
+      whereQuery: StoreEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSingleStore );
 
   }
@@ -764,13 +749,12 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readWeakRelation(
       primaryTable: StoreEntityData.table,
       subordinateTable: PurchaseEntityData.table,
-      idField: idField,
+      idField: StoreEntityData.idField,
       joinField: PurchaseEntityData.storeField,
-      whereFieldsAndValues: <String, dynamic>{
-        PurchaseEntityData.storeField : storeId,
-      },
-      primaryResults: false,
       selectFieldsAndTypes: PurchaseEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseEntityData.storeField, storeId),
+      primaryResults: false,
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -787,9 +771,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<System>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: SystemEntityData.fields,
+    return _iSQLConnector.read(
       tableName: systemViewToTable[systemView]!,
+      selectFieldsAndTypes: SystemEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListSystem );
   }
@@ -797,12 +781,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<System?> findSystemById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: SystemEntityData.fields,
+    return _iSQLConnector.read(
       tableName: SystemEntityData.table,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      selectFieldsAndTypes: SystemEntityData.fields,
+      whereQuery: SystemEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSingleSystem );
 
   }
@@ -813,12 +795,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PlatformEntityData.table,
       relationTable: PlatformSystemRelationData.table,
-      idField: idField,
+      idField: PlatformEntityData.idField,
       joinField: PlatformEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        SystemEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PlatformEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(SystemEntityData.relationField, id),
     ).asStream().map( _dynamicToListPlatform );
 
   }
@@ -835,9 +816,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Tag>> findAllGameTagsWithView(TagView tagView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: GameTagEntityData.fields,
+    return _iSQLConnector.read(
       tableName: tagViewToTable[tagView]!,
+      selectFieldsAndTypes: GameTagEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGameTag );
 
@@ -846,12 +827,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<Tag?> findGameTagById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: GameTagEntityData.fields,
+    return _iSQLConnector.read(
       tableName: GameTagEntityData.table,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      selectFieldsAndTypes: GameTagEntityData.fields,
+      whereQuery: GameTagEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSingleGameTag );
 
   }
@@ -862,12 +841,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: GameEntityData.table,
       relationTable: GameTagRelationData.table,
-      idField: idField,
+      idField: GameEntityData.idField,
       joinField: GameEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        GameTagEntityData.relationField : id,
-      },
       selectFieldsAndTypes: GameEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameTagEntityData.relationField, id),
     ).asStream().map( _dynamicToListGame );
   }
   //#endregion GameTag
@@ -883,9 +861,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<PurchaseType>> findAllPurchaseTypesWithView(TypeView typeView, [int? limit]) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: PurchaseTypeEntityData.fields,
+    return _iSQLConnector.read(
       tableName: typeViewToTable[typeView]!,
+      selectFieldsAndTypes: PurchaseTypeEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPurchaseType );
 
@@ -894,12 +872,10 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<PurchaseType?> findPurchaseTypeById(int id) {
 
-    return _iSQLConnector.readTable(
-      selectFieldsAndTypes: PurchaseTypeEntityData.fields,
+    return _iSQLConnector.read(
       tableName: PurchaseTypeEntityData.table,
-      whereFieldsAndValues: <String, int>{
-        idField : id,
-      },
+      selectFieldsAndTypes: PurchaseTypeEntityData.fields,
+      whereQuery: PurchaseTypeEntityData.getIdQuery(id),
     ).asStream().map( _dynamicToSinglePurchaseType );
 
   }
@@ -910,12 +886,11 @@ class RemoteRepository implements CollectionRepository {
     return _iSQLConnector.readRelation(
       tableName: PurchaseEntityData.table,
       relationTable: PurchaseTypeRelationData.table,
-      idField: idField,
+      idField: PurchaseEntityData.idField,
       joinField: PurchaseEntityData.relationField,
-      whereFieldsAndValues: <String, dynamic>{
-        PurchaseTypeEntityData.relationField : id,
-      },
       selectFieldsAndTypes: PurchaseEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseTypeEntityData.relationField, id),
     ).asStream().map( _dynamicToListPurchase );
 
   }
@@ -931,9 +906,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = game.toEntity().getUpdateDynamicMap(updatedGame.toEntity(), updateProperties);
 
     return _updateCollectionItem<Game>(
-      id: game.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: GameEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: GameEntityData.idField,
+      id: game.id,
       findItemById: findGameById,
     );
 
@@ -946,9 +922,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = dlc.toEntity().getUpdateDynamicMap(updatedDlc.toEntity(), updateProperties);
 
     return _updateCollectionItem<DLC>(
-      id: dlc.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: DLCEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: DLCEntityData.idField,
+      id: dlc.id,
       findItemById: findDLCById,
     );
 
@@ -961,9 +938,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = platform.toEntity().getUpdateDynamicMap(updatedPlatform.toEntity(), updateProperties);
 
     return _updateCollectionItem<Platform>(
-      id: platform.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: PlatformEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: PlatformEntityData.idField,
+      id: platform.id,
       findItemById: findPlatformById,
     );
 
@@ -976,9 +954,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = purchase.toEntity().getUpdateDynamicMap(updatedPurchase.toEntity(), updateProperties);
 
     return _updateCollectionItem<Purchase>(
-      id: purchase.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: PurchaseEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: PurchaseEntityData.idField,
+      id: purchase.id,
       findItemById: findPurchaseById,
     );
 
@@ -991,9 +970,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = store.toEntity().getUpdateDynamicMap(updatedStore.toEntity(), updateProperties);
 
     return _updateCollectionItem<Store>(
-      id: store.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: StoreEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: StoreEntityData.idField,
+      id: store.id,
       findItemById: findStoreById,
     );
 
@@ -1006,9 +986,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = system.toEntity().getUpdateDynamicMap(updatedSystem.toEntity(), updateProperties);
 
     return _updateCollectionItem<System>(
-      id: system.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: SystemEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: SystemEntityData.idField,
+      id: system.id,
       findItemById: findSystemById,
     );
 
@@ -1021,9 +1002,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = tag.toEntity().getUpdateDynamicMap(updatedTag.toEntity(), updateProperties);
 
     return _updateCollectionItem<Tag>(
-      id: tag.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: GameTagEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: GameTagEntityData.idField,
+      id: tag.id,
       findItemById: findGameTagById,
     );
 
@@ -1036,9 +1018,10 @@ class RemoteRepository implements CollectionRepository {
     final Map<String, dynamic> fieldsAndValues = type.toEntity().getUpdateDynamicMap(updatedType.toEntity(), updateProperties);
 
     return _updateCollectionItem<PurchaseType>(
-      id: type.id,
-      fieldsAndValues: fieldsAndValues,
       tableName: PurchaseTypeEntityData.table,
+      fieldsAndValues: fieldsAndValues,
+      idField: PurchaseTypeEntityData.idField,
+      id: type.id,
       findItemById: findPurchaseTypeById,
     );
 
@@ -1051,9 +1034,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteGameById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GameEntityData.table,
-      whereFieldsAndValues: GameEntityData.getIdMap(id),
+      whereQuery: GameEntityData.getIdQuery(id),
     );
 
   }
@@ -1061,9 +1044,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateGamePlatform(int gameId, int platformId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GamePlatformRelationData.table,
-      whereFieldsAndValues: GamePlatformRelationData.getIdMap(gameId, platformId),
+      whereQuery: GamePlatformRelationData.getIdQuery(gameId, platformId),
     );
 
   }
@@ -1071,9 +1054,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateGamePurchase(int gameId, int purchaseId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GamePurchaseRelationData.table,
-      whereFieldsAndValues: GamePurchaseRelationData.getIdMap(gameId, purchaseId),
+      whereQuery: GamePurchaseRelationData.getIdQuery(gameId, purchaseId),
     );
 
   }
@@ -1081,9 +1064,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateGameDLC(int dlcId) {
 
-    return _iSQLConnector.updateTable(
+    return _iSQLConnector.update(
       tableName: DLCEntityData.table,
-      whereFieldsAndValues: DLCEntityData.getIdMap(dlcId),
+      whereQuery: DLCEntityData.getIdQuery(dlcId),
       setFieldsAndValues: <String, dynamic> {
         DLCEntityData.baseGameField : null,
       },
@@ -1094,9 +1077,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateGameTag(int gameId, int tagId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GameTagRelationData.table,
-      whereFieldsAndValues: GameTagRelationData.getIdMap(gameId, tagId),
+      whereQuery: GameTagRelationData.getIdQuery(gameId, tagId),
     );
 
   }
@@ -1104,9 +1087,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteGameFinishById(int gameId, DateTime date) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GameFinishEntityData.table,
-      whereFieldsAndValues: GameFinishEntityData.getIdMap(gameId, date),
+      whereQuery: GameFinishEntityData.getIdQuery(gameId, date),
     );
 
   }
@@ -1114,9 +1097,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteGameTimeLogById(int gameId, DateTime dateTime) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GameTimeLogEntityData.table,
-      whereFieldsAndValues: GameTimeLogEntityData.getIdMap(gameId, dateTime),
+      whereQuery: GameTimeLogEntityData.getIdQuery(gameId, dateTime),
     );
 
   }
@@ -1126,9 +1109,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteDLCById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: DLCEntityData.table,
-      whereFieldsAndValues: DLCEntityData.getIdMap(id),
+      whereQuery: DLCEntityData.getIdQuery(id),
     );
 
   }
@@ -1136,9 +1119,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateDLCPurchase(int dlcId, int purchaseId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: DLCPurchaseRelationData.table,
-      whereFieldsAndValues: DLCPurchaseRelationData.getIdMap(dlcId, purchaseId),
+      whereQuery: DLCPurchaseRelationData.getIdQuery(dlcId, purchaseId),
     );
 
   }
@@ -1146,9 +1129,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteDLCFinishById(int dlcId, DateTime date) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: DLCFinishEntityData.table,
-      whereFieldsAndValues: DLCFinishEntityData.getIdMap(dlcId, date),
+      whereQuery: DLCFinishEntityData.getIdQuery(dlcId, date),
     );
 
   }
@@ -1158,9 +1141,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deletePlatformById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: PlatformEntityData.table,
-      whereFieldsAndValues: PlatformEntityData.getIdMap(id),
+      whereQuery: PlatformEntityData.getIdQuery(id),
     );
 
   }
@@ -1168,9 +1151,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelatePlatformSystem(int platformId, int systemId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: PlatformSystemRelationData.table,
-      whereFieldsAndValues: PlatformSystemRelationData.getIdMap(platformId, systemId),
+      whereQuery: PlatformSystemRelationData.getIdQuery(platformId, systemId),
     );
   }
   //#endregion Platform
@@ -1179,9 +1162,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deletePurchaseById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: PurchaseEntityData.table,
-      whereFieldsAndValues: PurchaseEntityData.getIdMap(id),
+      whereQuery: PurchaseEntityData.getIdQuery(id),
     );
 
   }
@@ -1189,9 +1172,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelatePurchaseType(int purchaseId, int typeId) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: PurchaseTypeRelationData.table,
-      whereFieldsAndValues: PurchaseTypeRelationData.getIdMap(purchaseId, typeId),
+      whereQuery: PurchaseTypeRelationData.getIdQuery(purchaseId, typeId),
     );
 
   }
@@ -1201,9 +1184,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteStoreById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: StoreEntityData.table,
-      whereFieldsAndValues: StoreEntityData.getIdMap(id),
+      whereQuery: StoreEntityData.getIdQuery(id),
     );
 
   }
@@ -1211,9 +1194,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> unrelateStorePurchase(int purchaseId) {
 
-    return _iSQLConnector.updateTable(
+    return _iSQLConnector.update(
       tableName: PurchaseEntityData.table,
-      whereFieldsAndValues: PurchaseEntityData.getIdMap(purchaseId),
+      whereQuery: PurchaseEntityData.getIdQuery(purchaseId),
       setFieldsAndValues: <String, dynamic> {
         PurchaseEntityData.storeField : null,
       },
@@ -1226,9 +1209,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteSystemById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: SystemEntityData.table,
-      whereFieldsAndValues: SystemEntityData.getIdMap(id),
+      whereQuery: SystemEntityData.getIdQuery(id),
     );
 
   }
@@ -1238,9 +1221,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deleteGameTagById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: GameTagEntityData.table,
-      whereFieldsAndValues: GameTagEntityData.getIdMap(id),
+      whereQuery: GameTagEntityData.getIdQuery(id),
     );
 
   }
@@ -1250,9 +1233,9 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<dynamic> deletePurchaseTypeById(int id) {
 
-    return _iSQLConnector.deleteRecord(
+    return _iSQLConnector.delete(
       tableName: PurchaseTypeEntityData.table,
-      whereFieldsAndValues: PurchaseTypeEntityData.getIdMap(id),
+      whereQuery: PurchaseTypeEntityData.getIdQuery(id),
     );
 
   }
@@ -1264,11 +1247,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllGamesByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: GameEntityData.table,
-      searchField: GameEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: GameEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListGame );
 
@@ -1277,11 +1260,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<DLC>> findAllDLCsByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: DLCEntityData.table,
-      searchField: DLCEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: DLCEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(DLCEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListDLC );
 
@@ -1290,11 +1273,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Platform>> findAllPlatformsByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: PlatformEntityData.table,
-      searchField: PlatformEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: PlatformEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PlatformEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListPlatform );
 
@@ -1303,11 +1286,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Purchase>> findAllPurchasesByDescription(String description, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: PurchaseEntityData.table,
-      searchField: PurchaseEntityData.searchField,
-      query: description,
       selectFieldsAndTypes: PurchaseEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseEntityData.descriptionField, description, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListPurchase );
 
@@ -1316,11 +1299,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Store>> findAllStoresByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: StoreEntityData.table,
-      searchField: StoreEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: StoreEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(StoreEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListStore );
 
@@ -1329,11 +1312,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<System>> findAllSystemsByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: SystemEntityData.table,
-      searchField: SystemEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: SystemEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(SystemEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListSystem );
 
@@ -1342,11 +1325,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Tag>> findAllGameTagsByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: GameTagEntityData.table,
-      searchField: GameTagEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: GameTagEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(GameTagEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListGameTag );
 
@@ -1355,11 +1338,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<PurchaseType>> findAllPurchaseTypesByName(String name, int maxResults) {
 
-    return _iSQLConnector.readTableSearch(
+    return _iSQLConnector.read(
       tableName: PurchaseTypeEntityData.table,
-      searchField: PurchaseTypeEntityData.searchField,
-      query: name,
       selectFieldsAndTypes: PurchaseTypeEntityData.fields,
+      whereQuery: Query()
+        ..addAnd(PurchaseTypeEntityData.nameField, name, QueryComparator.LIKE),
       limit: maxResults,
     ).asStream().map( _dynamicToListPurchaseType );
   }
@@ -1368,15 +1351,15 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<GameWithLogs>> findAllGamesWithTimeLogsByYear(int year) {
 
-    // Select * From "GameLog" log Left Join "Game" g On g."ID" = log."Game_ID" Where date_part('year', log."DateTime") = 2021 Order by g."ID"
-    return _iSQLConnector.readJoinTable(
+    return _iSQLConnector.readJoin(
       leftTable: GameTimeLogEntityData.table,
       rightTable: GameEntityData.table,
       leftTableIdField: GameEntityData.relationField,
-      rightTableIdField: idField,
+      rightTableIdField: GameEntityData.idField,
       leftSelectFields: GameTimeLogEntityData.fields,
       rightSelectFields: GameEntityData.fields,
-      where: "date_part(\'year\', \"DateTime\") = $year",
+      whereQuery: Query()
+        ..addAndRaw("date_part(\'year\', \"DateTime\") = $year"),
       orderFields: <String>[
         GameEntityData.relationField,
       ],
@@ -1390,12 +1373,13 @@ class RemoteRepository implements CollectionRepository {
   Future<Game?> uploadGameCover(int id, String uploadImagePath, [String? oldImageName]) async {
 
     return _uploadCollectionItemImage<Game>(
-      id: id,
+      tableName: GameEntityData.table,
       uploadImagePath: uploadImagePath,
       initialImageName: 'header',
       oldImageName: oldImageName,
-      tableName: GameEntityData.table,
       imageField: GameEntityData.imageField,
+      idField: GameEntityData.idField,
+      id: id,
       findItemById: findGameById,
     );
 
@@ -1405,11 +1389,12 @@ class RemoteRepository implements CollectionRepository {
   Future<Game?> renameGameCover(int id, String imageName, String newImageName) {
 
     return _renameCollectionItemImage<Game>(
-      id: id,
+      tableName: GameEntityData.table,
       oldImageName: imageName,
       newImageName: newImageName,
-      tableName: GameEntityData.table,
       imageField: GameEntityData.imageField,
+      idField: GameEntityData.idField,
+      id: id,
       findItemById: findGameById,
     );
 
@@ -1419,10 +1404,11 @@ class RemoteRepository implements CollectionRepository {
   Future<Game?> deleteGameCover(int id, String imageName) {
 
     return _deleteCollectionItemImage<Game>(
-      id: id,
-      imageName: imageName,
       tableName: GameEntityData.table,
+      imageName: imageName,
       imageField: GameEntityData.imageField,
+      idField: GameEntityData.idField,
+      id: id,
       findItemById: findGameById,
     );
 
@@ -1434,12 +1420,13 @@ class RemoteRepository implements CollectionRepository {
   Future<DLC?> uploadDLCCover(int id, String uploadImagePath, [String? oldImageName]) {
 
     return _uploadCollectionItemImage<DLC>(
-      id: id,
+      tableName: DLCEntityData.table,
       uploadImagePath: uploadImagePath,
       initialImageName: 'header',
       oldImageName: oldImageName,
-      tableName: DLCEntityData.table,
       imageField: DLCEntityData.imageField,
+      idField: DLCEntityData.idField,
+      id: id,
       findItemById: findDLCById,
     );
 
@@ -1449,11 +1436,12 @@ class RemoteRepository implements CollectionRepository {
   Future<DLC?> renameDLCCover(int id, String imageName, String newImageName) {
 
     return _renameCollectionItemImage<DLC>(
-      id: id,
+      tableName: DLCEntityData.table,
       oldImageName: imageName,
       newImageName: newImageName,
-      tableName: DLCEntityData.table,
       imageField: DLCEntityData.imageField,
+      idField: DLCEntityData.idField,
+      id: id,
       findItemById: findDLCById,
     );
 
@@ -1463,10 +1451,11 @@ class RemoteRepository implements CollectionRepository {
   Future<DLC?> deleteDLCCover(int id, String imageName) {
 
     return _deleteCollectionItemImage<DLC>(
-      id: id,
-      imageName: imageName,
       tableName: DLCEntityData.table,
+      imageName: imageName,
       imageField: DLCEntityData.imageField,
+      idField: DLCEntityData.idField,
+      id: id,
       findItemById: findDLCById,
     );
 
@@ -1478,12 +1467,13 @@ class RemoteRepository implements CollectionRepository {
   Future<Platform?> uploadPlatformIcon(int id, String uploadImagePath, [String? oldImageName]) {
 
     return _uploadCollectionItemImage<Platform>(
-      id: id,
+      tableName: PlatformEntityData.table,
       uploadImagePath: uploadImagePath,
       initialImageName: 'icon',
       oldImageName: oldImageName,
-      tableName: PlatformEntityData.table,
       imageField: PlatformEntityData.imageField,
+      idField: PlatformEntityData.idField,
+      id: id,
       findItemById: findPlatformById,
     );
 
@@ -1493,11 +1483,12 @@ class RemoteRepository implements CollectionRepository {
   Future<Platform?> renamePlatformIcon(int id, String imageName, String newImageName) {
 
     return _renameCollectionItemImage<Platform>(
-      id: id,
+      tableName: PlatformEntityData.table,
       oldImageName: imageName,
       newImageName: newImageName,
-      tableName: PlatformEntityData.table,
       imageField: PlatformEntityData.imageField,
+      idField: PlatformEntityData.idField,
+      id: id,
       findItemById: findPlatformById,
     );
 
@@ -1508,10 +1499,11 @@ class RemoteRepository implements CollectionRepository {
   Future<Platform?> deletePlatformIcon(int id, String imageName) {
 
     return _deleteCollectionItemImage<Platform>(
-      id: id,
-      imageName: imageName,
       tableName: PlatformEntityData.table,
+      imageName: imageName,
       imageField: PlatformEntityData.imageField,
+      idField: PlatformEntityData.idField,
+      id: id,
       findItemById: findPlatformById,
     );
 
@@ -1523,12 +1515,13 @@ class RemoteRepository implements CollectionRepository {
   Future<Store?> uploadStoreIcon(int id, String uploadImagePath, [String? oldImageName]) {
 
     return _uploadCollectionItemImage<Store>(
-      id: id,
+      tableName: StoreEntityData.table,
       uploadImagePath: uploadImagePath,
       initialImageName: 'icon',
       oldImageName: oldImageName,
-      tableName: StoreEntityData.table,
       imageField: StoreEntityData.imageField,
+      id: id,
+      idField: StoreEntityData.idField,
       findItemById: findStoreById,
     );
 
@@ -1538,11 +1531,12 @@ class RemoteRepository implements CollectionRepository {
   Future<Store?> renameStoreIcon(int id, String imageName, String newImageName) {
 
     return _renameCollectionItemImage<Store>(
-      id: id,
+      tableName: StoreEntityData.table,
       oldImageName: imageName,
       newImageName: newImageName,
-      tableName: StoreEntityData.table,
       imageField: StoreEntityData.imageField,
+      idField: StoreEntityData.idField,
+      id: id,
       findItemById: findStoreById,
     );
 
@@ -1552,10 +1546,11 @@ class RemoteRepository implements CollectionRepository {
   Future<Store?> deleteStoreIcon(int id, String imageName) {
 
     return _deleteCollectionItemImage<Store>(
-      id: id,
-      imageName: imageName,
       tableName: StoreEntityData.table,
+      imageName: imageName,
       imageField: StoreEntityData.imageField,
+      idField: StoreEntityData.idField,
+      id: id,
       findItemById: findStoreById,
     );
 
@@ -1567,12 +1562,13 @@ class RemoteRepository implements CollectionRepository {
   Future<System?> uploadSystemIcon(int id, String uploadImagePath, [String? oldImageName]) {
 
     return _uploadCollectionItemImage<System>(
-      id: id,
+      tableName: SystemEntityData.table,
       uploadImagePath: uploadImagePath,
       initialImageName: 'icon',
       oldImageName: oldImageName,
-      tableName: SystemEntityData.table,
       imageField: SystemEntityData.imageField,
+      idField: SystemEntityData.idField,
+      id: id,
       findItemById: findSystemById,
     );
 
@@ -1582,11 +1578,12 @@ class RemoteRepository implements CollectionRepository {
   Future<System?> renameSystemIcon(int id, String imageName, String newImageName) {
 
     return _renameCollectionItemImage<System>(
-      id: id,
+      tableName: SystemEntityData.table,
       oldImageName: imageName,
       newImageName: newImageName,
-      tableName: SystemEntityData.table,
       imageField: SystemEntityData.imageField,
+      idField: SystemEntityData.idField,
+      id: id,
       findItemById: findSystemById,
     );
 
@@ -1596,10 +1593,11 @@ class RemoteRepository implements CollectionRepository {
   Future<System?> deleteSystemIcon(int id, String imageName) {
 
     return _deleteCollectionItemImage<System>(
-      id: id,
-      imageName: imageName,
       tableName: SystemEntityData.table,
+      imageName: imageName,
       imageField: SystemEntityData.imageField,
+      idField: SystemEntityData.idField,
+      id: id,
       findItemById: findSystemById,
     );
 
@@ -1848,14 +1846,14 @@ class RemoteRepository implements CollectionRepository {
   //#endregion Dynamic Map to List
 
   //#region Utils
-  Future<T?> _createCollectionItem<T extends CollectionItem>({required T newItem, required String tableName, required Stream<T?> Function(int) findItemById}) async {
+  Future<T?> _createCollectionItem<T extends CollectionItem>({required String tableName, required T newItem, required String idField, required Stream<T?> Function(int) findItemById}) async {
 
     final CollectionItemEntity itemEntity = newItem.toEntity();
 
-    final int? id = await _iSQLConnector.insertRecord(
+    final int? id = await _iSQLConnector.create(
       tableName: tableName,
-      fieldsAndValues: itemEntity.getCreateDynamicMap(),
-      idField: idField,
+      insertFieldsAndValues: itemEntity.getCreateDynamicMap(),
+      returningField: idField,
     ).asStream().map( (List<Map<String, Map<String, dynamic>>> results) => _dynamicToId(results, tableName, idField) ).first;
 
     if(id != null) {
@@ -1866,13 +1864,12 @@ class RemoteRepository implements CollectionRepository {
 
   }
 
-  Future<T?> _updateCollectionItem<T extends CollectionItem>({required int id, required Map<String, dynamic> fieldsAndValues, required String tableName, required Stream<T?> Function(int) findItemById}) async {
+  Future<T?> _updateCollectionItem<T extends CollectionItem>({required String tableName, required Map<String, dynamic> fieldsAndValues, required String idField, required int id, required Stream<T?> Function(int) findItemById}) async {
 
-    await _iSQLConnector.updateTable(
+    await _iSQLConnector.update(
       tableName: tableName,
-      whereFieldsAndValues: <String, dynamic>{
-        idField : id,
-      },
+      whereQuery: Query()
+        ..addAnd(idField, id),
       setFieldsAndValues: fieldsAndValues,
     );
 
@@ -1880,75 +1877,78 @@ class RemoteRepository implements CollectionRepository {
 
   }
 
-  Future<T?> _uploadCollectionItemImage<T extends CollectionItem>({required int id, required String uploadImagePath, required String initialImageName, required String? oldImageName, required String tableName, required String imageField, required Stream<T?> Function(int) findItemById}) async {
+  Future<T?> _uploadCollectionItemImage<T extends CollectionItem>({required String tableName, required String uploadImagePath, required String initialImageName, required String? oldImageName, required String imageField, required String idField, required int id, required Stream<T?> Function(int) findItemById}) async {
 
     if(oldImageName != null) {
-      await _iImageConnector.deleteImage(
+      await _iImageConnector.delete(
         tableName: tableName,
         imageName: oldImageName,
       );
     }
 
-    final String imageName = await _iImageConnector.setImage(
+    final String imageName = await _iImageConnector.set(
       imagePath: uploadImagePath,
       tableName: tableName,
       imageName: _getImageName(id, initialImageName),
     );
 
     return _updateCollectionItem<T>(
-      id: id,
+      tableName: tableName,
       fieldsAndValues: <String, dynamic> {
         imageField : imageName,
       },
-      tableName: tableName,
+      idField: idField,
+      id: id,
       findItemById: findItemById,
     );
 
   }
 
-  Future<T?> _renameCollectionItemImage<T extends CollectionItem>({required int id, required String oldImageName, required String newImageName, required String tableName, required String imageField, required Stream<T?> Function(int) findItemById}) async {
+  Future<T?> _renameCollectionItemImage<T extends CollectionItem>({required String tableName, required String oldImageName, required String newImageName, required String imageField, required String idField, required int id, required Stream<T?> Function(int) findItemById}) async {
 
-    final String imageName = await _iImageConnector.renameImage(
+    final String imageName = await _iImageConnector.rename(
       tableName: tableName,
       oldImageName: oldImageName,
       newImageName: _getImageName(id, newImageName),
     );
 
     return _updateCollectionItem<T>(
-      id: id,
+      tableName: tableName,
       fieldsAndValues: <String, dynamic> {
         imageField : imageName,
       },
-      tableName: tableName,
+      idField: idField,
+      id: id,
       findItemById: findItemById,
     );
 
   }
 
-  Future<T?> _deleteCollectionItemImage<T extends CollectionItem>({required int id, required String imageName, required String tableName, required String imageField, required Stream<T?> Function(int) findItemById}) async {
+  Future<T?> _deleteCollectionItemImage<T extends CollectionItem>({required String tableName, required String imageName, required String imageField, required String idField, required int id, required Stream<T?> Function(int) findItemById}) async {
 
-    await _iImageConnector.deleteImage(
+    await _iImageConnector.delete(
       tableName: tableName,
       imageName: imageName,
     );
 
     return _updateCollectionItem<T>(
-      id: id,
+      tableName: tableName,
       fieldsAndValues: <String, dynamic> {
         imageField : null,
       },
-      tableName: tableName,
+      idField: idField,
+      id: id,
       findItemById: findItemById,
     );
 
   }
 
-  int? _dynamicToId(List<Map<String, Map<String, dynamic>>> results, String tableName, String tableIdField) {
+  int? _dynamicToId(List<Map<String, Map<String, dynamic>>> results, String tableName, String idField) {
     int? id;
 
     if(results.isNotEmpty) {
       final Map<String, dynamic> map = CollectionItemEntity.combineMaps(results.first, tableName);
-      id = map[tableIdField] as int;
+      id = map[idField] as int;
     }
 
     return id;

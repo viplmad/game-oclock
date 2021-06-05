@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -17,27 +18,28 @@ class SystemEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
   static const String _iconField = 'Icon';
   static const String _generationField = 'Generation';
   static const String _manufacturerField = 'Manufacturer';
 
-  static const String searchField = _nameField;
   static const String imageField = _iconField;
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
     _iconField : String,
     _generationField : int,
     _manufacturerField : String,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -59,8 +61,8 @@ class SystemEntity extends CollectionItemEntity {
   static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return SystemEntity(
-      id: map[idField] as int,
-      name: map[SystemEntityData._nameField] as String,
+      id: map[SystemEntityData.idField] as int,
+      name: map[SystemEntityData.nameField] as String,
       iconFilename: map[SystemEntityData._iconField] as String?,
       generation: map[SystemEntityData._generationField] as int,
       manufacturer: map[SystemEntityData._manufacturerField] as String?,
@@ -72,8 +74,8 @@ class SystemEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      SystemEntityData._nameField : name,
+      SystemEntityData.idField : id,
+      SystemEntityData.nameField : name,
       SystemEntityData._iconField : iconFilename,
       SystemEntityData._generationField : generation,
       SystemEntityData._manufacturerField : manufacturer,
@@ -85,7 +87,7 @@ class SystemEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      SystemEntityData._nameField : name,
+      SystemEntityData.nameField : name,
       SystemEntityData._generationField : generation,
     };
 
@@ -100,7 +102,7 @@ class SystemEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, SystemEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, SystemEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, SystemEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
     putUpdateMapValue(updateMap, SystemEntityData._generationField, generation, updatedEntity.generation);
     putUpdateMapValueNullable(updateMap, SystemEntityData._manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
@@ -133,7 +135,7 @@ class SystemEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$SystemEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$SystemEntityData.idField}: $id, '
         '{$SystemEntityData._nameField}: $name, '
         '{$SystemEntityData._iconField}: $iconFilename, '
         '{$SystemEntityData._generationField}: $generation, '

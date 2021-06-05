@@ -203,8 +203,12 @@ abstract class QueryBuilder {
     throw UnsupportedOperationException('`whereExpr` not implemented');
   }
 
-  QueryBuilder whereRaw(String whereRawSql, [String andOr = 'AND']) {
+  QueryBuilder whereRaw(String whereRawSql) {
     throw UnsupportedOperationException('`whereRaw` not implemented');
+  }
+
+  QueryBuilder orWhereRaw(String whereRawSql) {
+    throw UnsupportedOperationException('`orWhereRaw` not implemented');
   }
 
   ///add a andWhere safe way against SQL injection

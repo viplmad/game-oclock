@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
@@ -16,13 +18,14 @@ class DLCFinishEntityData {
     _dlcField : int,
     _dateField : DateTime,
   };
-  
-  static Map<String, dynamic> getIdMap(int dlcId, DateTime date) {
 
-    return <String, dynamic>{
-      _dlcField : dlcId,
-      _dateField : date,
-    };
+  static Query getIdQuery(int dlcId, DateTime date) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_dlcField, dlcId);
+    idQuery.addAnd(_dateField, date);
+
+    return idQuery;
 
   }
 }

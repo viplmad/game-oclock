@@ -51,9 +51,16 @@ class Delete extends QueryBuilder {
   }
 
   @override
-  QueryBuilder whereRaw(String whereRawSql, [String andOr = 'AND']) {
+  QueryBuilder whereRaw(String whereRawSql) {
     final WhereBlock block = blocks[3] as WhereBlock;
-    block.setWhereRaw(whereRawSql, andOr);
+    block.setWhereRaw(whereRawSql);
+    return this;
+  }
+
+  @override
+  QueryBuilder orWhereRaw(String whereRawSql) {
+    final WhereBlock block = blocks[3] as WhereBlock;
+    block.setOrWhereRaw(whereRawSql);
     return this;
   }
 

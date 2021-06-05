@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -10,20 +11,20 @@ class PurchaseTypeEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
-
-  static const String searchField = _nameField;
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -39,8 +40,8 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   static PurchaseTypeEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
-      id: map[idField] as int,
-      name: map[PurchaseTypeEntityData._nameField] as String,
+      id: map[PurchaseTypeEntityData.idField] as int,
+      name: map[PurchaseTypeEntityData.nameField] as String,
     );
 
   }
@@ -49,8 +50,8 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      PurchaseTypeEntityData._nameField : name,
+      PurchaseTypeEntityData.idField : id,
+      PurchaseTypeEntityData.nameField : name,
     };
 
   }
@@ -59,7 +60,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      PurchaseTypeEntityData._nameField : name,
+      PurchaseTypeEntityData.nameField : name,
     };
 
     return createMap;
@@ -70,7 +71,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, PurchaseTypeEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, PurchaseTypeEntityData.nameField, name, updatedEntity.name);
 
     return updateMap;
 
@@ -100,7 +101,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$PurchaseTypeEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$PurchaseTypeEntityData.idField}: $id, '
         '{$PurchaseTypeEntityData._nameField}: $name'
         ' }';
 

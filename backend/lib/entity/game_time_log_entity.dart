@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
@@ -8,7 +10,7 @@ class GameTimeLogEntityData {
 
   static const String table = 'GameLog';
   static const String readTable = 'Game-Log';
-  
+
   static const String _gameField = GameEntityData.relationField;
   static const String _dateTimeField = 'DateTime';
   static const String _timeField = 'Time';
@@ -18,13 +20,14 @@ class GameTimeLogEntityData {
     _dateTimeField : DateTime,
     _timeField : Duration,
   };
-  
-  static Map<String, dynamic> getIdMap(int gameId, DateTime dateTime) {
 
-    return <String, dynamic>{
-      _gameField : gameId,
-      _dateTimeField : dateTime,
-    };
+  static Query getIdQuery(int gameId, DateTime dateTime) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_gameField, gameId);
+    idQuery.addAnd(_dateTimeField, dateTime);
+
+    return idQuery;
 
   }
 }
@@ -34,7 +37,7 @@ class GameTimeLogEntity extends Equatable {
     required this.dateTime,
     required this.time,
   });
-  
+
   final DateTime dateTime;
   final Duration time;
 

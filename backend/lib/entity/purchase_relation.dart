@@ -1,3 +1,5 @@
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
@@ -14,7 +16,17 @@ class PurchaseTypeRelationData {
     _typeField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int purchaseId, int typeId) {
+  static Query getIdQuery(int purchaseId, int typeId) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_purchaseField, purchaseId);
+    idQuery.addAnd(_typeField, typeId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int purchaseId, int typeId) {
 
     return <String, dynamic>{
       _purchaseField : purchaseId,

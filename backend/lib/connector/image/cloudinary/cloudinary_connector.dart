@@ -29,7 +29,7 @@ class CloudinaryConnector extends ImageConnector {
 
   //#region UPLOAD
   @override
-  Future<String> setImage({required String imagePath, required String tableName, required String imageName}) {
+  Future<String> set({required String imagePath, required String tableName, required String imageName}) {
 
     return _connection.uploadImage(
       imagePath,
@@ -42,7 +42,7 @@ class CloudinaryConnector extends ImageConnector {
 
   //#region RENAME
   @override
-  Future<String> renameImage({required String tableName, required String oldImageName, required String newImageName}) {
+  Future<String> rename({required String tableName, required String oldImageName, required String newImageName}) {
 
     return _connection.renameImage(
       folder: tableName,
@@ -55,7 +55,7 @@ class CloudinaryConnector extends ImageConnector {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteImage({required String tableName, required String imageName}) {
+  Future<dynamic> delete({required String tableName, required String imageName}) {
 
     return _connection.deleteImage(
       folder: tableName,

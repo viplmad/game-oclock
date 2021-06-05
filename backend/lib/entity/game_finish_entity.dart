@@ -1,28 +1,31 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
 class GameFinishEntityData {
   GameFinishEntityData._();
-  
+
   static const String table = 'GameFinish';
   static const String readTable = 'Game-Finish';
 
   static const String _gameField = GameEntityData.relationField;
   static const String _dateField = 'Date';
-  
+
   static const Map<String, Type> fields = <String, Type>{
     _gameField : int,
     _dateField : DateTime,
   };
-  
-  static Map<String, dynamic> getIdMap(int gameId, DateTime date) {
 
-    return <String, dynamic>{
-      _gameField : gameId,
-      _dateField : date,
-    };
+  static Query getIdQuery(int gameId, DateTime date) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_gameField, gameId);
+    idQuery.addAnd(_dateField, date);
+
+    return idQuery;
 
   }
 }

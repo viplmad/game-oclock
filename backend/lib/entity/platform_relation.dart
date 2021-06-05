@@ -1,3 +1,5 @@
+import 'package:backend/query/query.dart';
+
 import 'entity.dart';
 
 
@@ -14,7 +16,17 @@ class PlatformSystemRelationData {
     _systemField : int,
   };
 
-  static Map<String, dynamic> getIdMap(int platformId, int systemId) {
+  static Query getIdQuery(int platformId, int systemId) {
+
+    final Query idQuery = Query();
+    idQuery.addAnd(_platformField, platformId);
+    idQuery.addAnd(_systemField, systemId);
+
+    return idQuery;
+
+  }
+
+  static Map<String, dynamic> getCreateDynamicMap(int platformId, int systemId) {
 
     return <String, dynamic>{
       _platformField : platformId,

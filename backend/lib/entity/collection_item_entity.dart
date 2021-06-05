@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 
-const String idField = 'ID';
-
 abstract class CollectionItemEntity extends Equatable {
   const CollectionItemEntity({
     required this.id,

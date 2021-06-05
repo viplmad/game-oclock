@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/query/query.dart';
 
 import 'entity.dart';
 
@@ -10,20 +11,20 @@ class GameTagEntityData {
 
   static const String relationField = table + '_ID';
 
-  static const String _nameField = 'Name';
-
-  static const String searchField = _nameField;
+  static const String idField = 'ID';
+  static const String nameField = 'Name';
 
   static const Map<String, Type> fields = <String, Type>{
     idField : int,
-    _nameField : String,
+    nameField : String,
   };
 
-  static Map<String, dynamic> getIdMap(int id) {
+  static Query getIdQuery(int id) {
 
-    return <String, dynamic>{
-      idField : id,
-    };
+    final Query idQuery = Query();
+    idQuery.addAnd(idField, id);
+
+    return idQuery;
 
   }
 }
@@ -39,8 +40,8 @@ class GameTagEntity extends CollectionItemEntity {
   static GameTagEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameTagEntity(
-      id: map[idField] as int,
-      name: map[GameTagEntityData._nameField] as String,
+      id: map[GameTagEntityData.idField] as int,
+      name: map[GameTagEntityData.nameField] as String,
     );
 
   }
@@ -49,8 +50,8 @@ class GameTagEntity extends CollectionItemEntity {
   Map<String, dynamic> toDynamicMap() {
 
     return <String, dynamic> {
-      idField : id,
-      GameTagEntityData._nameField : name,
+      GameTagEntityData.idField : id,
+      GameTagEntityData.nameField : name,
     };
 
   }
@@ -59,7 +60,7 @@ class GameTagEntity extends CollectionItemEntity {
   Map<String, dynamic> getCreateDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      GameTagEntityData._nameField : name,
+      GameTagEntityData.nameField : name,
     };
 
     return createMap;
@@ -70,7 +71,7 @@ class GameTagEntity extends CollectionItemEntity {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
-    putUpdateMapValue(updateMap, GameTagEntityData._nameField, name, updatedEntity.name);
+    putUpdateMapValue(updateMap, GameTagEntityData.nameField, name, updatedEntity.name);
 
     return updateMap;
 
@@ -100,7 +101,7 @@ class GameTagEntity extends CollectionItemEntity {
   String toString() {
 
     return '{$GameTagEntityData.table}Entity { '
-        '$idField: $id, '
+        '{$GameTagEntityData.idField}: $id, '
         '{$GameTagEntityData._nameField}: $name'
         ' }';
 
