@@ -1,13 +1,13 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_list_manager.dart';
 
 
 class StoreListManagerBloc extends ItemListManagerBloc<Store> {
   StoreListManagerBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override

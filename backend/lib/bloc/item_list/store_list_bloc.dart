@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
@@ -10,7 +10,7 @@ import 'item_list.dart';
 
 class StoreListBloc extends ItemListBloc<Store> {
   StoreListBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
     required StoreListManagerBloc managerBloc,
   }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 

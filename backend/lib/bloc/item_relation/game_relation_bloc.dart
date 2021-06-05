@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
@@ -11,7 +11,7 @@ import 'item_relation.dart';
 class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, W> {
   GameRelationBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
     required GameRelationManagerBloc<W> managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 
@@ -37,7 +37,7 @@ class GameRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Game, 
 class GameFinishRelationBloc extends RelationBloc<Game, GameFinish> {
   GameFinishRelationBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
     required GameFinishRelationManagerBloc managerBloc,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 

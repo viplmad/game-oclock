@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
@@ -10,7 +10,7 @@ import 'item_list.dart';
 
 class RomListBloc extends ItemListBloc<Game> {
   RomListBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
     required RomListManagerBloc managerBloc,
   }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
 

@@ -23,7 +23,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   StoreSearchBloc searchBlocBuilder() {
 
     return StoreSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -61,7 +61,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   StoreListManagerBloc managerBlocBuilder() {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

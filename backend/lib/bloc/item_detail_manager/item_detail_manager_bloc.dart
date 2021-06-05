@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_detail_manager.dart';
 
@@ -13,7 +13,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object>
   }) : super(ItemDetailManagerInitialised());
 
   final int itemId;
-  final ICollectionRepository iCollectionRepository;
+  final CollectionRepository iCollectionRepository;
 
   @override
   Stream<ItemDetailManagerState> mapEventToState(ItemDetailManagerEvent event) async* {

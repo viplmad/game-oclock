@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_list_manager.dart';
 
@@ -12,7 +12,7 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
     required this.iCollectionRepository,
   }) : super(ItemListManagerInitialised());
 
-  final ICollectionRepository iCollectionRepository;
+  final CollectionRepository iCollectionRepository;
 
   @override
   Stream<ItemListManagerState> mapEventToState(ItemListManagerEvent event) async* {

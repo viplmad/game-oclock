@@ -26,31 +26,31 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return MultiBlocProvider(
@@ -64,7 +64,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _allListManagerBloc,
             )..add(LoadItemList());
           },
@@ -72,7 +72,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
             return OwnedListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _ownedListManagerBloc,
             )..add(LoadItemList());
           },
@@ -80,7 +80,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _romListManagerBloc,
             )..add(LoadItemList());
           },
@@ -88,7 +88,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _dlcListManagerBloc,
             )..add(LoadItemList());
           },
@@ -96,7 +96,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _purchaseListManagerBloc,
             )..add(LoadItemList());
           },
@@ -104,7 +104,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _storeListManagerBloc,
             )..add(LoadItemList());
           },
@@ -112,7 +112,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              iCollectionRepository: CollectionRepository.iCollectionRepository!,
               managerBloc: _platformListManagerBloc,
             )..add(LoadItemList());
           },

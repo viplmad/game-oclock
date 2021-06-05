@@ -1,6 +1,6 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_relation_manager.dart';
 
@@ -8,7 +8,7 @@ import 'item_relation_manager.dart';
 class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Game, W> {
   GameRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -55,7 +55,7 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, GameTimeLog> {
   GameTimeLogRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -76,7 +76,7 @@ class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, GameTimeL
 class GameFinishRelationManagerBloc extends RelationManagerBloc<Game, GameFinish> {
   GameFinishRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override

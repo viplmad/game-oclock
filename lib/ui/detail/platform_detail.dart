@@ -30,7 +30,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
 
     return PlatformDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -41,7 +41,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
 
     return PlatformDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -51,12 +51,12 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
 
     final PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
@@ -92,7 +92,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+          iCollectionRepository: CollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

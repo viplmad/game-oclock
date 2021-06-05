@@ -23,7 +23,7 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   GameSearchBloc searchBlocBuilder() {
 
     return GameSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   GameListManagerBloc managerBlocBuilder() {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -61,7 +61,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   GameListManagerBloc managerBlocBuilder() {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

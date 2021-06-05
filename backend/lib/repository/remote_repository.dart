@@ -4,19 +4,19 @@ import 'package:backend/entity/entity.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'icollection_repository.dart';
+import 'collection_repository.dart';
 
 
-class RemoteRepository implements ICollectionRepository {
-  RemoteRepository._(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
+class RemoteRepository implements CollectionRepository {
+  RemoteRepository._(SQLConnector iSQLConnector, ImageConnector iImageConnector) {
     _iSQLConnector = iSQLConnector;
     _iImageConnector = iImageConnector;
   }
 
-  late ISQLConnector _iSQLConnector;
-  late IImageConnector _iImageConnector;
+  late SQLConnector _iSQLConnector;
+  late ImageConnector _iImageConnector;
 
-  factory RemoteRepository(ISQLConnector iSQLConnector, IImageConnector iImageConnector) {
+  factory RemoteRepository(SQLConnector iSQLConnector, ImageConnector iImageConnector) {
     return RemoteRepository._(
       iSQLConnector,
       iImageConnector,

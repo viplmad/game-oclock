@@ -1,4 +1,4 @@
-abstract class IImageConnector {
+abstract class ImageConnector {
   //#region UPLOAD
   Future<String> setImage({required String imagePath, required String tableName, required String imageName});
   //#endregion UPLOAD

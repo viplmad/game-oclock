@@ -1,6 +1,6 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_relation_manager.dart';
 
@@ -8,7 +8,7 @@ import 'item_relation_manager.dart';
 class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<System, W> {
   SystemRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override

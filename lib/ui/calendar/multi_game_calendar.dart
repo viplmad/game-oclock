@@ -30,7 +30,7 @@ class MultiGameCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final MultiCalendarBloc _bloc = MultiCalendarBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return BlocProvider<MultiCalendarBloc>(

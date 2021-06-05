@@ -30,7 +30,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
 
     return PurchaseDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -41,7 +41,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
 
     return PurchaseDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -51,22 +51,22 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
 
     final PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
@@ -114,7 +114,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
       create: (BuildContext context) {
         return PurchaseRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+          iCollectionRepository: CollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

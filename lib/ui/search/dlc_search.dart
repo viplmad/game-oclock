@@ -23,7 +23,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   DLCSearchBloc searchBlocBuilder() {
 
     return DLCSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -60,7 +60,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   @override DLCListManagerBloc managerBlocBuilder() {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

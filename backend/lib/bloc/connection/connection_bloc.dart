@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 import 'package:backend/preferences/repository_preferences.dart';
 
 import 'connection.dart';
@@ -39,8 +39,8 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
       try {
 
-        final ICollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
-        ICollectionRepository.iCollectionRepository = iCollectionRepository;
+        final CollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
+        CollectionRepository.iCollectionRepository = iCollectionRepository;
         await iCollectionRepository.open();
         yield Connected();
 
@@ -60,8 +60,8 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     try {
 
-      ICollectionRepository.iCollectionRepository!.reconnect();
-      await ICollectionRepository.iCollectionRepository!.open();
+      CollectionRepository.iCollectionRepository!.reconnect();
+      await CollectionRepository.iCollectionRepository!.open();
       yield Connected();
 
     } catch(e) {

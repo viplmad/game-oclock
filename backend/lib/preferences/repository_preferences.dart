@@ -49,11 +49,11 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ICollectionRepository> retrieveRepository() {
+  static Future<CollectionRepository> retrieveRepository() {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return retrieveRepositoryType().then<ICollectionRepository>((RepositoryType type) {
+    return retrieveRepositoryType().then<CollectionRepository>((RepositoryType type) {
 
       switch(type) {
         case RepositoryType.Remote:

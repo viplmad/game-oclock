@@ -23,7 +23,7 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
   TypeSearchBloc searchBlocBuilder() {
 
     return TypeSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
   TypeListManagerBloc managerBlocBuilder() {
 
     return TypeListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -64,7 +64,7 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   TypeListManagerBloc managerBlocBuilder() {
 
     return TypeListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

@@ -5,7 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/model/list_style.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
@@ -21,7 +21,7 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  final ICollectionRepository iCollectionRepository;
+  final CollectionRepository iCollectionRepository;
   final ItemListManagerBloc<T> managerBloc;
   late StreamSubscription<ItemListManagerState> managerSubscription;
 

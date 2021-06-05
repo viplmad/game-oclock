@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_search.dart';
 
 
 class PurchaseSearchBloc extends ItemSearchBloc<Purchase> {
   PurchaseSearchBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override

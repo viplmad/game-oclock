@@ -1,6 +1,6 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_relation_manager.dart';
 
@@ -8,7 +8,7 @@ import 'item_relation_manager.dart';
 class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<DLC, W> {
   DLCRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override
@@ -47,7 +47,7 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 class DLCFinishRelationManagerBloc extends RelationManagerBloc<DLC, DLCFinish> {
   DLCFinishRelationManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override

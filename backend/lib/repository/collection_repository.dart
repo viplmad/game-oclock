@@ -1,8 +1,8 @@
 import 'package:backend/model/model.dart';
 
 
-abstract class ICollectionRepository {
-  static ICollectionRepository? iCollectionRepository;
+abstract class CollectionRepository {
+  static CollectionRepository? iCollectionRepository;
 
   Future<dynamic> open();
   Future<dynamic> close();

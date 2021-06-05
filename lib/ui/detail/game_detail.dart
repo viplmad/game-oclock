@@ -32,7 +32,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
 
     return GameDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -43,7 +43,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
 
     return GameDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -53,27 +53,27 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
 
     final GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
@@ -107,7 +107,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
         create: (BuildContext context) {
           return GameFinishRelationBloc(
             itemId: item.id,
-            iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+            iCollectionRepository: CollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -137,7 +137,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
       create: (BuildContext context) {
         return GameRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+          iCollectionRepository: CollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

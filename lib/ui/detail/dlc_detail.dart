@@ -31,7 +31,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
 
     return DLCDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
       managerBloc: managerBloc,
     );
 
@@ -42,7 +42,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
 
     return DLCDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -52,17 +52,17 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
 
     final DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final DLCFinishRelationManagerBloc _finishRelationManagerBloc = DLCFinishRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
@@ -84,7 +84,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
         create: (BuildContext context) {
           return DLCFinishRelationBloc(
             itemId: item.id,
-            iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+            iCollectionRepository: CollectionRepository.iCollectionRepository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -113,7 +113,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+          iCollectionRepository: CollectionRepository.iCollectionRepository!,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },

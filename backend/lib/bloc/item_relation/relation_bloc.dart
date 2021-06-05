@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
@@ -22,7 +22,7 @@ abstract class RelationBloc<T extends CollectionItem, O extends Object> extends 
   }
 
   final int itemId;
-  final ICollectionRepository iCollectionRepository;
+  final CollectionRepository iCollectionRepository;
   final RelationManagerBloc<T, O> managerBloc;
   late StreamSubscription<RelationManagerState> managerSubscription;
 

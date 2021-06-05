@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_search.dart';
 
@@ -17,7 +17,7 @@ abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchE
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
-  final ICollectionRepository? iCollectionRepository;
+  final CollectionRepository? iCollectionRepository;
 
   @override
   Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {

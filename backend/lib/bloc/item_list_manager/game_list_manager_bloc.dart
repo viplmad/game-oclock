@@ -1,31 +1,31 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_list_manager.dart';
 
 
 class AllListManagerBloc extends GameListManagerBloc {
   AllListManagerBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 }
 
 class OwnedListManagerBloc extends GameListManagerBloc {
   OwnedListManagerBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 }
 
 class RomListManagerBloc extends GameListManagerBloc {
   RomListManagerBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 }
 
 class GameListManagerBloc extends ItemListManagerBloc<Game> {
   GameListManagerBloc({
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(iCollectionRepository: iCollectionRepository);
 
   @override

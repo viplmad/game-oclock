@@ -1,6 +1,6 @@
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import 'item_detail_manager.dart';
 
@@ -8,7 +8,7 @@ import 'item_detail_manager.dart';
 class TypeDetailManagerBloc extends ItemDetailManagerBloc<PurchaseType, PurchaseTypeUpdateProperties> {
   TypeDetailManagerBloc({
     required int itemId,
-    required ICollectionRepository iCollectionRepository,
+    required CollectionRepository iCollectionRepository,
   }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
 
   @override

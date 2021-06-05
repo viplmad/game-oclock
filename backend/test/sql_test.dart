@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 import 'package:backend/connector/item/sql/postgres/postgres_connector.dart';
 import 'package:sql_builder/sql_builder.dart';
@@ -59,7 +59,7 @@ void main() {
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
       'ID': relationId,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFieldsAndTypes, whereFieldsAndValues, null, primaryResults: true);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFieldsAndTypes, whereFieldsAndValues, null, null, primaryResults: true);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -88,7 +88,7 @@ void main() {
     final Map<String, dynamic> whereFieldsAndVales = <String, dynamic>{
       'Purchase_ID': relationId,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFieldsAndTypes, whereFieldsAndVales, null);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFieldsAndTypes, whereFieldsAndVales, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -106,7 +106,7 @@ void main() {
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
       'Purchase_ID': relationId,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFieldsAndTypes, whereFieldsAndValues, null);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFieldsAndTypes, whereFieldsAndValues, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -124,7 +124,7 @@ void main() {
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
       'Purchase_ID': relationId,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFieldsAndTypes, whereFieldsAndValues, null);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFieldsAndTypes, whereFieldsAndValues, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -247,7 +247,7 @@ void main() {
     final Map<String, dynamic> whereFieldsAndValues = <String, dynamic>{
       'ID': itemId,
     };
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFieldsAndTypes, whereFieldsAndValues, null, primaryResults: false);
+    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFieldsAndTypes, whereFieldsAndValues, null, null, primaryResults: false);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -274,7 +274,7 @@ void main() {
       'COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time"',
       '( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date"',
     ];
-    final QueryBuilder generatedQueryBuilder = connector.selectSpecial('Game', selectFieldsAndTypes, rawSelects, null, null);
+    final QueryBuilder generatedQueryBuilder = connector.selectSpecial('Game', selectFieldsAndTypes, rawSelects, null, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
   });

@@ -23,7 +23,7 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   TagSearchBloc searchBlocBuilder() {
 
     return TagSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -64,7 +64,7 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   TagListManagerBloc managerBlocBuilder() {
 
     return TagListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

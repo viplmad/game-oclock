@@ -23,7 +23,7 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   SystemSearchBloc searchBlocBuilder() {
 
     return SystemSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   SystemListManagerBloc managerBlocBuilder() {
 
     return SystemListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -64,7 +64,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   SystemListManagerBloc managerBlocBuilder() {
 
     return SystemListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

@@ -8,7 +8,7 @@ import 'package:backend/utils/datetime_extension.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/model/calendar_style.dart';
 
-import 'package:backend/repository/icollection_repository.dart';
+import 'package:backend/repository/collection_repository.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'single_calendar.dart';
@@ -28,7 +28,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   final int itemId;
-  final ICollectionRepository iCollectionRepository;
+  final CollectionRepository iCollectionRepository;
   final GameTimeLogRelationManagerBloc timeLogManagerBloc;
   final GameFinishRelationManagerBloc finishDateManagerBloc;
   late StreamSubscription<RelationManagerState> timeLogManagerSubscription;

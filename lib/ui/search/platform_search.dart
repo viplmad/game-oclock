@@ -23,7 +23,7 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   PlatformSearchBloc searchBlocBuilder() {
 
     return PlatformSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -32,7 +32,7 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   PlatformListManagerBloc managerBlocBuilder() {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }
@@ -61,7 +61,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   PlatformListManagerBloc managerBlocBuilder() {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
   }

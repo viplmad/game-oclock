@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:duration_picker/duration_picker.dart';
 
 import 'package:game_collection/utils/datetime_extension.dart';
 
@@ -21,7 +22,6 @@ import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 import '../common/statistics_histogram.dart';
-import '../common/duration_picker_dialog.dart';
 import '../common/item_view.dart';
 
 
@@ -50,12 +50,12 @@ class SingleGameCalendar extends StatelessWidget {
 
     final GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
     );
 
     final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
@@ -131,7 +131,7 @@ class SingleGameCalendar extends StatelessWidget {
 
     return SingleCalendarBloc(
       itemId: itemId,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      iCollectionRepository: CollectionRepository.iCollectionRepository!,
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );
@@ -167,16 +167,10 @@ class SingleGameCalendar extends StatelessWidget {
                 ).then((TimeOfDay? time) {
                   if(time != null) {
 
-                    showDialog<Duration>(
+                    showDurationPicker(
                       context: context,
-                      builder: (BuildContext context) {
-
-                        return DurationPickerDialog(
-                          fieldName: GameCollectionLocalisations.of(context).editTimeString,
-                          initialDuration: Duration.zero,
-                        );
-
-                      },
+                      //decoration: GameCollectionLocalisations.of(context).editTimeString,
+                      initialTime: Duration.zero,
                     ).then((Duration? duration) {
                       if(duration != null) {
 

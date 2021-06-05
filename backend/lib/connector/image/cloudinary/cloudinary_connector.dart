@@ -1,15 +1,12 @@
-import 'dart:async';
+import 'package:cloudinary/cloudinary.dart';
 
-import '../iimage_connector.dart';
-
-import 'cloudinary_connection/cloudinary_connection.dart';
-import 'cloudinary_connection/cloudinary_response.dart';
+import '../image_connector.dart';
 
 
 const String _baseAPIURL = 'https://api.cloudinary.com/v1_1/';
 const String _baseRESURL = 'https://res.cloudinary.com/';
 
-class CloudinaryConnector extends IImageConnector {
+class CloudinaryConnector extends ImageConnector {
   CloudinaryConnector.fromConnectionString(String connectionString) {
 
     this._instance = CloudinaryInstance.fromString(connectionString);
