@@ -18,6 +18,7 @@ abstract class SQLConnector {
   Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Map<String, Type> selectFieldsAndTypes, required Query whereQuery, List<String>? orderFields, int? limit});
   Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, required Query whereQuery, List<String>? orderFields, int? limit});
   Future<List<Map<String, Map<String, dynamic>>>> readJoin({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required Query whereQuery, List<String>? orderFields, int? limit});
+  Future<List<Map<String, Map<String, dynamic>>>> readFunction({required String functionName, required List<dynamic> arguments, required Map<String, Type> selectFieldsAndTypes, int? limit});
   //#endregion READ
 
   //#region UPDATE

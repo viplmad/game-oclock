@@ -272,4 +272,27 @@ void main() {
 
     expect(generatedQueryBuilder.toSql(), equals(insertSql));
   });
+
+  test('sql select 12', () {
+    final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
+    // TODO revise from bloc branch
+    final String insertSql = 'SELECT "ID", "Name", "Edition", "Release Year", "Cover", "Status", "Rating", "Thoughts", "Save Folder", "Screenshot Folder", "Backup" FROM  "Owned-Year In Review"(2020)';
+
+    final Map<String, Type> selectFieldsAndTypes = <String, Type>{
+      'ID': String,
+      'Name': String,
+      'Edition': String,
+      'Release Year': int,
+      'Cover': String,
+      'Status': String,
+      'Rating': int,
+      'Thoughts': String,
+      'Save Folder': String,
+      'Screenshot Folder': String,
+      'Backup': bool,
+    };
+    final QueryBuilder generatedQueryBuilder = connector.selectFunctionQueryBuilder('Owned-Year In Review', <dynamic>[2020], selectFieldsAndTypes, null);
+
+    expect(generatedQueryBuilder.toSql(), equals(insertSql));
+  });
 }

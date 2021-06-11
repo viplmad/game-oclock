@@ -145,6 +145,18 @@ class PostgresConnector extends SQLConnector {
     );
 
   }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readFunction({required String functionName, required List<dynamic> arguments, required Map<String, Type> selectFieldsAndTypes, int? limit}) {
+
+    final QueryBuilder queryBuilder = selectFunctionQueryBuilder(functionName, arguments, selectFieldsAndTypes, limit);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
   //#endregion READ
 
   //#region UPDATE
@@ -199,6 +211,7 @@ class PostgresConnector extends SQLConnector {
     return queryBuilder;
   }
 
+  // TODO build object for select like Query
   QueryBuilder selectSpecial(String tableName, Map<String, Type> selectFieldsAndTypes, List<String> rawSelects, Query? whereQuery, List<String>? orderFields, int? limit) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
@@ -237,6 +250,17 @@ class PostgresConnector extends SQLConnector {
     _buildFields(queryBuilder, rightTable, rightSelectFields);
     _buildWhere(queryBuilder, null, whereQuery);
     _buildOrder(queryBuilder, orderFields);
+    _buildLimit(queryBuilder, limit);
+
+    return queryBuilder;
+  }
+
+  QueryBuilder selectFunctionQueryBuilder(String functionName, List<dynamic> arguments, Map<String, Type> selectFieldsAndTypes, int? limit) {
+    final QueryBuilder queryBuilder = FluentQuery
+      .select(options: this._queryBuilderOptions)
+      .fromRaw(Validator.sanitizeTable(functionName, this._queryBuilderOptions) + '(' + arguments.join(', ') + ')');
+
+    _buildFields(queryBuilder, null, selectFieldsAndTypes);
     _buildLimit(queryBuilder, limit);
 
     return queryBuilder;

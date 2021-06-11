@@ -326,9 +326,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read sql function
-    return _iSQLConnector.read(
-      tableName: GameEntityData.allViewToTable[gameView]!,
+    return _iSQLConnector.readFunction(
+      functionName: GameEntityData.allViewToTable[gameView]!,
+      arguments: <dynamic>[
+        year,
+      ],
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -349,9 +351,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllOwnedGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read sql function
-    return _iSQLConnector.read(
-      tableName: GameEntityData.ownedViewToTable[gameView]!,
+    return _iSQLConnector.readFunction(
+      functionName: GameEntityData.ownedViewToTable[gameView]!,
+      arguments: <dynamic>[
+        year,
+      ],
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -372,9 +376,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Game>> findAllRomGamesWithYearView(GameView gameView, int year, [int? limit]) {
 
-    // TODO read sql function
-    return _iSQLConnector.read(
-      tableName: GameEntityData.romViewToTable[gameView]!,
+    return _iSQLConnector.readFunction(
+      functionName: GameEntityData.romViewToTable[gameView]!,
+      arguments: <dynamic>[
+        year,
+      ],
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -634,9 +640,11 @@ class RemoteRepository implements CollectionRepository {
   @override
   Stream<List<Purchase>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
 
-    // TODO read sql function
-    return _iSQLConnector.read(
-      tableName: PurchaseEntityData.viewToTable[purchaseView]!,
+    return _iSQLConnector.readFunction(
+      functionName: PurchaseEntityData.viewToTable[purchaseView]!,
+      arguments: <dynamic>[
+        year,
+      ],
       selectFieldsAndTypes: PurchaseEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPurchase );
