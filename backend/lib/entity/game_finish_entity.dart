@@ -37,30 +37,11 @@ class GameFinishEntity extends Equatable {
 
   final DateTime dateTime;
 
-  static GameFinishEntity fromDynamicMap(Map<String, dynamic> map) {
+  static GameFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return GameFinishEntity(
       dateTime: map[GameFinishEntityData._dateField] as DateTime,
     );
-
-  }
-
-  Map<String, dynamic> toDynamicMap() {
-
-    return <String, dynamic> {
-      GameFinishEntityData._dateField : dateTime,
-    };
-
-  }
-
-  Map<String, dynamic> getCreateDynamicMap(int gameId) {
-
-    final Map<String, dynamic> createMap = <String, dynamic>{
-      GameFinishEntityData._gameField : gameId,
-      GameFinishEntityData._dateField : dateTime,
-    };
-
-    return createMap;
 
   }
 
@@ -69,12 +50,23 @@ class GameFinishEntity extends Equatable {
     final List<GameFinishEntity> finishList = <GameFinishEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameFinishEntity date = GameFinishEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
+      final GameFinishEntity date = GameFinishEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
 
       finishList.add(date);
     });
 
     return finishList;
+
+  }
+
+  Map<String, dynamic> createDynamicMap(int gameId) {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      GameFinishEntityData._gameField : gameId,
+      GameFinishEntityData._dateField : dateTime,
+    };
+
+    return createMap;
 
   }
 

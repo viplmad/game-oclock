@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -35,32 +33,6 @@ class System extends CollectionItem {
 
   @override
   String get queryableTerms => this.name;
-
-  static System fromEntity(SystemEntity entity, [String? iconURL]) {
-
-    return System(
-      id: entity.id,
-      name: entity.name,
-      iconURL: iconURL,
-      iconFilename: entity.iconFilename,
-      generation: entity.generation,
-      manufacturer: entity.manufacturer,
-    );
-
-  }
-
-  @override
-  SystemEntity toEntity() {
-
-    return SystemEntity(
-      id: this.id,
-      name: this.name,
-      iconFilename: this.iconFilename,
-      generation: this.generation,
-      manufacturer: this.manufacturer,
-    );
-
-  }
 
   @override
   System copyWith({

@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -33,30 +31,6 @@ class Platform extends CollectionItem {
 
   @override
   String get queryableTerms => this.name;
-
-  static Platform fromEntity(PlatformEntity entity, [String? iconURL]) {
-
-    return Platform(
-      id: entity.id,
-      name: entity.name,
-      iconURL: iconURL,
-      iconFilename: entity.iconFilename,
-      type: entity.type,
-    );
-
-  }
-
-  @override
-  PlatformEntity toEntity() {
-
-    return PlatformEntity(
-      id: this.id,
-      name: this.name,
-      iconFilename: this.iconFilename,
-      type: this.type,
-    );
-
-  }
 
   @override
   Platform copyWith({

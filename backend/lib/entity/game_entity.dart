@@ -17,6 +17,36 @@ class GameEntityData {
   static const String table = 'Game';
   static const String readTable = '_Game';
 
+  static const Map<GameView, String> allViewToTable = <GameView, String>{
+    GameView.Main : 'All-Main',
+    GameView.LastCreated : 'All-Last Created',
+    GameView.Playing : 'All-Playing',
+    GameView.NextUp : 'All-Next Up',
+    GameView.LastPlayed : 'All-Last Played',
+    GameView.LastFinished : 'All-Last Finished',
+    GameView.Review : 'All-Year In Review',
+  };
+
+  static const Map<GameView, String> ownedViewToTable = <GameView, String>{
+    GameView.Main : 'Owned-Main',
+    GameView.LastCreated : 'Owned-Last Created',
+    GameView.Playing : 'Owned-Playing',
+    GameView.NextUp : 'Owned-Next Up',
+    GameView.LastPlayed : 'Owned-Last Played',
+    GameView.LastFinished : 'Owned-Last Finished',
+    GameView.Review : 'Owned-Year In Review',
+  };
+
+  static const Map<GameView, String> romViewToTable = <GameView, String>{
+    GameView.Main : 'Rom-Main',
+    GameView.LastCreated : 'Rom-Last Created',
+    GameView.Playing : 'Rom-Playing',
+    GameView.NextUp : 'Rom-Next Up',
+    GameView.LastPlayed : 'Rom-Last Played',
+    GameView.LastFinished : 'Rom-Last Finished',
+    GameView.Review : 'Rom-Year In Review',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -111,29 +141,21 @@ class GameEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<GameEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      GameEntityData.idField : id,
-      GameEntityData.nameField : name,
-      GameEntityData._editionField : edition,
-      GameEntityData._releaseYearField : releaseYear,
-      GameEntityData._coverField: coverFilename,
-      GameEntityData._statusField : status,
-      GameEntityData._ratingField : rating,
-      GameEntityData._thoughtsField : thoughts,
-      GameEntityData._timeField : time,
-      GameEntityData._saveFolderField : saveFolder,
-      GameEntityData._screenshotFolderField : screenshotFolder,
-      GameEntityData._finishDateField : finishDate,
-      GameEntityData._backupField : isBackup,
-    };
+    final List<GameEntity> gamesList = <GameEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameEntityData.table) );
+
+      gamesList.add(game);
+    });
+
+    return gamesList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       GameEntityData.nameField : name,
@@ -155,7 +177,7 @@ class GameEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(GameEntity updatedEntity, GameUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(GameEntity updatedEntity, GameUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -173,20 +195,6 @@ class GameEntity extends CollectionItemEntity {
     putUpdateMapValue(updateMap, GameEntityData._backupField, isBackup, updatedEntity.isBackup);
 
     return updateMap;
-  }
-
-  static List<GameEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<GameEntity> gamesList = <GameEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameEntityData.table) );
-
-      gamesList.add(game);
-    });
-
-    return gamesList;
-
   }
 
   @override

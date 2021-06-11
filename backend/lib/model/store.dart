@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -31,28 +29,6 @@ class Store extends CollectionItem {
 
   @override
   String get queryableTerms => this.name;
-
-  static Store fromEntity(StoreEntity entity, [String? iconURL]) {
-
-    return Store(
-      id: entity.id,
-      name: entity.name,
-      iconURL: iconURL,
-      iconFilename: entity.iconFilename,
-    );
-
-  }
-
-  @override
-  StoreEntity toEntity() {
-
-    return StoreEntity(
-      id: this.id,
-      name: this.name,
-      iconFilename: this.iconFilename,
-    );
-
-  }
 
   @override
   Store copyWith({

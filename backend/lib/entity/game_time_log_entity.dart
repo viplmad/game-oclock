@@ -50,27 +50,6 @@ class GameTimeLogEntity extends Equatable {
 
   }
 
-  Map<String, dynamic> toDynamicMap() {
-
-    return <String, dynamic> {
-      GameTimeLogEntityData._dateTimeField : dateTime,
-      GameTimeLogEntityData._timeField : time,
-    };
-
-  }
-
-  Map<String, dynamic> getCreateDynamicMap(int gameId) {
-
-    final Map<String, dynamic> createMap = <String, dynamic>{
-      GameTimeLogEntityData._gameField : gameId,
-      GameTimeLogEntityData._dateTimeField : dateTime,
-      GameTimeLogEntityData._timeField : time,
-    };
-
-    return createMap;
-
-  }
-
   static List<GameTimeLogEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
     final List<GameTimeLogEntity> timeLogsList = <GameTimeLogEntity>[];
@@ -82,6 +61,18 @@ class GameTimeLogEntity extends Equatable {
     });
 
     return timeLogsList;
+
+  }
+
+  Map<String, dynamic> createDynamicMap(int gameId) {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      GameTimeLogEntityData._gameField : gameId,
+      GameTimeLogEntityData._dateTimeField : dateTime,
+      GameTimeLogEntityData._timeField : time,
+    };
+
+    return createMap;
 
   }
 

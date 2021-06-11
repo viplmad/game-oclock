@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
 
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -20,24 +18,6 @@ class GameWithLogs extends Equatable {
   Set<DateTime> get logDates => timeLogs.map<DateTime>((GameTimeLog log) => log.dateTime.toDate()).toSet();
 
   int get totalTimeSeconds => timeLogs.fold<int>(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
-
-  static GameWithLogs fromEntity(GameWithLogsEntity entity, [String? coverURL]) {
-
-    return GameWithLogs(
-      game: Game.fromEntity(entity.game, coverURL),
-      timeLogs: entity.timeLogs.map<GameTimeLog>( GameTimeLog.fromEntity ).toList(),
-    );
-
-  }
-
-  GameWithLogsEntity toEntity() {
-
-    return GameWithLogsEntity(
-      game: this.game.toEntity(),
-      timeLogs: this.timeLogs.map<GameTimeLogEntity>((GameTimeLog log) => log.toEntity()).toList(growable: false),
-    );
-
-  }
 
   @override
   List<Object> get props => <Object>[

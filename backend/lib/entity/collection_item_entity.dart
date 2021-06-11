@@ -8,8 +8,6 @@ abstract class CollectionItemEntity extends Equatable {
 
   final int id;
 
-  Map<String, dynamic> toDynamicMap();
-
   static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
     final Map<String, dynamic> _combinedMaps = Map<String, dynamic>();
@@ -23,10 +21,6 @@ abstract class CollectionItemEntity extends Equatable {
 
     return _combinedMaps;
 
-  }
-
-  Map<String, dynamic> getCreateDynamicMap() {
-    return Map<String, dynamic>();
   }
 
   void putCreateMapValueNullable(Map<String, dynamic> createMap, String field, dynamic value) {

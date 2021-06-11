@@ -9,6 +9,11 @@ class StoreEntityData {
 
   static const String table = 'Store';
 
+  static const Map<StoreView, String> viewToTable = <StoreView, String>{
+    StoreView.Main : 'Store-Main',
+    StoreView.LastCreated : 'Store-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -43,7 +48,7 @@ class StoreEntity extends CollectionItemEntity {
   final String name;
   final String? iconFilename;
 
-  static StoreEntity fromDynamicMap(Map<String, dynamic> map) {
+  static StoreEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return StoreEntity(
       id: map[StoreEntityData.idField] as int,
@@ -53,19 +58,21 @@ class StoreEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<StoreEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      StoreEntityData.idField : id,
-      StoreEntityData.nameField : name,
-      StoreEntityData._iconField : iconFilename,
-    };
+    final List<StoreEntity> storesList = <StoreEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final StoreEntity store = StoreEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, StoreEntityData.table) );
+
+      storesList.add(store);
+    });
+
+    return storesList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       StoreEntityData.nameField : name,
@@ -77,7 +84,7 @@ class StoreEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -85,20 +92,6 @@ class StoreEntity extends CollectionItemEntity {
     putUpdateMapValueNullable(updateMap, StoreEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
 
     return updateMap;
-
-  }
-
-  static List<StoreEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<StoreEntity> storesList = <StoreEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final StoreEntity store = StoreEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, StoreEntityData.table) );
-
-      storesList.add(store);
-    });
-
-    return storesList;
 
   }
 

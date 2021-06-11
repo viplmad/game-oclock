@@ -11,6 +11,11 @@ class DLCEntityData {
   static const String table = 'DLC';
   static const String readTable = '_DLC';
 
+  static const Map<DLCView, String> viewToTable = <DLCView, String>{
+    DLCView.Main : 'DLC-Main',
+    DLCView.LastCreated : 'DLC-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -61,7 +66,7 @@ class DLCEntity extends CollectionItemEntity {
 
   final int? baseGame;
 
-  static DLCEntity fromDynamicMap(Map<String, dynamic> map) {
+  static DLCEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCEntity(
       id: map[DLCEntityData.idField] as int,
@@ -75,23 +80,21 @@ class DLCEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<DLCEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      DLCEntityData.idField : id,
-      DLCEntityData.nameField : name,
-      DLCEntityData._releaseYearField : releaseYear,
-      DLCEntityData._coverField : coverFilename,
-      DLCEntityData._finishDateField : finishDate,
+    final List<DLCEntity> dlcsList = <DLCEntity>[];
 
-      DLCEntityData.baseGameField : baseGame,
-    };
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final DLCEntity dlc = DLCEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, DLCEntityData.table) );
+
+      dlcsList.add(dlc);
+    });
+
+    return dlcsList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       DLCEntityData.nameField : name,
@@ -106,7 +109,7 @@ class DLCEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(DLCEntity updatedEntity, DLCUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(DLCEntity updatedEntity, DLCUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -116,20 +119,6 @@ class DLCEntity extends CollectionItemEntity {
     putUpdateMapValueNullable(updateMap, DLCEntityData._finishDateField, finishDate, updatedEntity.finishDate, updatedValueCanBeNull: updateProperties.finishDateToNull);
 
     return updateMap;
-
-  }
-
-  static List<DLCEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<DLCEntity> dlcsList = <DLCEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCEntity dlc = DLCEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, DLCEntityData.table) );
-
-      dlcsList.add(dlc);
-    });
-
-    return dlcsList;
 
   }
 

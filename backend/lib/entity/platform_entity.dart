@@ -14,6 +14,11 @@ class PlatformEntityData {
 
   static const String table = 'Platform';
 
+  static const Map<PlatformView, String> viewToTable = <PlatformView, String>{
+    PlatformView.Main : 'Platform-Main',
+    PlatformView.LastCreated : 'Platform-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -52,7 +57,7 @@ class PlatformEntity extends CollectionItemEntity {
   final String? iconFilename;
   final String? type;
 
-  static PlatformEntity fromDynamicMap(Map<String, dynamic> map) {
+  static PlatformEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
       id: map[PlatformEntityData.idField] as int,
@@ -63,20 +68,21 @@ class PlatformEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<PlatformEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      PlatformEntityData.idField : id,
-      PlatformEntityData.nameField : name,
-      PlatformEntityData._iconField : iconFilename,
-      PlatformEntityData._typeField : type,
-    };
+    final List<PlatformEntity> platformsList = <PlatformEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final PlatformEntity platform = PlatformEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PlatformEntityData.table) );
+
+      platformsList.add(platform);
+    });
+
+    return platformsList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       PlatformEntityData.nameField : name,
@@ -89,7 +95,7 @@ class PlatformEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -98,20 +104,6 @@ class PlatformEntity extends CollectionItemEntity {
     putUpdateMapValueNullable(updateMap, PlatformEntityData._typeField, type, updatedEntity.type, updatedValueCanBeNull: updateProperties.typeToNull);
 
     return updateMap;
-
-  }
-
-  static List<PlatformEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<PlatformEntity> platformsList = <PlatformEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PlatformEntity platform = PlatformEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PlatformEntityData.table) );
-
-      platformsList.add(platform);
-    });
-
-    return platformsList;
 
   }
 

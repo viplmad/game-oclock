@@ -26,7 +26,7 @@ class GamePlatformRelationData {
 
   }
 
-  static Map<String, dynamic> getCreateDynamicMap(int gameId, int platformId) {
+  static Map<String, dynamic> createDynamicMap(int gameId, int platformId) {
 
         return <String, dynamic>{
       _gameField : gameId,
@@ -59,7 +59,7 @@ class GamePurchaseRelationData {
 
   }
 
-  static Map<String, dynamic> getCreateDynamicMap(int gameId, int purchaseId) {
+  static Map<String, dynamic> createDynamicMap(int gameId, int purchaseId) {
 
     return <String, dynamic>{
       _gameField : gameId,
@@ -92,7 +92,7 @@ class GameTagRelationData {
 
   }
 
-  static Map<String, dynamic> getCreateDynamicMap(int gameId, int tagId) {
+  static Map<String, dynamic> createDynamicMap(int gameId, int tagId) {
 
     return <String, dynamic>{
       _gameField : gameId,

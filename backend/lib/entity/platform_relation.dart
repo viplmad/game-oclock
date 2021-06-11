@@ -26,7 +26,7 @@ class PlatformSystemRelationData {
 
   }
 
-  static Map<String, dynamic> getCreateDynamicMap(int platformId, int systemId) {
+  static Map<String, dynamic> createDynamicMap(int platformId, int systemId) {
 
     return <String, dynamic>{
       _platformField : platformId,

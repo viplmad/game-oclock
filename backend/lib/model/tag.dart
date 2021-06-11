@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -27,25 +25,6 @@ class Tag extends CollectionItem {
 
   @override
   String get queryableTerms => this.name;
-
-  static Tag fromEntity(GameTagEntity entity) {
-
-    return Tag(
-      id: entity.id,
-      name: entity.name,
-    );
-
-  }
-
-  @override
-  GameTagEntity toEntity() {
-
-    return GameTagEntity(
-      id: this.id,
-      name: this.name,
-    );
-
-  }
 
   @override
   Tag copyWith({

@@ -1,6 +1,8 @@
 import 'package:backend/model/model.dart';
 
 
+typedef ResultList = List<Map<String, Map<String, dynamic>>>;
+
 abstract class CollectionRepository {
   static CollectionRepository? iCollectionRepository;
 

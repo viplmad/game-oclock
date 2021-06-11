@@ -9,6 +9,14 @@ class PurchaseEntityData {
 
   static const String table = 'Purchase';
 
+  static const Map<PurchaseView, String> viewToTable = <PurchaseView, String>{
+    PurchaseView.Main : 'Purchase-Main',
+    PurchaseView.LastCreated : 'Purchase-Last Created',
+    PurchaseView.Pending : 'Purchase-Pending',
+    PurchaseView.LastPurchased : 'Purchase-Last Purchased',
+    PurchaseView.Review : 'Purchase-Year In Review',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -63,7 +71,7 @@ class PurchaseEntity extends CollectionItemEntity {
 
   final int? store;
 
-  static PurchaseEntity fromDynamicMap(Map<String, dynamic> map) {
+  static PurchaseEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseEntity(
       id: map[PurchaseEntityData.idField] as int,
@@ -78,24 +86,21 @@ class PurchaseEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<PurchaseEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      PurchaseEntityData.idField : id,
-      PurchaseEntityData.descriptionField : description,
-      PurchaseEntityData._priceField : price,
-      PurchaseEntityData._externalCreditField : externalCredit,
-      PurchaseEntityData._dateField : date,
-      PurchaseEntityData._originalPriceField : originalPrice,
+    final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
 
-      PurchaseEntityData._storeField : store,
-    };
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final PurchaseEntity purchase = PurchaseEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
+
+      purchasesList.add(purchase);
+    });
+
+    return purchasesList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       PurchaseEntityData.descriptionField : description,
@@ -110,7 +115,7 @@ class PurchaseEntity extends CollectionItemEntity {
     return createMap;
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(PurchaseEntity updatedEntity, PurchaseUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(PurchaseEntity updatedEntity, PurchaseUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -121,20 +126,6 @@ class PurchaseEntity extends CollectionItemEntity {
     putUpdateMapValue(updateMap, PurchaseEntityData._originalPriceField, originalPrice, updatedEntity.originalPrice);
 
     return updateMap;
-
-  }
-
-  static List<PurchaseEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseEntity purchase = PurchaseEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
-
-      purchasesList.add(purchase);
-    });
-
-    return purchasesList;
 
   }
 

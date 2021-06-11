@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -44,37 +42,6 @@ class Purchase extends CollectionItem {
 
   @override
   String get queryableTerms => this.description;
-
-  static Purchase fromEntity(PurchaseEntity entity) {
-
-    return Purchase(
-      id: entity.id,
-      description: entity.description,
-      price: entity.price,
-      externalCredit: entity.externalCredit,
-      date: entity.date,
-      originalPrice: entity.originalPrice,
-
-      store: entity.store,
-    );
-
-  }
-
-  @override
-  PurchaseEntity toEntity() {
-
-    return PurchaseEntity(
-      id: this.id,
-      description: this.description,
-      price: this.price,
-      externalCredit: this.externalCredit,
-      date: this.date,
-      originalPrice: this.originalPrice,
-
-      store: this.store,
-    );
-
-  }
 
   @override
   Purchase copyWith({

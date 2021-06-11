@@ -37,30 +37,11 @@ class DLCFinishEntity extends Equatable {
 
   final DateTime dateTime;
 
-  static DLCFinishEntity fromDynamicMap(Map<String, dynamic> map) {
+  static DLCFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCFinishEntity(
       dateTime: map[DLCFinishEntityData._dateField] as DateTime,
     );
-
-  }
-
-  Map<String, dynamic> toDynamicMap() {
-
-    return <String, dynamic> {
-      DLCFinishEntityData._dateField : dateTime,
-    };
-
-  }
-
-  Map<String, dynamic> getCreateDynamicMap(int dlcId) {
-
-    final Map<String, dynamic> createMap = <String, dynamic>{
-      DLCFinishEntityData._dlcField : dlcId,
-      DLCFinishEntityData._dateField : dateTime,
-    };
-
-    return createMap;
 
   }
 
@@ -69,12 +50,23 @@ class DLCFinishEntity extends Equatable {
     final List<DLCFinishEntity> finishList = <DLCFinishEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCFinishEntity date = DLCFinishEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
+      final DLCFinishEntity date = DLCFinishEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
 
       finishList.add(date);
     });
 
     return finishList;
+
+  }
+
+  Map<String, dynamic> createDynamicMap(int dlcId) {
+
+    final Map<String, dynamic> createMap = <String, dynamic>{
+      DLCFinishEntityData._dlcField : dlcId,
+      DLCFinishEntityData._dateField : dateTime,
+    };
+
+    return createMap;
 
   }
 

@@ -1,6 +1,7 @@
 import 'package:backend/connector/connector.dart';
 
 import 'package:backend/entity/entity.dart';
+import 'package:backend/mapper/mapper.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/query/query.dart';
 
@@ -65,7 +66,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<Game>(
       tableName: GameEntityData.table,
-      newItem: game,
+      fieldsAndValues: GameMapper.modelToEntity(game).createDynamicMap(),
       idField: GameEntityData.idField,
       findItemById: findGameById,
     );
@@ -77,7 +78,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: GamePlatformRelationData.table,
-      insertFieldsAndValues: GamePlatformRelationData.getCreateDynamicMap(gameId, platformId),
+      insertFieldsAndValues: GamePlatformRelationData.createDynamicMap(gameId, platformId),
     );
 
   }
@@ -87,7 +88,7 @@ class RemoteRepository implements CollectionRepository {
 
      return _iSQLConnector.create(
       tableName: GamePurchaseRelationData.table,
-      insertFieldsAndValues: GamePurchaseRelationData.getCreateDynamicMap(gameId, purchaseId),
+      insertFieldsAndValues: GamePurchaseRelationData.createDynamicMap(gameId, purchaseId),
     );
 
   }
@@ -110,7 +111,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: GameTagRelationData.table,
-      insertFieldsAndValues: GameTagRelationData.getCreateDynamicMap(gameId, tagId),
+      insertFieldsAndValues: GameTagRelationData.createDynamicMap(gameId, tagId),
     );
 
   }
@@ -120,7 +121,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: GameFinishEntityData.table,
-      insertFieldsAndValues: finish.toEntity().getCreateDynamicMap(gameId),
+      insertFieldsAndValues: GameMapper.finishModelToEntity(finish).createDynamicMap(gameId),
     );
 
   }
@@ -130,7 +131,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: GameTimeLogEntityData.table,
-      insertFieldsAndValues: timeLog.toEntity().getCreateDynamicMap(gameId),
+      insertFieldsAndValues: GameMapper.logModelToEntity(timeLog).createDynamicMap(gameId),
     );
 
   }
@@ -142,7 +143,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<DLC>(
       tableName: DLCEntityData.table,
-      newItem: dlc,
+      fieldsAndValues: DLCMapper.modelToEntity(dlc).createDynamicMap(),
       idField: DLCEntityData.idField,
       findItemById: findDLCById,
     );
@@ -154,7 +155,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: DLCPurchaseRelationData.table,
-      insertFieldsAndValues: DLCPurchaseRelationData.getCreateDynamicMap(dlcId, purchaseId),
+      insertFieldsAndValues: DLCPurchaseRelationData.createDynamicMap(dlcId, purchaseId),
     );
 
   }
@@ -164,7 +165,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: DLCFinishEntityData.table,
-      insertFieldsAndValues: finish.toEntity().getCreateDynamicMap(dlcId),
+      insertFieldsAndValues: DLCMapper.finishModelToEntity(finish).createDynamicMap(dlcId),
     );
 
   }
@@ -176,7 +177,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<Platform>(
       tableName: PlatformEntityData.table,
-      newItem: platform,
+      fieldsAndValues: PlatformMapper.modelToEntity(platform).createDynamicMap(),
       idField: PlatformEntityData.idField,
       findItemById: findPlatformById,
     );
@@ -188,7 +189,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: PlatformSystemRelationData.table,
-      insertFieldsAndValues: PlatformSystemRelationData.getCreateDynamicMap(platformId, systemId),
+      insertFieldsAndValues: PlatformSystemRelationData.createDynamicMap(platformId, systemId),
     );
 
   }
@@ -200,7 +201,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<Purchase>(
       tableName: PurchaseEntityData.table,
-      newItem: purchase,
+      fieldsAndValues: PurchaseMapper.modelToEntity(purchase).createDynamicMap(),
       idField: PurchaseEntityData.idField,
       findItemById: findPurchaseById,
     );
@@ -212,7 +213,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _iSQLConnector.create(
       tableName: PurchaseTypeRelationData.table,
-      insertFieldsAndValues: PurchaseTypeRelationData.getCreateDynamicMap(purchaseId, typeId),
+      insertFieldsAndValues: PurchaseTypeRelationData.createDynamicMap(purchaseId, typeId),
     );
 
   }
@@ -224,7 +225,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<Store>(
       tableName: StoreEntityData.table,
-      newItem: store,
+      fieldsAndValues: StoreMapper.modelToEntity(store).createDynamicMap(),
       idField: StoreEntityData.idField,
       findItemById: findStoreById,
     );
@@ -251,7 +252,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<System>(
       tableName: SystemEntityData.table,
-      newItem: system,
+      fieldsAndValues: SystemMapper.modelToEntity(system).createDynamicMap(),
       idField: StoreEntityData.idField,
       findItemById: findSystemById,
     );
@@ -265,7 +266,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<Tag>(
       tableName: GameTagEntityData.table,
-      newItem: tag,
+      fieldsAndValues: GameTagMapper.modelToEntity(tag).createDynamicMap(),
       idField: GameTagEntityData.idField,
       findItemById: findGameTagById,
     );
@@ -279,7 +280,7 @@ class RemoteRepository implements CollectionRepository {
 
     return _createCollectionItem<PurchaseType>(
       tableName: PurchaseTypeEntityData.table,
-      newItem: type,
+      fieldsAndValues: PurchaseTypeMapper.modelToEntity(type).createDynamicMap(),
       idField: PurchaseTypeEntityData.idField,
       findItemById: findPurchaseTypeById,
     );
@@ -315,7 +316,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Game>> findAllGamesWithView(GameView gameView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: allViewToTable[gameView]!,
+      tableName: GameEntityData.allViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -327,7 +328,7 @@ class RemoteRepository implements CollectionRepository {
 
     // TODO read sql function
     return _iSQLConnector.read(
-      tableName: allViewToTable[gameView]!,
+      tableName: GameEntityData.allViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -338,7 +339,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Game>> findAllOwnedGamesWithView(GameView gameView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: ownedViewToTable[gameView]!,
+      tableName: GameEntityData.ownedViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -350,7 +351,7 @@ class RemoteRepository implements CollectionRepository {
 
     // TODO read sql function
     return _iSQLConnector.read(
-      tableName: ownedViewToTable[gameView]!,
+      tableName: GameEntityData.ownedViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -361,7 +362,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Game>> findAllRomGamesWithView(GameView gameView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: romViewToTable[gameView]!,
+      tableName: GameEntityData.romViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -373,7 +374,7 @@ class RemoteRepository implements CollectionRepository {
 
     // TODO read sql function
     return _iSQLConnector.read(
-      tableName: romViewToTable[gameView]!,
+      tableName: GameEntityData.romViewToTable[gameView]!,
       selectFieldsAndTypes: GameEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGame );
@@ -489,7 +490,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<DLC>> findAllDLCsWithView(DLCView dlcView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: dlcViewToTable[dlcView]!,
+      tableName: DLCEntityData.viewToTable[dlcView]!,
       selectFieldsAndTypes: DLCEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListDLC );
@@ -562,7 +563,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Platform>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: platformViewToTable[platformView]!,
+      tableName: PlatformEntityData.viewToTable[platformView]!,
       selectFieldsAndTypes: PlatformEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPlatform );
@@ -623,7 +624,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Purchase>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: purchaseViewToTable[purchaseView]!,
+      tableName: PurchaseEntityData.viewToTable[purchaseView]!,
       selectFieldsAndTypes: PurchaseEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPurchase );
@@ -635,7 +636,7 @@ class RemoteRepository implements CollectionRepository {
 
     // TODO read sql function
     return _iSQLConnector.read(
-      tableName: purchaseViewToTable[purchaseView]!,
+      tableName: PurchaseEntityData.viewToTable[purchaseView]!,
       selectFieldsAndTypes: PurchaseEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPurchase );
@@ -726,7 +727,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Store>> findAllStoresWithView(StoreView storeView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: storeViewToTable[storeView]!,
+      tableName: StoreEntityData.viewToTable[storeView]!,
       selectFieldsAndTypes: StoreEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListStore );
@@ -772,7 +773,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<System>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: systemViewToTable[systemView]!,
+      tableName: SystemEntityData.viewToTable[systemView]!,
       selectFieldsAndTypes: SystemEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListSystem );
@@ -817,7 +818,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<Tag>> findAllGameTagsWithView(TagView tagView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: tagViewToTable[tagView]!,
+      tableName: GameTagEntityData.viewToTable[tagView]!,
       selectFieldsAndTypes: GameTagEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListGameTag );
@@ -862,7 +863,7 @@ class RemoteRepository implements CollectionRepository {
   Stream<List<PurchaseType>> findAllPurchaseTypesWithView(TypeView typeView, [int? limit]) {
 
     return _iSQLConnector.read(
-      tableName: typeViewToTable[typeView]!,
+      tableName: PurchaseTypeEntityData.viewToTable[typeView]!,
       selectFieldsAndTypes: PurchaseTypeEntityData.fields,
       limit: limit,
     ).asStream().map( _dynamicToListPurchaseType );
@@ -903,7 +904,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<Game?> updateGame<T>(Game game, Game updatedGame, GameUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = game.toEntity().getUpdateDynamicMap(updatedGame.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = GameMapper.modelToEntity(game).updateDynamicMap(GameMapper.modelToEntity(updatedGame), updateProperties);
 
     return _updateCollectionItem<Game>(
       tableName: GameEntityData.table,
@@ -919,7 +920,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<DLC?> updateDLC(DLC dlc, DLC updatedDlc, DLCUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = dlc.toEntity().getUpdateDynamicMap(updatedDlc.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = DLCMapper.modelToEntity(dlc).updateDynamicMap(DLCMapper.modelToEntity(updatedDlc), updateProperties);
 
     return _updateCollectionItem<DLC>(
       tableName: DLCEntityData.table,
@@ -935,7 +936,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<Platform?> updatePlatform(Platform platform, Platform updatedPlatform, PlatformUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = platform.toEntity().getUpdateDynamicMap(updatedPlatform.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = PlatformMapper.modelToEntity(platform).updateDynamicMap(PlatformMapper.modelToEntity(updatedPlatform), updateProperties);
 
     return _updateCollectionItem<Platform>(
       tableName: PlatformEntityData.table,
@@ -951,7 +952,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<Purchase?> updatePurchase(Purchase purchase, Purchase updatedPurchase, PurchaseUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = purchase.toEntity().getUpdateDynamicMap(updatedPurchase.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = PurchaseMapper.modelToEntity(purchase).updateDynamicMap(PurchaseMapper.modelToEntity(updatedPurchase), updateProperties);
 
     return _updateCollectionItem<Purchase>(
       tableName: PurchaseEntityData.table,
@@ -967,7 +968,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<Store?> updateStore(Store store, Store updatedStore, StoreUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = store.toEntity().getUpdateDynamicMap(updatedStore.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = StoreMapper.modelToEntity(store).updateDynamicMap(StoreMapper.modelToEntity(updatedStore), updateProperties);
 
     return _updateCollectionItem<Store>(
       tableName: StoreEntityData.table,
@@ -983,7 +984,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<System?> updateSystem(System system, System updatedSystem, SystemUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = system.toEntity().getUpdateDynamicMap(updatedSystem.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = SystemMapper.modelToEntity(system).updateDynamicMap(SystemMapper.modelToEntity(updatedSystem), updateProperties);
 
     return _updateCollectionItem<System>(
       tableName: SystemEntityData.table,
@@ -999,7 +1000,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<Tag?> updateGameTag(Tag tag, Tag updatedTag, GameTagUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = tag.toEntity().getUpdateDynamicMap(updatedTag.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = GameTagMapper.modelToEntity(tag).updateDynamicMap(GameTagMapper.modelToEntity(updatedTag), updateProperties);
 
     return _updateCollectionItem<Tag>(
       tableName: GameTagEntityData.table,
@@ -1015,7 +1016,7 @@ class RemoteRepository implements CollectionRepository {
   @override
   Future<PurchaseType?> updatePurchaseType(PurchaseType type, PurchaseType updatedType, PurchaseTypeUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> fieldsAndValues = type.toEntity().getUpdateDynamicMap(updatedType.toEntity(), updateProperties);
+    final Map<String, dynamic> fieldsAndValues = PurchaseTypeMapper.modelToEntity(type).updateDynamicMap(PurchaseTypeMapper.modelToEntity(updatedType), updateProperties);
 
     return _updateCollectionItem<PurchaseType>(
       tableName: PurchaseTypeEntityData.table,
@@ -1662,197 +1663,12 @@ class RemoteRepository implements CollectionRepository {
   }
   //#endregion DOWNLOAD
 
-  //#region Dynamic Map to List
-  // TODO move to mapper class
-  List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
-
-    return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
-      return Game.fromEntity(gameEntity, _getGameCoverURL(gameEntity.coverFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<GameFinish> _dynamicToListGameFinish(List<Map<String, Map<String, dynamic>>> results) {
-
-    return GameFinishEntity.fromDynamicMapList(results).map( GameFinish.fromEntity ).toList(growable: false);
-
-  }
-
-  List<GameTimeLog> _dynamicToListTimeLog(List<Map<String, Map<String, dynamic>>> results) {
-
-    return GameTimeLogEntity.fromDynamicMapList(results).map( GameTimeLog.fromEntity ).toList(growable: false);
-
-  }
-
-  List<GameWithLogs> _dynamicToListGamesWithLogs(List<Map<String, Map<String, dynamic>>> results) {
-
-    return GameWithLogsEntity.fromDynamicMapList(results).map( (GameWithLogsEntity gameWithLogsEntity) {
-      return GameWithLogs.fromEntity(gameWithLogsEntity, _getGameCoverURL(gameWithLogsEntity.game.coverFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
-
-    return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
-      return DLC.fromEntity(dlcEntity, _getDLCCoverURL(dlcEntity.coverFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<DLCFinish> _dynamicToListDLCFinish(List<Map<String, Map<String, dynamic>>> results) {
-
-    return DLCFinishEntity.fromDynamicMapList(results).map( DLCFinish.fromEntity ).toList(growable: false);
-
-  }
-
-  List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
-      return Platform.fromEntity(platformEntity, _getPlatformIconURL(platformEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<Purchase> _dynamicToListPurchase(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PurchaseEntity.fromDynamicMapList(results).map( Purchase.fromEntity ).toList(growable: false);
-
-  }
-
-  List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
-
-    return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
-      return Store.fromEntity(storeEntity, _getStoreIconURL(storeEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
-
-    return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
-      return System.fromEntity(systemEntity, _getSystemIconURL(systemEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
-
-  List<Tag> _dynamicToListGameTag(List<Map<String, Map<String, dynamic>>> results) {
-
-    return GameTagEntity.fromDynamicMapList(results).map( Tag.fromEntity ).toList(growable: false);
-
-  }
-
-  List<PurchaseType> _dynamicToListPurchaseType(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PurchaseTypeEntity.fromDynamicMapList(results).map( PurchaseType.fromEntity ).toList(growable: false);
-
-  }
-
-  Game? _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
-
-    Game? singleGame;
-
-    if(results.isNotEmpty) {
-      singleGame = _dynamicToListGame(results).first;
-    }
-
-    return singleGame;
-
-  }
-
-  DLC? _dynamicToSingleDLC(List<Map<String, Map<String, dynamic>>> results) {
-
-    DLC? singleDLC;
-
-    if(results.isNotEmpty) {
-      singleDLC = _dynamicToListDLC(results).first;
-    }
-
-    return singleDLC;
-
-  }
-
-  Platform? _dynamicToSinglePlatform(List<Map<String, Map<String, dynamic>>> results) {
-
-    Platform? singlePlatform;
-
-    if(results.isNotEmpty) {
-      singlePlatform = _dynamicToListPlatform(results).first;
-    }
-
-    return singlePlatform;
-
-  }
-
-  Purchase? _dynamicToSinglePurchase(List<Map<String, Map<String, dynamic>>> results) {
-
-    Purchase? singlePurchase;
-
-    if(results.isNotEmpty) {
-      singlePurchase = _dynamicToListPurchase(results).first;
-    }
-
-    return singlePurchase;
-
-  }
-
-  Store? _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
-
-    Store? singleStore;
-
-    if(results.isNotEmpty) {
-      singleStore = _dynamicToListStore(results).first;
-    }
-
-    return singleStore;
-
-  }
-
-  System? _dynamicToSingleSystem(List<Map<String, Map<String, dynamic>>> results) {
-
-    System? singleSystem;
-
-    if(results.isNotEmpty) {
-      singleSystem = _dynamicToListSystem(results).first;
-    }
-
-    return singleSystem;
-
-  }
-
-  Tag? _dynamicToSingleGameTag(List<Map<String, Map<String, dynamic>>> results) {
-
-    Tag? singleTag;
-
-    if(results.isNotEmpty) {
-      singleTag = _dynamicToListGameTag(results).first;
-    }
-
-    return singleTag;
-
-  }
-
-  PurchaseType? _dynamicToSinglePurchaseType(List<Map<String, Map<String, dynamic>>> results) {
-
-    PurchaseType? singleType;
-
-    if(results.isNotEmpty) {
-      singleType = _dynamicToListPurchaseType(results).first;
-    }
-
-    return singleType;
-
-  }
-  //#endregion Dynamic Map to List
-
   //#region Utils
-  Future<T?> _createCollectionItem<T extends CollectionItem>({required String tableName, required T newItem, required String idField, required Stream<T?> Function(int) findItemById}) async {
-
-    final CollectionItemEntity itemEntity = newItem.toEntity();
+  Future<T?> _createCollectionItem<T extends CollectionItem>({required String tableName, required Map<String, dynamic> fieldsAndValues, required String idField, required Stream<T?> Function(int) findItemById}) async {
 
     final int? id = await _iSQLConnector.create(
       tableName: tableName,
-      insertFieldsAndValues: itemEntity.getCreateDynamicMap(),
+      insertFieldsAndValues: fieldsAndValues,
       returningField: idField,
     ).asStream().map( (List<Map<String, Map<String, dynamic>>> results) => _dynamicToId(results, tableName, idField) ).first;
 
@@ -1953,81 +1769,156 @@ class RemoteRepository implements CollectionRepository {
 
     return id;
   }
-  //#endregion Utils
 
-  // TODO move somewhere else
   String _getImageName(int id, String imageName) {
 
     return id.toString() + '-' + imageName;
 
   }
+  //#endregion Utils
+
+  //#region Dynamic Map to List
+  List<Game> _dynamicToListGame(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
+      return GameMapper.entityToModel(gameEntity, _getGameCoverURL(gameEntity.coverFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<GameFinish> _dynamicToListGameFinish(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameFinishEntity.fromDynamicMapList(results).map( GameMapper.finishEntityToModel ).toList(growable: false);
+
+  }
+
+  List<GameTimeLog> _dynamicToListTimeLog(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameTimeLogEntity.fromDynamicMapList(results).map( GameMapper.logEntityToModel ).toList(growable: false);
+
+  }
+
+  List<GameWithLogs> _dynamicToListGamesWithLogs(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameWithLogsEntity.fromDynamicMapList(results).map( (GameWithLogsEntity gameWithLogsEntity) {
+      return GameMapper.gameWithLogEntityToModel(gameWithLogsEntity, _getGameCoverURL(gameWithLogsEntity.game.coverFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<DLC> _dynamicToListDLC(List<Map<String, Map<String, dynamic>>> results) {
+
+    return DLCEntity.fromDynamicMapList(results).map( (DLCEntity dlcEntity) {
+      return DLCMapper.entityToModel(dlcEntity, _getDLCCoverURL(dlcEntity.coverFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<DLCFinish> _dynamicToListDLCFinish(List<Map<String, Map<String, dynamic>>> results) {
+
+    return DLCFinishEntity.fromDynamicMapList(results).map( DLCMapper.finishEntityToModel ).toList(growable: false);
+
+  }
+
+  List<Platform> _dynamicToListPlatform(List<Map<String, Map<String, dynamic>>> results) {
+
+    return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
+      return PlatformMapper.entityToModel(platformEntity, _getPlatformIconURL(platformEntity.iconFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<Purchase> _dynamicToListPurchase(List<Map<String, Map<String, dynamic>>> results) {
+
+    return PurchaseEntity.fromDynamicMapList(results).map( PurchaseMapper.entityToModel ).toList(growable: false);
+
+  }
+
+  List<Store> _dynamicToListStore(List<Map<String, Map<String, dynamic>>> results) {
+
+    return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
+      return StoreMapper.entityToModel(storeEntity, _getStoreIconURL(storeEntity.iconFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<System> _dynamicToListSystem(List<Map<String, Map<String, dynamic>>> results) {
+
+    return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
+      return SystemMapper.entityToModel(systemEntity, _getSystemIconURL(systemEntity.iconFilename));
+    }).toList(growable: false);
+
+  }
+
+  List<Tag> _dynamicToListGameTag(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameTagEntity.fromDynamicMapList(results).map( GameTagMapper.entityToModel ).toList(growable: false);
+
+  }
+
+  List<PurchaseType> _dynamicToListPurchaseType(List<Map<String, Map<String, dynamic>>> results) {
+
+    return PurchaseTypeEntity.fromDynamicMapList(results).map( PurchaseTypeMapper.entityToModel ).toList(growable: false);
+
+  }
+
+  T? _dynamicToSingleCollectionItem<T extends CollectionItem>(List<Map<String, Map<String, dynamic>>> results, List<T> Function(List<Map<String, Map<String, dynamic>>>) dynamicToList) {
+
+    T? singleItem;
+
+    if(results.isNotEmpty) {
+      singleItem = dynamicToList(results).first;
+    }
+
+    return singleItem;
+  }
+
+  Game? _dynamicToSingleGame(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<Game>(results, _dynamicToListGame);
+
+  }
+
+  DLC? _dynamicToSingleDLC(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<DLC>(results, _dynamicToListDLC);
+
+  }
+
+  Platform? _dynamicToSinglePlatform(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<Platform>(results, _dynamicToListPlatform);
+
+  }
+
+  Purchase? _dynamicToSinglePurchase(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<Purchase>(results, _dynamicToListPurchase);
+
+  }
+
+  Store? _dynamicToSingleStore(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<Store>(results, _dynamicToListStore);
+
+  }
+
+  System? _dynamicToSingleSystem(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<System>(results, _dynamicToListSystem);
+
+  }
+
+  Tag? _dynamicToSingleGameTag(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<Tag>(results, _dynamicToListGameTag);
+
+  }
+
+  PurchaseType? _dynamicToSinglePurchaseType(List<Map<String, Map<String, dynamic>>> results) {
+
+    return _dynamicToSingleCollectionItem<PurchaseType>(results, _dynamicToListPurchaseType);
+
+  }
+  //#endregion Dynamic Map to List
 }
-
-// TODO move to mapper
-const Map<GameView, String> allViewToTable = <GameView, String>{
-  GameView.Main : 'All-Main',
-  GameView.LastCreated : 'All-Last Created',
-  GameView.Playing : 'All-Playing',
-  GameView.NextUp : 'All-Next Up',
-  GameView.LastPlayed : 'All-Last Played',
-  GameView.LastFinished : 'All-Last Finished',
-  GameView.Review : 'All-Year In Review',
-};
-
-const Map<GameView, String> ownedViewToTable = <GameView, String>{
-  GameView.Main : 'Owned-Main',
-  GameView.LastCreated : 'Owned-Last Created',
-  GameView.Playing : 'Owned-Playing',
-  GameView.NextUp : 'Owned-Next Up',
-  GameView.LastPlayed : 'Owned-Last Played',
-  GameView.LastFinished : 'Owned-Last Finished',
-  GameView.Review : 'Owned-Year In Review',
-};
-
-const Map<GameView, String> romViewToTable = <GameView, String>{
-  GameView.Main : 'Rom-Main',
-  GameView.LastCreated : 'Rom-Last Created',
-  GameView.Playing : 'Rom-Playing',
-  GameView.NextUp : 'Rom-Next Up',
-  GameView.LastPlayed : 'Rom-Last Played',
-  GameView.LastFinished : 'Rom-Last Finished',
-  GameView.Review : 'Rom-Year In Review',
-};
-
-const Map<DLCView, String> dlcViewToTable = <DLCView, String>{
-  DLCView.Main : 'DLC-Main',
-  DLCView.LastCreated : 'DLC-Last Created',
-};
-
-const Map<PlatformView, String> platformViewToTable = <PlatformView, String>{
-  PlatformView.Main : 'Platform-Main',
-  PlatformView.LastCreated : 'Platform-Last Created',
-};
-
-const Map<PurchaseView, String> purchaseViewToTable = <PurchaseView, String>{
-  PurchaseView.Main : 'Purchase-Main',
-  PurchaseView.LastCreated : 'Purchase-Last Created',
-  PurchaseView.Pending : 'Purchase-Pending',
-  PurchaseView.LastPurchased : 'Purchase-Last Purchased',
-  PurchaseView.Review : 'Purchase-Year In Review',
-};
-
-const Map<StoreView, String> storeViewToTable = <StoreView, String>{
-  StoreView.Main : 'Store-Main',
-  StoreView.LastCreated : 'Store-Last Created',
-};
-
-const Map<SystemView, String> systemViewToTable = <SystemView, String>{
-  SystemView.Main : 'System-Main',
-  SystemView.LastCreated : 'System-Last Created',
-};
-
-const Map<TagView, String> tagViewToTable = <TagView, String>{
-  TagView.Main : 'Tag-Main',
-  TagView.LastCreated : 'Tag-Last Created',
-};
-
-const Map<TypeView, String> typeViewToTable = <TypeView, String>{
-  TypeView.Main : 'Type-Main',
-  TypeView.LastCreated : 'Type-Last Created',
-};

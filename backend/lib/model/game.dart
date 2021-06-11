@@ -57,48 +57,6 @@ class Game extends CollectionItem {
   @override
   String get queryableTerms => <String>[this.name, this.edition].join(',');
 
-  static Game fromEntity(GameEntity entity, [String? coverURL]) {
-
-    return Game(
-      id: entity.id,
-      name: entity.name,
-      edition: entity.edition,
-      releaseYear: entity.releaseYear,
-      coverURL: coverURL,
-      coverFilename: entity.coverFilename,
-      status: entity.status,
-      rating: entity.rating,
-      thoughts: entity.thoughts,
-      time: entity.time,
-      saveFolder: entity.saveFolder,
-      screenshotFolder: entity.screenshotFolder,
-      finishDate: entity.finishDate,
-      isBackup: entity.isBackup,
-    );
-
-  }
-
-  @override
-  GameEntity toEntity() {
-
-    return GameEntity(
-      id: this.id,
-      name: this.name,
-      edition: this.edition,
-      releaseYear: this.releaseYear,
-      coverFilename: this.coverFilename,
-      status: this.status,
-      rating: this.rating,
-      thoughts: this.thoughts,
-      time: this.time,
-      saveFolder: this.saveFolder,
-      screenshotFolder: this.screenshotFolder,
-      finishDate: this.finishDate,
-      isBackup: this.isBackup,
-    );
-
-  }
-
   @override
   Game copyWith({
     String? name,

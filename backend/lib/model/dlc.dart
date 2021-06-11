@@ -1,5 +1,3 @@
-import 'package:backend/entity/entity.dart';
-
 import 'model.dart';
 
 
@@ -39,36 +37,6 @@ class DLC extends CollectionItem {
 
   @override
   String get queryableTerms => this.name;
-
-  static DLC fromEntity(DLCEntity entity, [String? coverURL]) {
-
-    return DLC(
-      id: entity.id,
-      name: entity.name,
-      releaseYear: entity.releaseYear,
-      coverURL: coverURL,
-      coverFilename: entity.coverFilename,
-      finishDate: entity.finishDate,
-
-      baseGame: entity.baseGame,
-    );
-
-  }
-
-  @override
-  DLCEntity toEntity() {
-
-    return DLCEntity(
-      id: this.id,
-      name: this.name,
-      releaseYear: this.releaseYear,
-      coverFilename: this.coverFilename,
-      finishDate: this.finishDate,
-
-      baseGame: this.baseGame,
-    );
-
-  }
 
   @override
   DLC copyWith({

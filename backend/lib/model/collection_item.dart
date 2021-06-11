@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/entity/entity.dart';
-
 
 abstract class CollectionItem extends Equatable {
   const CollectionItem({
@@ -14,8 +12,6 @@ abstract class CollectionItem extends Equatable {
   bool get hasImage;
   ItemImage get image;
   String get queryableTerms;
-
-  CollectionItemEntity toEntity();
 
   CollectionItem copyWith();
 

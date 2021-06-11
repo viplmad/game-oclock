@@ -9,6 +9,11 @@ class PurchaseTypeEntityData {
 
   static const String table = 'Type';
 
+  static const Map<TypeView, String> viewToTable = <TypeView, String>{
+    TypeView.Main : 'Type-Main',
+    TypeView.LastCreated : 'Type-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -37,7 +42,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   final String name;
 
-  static PurchaseTypeEntity fromDynamicMap(Map<String, dynamic> map) {
+  static PurchaseTypeEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
       id: map[PurchaseTypeEntityData.idField] as int,
@@ -46,18 +51,21 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<PurchaseTypeEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      PurchaseTypeEntityData.idField : id,
-      PurchaseTypeEntityData.nameField : name,
-    };
+    final List<PurchaseTypeEntity> typesList = <PurchaseTypeEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final PurchaseTypeEntity type = PurchaseTypeEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseTypeEntityData.table) );
+
+      typesList.add(type);
+    });
+
+    return typesList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       PurchaseTypeEntityData.nameField : name,
@@ -67,27 +75,13 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(PurchaseTypeEntity updatedEntity, PurchaseTypeUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(PurchaseTypeEntity updatedEntity, PurchaseTypeUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, PurchaseTypeEntityData.nameField, name, updatedEntity.name);
 
     return updateMap;
-
-  }
-
-  static List<PurchaseTypeEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<PurchaseTypeEntity> typesList = <PurchaseTypeEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseTypeEntity type = PurchaseTypeEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseTypeEntityData.table) );
-
-      typesList.add(type);
-    });
-
-    return typesList;
 
   }
 

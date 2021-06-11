@@ -26,7 +26,7 @@ class DLCPurchaseRelationData {
 
   }
 
-  static Map<String, dynamic> getCreateDynamicMap(int dlcId, int purchaseId) {
+  static Map<String, dynamic> createDynamicMap(int dlcId, int purchaseId) {
 
     return <String, dynamic>{
       _dlcField : dlcId,

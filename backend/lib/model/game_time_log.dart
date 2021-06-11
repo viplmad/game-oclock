@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/entity/entity.dart';
-
 
 class GameTimeLog extends Equatable implements Comparable<GameTimeLog> {
   const GameTimeLog({
@@ -11,24 +9,6 @@ class GameTimeLog extends Equatable implements Comparable<GameTimeLog> {
 
   final DateTime dateTime;
   final Duration time;
-
-  static GameTimeLog fromEntity(GameTimeLogEntity entity) {
-
-    return GameTimeLog(
-      dateTime: entity.dateTime,
-      time: entity.time,
-    );
-
-  }
-
-  GameTimeLogEntity toEntity() {
-
-    return GameTimeLogEntity(
-      dateTime: this.dateTime,
-      time: this.time,
-    );
-
-  }
 
   GameTimeLog copyWith({
     DateTime? dateTime,

@@ -9,6 +9,11 @@ class GameTagEntityData {
 
   static const String table = 'Tag';
 
+  static const Map<TagView, String> viewToTable = <TagView, String>{
+    TagView.Main : 'Tag-Main',
+    TagView.LastCreated : 'Tag-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -37,7 +42,7 @@ class GameTagEntity extends CollectionItemEntity {
 
   final String name;
 
-  static GameTagEntity fromDynamicMap(Map<String, dynamic> map) {
+  static GameTagEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return GameTagEntity(
       id: map[GameTagEntityData.idField] as int,
@@ -46,18 +51,21 @@ class GameTagEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<GameTagEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      GameTagEntityData.idField : id,
-      GameTagEntityData.nameField : name,
-    };
+    final List<GameTagEntity> tagsList = <GameTagEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final GameTagEntity tag = GameTagEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameTagEntityData.table) );
+
+      tagsList.add(tag);
+    });
+
+    return tagsList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       GameTagEntityData.nameField : name,
@@ -67,27 +75,13 @@ class GameTagEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, GameTagEntityData.nameField, name, updatedEntity.name);
 
     return updateMap;
-
-  }
-
-  static List<GameTagEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<GameTagEntity> tagsList = <GameTagEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameTagEntity tag = GameTagEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameTagEntityData.table) );
-
-      tagsList.add(tag);
-    });
-
-    return tagsList;
 
   }
 

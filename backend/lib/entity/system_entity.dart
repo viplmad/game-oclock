@@ -16,6 +16,11 @@ class SystemEntityData {
 
   static const String table = 'System';
 
+  static const Map<SystemView, String> viewToTable = <SystemView, String>{
+    SystemView.Main : 'System-Main',
+    SystemView.LastCreated : 'System-Last Created',
+  };
+
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
@@ -58,7 +63,7 @@ class SystemEntity extends CollectionItemEntity {
   final int generation;
   final String? manufacturer;
 
-  static SystemEntity fromDynamicMap(Map<String, dynamic> map) {
+  static SystemEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return SystemEntity(
       id: map[SystemEntityData.idField] as int,
@@ -70,21 +75,21 @@ class SystemEntity extends CollectionItemEntity {
 
   }
 
-  @override
-  Map<String, dynamic> toDynamicMap() {
+  static List<SystemEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
 
-    return <String, dynamic> {
-      SystemEntityData.idField : id,
-      SystemEntityData.nameField : name,
-      SystemEntityData._iconField : iconFilename,
-      SystemEntityData._generationField : generation,
-      SystemEntityData._manufacturerField : manufacturer,
-    };
+    final List<SystemEntity> systemsList = <SystemEntity>[];
+
+    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
+      final SystemEntity system = SystemEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, SystemEntityData.table) );
+
+      systemsList.add(system);
+    });
+
+    return systemsList;
 
   }
 
-  @override
-  Map<String, dynamic> getCreateDynamicMap() {
+  Map<String, dynamic> createDynamicMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       SystemEntityData.nameField : name,
@@ -98,7 +103,7 @@ class SystemEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> getUpdateDynamicMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
+  Map<String, dynamic> updateDynamicMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
@@ -108,20 +113,6 @@ class SystemEntity extends CollectionItemEntity {
     putUpdateMapValueNullable(updateMap, SystemEntityData._manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
 
     return updateMap;
-
-  }
-
-  static List<SystemEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
-
-    final List<SystemEntity> systemsList = <SystemEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final SystemEntity system = SystemEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, SystemEntityData.table) );
-
-      systemsList.add(system);
-    });
-
-    return systemsList;
 
   }
 
