@@ -28,10 +28,12 @@ class Query {
   }
 }
 
-abstract class FieldQuery {}
+abstract class FieldQuery {
+  const FieldQuery();
+}
 
 class FieldCompareQuery extends FieldQuery {
-  FieldCompareQuery(this.field, this.comparator, this.value);
+  const FieldCompareQuery(this.field, this.comparator, this.value);
 
   final String field;
   final QueryComparator comparator;
@@ -39,7 +41,7 @@ class FieldCompareQuery extends FieldQuery {
 }
 
 class FieldRawQuery extends FieldQuery {
-  FieldRawQuery(this.rawQuery);
+  const FieldRawQuery(this.rawQuery);
 
   final String rawQuery;
 }

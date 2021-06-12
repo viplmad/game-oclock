@@ -1,5 +1,6 @@
 import 'package:backend/model/model.dart';
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import 'entity.dart';
 
@@ -19,12 +20,17 @@ class PurchaseTypeEntityData {
   static const String idField = 'ID';
   static const String nameField = 'Name';
 
-  static const Map<String, Type> fields = <String, Type>{
-    idField : int,
-    nameField : String,
-  };
+  static Fields fields() {
 
-  static Query getIdQuery(int id) {
+    final Fields fields = Fields();
+    fields.add(idField, int);
+    fields.add(nameField, String);
+
+    return fields;
+
+  }
+
+  static Query idQuery(int id) {
 
     final Query idQuery = Query();
     idQuery.addAnd(idField, id);

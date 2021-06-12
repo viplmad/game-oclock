@@ -16,7 +16,7 @@ class PurchaseTypeRelationData {
     _typeField : int,
   };
 
-  static Query getIdQuery(int purchaseId, int typeId) {
+  static Query idQuery(int purchaseId, int typeId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_purchaseField, purchaseId);

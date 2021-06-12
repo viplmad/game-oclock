@@ -16,7 +16,7 @@ class DLCPurchaseRelationData {
     _purchaseField : int,
   };
 
-  static Query getIdQuery(int dlcId, int purchaseId) {
+  static Query idQuery(int dlcId, int purchaseId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_dlcField, dlcId);

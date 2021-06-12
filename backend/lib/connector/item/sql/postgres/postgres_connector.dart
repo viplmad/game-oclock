@@ -2,6 +2,7 @@ import 'package:postgres/postgres.dart';
 import 'package:sql_builder/sql_builder.dart';
 
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import '../sql_connector.dart';
 
@@ -99,21 +100,9 @@ class PostgresConnector extends SQLConnector {
 
   //#region READ
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> read({required String tableName, required Map<String, Type> selectFieldsAndTypes, Query? whereQuery, List<String>? orderFields, int? limit}) {
+  Future<List<Map<String, Map<String, dynamic>>>> read({required String tableName, required Fields selectFields, Query? whereQuery, List<String>? orderFields, int? limit}) {
 
-    final QueryBuilder queryBuilder = selectTableQueryBuilder(tableName, selectFieldsAndTypes, whereQuery, orderFields, limit);
-
-    return _connection.mappedResultsQuery(
-      queryBuilder.toSql(),
-      substitutionValues: queryBuilder.buildSubstitutionValues(),
-    );
-
-  }
-
-  @override
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Map<String, Type> selectFieldsAndTypes, required Query whereQuery, List<String>? orderFields, int? limit}) {
-
-    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, idField, joinField, selectFieldsAndTypes, whereQuery, orderFields, limit);
+    final QueryBuilder queryBuilder = selectTableQueryBuilder(tableName, selectFields, whereQuery, orderFields, limit);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -123,9 +112,9 @@ class PostgresConnector extends SQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Map<String, Type> selectFieldsAndTypes, required Query whereQuery, List<String>? orderFields, int? limit}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Fields selectFields, required Query whereQuery, List<String>? orderFields, int? limit}) {
 
-    final QueryBuilder queryBuilder = selectRelationQueryBuilder(primaryTable, subordinateTable, idField, joinField, selectFieldsAndTypes, whereQuery, orderFields, limit, primaryResults: primaryResults);
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(tableName, relationTable, idField, joinField, selectFields, whereQuery, orderFields, limit);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -135,7 +124,19 @@ class PostgresConnector extends SQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readJoin({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Map<String, Type> leftSelectFields, required Map<String, Type> rightSelectFields, required Query whereQuery, List<String>? orderFields, int? limit}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Fields selectFields, required Query whereQuery, List<String>? orderFields, int? limit}) {
+
+    final QueryBuilder queryBuilder = selectRelationQueryBuilder(primaryTable, subordinateTable, idField, joinField, selectFields, whereQuery, orderFields, limit, primaryResults: primaryResults);
+
+    return _connection.mappedResultsQuery(
+      queryBuilder.toSql(),
+      substitutionValues: queryBuilder.buildSubstitutionValues(),
+    );
+
+  }
+
+  @override
+  Future<List<Map<String, Map<String, dynamic>>>> readJoin({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Fields leftSelectFields, required Fields rightSelectFields, required Query whereQuery, List<String>? orderFields, int? limit}) {
 
     final QueryBuilder queryBuilder = selectJoinQueryBuilder(leftTable, rightTable, leftTableIdField, rightTableIdField, leftSelectFields, rightSelectFields, whereQuery, orderFields, limit);
 
@@ -147,9 +148,9 @@ class PostgresConnector extends SQLConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> readFunction({required String functionName, required List<dynamic> arguments, required Map<String, Type> selectFieldsAndTypes, int? limit}) {
+  Future<List<Map<String, Map<String, dynamic>>>> readFunction({required String functionName, required List<dynamic> arguments, required Fields selectFields, int? limit}) {
 
-    final QueryBuilder queryBuilder = selectFunctionQueryBuilder(functionName, arguments, selectFieldsAndTypes, limit);
+    final QueryBuilder queryBuilder = selectFunctionQueryBuilder(functionName, arguments, selectFields, limit);
 
     return _connection.mappedResultsQuery(
       queryBuilder.toSql(),
@@ -198,12 +199,12 @@ class PostgresConnector extends SQLConnector {
     return queryBuilder;
   }
 
-  QueryBuilder selectTableQueryBuilder(String tableName, Map<String, Type> selectFieldsAndTypes, Query? whereQuery, List<String>? orderFields, int? limit) {
+  QueryBuilder selectTableQueryBuilder(String tableName, Fields selectFields, Query? whereQuery, List<String>? orderFields, int? limit) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .from(tableName);
 
-    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
+    _buildFields(queryBuilder, tableName, selectFields);
     _buildWhere(queryBuilder, tableName, whereQuery);
     _buildOrder(queryBuilder, orderFields);
     _buildLimit(queryBuilder, limit);
@@ -211,28 +212,13 @@ class PostgresConnector extends SQLConnector {
     return queryBuilder;
   }
 
-  // TODO build object for select like Query
-  QueryBuilder selectSpecial(String tableName, Map<String, Type> selectFieldsAndTypes, List<String> rawSelects, Query? whereQuery, List<String>? orderFields, int? limit) {
-    final QueryBuilder queryBuilder = FluentQuery
-      .select(options: this._queryBuilderOptions)
-      .from(tableName);
-
-    _buildFields(queryBuilder, tableName, selectFieldsAndTypes);
-    _buildRawFields(queryBuilder, rawSelects);
-    _buildWhere(queryBuilder, tableName, whereQuery);
-    _buildOrder(queryBuilder, orderFields);
-    _buildLimit(queryBuilder, limit);
-
-    return queryBuilder;
-  }
-
-  QueryBuilder selectRelationQueryBuilder(String primaryTable, String subordinateTable, String idField, String joinField, Map<String, Type> selectFieldsAndTypes, Query whereQuery, List<String>? orderFields, int? limit, {bool primaryResults = true}) {
+  QueryBuilder selectRelationQueryBuilder(String primaryTable, String subordinateTable, String idField, String joinField, Fields selectFields, Query whereQuery, List<String>? orderFields, int? limit, {bool primaryResults = true}) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .from(primaryTable);
 
     _buildJoin(queryBuilder, subordinateTable, primaryTable, joinField, idField);
-    _buildFields(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFieldsAndTypes);
+    _buildFields(queryBuilder, (primaryResults? primaryTable : subordinateTable), selectFields);
     _buildWhere(queryBuilder, (primaryResults? subordinateTable : primaryTable), whereQuery);
     _buildOrder(queryBuilder, orderFields);
     _buildLimit(queryBuilder, limit);
@@ -240,7 +226,7 @@ class PostgresConnector extends SQLConnector {
     return queryBuilder;
   }
 
-  QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Map<String, Type> leftSelectFields, Map<String, Type> rightSelectFields, Query whereQuery, List<String>? orderFields, int? limit) {
+  QueryBuilder selectJoinQueryBuilder(String leftTable, String rightTable, String leftTableIdField, String rightTableIdField, Fields leftSelectFields, Fields rightSelectFields, Query whereQuery, List<String>? orderFields, int? limit) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .from(leftTable);
@@ -255,12 +241,12 @@ class PostgresConnector extends SQLConnector {
     return queryBuilder;
   }
 
-  QueryBuilder selectFunctionQueryBuilder(String functionName, List<dynamic> arguments, Map<String, Type> selectFieldsAndTypes, int? limit) {
+  QueryBuilder selectFunctionQueryBuilder(String functionName, List<dynamic> arguments, Fields selectFields, int? limit) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
       .fromRaw(Validator.sanitizeTable(functionName, this._queryBuilderOptions) + '(' + arguments.join(', ') + ')');
 
-    _buildFields(queryBuilder, null, selectFieldsAndTypes);
+    _buildFields(queryBuilder, null, selectFields);
     _buildLimit(queryBuilder, limit);
 
     return queryBuilder;
@@ -295,39 +281,41 @@ class PostgresConnector extends SQLConnector {
     queryBuilder.join(joinTableName, '$onPrimary = $onJoin', type: joinType);
   }
 
-  void _buildFields(QueryBuilder queryBuilder, String? tableName, Map<String, Type>? selectFieldsAndTypes) {
-    if(selectFieldsAndTypes != null) {
-      selectFieldsAndTypes.forEach( (String fieldName, Type fieldType) {
+  void _buildFields(QueryBuilder queryBuilder, String? tableName, Fields? selectFields) {
+    if(selectFields != null) {
+      selectFields.fields.forEach((SelectField selectField) {
+        if(selectField is SelectTypeField) {
 
-        final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+          final String fieldName = selectField.field;
+          final Type fieldType = selectField.type;
 
-        if(fieldType == double) {
+          final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
 
-          final String rawDoubleField = sanitizedField + '::float';
-          queryBuilder.fieldRaw(rawDoubleField);
+          if(fieldType == double) {
 
-        } else if(fieldType == Duration) {
+            final String rawDoubleField = sanitizedField + '::float';
+            queryBuilder.fieldRaw(rawDoubleField);
 
-          final String fieldValue = Validator.sanitizeField(fieldName.trim(), this._queryBuilderOptions);
-          final String rawDurationField = '(Extract(hours from ' + sanitizedField + ') * 60 + EXTRACT(minutes from ' + sanitizedField + '))::int AS ' + fieldValue;
-          queryBuilder.fieldRaw(rawDurationField);
+          } else if(fieldType == Duration) {
 
-        } else {
+            final String fieldValue = Validator.sanitizeField(fieldName.trim(), this._queryBuilderOptions);
+            final String rawDurationField = '(Extract(hours from ' + sanitizedField + ') * 60 + EXTRACT(minutes from ' + sanitizedField + '))::int AS ' + fieldValue;
+            queryBuilder.fieldRaw(rawDurationField);
 
-          queryBuilder.fieldRaw(sanitizedField);
+          } else {
+
+            queryBuilder.fieldRaw(sanitizedField);
+
+          }
+
+        } else if(selectField is SelectRawField) {
+
+          final String rawSelect = selectField.rawField;
+          queryBuilder.fieldRaw(rawSelect);
 
         }
-
       });
     }
-  }
-
-  void _buildRawFields(QueryBuilder queryBuilder, List<String> rawSelects) {
-    rawSelects.forEach((String rawSelect) {
-
-      queryBuilder.fieldRaw(rawSelect);
-
-    });
   }
 
   void _buildWhere(QueryBuilder queryBuilder, String? tableName, Query? whereQuery) {

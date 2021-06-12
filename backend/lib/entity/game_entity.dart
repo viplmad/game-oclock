@@ -1,5 +1,6 @@
 import 'package:backend/model/model.dart';
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import 'entity.dart';
 
@@ -65,23 +66,28 @@ class GameEntityData {
 
   static const String imageField = _coverField;
 
-  static const Map<String, Type> fields = <String, Type>{
-    idField : int,
-    nameField : String,
-    _editionField : String,
-    _releaseYearField : int,
-    _coverField : String,
-    _statusField : String,
-    _ratingField : int,
-    _thoughtsField : String,
-    _timeField : Duration,
-    _saveFolderField : String,
-    _screenshotFolderField : String,
-    _finishDateField : DateTime,
-    _backupField : bool,
-  };
+  static Fields fields() {
 
-  static Query getIdQuery(int id) {
+    final Fields fields = Fields();
+    fields.add(idField, int);
+    fields.add(nameField, String);
+    fields.add(_editionField, String);
+    fields.add(_releaseYearField, int);
+    fields.add(_coverField, String);
+    fields.add(_statusField, String);
+    fields.add(_ratingField, int);
+    fields.add(_thoughtsField, String);
+    fields.add(_timeField, Duration);
+    fields.add(_saveFolderField, String);
+    fields.add(_screenshotFolderField, String);
+    fields.add(_finishDateField, DateTime);
+    fields.add(_backupField, bool);
+
+    return fields;
+
+  }
+
+  static Query idQuery(int id) {
 
     final Query idQuery = Query();
     idQuery.addAnd(idField, id);

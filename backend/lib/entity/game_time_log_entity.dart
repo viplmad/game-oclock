@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import 'entity.dart';
 
@@ -15,13 +16,18 @@ class GameTimeLogEntityData {
   static const String _dateTimeField = 'DateTime';
   static const String _timeField = 'Time';
 
-  static const Map<String, Type> fields = <String, Type>{
-    _gameField : int,
-    _dateTimeField : DateTime,
-    _timeField : Duration,
-  };
+  static Fields fields() {
 
-  static Query getIdQuery(int gameId, DateTime dateTime) {
+    final Fields fields = Fields();
+    fields.add(_gameField, int);
+    fields.add(_dateTimeField, DateTime);
+    fields.add(_timeField, Duration);
+
+    return fields;
+
+  }
+
+  static Query idQuery(int gameId, DateTime dateTime) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_gameField, gameId);

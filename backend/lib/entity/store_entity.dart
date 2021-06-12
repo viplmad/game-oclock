@@ -1,5 +1,6 @@
 import 'package:backend/model/model.dart';
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import 'entity.dart';
 
@@ -22,13 +23,18 @@ class StoreEntityData {
 
   static const String imageField = _iconField;
 
-  static const Map<String, Type> fields = <String, Type>{
-    idField : int,
-    nameField : String,
-    _iconField : String,
-  };
+  static Fields fields() {
 
-  static Query getIdQuery(int id) {
+    final Fields fields = Fields();
+    fields.add(idField, int);
+    fields.add(nameField, String);
+    fields.add(_iconField, String);
+
+    return fields;
+
+  }
+
+  static Query idQuery(int id) {
 
     final Query idQuery = Query();
     idQuery.addAnd(idField, id);

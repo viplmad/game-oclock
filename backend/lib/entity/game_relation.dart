@@ -16,7 +16,7 @@ class GamePlatformRelationData {
     _platformField : int,
   };
 
-  static Query getIdQuery(int gameId, int platformId) {
+  static Query idQuery(int gameId, int platformId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_gameField, gameId);
@@ -49,7 +49,7 @@ class GamePurchaseRelationData {
     _purchaseField : int,
   };
 
-  static Query getIdQuery(int gameId, int purchaseId) {
+  static Query idQuery(int gameId, int purchaseId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_gameField, gameId);
@@ -82,7 +82,7 @@ class GameTagRelationData {
     _tagField : int,
   };
 
-  static Query getIdQuery(int gameId, int tagId) {
+  static Query idQuery(int gameId, int tagId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_gameField, gameId);

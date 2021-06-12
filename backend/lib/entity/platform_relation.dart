@@ -16,7 +16,7 @@ class PlatformSystemRelationData {
     _systemField : int,
   };
 
-  static Query getIdQuery(int platformId, int systemId) {
+  static Query idQuery(int platformId, int systemId) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_platformField, platformId);

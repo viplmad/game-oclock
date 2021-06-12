@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:backend/query/query.dart';
+import 'package:backend/query/fields.dart';
 
 import 'entity.dart';
 
@@ -14,12 +15,17 @@ class DLCFinishEntityData {
   static const String _dlcField = DLCEntityData.relationField;
   static const String _dateField = 'Date';
 
-  static const Map<String, Type> fields = <String, Type>{
-    _dlcField : int,
-    _dateField : DateTime,
-  };
+  static Fields fields() {
 
-  static Query getIdQuery(int dlcId, DateTime date) {
+    final Fields fields = Fields();
+    fields.add(_dlcField, int);
+    fields.add(_dateField, DateTime);
+
+    return fields;
+
+  }
+
+  static Query idQuery(int dlcId, DateTime date) {
 
     final Query idQuery = Query();
     idQuery.addAnd(_dlcField, dlcId);
