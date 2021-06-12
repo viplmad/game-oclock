@@ -13,14 +13,14 @@ class GameTimeLogEntityData {
   static const String readTable = 'Game-Log';
 
   static const String _gameField = GameEntityData.relationField;
-  static const String _dateTimeField = 'DateTime';
+  static const String dateTimeField = 'DateTime';
   static const String _timeField = 'Time';
 
   static Fields fields() {
 
     final Fields fields = Fields();
     fields.add(_gameField, int);
-    fields.add(_dateTimeField, DateTime);
+    fields.add(dateTimeField, DateTime);
     fields.add(_timeField, Duration);
 
     return fields;
@@ -31,7 +31,7 @@ class GameTimeLogEntityData {
 
     final Query idQuery = Query();
     idQuery.addAnd(_gameField, gameId);
-    idQuery.addAnd(_dateTimeField, dateTime);
+    idQuery.addAnd(dateTimeField, dateTime);
 
     return idQuery;
 
@@ -50,7 +50,7 @@ class GameTimeLogEntity extends Equatable {
   static GameTimeLogEntity fromDynamicMap(Map<String, dynamic> map) {
 
     return GameTimeLogEntity(
-      dateTime: map[GameTimeLogEntityData._dateTimeField] as DateTime,
+      dateTime: map[GameTimeLogEntityData.dateTimeField] as DateTime,
       time: Duration(seconds: map[GameTimeLogEntityData._timeField] as int),
     );
 
@@ -74,7 +74,7 @@ class GameTimeLogEntity extends Equatable {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       GameTimeLogEntityData._gameField : gameId,
-      GameTimeLogEntityData._dateTimeField : dateTime,
+      GameTimeLogEntityData.dateTimeField : dateTime,
       GameTimeLogEntityData._timeField : time,
     };
 

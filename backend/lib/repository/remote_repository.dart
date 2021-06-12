@@ -1368,7 +1368,7 @@ class RemoteRepository implements CollectionRepository {
       leftSelectFields: GameTimeLogEntityData.fields(),
       rightSelectFields: GameEntityData.fields(),
       whereQuery: Query()
-        ..addAndRaw("date_part(\'year\', \"DateTime\") = $year"),
+        ..addAndDatePart(GameTimeLogEntityData.dateTimeField, year, DatePart.YEAR),
       orderFields: <String>[
         GameEntityData.relationField,
       ],

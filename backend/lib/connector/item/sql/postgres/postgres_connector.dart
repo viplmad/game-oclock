@@ -231,7 +231,7 @@ class PostgresConnector extends SQLConnector {
       .select(options: this._queryBuilderOptions)
       .from(leftTable);
 
-    _buildJoin(queryBuilder, rightTable, rightTableIdField, leftTable, leftTableIdField, joinType: JoinType.LEFT);
+    _buildJoin(queryBuilder, rightTable, leftTable, rightTableIdField, leftTableIdField, joinType: JoinType.LEFT);
     _buildFields(queryBuilder, leftTable, leftSelectFields);
     _buildFields(queryBuilder, rightTable, rightSelectFields);
     _buildWhere(queryBuilder, null, whereQuery);
@@ -244,7 +244,7 @@ class PostgresConnector extends SQLConnector {
   QueryBuilder selectFunctionQueryBuilder(String functionName, List<dynamic> arguments, Fields selectFields, int? limit) {
     final QueryBuilder queryBuilder = FluentQuery
       .select(options: this._queryBuilderOptions)
-      .fromRaw(Validator.sanitizeTable(functionName, this._queryBuilderOptions) + '(' + arguments.join(', ') + ')');
+      .fromRaw(Validator.sanitizeTable(functionName, this._queryBuilderOptions) + Validator.formatIterable(arguments, this._queryBuilderOptions));
 
     _buildFields(queryBuilder, null, selectFields);
     _buildLimit(queryBuilder, limit);
@@ -331,7 +331,11 @@ class PostgresConnector extends SQLConnector {
             fieldValue = _searchableQuery(fieldValue);
           }
 
-          final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+          String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+          if(fieldQuery is FieldDatePartQuery) {
+            sanitizedField = _convertDatePart(fieldQuery.datePart, sanitizedField);
+          }
+
           queryBuilder.whereSafe(sanitizedField, compareOperator, fieldValue);
 
         } else if(fieldQuery is FieldRawQuery) {
@@ -353,7 +357,11 @@ class PostgresConnector extends SQLConnector {
             fieldValue = _searchableQuery(fieldValue);
           }
 
-          final String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+          String sanitizedField = Validator.sanitizeTableDotField(tableName, fieldName, this._queryBuilderOptions);
+          if(fieldQuery is FieldDatePartQuery) {
+            sanitizedField = _convertDatePart(fieldQuery.datePart, sanitizedField);
+          }
+
           queryBuilder.orWhereSafe(sanitizedField, compareOperator, fieldValue);
 
         } else if(fieldQuery is FieldRawQuery) {
@@ -424,6 +432,21 @@ class PostgresConnector extends SQLConnector {
       case QueryComparator.LESS_THAN_EQUAL:
         return OPERATOR_LTE;
     }
+  }
+
+  String _convertDatePart(DatePart datePart, String sanitizedField) {
+    switch(datePart) {
+      case DatePart.DAY:
+        sanitizedField = 'date_part(\'day\', $sanitizedField)';
+        break;
+      case DatePart.MONTH:
+        sanitizedField = 'date_part(\'month\', $sanitizedField)';
+        break;
+      case DatePart.YEAR:
+        sanitizedField = 'date_part(\'year\', $sanitizedField)';
+        break;
+    }
+    return sanitizedField;
   }
   //#endregion Helpers
 }

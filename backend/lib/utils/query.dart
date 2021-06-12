@@ -17,6 +17,16 @@ class Query {
     ors.add(fieldQuery);
   }
 
+  void addAndDatePart(String field, int value, DatePart datePart, [QueryComparator comparator = QueryComparator.EQ]) {
+    final FieldQuery fieldQuery = FieldDatePartQuery(field, comparator, value, datePart);
+    ands.add(fieldQuery);
+  }
+
+  void addOrDatePart(String field, int value, DatePart datePart, [QueryComparator comparator = QueryComparator.EQ]) {
+    final FieldQuery fieldQuery = FieldDatePartQuery(field, comparator, value, datePart);
+    ors.add(fieldQuery);
+  }
+
   void addAndRaw(String rawQuery) {
     final FieldQuery fieldQuery = FieldRawQuery(rawQuery);
     ands.add(fieldQuery);
@@ -40,6 +50,12 @@ class FieldCompareQuery extends FieldQuery {
   final dynamic value;
 }
 
+class FieldDatePartQuery extends FieldCompareQuery {
+  FieldDatePartQuery(String field, QueryComparator comparator, int value, this.datePart) : super(field, comparator, value);
+
+  final DatePart datePart;
+}
+
 class FieldRawQuery extends FieldQuery {
   const FieldRawQuery(this.rawQuery);
 
@@ -53,4 +69,10 @@ enum QueryComparator {
   GREATER_THAN_EQUAL,
   LESS_THAN,
   LESS_THAN_EQUAL,
+}
+
+enum DatePart {
+  DAY,
+  MONTH,
+  YEAR,
 }
