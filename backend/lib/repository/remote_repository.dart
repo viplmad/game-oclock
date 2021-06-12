@@ -253,7 +253,7 @@ class RemoteRepository implements CollectionRepository {
     return _createCollectionItem<System>(
       tableName: SystemEntityData.table,
       fieldsAndValues: SystemMapper.modelToEntity(system).createDynamicMap(),
-      idField: StoreEntityData.idField,
+      idField: SystemEntityData.idField,
       findItemById: findSystemById,
     );
 
