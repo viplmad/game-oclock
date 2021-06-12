@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sql_builder/sql_builder.dart';
 
 import 'package:backend/connector/item/sql/postgres/postgres_connector.dart';
-import 'package:backend/query/query.dart';
-import 'package:backend/query/fields.dart';
+import 'package:backend/utils/query.dart';
+import 'package:backend/utils/fields.dart';
 
 
 void main() {

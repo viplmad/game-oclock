@@ -1,8 +1,8 @@
 import 'package:postgres/postgres.dart';
 import 'package:sql_builder/sql_builder.dart';
 
-import 'package:backend/query/query.dart';
-import 'package:backend/query/fields.dart';
+import 'package:backend/utils/query.dart';
+import 'package:backend/utils/fields.dart';
 
 import '../sql_connector.dart';
 

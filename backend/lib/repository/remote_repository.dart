@@ -3,7 +3,7 @@ import 'package:backend/connector/connector.dart';
 import 'package:backend/entity/entity.dart';
 import 'package:backend/mapper/mapper.dart';
 import 'package:backend/model/model.dart';
-import 'package:backend/query/query.dart';
+import 'package:backend/utils/query.dart';
 
 import 'collection_repository.dart';
 

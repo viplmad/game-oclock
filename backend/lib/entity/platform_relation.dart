@@ -1,4 +1,4 @@
-import 'package:backend/query/query.dart';
+import 'package:backend/utils/query.dart';
 
 import 'entity.dart';
 

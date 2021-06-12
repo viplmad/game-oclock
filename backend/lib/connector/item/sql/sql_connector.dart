@@ -1,5 +1,5 @@
-import 'package:backend/query/query.dart';
-import 'package:backend/query/fields.dart';
+import 'package:backend/utils/query.dart';
+import 'package:backend/utils/fields.dart';
 
 abstract class SQLConnector {
   Future<dynamic> open();

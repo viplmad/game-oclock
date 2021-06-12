@@ -1,6 +1,6 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/query/query.dart';
-import 'package:backend/query/fields.dart';
+import 'package:backend/utils/query.dart';
+import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
