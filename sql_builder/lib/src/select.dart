@@ -234,9 +234,16 @@ class Select extends QueryBuilder {
   // ORDER BY
   //
   @override
-  QueryBuilder order(String field, {SortOrder dir = SortOrder.ASC}) {
+  QueryBuilder order(String field, {SortOrder dir = SortOrder.ASC, bool nullsLast = false}) {
     final OrderByBlock block = blocks[7] as OrderByBlock;
-    block.setOrder(field, dir);
+    block.setOrder(field, dir, nullsLast: nullsLast);
+    return this;
+  }
+
+  @override
+  QueryBuilder orderRaw(String fieldRaw, {SortOrder dir = SortOrder.ASC, bool nullsLast = false}) {
+    final OrderByBlock block = blocks[7] as OrderByBlock;
+    block.setOrderRaw(fieldRaw, dir, nullsLast: nullsLast);
     return this;
   }
 

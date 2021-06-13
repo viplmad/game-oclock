@@ -7,4 +7,5 @@ export 'src/validator.dart';
 export 'src/expression.dart';
 export 'src/join_type.dart';
 export 'src/union_type.dart';
+export 'src/sort_order.dart';
 export 'src/exceptions.dart';

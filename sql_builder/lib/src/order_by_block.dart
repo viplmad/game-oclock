@@ -5,9 +5,11 @@ import 'sort_order.dart';
 import 'validator.dart';
 
 class OrderNode {
-  OrderNode(this.field, this.dir);
+  // ignore: avoid_positional_boolean_parameters
+  OrderNode(this.field, this.dir, this.nullsLast);
   final String field;
   final SortOrder dir;
+  final bool nullsLast;
 }
 
 /// ORDER BY
@@ -21,9 +23,13 @@ class OrderByBlock extends Block {
   /// Add an ORDER BY transformation for the given setField in the given order.
   /// @param field Field
   /// @param dir Order
-  void setOrder(String field, SortOrder dir) {
+  void setOrder(String field, SortOrder dir, {bool nullsLast = false}) {
     final String fld = Validator.sanitizeField(field, options);
-    orders.add(OrderNode(fld, dir));
+    orders.add(OrderNode(fld, dir, nullsLast));
+  }
+
+  void setOrderRaw(String fieldRaw, SortOrder dir, {bool nullsLast = false}) {
+    orders.add(OrderNode(fieldRaw, dir, nullsLast));
   }
 
   @override
@@ -41,6 +47,7 @@ class OrderByBlock extends Block {
       sb.write(o.field);
       sb.write(' ');
       sb.write(o.dir == SortOrder.ASC ? 'ASC' : 'DESC');
+      sb.write(o.nullsLast ? ' NULLS LAST' : '');
     }
 
     return '$text $sb';

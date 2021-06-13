@@ -1,5 +1,7 @@
 import 'package:backend/utils/query.dart';
 import 'package:backend/utils/fields.dart';
+import 'package:backend/utils/order.dart';
+
 
 abstract class SQLConnector {
   Future<dynamic> open();
@@ -15,10 +17,10 @@ abstract class SQLConnector {
   //#endregion CREATE
 
   //#region READ
-  Future<List<Map<String, Map<String, dynamic>>>> read({required String tableName, required Fields selectFields, Query? whereQuery, List<String>? orderFields, int? limit});
-  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Fields selectFields, required Query whereQuery, List<String>? orderFields, int? limit});
-  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Fields selectFields, required Query whereQuery, List<String>? orderFields, int? limit});
-  Future<List<Map<String, Map<String, dynamic>>>> readJoin({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Fields leftSelectFields, required Fields rightSelectFields, required Query whereQuery, List<String>? orderFields, int? limit});
+  Future<List<Map<String, Map<String, dynamic>>>> read({required String tableName, required Fields selectFields, Query? whereQuery, Order? order, int? limit});
+  Future<List<Map<String, Map<String, dynamic>>>> readRelation({required String tableName, required String relationTable, required String idField, required String joinField, required Fields selectFields, required Query whereQuery, Order? order, int? limit});
+  Future<List<Map<String, Map<String, dynamic>>>> readWeakRelation({required String primaryTable, required String subordinateTable, required String idField, required String joinField, bool primaryResults = false, required Fields selectFields, required Query whereQuery, Order? order, int? limit});
+  Future<List<Map<String, Map<String, dynamic>>>> readJoin({required String leftTable, required String rightTable, required String leftTableIdField, required String rightTableIdField, required Fields leftSelectFields, required Fields rightSelectFields, required Query whereQuery, Order? order, int? limit});
   Future<List<Map<String, Map<String, dynamic>>>> readFunction({required String functionName, required List<dynamic> arguments, required Fields selectFields, int? limit});
   //#endregion READ
 

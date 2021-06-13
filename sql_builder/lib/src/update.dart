@@ -114,13 +114,6 @@ class Update extends QueryBuilder {
   }
 
   @override
-  QueryBuilder order(String field, {SortOrder dir = SortOrder.ASC}) {
-    final OrderByBlock block = blocks[4] as OrderByBlock;
-    block.setOrder(field, dir);
-    return this;
-  }
-
-  @override
   QueryBuilder limit(int value) {
     final LimitBlock block = blocks[5] as LimitBlock;
     block.setLimit(value);

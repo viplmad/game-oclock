@@ -4,6 +4,7 @@ import 'package:backend/entity/entity.dart';
 import 'package:backend/mapper/mapper.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/utils/query.dart';
+import 'package:backend/utils/order.dart';
 
 import 'collection_repository.dart';
 
@@ -1369,9 +1370,8 @@ class RemoteRepository implements CollectionRepository {
       rightSelectFields: GameEntityData.fields(),
       whereQuery: Query()
         ..addAndDatePart(GameTimeLogEntityData.dateTimeField, year, DatePart.YEAR),
-      orderFields: <String>[
-        GameEntityData.relationField,
-      ],
+      order: Order()
+        ..add(GameEntityData.relationField),
     ).asStream().map( _dynamicToListGamesWithLogs );
 
   }

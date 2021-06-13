@@ -240,8 +240,12 @@ abstract class QueryBuilder {
   //
   // ORDER BY
   //
-  QueryBuilder order(String field, {SortOrder dir = SortOrder.ASC}) {
+  QueryBuilder order(String field, {SortOrder dir = SortOrder.ASC, bool nullsLast = false}) {
     throw UnsupportedOperationException('`order` not implemented');
+  }
+
+  QueryBuilder orderRaw(String fieldRaw, {SortOrder dir = SortOrder.ASC, bool nullsLast = false}) {
+    throw UnsupportedOperationException('`orderRaw` not implemented');
   }
 
   //
