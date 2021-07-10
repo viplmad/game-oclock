@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -16,85 +14,22 @@ class GameEntityData {
   GameEntityData._();
 
   static const String table = 'Game';
-  static const String readTable = '_Game';
-
-  static const Map<GameView, String> allViewToTable = <GameView, String>{
-    GameView.Main : 'All-Main',
-    GameView.LastCreated : 'All-Last Created',
-    GameView.Playing : 'All-Playing',
-    GameView.NextUp : 'All-Next Up',
-    GameView.LastPlayed : 'All-Last Played',
-    GameView.LastFinished : 'All-Last Finished',
-    GameView.Review : 'All-Year In Review',
-  };
-
-  static const Map<GameView, String> ownedViewToTable = <GameView, String>{
-    GameView.Main : 'Owned-Main',
-    GameView.LastCreated : 'Owned-Last Created',
-    GameView.Playing : 'Owned-Playing',
-    GameView.NextUp : 'Owned-Next Up',
-    GameView.LastPlayed : 'Owned-Last Played',
-    GameView.LastFinished : 'Owned-Last Finished',
-    GameView.Review : 'Owned-Year In Review',
-  };
-
-  static const Map<GameView, String> romViewToTable = <GameView, String>{
-    GameView.Main : 'Rom-Main',
-    GameView.LastCreated : 'Rom-Last Created',
-    GameView.Playing : 'Rom-Playing',
-    GameView.NextUp : 'Rom-Next Up',
-    GameView.LastPlayed : 'Rom-Last Played',
-    GameView.LastFinished : 'Rom-Last Finished',
-    GameView.Review : 'Rom-Year In Review',
-  };
 
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-  static const String _editionField = 'Edition';
-  static const String _releaseYearField = 'Release Year';
-  static const String _coverField = 'Cover';
-  static const String _statusField = 'Status';
-  static const String _ratingField = 'Rating';
-  static const String _thoughtsField = 'Thoughts';
-  static const String _timeField = 'Time';
-  static const String _saveFolderField = 'Save Folder';
-  static const String _screenshotFolderField = 'Screenshot Folder';
-  static const String _finishDateField = 'Finish Date';
-  static const String _backupField = 'Backup';
-
-  static const String imageField = _coverField;
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-    fields.add(_editionField, String);
-    fields.add(_releaseYearField, int);
-    fields.add(_coverField, String);
-    fields.add(_statusField, String);
-    fields.add(_ratingField, int);
-    fields.add(_thoughtsField, String);
-    fields.add(_timeField, Duration);
-    fields.add(_saveFolderField, String);
-    fields.add(_screenshotFolderField, String);
-    fields.add(_finishDateField, DateTime);
-    fields.add(_backupField, bool);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
+  static const String editionField = 'Edition';
+  static const String releaseYearField = 'Release Year';
+  static const String coverField = 'Cover';
+  static const String statusField = 'Status';
+  static const String ratingField = 'Rating';
+  static const String thoughtsField = 'Thoughts';
+  static const String timeField = 'Time';
+  static const String saveFolderField = 'Save Folder';
+  static const String screenshotFolderField = 'Screenshot Folder';
+  static const String finishDateField = 'Finish Date';
+  static const String backupField = 'Backup';
 }
 
 class GameEntity extends CollectionItemEntity {
@@ -132,17 +67,17 @@ class GameEntity extends CollectionItemEntity {
     return GameEntity(
       id: map[GameEntityData.idField] as int,
       name: map[GameEntityData.nameField] as String,
-      edition: map[GameEntityData._editionField] as String,
-      releaseYear: map[GameEntityData._releaseYearField] as int?,
-      coverFilename: map[GameEntityData._coverField] as String?,
-      status: map[GameEntityData._statusField] as String,
-      rating: map[GameEntityData._ratingField] as int,
-      thoughts: map[GameEntityData._thoughtsField] as String,
-      time: Duration(seconds: map[GameEntityData._timeField] as int),
-      saveFolder: map[GameEntityData._saveFolderField] as String,
-      screenshotFolder: map[GameEntityData._screenshotFolderField] as String,
-      finishDate: map[GameEntityData._finishDateField] as DateTime?,
-      isBackup: map[GameEntityData._backupField] as bool,
+      edition: map[GameEntityData.editionField] as String,
+      releaseYear: map[GameEntityData.releaseYearField] as int?,
+      coverFilename: map[GameEntityData.coverField] as String?,
+      status: map[GameEntityData.statusField] as String,
+      rating: map[GameEntityData.ratingField] as int,
+      thoughts: map[GameEntityData.thoughtsField] as String,
+      time: Duration(seconds: map[GameEntityData.timeField] as int),
+      saveFolder: map[GameEntityData.saveFolderField] as String,
+      screenshotFolder: map[GameEntityData.screenshotFolderField] as String,
+      finishDate: map[GameEntityData.finishDateField] as DateTime?,
+      isBackup: map[GameEntityData.backupField] as bool,
     );
 
   }
@@ -161,44 +96,55 @@ class GameEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, GameEntityData.table);
+      id = map[GameEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, Object?> createMap() {
+
+    final Map<String, Object?> createMap = <String, Object?>{
       GameEntityData.nameField : name,
-      GameEntityData._editionField : edition,
-      GameEntityData._statusField : status,
-      GameEntityData._ratingField : rating,
-      GameEntityData._thoughtsField : thoughts,
-      GameEntityData._timeField : time,
-      GameEntityData._saveFolderField : saveFolder,
-      GameEntityData._screenshotFolderField : screenshotFolder,
-      GameEntityData._backupField : isBackup,
+      GameEntityData.editionField : edition,
+      GameEntityData.statusField : status,
+      GameEntityData.ratingField : rating,
+      GameEntityData.thoughtsField : thoughts,
+      GameEntityData.timeField : time,
+      GameEntityData.saveFolderField : saveFolder,
+      GameEntityData.screenshotFolderField : screenshotFolder,
+      GameEntityData.backupField : isBackup,
     };
 
-    putCreateMapValueNullable(createMap, GameEntityData._releaseYearField, releaseYear);
-    putCreateMapValueNullable(createMap, GameEntityData._coverField, coverFilename);
-    putCreateMapValueNullable(createMap, GameEntityData._finishDateField, finishDate);
+    putCreateMapValueNullable(createMap, GameEntityData.releaseYearField, releaseYear);
+    putCreateMapValueNullable(createMap, GameEntityData.coverField, coverFilename);
+    putCreateMapValueNullable(createMap, GameEntityData.finishDateField, finishDate);
 
     return createMap;
 
   }
 
-  Map<String, dynamic> updateDynamicMap(GameEntity updatedEntity, GameUpdateProperties updateProperties) {
+  Map<String, Object?> updateMap(GameEntity updatedEntity, GameUpdateProperties updateProperties) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, GameEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValue(updateMap, GameEntityData._editionField, edition, updatedEntity.edition);
-    putUpdateMapValueNullable(updateMap, GameEntityData._releaseYearField, releaseYear, updatedEntity.releaseYear, updatedValueCanBeNull: updateProperties.releaseYearToNull);
-    putUpdateMapValueNullable(updateMap, GameEntityData._coverField, coverFilename, updatedEntity.coverFilename, updatedValueCanBeNull: updateProperties.coverURLToNull);
-    putUpdateMapValue(updateMap, GameEntityData._statusField, status, updatedEntity.status);
-    putUpdateMapValue(updateMap, GameEntityData._ratingField, rating, updatedEntity.rating);
-    putUpdateMapValue(updateMap, GameEntityData._thoughtsField, thoughts, updatedEntity.thoughts);
-    putUpdateMapValue(updateMap, GameEntityData._timeField, time, updatedEntity.time);
-    putUpdateMapValue(updateMap, GameEntityData._saveFolderField, saveFolder, updatedEntity.saveFolder);
-    putUpdateMapValue(updateMap, GameEntityData._screenshotFolderField, screenshotFolder, updatedEntity.screenshotFolder);
-    putUpdateMapValueNullable(updateMap, GameEntityData._finishDateField, finishDate, updatedEntity.finishDate, updatedValueCanBeNull: updateProperties.finishDateToNull);
-    putUpdateMapValue(updateMap, GameEntityData._backupField, isBackup, updatedEntity.isBackup);
+    putUpdateMapValue(updateMap, GameEntityData.editionField, edition, updatedEntity.edition);
+    putUpdateMapValueNullable(updateMap, GameEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear, updatedValueCanBeNull: updateProperties.releaseYearToNull);
+    putUpdateMapValueNullable(updateMap, GameEntityData.coverField, coverFilename, updatedEntity.coverFilename, updatedValueCanBeNull: updateProperties.coverURLToNull);
+    putUpdateMapValue(updateMap, GameEntityData.statusField, status, updatedEntity.status);
+    putUpdateMapValue(updateMap, GameEntityData.ratingField, rating, updatedEntity.rating);
+    putUpdateMapValue(updateMap, GameEntityData.thoughtsField, thoughts, updatedEntity.thoughts);
+    putUpdateMapValue(updateMap, GameEntityData.timeField, time, updatedEntity.time);
+    putUpdateMapValue(updateMap, GameEntityData.saveFolderField, saveFolder, updatedEntity.saveFolder);
+    putUpdateMapValue(updateMap, GameEntityData.screenshotFolderField, screenshotFolder, updatedEntity.screenshotFolder);
+    putUpdateMapValueNullable(updateMap, GameEntityData.finishDateField, finishDate, updatedEntity.finishDate, updatedValueCanBeNull: updateProperties.finishDateToNull);
+    putUpdateMapValue(updateMap, GameEntityData.backupField, isBackup, updatedEntity.isBackup);
 
     return updateMap;
   }

@@ -24,8 +24,8 @@ dependencies:
   cloudinary:
     git: https://github.com/viplmad/cloudinary.git
   http: ^0.13.0
-  sql_builder:
-    path: ../sql_builder
+  query:
+    path: ../query
 
 dev_dependencies:
   flutter_test:

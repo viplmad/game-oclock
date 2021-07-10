@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
+/*import 'package:flutter_test/flutter_test.dart';
 
-import 'package:sql_builder/sql_builder.dart';
+import 'package:query/query.dart';
 
 import 'package:backend/connector/item/sql/postgres/postgres_connector.dart';
 import 'package:backend/utils/query.dart';
@@ -29,7 +29,7 @@ void main() {
     selectFields.add('Screenshot Folder', String);
     selectFields.add('Finish Date', DateTime);
     selectFields.add('Backup', bool);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('All-Playing', selectFields, null, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('All-Playing', selectFields, null, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
@@ -47,7 +47,7 @@ void main() {
     selectFields.add('Date', DateTime);
     selectFields.add('Original Price', double);
     selectFields.add('Store', int);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase-Main', selectFields, null, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase-Main', selectFields, null, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
@@ -62,7 +62,7 @@ void main() {
     final int relationId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', relationId);
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFields, whereQuery, null, null, primaryResults: true);
+    final Query generatedQueryBuilder = connector.selectRelationQueryBuilder('Store', 'Purchase', 'ID', 'Store', selectFields, whereQuery, null, null, primaryResults: true);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -89,7 +89,7 @@ void main() {
     final int relationId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('Purchase_ID', relationId);
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'Game-Purchase', 'ID', 'Game_ID', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -105,7 +105,7 @@ void main() {
     final int relationId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('Purchase_ID', relationId);
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectRelationQueryBuilder('DLC', 'DLC-Purchase', 'ID', 'DLC_ID', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -121,7 +121,7 @@ void main() {
     final int relationId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('Purchase_ID', relationId);
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectRelationQueryBuilder('Type', 'Purchase-Type', 'ID', 'Type_ID', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : relationId}));
@@ -142,7 +142,7 @@ void main() {
     final int itemId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Purchase', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -159,7 +159,7 @@ void main() {
     final int itemId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
+    final Query generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newDate, 'whereParam0' : itemId}));
@@ -177,7 +177,7 @@ void main() {
     final int itemId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
+    final Query generatedQueryBuilder = connector.updateQueryBuilder('Purchase', setFieldsAndValues, whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'setParam0' : newPrice, 'setParam1' : 'NULL', 'whereParam0' : itemId}));
@@ -195,7 +195,7 @@ void main() {
       'Price': newPrice,
       'Date': newDate,
     };
-    final QueryBuilder generatedQueryBuilder = connector.insertQueryBuilder('Purchase', insertFieldsAndValues);
+    final Query generatedQueryBuilder = connector.insertQueryBuilder('Purchase', insertFieldsAndValues);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'insertParam0' : newDescription, 'insertParam1' : newPrice, 'insertParam2' : newDate}));
@@ -208,7 +208,7 @@ void main() {
     final int itemId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.deleteQueryBuilder('Platform', whereQuery);
+    final Query generatedQueryBuilder = connector.deleteQueryBuilder('Platform', whereQuery);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -223,7 +223,7 @@ void main() {
     final String name = 'smth';
     final Query whereQuery = Query();
     whereQuery.addAnd('Name', name, QueryComparator.LIKE);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Platform', selectFields, whereQuery, null, 10);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Platform', selectFields, whereQuery, null, 10);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : '%$name%'}));
@@ -238,7 +238,7 @@ void main() {
     final int itemId = 1;
     final Query whereQuery = Query();
     whereQuery.addAnd('ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFields, whereQuery, null, null, primaryResults: false);
+    final Query generatedQueryBuilder = connector.selectRelationQueryBuilder('Game', 'DLC', 'ID', 'Base Game', selectFields, whereQuery, null, null, primaryResults: false);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -262,7 +262,7 @@ void main() {
     selectFields.add('Screenshot Folder', String);
     selectFields.add('Finish Date', DateTime);
     selectFields.add('Backup', bool);
-    final QueryBuilder generatedQueryBuilder = connector.selectFunctionQueryBuilder('All-Year In Review', <dynamic>[2016], selectFields, null);
+    final Query generatedQueryBuilder = connector.selectFunctionQueryBuilder('All-Year In Review', <dynamic>[2016], selectFields, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
@@ -280,7 +280,7 @@ void main() {
     selectFields.add('Date', DateTime);
     selectFields.add('Original Price', double);
     selectFields.add('Store', int);
-    final QueryBuilder generatedQueryBuilder = connector.selectFunctionQueryBuilder('Purchase-Year In Review', <dynamic>[2019], selectFields, null);
+    final Query generatedQueryBuilder = connector.selectFunctionQueryBuilder('Purchase-Year In Review', <dynamic>[2019], selectFields, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
@@ -297,7 +297,7 @@ void main() {
     final int itemId = 13;
     final Query whereQuery = Query();
     whereQuery.addAnd('Game_ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game-Log', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game-Log', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -313,7 +313,7 @@ void main() {
     final int itemId = 13;
     final Query whereQuery = Query();
     whereQuery.addAnd('Game_ID', itemId);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game-Finish', selectFields, whereQuery, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game-Finish', selectFields, whereQuery, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : itemId}));
@@ -345,13 +345,13 @@ void main() {
     whereQuery.addAndDatePart('DateTime', year, DatePart.YEAR);
     final Order order = Order();
     order.add('Game_ID');
-    final QueryBuilder generatedQueryBuilder = connector.selectJoinQueryBuilder('Game', 'GameLog', 'ID', 'Game_ID', leftSelectFields, rightSelectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectJoinQueryBuilder('Game', 'GameLog', 'ID', 'Game_ID', leftSelectFields, rightSelectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : year}));
   });
 
-  test('sql views migration 1', () {
+  test('sql views migration 1 _Game', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"';
 
@@ -369,13 +369,13 @@ void main() {
     selectFields.addRaw('COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time"');
     selectFields.addRaw('( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date"');
     selectFields.add('Backup', bool);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, null, null, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, null, null, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 2', () {
+  test('sql views migration 2 _Game-LastCreated', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  ORDER BY "Game"."ID" DESC';
 
@@ -395,13 +395,13 @@ void main() {
     selectFields.add('Backup', bool);
     final Order order = Order();
     order.add('ID', type: OrderType.DESC);
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, null, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, null, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 3', () {
+  test('sql views migration 3 _Game-LastFinished', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE "Game"."Status" = \'Played\'::game_status OR "Game"."Status" = \'Playing\'::game_status ORDER BY "Game"."Finish Date" DESC NULLS LAST, "Game"."Name" ASC';
 
@@ -425,13 +425,13 @@ void main() {
     final Order order = Order();
     order.add('Finish Date', type: OrderType.DESC, nullsLast: true);
     order.add('Name');
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 4', () {
+  test('sql views migration 4 _Game-LastPlayed', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE "Game"."Status" = \'Played\'::game_status OR "Game"."Status" = \'Playing\'::game_status ORDER BY (( SELECT max("GameLog"."DateTime") AS max FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID")) DESC NULLS LAST, "Game"."Name" ASC';
 
@@ -455,13 +455,13 @@ void main() {
     final Order order = Order();
     order.addRaw('(( SELECT max("GameLog"."DateTime") AS max FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"))', type: OrderType.DESC, nullsLast: true);
     order.add('Name');
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 5', () {
+  test('sql views migration 5 _Game-NextUp', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE "Game"."Status" = \'Next Up\'::game_status ORDER BY "Game"."Release Year" ASC, "Game"."Name" ASC';
 
@@ -484,13 +484,13 @@ void main() {
     final Order order = Order();
     order.add('Release Year');
     order.add('Name');
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 6', () {
+  test('sql views migration 6 _Game-Playing', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE "Game"."Status" = \'Playing\'::game_status ORDER BY "Game"."Release Year" ASC, "Game"."Name" ASC';
 
@@ -513,13 +513,13 @@ void main() {
     final Order order = Order();
     order.add('Release Year');
     order.add('Name');
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {}));
   });
 
-  test('sql views migration 7', () {
+  test('sql views migration 7 _Game-YearInReview', () {
     final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
     final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE date_part(\'year\', "Game"."Finish Date") = @whereParam0 ORDER BY "Game"."Release Year" ASC, "Game"."Name" ASC';
 
@@ -543,9 +543,40 @@ void main() {
     final Order order = Order();
     order.add('Release Year');
     order.add('Name');
-    final QueryBuilder generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
+
+    expect(generatedQueryBuilder.toSql(), equals(sql));
+    expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : year}));
+  });
+
+  test('sql views migration 8 Owned', () {
+    final PostgresConnector connector = PostgresConnector.fromConnectionString(_postgresConnectionString);
+    final String sql = 'SELECT "Game"."ID", "Game"."Name", "Game"."Edition", "Game"."Release Year", "Game"."Cover", "Game"."Status", "Game"."Rating", "Game"."Thoughts", "Game"."Save Folder", "Game"."Screenshot Folder", COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time", ( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date", "Game"."Backup" FROM "Game"  WHERE (( SELECT count(*) AS count FROM "Game-Purchase" WHERE "Game-Purchase"."Game_ID" = "Game-Last Created"."ID")) > 0 ORDER BY "Game"."Release Year" ASC, "Game"."Name" ASC';
+
+    final Fields selectFields = Fields();
+    selectFields.add('ID', String);
+    selectFields.add('Name', String);
+    selectFields.add('Edition', String);
+    selectFields.add('Release Year', int);
+    selectFields.add('Cover', String);
+    selectFields.add('Status', String);
+    selectFields.add('Rating', int);
+    selectFields.add('Thoughts', String);
+    selectFields.add('Save Folder', String);
+    selectFields.add('Screenshot Folder', String);
+    selectFields.addRaw('COALESCE(( SELECT sum("GameLog"."Time") AS sum FROM "GameLog" WHERE "GameLog"."Game_ID" = "Game"."ID"), \'00:00:00\'::interval) AS "Time"');
+    selectFields.addRaw('( SELECT min("GameFinish"."Date") AS min FROM "GameFinish" WHERE "GameFinish"."Game_ID" = "Game"."ID") AS "Finish Date"');
+    selectFields.add('Backup', bool);
+    final int year = 2021;
+    final Query whereQuery = Query();
+    whereQuery.addAndRaw('(( SELECT count(*) AS count FROM "Game-Purchase" WHERE "Game-Purchase"."Game_ID" = "Game-Last Created"."ID")) > 0');
+    final Order order = Order();
+    order.add('Release Year');
+    order.add('Name');
+    final Query generatedQueryBuilder = connector.selectTableQueryBuilder('Game', selectFields, whereQuery, order, null);
 
     expect(generatedQueryBuilder.toSql(), equals(sql));
     expect(generatedQueryBuilder.buildSubstitutionValues(), equals(<String, dynamic> {'whereParam0' : year}));
   });
 }
+*/

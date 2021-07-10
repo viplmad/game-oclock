@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -17,42 +15,13 @@ class SystemEntityData {
 
   static const String table = 'System';
 
-  static const Map<SystemView, String> viewToTable = <SystemView, String>{
-    SystemView.Main : 'System-Main',
-    SystemView.LastCreated : 'System-Last Created',
-  };
-
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-  static const String _iconField = 'Icon';
-  static const String _generationField = 'Generation';
-  static const String _manufacturerField = 'Manufacturer';
-
-  static const String imageField = _iconField;
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-    fields.add(_iconField, String);
-    fields.add(_generationField, int);
-    fields.add(_manufacturerField, String);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
+  static const String iconField = 'Icon';
+  static const String generationField = 'Generation';
+  static const String manufacturerField = 'Manufacturer';
 }
 
 class SystemEntity extends CollectionItemEntity {
@@ -74,9 +43,9 @@ class SystemEntity extends CollectionItemEntity {
     return SystemEntity(
       id: map[SystemEntityData.idField] as int,
       name: map[SystemEntityData.nameField] as String,
-      iconFilename: map[SystemEntityData._iconField] as String?,
-      generation: map[SystemEntityData._generationField] as int,
-      manufacturer: map[SystemEntityData._manufacturerField] as String?,
+      iconFilename: map[SystemEntityData.iconField] as String?,
+      generation: map[SystemEntityData.generationField] as int,
+      manufacturer: map[SystemEntityData.manufacturerField] as String?,
     );
 
   }
@@ -95,28 +64,39 @@ class SystemEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
+
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, SystemEntityData.table);
+      id = map[SystemEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       SystemEntityData.nameField : name,
-      SystemEntityData._generationField : generation,
+      SystemEntityData.generationField : generation,
     };
 
-    putCreateMapValueNullable(createMap, SystemEntityData._iconField, iconFilename);
-    putCreateMapValueNullable(createMap, SystemEntityData._manufacturerField, manufacturer);
+    putCreateMapValueNullable(createMap, SystemEntityData.iconField, iconFilename);
+    putCreateMapValueNullable(createMap, SystemEntityData.manufacturerField, manufacturer);
 
     return createMap;
 
   }
 
-  Map<String, dynamic> updateDynamicMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, SystemEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, SystemEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
-    putUpdateMapValue(updateMap, SystemEntityData._generationField, generation, updatedEntity.generation);
-    putUpdateMapValueNullable(updateMap, SystemEntityData._manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
+    putUpdateMapValueNullable(updateMap, SystemEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValue(updateMap, SystemEntityData.generationField, generation, updatedEntity.generation);
+    putUpdateMapValueNullable(updateMap, SystemEntityData.manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
 
     return updateMap;
 
@@ -133,10 +113,10 @@ class SystemEntity extends CollectionItemEntity {
 
     return '{$SystemEntityData.table}Entity { '
         '{$SystemEntityData.idField}: $id, '
-        '{$SystemEntityData._nameField}: $name, '
-        '{$SystemEntityData._iconField}: $iconFilename, '
-        '{$SystemEntityData._generationField}: $generation, '
-        '{$SystemEntityData._manufacturerField}: $manufacturer'
+        '{$SystemEntityData.nameField}: $name, '
+        '{$SystemEntityData.iconField}: $iconFilename, '
+        '{$SystemEntityData.generationField}: $generation, '
+        '{$SystemEntityData.manufacturerField}: $manufacturer'
         ' }';
 
   }

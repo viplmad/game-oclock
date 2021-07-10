@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
-
 import 'entity.dart';
 
 
@@ -10,30 +7,9 @@ class DLCFinishEntityData {
   DLCFinishEntityData._();
 
   static const String table = 'DLCFinish';
-  static const String readTable = 'DLC-Finish';
 
-  static const String _dlcField = DLCEntityData.relationField;
-  static const String _dateField = 'Date';
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(_dlcField, int);
-    fields.add(_dateField, DateTime);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int dlcId, DateTime date) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(_dlcField, dlcId);
-    idQuery.addAnd(_dateField, date);
-
-    return idQuery;
-
-  }
+  static const String dlcField = DLCEntityData.relationField;
+  static const String dateField = 'Date';
 }
 
 class DLCFinishEntity extends Equatable {
@@ -46,7 +22,7 @@ class DLCFinishEntity extends Equatable {
   static DLCFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return DLCFinishEntity(
-      dateTime: map[DLCFinishEntityData._dateField] as DateTime,
+      dateTime: map[DLCFinishEntityData.dateField] as DateTime,
     );
 
   }
@@ -65,11 +41,11 @@ class DLCFinishEntity extends Equatable {
 
   }
 
-  Map<String, dynamic> createDynamicMap(int dlcId) {
+  Map<String, dynamic> createMap(int dlcId) {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
-      DLCFinishEntityData._dlcField : dlcId,
-      DLCFinishEntityData._dateField : dateTime,
+      DLCFinishEntityData.dlcField : dlcId,
+      DLCFinishEntityData.dateField : dateTime,
     };
 
     return createMap;
@@ -85,7 +61,7 @@ class DLCFinishEntity extends Equatable {
   String toString() {
 
     return '{$DLCFinishEntityData.table}Entity { '
-        '{$DLCFinishEntityData._dateTimeField}: $dateTime'
+        '{$DLCFinishEntityData.dateTimeField}: $dateTime'
         ' }';
 
   }

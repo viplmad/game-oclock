@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -10,34 +8,10 @@ class GameTagEntityData {
 
   static const String table = 'Tag';
 
-  static const Map<TagView, String> viewToTable = <TagView, String>{
-    TagView.Main : 'Tag-Main',
-    TagView.LastCreated : 'Tag-Last Created',
-  };
-
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
 }
 
 class GameTagEntity extends CollectionItemEntity {
@@ -71,7 +45,18 @@ class GameTagEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
+
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, GameTagEntityData.table);
+      id = map[GameTagEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       GameTagEntityData.nameField : name,
@@ -81,7 +66,7 @@ class GameTagEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateDynamicMap(GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 

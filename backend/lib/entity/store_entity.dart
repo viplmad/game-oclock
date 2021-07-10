@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -10,38 +8,11 @@ class StoreEntityData {
 
   static const String table = 'Store';
 
-  static const Map<StoreView, String> viewToTable = <StoreView, String>{
-    StoreView.Main : 'Store-Main',
-    StoreView.LastCreated : 'Store-Last Created',
-  };
-
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-  static const String _iconField = 'Icon';
-
-  static const String imageField = _iconField;
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-    fields.add(_iconField, String);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
+  static const String iconField = 'Icon';
 }
 
 class StoreEntity extends CollectionItemEntity {
@@ -59,7 +30,7 @@ class StoreEntity extends CollectionItemEntity {
     return StoreEntity(
       id: map[StoreEntityData.idField] as int,
       name: map[StoreEntityData.nameField] as String,
-      iconFilename: map[StoreEntityData._iconField] as String?,
+      iconFilename: map[StoreEntityData.iconField] as String?,
     );
 
   }
@@ -78,24 +49,35 @@ class StoreEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
+
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, StoreEntityData.table);
+      id = map[StoreEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       StoreEntityData.nameField : name,
     };
 
-    putCreateMapValueNullable(createMap, StoreEntityData._iconField, iconFilename);
+    putCreateMapValueNullable(createMap, StoreEntityData.iconField, iconFilename);
 
     return createMap;
 
   }
 
-  Map<String, dynamic> updateDynamicMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, StoreEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, StoreEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValueNullable(updateMap, StoreEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
 
     return updateMap;
 

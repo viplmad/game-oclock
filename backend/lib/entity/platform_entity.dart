@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -15,40 +13,12 @@ class PlatformEntityData {
 
   static const String table = 'Platform';
 
-  static const Map<PlatformView, String> viewToTable = <PlatformView, String>{
-    PlatformView.Main : 'Platform-Main',
-    PlatformView.LastCreated : 'Platform-Last Created',
-  };
-
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-  static const String _iconField = 'Icon';
-  static const String _typeField = 'Type';
-
-  static const String imageField = _iconField;
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-    fields.add(_iconField, String);
-    fields.add(_typeField, String);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
+  static const String iconField = 'Icon';
+  static const String typeField = 'Type';
 }
 
 class PlatformEntity extends CollectionItemEntity {
@@ -68,8 +38,8 @@ class PlatformEntity extends CollectionItemEntity {
     return PlatformEntity(
       id: map[PlatformEntityData.idField] as int,
       name: map[PlatformEntityData.nameField] as String,
-      iconFilename: map[PlatformEntityData._iconField] as String?,
-      type: map[PlatformEntityData._typeField] as String?,
+      iconFilename: map[PlatformEntityData.iconField] as String?,
+      type: map[PlatformEntityData.typeField] as String?,
     );
 
   }
@@ -88,26 +58,37 @@ class PlatformEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
+
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, PlatformEntityData.table);
+      id = map[PlatformEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       PlatformEntityData.nameField : name,
     };
 
-    putCreateMapValueNullable(createMap, PlatformEntityData._iconField, iconFilename);
-    putCreateMapValueNullable(createMap, PlatformEntityData._typeField, type);
+    putCreateMapValueNullable(createMap, PlatformEntityData.iconField, iconFilename);
+    putCreateMapValueNullable(createMap, PlatformEntityData.typeField, type);
 
     return createMap;
 
   }
 
-  Map<String, dynamic> updateDynamicMap(PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, PlatformEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, PlatformEntityData._iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
-    putUpdateMapValueNullable(updateMap, PlatformEntityData._typeField, type, updatedEntity.type, updatedValueCanBeNull: updateProperties.typeToNull);
+    putUpdateMapValueNullable(updateMap, PlatformEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValueNullable(updateMap, PlatformEntityData.typeField, type, updatedEntity.type, updatedValueCanBeNull: updateProperties.typeToNull);
 
     return updateMap;
 

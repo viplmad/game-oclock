@@ -23,19 +23,19 @@ abstract class CollectionItemEntity extends Equatable {
 
   }
 
-  void putCreateMapValueNullable(Map<String, dynamic> createMap, String field, dynamic value) {
+  void putCreateMapValueNullable(Map<String, Object?> createMap, String field, Object? value) {
     if(value != null) {
       createMap[field] = value;
     }
   }
 
-  void putUpdateMapValue(Map<String, dynamic> updateMap, String field, dynamic value, dynamic updatedValue) {
+  void putUpdateMapValue(Map<String, Object?> updateMap, String field, Object? value, Object? updatedValue) {
     if(value != updatedValue) {
       updateMap[field] = updatedValue;
     }
   }
 
-  void putUpdateMapValueNullable(Map<String, dynamic> updateMap, String field, dynamic value, dynamic updatedValue, {required bool updatedValueCanBeNull}) {
+  void putUpdateMapValueNullable(Map<String, Object?> updateMap, String field, Object? value, Object? updatedValue, {required bool updatedValueCanBeNull}) {
     if(value != updatedValue && (updatedValue == null && updatedValueCanBeNull) && (updatedValue != null && !updatedValueCanBeNull)) {
       updateMap[field] = updatedValue;
     }

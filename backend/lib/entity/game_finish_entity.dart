@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
-
 import 'entity.dart';
 
 
@@ -10,30 +7,9 @@ class GameFinishEntityData {
   GameFinishEntityData._();
 
   static const String table = 'GameFinish';
-  static const String readTable = 'Game-Finish';
 
-  static const String _gameField = GameEntityData.relationField;
-  static const String _dateField = 'Date';
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(_gameField, int);
-    fields.add(_dateField, DateTime);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int gameId, DateTime date) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(_gameField, gameId);
-    idQuery.addAnd(_dateField, date);
-
-    return idQuery;
-
-  }
+  static const String gameField = GameEntityData.relationField;
+  static const String dateField = 'Date';
 }
 
 class GameFinishEntity extends Equatable {
@@ -46,7 +22,7 @@ class GameFinishEntity extends Equatable {
   static GameFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
 
     return GameFinishEntity(
-      dateTime: map[GameFinishEntityData._dateField] as DateTime,
+      dateTime: map[GameFinishEntityData.dateField] as DateTime,
     );
 
   }
@@ -65,11 +41,11 @@ class GameFinishEntity extends Equatable {
 
   }
 
-  Map<String, dynamic> createDynamicMap(int gameId) {
+  Map<String, Object?> createMap(int gameId) {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
-      GameFinishEntityData._gameField : gameId,
-      GameFinishEntityData._dateField : dateTime,
+    final Map<String, Object?> createMap = <String, Object?>{
+      GameFinishEntityData.gameField : gameId,
+      GameFinishEntityData.dateField : dateTime,
     };
 
     return createMap;
@@ -85,7 +61,7 @@ class GameFinishEntity extends Equatable {
   String toString() {
 
     return '{$GameFinishEntityData.table}Entity { '
-        '{$GameFinishEntityData._dateTimeField}: $dateTime'
+        '{$GameFinishEntityData.dateTimeField}: $dateTime'
         ' }';
 
   }

@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
-
 import 'entity.dart';
 
 
@@ -10,32 +7,10 @@ class GameTimeLogEntityData {
   GameTimeLogEntityData._();
 
   static const String table = 'GameLog';
-  static const String readTable = 'Game-Log';
 
-  static const String _gameField = GameEntityData.relationField;
+  static const String gameField = GameEntityData.relationField;
   static const String dateTimeField = 'DateTime';
-  static const String _timeField = 'Time';
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(_gameField, int);
-    fields.add(dateTimeField, DateTime);
-    fields.add(_timeField, Duration);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int gameId, DateTime dateTime) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(_gameField, gameId);
-    idQuery.addAnd(dateTimeField, dateTime);
-
-    return idQuery;
-
-  }
+  static const String timeField = 'Time';
 }
 
 class GameTimeLogEntity extends Equatable {
@@ -51,7 +26,7 @@ class GameTimeLogEntity extends Equatable {
 
     return GameTimeLogEntity(
       dateTime: map[GameTimeLogEntityData.dateTimeField] as DateTime,
-      time: Duration(seconds: map[GameTimeLogEntityData._timeField] as int),
+      time: Duration(seconds: map[GameTimeLogEntityData.timeField] as int),
     );
 
   }
@@ -70,12 +45,12 @@ class GameTimeLogEntity extends Equatable {
 
   }
 
-  Map<String, dynamic> createDynamicMap(int gameId) {
+  Map<String, Object?> createMap(int gameId) {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
-      GameTimeLogEntityData._gameField : gameId,
+    final Map<String, Object?> createMap = <String, Object?>{
+      GameTimeLogEntityData.gameField : gameId,
       GameTimeLogEntityData.dateTimeField : dateTime,
-      GameTimeLogEntityData._timeField : time,
+      GameTimeLogEntityData.timeField : time,
     };
 
     return createMap;
@@ -92,8 +67,8 @@ class GameTimeLogEntity extends Equatable {
   String toString() {
 
     return '{$GameTimeLogEntityData.table}Entity { '
-        '{$GameTimeLogEntityData._dateTimeField}: $dateTime, '
-        '{$GameTimeLogEntityData._timeField}: $time'
+        '{$GameTimeLogEntityData.dateTimeField}: $dateTime, '
+        '{$GameTimeLogEntityData.timeField}: $time'
         ' }';
 
   }

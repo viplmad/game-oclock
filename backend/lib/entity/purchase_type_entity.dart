@@ -1,6 +1,4 @@
 import 'package:backend/model/model.dart';
-import 'package:backend/utils/query.dart';
-import 'package:backend/utils/fields.dart';
 
 import 'entity.dart';
 
@@ -10,34 +8,10 @@ class PurchaseTypeEntityData {
 
   static const String table = 'Type';
 
-  static const Map<TypeView, String> viewToTable = <TypeView, String>{
-    TypeView.Main : 'Type-Main',
-    TypeView.LastCreated : 'Type-Last Created',
-  };
-
   static const String relationField = table + '_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';
-
-  static Fields fields() {
-
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-
-    return fields;
-
-  }
-
-  static Query idQuery(int id) {
-
-    final Query idQuery = Query();
-    idQuery.addAnd(idField, id);
-
-    return idQuery;
-
-  }
 }
 
 class PurchaseTypeEntity extends CollectionItemEntity {
@@ -71,7 +45,18 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> createDynamicMap() {
+  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    int? id;
+
+    if(listMap.isNotEmpty) {
+      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, PurchaseTypeEntityData.table);
+      id = map[PurchaseTypeEntityData.idField] as int;
+    }
+
+    return id;
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       PurchaseTypeEntityData.nameField : name,
@@ -81,7 +66,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateDynamicMap(PurchaseTypeEntity updatedEntity, PurchaseTypeUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(PurchaseTypeEntity updatedEntity, PurchaseTypeUpdateProperties updateProperties) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
