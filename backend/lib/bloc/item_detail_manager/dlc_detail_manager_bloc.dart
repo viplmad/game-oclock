@@ -1,41 +1,33 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
 
 import 'item_detail_manager.dart';
 
 
-class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC, DLCUpdateProperties> {
+class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC, DLCRepository> {
   DLCDetailManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<DLC?> updateFuture(UpdateItemField<DLC, DLCUpdateProperties> event) {
-
-    return iCollectionRepository.updateDLC(event.item, event.updatedItem, event.updateProperties);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(itemId: itemId, repository: collectionRepository.dlcRepository);
 
   @override
   Future<DLC?> addImage(AddItemImage<DLC> event) {
 
-    return iCollectionRepository.uploadDLCCover(itemId, event.imagePath, event.oldImageName);
+    return repository.uploadDLCCover(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<DLC?> updateImageName(UpdateItemImageName<DLC> event) {
 
-    return iCollectionRepository.renameDLCCover(itemId, event.oldImageName, event.newImageName);
+    return repository.renameDLCCover(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<DLC?> deleteImage(DeleteItemImage<DLC> event) {
 
-    return iCollectionRepository.deleteDLCCover(itemId, event.imageName);
+    return repository.deleteDLCCover(itemId, event.imageName);
 
   }
 }

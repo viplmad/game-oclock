@@ -12,7 +12,7 @@ abstract class ItemRelationManagerState extends Equatable {
 
 class ItemRelationManagerInitialised extends ItemRelationManagerState {}
 
-class ItemRelationAdded<W extends CollectionItem> extends ItemRelationManagerState {
+class ItemRelationAdded<W extends Item> extends ItemRelationManagerState {
   const ItemRelationAdded(this.otherItem);
 
   final W otherItem;
@@ -40,7 +40,7 @@ class ItemRelationNotAdded extends ItemRelationManagerState {
       ' }';
 }
 
-class ItemRelationDeleted<W extends CollectionItem> extends ItemRelationManagerState {
+class ItemRelationDeleted<W extends Item> extends ItemRelationManagerState {
   const ItemRelationDeleted(this.otherItem);
 
   final W otherItem;

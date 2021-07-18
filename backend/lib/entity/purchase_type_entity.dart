@@ -14,7 +14,7 @@ class PurchaseTypeEntityData {
   static const String nameField = 'Name';
 }
 
-class PurchaseTypeEntity extends CollectionItemEntity {
+class PurchaseTypeEntity extends ItemEntity {
   const PurchaseTypeEntity({
     required int id,
     required this.name,
@@ -36,7 +36,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
     final List<PurchaseTypeEntity> typesList = <PurchaseTypeEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseTypeEntity type = PurchaseTypeEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseTypeEntityData.table) );
+      final PurchaseTypeEntity type = PurchaseTypeEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PurchaseTypeEntityData.table) );
 
       typesList.add(type);
     });
@@ -49,7 +49,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, PurchaseTypeEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PurchaseTypeEntityData.table);
       id = map[PurchaseTypeEntityData.idField] as int;
     }
 
@@ -66,7 +66,7 @@ class PurchaseTypeEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(PurchaseTypeEntity updatedEntity, PurchaseTypeUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(PurchaseTypeEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 

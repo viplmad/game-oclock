@@ -1,24 +1,14 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformUpdateProperties> {
+class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformRepository> {
   PlatformDetailBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required PlatformDetailManagerBloc managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<Platform?> getReadStream() {
-
-    return iCollectionRepository.findPlatformById(itemId);
-
-  }
+  }) : super(itemId: itemId, repository: collectionRepository.platformRepository, managerBloc: managerBloc);
 }

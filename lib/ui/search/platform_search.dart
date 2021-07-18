@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -14,25 +13,25 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
+class PlatformSearch extends ItemSearch<Platform, PlatformRepository, PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  PlatformSearchBloc searchBlocBuilder() {
+  PlatformSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  PlatformListManagerBloc managerBlocBuilder() {
+  PlatformListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +47,7 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   }
 }
 
-class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
+class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformRepository, PlatformListManagerBloc> {
   const PlatformLocalSearch({
     Key? key,
     required List<Platform> items,
@@ -58,10 +57,10 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   final String detailRouteName = platformDetailRoute;
 
   @override
-  PlatformListManagerBloc managerBlocBuilder() {
+  PlatformListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -77,7 +76,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   }
 }
 
-class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
+class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, PlatformRepository, K, PlatformListManagerBloc> {
   const _PlatformSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Platform) onTap,

@@ -1,28 +1,33 @@
 import 'dart:async';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, DLC, Game, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, PurchaseRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class DLCRelationBloc<W extends CollectionItem> extends ItemRelationBloc<DLC, W> {
+class DLCRelationBloc<W extends Item> extends ItemRelationBloc<DLC, W> {
   DLCRelationBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required DLCRelationManagerBloc<W> managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.purchaseRepository = collectionRepository.purchaseRepository,
+    super(itemId: itemId, managerBloc: managerBloc);
+
+  final GameRepository gameRepository;
+  final PurchaseRepository purchaseRepository;
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.findBaseGameFromDLC(itemId).map<List<Game>>( (Game? game) => game != null? <Game>[game] : <Game>[] ) as Stream<List<W>>;
+        return gameRepository.findBaseGameFromDLC(itemId).map<List<Game>>( (Game? game) => game != null? <Game>[game] : <Game>[] ) as Stream<List<W>>;
       case Purchase:
-        return iCollectionRepository.findAllPurchasesFromDLC(itemId) as Stream<List<W>>;
+        return purchaseRepository.findAllPurchasesFromDLC(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

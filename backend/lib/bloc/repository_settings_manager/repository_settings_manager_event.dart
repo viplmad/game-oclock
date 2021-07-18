@@ -10,8 +10,8 @@ abstract class RepositorySettingsManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
-  const UpdateRemoteConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
+class UpdateConnectionSettings extends RepositorySettingsManagerEvent {
+  const UpdateConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
 
   final PostgresInstance postgresInstance;
   final CloudinaryInstance cloudinaryInstance;
@@ -25,5 +25,3 @@ class UpdateRemoteConnectionSettings extends RepositorySettingsManagerEvent {
       'cloudinary instance: $cloudinaryInstance'
       ' }';
 }
-
-/*class UpdateLocalConnectionSettings extends RepositorySettingsEvent {}*/

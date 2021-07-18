@@ -1,15 +1,20 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, DLC, Game, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 
 
-class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<DLC, W> {
+class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC, W> {
   DLCRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.dlcRepository = collectionRepository.dlcRepository,
+    super(itemId: itemId);
+
+  final GameRepository gameRepository;
+  final DLCRepository dlcRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,9 +23,9 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGameDLC(otherId, itemId);
+        return gameRepository.relateGameDLC(otherId, itemId);
       case Purchase:
-        return iCollectionRepository.relateDLCPurchase(itemId, otherId);
+        return dlcRepository.relateDLCPurchase(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -34,9 +39,9 @@ class DLCRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.unrelateGameDLC(itemId);
+        return gameRepository.unrelateGameDLC(itemId);
       case Purchase:
-        return iCollectionRepository.unrelateDLCPurchase(itemId, otherId);
+        return dlcRepository.unrelateDLCPurchase(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

@@ -12,7 +12,7 @@ abstract class ItemDetailManagerState extends Equatable {
 
 class ItemDetailManagerInitialised extends ItemDetailManagerState {}
 
-class ItemFieldUpdated<T extends CollectionItem> extends ItemDetailManagerState {
+class ItemFieldUpdated<T extends Item> extends ItemDetailManagerState {
   const ItemFieldUpdated(this.item);
 
   final T item;
@@ -40,7 +40,7 @@ class ItemFieldNotUpdated extends ItemDetailManagerState {
       ' }';
 }
 
-class ItemImageUpdated<T extends CollectionItem> extends ItemDetailManagerState {
+class ItemImageUpdated<T extends Item> extends ItemDetailManagerState {
   const ItemImageUpdated(this.item);
 
   final T item;

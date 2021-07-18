@@ -6,17 +6,17 @@ enum SystemView {
   LastCreated,
 }
 
-class System extends CollectionItem {
+class System extends Item {
   const System({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconURL,
     required this.iconFilename,
     required this.generation,
     required this.manufacturer,
-  }) : this.uniqueId = 'Sy$id',
-        super(id: id);
+  }) : this.uniqueId = 'Sy$id';
 
+  final int id;
   final String name;
   final String? iconURL;
   final String? iconFilename;
@@ -75,14 +75,4 @@ class System extends CollectionItem {
         ' }';
 
   }
-}
-
-class SystemUpdateProperties {
-  final bool iconURLToNull;
-  final bool manufacturerToNull;
-
-  const SystemUpdateProperties({
-    this.iconURLToNull = false,
-    this.manufacturerToNull = false,
-  });
 }

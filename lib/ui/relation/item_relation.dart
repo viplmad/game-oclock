@@ -14,7 +14,7 @@ import '../common/item_view.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
+abstract class ItemRelationList<T extends Item, W extends Item, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
   const ItemRelationList({
     Key? key,
     required this.relationName,
@@ -303,7 +303,7 @@ class _ResultsList extends StatelessWidget {
   }
 }
 
-class _LinkButton<W extends CollectionItem> extends StatelessWidget {
+class _LinkButton<W extends Item> extends StatelessWidget {
   const _LinkButton({
     Key? key,
     required this.typeName,
@@ -350,7 +350,7 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
+class _ResultsListSingle<W extends Item> extends StatelessWidget {
   const _ResultsListSingle({
     Key? key,
     required this.items,
@@ -404,7 +404,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
+class _ResultsListMany<W extends Item> extends StatelessWidget {
   const _ResultsListMany({
     Key? key,
     required this.items,

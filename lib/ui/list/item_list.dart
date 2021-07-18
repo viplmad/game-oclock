@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item;
 import 'package:backend/model/list_style.dart';
+import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +18,7 @@ import '../detail/detail.dart';
 import '../statistics/statistics.dart';
 
 
-abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
+abstract class ItemAppBar<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>> extends StatelessWidget with PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
   }) : super(key: key);
@@ -89,7 +90,7 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
   List<String> views(BuildContext context);
 }
 
-abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemFAB<T extends Item, R extends ItemRepository<T>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
   const ItemFAB({
     Key? key,
   }) : super(key: key);
@@ -116,7 +117,7 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
   String typeName(BuildContext context);
 }
 
-abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemList<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
   const ItemList({
     Key? key,
   }) : super(key: key);
@@ -220,10 +221,10 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
+  ItemListBody<T, R, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
 }
 
-abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
+abstract class ItemListBody<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>> extends StatelessWidget {
   const ItemListBody({
     Key? key,
     required this.items,
@@ -442,7 +443,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   Widget gridBuilder(BuildContext context, T item);
 }
 
-class ItemCardView<T extends CollectionItem> extends StatelessWidget {
+class ItemCardView<T extends Item> extends StatelessWidget {
   const ItemCardView({
     Key? key,
     required this.items,
@@ -490,7 +491,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class ItemGridView<T extends CollectionItem> extends StatelessWidget {
+class ItemGridView<T extends Item> extends StatelessWidget {
   const ItemGridView({
     Key? key,
     required this.items,

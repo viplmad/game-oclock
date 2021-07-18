@@ -1,15 +1,18 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, System, Platform;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import 'item_relation_manager.dart';
 
 
-class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<System, W> {
+class SystemRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<System, W> {
   SystemRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.platformRepository = collectionRepository.platformRepository,
+    super(itemId: itemId);
+
+  final PlatformRepository platformRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,7 +21,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.relatePlatformSystem(otherId, itemId);
+        return platformRepository.relatePlatformSystem(otherId, itemId);
     }
 
     return super.addRelationFuture(event);
@@ -32,7 +35,7 @@ class SystemRelationManagerBloc<W extends CollectionItem> extends ItemRelationMa
 
     switch(W) {
       case Platform:
-        return iCollectionRepository.unrelatePlatformSystem(otherId, itemId);
+        return platformRepository.unrelatePlatformSystem(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

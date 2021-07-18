@@ -32,9 +32,9 @@ class GameEntityData {
   static const String backupField = 'Backup';
 }
 
-class GameEntity extends CollectionItemEntity {
+class GameEntity extends ItemEntity {
   const GameEntity({
-    required int id,
+    required this.id,
     required this.name,
     required this.edition,
     required this.releaseYear,
@@ -47,8 +47,9 @@ class GameEntity extends CollectionItemEntity {
     required this.screenshotFolder,
     required this.finishDate,
     required this.isBackup,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
   final String edition;
   final int? releaseYear;
@@ -87,7 +88,7 @@ class GameEntity extends CollectionItemEntity {
     final List<GameEntity> gamesList = <GameEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameEntity game = GameEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameEntityData.table) );
+      final GameEntity game = GameEntity.fromDynamicMap( ItemEntity.combineMaps(manyMap, GameEntityData.table) );
 
       gamesList.add(game);
     });
@@ -100,7 +101,7 @@ class GameEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, GameEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, GameEntityData.table);
       id = map[GameEntityData.idField] as int;
     }
 
@@ -129,21 +130,21 @@ class GameEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, Object?> updateMap(GameEntity updatedEntity, GameUpdateProperties updateProperties) {
+  Map<String, Object?> updateMap(GameEntity updatedEntity) {
 
     final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, GameEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValue(updateMap, GameEntityData.editionField, edition, updatedEntity.edition);
-    putUpdateMapValueNullable(updateMap, GameEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear, updatedValueCanBeNull: updateProperties.releaseYearToNull);
-    putUpdateMapValueNullable(updateMap, GameEntityData.coverField, coverFilename, updatedEntity.coverFilename, updatedValueCanBeNull: updateProperties.coverURLToNull);
+    putUpdateMapValueNullable(updateMap, GameEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear);
+    putUpdateMapValueNullable(updateMap, GameEntityData.coverField, coverFilename, updatedEntity.coverFilename);
     putUpdateMapValue(updateMap, GameEntityData.statusField, status, updatedEntity.status);
     putUpdateMapValue(updateMap, GameEntityData.ratingField, rating, updatedEntity.rating);
     putUpdateMapValue(updateMap, GameEntityData.thoughtsField, thoughts, updatedEntity.thoughts);
     putUpdateMapValue(updateMap, GameEntityData.timeField, time, updatedEntity.time);
     putUpdateMapValue(updateMap, GameEntityData.saveFolderField, saveFolder, updatedEntity.saveFolder);
     putUpdateMapValue(updateMap, GameEntityData.screenshotFolderField, screenshotFolder, updatedEntity.screenshotFolder);
-    putUpdateMapValueNullable(updateMap, GameEntityData.finishDateField, finishDate, updatedEntity.finishDate, updatedValueCanBeNull: updateProperties.finishDateToNull);
+    putUpdateMapValueNullable(updateMap, GameEntityData.finishDateField, finishDate, updatedEntity.finishDate);
     putUpdateMapValue(updateMap, GameEntityData.backupField, isBackup, updatedEntity.isBackup);
 
     return updateMap;

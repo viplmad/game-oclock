@@ -1,26 +1,11 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show PurchaseType;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
 
 import 'item_list_manager.dart';
 
 
-class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType> {
+class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType, PurchaseTypeRepository> {
   TypeListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<PurchaseType?> createFuture(AddItem<PurchaseType> event) {
-
-    return iCollectionRepository.createPurchaseType(event.item);
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<PurchaseType> event) {
-
-    return iCollectionRepository.deletePurchaseTypeById(event.item.id);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.purchaseTypeRepository);
 }

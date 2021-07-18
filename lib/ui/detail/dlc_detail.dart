@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Item, DLC, DLCFinish, Game, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -19,7 +18,7 @@ import 'item_detail.dart';
 import 'finish_date_list.dart';
 
 
-class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCDetailManagerBloc> {
+class DLCDetail extends ItemDetail<DLC, DLCRepository, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
     Key? key,
     required DLC item,
@@ -27,47 +26,47 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  DLCDetailBloc detailBlocBuilder(DLCDetailManagerBloc managerBloc) {
+  DLCDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, DLCDetailManagerBloc managerBloc) {
 
     return DLCDetailBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  DLCDetailManagerBloc managerBlocBuilder() {
+  DLCDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final DLCRelationManagerBloc<Game> _gameRelationManagerBloc = DLCRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = DLCRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final DLCFinishRelationManagerBloc _finishRelationManagerBloc = DLCFinishRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      iCollectionRepository: ItemRepository.repository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
-      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
+      blocProviderRelationBuilder<Game>(collectionRepository, _gameRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
 
       BlocProvider<DLCRelationManagerBloc<Game>>(
         create: (BuildContext context) {
@@ -84,7 +83,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
         create: (BuildContext context) {
           return DLCFinishRelationBloc(
             itemId: item.id,
-            iCollectionRepository: CollectionRepository.iCollectionRepository!,
+            iCollectionRepository: ItemRepository.repository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -107,13 +106,13 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
 
   }
 
-  BlocProvider<DLCRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(DLCRelationManagerBloc<W> managerBloc) {
+  BlocProvider<DLCRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, DLCRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<DLCRelationBloc<W>>(
       create: (BuildContext context) {
         return DLCRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: CollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -123,7 +122,7 @@ class DLCDetail extends ItemDetail<DLC, DLCUpdateProperties, DLCDetailBloc, DLCD
 }
 
 // ignore: must_be_immutable
-class _DLCDetailBody extends ItemDetailBody<DLC, DLCUpdateProperties, DLCDetailBloc, DLCDetailManagerBloc> {
+class _DLCDetailBody extends ItemDetailBody<DLC, DLCRepository, DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
     void Function(DLC? item)? onUpdate,
@@ -142,7 +141,6 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCUpdateProperties, DLCDetailB
         value: dlc.name,
         item: dlc,
         itemUpdater: (String newValue) => dlc.copyWith(name: newValue),
-        updateProperties: const DLCUpdateProperties(),
       ),
       itemYearField(
         context,
@@ -150,7 +148,6 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCUpdateProperties, DLCDetailB
         value: dlc.releaseYear,
         item: dlc,
         itemUpdater: (int newValue) => dlc.copyWith(releaseYear: newValue),
-        updateProperties: const DLCUpdateProperties(),
       ),
       DLCFinishList(
         fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,

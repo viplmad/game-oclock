@@ -1,114 +1,183 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-class PlatformRepository {
-  PlatformRepository._();
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show PlatformMapper;
+import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData;
+import 'package:backend/model/model.dart' show Platform, PlatformView;
 
-  static Query create(PlatformEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(PlatformEntityData.table)
-      .sets(entity.createMap())
-      .returningField(PlatformEntityData.idField);
+import './query/query.dart' show PlatformQuery, PlatformSystemRelationQuery, GamePlatformRelationQuery;
+import 'item_repository.dart';
 
-    return query;
+
+class PlatformRepository extends ItemRepository<Platform> {
+  const PlatformRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+
+  static const String _imagePrefix = 'icon';
+
+  //#region CREATE
+  @override
+  Future<Platform?> create(Platform item) {
+
+    final PlatformEntity entity = PlatformMapper.modelToEntity(item);
+    final Query query = PlatformQuery.create(entity);
+
+    return createCollectionItem(
+      query: query,
+      dynamicToId: PlatformEntity.idFromDynamicMap,
+    );
+
   }
 
-  static Query updateById(int id, PlatformEntity entity, PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(PlatformEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  Future<dynamic> relatePlatformSystem(int platformId, int systemId) {
 
-    return _addIdWhere(id, query);
+    final Query query = PlatformSystemRelationQuery.create(platformId, systemId);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<Platform?> findById(int id) {
+
+    final Query query = PlatformQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query updateIconById(int id, String? iconName) {
-    final Query query = FluentQuery
-      .update()
-      .table(PlatformEntityData.table)
-      .set(PlatformEntityData.iconField, iconName);
+  @override
+  Stream<List<Platform>> findAll() {
 
-    return _addIdWhere(id, query);
+    return findAllPlatformsWithView(PlatformView.Main);
+
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(PlatformEntityData.table);
+  Stream<List<Platform>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
 
-    return _addIdWhere(id, query);
+    final Query query = PlatformQuery.selectAllInView(platformView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static Query selectById(int id) {
-    Query query = FluentQuery
-      .select()
-      .from(PlatformEntityData.table);
+  Stream<List<Platform>> findAllPlatformsFromGame(int id) {
 
-    query = addFields(query);
+    final Query query = GamePlatformRelationQuery.selectAllPlatformsByGameId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return _addIdWhere(id, query);
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(PlatformEntityData.table)
-      .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  Stream<List<Platform>> findAllPlatformsFromSystem(int id) {
 
-    return query;
+    final Query query = PlatformSystemRelationQuery.selectAllPlatformsBySystemId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion READ
+
+  //#region UPDATE
+  @override
+  Future<Platform?> update(Platform item, Platform updatedItem) {
+
+    final PlatformEntity entity = PlatformMapper.modelToEntity(item);
+    final PlatformEntity updatedEntity = PlatformMapper.modelToEntity(updatedItem);
+    final Query query = PlatformQuery.updateById(item.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
+
+    final Query query = PlatformQuery.deleteById(id);
+    return itemConnector.execute(query);
+
   }
 
-  static Query selectAllInView(PlatformView view, [int? limit]) {
-    Query query = FluentQuery
-      .select()
-      .from(PlatformEntityData.table)
-      .limit(limit);
+  Future<dynamic> unrelatePlatformSystem(int platformId, int systemId) {
 
-    query = addFields(query);
-    query = _addViewWhere(query, view);
-    query = _addViewOrder(query, view);
+    final Query query = PlatformSystemRelationQuery.deleteById(platformId, systemId);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<Platform>> findAllPlatformsByName(String name, int maxResults) {
+
+    final Query query = PlatformQuery.selectAllByNameLike(name, maxResults);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion SEARCH
+
+  //#region IMAGE
+  Future<Platform?> uploadPlatformIcon(int id, String uploadImagePath, [String? oldImageName]) {
+
+    return uploadCollectionItemImage(
+      tableName: PlatformEntityData.table,
+      uploadImagePath: uploadImagePath,
+      initialImageName: _imagePrefix,
+      oldImageName: oldImageName,
+      queryBuilder: PlatformQuery.updateIconById,
+      id: id,
+    );
+
   }
 
-  static Query _addIdWhere(int id, Query query) {
-    query.where(PlatformEntityData.idField, id, type: int, table: PlatformEntityData.table);
+  Future<Platform?> renamePlatformIcon(int id, String imageName, String newImageName) {
 
-    return query;
+    return renameCollectionItemImage(
+      tableName: PlatformEntityData.table,
+      oldImageName: imageName,
+      newImageName: newImageName,
+      queryBuilder: PlatformQuery.updateIconById,
+      id: id,
+    );
+
   }
 
-  static Query addFields(Query query) {
-    query.field(PlatformEntityData.idField, type: int, table: PlatformEntityData.table);
-    query.field(PlatformEntityData.nameField, type: String, table: PlatformEntityData.table);
-    query.field(PlatformEntityData.iconField, type: String, table: PlatformEntityData.table);
-    query.field(PlatformEntityData.typeField, type: String, table: PlatformEntityData.table);
+  Future<Platform?> deletePlatformIcon(int id, String imageName) {
 
-    return query;
+    return deleteCollectionItemImage(
+      tableName: PlatformEntityData.table,
+      imageName: imageName,
+      queryBuilder: PlatformQuery.updateIconById,
+      id: id,
+    );
+
   }
+  //#endregion IMAGE
 
-  static Query _addViewWhere(Query query, PlatformView view) {
-    switch(view) {
-      case PlatformView.Main:
-        break;
-      case PlatformView.LastCreated:
-        break;
-    }
+  //#region DOWNLOAD
+  String? _getPlatformIconURL(String? platformIconName) {
 
-    return query;
+    return platformIconName != null?
+        imageConnector.getURI(
+          tableName: PlatformEntityData.table,
+          imageFilename: platformIconName,
+        )
+        : null;
+
   }
+  //#endregion DOWNLOAD
 
-  static Query _addViewOrder(Query query, PlatformView view) {
-    switch(view) {
-      case PlatformView.Main:
-        break;
-      case PlatformView.LastCreated:
-        query.order(PlatformEntityData.idField, PlatformEntityData.table, direction: SortOrder.DESC);
-        break;
-    }
+  @override
+  List<Platform> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
 
-    return query;
+    return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
+      return PlatformMapper.entityToModel(platformEntity, _getPlatformIconURL(platformEntity.iconFilename));
+    }).toList(growable: false);
+
   }
 }

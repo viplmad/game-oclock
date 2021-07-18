@@ -1,28 +1,25 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show PurchaseType, TypeView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
 
 import 'item_search.dart';
 
 
-class TypeSearchBloc extends ItemSearchBloc<PurchaseType> {
+class TypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, PurchaseTypeRepository> {
   TypeSearchBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.purchaseTypeRepository);
 
   @override
   Future<List<PurchaseType>> getInitialItems() {
 
-    return iCollectionRepository!.findAllPurchaseTypesWithView(TypeView.LastCreated, super.maxSuggestions).first;
+    return repository.findAllPurchaseTypesWithView(TypeView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<PurchaseType>> getSearchItems(String query) {
 
-    return iCollectionRepository!.findAllPurchaseTypesByName(query, super.maxResults).first;
+    return repository.findAllPurchaseTypesByName(query, super.maxResults).first;
 
   }
 }

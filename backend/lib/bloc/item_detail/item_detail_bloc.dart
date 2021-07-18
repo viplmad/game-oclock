@@ -3,17 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-abstract class ItemDetailBloc<T extends CollectionItem, P extends Object> extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
     required this.itemId,
-    required this.iCollectionRepository,
+    required this.repository,
     required this.managerBloc,
   }) : super(ItemLoading()) {
 
@@ -22,8 +21,8 @@ abstract class ItemDetailBloc<T extends CollectionItem, P extends Object> extend
   }
 
   final int itemId;
-  final CollectionRepository iCollectionRepository;
-  final ItemDetailManagerBloc<T, P> managerBloc;
+  final R repository;
+  final ItemDetailManagerBloc<T, R> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   @override
@@ -49,13 +48,13 @@ abstract class ItemDetailBloc<T extends CollectionItem, P extends Object> extend
 
   Stream<ItemDetailState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(repository.isClosed()) {
       yield const ItemNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        repository.reconnect();
+        await repository.open();
 
       } catch (e) {
 
@@ -139,5 +138,9 @@ abstract class ItemDetailBloc<T extends CollectionItem, P extends Object> extend
 
   }
 
-  Stream<T?> getReadStream();
+  Stream<T?> getReadStream() {
+
+    return repository.findById(itemId);
+
+  }
 }

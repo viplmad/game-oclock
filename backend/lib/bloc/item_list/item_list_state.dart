@@ -13,7 +13,7 @@ abstract class ItemListState extends Equatable {
 
 class ItemListLoading extends ItemListState {}
 
-class ItemListLoaded<T extends CollectionItem> extends ItemListState {
+class ItemListLoaded<T extends Item> extends ItemListState {
   const ItemListLoaded(this.items, [this.viewIndex = 0, int? year, ListStyle? style])
       : this.year = year?? -1,
         this.style = style?? ListStyle.Card;

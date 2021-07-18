@@ -1,11 +1,11 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart';
-import 'repository.dart';
+import 'package:backend/entity/entity.dart' show GameEntityData, PlatformEntityData, PurchaseEntityData, GameTagEntityData, GamePlatformRelationData, GamePurchaseRelationData, GameTagRelationData;
+import 'query.dart' show GameQuery, PlatformQuery, PurchaseQuery, GameTagQuery;
 
 
-class GamePlatformRelationRepository {
-  GamePlatformRelationRepository._();
+class GamePlatformRelationQuery {
+  GamePlatformRelationQuery._();
 
   static Query create(int gameId, int plaformId) {
     final Query query = FluentQuery
@@ -34,7 +34,7 @@ class GamePlatformRelationRepository {
       .join(GamePlatformRelationData.table, null, GamePlatformRelationData.gameField, GameEntityData.table, GameEntityData.idField)
       .where(GamePlatformRelationData.platformField, id, type: int, table: GamePlatformRelationData.table);
 
-    GameRepository.addFields(query);
+    GameQuery.addFields(query);
 
     return query;
   }
@@ -46,7 +46,7 @@ class GamePlatformRelationRepository {
       .join(GamePlatformRelationData.table, null, GamePlatformRelationData.platformField, PlatformEntityData.table, PlatformEntityData.idField)
       .where(GamePlatformRelationData.gameField, id, type: int, table: GamePlatformRelationData.table);
 
-    PlatformRepository.addFields(query);
+    PlatformQuery.addFields(query);
 
     return query;
   }
@@ -57,8 +57,8 @@ class GamePlatformRelationRepository {
   }
 }
 
-class GamePurchaseRelationRepository {
-  GamePurchaseRelationRepository._();
+class GamePurchaseRelationQuery {
+  GamePurchaseRelationQuery._();
 
   static Query create(int gameId, int purchaseId) {
     final Query query = FluentQuery
@@ -87,7 +87,7 @@ class GamePurchaseRelationRepository {
       .join(GamePurchaseRelationData.table, null, GamePurchaseRelationData.gameField, GameEntityData.table, GameEntityData.idField)
       .where(GamePurchaseRelationData.purchaseField, id, type: int, table: GamePurchaseRelationData.table);
 
-    GameRepository.addFields(query);
+    GameQuery.addFields(query);
 
     return query;
   }
@@ -99,7 +99,7 @@ class GamePurchaseRelationRepository {
       .join(GamePurchaseRelationData.table, null, GamePurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField)
       .where(GamePurchaseRelationData.gameField, id, type: int, table: GamePurchaseRelationData.table);
 
-    PurchaseRepository.addFields(query);
+    PurchaseQuery.addFields(query);
 
     return query;
   }
@@ -110,8 +110,8 @@ class GamePurchaseRelationRepository {
   }
 }
 
-class GameTagRelationRepository {
-  GameTagRelationRepository._();
+class GameTagRelationQuery {
+  GameTagRelationQuery._();
 
   static Query create(int gameId, int tagId) {
     final Query query = FluentQuery
@@ -140,7 +140,7 @@ class GameTagRelationRepository {
       .join(GameTagRelationData.table, null, GameTagRelationData.gameField, GameEntityData.table, GameEntityData.idField)
       .where(GameTagRelationData.tagField, id, type: int, table: GameTagRelationData.table);
 
-    GameRepository.addFields(query);
+    GameQuery.addFields(query);
 
     return query;
   }
@@ -152,7 +152,7 @@ class GameTagRelationRepository {
       .join(GameTagRelationData.table, null, GameTagRelationData.tagField, GameTagEntityData.table, GameTagEntityData.idField)
       .where(GameTagRelationData.gameField, id, type: int, table: GameTagRelationData.table);
 
-    GameTagRepository.addFields(query);
+    GameTagQuery.addFields(query);
 
     return query;
   }

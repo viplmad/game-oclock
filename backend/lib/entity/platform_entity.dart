@@ -21,7 +21,7 @@ class PlatformEntityData {
   static const String typeField = 'Type';
 }
 
-class PlatformEntity extends CollectionItemEntity {
+class PlatformEntity extends ItemEntity {
   const PlatformEntity({
     required int id,
     required this.name,
@@ -49,7 +49,7 @@ class PlatformEntity extends CollectionItemEntity {
     final List<PlatformEntity> platformsList = <PlatformEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PlatformEntity platform = PlatformEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PlatformEntityData.table) );
+      final PlatformEntity platform = PlatformEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PlatformEntityData.table) );
 
       platformsList.add(platform);
     });
@@ -62,7 +62,7 @@ class PlatformEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, PlatformEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PlatformEntityData.table);
       id = map[PlatformEntityData.idField] as int;
     }
 
@@ -82,13 +82,13 @@ class PlatformEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(PlatformEntity updatedEntity, PlatformUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(PlatformEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, PlatformEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, PlatformEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
-    putUpdateMapValueNullable(updateMap, PlatformEntityData.typeField, type, updatedEntity.type, updatedValueCanBeNull: updateProperties.typeToNull);
+    putUpdateMapValueNullable(updateMap, PlatformEntityData.iconField, iconFilename, updatedEntity.iconFilename);
+    putUpdateMapValueNullable(updateMap, PlatformEntityData.typeField, type, updatedEntity.type);
 
     return updateMap;
 

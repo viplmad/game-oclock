@@ -1,48 +1,50 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show GameMapper;
+import 'package:backend/entity/entity.dart' show GameFinishEntity;
+import 'package:backend/model/model.dart' show GameFinish;
+
+import './query/query.dart' show GameFinishQuery;
+import 'item_repository.dart';
 
 
-class GameFinishRepository {
-  GameFinishRepository._();
+class GameFinishRepository extends ItemRepository {
+  GameFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(GameFinishEntity entity, int gameId) {
-    final Query query = FluentQuery
-      .insert()
-      .into(GameFinishEntityData.table)
-      .sets(entity.createMap(gameId));
+  //#region CREATE
+  Future<dynamic> createGameFinish(int gameId, GameFinish finish) {
 
-    return query;
+    final GameFinishEntity entity = GameMapper.finishModelToEntity(finish);
+    final Query query = GameFinishQuery.create(entity, gameId);
+
+    return itemConnector.execute(query);
+
   }
+  //#endregion CREATE
 
-  static Query deleteById(int gameId, DateTime date) {
-    final Query query = FluentQuery
-      .delete()
-      .from(GameFinishEntityData.table);
+  //#region READ
+  Stream<List<GameFinish>> findAllGameFinishFromGame(int id) {
 
-    _addIdWhere(gameId, date, query);
+    final Query query = GameFinishQuery.selectAllByGame(id);
+    return itemConnector.execute(query)
+      .asStream().map( _dynamicToListGameFinish );
 
-    return query;
   }
+  //#endregion READ
 
-  static Query selectAllByGame(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameFinishEntityData.table)
-      .where(GameFinishEntityData.gameField, id, type: int, table: GameFinishEntityData.table);
+  //#region DELETE
+  Future<dynamic> deleteGameFinishById(int gameId, DateTime date) {
 
-    addFields(query);
+    final Query query = GameFinishQuery.deleteById(gameId, date);
+    return itemConnector.execute(query);
 
-    return query;
   }
+  //#endregion DELETE
 
-  static void addFields(Query query) {
-    query.field(GameFinishEntityData.gameField, type: int, table: GameFinishEntityData.table);
-    query.field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table);
-  }
+  List<GameFinish> _dynamicToListGameFinish(List<Map<String, Map<String, dynamic>>> results) {
 
-  static void _addIdWhere(int gameId, DateTime date, Query query) {
-    query.where(GameFinishEntityData.gameField, gameId, type: int, table: GameFinishEntityData.table);
-    query.where(GameFinishEntityData.dateField, date, type: DateTime, table: GameFinishEntityData.table);
+    return GameFinishEntity.fromDynamicMapList(results).map( GameMapper.finishEntityToModel ).toList(growable: false);
+
   }
 }

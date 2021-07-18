@@ -32,7 +32,7 @@ class GameFinishEntity extends Equatable {
     final List<GameFinishEntity> finishList = <GameFinishEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameFinishEntity date = GameFinishEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
+      final GameFinishEntity date = GameFinishEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
 
       finishList.add(date);
     });

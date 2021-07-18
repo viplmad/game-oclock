@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameTagRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-//import '../route_constants.dart';
 import '../theme/theme.dart';
 import 'search.dart';
 
 
-class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
+class TagSearch extends ItemSearch<Tag, GameTagRepository, TagSearchBloc, TagListManagerBloc> {
   const TagSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  TagSearchBloc searchBlocBuilder() {
+  TagSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TagSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  TagListManagerBloc managerBlocBuilder() {
+  TagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TagListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +46,7 @@ class TagSearch extends ItemSearch<Tag, TagSearchBloc, TagListManagerBloc> {
   }
 }
 
-class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
+class TagLocalSearch extends ItemLocalSearch<Tag, GameTagRepository, TagListManagerBloc> {
   const TagLocalSearch({
     Key? key,
     required List<Tag> items,
@@ -61,10 +59,10 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   void Function() onTap(BuildContext context, Tag item) => () {};
 
   @override
-  TagListManagerBloc managerBlocBuilder() {
+  TagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TagListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -80,7 +78,7 @@ class TagLocalSearch extends ItemLocalSearch<Tag, TagListManagerBloc> {
   }
 }
 
-class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, K, TagListManagerBloc> {
+class _TagSearchBody<K extends ItemSearchBloc<Tag>> extends ItemSearchBody<Tag, GameTagRepository, K, TagListManagerBloc> {
   const _TagSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Tag) onTap,

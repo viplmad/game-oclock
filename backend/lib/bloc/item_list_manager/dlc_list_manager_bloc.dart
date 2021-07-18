@@ -1,26 +1,11 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
 
 import 'item_list_manager.dart';
 
 
-class DLCListManagerBloc extends ItemListManagerBloc<DLC> {
+class DLCListManagerBloc extends ItemListManagerBloc<DLC, DLCRepository> {
   DLCListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<DLC?> createFuture(AddItem<DLC> event) {
-
-    return iCollectionRepository.createDLC(event.item);
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<DLC> event) {
-
-    return iCollectionRepository.deleteDLCById(event.item.id);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.dlcRepository);
 }

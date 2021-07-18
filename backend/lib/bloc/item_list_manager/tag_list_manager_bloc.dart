@@ -1,26 +1,11 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameTagRepository;
 
 import 'item_list_manager.dart';
 
 
-class TagListManagerBloc extends ItemListManagerBloc<Tag> {
+class TagListManagerBloc extends ItemListManagerBloc<Tag, GameTagRepository> {
   TagListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<Tag?> createFuture(AddItem<Tag> event) {
-
-    return iCollectionRepository.createGameTag(event.item);
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<Tag> event) {
-
-    return iCollectionRepository.deleteGameTagById(event.item.id);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.gameTagRepository);
 }

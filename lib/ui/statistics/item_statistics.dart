@@ -22,7 +22,7 @@ class StatisticsArguments<T> {
   final String viewTitle;
 }
 
-abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
+abstract class ItemStatistics<T extends Item, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
   const ItemStatistics({
     Key? key,
     required this.items,
@@ -49,7 +49,7 @@ abstract class ItemStatistics<T extends CollectionItem, D extends ItemData<T>, K
   ItemStatisticsBody<T, D, K> statisticsBodyBuilder();
 }
 
-abstract class ItemStatisticsBody<T extends CollectionItem, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
+abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
   const ItemStatisticsBody({
     Key? key,
     required this.viewTitle,

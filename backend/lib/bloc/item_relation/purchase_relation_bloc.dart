@@ -1,32 +1,41 @@
 import 'dart:async';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Purchase, Game, DLC, Store, PurchaseType;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, DLCRepository, PurchaseTypeRepository, StoreRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class PurchaseRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Purchase, W> {
+class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, W> {
   PurchaseRelationBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required PurchaseRelationManagerBloc<W> managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.dlcRepository = collectionRepository.dlcRepository,
+    this.storeRepository = collectionRepository.storeRepository,
+    this.purchaseTypeRepository = collectionRepository.purchaseTypeRepository,
+    super(itemId: itemId, managerBloc: managerBloc);
+
+  final GameRepository gameRepository;
+  final DLCRepository dlcRepository;
+  final StoreRepository storeRepository;
+  final PurchaseTypeRepository purchaseTypeRepository;
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.findAllGamesFromPurchase(itemId) as Stream<List<W>>;
+        return gameRepository.findAllGamesFromPurchase(itemId) as Stream<List<W>>;
       case DLC:
-        return iCollectionRepository.findAllDLCsFromPurchase(itemId) as Stream<List<W>>;
+        return dlcRepository.findAllDLCsFromPurchase(itemId) as Stream<List<W>>;
       case Store:
-        return iCollectionRepository.findStoreFromPurchase(itemId).map<List<Store>>( (Store? store) => store != null? <Store>[store] : <Store>[] ) as Stream<List<W>>;
+        return storeRepository.findStoreFromPurchase(itemId).map<List<Store>>( (Store? store) => store != null? <Store>[store] : <Store>[] ) as Stream<List<W>>;
       case PurchaseType:
-        return iCollectionRepository.findAllPurchaseTypesFromPurchase(itemId) as Stream<List<W>>;
+        return purchaseTypeRepository.findAllPurchaseTypesFromPurchase(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

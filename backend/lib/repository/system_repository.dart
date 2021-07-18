@@ -1,130 +1,160 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show SystemMapper;
+import 'package:backend/entity/entity.dart' show SystemEntity, SystemEntityData;
+import 'package:backend/model/model.dart' show System, SystemView;
 
-  /*static Fields fields() {
+import './query/query.dart' show SystemQuery, PlatformSystemRelationQuery;
+import 'item_repository.dart';
 
-    final Fields fields = Fields();
-    fields.add(idField, int);
-    fields.add(nameField, String);
-    fields.add(iconField, String);
-    fields.add(generationField, int);
-    fields.add(manufacturerField, String);
 
-    return fields;
+class SystemRepository extends ItemRepository<System> {
+  const SystemRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  }*/
+  static const String _imagePrefix = 'icon';
 
-class SystemRepository {
-  SystemRepository._();
+  //#region CREATE
+  @override
+  Future<System?> create(System item) {
 
-  static Query create(SystemEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(SystemEntityData.table)
-      .sets(entity.createMap())
-      .returningField(SystemEntityData.idField);
+    final SystemEntity entity = SystemMapper.modelToEntity(item);
+    final Query query = SystemQuery.create(entity);
 
-    return query;
+    return createCollectionItem(
+      query: query,
+      dynamicToId: SystemEntity.idFromDynamicMap,
+    );
+
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<System?> findById(int id) {
+
+    final Query query = SystemQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query updateById(int id, SystemEntity entity, SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(SystemEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  @override
+  Stream<List<System>> findAll() {
 
-    _addIdWhere(id, query);
+    return findAllSystemsWithView(SystemView.Main);
 
-    return query;
   }
 
-  static Query updateIconById(int id, String? iconName) {
-    final Query query = FluentQuery
-      .update()
-      .table(SystemEntityData.table)
-      .set(SystemEntityData.iconField, iconName);
+  Stream<List<System>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
 
-    _addIdWhere(id, query);
+    final Query query = SystemQuery.selectAllInView(systemView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+  }
+  //#endregion READ
 
-    return query;
+  //#region UPDATE
+  @override
+  Future<System?> update(System item, System updatedItem) {
+
+    final SystemEntity entity = SystemMapper.modelToEntity(item);
+    final SystemEntity updatedEntity = SystemMapper.modelToEntity(updatedItem);
+    final Query query = SystemQuery.updateById(item.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
+
+    final Query query = SystemQuery.deleteById(id);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<System>> findAllSystemsByName(String name, int maxResults) {
+
+    final Query query = SystemQuery.selectAllByNameLike(name, maxResults);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(SystemEntityData.table);
+  Stream<List<System>> findAllSystemsFromPlatform(int id) {
 
-    _addIdWhere(id, query);
+    final Query query = PlatformSystemRelationQuery.selectAllSystemsByPlatformId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
+  }
+  //#endregion SEARCH
+
+  //#region IMAGE
+  Future<System?> uploadSystemIcon(int id, String uploadImagePath, [String? oldImageName]) {
+
+    return uploadCollectionItemImage(
+      tableName: SystemEntityData.table,
+      uploadImagePath: uploadImagePath,
+      initialImageName: _imagePrefix,
+      oldImageName: oldImageName,
+      queryBuilder: SystemQuery.updateIconById,
+      id: id,
+    );
+
   }
 
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(SystemEntityData.table);
+  Future<System?> renameSystemIcon(int id, String imageName, String newImageName) {
 
-    addFields(query);
-    _addIdWhere(id, query);
+    return renameCollectionItemImage(
+      tableName: SystemEntityData.table,
+      oldImageName: imageName,
+      newImageName: newImageName,
+      queryBuilder: SystemQuery.updateIconById,
+      id: id,
+    );
 
-    return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(SystemEntityData.table)
-      .where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  Future<System?> deleteSystemIcon(int id, String imageName) {
 
-    addFields(query);
+    return deleteCollectionItemImage(
+      tableName: SystemEntityData.table,
+      imageName: imageName,
+      queryBuilder: SystemQuery.updateIconById,
+      id: id,
+    );
 
-    return query;
   }
+  //#endregion IMAGE
 
-  static Query selectAllInView(SystemView view, [int? limit]) {
-    final Query query = FluentQuery
-      .select()
-      .from(SystemEntityData.table)
-      .limit(limit);
+  //#region DOWNLOAD
+  String? _getSystemIconURL(String? systemIconName) {
 
-    addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    return systemIconName != null?
+        imageConnector.getURI(
+          tableName: SystemEntityData.table,
+          imageFilename: systemIconName,
+        )
+        : null;
 
-    return query;
   }
+  //#endregion DOWNLOAD
 
-  static void addFields(Query query) {
-    query.field(SystemEntityData.idField, type: int, table: SystemEntityData.table);
-    query.field(SystemEntityData.nameField, type: String, table: SystemEntityData.table);
-    query.field(SystemEntityData.iconField, type: String, table: SystemEntityData.table);
-    query.field(SystemEntityData.generationField, type: int, table: SystemEntityData.table);
-    query.field(SystemEntityData.manufacturerField, type: String, table: SystemEntityData.table);
-  }
+  @override
+  List<System> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(SystemEntityData.idField, id, type: int, table: SystemEntityData.table);
-  }
+    return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
+      return SystemMapper.entityToModel(systemEntity, _getSystemIconURL(systemEntity.iconFilename));
+    }).toList(growable: false);
 
-  static void _addViewWhere(Query query, SystemView view) {
-    switch(view) {
-      case SystemView.Main:
-        break;
-      case SystemView.LastCreated:
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, SystemView view) {
-    switch(view) {
-      case SystemView.Main:
-        break;
-      case SystemView.LastCreated:
-        query.order(SystemEntityData.idField, SystemEntityData.table, direction: SortOrder.DESC);
-        break;
-    }
   }
 }

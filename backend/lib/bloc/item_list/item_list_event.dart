@@ -13,7 +13,7 @@ abstract class ItemListEvent extends Equatable {
 
 class LoadItemList extends ItemListEvent {}
 
-class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
+class UpdateItemList<T extends Item> extends ItemListEvent {
   const UpdateItemList(this.items, this.viewIndex, this.year, this.style);
 
   final List<T> items;
@@ -33,7 +33,7 @@ class UpdateItemList<T extends CollectionItem> extends ItemListEvent {
       ' }';
 }
 
-class UpdateListItem<T extends CollectionItem> extends ItemListEvent {
+class UpdateListItem<T extends Item> extends ItemListEvent {
   const UpdateListItem(this.item);
 
   final T item;

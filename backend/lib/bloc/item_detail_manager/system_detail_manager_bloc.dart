@@ -1,41 +1,40 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, SystemRepository;
 
 import 'item_detail_manager.dart';
 
 
-class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemUpdateProperties> {
+class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemRepository> {
   SystemDetailManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(itemId: itemId, repository: collectionRepository.systemRepository);
 
   @override
-  Future<System?> updateFuture(UpdateItemField<System, SystemUpdateProperties> event) {
+  Future<System?> updateFuture(UpdateItemField<System> event) {
 
-    return iCollectionRepository.updateSystem(event.item, event.updatedItem, event.updateProperties);
+    return repository.updateSystem(event.item, event.updatedItem);
 
   }
 
   @override
   Future<System?> addImage(AddItemImage<System> event) {
 
-    return iCollectionRepository.uploadSystemIcon(itemId, event.imagePath, event.oldImageName);
+    return repository.uploadSystemIcon(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<System?> updateImageName(UpdateItemImageName<System> event) {
 
-    return iCollectionRepository.renameSystemIcon(itemId, event.oldImageName, event.newImageName);
+    return repository.renameSystemIcon(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<System?> deleteImage(DeleteItemImage<System> event) {
 
-    return iCollectionRepository.deleteSystemIcon(itemId, event.imageName);
+    return repository.deleteSystemIcon(itemId, event.imageName);
 
   }
 }

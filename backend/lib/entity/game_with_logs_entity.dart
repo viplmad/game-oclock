@@ -30,7 +30,7 @@ class GameWithLogsEntity extends Equatable {
       final Map<String, dynamic> gameMap = manyMap[GameTimeLogEntityData.table]!;
       final GameEntity gameEntity = GameEntity.fromDynamicMap(gameMap);
 
-      final Map<String, dynamic> timeLogMap = CollectionItemEntity.combineMaps(manyMap, GameTimeLogEntityData.table);
+      final Map<String, dynamic> timeLogMap = ItemEntity.combineMaps(manyMap, GameTimeLogEntityData.table);
       final GameTimeLogEntity timeLogEntity = GameTimeLogEntity.fromDynamicMap(timeLogMap);
 
       GameWithLogsEntity gameWithLogs;

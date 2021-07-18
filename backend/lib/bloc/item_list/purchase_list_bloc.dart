@@ -1,32 +1,22 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Purchase, PurchaseView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class PurchaseListBloc extends ItemListBloc<Purchase> {
+class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseRepository> {
   PurchaseListBloc({
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required PurchaseListManagerBloc managerBloc,
-  }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<List<Purchase>> getReadAllStream() {
-
-    return iCollectionRepository.findAllPurchases();
-
-  }
+  }) : super(repository: collectionRepository.purchaseRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<Purchase>> getReadViewStream(UpdateView event) {
 
     final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
-    return iCollectionRepository.findAllPurchasesWithView(purchaseView);
+    return repository.findAllPurchasesWithView(purchaseView);
 
   }
 
@@ -35,7 +25,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase> {
 
     final PurchaseView purchaseView = PurchaseView.values[event.viewIndex];
 
-    return iCollectionRepository.findAllPurchasesWithYearView(purchaseView, event.year);
+    return repository.findAllPurchasesWithYearView(purchaseView, event.year);
 
   }
 }

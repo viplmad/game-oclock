@@ -1,24 +1,14 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, SystemRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class SystemDetailBloc extends ItemDetailBloc<System, Object> {
+class SystemDetailBloc extends ItemDetailBloc<System, SystemRepository> {
   SystemDetailBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required SystemDetailManagerBloc managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<System?> getReadStream() {
-
-    return iCollectionRepository.findSystemById(itemId);
-
-  }
+  }) : super(itemId: itemId, repository: collectionRepository.systemRepository, managerBloc: managerBloc);
 }

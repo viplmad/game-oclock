@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Platform;
 import 'package:backend/model/list_style.dart';
+import 'package:backend/repository/repository.dart' show PlatformRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +14,7 @@ import '../theme/theme.dart';
 import 'list.dart';
 
 
-class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
+class PlatformAppBar extends ItemAppBar<Platform, PlatformRepository, PlatformListBloc> {
   const PlatformAppBar({
     Key? key,
   }) : super(key: key);
@@ -28,7 +29,7 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   List<String> views(BuildContext context) => PlatformTheme.views(context);
 }
 
-class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
+class PlatformFAB extends ItemFAB<Platform, PlatformRepository, PlatformListManagerBloc> {
   const PlatformFAB({
     Key? key,
   }) : super(key: key);
@@ -43,7 +44,7 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 }
 
-class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
+class PlatformList extends ItemList<Platform, PlatformRepository, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
     Key? key,
   }) : super(key: key);
@@ -68,7 +69,7 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
   }
 }
 
-class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
+class _PlatformListBody extends ItemListBody<Platform, PlatformRepository, PlatformListBloc> {
   const _PlatformListBody({
     Key? key,
     required List<Platform> items,

@@ -1,24 +1,14 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Game;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class GameDetailBloc extends ItemDetailBloc<Game, GameUpdateProperties> {
+class GameDetailBloc extends ItemDetailBloc<Game, GameRepository> {
   GameDetailBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required GameDetailManagerBloc managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<Game?> getReadStream() {
-
-    return iCollectionRepository.findGameById(itemId);
-
-  }
+  }) : super(itemId: itemId, repository: collectionRepository.gameRepository, managerBloc: managerBloc);
 }

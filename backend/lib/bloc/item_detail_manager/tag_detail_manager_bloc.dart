@@ -1,20 +1,12 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameTagRepository;
 
 import 'item_detail_manager.dart';
 
 
-class TagDetailManagerBloc extends ItemDetailManagerBloc<Tag, GameTagUpdateProperties> {
+class TagDetailManagerBloc extends ItemDetailManagerBloc<Tag, GameTagRepository> {
   TagDetailManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<Tag?> updateFuture(UpdateItemField<Tag, GameTagUpdateProperties> event) {
-
-    return iCollectionRepository.updateGameTag(event.item, event.updatedItem, event.updateProperties);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(itemId: itemId, repository: collectionRepository.gameTagRepository);
 }

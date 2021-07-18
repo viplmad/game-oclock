@@ -12,7 +12,7 @@ abstract class ItemStatisticsState extends Equatable {
 
 class ItemStatisticsLoading extends ItemStatisticsState {}
 
-class ItemGeneralStatisticsLoaded<T extends CollectionItem, D extends ItemData<T>> extends ItemStatisticsState {
+class ItemGeneralStatisticsLoaded<T extends Item, D extends ItemData<T>> extends ItemStatisticsState {
   const ItemGeneralStatisticsLoaded(this.itemData);
 
   final D itemData;
@@ -26,7 +26,7 @@ class ItemGeneralStatisticsLoaded<T extends CollectionItem, D extends ItemData<T
       ' }';
 }
 
-class ItemYearStatisticsLoaded<T extends CollectionItem, D extends ItemData<T>> extends ItemStatisticsState {
+class ItemYearStatisticsLoaded<T extends Item, D extends ItemData<T>> extends ItemStatisticsState {
   const ItemYearStatisticsLoaded(this.itemData, this.year);
 
   final D itemData;

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Game;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -14,25 +13,25 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
+class GameSearch extends ItemSearch<Game, GameRepository, GameSearchBloc, GameListManagerBloc> {
   const GameSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  GameSearchBloc searchBlocBuilder() {
+  GameSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  GameListManagerBloc managerBlocBuilder() {
+  GameListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +47,7 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   }
 }
 
-class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
+class GameLocalSearch extends ItemLocalSearch<Game, GameRepository, GameListManagerBloc> {
   const GameLocalSearch({
     Key? key,
     required List<Game> items,
@@ -58,10 +57,10 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   final String detailRouteName = gameDetailRoute;
 
   @override
-  GameListManagerBloc managerBlocBuilder() {
+  GameListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -77,7 +76,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   }
 }
 
-class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, K, GameListManagerBloc> {
+class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, GameRepository, K, GameListManagerBloc> {
   const _GameSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Game) onTap,

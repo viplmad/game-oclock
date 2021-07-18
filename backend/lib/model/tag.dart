@@ -6,13 +6,13 @@ enum TagView {
   LastCreated,
 }
 
-class Tag extends CollectionItem {
+class Tag extends Item {
   const Tag({
-    required int id,
+    required this.id,
     required this.name,
-  }) : this.uniqueId = 'Tg$id',
-        super(id: id);
+  }) : this.uniqueId = 'Tg$id';
 
+  final int id;
   final String name;
 
   @override
@@ -21,7 +21,7 @@ class Tag extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  ItemImage get image => const ItemImage(null, null);
+  final ItemImage image = const ItemImage(null, null);
 
   @override
   String get queryableTerms => this.name;
@@ -53,9 +53,4 @@ class Tag extends CollectionItem {
         ' }';
 
   }
-}
-
-class GameTagUpdateProperties {
-
-  const GameTagUpdateProperties();
 }

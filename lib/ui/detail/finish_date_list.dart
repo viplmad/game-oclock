@@ -14,7 +14,7 @@ import '../common/show_date_picker.dart';
 
 
 // ignore: must_be_immutable
-abstract class FinishList<T extends CollectionItem, D extends CollectionItemFinish, K extends RelationBloc<T, D>, S extends RelationManagerBloc<T, D>> extends StatelessWidget {
+abstract class FinishList<T extends Item, D extends CollectionItemFinish, K extends RelationBloc<T, D>, S extends RelationManagerBloc<T, D>> extends StatelessWidget {
   FinishList({
     Key? key,
     required this.fieldName,

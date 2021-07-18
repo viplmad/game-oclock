@@ -55,7 +55,7 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }
 
-abstract class _DLCRelationList<W extends CollectionItem> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
+abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
   const _DLCRelationList({
     Key? key,
     required String relationName,

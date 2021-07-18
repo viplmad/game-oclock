@@ -8,7 +8,8 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item, ItemImage;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, ItemRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -31,7 +32,7 @@ class DetailArguments<T> {
   final void Function(T? item)? onUpdate;
 }
 
-abstract class ItemDetail<T extends CollectionItem, P extends Object, K extends ItemDetailBloc<T, P>, S extends ItemDetailManagerBloc<T, P>> extends StatelessWidget {
+abstract class ItemDetail<T extends Item, R extends ItemRepository<T>, K extends ItemDetailBloc<T, R>, S extends ItemDetailManagerBloc<T, R>> extends StatelessWidget {
   const ItemDetail({
     Key? key,
     required this.item,
@@ -44,13 +45,15 @@ abstract class ItemDetail<T extends CollectionItem, P extends Object, K extends 
   @override
   Widget build(BuildContext context) {
 
-    final S _managerBloc = managerBlocBuilder();
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
+    final S _managerBloc = managerBlocBuilder(_collectionRepository);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return detailBlocBuilder(_managerBloc)..add(LoadItem());
+            return detailBlocBuilder(_collectionRepository, _managerBloc)..add(LoadItem());
           },
         ),
 
@@ -59,7 +62,7 @@ abstract class ItemDetail<T extends CollectionItem, P extends Object, K extends 
             return _managerBloc;
           },
         ),
-      ]..addAll(relationBlocsBuilder()),
+      ]..addAll(relationBlocsBuilder(_collectionRepository)),
       child: Scaffold(
         body: detailBodyBuilder()
       ),
@@ -67,15 +70,15 @@ abstract class ItemDetail<T extends CollectionItem, P extends Object, K extends 
 
   }
 
-  K detailBlocBuilder(S managerBloc);
-  S managerBlocBuilder();
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder();
+  K detailBlocBuilder(GameCollectionRepository collectionRepository, S managerBloc);
+  S managerBlocBuilder(GameCollectionRepository collectionRepository);
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository);
 
-  ItemDetailBody<T, P, K, S> detailBodyBuilder();
+  ItemDetailBody<T, R, K, S> detailBodyBuilder();
 }
 
 // ignore: must_be_immutable
-abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K extends ItemDetailBloc<T, P>, S extends ItemDetailManagerBloc<T, P>> extends StatelessWidget {
+abstract class ItemDetailBody<T extends Item, R extends ItemRepository<T>, K extends ItemDetailBloc<T, R>, S extends ItemDetailManagerBloc<T, R>> extends StatelessWidget {
   ItemDetailBody({
     Key? key,
     required this.onUpdate,
@@ -367,23 +370,22 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
 
   }
 
-  void Function(O) _updateFunction<O>(BuildContext context, {required T item, required T Function(O newValue) itemUpdater, required P updateProperties}) {
+  void Function(O) _updateFunction<O>(BuildContext context, {required T item, required T Function(O newValue) itemUpdater}) {
 
     return (O newValue) {
       final T updatedItem = itemUpdater(newValue);
 
       BlocProvider.of<S>(context).add(
-          UpdateItemField<T, P>(
+          UpdateItemField<T>(
             item,
             updatedItem,
-            updateProperties,
           ),
         );
     };
 
   }
 
-  Widget itemTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater, required P updateProperties}) {
+  Widget itemTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -392,13 +394,12 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
   }
 
-  Widget itemURLField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater, required P updateProperties}) {
+  Widget itemURLField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -407,7 +408,6 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
       onLongPress: () async {
         if (await canLaunch(value)) {
@@ -424,7 +424,7 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
 
   }
 
-  Widget itemLongTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater, required P updateProperties}) {
+  Widget itemLongTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
@@ -433,14 +433,13 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
       isLongText: true,
     );
 
   }
 
-  Widget itemMoneyField(BuildContext context, {required String fieldName, required double? value, required T item, required T Function(double newValue) itemUpdater, required P updateProperties}) {
+  Widget itemMoneyField(BuildContext context, {required String fieldName, required double? value, required T item, required T Function(double newValue) itemUpdater}) {
 
     return _ItemDoubleField(
       fieldName: fieldName,
@@ -453,7 +452,6 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
@@ -501,7 +499,7 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
 
   }
 
-  Widget itemYearField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater, required P updateProperties}) {
+  Widget itemYearField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _ItemYearField(
       fieldName: fieldName,
@@ -510,13 +508,12 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
   }
 
-  Widget itemDateTimeField(BuildContext context, {required String fieldName, required DateTime? value, required T item, required T Function(DateTime newValue) itemUpdater, required P updateProperties}) {
+  Widget itemDateTimeField(BuildContext context, {required String fieldName, required DateTime? value, required T item, required T Function(DateTime newValue) itemUpdater}) {
 
     return _ItemDateTimeField(
       fieldName: fieldName,
@@ -525,13 +522,12 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
   }
 
-  Widget itemRatingField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater, required P updateProperties}) {
+  Widget itemRatingField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _RatingField(
       fieldName: fieldName,
@@ -540,13 +536,12 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
   }
 
-  Widget itemBoolField(BuildContext context, {required String fieldName, required bool value, required T item, required T Function(bool newValue) itemUpdater, required P updateProperties}) {
+  Widget itemBoolField(BuildContext context, {required String fieldName, required bool value, required T item, required T Function(bool newValue) itemUpdater}) {
 
     return _BoolField(
       fieldName: fieldName,
@@ -555,13 +550,12 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 
   }
 
-  Widget itemChipField(BuildContext context, {required String fieldName, required String? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(String newValue) itemUpdater, required P updateProperties}) {
+  Widget itemChipField(BuildContext context, {required String fieldName, required String? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _EnumField(
       fieldName: fieldName,
@@ -572,7 +566,6 @@ abstract class ItemDetailBody<T extends CollectionItem, P extends Object, K exte
         context,
         item: item,
         itemUpdater: itemUpdater,
-        updateProperties: updateProperties
       ),
     );
 

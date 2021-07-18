@@ -7,25 +7,25 @@ import '../item_connector.dart';
 class PostgresConnector extends ItemConnector {
   PostgresConnector.fromConnectionString(String connectionString) {
 
-    this._instance = PostgresInstance.fromString(connectionString);
+    this.instance = PostgresInstance.fromString(connectionString);
     createConnection();
 
     this._builderOptions.quoteStringWithFieldsTablesSeparator = false;
 
   }
 
-  late final PostgresInstance _instance;
+  late final PostgresInstance instance;
   late final PostgreSQLConnection _connection;
   final SQLBuilderOptions _builderOptions = SQLBuilderOptions();
 
   void createConnection() {
 
     this._connection = PostgreSQLConnection(
-      _instance.host,
-      _instance.port,
-      _instance.database,
-      username: _instance.user,
-      password: _instance.password,
+      instance.host,
+      instance.port,
+      instance.database,
+      username: instance.user,
+      password: instance.password,
       useSSL: true,
     );
 

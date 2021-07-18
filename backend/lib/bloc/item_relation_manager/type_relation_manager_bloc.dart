@@ -1,15 +1,18 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, PurchaseType, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
 
 import 'item_relation_manager.dart';
 
 
-class TypeRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<PurchaseType, W> {
+class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<PurchaseType, W> {
   TypeRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.purchaseRepository = collectionRepository.purchaseRepository,
+    super(itemId: itemId);
+
+  final PurchaseRepository purchaseRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,7 +21,7 @@ class TypeRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.relatePurchaseType(otherId, itemId);
+        return purchaseRepository.relatePurchaseType(otherId, itemId);
     }
 
     return super.addRelationFuture(event);
@@ -32,7 +35,7 @@ class TypeRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case Purchase:
-        return iCollectionRepository.unrelatePurchaseType(otherId, itemId);
+        return purchaseRepository.unrelatePurchaseType(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

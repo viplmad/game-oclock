@@ -1,41 +1,33 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import 'item_detail_manager.dart';
 
 
-class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform, PlatformUpdateProperties> {
+class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform, PlatformRepository> {
   PlatformDetailManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<Platform?> updateFuture(UpdateItemField<Platform, PlatformUpdateProperties> event) {
-
-    return iCollectionRepository.updatePlatform(event.item, event.updatedItem, event.updateProperties);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(itemId: itemId, repository: collectionRepository.platformRepository);
 
   @override
   Future<Platform?> addImage(AddItemImage<Platform> event) {
 
-    return iCollectionRepository.uploadPlatformIcon(itemId, event.imagePath, event.oldImageName);
+    return repository.uploadPlatformIcon(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<Platform?> updateImageName(UpdateItemImageName<Platform> event) {
 
-    return iCollectionRepository.renamePlatformIcon(itemId, event.oldImageName, event.newImageName);
+    return repository.renamePlatformIcon(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<Platform?> deleteImage(DeleteItemImage<Platform> event) {
 
-    return iCollectionRepository.deletePlatformIcon(itemId, event.imageName);
+    return repository.deletePlatformIcon(itemId, event.imageName);
 
   }
 }

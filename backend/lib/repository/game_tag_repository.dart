@@ -1,107 +1,105 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show GameTagMapper;
+import 'package:backend/entity/entity.dart' show GameTagEntity;
+import 'package:backend/model/model.dart' show Tag, TagView;
+
+import './query/query.dart' show GameTagQuery, GameTagRelationQuery;
+import 'item_repository.dart';
 
 
-class GameTagRepository {
-  GameTagRepository._();
+class GameTagRepository extends ItemRepository<Tag> {
+  const GameTagRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(GameTagEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(GameTagEntityData.table)
-      .sets(entity.createMap())
-      .returningField(GameTagEntityData.idField);
+  //#region CREATE
+  @override
+  Future<Tag?> create(Tag item) {
 
-    return query;
+    final GameTagEntity entity = GameTagMapper.modelToEntity(item);
+    final Query query = GameTagQuery.create(entity);
+
+    return createCollectionItem(
+      query: query,
+      dynamicToId: GameTagEntity.idFromDynamicMap,
+    );
+
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<Tag?> findById(int id) {
+
+    final Query query = GameTagQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query updateById(int id, GameTagEntity entity, GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(GameTagEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  @override
+  Stream<List<Tag>> findAll() {
 
-    _addIdWhere(id, query);
+    return findAllGameTagsWithView(TagView.Main);
 
-    return query;
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(GameTagEntityData.table);
+  Stream<List<Tag>> findAllGameTagsWithView(TagView tagView, [int? limit]) {
 
-    _addIdWhere(id, query);
+    final Query query = GameTagQuery.selectAllInView(tagView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
   }
 
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameTagEntityData.table);
+  Stream<List<Tag>> findAllGameTagsFromGame(int id) {
 
-    addFields(query);
-    _addIdWhere(id, query);
+    final Query query = GameTagRelationQuery.selectAllTagsByGameId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
   }
+  //#endregion READ
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameTagEntityData.table)
-      .where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  //#region UPDATE
+  @override
+  Future<Tag?> update(Tag item, Tag updatedItem) {
 
-    addFields(query);
+    final GameTagEntity entity = GameTagMapper.modelToEntity(item);
+    final GameTagEntity updatedEntity = GameTagMapper.modelToEntity(updatedItem);
+    final Query query = GameTagQuery.updateById(item.id, entity, updatedEntity);
 
-    return query;
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
   }
+  //#endregion UPDATE
 
-  static Query selectAllInView(TagView view, [int? limit]) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameTagEntityData.table)
-      .limit(limit);
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
 
-    addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    final Query query = GameTagQuery.deleteById(id);
+    return itemConnector.execute(query);
 
-    return query;
   }
+  //#endregion DELETE
 
-  static void addFields(Query query) {
-    query.field(GameTagEntityData.idField, type: int, table: GameTagEntityData.table);
-    query.field(GameTagEntityData.nameField, type: String, table: GameTagEntityData.table);
+  //#region SEARCH
+  Stream<List<Tag>> findAllGameTagsByName(String name, int maxResults) {
+
+    final Query query = GameTagQuery.selectAllByNameLike(name, maxResults);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
+  //#region SEARCH
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(GameTagEntityData.idField, id, type: int, table: GameTagEntityData.table);
-  }
+  List<Tag> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
 
-  static void _addViewWhere(Query query, TagView view) {
-    switch(view) {
-      case TagView.Main:
-        // TODO: Handle this case.
-        break;
-      case TagView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
-  }
+    return GameTagEntity.fromDynamicMapList(results).map( GameTagMapper.entityToModel ).toList(growable: false);
 
-  static void _addViewOrder(Query query, TagView view) {
-    switch(view) {
-      case TagView.Main:
-        // TODO: Handle this case.
-        break;
-      case TagView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
   }
 }

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Item, Store, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -18,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class StoreDetail extends ItemDetail<Store, StoreUpdateProperties, StoreDetailBloc, StoreDetailManagerBloc> {
+class StoreDetail extends ItemDetail<Store, StoreRepository, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
     Key? key,
     required Store item,
@@ -26,36 +25,36 @@ class StoreDetail extends ItemDetail<Store, StoreUpdateProperties, StoreDetailBl
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  StoreDetailBloc detailBlocBuilder(StoreDetailManagerBloc managerBloc) {
+  StoreDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, StoreDetailManagerBloc managerBloc) {
 
     return StoreDetailBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  StoreDetailManagerBloc managerBlocBuilder() {
+  StoreDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
 
       BlocProvider<StoreRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
@@ -75,13 +74,13 @@ class StoreDetail extends ItemDetail<Store, StoreUpdateProperties, StoreDetailBl
 
   }
 
-  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(StoreRelationManagerBloc<W> managerBloc) {
+  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, StoreRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<StoreRelationBloc<W>>(
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: CollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -91,7 +90,7 @@ class StoreDetail extends ItemDetail<Store, StoreUpdateProperties, StoreDetailBl
 }
 
 // ignore: must_be_immutable
-class _StoreDetailBody extends ItemDetailBody<Store, StoreUpdateProperties, StoreDetailBloc, StoreDetailManagerBloc> {
+class _StoreDetailBody extends ItemDetailBody<Store, StoreRepository, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key? key,
     void Function(Store? item)? onUpdate,
@@ -110,7 +109,6 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreUpdateProperties, Stor
         value: store.name,
         item: store,
         itemUpdater: (String newValue) => store.copyWith(name: newValue),
-        updateProperties: const StoreUpdateProperties(),
       ),
     ];
 

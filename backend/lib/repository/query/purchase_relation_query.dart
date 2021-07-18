@@ -1,11 +1,12 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart';
-import 'repository.dart';
+import 'package:backend/entity/entity.dart' show PurchaseEntityData, PurchaseTypeEntityData, PurchaseTypeRelationData;
+
+import 'query.dart' show PurchaseQuery, PurchaseTypeQuery;
 
 
-class PurchaseTypeRelationRepository {
-  PurchaseTypeRelationRepository._();
+class PurchaseTypeRelationQuery {
+  PurchaseTypeRelationQuery._();
 
   static Query create(int purchaseId, int typeId) {
     final Query query = FluentQuery
@@ -34,7 +35,7 @@ class PurchaseTypeRelationRepository {
       .join(PurchaseTypeRelationData.table, null, PurchaseTypeRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField)
       .where(PurchaseTypeRelationData.typeField, id, type: int, table: PurchaseTypeRelationData.table);
 
-    PurchaseRepository.addFields(query);
+    PurchaseQuery.addFields(query);
 
     return query;
   }
@@ -46,7 +47,7 @@ class PurchaseTypeRelationRepository {
       .join(PurchaseTypeRelationData.table, null, PurchaseTypeRelationData.typeField, PurchaseTypeEntityData.table, PurchaseTypeEntityData.idField)
       .where(PurchaseTypeRelationData.purchaseField, id, type: int, table: PurchaseTypeRelationData.table);
 
-    PurchaseTypeRepository.addFields(query);
+    PurchaseTypeQuery.addFields(query);
 
     return query;
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Store;
 import 'package:backend/model/list_style.dart';
+import 'package:backend/repository/repository.dart' show StoreRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +14,7 @@ import '../theme/theme.dart';
 import 'list.dart';
 
 
-class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
+class StoreAppBar extends ItemAppBar<Store, StoreRepository, StoreListBloc> {
   const StoreAppBar({
     Key? key,
   }) : super(key: key);
@@ -28,7 +29,7 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   List<String> views(BuildContext context) => StoreTheme.views(context);
 }
 
-class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
+class StoreFAB extends ItemFAB<Store, StoreRepository, StoreListManagerBloc> {
   const StoreFAB({
     Key? key,
   }) : super(key: key);
@@ -43,7 +44,7 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 }
 
-class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
+class StoreList extends ItemList<Store, StoreRepository, StoreListBloc, StoreListManagerBloc> {
   const StoreList({
     Key? key,
   }) : super(key: key);
@@ -68,7 +69,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   }
 }
 
-class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
+class _StoreListBody extends ItemListBody<Store, StoreRepository, StoreListBloc> {
   const _StoreListBody({
     Key? key,
     required List<Store> items,

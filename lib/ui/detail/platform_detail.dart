@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -18,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class PlatformDetail extends ItemDetail<Platform, PlatformRepository, PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
     Key? key,
     required Platform item,
@@ -26,42 +25,42 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  PlatformDetailBloc detailBlocBuilder(PlatformDetailManagerBloc managerBloc) {
+  PlatformDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, PlatformDetailManagerBloc managerBloc) {
 
     return PlatformDetailBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  PlatformDetailManagerBloc managerBlocBuilder() {
+  PlatformDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final PlatformRelationManagerBloc<Game> _gameRelationManagerBloc = PlatformRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final PlatformRelationManagerBloc<System> _systemRelationManagerBloc = PlatformRelationManagerBloc<System>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
-      blocProviderRelationBuilder<System>(_systemRelationManagerBloc),
+      blocProviderRelationBuilder<Game>(collectionRepository, _gameRelationManagerBloc),
+      blocProviderRelationBuilder<System>(collectionRepository, _systemRelationManagerBloc),
 
       BlocProvider<PlatformRelationManagerBloc<Game>>(
         create: (BuildContext context) {
@@ -86,13 +85,13 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
 
   }
 
-  BlocProvider<PlatformRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(PlatformRelationManagerBloc<W> managerBloc) {
+  BlocProvider<PlatformRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, PlatformRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<PlatformRelationBloc<W>>(
       create: (BuildContext context) {
         return PlatformRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: CollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -102,7 +101,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformUpdateProperties, Plat
 }
 
 // ignore: must_be_immutable
-class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformUpdateProperties, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformRepository, PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
     void Function(Platform? item)? onUpdate,
@@ -121,7 +120,6 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformUpdatePropert
         value: platform.name,
         item: platform,
         itemUpdater: (String newValue) => platform.copyWith(name: newValue),
-        updateProperties: const PlatformUpdateProperties(),
       ),
       itemChipField(
         context,
@@ -134,7 +132,6 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformUpdatePropert
         possibleValuesColours: PlatformTheme.typeColours,
         item: platform,
         itemUpdater: (String newValue) => platform.copyWith(type: newValue),
-        updateProperties: const PlatformUpdateProperties(),
       ),
     ];
 

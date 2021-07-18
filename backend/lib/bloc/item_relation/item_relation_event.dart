@@ -12,7 +12,7 @@ abstract class ItemRelationEvent extends Equatable {
 
 class LoadItemRelation extends ItemRelationEvent {}
 
-class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
+class UpdateItemRelation<W extends Item> extends ItemRelationEvent {
   const UpdateItemRelation(this.otherItems);
 
   final List<W> otherItems;
@@ -26,7 +26,7 @@ class UpdateItemRelation<W extends CollectionItem> extends ItemRelationEvent {
       ' }';
 }
 
-class UpdateRelationItem<T extends CollectionItem> extends ItemRelationEvent {
+class UpdateRelationItem<T extends Item> extends ItemRelationEvent {
   const UpdateRelationItem(this.item);
 
   final T item;

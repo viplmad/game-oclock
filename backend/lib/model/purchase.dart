@@ -9,9 +9,9 @@ enum PurchaseView {
   Review,
 }
 
-class Purchase extends CollectionItem {
+class Purchase extends Item {
   const Purchase({
-    required int id,
+    required this.id,
     required this.description,
     required this.price,
     required this.externalCredit,
@@ -20,9 +20,9 @@ class Purchase extends CollectionItem {
 
     required this.store,
   }) : this.uniqueId = 'Pu$id',
-       this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
-        super(id: id);
+       this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0;
 
+  final int id;
   final String description;
   final double price;
   final double externalCredit;
@@ -38,7 +38,7 @@ class Purchase extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  ItemImage get image => const ItemImage(null, null);
+  final ItemImage image = const ItemImage(null, null);
 
   @override
   String get queryableTerms => this.description;
@@ -211,12 +211,4 @@ class PurchasesData extends ItemData<Purchase> {
     );
 
   }
-}
-
-class PurchaseUpdateProperties {
-  final bool dateToNull;
-
-  const PurchaseUpdateProperties({
-    this.dateToNull = false,
-  });
 }

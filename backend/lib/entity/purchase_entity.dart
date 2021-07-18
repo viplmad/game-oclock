@@ -20,7 +20,7 @@ class PurchaseEntityData {
   static const String storeField = 'Store';
 }
 
-class PurchaseEntity extends CollectionItemEntity {
+class PurchaseEntity extends ItemEntity {
   const PurchaseEntity({
     required int id,
     required this.description,
@@ -60,7 +60,7 @@ class PurchaseEntity extends CollectionItemEntity {
     final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseEntity purchase = PurchaseEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
+      final PurchaseEntity purchase = PurchaseEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
 
       purchasesList.add(purchase);
     });
@@ -73,7 +73,7 @@ class PurchaseEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, PurchaseEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PurchaseEntityData.table);
       id = map[PurchaseEntityData.idField] as int;
     }
 
@@ -95,14 +95,14 @@ class PurchaseEntity extends CollectionItemEntity {
     return createMap;
   }
 
-  Map<String, dynamic> updateMap(PurchaseEntity updatedEntity, PurchaseUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(PurchaseEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, PurchaseEntityData.descriptionField, description, updatedEntity.description);
     putUpdateMapValue(updateMap, PurchaseEntityData.priceField, price, updatedEntity.price);
     putUpdateMapValue(updateMap, PurchaseEntityData.externalCreditField, externalCredit, updatedEntity.externalCredit);
-    putUpdateMapValueNullable(updateMap, PurchaseEntityData.dateField, date, updatedEntity.date, updatedValueCanBeNull: updateProperties.dateToNull);
+    putUpdateMapValueNullable(updateMap, PurchaseEntityData.dateField, date, updatedEntity.date);
     putUpdateMapValue(updateMap, PurchaseEntityData.originalPriceField, originalPrice, updatedEntity.originalPrice);
 
     return updateMap;

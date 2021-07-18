@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
 
-import 'model.dart';
+import 'model.dart' show Game, GameTimeLog;
 
 
 // ignore: must_be_immutable

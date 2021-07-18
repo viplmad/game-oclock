@@ -1,5 +1,3 @@
-import 'package:backend/model/model.dart';
-
 import 'entity.dart';
 
 
@@ -19,17 +17,24 @@ class DLCEntityData {
   static const String baseGameField = 'Base Game';
 }
 
-class DLCEntity extends CollectionItemEntity {
+class DLCID {
+  DLCID(this.id);
+
+  final int id;
+}
+
+class DLCEntity extends ItemEntity {
   const DLCEntity({
-    required int id,
+    required this.id,
     required this.name,
     required this.releaseYear,
     required this.coverFilename,
     required this.finishDate,
 
     required this.baseGame,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
   final int? releaseYear;
   final String? coverFilename;
@@ -56,7 +61,7 @@ class DLCEntity extends CollectionItemEntity {
     final List<DLCEntity> dlcsList = <DLCEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCEntity dlc = DLCEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, DLCEntityData.table) );
+      final DLCEntity dlc = DLCEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, DLCEntityData.table) );
 
       dlcsList.add(dlc);
     });
@@ -65,15 +70,20 @@ class DLCEntity extends CollectionItemEntity {
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  static DLCID? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
+    DLCID? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, DLCEntityData.table);
-      id = map[DLCEntityData.idField] as int;
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, DLCEntityData.table);
+      final int dlcId = map[DLCEntityData.idField] as int;
+      id = DLCID(dlcId);
     }
 
     return id;
+  }
+
+  DLCID createId() {
+    return DLCID(id);
   }
 
   Map<String, dynamic> createMap() {
@@ -91,14 +101,14 @@ class DLCEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(DLCEntity updatedEntity, DLCUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(DLCEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, DLCEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, DLCEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear, updatedValueCanBeNull: updateProperties.releaseYearToNull);
-    putUpdateMapValueNullable(updateMap, DLCEntityData.coverField, coverFilename, updatedEntity.coverFilename, updatedValueCanBeNull: updateProperties.coverFilenameToNull);
-    putUpdateMapValueNullable(updateMap, DLCEntityData.finishDateField, finishDate, updatedEntity.finishDate, updatedValueCanBeNull: updateProperties.finishDateToNull);
+    putUpdateMapValueNullable(updateMap, DLCEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear);
+    putUpdateMapValueNullable(updateMap, DLCEntityData.coverField, coverFilename, updatedEntity.coverFilename);
+    putUpdateMapValueNullable(updateMap, DLCEntityData.finishDateField, finishDate, updatedEntity.finishDate);
 
     return updateMap;
 

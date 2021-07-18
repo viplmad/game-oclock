@@ -1,15 +1,24 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Purchase, Game, DLC, Store, PurchaseType;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, DLCRepository, PurchaseRepository, StoreRepository;
 
 import 'item_relation_manager.dart';
 
 
-class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Purchase, W> {
+class PurchaseRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Purchase, W> {
   PurchaseRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.dlcRepository = collectionRepository.dlcRepository,
+    this.purchaseRepository = collectionRepository.purchaseRepository,
+    this.storeRepository = collectionRepository.storeRepository,
+    super(itemId: itemId);
+
+  final GameRepository gameRepository;
+  final DLCRepository dlcRepository;
+  final PurchaseRepository purchaseRepository;
+  final StoreRepository storeRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,13 +27,13 @@ class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGamePurchase(otherId, itemId);
+        return gameRepository.relateGamePurchase(otherId, itemId);
       case DLC:
-        return iCollectionRepository.relateDLCPurchase(otherId, itemId);
+        return dlcRepository.relateDLCPurchase(otherId, itemId);
       case Store:
-        return iCollectionRepository.relateStorePurchase(otherId, itemId);
+        return storeRepository.relateStorePurchase(otherId, itemId);
       case PurchaseType:
-        return iCollectionRepository.relatePurchaseType(itemId, otherId);
+        return purchaseRepository.relatePurchaseType(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -38,13 +47,13 @@ class PurchaseRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.unrelateGamePurchase(otherId, itemId);
+        return gameRepository.unrelateGamePurchase(otherId, itemId);
       case DLC:
-        return iCollectionRepository.unrelateDLCPurchase(otherId, itemId);
+        return dlcRepository.unrelateDLCPurchase(otherId, itemId);
       case Store:
-        return iCollectionRepository.unrelateStorePurchase(itemId);
+        return storeRepository.unrelateStorePurchase(itemId);
       case PurchaseType:
-        return iCollectionRepository.unrelatePurchaseType(itemId, otherId);
+        return purchaseRepository.unrelatePurchaseType(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

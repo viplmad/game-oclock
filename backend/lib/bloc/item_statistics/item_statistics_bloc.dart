@@ -7,7 +7,7 @@ import 'package:backend/model/model.dart';
 import 'item_statistics.dart';
 
 
-abstract class ItemStatisticsBloc<T extends CollectionItem, D extends ItemData<T>> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
+abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
   ItemStatisticsBloc({
     required this.items,
   }) : super(ItemStatisticsLoading());

@@ -6,16 +6,16 @@ enum PlatformView {
   LastCreated,
 }
 
-class Platform extends CollectionItem {
+class Platform extends Item {
   const Platform({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconURL,
     required this.iconFilename,
     required this.type,
-  }) : this.uniqueId = 'Pl$id',
-        super(id: id);
+  }) : this.uniqueId = 'Pl$id';
 
+  final int id;
   final String name;
   final String? iconURL;
   final String? iconFilename;
@@ -69,14 +69,4 @@ class Platform extends CollectionItem {
         ' }';
 
   }
-}
-
-class PlatformUpdateProperties {
-  final bool iconURLToNull;
-  final bool typeToNull;
-
-  const PlatformUpdateProperties({
-    this.iconURLToNull = false,
-    this.typeToNull = false,
-  });
 }

@@ -36,7 +36,7 @@ class GameTimeLogEntity extends Equatable {
     final List<GameTimeLogEntity> timeLogsList = <GameTimeLogEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameTimeLogEntity log = GameTimeLogEntity.fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameTimeLogEntityData.table) );
+      final GameTimeLogEntity log = GameTimeLogEntity.fromDynamicMap( ItemEntity.combineMaps(manyMap, GameTimeLogEntityData.table) );
 
       timeLogsList.add(log);
     });

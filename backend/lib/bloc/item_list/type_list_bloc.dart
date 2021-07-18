@@ -1,32 +1,22 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show PurchaseType, TypeView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class TypeListBloc extends ItemListBloc<PurchaseType> {
+class TypeListBloc extends ItemListBloc<PurchaseType, PurchaseTypeRepository> {
   TypeListBloc({
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required TypeListManagerBloc managerBloc,
-  }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<List<PurchaseType>> getReadAllStream() {
-
-    return iCollectionRepository.findAllPurchaseTypes();
-
-  }
+  }) : super(repository: collectionRepository.purchaseTypeRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<PurchaseType>> getReadViewStream(UpdateView event) {
 
     final TypeView typeView = TypeView.values[event.viewIndex];
 
-    return iCollectionRepository.findAllPurchaseTypesWithView(typeView);
+    return repository.findAllPurchaseTypesWithView(typeView);
 
   }
 }

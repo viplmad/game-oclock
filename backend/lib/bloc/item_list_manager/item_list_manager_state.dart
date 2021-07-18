@@ -12,7 +12,7 @@ abstract class ItemListManagerState extends Equatable {
 
 class ItemListManagerInitialised extends ItemListManagerState {}
 
-class ItemAdded<T extends CollectionItem> extends ItemListManagerState {
+class ItemAdded<T extends Item> extends ItemListManagerState {
   const ItemAdded(this.item);
 
   final T item;
@@ -40,7 +40,7 @@ class ItemNotAdded extends ItemListManagerState {
       ' }';
 }
 
-class ItemDeleted<T extends CollectionItem> extends ItemListManagerState {
+class ItemDeleted<T extends Item> extends ItemListManagerState {
   const ItemDeleted(this.item);
 
   final T item;

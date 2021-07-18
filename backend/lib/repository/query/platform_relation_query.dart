@@ -1,11 +1,12 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart';
-import 'repository.dart';
+import 'package:backend/entity/entity.dart' show PlatformEntityData, SystemEntityData, PlatformSystemRelationData;
+
+import 'query.dart' show PlatformQuery, SystemQuery;
 
 
-class PlatformSystemRelationRepository {
-  PlatformSystemRelationRepository._();
+class PlatformSystemRelationQuery {
+  PlatformSystemRelationQuery._();
 
   static Query create(int platformId, int systemId) {
     final Query query = FluentQuery
@@ -34,7 +35,7 @@ class PlatformSystemRelationRepository {
       .join(PlatformSystemRelationData.table, null, PlatformSystemRelationData.platformField, PlatformEntityData.table, PlatformEntityData.idField)
       .where(PlatformSystemRelationData.systemField, id, type: int, table: PlatformSystemRelationData.table);
 
-    PlatformRepository.addFields(query);
+    PlatformQuery.addFields(query);
 
     return query;
   }
@@ -46,7 +47,7 @@ class PlatformSystemRelationRepository {
       .join(PlatformSystemRelationData.table, null, PlatformSystemRelationData.systemField, SystemEntityData.table, SystemEntityData.idField)
       .where(PlatformSystemRelationData.platformField, id, type: int, table: PlatformSystemRelationData.table);
 
-    SystemRepository.addFields(query);
+    SystemQuery.addFields(query);
 
     return query;
   }

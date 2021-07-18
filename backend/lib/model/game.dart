@@ -13,9 +13,15 @@ enum GameView {
   Review,
 }
 
-class Game extends CollectionItem {
+class GameID {
+  GameID(this.id);
+
+  final int id;
+}
+
+class Game extends Item {
   const Game({
-    required int id,
+    required this.id,
     required this.name,
     required this.edition,
     required this.releaseYear,
@@ -29,9 +35,9 @@ class Game extends CollectionItem {
     required this.screenshotFolder,
     required this.finishDate,
     required this.isBackup,
-  }) : this.uniqueId = 'G$id',
-        super(id: id);
+  }) : this.uniqueId = 'G$id';
 
+  final GameID id;
   final String name;
   final String edition;
   final int? releaseYear;
@@ -245,16 +251,4 @@ class GamesData extends ItemData<Game> {
     );
 
   }
-}
-
-class GameUpdateProperties {
-  final bool releaseYearToNull;
-  final bool coverURLToNull;
-  final bool finishDateToNull;
-
-  const GameUpdateProperties({
-    this.releaseYearToNull = false,
-    this.coverURLToNull = false,
-    this.finishDateToNull = false,
-  });
 }

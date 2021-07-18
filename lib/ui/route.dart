@@ -12,6 +12,8 @@ import 'statistics/statistics.dart';
 import 'calendar/calendar.dart';
 import 'theme/theme.dart';
 
+export 'route_constants.dart';
+
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
 

@@ -2,14 +2,19 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 import 'package:backend/preferences/repository_preferences.dart';
 
 import 'connection.dart';
 
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
-  ConnectionBloc() : super(Connecting());
+  ConnectionBloc({
+    required this.collectionRepository
+  }) : super(Connecting());
+
+  final GameCollectionRepository collectionRepository;
 
   @override
   Stream<ConnectState> mapEventToState(ConnectionEvent event) async* {
@@ -39,9 +44,12 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
       try {
 
-        final CollectionRepository iCollectionRepository = await RepositoryPreferences.retrieveRepository();
-        CollectionRepository.iCollectionRepository = iCollectionRepository;
-        await iCollectionRepository.open();
+        final ItemConnector itemConnector = await RepositoryPreferences.retrieveItemConnector();
+        final ImageConnector imageConnector = await RepositoryPreferences.retrieveImageConnector();
+
+        collectionRepository.connect(itemConnector, imageConnector);
+        await collectionRepository.open();
+
         yield Connected();
 
       } catch(e) {
@@ -60,8 +68,8 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     try {
 
-      CollectionRepository.iCollectionRepository!.reconnect();
-      await CollectionRepository.iCollectionRepository!.open();
+      collectionRepository.reconnect();
+      await collectionRepository.open();
       yield Connected();
 
     } catch(e) {

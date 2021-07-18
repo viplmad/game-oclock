@@ -1,24 +1,14 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameTagRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class TagDetailBloc extends ItemDetailBloc<Tag, Object> {
+class TagDetailBloc extends ItemDetailBloc<Tag, GameTagRepository> {
   TagDetailBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required TagDetailManagerBloc managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<Tag?> getReadStream() {
-
-    return iCollectionRepository.findGameTagById(itemId);
-
-  }
+  }) : super(itemId: itemId, repository: collectionRepository.gameTagRepository, managerBloc: managerBloc);
 }

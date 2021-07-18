@@ -1,44 +1,29 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Game;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_list_manager.dart';
 
 
 class AllListManagerBloc extends GameListManagerBloc {
   AllListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(collectionRepository: collectionRepository);
 }
 
 class OwnedListManagerBloc extends GameListManagerBloc {
   OwnedListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(collectionRepository: collectionRepository);
 }
 
 class RomListManagerBloc extends GameListManagerBloc {
   RomListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(collectionRepository: collectionRepository);
 }
 
-class GameListManagerBloc extends ItemListManagerBloc<Game> {
+class GameListManagerBloc extends ItemListManagerBloc<Game, GameRepository> {
   GameListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<Game?> createFuture(AddItem<Game> event) {
-
-    return iCollectionRepository.createGame(event.item);
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<Game> event) {
-
-    return iCollectionRepository.deleteGameById(event.item.id);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.gameRepository);
 }

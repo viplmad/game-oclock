@@ -31,7 +31,7 @@ class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }
 
-abstract class _StoreRelationList<W extends CollectionItem> extends ItemRelationList<Store, W, StoreRelationBloc<W>, StoreRelationManagerBloc<W>> {
+abstract class _StoreRelationList<W extends Item> extends ItemRelationList<Store, W, StoreRelationBloc<W>, StoreRelationManagerBloc<W>> {
   const _StoreRelationList({
     Key? key,
     required String relationName,

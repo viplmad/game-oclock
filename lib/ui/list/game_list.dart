@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Game;
 import 'package:backend/model/list_style.dart';
 import 'package:backend/model/app_tab.dart';
+import 'package:backend/repository/repository.dart' show GameRepository;
 
 import 'package:backend/bloc/tab/tab.dart';
 import 'package:backend/bloc/item_list/item_list.dart';
@@ -47,7 +48,7 @@ class _AllAppBar extends _GameAppBar<AllListBloc> {}
 class _OwnedAppBar extends _GameAppBar<OwnedListBloc> {}
 class _RomAppBar extends _GameAppBar<RomListBloc> {}
 
-abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
+abstract class _GameAppBar<K extends ItemListBloc<Game, GameRepository>> extends ItemAppBar<Game, GameRepository, K> {
   const _GameAppBar({
     Key? key,
   }) : super(key: key);
@@ -118,7 +119,7 @@ class _AllFAB extends _GameFAB<AllListManagerBloc> {}
 class _OwnedFAB extends _GameFAB<OwnedListManagerBloc> {}
 class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 
-abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
+abstract class _GameFAB<S extends ItemListManagerBloc<Game, GameRepository>> extends ItemFAB<Game, GameRepository, S> {
   const _GameFAB({
     Key? key,
   }) : super(key: key);
@@ -216,7 +217,7 @@ class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
   }) : super(tabTitle: tabTitle);
 }
 
-abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
+abstract class _GameList<K extends ItemListBloc<Game, GameRepository>, S extends ItemListManagerBloc<Game, GameRepository>> extends ItemList<Game, GameRepository, K, S> {
   const _GameList({
     Key? key,
     required this.tabTitle,
@@ -245,7 +246,7 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
   }
 }
 
-class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> {
+class _GameListBody<K extends ItemListBloc<Game, GameRepository>> extends ItemListBody<Game, GameRepository, K> {
   const _GameListBody({
     Key? key,
     required List<Game> items,

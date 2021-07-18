@@ -1,48 +1,55 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show DLCMapper;
+import 'package:backend/entity/entity.dart' show DLCFinishEntity;
+import 'package:backend/model/model.dart' show DLCFinish;
+
+import './query/query.dart' show DLCFinishQuery;
+import 'item_repository.dart';
 
 
-class DLCFinishRepository {
-  DLCFinishRepository._();
+class DLCFinishRepository extends ItemRepository<DLCFinish> {
+  DLCFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(DLCFinishEntity entity, int dlcId) {
-    final Query query = FluentQuery
-      .insert()
-      .into(DLCFinishEntityData.table)
-      .sets(entity.createMap(dlcId));
+  //#region CREATE
+  Future<dynamic> create(int dlcId, DLCFinish finish) {
 
-    return query;
+    final DLCFinishEntity entity = DLCMapper.finishModelToEntity(finish);
+    final Query query = DLCFinishQuery.create(entity, dlcId);
+
+    return itemConnector.execute(query);
+
   }
+  //#endregion CREATE
 
-  static Query deleteById(int dlcId, DateTime date) {
-    final Query query = FluentQuery
-      .delete()
-      .from(DLCFinishEntityData.table);
+  //#region READ
+  Stream<T?> findById(int id) {
 
-    _addIdWhere(dlcId, date, query);
-
-    return query;
   }
+  Stream<List<T>> findAll();
 
-  static Query selectAllByDLC(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCFinishEntityData.table)
-      .where(DLCFinishEntityData.dlcField, id, type: int, table: DLCFinishEntityData.table);
+  Stream<List<DLCFinish>> findAllDLCFinishFromDLC(int id) {
 
-    addFields(query);
+    final Query query = DLCFinishQuery.selectAllByDLC(id);
+    return itemConnector.execute(query)
+      .asStream().map( _dynamicToListDLCFinish );
 
-    return query;
   }
+  //#endregion READ
 
-  static void addFields(Query query) {
-    query.field(DLCFinishEntityData.dlcField, type: int, table: DLCFinishEntityData.table);
-    query.field(DLCFinishEntityData.dateField, type: DateTime, table: DLCFinishEntityData.table);
+  //#region DELETE
+  Future<dynamic> deleteById(int dlcId, DateTime date) {
+
+    final Query query = DLCFinishQuery.deleteById(dlcId, date);
+    return itemConnector.execute(query);
+
   }
+  //#region DELETE
 
-  static void _addIdWhere(int dlcId, DateTime date, Query query) {
-    query.where(DLCFinishEntityData.dlcField, dlcId, type: int, table: DLCFinishEntityData.table);
-    query.where(DLCFinishEntityData.dateField, date, type: DateTime, table: DLCFinishEntityData.table);
+  List<DLCFinish> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
+
+    return DLCFinishEntity.fromDynamicMapList(results).map( DLCMapper.finishEntityToModel ).toList(growable: false);
+
   }
 }

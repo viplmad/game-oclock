@@ -16,22 +16,20 @@ class RepositorySettingsLoading extends RepositorySettingsState {}
 
 class EmptyRepositorySettings extends RepositorySettingsState {}
 
-class RemoteRepositorySettingsLoaded extends RepositorySettingsState {
-  const RemoteRepositorySettingsLoaded(this.postgresInstance, this.cloudinaryInstance);
+class RepositorySettingsLoaded extends RepositorySettingsState {
+  RepositorySettingsLoaded(this.itemType, this.itemConnector, this.imageType, this.imageConnector);
 
-  final PostgresInstance postgresInstance;
-  final CloudinaryInstance cloudinaryInstance;
-
-  final RepositoryType radio = RepositoryType.Remote;
-
-  @override
-  List<Object> get props => <Object>[postgresInstance, cloudinaryInstance];
+  final ItemConnectorType itemType;
+  final ItemConnector itemConnector;
+  final ImageConnectorType imageType;
+  final ImageConnector imageConnector;
 
   @override
-  String toString() => 'UpdatePostgresConnectionSettings { '
-      'postgres instance: $postgresInstance, '
-      'cloudinary instance: $cloudinaryInstance'
+  List<Object> get props => <Object>[itemConnector, imageConnector];
+
+  @override
+  String toString() => 'RepositorySettingsLoaded { '
+      'itemConnector: $itemConnector, '
+      'imageConnector: $imageConnector'
       ' }';
 }
-
-/*class LocalRepositorySettingsLoaded extends RepositorySettingsState {}*/

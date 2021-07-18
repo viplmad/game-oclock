@@ -15,7 +15,7 @@ class StoreEntityData {
   static const String iconField = 'Icon';
 }
 
-class StoreEntity extends CollectionItemEntity {
+class StoreEntity extends ItemEntity {
   const StoreEntity({
     required int id,
     required this.name,
@@ -40,7 +40,7 @@ class StoreEntity extends CollectionItemEntity {
     final List<StoreEntity> storesList = <StoreEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final StoreEntity store = StoreEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, StoreEntityData.table) );
+      final StoreEntity store = StoreEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, StoreEntityData.table) );
 
       storesList.add(store);
     });
@@ -53,7 +53,7 @@ class StoreEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, StoreEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, StoreEntityData.table);
       id = map[StoreEntityData.idField] as int;
     }
 
@@ -72,12 +72,12 @@ class StoreEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(StoreEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, StoreEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, StoreEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValueNullable(updateMap, StoreEntityData.iconField, iconFilename, updatedEntity.iconFilename);
 
     return updateMap;
 

@@ -6,13 +6,13 @@ enum TypeView {
   LastCreated,
 }
 
-class PurchaseType extends CollectionItem {
+class PurchaseType extends Item {
   const PurchaseType({
-    required int id,
+    required this.id,
     required this.name,
-  }) : this.uniqueId = 'Ty$id',
-        super(id: id);
+  }) : this.uniqueId = 'Ty$id';
 
+  final int id;
   final String name;
 
   @override
@@ -21,7 +21,7 @@ class PurchaseType extends CollectionItem {
   @override
   final bool hasImage = false;
   @override
-  ItemImage get image => const ItemImage(null, null);
+  final ItemImage image = const ItemImage(null, null);
 
   @override
   String get queryableTerms => this.name;
@@ -53,9 +53,4 @@ class PurchaseType extends CollectionItem {
         ' }';
 
   }
-}
-
-class PurchaseTypeUpdateProperties {
-
-  const PurchaseTypeUpdateProperties();
 }

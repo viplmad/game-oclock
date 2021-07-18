@@ -1,15 +1,20 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, PlatformRepository;
 
 import 'item_relation_manager.dart';
 
 
-class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Platform, W> {
+class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Platform, W> {
   PlatformRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.platformRepository = collectionRepository.platformRepository,
+    super(itemId: itemId);
+
+  final GameRepository gameRepository;
+  final PlatformRepository platformRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,9 +23,9 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGamePlatform(otherId, itemId);
+        return gameRepository.relateGamePlatform(otherId, itemId);
       case System:
-        return iCollectionRepository.relatePlatformSystem(itemId, otherId);
+        return platformRepository.relatePlatformSystem(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -34,9 +39,9 @@ class PlatformRelationManagerBloc<W extends CollectionItem> extends ItemRelation
 
     switch(W) {
       case Game:
-        return iCollectionRepository.unrelateGamePlatform(otherId, itemId);
+        return gameRepository.unrelateGamePlatform(otherId, itemId);
       case System:
-        return iCollectionRepository.unrelatePlatformSystem(itemId, otherId);
+        return platformRepository.unrelatePlatformSystem(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

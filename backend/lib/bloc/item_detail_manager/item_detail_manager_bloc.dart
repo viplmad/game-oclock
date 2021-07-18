@@ -1,26 +1,25 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item;
+import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import 'item_detail_manager.dart';
 
-abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
+abstract class ItemDetailManagerBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
   ItemDetailManagerBloc({
     required this.itemId,
-    required this.iCollectionRepository,
+    required this.repository,
   }) : super(ItemDetailManagerInitialised());
 
   final int itemId;
-  final CollectionRepository iCollectionRepository;
+  final R repository;
 
   @override
   Stream<ItemDetailManagerState> mapEventToState(ItemDetailManagerEvent event) async* {
 
     yield* _checkConnection();
 
-    if(event is UpdateItemField<T, P>) {
+    if(event is UpdateItemField<T>) {
 
       yield* _mapUpdateFieldToState(event);
 
@@ -44,12 +43,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object>
 
   Stream<ItemDetailManagerState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(repository.isClosed()) {
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        repository.reconnect();
+        await repository.open();
 
       } catch(e) {
 
@@ -60,7 +59,7 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object>
 
   }
 
-  Stream<ItemDetailManagerState> _mapUpdateFieldToState(UpdateItemField<T, P> event) async* {
+  Stream<ItemDetailManagerState> _mapUpdateFieldToState(UpdateItemField<T> event) async* {
 
     try {
 
@@ -136,7 +135,12 @@ abstract class ItemDetailManagerBloc<T extends CollectionItem, P extends Object>
 
   }
 
-  Future<T?> updateFuture(UpdateItemField<T, P> event);
+  Future<T?> updateFuture(UpdateItemField<T> event) {
+
+    return repository.update(event.item, event.updatedItem);
+
+  }
+
   external Future<T?> addImage(AddItemImage<T> event);
   external Future<T?> deleteImage(DeleteItemImage<T> event);
   external Future<T?> updateImageName(UpdateItemImageName<T> event);

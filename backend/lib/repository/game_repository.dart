@@ -1,163 +1,293 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show GameMapper;
+import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData;
+import 'package:backend/model/model.dart' show Game, GameID, GameView;
+
+import './query/query.dart' show GameQuery, DLCQuery, GamePlatformRelationQuery, GamePurchaseRelationQuery, GameTagRelationQuery;
+import 'item_repository.dart';
 
 
-class GameRepository {
-  GameRepository._();
+class GameRepository extends ItemRepository<Game, GameID> {
+  const GameRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(GameEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(GameEntityData.table)
-      .sets(entity.createMap())
-      .returningField(GameEntityData.idField);
+  static const String _imagePrefix = 'header';
 
-    return query;
+  //#region CREATE
+  @override
+  Future<Game?> create(Game item) async {
+
+    final GameEntity entity = GameMapper.modelToEntity(item);
+    final Query query = GameQuery.create(entity);
+
+    return createCollectionItem(
+      query: query,
+      dynamicToId: GameEntity.idFromDynamicMap,
+    );
+
   }
 
-  static Query updateById(int id, GameEntity entity, GameEntity updatedEntity, GameUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(GameEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  Future<dynamic> relateGamePlatform(int gameId, int platformId) {
 
-    _addIdWhere(id, query);
+    final Query query = GamePlatformRelationQuery.create(gameId, platformId);
+    return itemConnector.execute(query);
 
-    return query;
   }
 
-  static Query updateCoverById(int id, String? coverName) {
-    final Query query = FluentQuery
-      .update()
-      .table(GameEntityData.table)
-      .set(GameEntityData.coverField, coverName);
+  Future<dynamic> relateGamePurchase(int gameId, int purchaseId) {
 
-    _addIdWhere(id, query);
+    final Query query = GamePurchaseRelationQuery.create(gameId, purchaseId);
+    return itemConnector.execute(query);
 
-    return query;
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(GameEntityData.table);
+  Future<dynamic> relateGameDLC(int gameId, int dlcId) {
 
-    _addIdWhere(id, query);
+    final Query query = DLCQuery.updateBaseGameById(dlcId, gameId);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  Future<dynamic> relateGameTag(int gameId, int tagId) {
+
+    final Query query = GameTagRelationQuery.create(gameId, tagId);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<Game?> findById(int id) {
+
+    final Query query = GameQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameEntityData.table);
+  @override
+  Stream<List<Game>> findAll() {
 
-    addFields(query);
-    _addIdWhere(id, query);
+    return findAllGamesWithView(GameView.Main);
 
-    return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameEntityData.table)
-      .where(GameEntityData.nameField, name, type: String, table: GameEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  Stream<List<Game>> findAllOwnedGames() {
 
-    addFields(query);
+    return findAllOwnedGamesWithView(GameView.Main);
 
-    return query;
   }
 
-  static Query selectAllInView(GameView view, [int? limit, int? year]) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameEntityData.table)
-      .limit(limit);
+  Stream<List<Game>> findAllRomGames() {
 
-    addFields(query);
-    _addViewWhere(query, view, year);
-    _addViewOrder(query, view);
+    return findAllRomGamesWithView(GameView.Main);
 
-    return query;
   }
 
-  static Query selectAllInViewAndOwned(GameView view, [int? limit, int? year]) {
-    final Query query = selectAllInView(view, limit, year);
-    // TODO subquery to cross with purchases
-    return query;
+  Stream<List<Game>> findAllGamesWithView(GameView gameView, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInView(gameView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static Query selectAllInViewAndRom(GameView view, [int? limit, int? year]) {
-    final Query query = selectAllInView(view, limit, year);
-    // TODO subquery to cross with purchases
-    return query;
+  Stream<List<Game>> findAllGamesWithYearView(GameView gameView, int year, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInView(gameView, limit, year);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static void addFields(Query query) {
-    query.field(GameEntityData.idField, type: int, table: GameEntityData.table);
-    query.field(GameEntityData.nameField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.editionField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.releaseYearField, type: int, table: GameEntityData.table);
-    query.field(GameEntityData.coverField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.statusField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.ratingField, type: int, table: GameEntityData.table);
-    query.field(GameEntityData.thoughtsField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.timeField, type: Duration, table: GameEntityData.table);
-    query.field(GameEntityData.saveFolderField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.screenshotFolderField, type: String, table: GameEntityData.table);
-    query.field(GameEntityData.finishDateField, type: DateTime, table: GameEntityData.table);
-    query.field(GameEntityData.backupField, type: bool, table: GameEntityData.table);
+  Stream<List<Game>> findAllOwnedGamesWithView(GameView gameView, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInViewAndOwned(gameView, limit, null);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(GameEntityData.idField, id, type: int, table: GameEntityData.table);
+  Stream<List<Game>> findAllOwnedGamesWithYearView(GameView gameView, int year, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInViewAndOwned(gameView, limit, year);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static void _addViewWhere(Query query, GameView view, [int? year]) {
-    switch(view) {
-      case GameView.Main:
-        break;
-      case GameView.LastCreated:
-        break;
-      case GameView.Playing:
-        query.where(GameEntityData.statusField, '\'Playing\'::game_status', table: GameEntityData.table);
-        break;
-      case GameView.NextUp:
-        query.where(GameEntityData.statusField, '\'Next Up\'::game_status', table: GameEntityData.table);
-        break;
-      case GameView.LastPlayed:
-      case GameView.LastFinished:
-        query.where(GameEntityData.statusField, '\'Playing\'::game_status', table: GameEntityData.table);
-        query.where(GameEntityData.statusField, '\'Played\'::game_status', table: GameEntityData.table);
-        break;
-      case GameView.Review:
-        year = year?? DateTime.now().year;
-        query.whereDatePart(GameEntityData.finishDateField, year, DatePart.YEAR, table: GameEntityData.table);
-        break;
-    }
+  Stream<List<Game>> findAllRomGamesWithView(GameView gameView, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInViewAndRom(gameView, limit, null);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
   }
 
-  static void _addViewOrder(Query query, GameView view) {
-    switch(view) {
-      case GameView.Main:
-        break;
-      case GameView.LastCreated:
-        query.order(GameEntityData.idField, GameEntityData.table, direction: SortOrder.DESC);
-        break;
-      case GameView.Playing:
-        break;
-      case GameView.NextUp:
-        break;
-      case GameView.LastPlayed:
-        break;
-      case GameView.LastFinished:
-        break;
-      case GameView.Review:
-        break;
-    }
+  Stream<List<Game>> findAllRomGamesWithYearView(GameView gameView, int year, [int? limit]) {
+
+    final Query query = GameQuery.selectAllInViewAndRom(gameView, limit, year);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<Game?> findBaseGameFromDLC(int dlcId) {
+
+    final Query query = DLCQuery.selectGameByDLC(dlcId);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
+  }
+
+  Stream<List<Game>> findAllGamesFromPlatform(int id) {
+
+    final Query query = GamePlatformRelationQuery.selectAllGamesByPlatformId(id);
+
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Game>> findAllGamesFromPurchase(int id) {
+
+    final Query query = GamePurchaseRelationQuery.selectAllGamesByPurchaseId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Game>> findAllGamesFromGameTag(int id) {
+
+    final Query query = GameTagRelationQuery.selectAllGamesByTagId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion CREATE
+
+  //#region UPDATE
+  @override
+  Future<Game?> update(Game item, Game updatedItem) {
+
+    final GameEntity entity = GameMapper.modelToEntity(item);
+    final GameEntity updatedEntity = GameMapper.modelToEntity(updatedItem);
+    final Query query = GameQuery.updateById(item.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
+
+    final Query query = GameQuery.deleteById(id);
+    return itemConnector.execute(query);
+
+  }
+
+  Future<dynamic> unrelateGamePlatform(int gameId, int platformId) {
+
+    final Query query = GamePlatformRelationQuery.deleteById(gameId, platformId);
+    return itemConnector.execute(query);
+
+  }
+
+  Future<dynamic> unrelateGamePurchase(int gameId, int purchaseId) {
+
+    final Query query = GamePurchaseRelationQuery.deleteById(gameId, purchaseId);
+    return itemConnector.execute(query);
+
+  }
+
+  Future<dynamic> unrelateGameDLC(int dlcId) {
+
+    final Query query = DLCQuery.updateBaseGameById(dlcId, null);
+    return itemConnector.execute(query);
+
+  }
+
+  Future<dynamic> unrelateGameTag(int gameId, int tagId) {
+
+    final Query query = GameTagRelationQuery.deleteById(gameId, tagId);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<Game>> findAllGamesByName(String name, int limit) {
+
+    final Query query = GameQuery.selectAllByNameLike(name, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion SEARCH
+
+  //#region IMAGE
+  Future<Game?> uploadGameCover(int id, String uploadImagePath, [String? oldImageName]) async {
+
+    return uploadCollectionItemImage(
+      tableName: GameEntityData.table,
+      uploadImagePath: uploadImagePath,
+      initialImageName: _imagePrefix,
+      oldImageName: oldImageName,
+      queryBuilder: GameQuery.updateCoverById,
+      id: id,
+    );
+
+  }
+
+  Future<Game?> renameGameCover(int id, String imageName, String newImageName) {
+
+    return renameCollectionItemImage(
+      tableName: GameEntityData.table,
+      oldImageName: imageName,
+      newImageName: newImageName,
+      queryBuilder: GameQuery.updateCoverById,
+      id: id,
+    );
+
+  }
+
+  Future<Game?> deleteGameCover(int id, String imageName) {
+
+    return deleteCollectionItemImage(
+      tableName: GameEntityData.table,
+      imageName: imageName,
+      queryBuilder: GameQuery.updateCoverById,
+      id: id,
+    );
+
+  }
+  //#endregion IMAGE
+
+  //#region DOWNLOAD
+  String? _getGameCoverURL(String? gameCoverName) {
+
+    return gameCoverName != null?
+        imageConnector.getURI(
+          tableName: GameEntityData.table,
+          imageFilename: gameCoverName,
+        )
+        : null;
+
+  }
+  //#endregion DOWNLOAD
+
+  @override
+  List<Game> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
+
+    return GameEntity.fromDynamicMapList(results).map( (GameEntity gameEntity) {
+      return GameMapper.entityToModel(gameEntity, _getGameCoverURL(gameEntity.coverFilename));
+    }).toList(growable: false);
+
   }
 }

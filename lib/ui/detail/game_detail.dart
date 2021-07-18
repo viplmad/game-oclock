@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Item, Game, GameFinish, DLC, Purchase, Platform, Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -20,7 +19,8 @@ import '../calendar/calendar.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, GameDetailManagerBloc> {
+
+class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
     required Game item,
@@ -28,59 +28,59 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  GameDetailBloc detailBlocBuilder(GameDetailManagerBloc managerBloc) {
+  GameDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, GameDetailManagerBloc managerBloc) {
 
     return GameDetailBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  GameDetailManagerBloc managerBlocBuilder() {
+  GameDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      iCollectionRepository: ItemRepository.repository!,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Platform>(_platformRelationManagerBloc),
-      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
-      blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
-      blocProviderRelationBuilder<Tag>(_tagRelationManagerBloc),
+      blocProviderRelationBuilder<Platform>(collectionRepository, _platformRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
+      blocProviderRelationBuilder<DLC>(collectionRepository, _dlcRelationManagerBloc),
+      blocProviderRelationBuilder<Tag>(collectionRepository, _tagRelationManagerBloc),
 
       BlocProvider<GameRelationManagerBloc<Platform>>(
         create: (BuildContext context) {
@@ -107,7 +107,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
         create: (BuildContext context) {
           return GameFinishRelationBloc(
             itemId: item.id,
-            iCollectionRepository: CollectionRepository.iCollectionRepository!,
+            iCollectionRepository: ItemRepository.repository!,
             managerBloc: _finishRelationManagerBloc,
           )..add(LoadRelation());
         },
@@ -131,13 +131,13 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
 
   }
 
-  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(GameRelationManagerBloc<W> managerBloc) {
+  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, GameRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<GameRelationBloc<W>>(
       create: (BuildContext context) {
         return GameRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: CollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -147,7 +147,7 @@ class GameDetail extends ItemDetail<Game, GameUpdateProperties, GameDetailBloc, 
 }
 
 // ignore: must_be_immutable
-class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDetailBloc, GameDetailManagerBloc> {
+class _GameDetailBody extends ItemDetailBody<Game, GameRepository, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key? key,
     required this.itemId,
@@ -169,7 +169,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.name,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(name: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemTextField(
         context,
@@ -177,7 +176,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.edition,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(edition: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemYearField(
         context,
@@ -185,7 +183,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.releaseYear,
         item: game,
         itemUpdater: (int newValue) => game.copyWith(releaseYear: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemChipField(
         context,
@@ -200,7 +197,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         possibleValuesColours: GameTheme.statusColours,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(status: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemRatingField(
         context,
@@ -208,7 +204,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.rating,
         item: game,
         itemUpdater: (int newValue) => game.copyWith(rating: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemLongTextField(
         context,
@@ -216,8 +211,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.thoughts,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(thoughts: newValue),
-        updateProperties: const GameUpdateProperties(),
-
       ),
       itemURLField(
         context,
@@ -225,7 +218,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.saveFolder,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(saveFolder: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemURLField(
         context,
@@ -233,7 +225,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.screenshotFolder,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(screenshotFolder: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       itemBoolField(
         context,
@@ -241,7 +232,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameUpdateProperties, GameDet
         value: game.isBackup,
         item: game,
         itemUpdater: (bool newValue) => game.copyWith(isBackup: newValue),
-        updateProperties: const GameUpdateProperties(),
       ),
       ListTileTheme.merge(
         child: ListTile(

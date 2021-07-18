@@ -10,7 +10,7 @@ abstract class ItemRelationManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItemRelation<W extends CollectionItem> extends ItemRelationManagerEvent {
+class AddItemRelation<W extends Item> extends ItemRelationManagerEvent {
   const AddItemRelation(this.otherItem);
 
   final W otherItem;
@@ -24,7 +24,7 @@ class AddItemRelation<W extends CollectionItem> extends ItemRelationManagerEvent
       ' }';
 }
 
-class DeleteItemRelation<W extends CollectionItem> extends ItemRelationManagerEvent {
+class DeleteItemRelation<W extends Item> extends ItemRelationManagerEvent {
   const DeleteItemRelation(this.otherItem);
 
   final W otherItem;

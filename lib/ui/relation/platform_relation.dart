@@ -55,7 +55,7 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
 }
 
-abstract class _PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
+abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   const _PlatformRelationList({
     Key? key,
     required String relationName,

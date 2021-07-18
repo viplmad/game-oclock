@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -14,25 +13,25 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
+class DLCSearch extends ItemSearch<DLC, DLCRepository, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  DLCSearchBloc searchBlocBuilder() {
+  DLCSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  DLCListManagerBloc managerBlocBuilder() {
+  DLCListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +47,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   }
 }
 
-class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
+class DLCLocalSearch extends ItemLocalSearch<DLC, DLCRepository, DLCListManagerBloc> {
   const DLCLocalSearch({
     Key? key,
     required List<DLC> items,
@@ -57,10 +56,10 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   @override
   final String detailRouteName = dlcDetailRoute;
 
-  @override DLCListManagerBloc managerBlocBuilder() {
+  @override DLCListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -76,7 +75,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   }
 }
 
-class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
+class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, DLCRepository, K, DLCListManagerBloc> {
   const _DLCSearchBody({
     Key? key,
     required void Function() Function(BuildContext, DLC) onTap,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show DLC;
 import 'package:backend/model/list_style.dart';
+import 'package:backend/repository/repository.dart' show DLCRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +14,7 @@ import '../theme/theme.dart';
 import 'list.dart';
 
 
-class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
+class DLCAppBar extends ItemAppBar<DLC, DLCRepository, DLCListBloc> {
   const DLCAppBar({
     Key? key,
   }) : super(key: key);
@@ -28,7 +29,7 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   List<String> views(BuildContext context) => DLCTheme.views(context);
 }
 
-class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
+class DLCFAB extends ItemFAB<DLC, DLCRepository, DLCListManagerBloc> {
   const DLCFAB({
     Key? key,
   }) : super(key: key);
@@ -43,7 +44,7 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
 }
 
-class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
+class DLCList extends ItemList<DLC, DLCRepository, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
     Key? key,
   }) : super(key: key);
@@ -68,7 +69,7 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   }
 }
 
-class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
+class _DLCListBody extends ItemListBody<DLC, DLCRepository, DLCListBloc> {
   const _DLCListBody({
     Key? key,
     required List<DLC> items,

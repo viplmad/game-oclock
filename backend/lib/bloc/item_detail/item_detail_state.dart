@@ -12,7 +12,7 @@ abstract class ItemDetailState extends Equatable {
 
 class ItemLoading extends ItemDetailState {}
 
-class ItemLoaded<T extends CollectionItem> extends ItemDetailState {
+class ItemLoaded<T extends Item> extends ItemDetailState {
   const ItemLoaded(this.item);
 
   final T item;

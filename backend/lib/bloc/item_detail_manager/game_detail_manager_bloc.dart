@@ -1,41 +1,33 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Game;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_detail_manager.dart';
 
 
-class GameDetailManagerBloc extends ItemDetailManagerBloc<Game, GameUpdateProperties> {
+class GameDetailManagerBloc extends ItemDetailManagerBloc<Game, GameRepository> {
   GameDetailManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<Game?> updateFuture(UpdateItemField<Game, GameUpdateProperties> event) {
-
-    return iCollectionRepository.updateGame(event.item, event.updatedItem, event.updateProperties);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(itemId: itemId, repository: collectionRepository.gameRepository);
 
   @override
   Future<Game?> addImage(AddItemImage<Game> event) {
 
-    return iCollectionRepository.uploadGameCover(itemId, event.imagePath, event.oldImageName);
+    return repository.uploadGameCover(itemId, event.imagePath, event.oldImageName);
 
   }
 
   @override
   Future<Game?> updateImageName(UpdateItemImageName<Game> event) {
 
-    return iCollectionRepository.renameGameCover(itemId, event.oldImageName, event.newImageName);
+    return repository.renameGameCover(itemId, event.oldImageName, event.newImageName);
 
   }
 
   @override
   Future<Game?> deleteImage(DeleteItemImage<Game> event) {
 
-    return iCollectionRepository.deleteGameCover(itemId, event.imageName);
+    return repository.deleteGameCover(itemId, event.imageName);
 
   }
 }

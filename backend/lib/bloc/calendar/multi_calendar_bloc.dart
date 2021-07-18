@@ -8,7 +8,7 @@ import 'package:backend/utils/datetime_extension.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/model/calendar_style.dart';
 
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/repository/item_repository.dart';
 
 import 'multi_calendar.dart';
 
@@ -18,7 +18,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required this.iCollectionRepository,
   }) : super(CalendarLoading());
 
-  final CollectionRepository iCollectionRepository;
+  final ItemRepository iCollectionRepository;
   final Set<int> yearsLoaded = Set<int>();
 
   @override

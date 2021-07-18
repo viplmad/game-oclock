@@ -11,28 +11,23 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
   @override
   Stream<RepositorySettingsManagerState> mapEventToState(RepositorySettingsManagerEvent event) async* {
 
-    if(event is UpdateRemoteConnectionSettings) {
+    if(event is UpdateConnectionSettings) {
 
       yield* _mapUpdateRemoteToState(event);
 
-    }/* else if(event is UpdateLocalConnectionSettings) {
-
-      yield* _mapUpdateLocalToState();
-
-    }*/
+    }
 
     yield Initialised();
 
   }
 
-  Stream<RepositorySettingsManagerState> _mapUpdateRemoteToState(UpdateRemoteConnectionSettings event) async* {
+  Stream<RepositorySettingsManagerState> _mapUpdateRemoteToState(UpdateConnectionSettings event) async* {
 
     try {
 
       await RepositoryPreferences.setPostgresConnector(event.postgresInstance);
       await RepositoryPreferences.setCloudinaryConnector(event.cloudinaryInstance);
 
-      await RepositoryPreferences.setRepositoryTypeRemote();
       await RepositoryPreferences.setRepositoryExist();
 
       yield RepositorySettingsUpdated();

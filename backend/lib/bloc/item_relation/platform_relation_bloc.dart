@@ -1,28 +1,33 @@
 import 'dart:async';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, SystemRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class PlatformRelationBloc<W extends CollectionItem> extends ItemRelationBloc<Platform, W> {
+class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, W> {
   PlatformRelationBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required PlatformRelationManagerBloc<W> managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    this.systemRepository = collectionRepository.systemRepository,
+    super(itemId: itemId, managerBloc: managerBloc);
+
+  final GameRepository gameRepository;
+  final SystemRepository systemRepository;
 
   @override
   Stream<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return iCollectionRepository.findAllGamesFromPlatform(itemId) as Stream<List<W>>;
+        return gameRepository.findAllGamesFromPlatform(itemId) as Stream<List<W>>;
       case System:
-        return iCollectionRepository.findAllSystemsFromPlatform(itemId) as Stream<List<W>>;
+        return systemRepository.findAllSystemsFromPlatform(itemId) as Stream<List<W>>;
     }
 
     return super.getRelationStream();

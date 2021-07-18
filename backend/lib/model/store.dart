@@ -6,15 +6,15 @@ enum StoreView {
   LastCreated,
 }
 
-class Store extends CollectionItem {
+class Store extends Item {
   const Store({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconURL,
     required this.iconFilename,
-  }) : this.uniqueId = 'St$id',
-        super(id: id);
+  }) : this.uniqueId = 'St$id';
 
+  final int id;
   final String name;
   final String? iconURL;
   final String? iconFilename;
@@ -63,12 +63,4 @@ class Store extends CollectionItem {
         ' }';
 
   }
-}
-
-class StoreUpdateProperties {
-  final bool iconURLToNull;
-
-  const StoreUpdateProperties({
-    this.iconURLToNull = false,
-  });
 }

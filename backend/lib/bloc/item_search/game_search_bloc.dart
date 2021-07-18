@@ -1,28 +1,25 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Game, GameView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_search.dart';
 
 
-class GameSearchBloc extends ItemSearchBloc<Game> {
+class GameSearchBloc extends ItemRemoteSearchBloc<Game, GameRepository> {
   GameSearchBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.gameRepository);
 
   @override
   Future<List<Game>> getInitialItems() {
 
-    return iCollectionRepository!.findAllOwnedGamesWithView(GameView.LastCreated, super.maxSuggestions).first;
+    return repository.findAllOwnedGamesWithView(GameView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Game>> getSearchItems(String query) {
 
-    return iCollectionRepository!.findAllGamesByName(query, super.maxResults).first;
+    return repository.findAllGamesByName(query, super.maxResults).first;
 
   }
 }

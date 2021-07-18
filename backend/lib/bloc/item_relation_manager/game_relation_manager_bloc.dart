@@ -1,15 +1,18 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Game, DLC, Platform, Purchase, Tag;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 
 
-class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Game, W> {
+class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Game, W> {
   GameRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    super(itemId: itemId);
+
+  final GameRepository gameRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,13 +21,13 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.relateGameDLC(itemId, otherId);
-      case Purchase:
-        return iCollectionRepository.relateGamePurchase(itemId, otherId);
+        return gameRepository.relateGameDLC(itemId, otherId);
       case Platform:
-        return iCollectionRepository.relateGamePlatform(itemId, otherId);
+        return gameRepository.relateGamePlatform(itemId, otherId);
+      case Purchase:
+        return gameRepository.relateGamePurchase(itemId, otherId);
       case Tag:
-        return iCollectionRepository.relateGameTag(itemId, otherId);
+        return gameRepository.relateGameTag(itemId, otherId);
     }
 
     return super.addRelationFuture(event);
@@ -38,13 +41,13 @@ class GameRelationManagerBloc<W extends CollectionItem> extends ItemRelationMana
 
     switch(W) {
       case DLC:
-        return iCollectionRepository.unrelateGameDLC(otherId);
+        return gameRepository.unrelateGameDLC(otherId);
       case Purchase:
-        return iCollectionRepository.unrelateGamePurchase(itemId, otherId);
+        return gameRepository.unrelateGamePurchase(itemId, otherId);
       case Platform:
-        return iCollectionRepository.unrelateGamePlatform(itemId, otherId);
+        return gameRepository.unrelateGamePlatform(itemId, otherId);
       case Tag:
-        return iCollectionRepository.unrelateGameTag(itemId, otherId);
+        return gameRepository.unrelateGameTag(itemId, otherId);
     }
 
     return super.deleteRelationFuture(event);

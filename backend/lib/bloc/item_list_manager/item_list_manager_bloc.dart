@@ -1,18 +1,17 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item;
+import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import 'item_list_manager.dart';
 
 
-abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
+abstract class ItemListManagerBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
-    required this.iCollectionRepository,
+    required this.repository,
   }) : super(ItemListManagerInitialised());
 
-  final CollectionRepository iCollectionRepository;
+  final R repository;
 
   @override
   Stream<ItemListManagerState> mapEventToState(ItemListManagerEvent event) async* {
@@ -35,12 +34,12 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   Stream<ItemListManagerState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(repository.isClosed()) {
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        repository.reconnect();
+        await repository.open();
 
       } catch (e) {
 
@@ -85,6 +84,15 @@ abstract class ItemListManagerBloc<T extends CollectionItem> extends Bloc<ItemLi
 
   }
 
-  Future<T?> createFuture(AddItem<T> event);
-  Future<dynamic> deleteFuture(DeleteItem<T> event);
+  Future<T?> createFuture(AddItem<T> event) {
+
+    return repository.create(event.item);
+
+  }
+
+  Future<dynamic> deleteFuture(DeleteItem<T> event) {
+
+    return repository.deleteById(event.item.id);
+
+  }
 }

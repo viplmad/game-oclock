@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -14,25 +13,25 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
+class PurchaseSearch extends ItemSearch<Purchase, PurchaseRepository, PurchaseSearchBloc, PurchaseListManagerBloc> {
   const PurchaseSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  PurchaseSearchBloc searchBlocBuilder() {
+  PurchaseSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  PurchaseListManagerBloc managerBlocBuilder() {
+  PurchaseListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +47,7 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
   }
 }
 
-class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerBloc> {
+class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseRepository, PurchaseListManagerBloc> {
   const PurchaseLocalSearch({
     Key? key,
     required List<Purchase> items,
@@ -58,10 +57,10 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   final String detailRouteName = purchaseDetailRoute;
 
   @override
-  PurchaseListManagerBloc managerBlocBuilder() {
+  PurchaseListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -77,7 +76,7 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   }
 }
 
-class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
+class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, PurchaseRepository, K, PurchaseListManagerBloc> {
   const _PurchaseSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Purchase) onTap,

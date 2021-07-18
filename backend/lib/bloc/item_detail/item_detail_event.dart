@@ -14,7 +14,7 @@ class LoadItem extends ItemDetailEvent {}
 
 class ReloadItem extends ItemDetailEvent {}
 
-class UpdateItem<T extends CollectionItem> extends ItemDetailEvent {
+class UpdateItem<T extends Item> extends ItemDetailEvent {
   const UpdateItem(this.item);
 
   final T item;

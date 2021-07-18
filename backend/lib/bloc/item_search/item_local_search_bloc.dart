@@ -1,17 +1,14 @@
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item;
 
-import 'item_search.dart';
+import 'item_search.dart' show ItemSearchBloc;
 
 
-class ItemLocalSearchBloc<T extends CollectionItem> extends ItemSearchBloc<T> {
+class ItemLocalSearchBloc<T extends Item> extends ItemSearchBloc<T> {
   ItemLocalSearchBloc({
     required this.items,
-  }) : super(iCollectionRepository: null);
+  });
 
   final List<T> items;
-
-  @override
-  Stream<ItemSearchState> checkConnection() async* {}
 
   @override
   Future<List<T>> getInitialItems() {

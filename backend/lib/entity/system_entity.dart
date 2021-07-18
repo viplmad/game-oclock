@@ -24,7 +24,7 @@ class SystemEntityData {
   static const String manufacturerField = 'Manufacturer';
 }
 
-class SystemEntity extends CollectionItemEntity {
+class SystemEntity extends ItemEntity {
   const SystemEntity({
     required int id,
     required this.name,
@@ -55,7 +55,7 @@ class SystemEntity extends CollectionItemEntity {
     final List<SystemEntity> systemsList = <SystemEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final SystemEntity system = SystemEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, SystemEntityData.table) );
+      final SystemEntity system = SystemEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, SystemEntityData.table) );
 
       systemsList.add(system);
     });
@@ -68,7 +68,7 @@ class SystemEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, SystemEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, SystemEntityData.table);
       id = map[SystemEntityData.idField] as int;
     }
 
@@ -89,14 +89,14 @@ class SystemEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(SystemEntity updatedEntity, SystemUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(SystemEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 
     putUpdateMapValue(updateMap, SystemEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, SystemEntityData.iconField, iconFilename, updatedEntity.iconFilename, updatedValueCanBeNull: updateProperties.iconURLToNull);
+    putUpdateMapValueNullable(updateMap, SystemEntityData.iconField, iconFilename, updatedEntity.iconFilename);
     putUpdateMapValue(updateMap, SystemEntityData.generationField, generation, updatedEntity.generation);
-    putUpdateMapValueNullable(updateMap, SystemEntityData.manufacturerField, manufacturer, updatedEntity.manufacturer, updatedValueCanBeNull: updateProperties.manufacturerToNull);
+    putUpdateMapValueNullable(updateMap, SystemEntityData.manufacturerField, manufacturer, updatedEntity.manufacturer);
 
     return updateMap;
 

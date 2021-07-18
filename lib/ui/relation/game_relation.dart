@@ -97,7 +97,7 @@ class GameTagRelationList extends _GameRelationList<Tag> {
   Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);
 }
 
-abstract class _GameRelationList<W extends CollectionItem> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {
+abstract class _GameRelationList<W extends Item> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {
   const _GameRelationList({
     Key? key,
     required String relationName,

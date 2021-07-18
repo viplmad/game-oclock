@@ -1,26 +1,11 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, SystemRepository;
 
 import 'item_list_manager.dart';
 
 
-class SystemListManagerBloc extends ItemListManagerBloc<System> {
+class SystemListManagerBloc extends ItemListManagerBloc<System, SystemRepository> {
   SystemListManagerBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<System?> createFuture(AddItem<System> event) {
-
-    return iCollectionRepository.createSystem(event.item);
-
-  }
-
-  @override
-  Future<dynamic> deleteFuture(DeleteItem<System> event) {
-
-    return iCollectionRepository.deleteSystemById(event.item.id);
-
-  }
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.systemRepository);
 }

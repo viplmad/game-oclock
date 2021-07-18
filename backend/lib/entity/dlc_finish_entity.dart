@@ -32,7 +32,7 @@ class DLCFinishEntity extends Equatable {
     final List<DLCFinishEntity> finishList = <DLCFinishEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCFinishEntity date = DLCFinishEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
+      final DLCFinishEntity date = DLCFinishEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
 
       finishList.add(date);
     });

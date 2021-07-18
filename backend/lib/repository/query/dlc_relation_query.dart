@@ -1,11 +1,12 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart';
-import 'repository.dart';
+import 'package:backend/entity/entity.dart' show DLCEntityData, PurchaseEntityData, DLCPurchaseRelationData;
+
+import 'query.dart' show DLCQuery, PurchaseQuery;
 
 
-class DLCPurchaseRelationRepository {
-  DLCPurchaseRelationRepository._();
+class DLCPurchaseRelationQuery {
+  DLCPurchaseRelationQuery._();
 
   static Query create(int dlcId, int purchaseId) {
     final Query query = FluentQuery
@@ -34,7 +35,7 @@ class DLCPurchaseRelationRepository {
       .join(DLCPurchaseRelationData.table, null, DLCPurchaseRelationData.dlcField, DLCEntityData.table, DLCEntityData.idField)
       .where(DLCPurchaseRelationData.purchaseField, id, type: int, table: DLCPurchaseRelationData.table);
 
-    DLCRepository.addFields(query);
+    DLCQuery.addFields(query);
 
     return query;
   }
@@ -46,7 +47,7 @@ class DLCPurchaseRelationRepository {
       .join(DLCPurchaseRelationData.table, null, DLCPurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField)
       .where(DLCPurchaseRelationData.dlcField, id, type: int, table: DLCPurchaseRelationData.table);
 
-    PurchaseRepository.addFields(query);
+    PurchaseQuery.addFields(query);
 
     return query;
   }

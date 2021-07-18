@@ -14,7 +14,7 @@ class GameTagEntityData {
   static const String nameField = 'Name';
 }
 
-class GameTagEntity extends CollectionItemEntity {
+class GameTagEntity extends ItemEntity {
   const GameTagEntity({
     required int id,
     required this.name,
@@ -36,7 +36,7 @@ class GameTagEntity extends CollectionItemEntity {
     final List<GameTagEntity> tagsList = <GameTagEntity>[];
 
     listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameTagEntity tag = GameTagEntity._fromDynamicMap( CollectionItemEntity.combineMaps(manyMap, GameTagEntityData.table) );
+      final GameTagEntity tag = GameTagEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameTagEntityData.table) );
 
       tagsList.add(tag);
     });
@@ -49,7 +49,7 @@ class GameTagEntity extends CollectionItemEntity {
     int? id;
 
     if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = CollectionItemEntity.combineMaps(listMap.first, GameTagEntityData.table);
+      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, GameTagEntityData.table);
       id = map[GameTagEntityData.idField] as int;
     }
 
@@ -66,7 +66,7 @@ class GameTagEntity extends CollectionItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(GameTagEntity updatedEntity, GameTagUpdateProperties updateProperties) {
+  Map<String, dynamic> updateMap(GameTagEntity updatedEntity) {
 
     final Map<String, dynamic> updateMap = <String, dynamic>{};
 

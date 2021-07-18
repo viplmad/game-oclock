@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show PurchaseType;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-//import '../route_constants.dart';
 import '../theme/theme.dart';
 import 'search.dart';
 
 
-class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManagerBloc> {
+class TypeSearch extends ItemSearch<PurchaseType, PurchaseTypeRepository, TypeSearchBloc, TypeListManagerBloc> {
   const TypeSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  TypeSearchBloc searchBlocBuilder() {
+  TypeSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TypeSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  TypeListManagerBloc managerBlocBuilder() {
+  TypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TypeListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +46,7 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
   }
 }
 
-class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc> {
+class TypeLocalSearch extends ItemLocalSearch<PurchaseType, PurchaseTypeRepository, TypeListManagerBloc> {
   const TypeLocalSearch({
     Key? key,
     required List<PurchaseType> items,
@@ -61,10 +59,10 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   void Function() onTap(BuildContext context, PurchaseType item) => () {};
 
   @override
-  TypeListManagerBloc managerBlocBuilder() {
+  TypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return TypeListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -80,7 +78,7 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   }
 }
 
-class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, TypeListManagerBloc> {
+class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, PurchaseTypeRepository, K, TypeListManagerBloc> {
   const _TypeSearchBody({
     Key? key,
     required void Function() Function(BuildContext, PurchaseType) onTap,

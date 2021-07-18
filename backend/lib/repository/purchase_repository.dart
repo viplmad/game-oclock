@@ -1,167 +1,152 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
-import 'repository.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
+import 'package:backend/entity/entity.dart' show PurchaseEntity;
+import 'package:backend/model/model.dart' show Purchase, PurchaseView;
+
+import './query/query.dart' show PurchaseQuery, PurchaseTypeRelationQuery, GamePurchaseRelationQuery, DLCPurchaseRelationQuery;
+import 'item_repository.dart';
 
 
-class PurchaseRepository {
-  PurchaseRepository._();
+class PurchaseRepository extends ItemRepository<Purchase> {
+  const PurchaseRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(PurchaseEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(PurchaseEntityData.table)
-      .sets(entity.createMap())
-      .returningField(PurchaseEntityData.idField);
+  //#region CREATE
+  @override
+  Future<Purchase?> create(Purchase item) {
 
-    return query;
-  }
+    final PurchaseEntity entity = PurchaseMapper.modelToEntity(item);
+    final Query query = PurchaseQuery.create(entity);
 
-  static Query updateById(int id, PurchaseEntity entity, PurchaseEntity updatedEntity, PurchaseUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(PurchaseEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
-
-    _addIdWhere(id, query);
-
-    return query;
-  }
-
-  static Query updateStoreById(int id, int? store) {
-    final Query query = FluentQuery
-      .update()
-      .table(PurchaseEntityData.table)
-      .set(PurchaseEntityData.storeField, store);
-
-    _addIdWhere(id, query);
-
-    return query;
-  }
-
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(PurchaseEntityData.table);
-
-    _addIdWhere(id, query);
-
-    return query;
-  }
-
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseEntityData.table);
-
-    addFields(query);
-    _addIdWhere(id, query);
-
-    return query;
-  }
-
-  static Query selectAllByDescriptionLike(String description, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseEntityData.table)
-      .where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
-  static Query selectAllInView(PurchaseView view, [int? limit, int? year]) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseEntityData.table)
-      .limit(limit);
-
-    addFields(query);
-    _addViewWhere(query, view, year);
-    _addViewOrder(query, view);
-
-    return query;
-  }
-
-  static Query selectAllByStore(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseEntityData.table)
-      .where(PurchaseEntityData.storeField, id, type: int, table: PurchaseEntityData.table);
-
-    addFields(query);
-
-    return query;
-  }
-
-  static Query selectStoreByPurchase(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(StoreEntityData.table)
-      .join(PurchaseEntityData.table, null, PurchaseEntityData.storeField, StoreEntityData.table, StoreEntityData.idField)
-      .where(PurchaseEntityData.idField, id, type: int, table: PurchaseEntityData.table);
-
-    StoreRepository.addFields(query);
-
-    return query;
-  }
-
-  static void addFields(Query query) {
-    query.field(PurchaseEntityData.idField, type: int, table: PurchaseEntityData.table);
-    query.field(PurchaseEntityData.descriptionField, type: String, table: PurchaseEntityData.table);
-    query.field(PurchaseEntityData.priceField, type: double, table: PurchaseEntityData.table);
-    query.field(PurchaseEntityData.externalCreditField, type: double, table: PurchaseEntityData.table);
-    query.field(PurchaseEntityData.dateField, type: DateTime, table: PurchaseEntityData.table);
-    query.field(PurchaseEntityData.originalPriceField, type: double, table: PurchaseEntityData.table);
-
-    query.field(PurchaseEntityData.storeField, type: int, table: PurchaseEntityData.table);
+    return createCollectionItem(
+      query: query,
+      dynamicToId: PurchaseEntity.idFromDynamicMap,
+    );
 
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(PurchaseEntityData.idField, id, type: int, table: PurchaseEntityData.table);
+  Future<dynamic> relatePurchaseType(int purchaseId, int typeId) {
+
+    final Query query = PurchaseTypeRelationQuery.create(purchaseId, typeId);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<Purchase?> findById(int id) {
+
+    final Query query = PurchaseQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static void _addViewWhere(Query query, PurchaseView view, [int? year]) {
-    switch(view) {
-      case PurchaseView.Main:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastCreated:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Pending:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastPurchased:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Review:
-        // TODO: Handle this case.
-        break;
-    }
+  @override
+  Stream<List<Purchase>> findAll() {
+
+    return findAllPurchasesWithView(PurchaseView.Main);
+
   }
 
-  static void _addViewOrder(Query query, PurchaseView view) {
-    switch(view) {
-      case PurchaseView.Main:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastCreated:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Pending:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastPurchased:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Review:
-        // TODO: Handle this case.
-        break;
-    }
+  Stream<List<Purchase>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
+
+    final Query query = PurchaseQuery.selectAllInView(purchaseView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Purchase>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
+
+    final Query query = PurchaseQuery.selectAllInView(purchaseView, limit, year);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Purchase>> findAllPurchasesFromGame(int id) {
+
+    final Query query = GamePurchaseRelationQuery.selectAllPurchasesByGameId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Purchase>> findAllPurchasesFromStore(int storeId) {
+
+    final Query query = PurchaseQuery.selectAllByStore(storeId);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Purchase>> findAllPurchasesFromDLC(int id) {
+
+    final Query query = DLCPurchaseRelationQuery.selectAllPurchasesByDLCId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+
+  Stream<List<Purchase>> findAllPurchasesFromPurchaseType(int id) {
+
+    final Query query = PurchaseTypeRelationQuery.selectAllPurchasesByTypeId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion READ
+
+  //#region UPDATE
+  @override
+  Future<Purchase?> update(Purchase item, Purchase updatedItem) {
+
+    final PurchaseEntity entity = PurchaseMapper.modelToEntity(item);
+    final PurchaseEntity updatedEntity = PurchaseMapper.modelToEntity(updatedItem);
+    final Query query = PurchaseQuery.updateById(item.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
+
+    final Query query = PurchaseQuery.deleteById(id);
+    return itemConnector.execute(query);
+
+  }
+
+  Future<dynamic> unrelatePurchaseType(int purchaseId, int typeId) {
+
+    final Query query = PurchaseTypeRelationQuery.deleteById(purchaseId, typeId);
+    return itemConnector.execute(query);
+
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<Purchase>> findAllPurchasesByDescription(String description, int maxResults) {
+
+    final Query query = PurchaseQuery.selectAllByDescriptionLike(description, maxResults);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion SEARCH
+
+  @override
+  List<Purchase> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
+
+    return PurchaseEntity.fromDynamicMapList(results).map( PurchaseMapper.entityToModel ).toList(growable: false);
+
   }
 }

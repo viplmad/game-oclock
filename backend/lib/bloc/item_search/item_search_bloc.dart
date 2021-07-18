@@ -2,51 +2,24 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item;
 
 import 'item_search.dart';
 
 
-abstract class ItemSearchBloc<T extends CollectionItem> extends Bloc<ItemSearchEvent, ItemSearchState> {
-  ItemSearchBloc({
-    required this.iCollectionRepository,
-  }) : super(ItemSearchEmpty<T>());
+abstract class ItemSearchBloc<T extends Item> extends Bloc<ItemSearchEvent, ItemSearchState> {
+  ItemSearchBloc() : super(ItemSearchEmpty<T>());
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
-  final CollectionRepository? iCollectionRepository;
-
   @override
   Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
-
-    yield* checkConnection();
 
     if(event is SearchTextChanged) {
 
       yield* _mapTextChangedToState(event);
 
-    }
-
-  }
-
-  Stream<ItemSearchState> checkConnection() async* {
-
-    if(iCollectionRepository!.isClosed()) {
-      yield const ItemSearchError('Connection lost. Trying to reconnect');
-
-      try {
-
-        iCollectionRepository!.reconnect();
-        await iCollectionRepository!.open();
-
-      } catch(e) {
-
-        yield ItemSearchError(e.toString());
-
-      }
     }
 
   }

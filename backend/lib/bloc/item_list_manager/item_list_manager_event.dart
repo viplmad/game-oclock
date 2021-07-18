@@ -10,7 +10,7 @@ abstract class ItemListManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItem<T extends CollectionItem> extends ItemListManagerEvent {
+class AddItem<T extends Item> extends ItemListManagerEvent {
   const AddItem(this.item);
 
   final T item;
@@ -24,7 +24,7 @@ class AddItem<T extends CollectionItem> extends ItemListManagerEvent {
       ' }';
 }
 
-class DeleteItem<T extends CollectionItem> extends ItemListManagerEvent {
+class DeleteItem<T extends Item> extends ItemListManagerEvent {
   const DeleteItem(this.item);
 
   final T item;

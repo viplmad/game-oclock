@@ -50,12 +50,12 @@ class SingleGameCalendar extends StatelessWidget {
 
     final GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      iCollectionRepository: ItemRepository.repository!,
     );
 
     final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
       itemId: itemId,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      iCollectionRepository: ItemRepository.repository!,
     );
 
     final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
@@ -131,7 +131,7 @@ class SingleGameCalendar extends StatelessWidget {
 
     return SingleCalendarBloc(
       itemId: itemId,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      iCollectionRepository: ItemRepository.repository!,
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );

@@ -1,15 +1,18 @@
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Item, Tag, Game;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 
 
-class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManagerBloc<Tag, W> {
+class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag, W> {
   TagRelationManagerBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameRepository = collectionRepository.gameRepository,
+    super(itemId: itemId);
+
+  final GameRepository gameRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
@@ -18,7 +21,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.relateGameTag(otherId, itemId);
+        return gameRepository.relateGameTag(otherId, itemId);
     }
 
     return super.addRelationFuture(event);
@@ -32,7 +35,7 @@ class TagRelationManagerBloc<W extends CollectionItem> extends ItemRelationManag
 
     switch(W) {
       case Game:
-        return iCollectionRepository.unrelateGameTag(otherId, itemId);
+        return gameRepository.unrelateGameTag(otherId, itemId);
     }
 
     return super.deleteRelationFuture(event);

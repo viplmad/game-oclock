@@ -3,24 +3,20 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
 
-import 'package:backend/repository/collection_repository.dart';
-
 import 'item_relation_manager.dart';
 
 
-abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends CollectionItem> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
+abstract class ItemRelationManagerBloc<T extends Item, W extends Item> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
     required this.itemId,
-    required this.iCollectionRepository,
   }) : super(ItemRelationManagerInitialised());
 
   final int itemId;
-  final CollectionRepository iCollectionRepository;
 
   @override
   Stream<ItemRelationManagerState> mapEventToState(ItemRelationManagerEvent event) async* {
 
-    yield* _checkConnection();
+    //yield* _checkConnection(); // TODO
 
     if(event is AddItemRelation<W>) {
 
@@ -36,7 +32,7 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
 
   }
 
-  Stream<ItemRelationManagerState> _checkConnection() async* {
+  /*Stream<ItemRelationManagerState> _checkConnection() async* {
 
     if(iCollectionRepository.isClosed()) {
 
@@ -52,7 +48,7 @@ abstract class ItemRelationManagerBloc<T extends CollectionItem, W extends Colle
       }
     }
 
-  }
+  }*/
 
   Stream<ItemRelationManagerState> _mapAddRelationToState(AddItemRelation<W> event) async* {
 

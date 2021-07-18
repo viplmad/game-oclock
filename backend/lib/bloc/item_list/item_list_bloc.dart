@@ -2,18 +2,17 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item;
 import 'package:backend/model/list_style.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent, ItemListState> {
+abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
-    required this.iCollectionRepository,
+    required this.repository,
     required this.managerBloc,
   }) : super(ItemListLoading()) {
 
@@ -21,8 +20,8 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  final CollectionRepository iCollectionRepository;
-  final ItemListManagerBloc<T> managerBloc;
+  final R repository;
+  final ItemListManagerBloc<T, R> managerBloc;
   late StreamSubscription<ItemListManagerState> managerSubscription;
 
   @override
@@ -64,13 +63,13 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   Stream<ItemListState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(repository.isClosed()) {
       yield const ItemListNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        repository.reconnect();
+        await repository.open();
 
       } catch (e) {
 
@@ -293,7 +292,12 @@ abstract class ItemListBloc<T extends CollectionItem> extends Bloc<ItemListEvent
 
   }
 
-  Stream<List<T>> getReadAllStream();
+  Stream<List<T>> getReadAllStream() {
+
+    return repository.findAll();
+
+  }
+
   Stream<List<T>> getReadViewStream(UpdateView event);
   external Stream<List<T>> getReadYearViewStream(UpdateYearView event);
 }

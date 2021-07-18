@@ -1,15 +1,26 @@
-import 'package:equatable/equatable.dart';
+import 'collection_item.dart';
 
 
-class GameTimeLog extends Equatable implements Comparable<GameTimeLog> {
+class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   const GameTimeLog({
     required this.dateTime,
     required this.time,
-  });
+  }) : this.uniqueId = '$dateTime';
 
   final DateTime dateTime;
   final Duration time;
 
+  @override
+  final String uniqueId;
+
+  @override
+  final bool hasImage = false;
+  @override
+  final ItemImage image = const ItemImage(null, null);
+  @override
+  final String queryableTerms = '';
+
+  @override
   GameTimeLog copyWith({
     DateTime? dateTime,
     Duration? time,

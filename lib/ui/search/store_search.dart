@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Store;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -14,25 +13,25 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
+class StoreSearch extends ItemSearch<Store, StoreRepository, StoreSearchBloc, StoreListManagerBloc> {
   const StoreSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  StoreSearchBloc searchBlocBuilder() {
+  StoreSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreSearchBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  StoreListManagerBloc managerBlocBuilder() {
+  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -48,7 +47,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   }
 }
 
-class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
+class StoreLocalSearch extends ItemLocalSearch<Store, StoreRepository, StoreListManagerBloc> {
   const StoreLocalSearch({
     Key? key,
     required List<Store> items,
@@ -58,10 +57,10 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   final String detailRouteName = storeDetailRoute;
 
   @override
-  StoreListManagerBloc managerBlocBuilder() {
+  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreListManagerBloc(
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -77,7 +76,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   }
 }
 
-class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, K, StoreListManagerBloc> {
+class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, StoreRepository, K, StoreListManagerBloc> {
   const _StoreSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Store) onTap,

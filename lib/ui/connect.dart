@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/bloc/connection/connection.dart';
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -20,7 +21,9 @@ class Connectpage extends StatelessWidget {
 
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
-        return ConnectionBloc()..add(Connect());
+        return ConnectionBloc(
+          collectionRepository: RepositoryProvider.of<GameCollectionRepository>(context),
+        )..add(Connect());
       },
       child: const _ConnectpageBody(),
     );

@@ -6,9 +6,9 @@ enum DLCView {
   LastCreated,
 }
 
-class DLC extends CollectionItem {
+class DLC extends Item {
   const DLC({
-    required int id,
+    required this.id,
     required this.name,
     required this.releaseYear,
     required this.coverURL,
@@ -16,9 +16,9 @@ class DLC extends CollectionItem {
     required this.finishDate,
 
     required this.baseGame,
-  }) : this.uniqueId = 'D$id',
-        super(id: id);
+  }) : this.uniqueId = 'D$id';
 
+  final int id;
   final String name;
   final int? releaseYear;
   final String? coverURL;
@@ -83,20 +83,4 @@ class DLC extends CollectionItem {
         ' }';
 
   }
-}
-
-class DLCUpdateProperties {
-  final bool releaseYearToNull;
-  final bool coverURLToNull;
-  final bool coverFilenameToNull;
-  final bool finishDateToNull;
-  final bool baseGameToNull;
-
-  const DLCUpdateProperties({
-    this.releaseYearToNull = false,
-    this.coverURLToNull = false,
-    this.coverFilenameToNull = false,
-    this.finishDateToNull = false,
-    this.baseGameToNull = false,
-  });
 }

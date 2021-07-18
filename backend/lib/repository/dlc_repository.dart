@@ -1,158 +1,211 @@
-import 'package:query/query.dart';
+import 'package:backend/game_collection_backend.dart';
+import 'package:query/query.dart' show Query;
 
-import 'repository.dart';
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show DLCMapper;
+import 'package:backend/entity/entity.dart' show DLCEntity, DLCID, DLCEntityData;
+import 'package:backend/model/model.dart' show DLC, DLCView;
 
+import './query/query.dart' show DLCQuery, DLCPurchaseRelationQuery;
+import 'item_repository.dart';
 
-class DLCRepository {
-  DLCRepository._();
+class DLCService {
+  DLCService(this.dlcRepository);
 
-  static Query create(DLCEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(DLCEntityData.table)
-      .sets(entity.createMap())
-      .returningField(DLCEntityData.idField);
+  final DLCRepository dlcRepository;
 
-    return query;
+  Future<DLC?> create(DLC item) {
+
+    final DLCEntity entity = DLCMapper.modelToEntity(item);
+    return dlcRepository.create(item).map( (DLCEntity dlcEntity) {
+      return DLCMapper.entityToModel(dlcEntity, dlcRepository.getDLCCoverURL(dlcEntity.coverFilename));
+    }).toList(growable: false);
+
   }
 
-  static Query updateById(int id, DLCEntity entity, DLCEntity updatedEntity, DLCUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(DLCEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  Future<DLC?> update(DLC item, DLC updatedItem) {
 
-    _addIdWhere(id, query);
+    final DLCEntity entity = DLCMapper.modelToEntity(item);
+    final DLCEntity updatedEntity = DLCMapper.modelToEntity(updatedItem);
+    return dlcRepository.update(entity.createId(), entity, updatedEntity).map( (DLCEntity dlcEntity) {
+      return DLCMapper.entityToModel(dlcEntity, dlcRepository.getDLCCoverURL(dlcEntity.coverFilename));
+    }).toList(growable: false);
 
-    return query;
   }
 
-  static Query updateCoverById(int id, String? coverName) {
-    final Query query = FluentQuery
-      .update()
-      .table(DLCEntityData.table)
-      .set(DLCEntityData.coverField, coverName);
+  Future<Iterable<DLC>> findAll() {
 
-    _addIdWhere(id, query);
+    return dlcRepository.findAllDLCsWithView(DLCView.Main).map((List<DLCEntity> event) => event.map((DLCEntity e) => DLCMapper.entityToModel(e, dlcRepository.getDLCCoverURL(e.coverFilename)))).first;
 
-    return query;
   }
 
-  static Query updateBaseGameById(int id, int? baseGame) {
-    final Query query = FluentQuery
-      .update()
-      .table(DLCEntityData.table)
-      .set(DLCEntityData.baseGameField, baseGame);
+}
 
-    _addIdWhere(id, query);
+class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
+  const DLCRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-    return query;
+  static const String _imagePrefix = 'header';
+
+  //#region CREATE
+  @override
+  Future<DLCEntity?> create(DLCEntity entity) {
+
+    final Query query = DLCQuery.create(entity);
+
+    return createCollectionItem(
+      query: query,
+      dynamicToId: DLCEntity.idFromDynamicMap,
+    );
+
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(DLCEntityData.table);
+  Future<dynamic> relateDLCPurchase(DLCID dlcId, int purchaseId) {
 
-    _addIdWhere(id, query);
+    final Query query = DLCPurchaseRelationQuery.create(dlcId.id, purchaseId);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<DLCEntity?> findById(DLCID id) {
+
+    final Query query = DLCQuery.selectById(id.id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCEntityData.table);
+  @override
+  Stream<List<DLCEntity>> findAll() {
 
-    addFields(query);
-    _addIdWhere(id, query);
-
-    return query;
+    final Query query = DLCQuery.selectAll();
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCEntityData.table)
-      .where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  Stream<List<DLCEntity>> findAllDLCsWithView(DLCView dlcView, [int? limit]) {
 
-    addFields(query);
+    final Query query = DLCQuery.selectAllInView(dlcView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
   }
 
-  static Query selectAllInView(DLCView view, [int? limit]) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCEntityData.table)
-      .limit(limit);
+  Stream<List<DLCEntity>> findAllDLCsFromGame(int id) {
 
-    addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    final Query query = DLCQuery.selectAllByBaseGame(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
   }
 
-  static Query selectAllByBaseGame(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCEntityData.table)
-      .where(DLCEntityData.baseGameField, id, type: int, table: DLCEntityData.table);
+  Stream<List<DLCEntity>> findAllDLCsFromPurchase(int id) {
 
-    addFields(query);
+    final Query query = DLCPurchaseRelationQuery.selectAllDLCsByPurchaseId(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
+  }
+  //#endregion CREATE
+
+  //#region UPDATE
+  @override
+  Future<DLCEntity?> update(DLCID id, DLCEntity entity, DLCEntity updatedEntity) {
+
+    final Query query = DLCQuery.updateById(id.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(DLCID id) {
+
+    final Query query = DLCQuery.deleteById(id.id);
+    return itemConnector.execute(query);
+
   }
 
-  static Query selectGameByDLC(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameEntityData.table)
-      .join(DLCEntityData.table, null, DLCEntityData.baseGameField, GameEntityData.table, GameEntityData.idField)
-      .where(DLCEntityData.idField, id, type: int, table: DLCEntityData.table);
+  Future<dynamic> unrelateDLCPurchase(DLCID dlcId, int purchaseId) {
 
-    GameRepository.addFields(query);
+    final Query query = DLCPurchaseRelationQuery.deleteById(dlcId.id, purchaseId);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<DLCEntity>> findAllDLCsByName(String name, int limit) {
+
+    final Query query = DLCQuery.selectAllByNameLike(name, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion SEARCH
+
+  //#region IMAGE
+  Future<DLCEntity?> uploadDLCCover(DLCID id, String uploadImagePath, [String? oldImageName]) {
+
+    return uploadCollectionItemImage(
+      tableName: DLCEntityData.table,
+      uploadImagePath: uploadImagePath,
+      initialImageName: _imagePrefix,
+      oldImageName: oldImageName,
+      queryBuilder: (DLCID dlcId, String? name) => DLCQuery.updateCoverById(dlcId.id, name),
+      id: id,
+    );
+
   }
 
-  static void addFields(Query query) {
-    query.field(DLCEntityData.idField, type: int, table: DLCEntityData.table);
-    query.field(DLCEntityData.nameField, type: String, table: DLCEntityData.table);
-    query.field(DLCEntityData.releaseYearField, type: int, table: DLCEntityData.table);
-    query.field(DLCEntityData.coverField, type: String, table: DLCEntityData.table);
-    query.field(DLCEntityData.finishDateField, type: DateTime, table: DLCEntityData.table);
+  Future<DLCEntity?> renameDLCCover(DLCID id, String imageName, String newImageName) {
 
-    query.field(DLCEntityData.baseGameField, type: int, table: DLCEntityData.table);
+    return renameCollectionItemImage(
+      tableName: DLCEntityData.table,
+      oldImageName: imageName,
+      newImageName: newImageName,
+      queryBuilder: (DLCID dlcId, String? name) => DLCQuery.updateCoverById(dlcId.id, name),
+      id: id,
+    );
+
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(DLCEntityData.idField, id, type: int, table: DLCEntityData.table);
-  }
+  Future<DLCEntity?> deleteDLCCover(DLCID id, String imageName) {
 
-  static void _addViewWhere(Query query, DLCView view) {
-    switch(view) {
-      case DLCView.Main:
-        // TODO: Handle this case.
-        break;
-      case DLCView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
-  }
+    return deleteCollectionItemImage(
+      tableName: DLCEntityData.table,
+      imageName: imageName,
+      queryBuilder: (DLCID dlcId, String? name) => DLCQuery.updateCoverById(dlcId.id, name),
+      id: id,
+    );
 
-  static void _addViewOrder(Query query, DLCView view) {
-    switch(view) {
-      case DLCView.Main:
-        // TODO: Handle this case.
-        break;
-      case DLCView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
+  }
+  //#endregion IMAGE
+
+  //#region DOWNLOAD
+  String? getDLCCoverURL(String? dlcCoverName) {
+
+    return dlcCoverName != null?
+        imageConnector.getURI(
+          tableName: DLCEntityData.table,
+          imageFilename: dlcCoverName,
+        )
+        : null;
+
+  }
+  //#endregion DOWNLOAD
+
+  @override
+  List<DLCEntity> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
+
+    return DLCEntity.fromDynamicMapList(results);
+
   }
 }

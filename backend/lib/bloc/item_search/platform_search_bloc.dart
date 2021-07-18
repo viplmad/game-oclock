@@ -1,28 +1,25 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Platform, PlatformView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
 
 import 'item_search.dart';
 
 
-class PlatformSearchBloc extends ItemSearchBloc<Platform> {
+class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformRepository> {
   PlatformSearchBloc({
-    required CollectionRepository iCollectionRepository,
-  }) : super(iCollectionRepository: iCollectionRepository);
+    required GameCollectionRepository collectionRepository,
+  }) : super(repository: collectionRepository.platformRepository);
 
   @override
   Future<List<Platform>> getInitialItems() {
 
-    return iCollectionRepository!.findAllPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions).first;
+    return repository.findAllPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions).first;
 
   }
 
   @override
   Future<List<Platform>> getSearchItems(String query) {
 
-    return iCollectionRepository!.findAllPlatformsByName(query, super.maxResults).first;
+    return repository.findAllPlatformsByName(query, super.maxResults).first;
 
   }
 }

@@ -1,32 +1,22 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show Store, StoreView;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class StoreListBloc extends ItemListBloc<Store> {
+class StoreListBloc extends ItemListBloc<Store, StoreRepository> {
   StoreListBloc({
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required StoreListManagerBloc managerBloc,
-  }) : super(iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<List<Store>> getReadAllStream() {
-
-    return iCollectionRepository.findAllStores();
-
-  }
+  }) : super(repository: collectionRepository.storeRepository, managerBloc: managerBloc);
 
   @override
   Stream<List<Store>> getReadViewStream(UpdateView event) {
 
     final StoreView storeView = StoreView.values[event.viewIndex];
 
-    return iCollectionRepository.findAllStoresWithView(storeView);
+    return repository.findAllStoresWithView(storeView);
 
   }
 }

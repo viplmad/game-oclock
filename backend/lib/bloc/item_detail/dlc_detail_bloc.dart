@@ -1,24 +1,14 @@
-import 'dart:async';
-
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/collection_repository.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class DLCDetailBloc extends ItemDetailBloc<DLC, DLCUpdateProperties> {
+class DLCDetailBloc extends ItemDetailBloc<DLC, DLCRepository> {
   DLCDetailBloc({
     required int itemId,
-    required CollectionRepository iCollectionRepository,
+    required GameCollectionRepository collectionRepository,
     required DLCDetailManagerBloc managerBloc,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository, managerBloc: managerBloc);
-
-  @override
-  Stream<DLC?> getReadStream() {
-
-    return iCollectionRepository.findDLCById(itemId);
-
-  }
+  }) : super(itemId: itemId, repository: collectionRepository.dlcRepository, managerBloc: managerBloc);
 }

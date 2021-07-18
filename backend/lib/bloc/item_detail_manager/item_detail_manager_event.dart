@@ -10,25 +10,23 @@ abstract class ItemDetailManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateItemField<T extends CollectionItem, P extends Object> extends ItemDetailManagerEvent {
-  const UpdateItemField(this.item, this.updatedItem, this.updateProperties);
+class UpdateItemField<T extends Item> extends ItemDetailManagerEvent {
+  const UpdateItemField(this.item, this.updatedItem);
 
   final T item;
   final T updatedItem;
-  final P updateProperties;
 
   @override
-  List<Object> get props => <Object>[item, updatedItem, updateProperties];
+  List<Object> get props => <Object>[item, updatedItem];
 
   @override
   String toString() => 'UpdateItemField { '
       'item: $item, '
-      'updateItem: $updatedItem, '
-      'updateProperties: $updateProperties'
+      'updateItem: $updatedItem'
       ' }';
 }
 
-class AddItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
+class AddItemImage<T extends Item> extends ItemDetailManagerEvent {
   const AddItemImage(this.imagePath, [this.oldImageName]);
 
   final String imagePath;
@@ -43,7 +41,7 @@ class AddItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
       ' }';
 }
 
-class UpdateItemImageName<T extends CollectionItem> extends ItemDetailManagerEvent {
+class UpdateItemImageName<T extends Item> extends ItemDetailManagerEvent {
   const UpdateItemImageName(this.oldImageName, this.newImageName);
 
   final String oldImageName;
@@ -59,7 +57,7 @@ class UpdateItemImageName<T extends CollectionItem> extends ItemDetailManagerEve
       ' }';
 }
 
-class DeleteItemImage<T extends CollectionItem> extends ItemDetailManagerEvent {
+class DeleteItemImage<T extends Item> extends ItemDetailManagerEvent {
   const DeleteItemImage(this.imageName);
 
   final String imageName;

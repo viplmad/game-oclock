@@ -1,33 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 
-abstract class CollectionItem extends Equatable {
-  const CollectionItem({
-    required this.id,
-  });
-
-  final int id;
+abstract class Item extends Equatable {
+  const Item();
 
   String get uniqueId;
   bool get hasImage;
   ItemImage get image;
   String get queryableTerms;
 
-  CollectionItem copyWith();
-
-  @override
-  List<Object> get props => <Object>[
-    id,
-  ];
-
-  @override
-  String toString() {
-
-    return 'CollectionItem { '
-        'Id: $id'
-        ' }';
-
-  }
+  Item copyWith();
 }
 
 class ItemImage {
@@ -39,29 +21,7 @@ class ItemImage {
   final String filename;
 }
 
-abstract class CollectionItemFinish extends Equatable {
-  const CollectionItemFinish({
-    required this.dateTime,
-  });
-
-  final DateTime dateTime;
-
-  @override
-  List<Object> get props => <Object>[
-    dateTime,
-  ];
-
-  @override
-  String toString() {
-
-    return 'CollectionItemFinish { '
-        'DateTime: $dateTime'
-        ' }';
-
-  }
-}
-
-abstract class ItemData<T extends CollectionItem> {
+abstract class ItemData<T extends Item> {
   const ItemData(this.items);
 
   final List<T> items;

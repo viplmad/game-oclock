@@ -1,12 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 
-abstract class CollectionItemEntity extends Equatable {
-  const CollectionItemEntity({
-    required this.id,
-  });
-
-  final int id;
+abstract class ItemEntity extends Equatable {
+  const ItemEntity();
 
   static Map<String, dynamic> combineMaps(Map<String, Map<String, dynamic>> manyMap, String primaryTableName) {
 
@@ -35,23 +31,9 @@ abstract class CollectionItemEntity extends Equatable {
     }
   }
 
-  void putUpdateMapValueNullable(Map<String, Object?> updateMap, String field, Object? value, Object? updatedValue, {required bool updatedValueCanBeNull}) {
-    if(value != updatedValue && (updatedValue == null && updatedValueCanBeNull) && (updatedValue != null && !updatedValueCanBeNull)) {
+  void putUpdateMapValueNullable(Map<String, Object?> updateMap, String field, Object? value, Object? updatedValue) {
+    if(value != updatedValue && updatedValue != null) {
       updateMap[field] = updatedValue;
     }
-  }
-
-  @override
-  List<Object> get props => <Object>[
-    id,
-  ];
-
-  @override
-  String toString() {
-
-    return 'CollectionItemEntity { '
-        'id: $id'
-        ' }';
-
   }
 }

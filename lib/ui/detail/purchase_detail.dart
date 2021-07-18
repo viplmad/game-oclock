@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/repository.dart';
+import 'package:backend/model/model.dart' show Item, Purchase, Game, DLC, Store, PurchaseType;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -18,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class PurchaseDetail extends ItemDetail<Purchase, PurchaseRepository, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   const PurchaseDetail({
     Key? key,
     required Purchase item,
@@ -26,54 +25,54 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  PurchaseDetailBloc detailBlocBuilder(PurchaseDetailManagerBloc managerBloc) {
+  PurchaseDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, PurchaseDetailManagerBloc managerBloc) {
 
     return PurchaseDetailBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  PurchaseDetailManagerBloc managerBlocBuilder() {
+  PurchaseDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc = PurchaseRelationManagerBloc<Store>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc = PurchaseRelationManagerBloc<Game>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc = PurchaseRelationManagerBloc<DLC>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     final PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc = PurchaseRelationManagerBloc<PurchaseType>(
       itemId: item.id,
-      iCollectionRepository: CollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Store>(_storeRelationManagerBloc),
-      blocProviderRelationBuilder<Game>(_gameRelationManagerBloc),
-      blocProviderRelationBuilder<DLC>(_dlcRelationManagerBloc),
-      blocProviderRelationBuilder<PurchaseType>(_typeRelationManagerBloc),
+      blocProviderRelationBuilder<Store>(collectionRepository, _storeRelationManagerBloc),
+      blocProviderRelationBuilder<Game>(collectionRepository, _gameRelationManagerBloc),
+      blocProviderRelationBuilder<DLC>(collectionRepository, _dlcRelationManagerBloc),
+      blocProviderRelationBuilder<PurchaseType>(collectionRepository, _typeRelationManagerBloc),
 
       BlocProvider<PurchaseRelationManagerBloc<Store>>(
         create: (BuildContext context) {
@@ -108,13 +107,13 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
 
   }
 
-  BlocProvider<PurchaseRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(PurchaseRelationManagerBloc<W> managerBloc) {
+  BlocProvider<PurchaseRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, PurchaseRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<PurchaseRelationBloc<W>>(
       create: (BuildContext context) {
         return PurchaseRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: CollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -124,7 +123,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseUpdateProperties, Purc
 }
 
 // ignore: must_be_immutable
-class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdateProperties, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseRepository, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   _PurchaseDetailBody({
     Key? key,
     void Function(Purchase? item)? onUpdate,
@@ -143,7 +142,6 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdatePropert
         value: purchase.description,
         item: purchase,
         itemUpdater: (String newValue) => purchase.copyWith(description: newValue),
-        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
@@ -151,7 +149,6 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdatePropert
         value: purchase.price,
         item: purchase,
         itemUpdater: (double newValue) => purchase.copyWith(price: newValue),
-        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
@@ -159,7 +156,6 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdatePropert
         value: purchase.externalCredit,
         item: purchase,
         itemUpdater: (double newValue) => purchase.copyWith(externalCredit: newValue),
-        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemDateTimeField(
         context,
@@ -167,7 +163,6 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdatePropert
         value: purchase.date,
         item: purchase,
         itemUpdater: (DateTime newValue) => purchase.copyWith(date: newValue),
-        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemMoneyField(
         context,
@@ -175,7 +170,6 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseUpdatePropert
         value: purchase.originalPrice,
         item: purchase,
         itemUpdater: (double newValue) => purchase.copyWith(originalPrice: newValue),
-        updateProperties: const PurchaseUpdateProperties(),
       ),
       itemPercentageField(
         context,

@@ -1,119 +1,173 @@
-import 'package:query/query.dart';
+import 'package:query/query.dart' show Query;
 
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/mapper/mapper.dart' show StoreMapper;
+import 'package:backend/entity/entity.dart' show StoreEntity, StoreEntityData;
+import 'package:backend/model/model.dart' show Store, StoreView;
+
+import './query/query.dart' show StoreQuery, PurchaseQuery;
+import 'item_repository.dart';
 
 
-class StoreRepository {
-  StoreRepository._();
+class StoreRepository extends ItemRepository<Store> {
+  const StoreRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
-  static Query create(StoreEntity entity) {
-    final Query query = FluentQuery
-      .insert()
-      .into(StoreEntityData.table)
-      .sets(entity.createMap())
-      .returningField(StoreEntityData.idField);
+  //#region CREATE
+  @override
+  Future<Store?> create(Store item) {
 
-    return query;
+    final StoreEntity entity = StoreMapper.modelToEntity(item);
+    final Query query = StoreQuery.create(entity);
+
+    return createCollectionItem(
+      query: query,
+      dynamicToId: StoreEntity.idFromDynamicMap,
+    );
+
   }
 
-  static Query updateById(int id, StoreEntity entity, StoreEntity updatedEntity, StoreUpdateProperties updateProperties) {
-    final Query query = FluentQuery
-      .update()
-      .table(StoreEntityData.table)
-      .sets(entity.updateMap(updatedEntity, updateProperties));
+  Future<dynamic> relateStorePurchase(int storeId, int purchaseId) {
 
-    _addIdWhere(id, query);
+    final Query query = PurchaseQuery.updateStoreById(purchaseId, storeId);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  //#endregion CREATE
+
+  //#region READ
+  @override
+  Stream<Store?> findById(int id) {
+
+    final Query query = StoreQuery.selectById(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
+
   }
 
-  static Query updateIconById(int id, String? iconName) {
-    final Query query = FluentQuery
-      .update()
-      .table(StoreEntityData.table)
-      .set(StoreEntityData.iconField, iconName);
+  @override
+  Stream<List<Store>> findAll() {
 
-    _addIdWhere(id, query);
+    return findAllStoresWithView(StoreView.Main);
 
-    return query;
   }
 
-  static Query deleteById(int id) {
-    final Query query = FluentQuery
-      .delete()
-      .from(StoreEntityData.table);
+  Stream<List<Store>> findAllStoresWithView(StoreView storeView, [int? limit]) {
 
-    _addIdWhere(id, query);
+    final Query query = StoreQuery.selectAllInView(storeView, limit);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
 
-    return query;
   }
 
-  static Query selectById(int id) {
-    final Query query = FluentQuery
-      .select()
-      .from(StoreEntityData.table);
+  Stream<Store?> findStoreFromPurchase(int id) {
 
-    addFields(query);
-    _addIdWhere(id, query);
+    final Query query = PurchaseQuery.selectStoreByPurchase(id);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToSingle );
 
-    return query;
+  }
+  //#endregion READ
+
+  //#region UPDATE
+  @override
+  Future<Store?> update(Store item, Store updatedItem) {
+
+    final StoreEntity entity = StoreMapper.modelToEntity(item);
+    final StoreEntity updatedEntity = StoreMapper.modelToEntity(updatedItem);
+    final Query query = StoreQuery.updateById(item.id, entity, updatedEntity);
+
+    return updateCollectionItem(
+      query: query,
+      id: item.id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(int id) {
+
+    final Query query = StoreQuery.deleteById(id);
+    return itemConnector.execute(query);
+
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(StoreEntityData.table)
-      .where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.LIKE)
-      .limit(limit);
+  Future<dynamic> unrelateStorePurchase(int purchaseId) {
 
-    addFields(query);
+    final Query query = PurchaseQuery.updateStoreById(purchaseId, null);
+    return itemConnector.execute(query);
 
-    return query;
+  }
+  //#endregion DELETE
+
+  //#region SEARCH
+  Stream<List<Store>> findAllStoresByName(String name, int maxResults) {
+
+    final Query query = StoreQuery.selectAllByNameLike(name, maxResults);
+    return itemConnector.execute(query)
+      .asStream().map( dynamicToList );
+
+  }
+  //#endregion SEARCH
+
+  //#region IMAGE
+  Future<Store?> uploadStoreIcon(int id, String uploadImagePath, [String? oldImageName]) {
+
+    return uploadCollectionItemImage(
+      tableName: StoreEntityData.table,
+      uploadImagePath: uploadImagePath,
+      initialImageName: 'icon',
+      oldImageName: oldImageName,
+      queryBuilder: StoreQuery.updateIconById,
+      id: id,
+    );
+
   }
 
-  static Query selectAllInView(StoreView view, [int? limit]) {
-    final Query query = FluentQuery
-      .select()
-      .from(StoreEntityData.table)
-      .limit(limit);
+  Future<Store?> renameStoreIcon(int id, String imageName, String newImageName) {
 
-    addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    return renameCollectionItemImage(
+      tableName: StoreEntityData.table,
+      oldImageName: imageName,
+      newImageName: newImageName,
+      queryBuilder: StoreQuery.updateIconById,
+      id: id,
+    );
 
-    return query;
   }
 
-  static void addFields(Query query) {
-    query.field(StoreEntityData.idField, type: int, table: StoreEntityData.table);
-    query.field(StoreEntityData.nameField, type: String, table: StoreEntityData.table);
-    query.field(StoreEntityData.iconField, type: String, table: StoreEntityData.table);
-  }
+  Future<Store?> deleteStoreIcon(int id, String imageName) {
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(StoreEntityData.idField, id, type: int, table: StoreEntityData.table);
-  }
+    return deleteCollectionItemImage(
+      tableName: StoreEntityData.table,
+      imageName: imageName,
+      queryBuilder: StoreQuery.updateIconById,
+      id: id,
+    );
 
-  static void _addViewWhere(Query query, StoreView view, [int? year]) {
-    switch(view) {
-      case StoreView.Main:
-        // TODO: Handle this case.
-        break;
-      case StoreView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
   }
+  //#endregion IMAGE
 
-  static void _addViewOrder(Query query, StoreView view) {
-    switch(view) {
-      case StoreView.Main:
-        // TODO: Handle this case.
-        break;
-      case StoreView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
+  //#region DOWNLOAD
+  String? _getStoreIconURL(String? storeIconName) {
+
+    return storeIconName != null?
+        imageConnector.getURI(
+          tableName: StoreEntityData.table,
+          imageFilename: storeIconName,
+        )
+        : null;
+
+  }
+  //#endregion DOWNLOAD
+
+  @override
+  List<Store> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
+
+    return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
+      return StoreMapper.entityToModel(storeEntity, _getStoreIconURL(storeEntity.iconFilename));
+    }).toList(growable: false);
+
   }
 }
