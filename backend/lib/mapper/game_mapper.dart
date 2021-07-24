@@ -1,5 +1,5 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show GameEntity;
+import 'package:backend/model/model.dart' show Game;
 
 
 class GameMapper {
@@ -46,55 +46,21 @@ class GameMapper {
 
   }
 
-  static GameFinishEntity finishModelToEntity(GameFinish model) {
+  static Future<Game> futureEntityToModel(Future<GameEntity> entityFuture, String? Function(String?) coverFunction) {
 
-    return GameFinishEntity(
-      dateTime: model.dateTime,
-    );
-
-  }
-
-  static GameFinish finishEntityToModel(GameFinishEntity entity) {
-
-    return GameFinish(
-      dateTime: entity.dateTime,
-    );
+    return entityFuture.asStream().map( (GameEntity entity) {
+      return entityToModel(entity, coverFunction(entity.coverFilename));
+    }).first;
 
   }
 
-  static GameTimeLogEntity logModelToEntity(GameTimeLog model) {
+  static Future<List<Game>> futureEntityListToModelList(Future<List<GameEntity>> entityListFuture, String? Function(String?) coverFunction) {
 
-    return GameTimeLogEntity(
-      dateTime: model.dateTime,
-      time: model.time,
-    );
-
-  }
-
-  static GameTimeLog logEntityToModel(GameTimeLogEntity entity) {
-
-    return GameTimeLog(
-      dateTime: entity.dateTime,
-      time: entity.time,
-    );
-
-  }
-
-  static GameWithLogsEntity gameWithLogModelToEntity(GameWithLogs model) {
-
-    return GameWithLogsEntity(
-      game: modelToEntity(model.game),
-      timeLogs: model.timeLogs.map<GameTimeLogEntity>( logModelToEntity ).toList(growable: false),
-    );
-
-  }
-
-  static GameWithLogs gameWithLogEntityToModel(GameWithLogsEntity entity, [String? coverURL]) {
-
-    return GameWithLogs(
-      game: entityToModel(entity.game, coverURL),
-      timeLogs: entity.timeLogs.map<GameTimeLog>( logEntityToModel ).toList(),
-    );
+    return entityListFuture.asStream().map( (List<GameEntity> entityList) {
+      return entityList.map( (GameEntity entity) {
+        return entityToModel(entity, coverFunction(entity.coverFilename));
+      }).toList(growable: false);
+    }).first;
 
   }
 }

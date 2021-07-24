@@ -1,13 +1,13 @@
-import 'dart:async';
-
+import 'package:backend/entity/entity.dart' show DLCEntity, GameEntity, PurchaseID, PurchaseTypeEntity, StoreEntity;
 import 'package:backend/model/model.dart' show Item, Purchase, Game, DLC, Store, PurchaseType;
+import 'package:backend/mapper/mapper.dart' show DLCMapper, GameMapper, PurchaseTypeMapper, StoreMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, DLCRepository, PurchaseTypeRepository, StoreRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, W> {
+class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, PurchaseID, W> {
   PurchaseRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
@@ -17,7 +17,7 @@ class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, W>
     this.dlcRepository = collectionRepository.dlcRepository,
     this.storeRepository = collectionRepository.storeRepository,
     this.purchaseTypeRepository = collectionRepository.purchaseTypeRepository,
-    super(itemId: itemId, managerBloc: managerBloc);
+    super(id: PurchaseID(itemId), managerBloc: managerBloc);
 
   final GameRepository gameRepository;
   final DLCRepository dlcRepository;
@@ -25,17 +25,21 @@ class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, W>
   final PurchaseTypeRepository purchaseTypeRepository;
 
   @override
-  Stream<List<W>> getRelationStream() {
+  Future<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return gameRepository.findAllGamesFromPurchase(itemId) as Stream<List<W>>;
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromPurchase(id);
+        return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
       case DLC:
-        return dlcRepository.findAllDLCsFromPurchase(itemId) as Stream<List<W>>;
+        final Future<List<DLCEntity>> entityListFuture = dlcRepository.findAllFromPurchase(id);
+        return DLCMapper.futureEntityListToModelList(entityListFuture, dlcRepository.getImageURI) as Future<List<W>>;
       case Store:
-        return storeRepository.findStoreFromPurchase(itemId).map<List<Store>>( (Store? store) => store != null? <Store>[store] : <Store>[] ) as Stream<List<W>>;
+        final Future<StoreEntity> entityFuture = storeRepository.findStoreFromPurchase(id); // TODO can be null store != null? <Store>[store] : <Store>[]
+        return StoreMapper.futureEntityToModel(entityFuture, storeRepository.getImageURI) as Future<List<W>>;
       case PurchaseType:
-        return purchaseTypeRepository.findAllPurchaseTypesFromPurchase(itemId) as Stream<List<W>>;
+        final Future<List<PurchaseTypeEntity>> entityListFuture = purchaseTypeRepository.findAllPurchaseTypesFromPurchase(id);
+        return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture) as Future<List<W>>;
     }
 
     return super.getRelationStream();

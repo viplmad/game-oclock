@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, Game, GameFinish, DLC, Purchase, Platform, Tag;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -20,7 +20,7 @@ import 'item_detail.dart';
 import 'finish_date_list.dart';
 
 
-class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDetailManagerBloc> {
+class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
     required Game item,
@@ -71,9 +71,9 @@ class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDe
       collectionRepository: collectionRepository,
     );
 
-    final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
+    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc = GameRelationManagerBloc<GameFinish>(
       itemId: item.id,
-      iCollectionRepository: ItemRepository.repository!,
+      collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
@@ -81,6 +81,7 @@ class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDe
       blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
       blocProviderRelationBuilder<DLC>(collectionRepository, _dlcRelationManagerBloc),
       blocProviderRelationBuilder<Tag>(collectionRepository, _tagRelationManagerBloc),
+      blocProviderRelationBuilder<GameFinish>(collectionRepository, _finishRelationManagerBloc),
 
       BlocProvider<GameRelationManagerBloc<Platform>>(
         create: (BuildContext context) {
@@ -102,17 +103,7 @@ class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDe
           return _tagRelationManagerBloc;
         },
       ),
-
-      BlocProvider<GameFinishRelationBloc>(
-        create: (BuildContext context) {
-          return GameFinishRelationBloc(
-            itemId: item.id,
-            iCollectionRepository: ItemRepository.repository!,
-            managerBloc: _finishRelationManagerBloc,
-          )..add(LoadRelation());
-        },
-      ),
-      BlocProvider<GameFinishRelationManagerBloc>(
+      BlocProvider<GameRelationManagerBloc<GameFinish>>(
         create: (BuildContext context) {
           return _finishRelationManagerBloc;
         },
@@ -147,7 +138,7 @@ class GameDetail extends ItemDetail<Game, GameRepository, GameDetailBloc, GameDe
 }
 
 // ignore: must_be_immutable
-class _GameDetailBody extends ItemDetailBody<Game, GameRepository, GameDetailBloc, GameDetailManagerBloc> {
+class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key? key,
     required this.itemId,
@@ -296,7 +287,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameRepository, GameDetailBlo
 }
 
 // ignore: must_be_immutable
-class GameFinishDateList extends FinishList<Game, GameFinish, GameFinishRelationBloc, GameFinishRelationManagerBloc> {
+class GameFinishDateList extends FinishList<Game, GameFinish, GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
   GameFinishDateList({
     Key? key,
     required String fieldName,

@@ -1,7 +1,10 @@
-import 'package:backend/model/model.dart';
+import 'entity.dart' show ItemEntity;
 
-import 'entity.dart';
 
+enum TagView {
+  Main,
+  LastCreated,
+}
 
 class GameTagEntityData {
   GameTagEntityData._();
@@ -14,15 +17,22 @@ class GameTagEntityData {
   static const String nameField = 'Name';
 }
 
+class GameTagID {
+  GameTagID(this.id);
+
+  final int id;
+}
+
 class GameTagEntity extends ItemEntity {
   const GameTagEntity({
-    required int id,
+    required this.id,
     required this.name,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
 
-  static GameTagEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static GameTagEntity fromMap(Map<String, dynamic> map) {
 
     return GameTagEntity(
       id: map[GameTagEntityData.idField] as int,
@@ -31,29 +41,16 @@ class GameTagEntity extends ItemEntity {
 
   }
 
-  static List<GameTagEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static GameTagID idFromMap(Map<String, dynamic> map) {
 
-    final List<GameTagEntity> tagsList = <GameTagEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameTagEntity tag = GameTagEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameTagEntityData.table) );
-
-      tagsList.add(tag);
-    });
-
-    return tagsList;
+    return GameTagID(map[GameTagEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  GameTagID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, GameTagEntityData.table);
-      id = map[GameTagEntityData.idField] as int;
-    }
+    return GameTagID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -85,9 +82,9 @@ class GameTagEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$GameTagEntityData.table}Entity { '
-        '{$GameTagEntityData.idField}: $id, '
-        '{$GameTagEntityData._nameField}: $name'
+    return '${GameTagEntityData.table}Entity { '
+        '${GameTagEntityData.idField}: $id, '
+        '${GameTagEntityData.nameField}: $name'
         ' }';
 
   }

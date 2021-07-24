@@ -1,27 +1,30 @@
+import 'package:backend/entity/entity.dart' show PurchaseEntity, PurchaseTypeID;
 import 'package:backend/model/model.dart' show Item, PurchaseType, Purchase;
+import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
 
 import 'item_relation_manager.dart';
 
 
-class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<PurchaseType, W> {
+class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<PurchaseType, PurchaseTypeID, W> {
   TypeRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
     this.purchaseRepository = collectionRepository.purchaseRepository,
-    super(itemId: itemId);
+    super(id: PurchaseTypeID(itemId));
 
   final PurchaseRepository purchaseRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Purchase:
-        return purchaseRepository.relatePurchaseType(otherId, itemId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return purchaseRepository.relatePurchaseType(otherEntity.createId(), id);
     }
 
     return super.addRelationFuture(event);
@@ -31,11 +34,12 @@ class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Pu
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Purchase:
-        return purchaseRepository.unrelatePurchaseType(otherId, itemId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return purchaseRepository.unrelatePurchaseType(otherEntity.createId(), id);
     }
 
     return super.deleteRelationFuture(event);

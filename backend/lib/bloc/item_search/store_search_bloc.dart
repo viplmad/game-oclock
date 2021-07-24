@@ -1,10 +1,12 @@
-import 'package:backend/model/model.dart' show Store, StoreView;
+import 'package:backend/entity/entity.dart' show StoreEntity, StoreID, StoreView;
+import 'package:backend/model/model.dart' show Store;
+import 'package:backend/mapper/mapper.dart' show StoreMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
 
 import 'item_search.dart';
 
 
-class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreRepository> {
+class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreEntity, StoreID, StoreRepository> {
   StoreSearchBloc({
     required GameCollectionRepository collectionRepository,
   }) : super(repository: collectionRepository.storeRepository);
@@ -12,14 +14,16 @@ class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreRepository> {
   @override
   Future<List<Store>> getInitialItems() {
 
-    return repository.findAllStoresWithView(StoreView.LastCreated, super.maxSuggestions).first;
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllStoresWithView(StoreView.LastCreated, super.maxSuggestions);
+    return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
 
   @override
   Future<List<Store>> getSearchItems(String query) {
 
-    return repository.findAllStoresByName(query, super.maxResults).first;
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllStoresByName(query, super.maxResults);
+    return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
 }

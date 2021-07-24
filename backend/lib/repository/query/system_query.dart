@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show SystemEntity, SystemEntityData;
-import 'package:backend/model/model.dart' show SystemView;
+import 'package:backend/entity/entity.dart' show SystemEntity, SystemID, SystemEntityData, SystemView;
 
 
 class SystemQuery {
@@ -17,7 +16,7 @@ class SystemQuery {
     return query;
   }
 
-  static Query updateById(int id, SystemEntity entity, SystemEntity updatedEntity) {
+  static Query updateById(SystemID id, SystemEntity entity, SystemEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(SystemEntityData.table)
@@ -28,7 +27,7 @@ class SystemQuery {
     return query;
   }
 
-  static Query updateIconById(int id, String? iconName) {
+  static Query updateIconById(SystemID id, String? iconName) {
     final Query query = FluentQuery
       .update()
       .table(SystemEntityData.table)
@@ -39,7 +38,7 @@ class SystemQuery {
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(SystemID id) {
     final Query query = FluentQuery
       .delete()
       .from(SystemEntityData.table);
@@ -49,13 +48,23 @@ class SystemQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(SystemID id) {
     final Query query = FluentQuery
       .select()
       .from(SystemEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(SystemEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -93,8 +102,8 @@ class SystemQuery {
     query.field(SystemEntityData.manufacturerField, type: String, table: SystemEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(SystemEntityData.idField, id, type: int, table: SystemEntityData.table);
+  static void _addIdWhere(SystemID id, Query query) {
+    query.where(SystemEntityData.idField, id.id, type: int, table: SystemEntityData.table);
   }
 
   static void _addViewWhere(Query query, SystemView view) {

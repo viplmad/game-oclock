@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Purchase;
 import 'package:backend/model/list_style.dart';
-import 'package:backend/repository/repository.dart' show PurchaseRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -17,7 +16,7 @@ import '../common/year_picker_dialog.dart';
 import 'list.dart';
 
 
-class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseRepository, PurchaseListBloc> {
+class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
   const PurchaseAppBar({
     Key? key,
   }) : super(key: key);
@@ -60,7 +59,7 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseRepository, PurchaseLi
   List<String> views(BuildContext context) => PurchaseTheme.views(context);
 }
 
-class PurchaseFAB extends ItemFAB<Purchase, PurchaseRepository, PurchaseListManagerBloc> {
+class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
   const PurchaseFAB({
     Key? key,
   }) : super(key: key);
@@ -75,7 +74,7 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseRepository, PurchaseListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 }
 
-class PurchaseList extends ItemList<Purchase, PurchaseRepository, PurchaseListBloc, PurchaseListManagerBloc> {
+class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
   const PurchaseList({
     Key? key,
   }) : super(key: key);
@@ -100,7 +99,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseRepository, PurchaseListBl
   }
 }
 
-class _PurchaseListBody extends ItemListBody<Purchase, PurchaseRepository, PurchaseListBloc> {
+class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   const _PurchaseListBody({
     Key? key,
     required List<Purchase> items,

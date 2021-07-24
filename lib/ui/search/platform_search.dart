@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show Platform;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +13,7 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class PlatformSearch extends ItemSearch<Platform, PlatformRepository, PlatformSearchBloc, PlatformListManagerBloc> {
+class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
     Key? key,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class PlatformSearch extends ItemSearch<Platform, PlatformRepository, PlatformSe
   }
 }
 
-class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformRepository, PlatformListManagerBloc> {
+class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
   const PlatformLocalSearch({
     Key? key,
     required List<Platform> items,
@@ -76,7 +76,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformRepository, 
   }
 }
 
-class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, PlatformRepository, K, PlatformListManagerBloc> {
+class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
   const _PlatformSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Platform) onTap,

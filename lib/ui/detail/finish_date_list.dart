@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item, ItemFinish;
 
 import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
@@ -14,7 +14,7 @@ import '../common/show_date_picker.dart';
 
 
 // ignore: must_be_immutable
-abstract class FinishList<T extends Item, D extends CollectionItemFinish, K extends RelationBloc<T, D>, S extends RelationManagerBloc<T, D>> extends StatelessWidget {
+abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
   FinishList({
     Key? key,
     required this.fieldName,
@@ -36,9 +36,9 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
 
     final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
 
-    return BlocListener<S, RelationManagerState>(
-      listener: (BuildContext context, RelationManagerState state) {
-        if(state is RelationAdded<D>) {
+    return BlocListener<S, ItemRelationManagerState>(
+      listener: (BuildContext context, ItemRelationManagerState state) {
+        if(state is ItemRelationAdded<F>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
@@ -47,7 +47,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
             message: message,
           );
         }
-        if(state is RelationNotAdded) {
+        if(state is ItemRelationNotAdded) {
           final String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
           showSnackBar(
             context,
@@ -60,7 +60,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
             ),
           );
         }
-        if(state is RelationDeleted<D>) {
+        if(state is ItemRelationDeleted<F>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
@@ -69,7 +69,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
             message: message,
           );
         }
-        if(state is RelationNotDeleted) {
+        if(state is ItemRelationNotDeleted) {
           final String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
           showSnackBar(
             context,
@@ -86,10 +86,10 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
       child: ListTileTheme.merge(
         child: ListTile(
           title: Text(fieldName),
-          trailing: BlocBuilder<K, RelationState>(
-            builder: (BuildContext context, RelationState state) {
+          trailing: BlocBuilder<K, ItemRelationState>(
+            builder: (BuildContext context, ItemRelationState state) {
               String extra = '';
-              if(state is RelationLoaded<D>) {
+              if(state is ItemRelationLoaded<F>) {
 
                 extra = state.otherItems.length > 1? '(+)' : '';
 
@@ -115,13 +115,13 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
                     title: Text(fieldName),
                     content: SizedBox(
                       width: double.maxFinite,
-                      child: BlocBuilder<K, RelationState>(
+                      child: BlocBuilder<K, ItemRelationState>(
                         bloc: BlocProvider.of<K>(outerContext),
-                        builder: (BuildContext context, RelationState state) {
+                        builder: (BuildContext context, ItemRelationState state) {
 
-                          if(state is RelationLoaded<D>) {
+                          if(state is ItemRelationLoaded<F>) {
 
-                            final List<D> values = state.otherItems;
+                            final List<F> values = state.otherItems;
 
                             if(values.isEmpty) {
                               return Text(GameCollectionLocalisations.of(context).emptyFinishDatesString);
@@ -131,7 +131,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
                               shrinkWrap: true,
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
-                                final D finish = values.elementAt(index);
+                                final F finish = values.elementAt(index);
                                 final String dateString = GameCollectionLocalisations.of(context).dateString(finish.dateTime);
 
                                 return Padding(
@@ -142,7 +142,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
                                       icon: const Icon(Icons.link_off),
                                       onPressed: () {
                                         BlocProvider.of<S>(outerContext).add(
-                                          DeleteRelation<D>(finish),
+                                          DeleteItemRelation<F>(finish),
                                         );
                                       },
                                     ),
@@ -152,7 +152,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
                             );
                           }
 
-                          if(state is RelationNotLoaded) {
+                          if(state is ItemRelationNotLoaded) {
                             return Center(
                               child: Text(state.error),
                             );
@@ -178,7 +178,7 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
                           ).then((DateTime? value) {
                             if(value != null) {
                               BlocProvider.of<S>(outerContext).add(
-                                AddRelation<D>(createFinish(value)),
+                                AddItemRelation<F>(createFinish(value)),
                               );
                             }
                           });
@@ -205,5 +205,5 @@ abstract class FinishList<T extends Item, D extends CollectionItemFinish, K exte
 
   }
 
-  D createFinish(DateTime dateTime);
+  F createFinish(DateTime dateTime);
 }

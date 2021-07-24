@@ -5,10 +5,10 @@ import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
 import 'package:game_collection/utils/datetime_extension.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Game, GameWithLogs;
 import 'package:backend/model/calendar_style.dart';
 
-import 'package:backend/repository/repository.dart';
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/calendar/multi_calendar.dart';
 
@@ -30,7 +30,7 @@ class MultiGameCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final MultiCalendarBloc _bloc = MultiCalendarBloc(
-      iCollectionRepository: ItemRepository.repository!,
+      collectionRepository: RepositoryProvider.of<GameCollectionRepository>(context),
     );
 
     return BlocProvider<MultiCalendarBloc>(

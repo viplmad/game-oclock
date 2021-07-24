@@ -14,7 +14,7 @@ import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemSearch<T extends Item, R extends ItemRepository<T>, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemSearch({
     Key? key,
   }) : super(key: key);
@@ -58,10 +58,10 @@ abstract class ItemSearch<T extends Item, R extends ItemRepository<T>, K extends
   K searchBlocBuilder(GameCollectionRepository collectionRepository);
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, R, K, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, K, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
-abstract class ItemLocalSearch<T extends Item, R extends ItemRepository<T>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemLocalSearch({
     Key? key,
     required this.items,
@@ -117,10 +117,10 @@ abstract class ItemLocalSearch<T extends Item, R extends ItemRepository<T>, S ex
 
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, R, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
-abstract class ItemSearchBody<T extends Item, R extends ItemRepository<T>, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T, R>> extends StatefulWidget {
+abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatefulWidget {
   const ItemSearchBody({
     Key? key,
     required this.onTap,
@@ -137,9 +137,9 @@ abstract class ItemSearchBody<T extends Item, R extends ItemRepository<T>, K ext
   Widget cardBuilder(BuildContext context, T item);
 
   @override
-  State<ItemSearchBody<T, R, K, S>> createState() => _ItemSearchBodyState<T, R, K, S>();
+  State<ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
 }
-class _ItemSearchBodyState<T extends Item, R extends ItemRepository<T>, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T, R>> extends State<ItemSearchBody<T, R, K, S>> {
+class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends State<ItemSearchBody<T, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {

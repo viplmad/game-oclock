@@ -1,13 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage, ItemData, YearData;
 
-
-enum PurchaseView {
-  Main,
-  LastCreated,
-  Pending,
-  LastPurchased,
-  Review,
-}
 
 class Purchase extends Item {
   const Purchase({

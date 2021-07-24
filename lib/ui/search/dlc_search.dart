@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +13,7 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class DLCSearch extends ItemSearch<DLC, DLCRepository, DLCSearchBloc, DLCListManagerBloc> {
+class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
     Key? key,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class DLCSearch extends ItemSearch<DLC, DLCRepository, DLCSearchBloc, DLCListMan
   }
 }
 
-class DLCLocalSearch extends ItemLocalSearch<DLC, DLCRepository, DLCListManagerBloc> {
+class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   const DLCLocalSearch({
     Key? key,
     required List<DLC> items,
@@ -75,7 +75,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCRepository, DLCListManagerB
   }
 }
 
-class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, DLCRepository, K, DLCListManagerBloc> {
+class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
   const _DLCSearchBody({
     Key? key,
     required void Function() Function(BuildContext, DLC) onTap,

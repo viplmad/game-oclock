@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum TypeView {
-  Main,
-  LastCreated,
-}
 
 class PurchaseType extends Item {
   const PurchaseType({

@@ -8,7 +8,10 @@ class GameCollectionRepository {
 
   void connect(ItemConnector itemConnector, ImageConnector imageConnector) {
     gameRepository = GameRepository(itemConnector, imageConnector);
+    gameFinishRepository = GameFinishRepository(itemConnector, imageConnector);
+    gameTimeLogRepository = GameTimeLogRepository(itemConnector, imageConnector);
     dlcRepository = DLCRepository(itemConnector, imageConnector);
+    dlcFinishRepository = DLCFinishRepository(itemConnector, imageConnector);
     platformRepository = PlatformRepository(itemConnector, imageConnector);
     purchaseRepository = PurchaseRepository(itemConnector, imageConnector);
     storeRepository = StoreRepository(itemConnector, imageConnector);
@@ -21,7 +24,10 @@ class GameCollectionRepository {
   void reconnect() => gameRepository.reconnect();
 
   late final GameRepository gameRepository;
+  late final GameFinishRepository gameFinishRepository;
+  late final GameTimeLogRepository gameTimeLogRepository;
   late final DLCRepository dlcRepository;
+  late final DLCFinishRepository dlcFinishRepository;
   late final PlatformRepository platformRepository;
   late final PurchaseRepository purchaseRepository;
   late final StoreRepository storeRepository;

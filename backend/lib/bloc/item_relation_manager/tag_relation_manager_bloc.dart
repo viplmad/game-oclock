@@ -1,27 +1,30 @@
+import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
 import 'package:backend/model/model.dart' show Item, Tag, Game;
+import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 
 
-class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag, W> {
+class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag, GameTagID, W> {
   TagRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
-    super(itemId: itemId);
+    super(id: GameTagID(itemId));
 
   final GameRepository gameRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Game:
-        return gameRepository.relateGameTag(otherId, itemId);
+        final GameEntity otherEntity = GameMapper.modelToEntity(otherItem as Game);
+        return gameRepository.relateGameTag(otherEntity.createId(), id);
     }
 
     return super.addRelationFuture(event);
@@ -31,11 +34,12 @@ class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Game:
-        return gameRepository.unrelateGameTag(otherId, itemId);
+        final GameEntity otherEntity = GameMapper.modelToEntity(otherItem as Game);
+        return gameRepository.unrelateGameTag(otherEntity.createId(), id);
     }
 
     return super.deleteRelationFuture(event);

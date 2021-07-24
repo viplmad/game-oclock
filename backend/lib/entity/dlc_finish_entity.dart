@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity, DLCEntityData, DLCEntity, DLCID;
 
 
 class DLCFinishEntityData {
@@ -12,36 +10,44 @@ class DLCFinishEntityData {
   static const String dateField = 'Date';
 }
 
-class DLCFinishEntity extends Equatable {
+class DLCFinishID {
+  DLCFinishID(this.dlcId, this.dateTime);
+
+  final DLCID dlcId;
+  final DateTime dateTime;
+}
+
+class DLCFinishEntity extends ItemEntity {
   const DLCFinishEntity({
+    required this.dlcId,
     required this.dateTime,
   });
 
+  final int dlcId;
   final DateTime dateTime;
 
-  static DLCFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static DLCFinishEntity fromMap(Map<String, dynamic> map) {
 
     return DLCFinishEntity(
+      dlcId: map[DLCFinishEntityData.dlcField] as int,
       dateTime: map[DLCFinishEntityData.dateField] as DateTime,
     );
 
   }
 
-  static List<DLCFinishEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static DLCFinishID idFromMap(Map<String, dynamic> map) {
 
-    final List<DLCFinishEntity> finishList = <DLCFinishEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCFinishEntity date = DLCFinishEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
-
-      finishList.add(date);
-    });
-
-    return finishList;
+    return DLCFinishID(DLCEntity.idFromMap(map), map[DLCFinishEntityData.dateField] as DateTime);
 
   }
 
-  Map<String, dynamic> createMap(int dlcId) {
+  DLCFinishID createId() {
+
+    return DLCFinishID(DLCID(dlcId), dateTime);
+
+  }
+
+  Map<String, dynamic> createMap() {
 
     final Map<String, dynamic> createMap = <String, dynamic>{
       DLCFinishEntityData.dlcField : dlcId,
@@ -49,6 +55,16 @@ class DLCFinishEntity extends Equatable {
     };
 
     return createMap;
+
+  }
+
+  Map<String, Object?> updateMap(DLCFinishEntity updatedEntity) {
+
+    final Map<String, Object?> updateMap = <String, Object?>{};
+
+    putUpdateMapValue(updateMap, DLCFinishEntityData.dateField, dateTime, updatedEntity.dateTime);
+
+    return updateMap;
 
   }
 
@@ -60,8 +76,9 @@ class DLCFinishEntity extends Equatable {
   @override
   String toString() {
 
-    return '{$DLCFinishEntityData.table}Entity { '
-        '{$DLCFinishEntityData.dateTimeField}: $dateTime'
+    return '${DLCFinishEntityData.table}Entity { '
+        '${DLCFinishEntityData.dlcField}: $dlcId, '
+        '${DLCFinishEntityData.dateField}: $dateTime'
         ' }';
 
   }

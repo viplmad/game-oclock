@@ -14,7 +14,7 @@ import '../common/item_view.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemRelationList<T extends Item, W extends Item, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
+abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
   const ItemRelationList({
     Key? key,
     required this.relationName,
@@ -383,7 +383,7 @@ class _ResultsListSingle<W extends Item> extends StatelessWidget {
           final W result = items[index];
 
           return DismissibleItem(
-            dismissibleKey: result.id,
+            dismissibleKey: result.uniqueId,
             itemWidget: itemBuilder(context, result),
             onDismissed: (DismissDirection direction) {
               updateDelete(result);
@@ -445,7 +445,7 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
             final W result = items[index];
 
             return DismissibleItem(
-              dismissibleKey: result.id,
+              dismissibleKey: result.uniqueId,
               itemWidget: itemBuilder(context, result),
               onDismissed: (DismissDirection direction) {
                 updateDelete(result);

@@ -1,32 +1,34 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
-import 'package:backend/entity/entity.dart' show PurchaseEntity;
-import 'package:backend/model/model.dart' show Purchase, PurchaseView;
+import 'package:backend/entity/entity.dart' show DLCID, GameID, PurchaseEntity, PurchaseEntityData, PurchaseID, PurchaseTypeID, StoreID, PurchaseView;
 
 import './query/query.dart' show PurchaseQuery, PurchaseTypeRelationQuery, GamePurchaseRelationQuery, DLCPurchaseRelationQuery;
 import 'item_repository.dart';
 
 
-class PurchaseRepository extends ItemRepository<Purchase> {
+class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
   const PurchaseRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+
+  @override
+  final String recordName = PurchaseEntityData.table;
+  @override
+  PurchaseEntity entityFromMap(Map<String, Object?> map) => PurchaseEntity.fromMap(map);
+  @override
+  PurchaseID idFromMap(Map<String, Object?> map) => PurchaseEntity.idFromMap(map);
 
   //#region CREATE
   @override
-  Future<Purchase?> create(Purchase item) {
+  Future<PurchaseEntity> create(PurchaseEntity entity) {
 
-    final PurchaseEntity entity = PurchaseMapper.modelToEntity(item);
     final Query query = PurchaseQuery.create(entity);
-
-    return createCollectionItem(
+    return createItem(
       query: query,
-      dynamicToId: PurchaseEntity.idFromDynamicMap,
     );
 
   }
 
-  Future<dynamic> relatePurchaseType(int purchaseId, int typeId) {
+  Future<dynamic> relatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
 
     final Query query = PurchaseTypeRelationQuery.create(purchaseId, typeId);
     return itemConnector.execute(query);
@@ -36,81 +38,89 @@ class PurchaseRepository extends ItemRepository<Purchase> {
 
   //#region READ
   @override
-  Stream<Purchase?> findById(int id) {
+  Future<PurchaseEntity> findById(PurchaseID id) {
 
     final Query query = PurchaseQuery.selectById(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
 
   @override
-  Stream<List<Purchase>> findAll() {
+  Future<List<PurchaseEntity>> findAll() {
 
-    return findAllPurchasesWithView(PurchaseView.Main);
+    final Query query = PurchaseQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
+  Future<List<PurchaseEntity>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
 
     final Query query = PurchaseQuery.selectAllInView(purchaseView, limit);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
+  Future<List<PurchaseEntity>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
 
     final Query query = PurchaseQuery.selectAllInView(purchaseView, limit, year);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesFromGame(int id) {
+  Future<List<PurchaseEntity>> findAllPurchasesFromGame(GameID id) {
 
     final Query query = GamePurchaseRelationQuery.selectAllPurchasesByGameId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesFromStore(int storeId) {
+  Future<List<PurchaseEntity>> findAllPurchasesFromStore(StoreID storeId) {
 
     final Query query = PurchaseQuery.selectAllByStore(storeId);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesFromDLC(int id) {
+  Future<List<PurchaseEntity>> findAllPurchasesFromDLC(DLCID id) {
 
     final Query query = DLCPurchaseRelationQuery.selectAllPurchasesByDLCId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Purchase>> findAllPurchasesFromPurchaseType(int id) {
+  Future<List<PurchaseEntity>> findAllPurchasesFromPurchaseType(PurchaseTypeID id) {
 
     final Query query = PurchaseTypeRelationQuery.selectAllPurchasesByTypeId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<Purchase?> update(Purchase item, Purchase updatedItem) {
+  Future<PurchaseEntity> update(PurchaseEntity entity, PurchaseEntity updatedEntity) {
 
-    final PurchaseEntity entity = PurchaseMapper.modelToEntity(item);
-    final PurchaseEntity updatedEntity = PurchaseMapper.modelToEntity(updatedItem);
-    final Query query = PurchaseQuery.updateById(item.id, entity, updatedEntity);
-
-    return updateCollectionItem(
+    final PurchaseID id = entity.createId();
+    final Query query = PurchaseQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
       query: query,
-      id: item.id,
+      id: id,
     );
 
   }
@@ -118,14 +128,14 @@ class PurchaseRepository extends ItemRepository<Purchase> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(int id) {
+  Future<dynamic> deleteById(PurchaseID id) {
 
     final Query query = PurchaseQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelatePurchaseType(int purchaseId, int typeId) {
+  Future<dynamic> unrelatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
 
     final Query query = PurchaseTypeRelationQuery.deleteById(purchaseId, typeId);
     return itemConnector.execute(query);
@@ -134,19 +144,13 @@ class PurchaseRepository extends ItemRepository<Purchase> {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<Purchase>> findAllPurchasesByDescription(String description, int maxResults) {
+  Future<List<PurchaseEntity>> findAllPurchasesByDescription(String description, int limit) {
 
-    final Query query = PurchaseQuery.selectAllByDescriptionLike(description, maxResults);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    final Query query = PurchaseQuery.selectAllByDescriptionLike(description, limit);
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion SEARCH
-
-  @override
-  List<Purchase> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PurchaseEntity.fromDynamicMapList(results).map( PurchaseMapper.entityToModel ).toList(growable: false);
-
-  }
 }

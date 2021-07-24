@@ -1,6 +1,4 @@
-import 'package:backend/model/model.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity;
 
 
 const List<String> statuses = <String>[
@@ -9,6 +7,16 @@ const List<String> statuses = <String>[
   'Playing',
   'Played',
 ];
+
+enum GameView {
+  Main,
+  LastCreated,
+  Playing,
+  NextUp,
+  LastPlayed,
+  LastFinished,
+  Review,
+}
 
 class GameEntityData {
   GameEntityData._();
@@ -30,6 +38,12 @@ class GameEntityData {
   static const String screenshotFolderField = 'Screenshot Folder';
   static const String finishDateField = 'Finish Date';
   static const String backupField = 'Backup';
+}
+
+class GameID {
+  GameID(this.id);
+
+  final int id;
 }
 
 class GameEntity extends ItemEntity {
@@ -63,7 +77,7 @@ class GameEntity extends ItemEntity {
   final DateTime? finishDate;
   final bool isBackup;
 
-  static GameEntity fromDynamicMap(Map<String, dynamic> map) {
+  static GameEntity fromMap(Map<String, dynamic> map) {
 
     return GameEntity(
       id: map[GameEntityData.idField] as int,
@@ -83,29 +97,16 @@ class GameEntity extends ItemEntity {
 
   }
 
-  static List<GameEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static GameID idFromMap(Map<String, dynamic> map) {
 
-    final List<GameEntity> gamesList = <GameEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameEntity game = GameEntity.fromDynamicMap( ItemEntity.combineMaps(manyMap, GameEntityData.table) );
-
-      gamesList.add(game);
-    });
-
-    return gamesList;
+    return GameID(map[GameEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  GameID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, GameEntityData.table);
-      id = map[GameEntityData.idField] as int;
-    }
+    return GameID(id);
 
-    return id;
   }
 
   Map<String, Object?> createMap() {
@@ -160,20 +161,20 @@ class GameEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$GameEntityData.table}Entity { '
-        '{$GameEntityData.idField}: $id, '
-        '{$GameEntityData._nameField}: $name, '
-        '{$GameEntityData._editionField}: $edition, '
-        '{$GameEntityData._releaseYearField}: $releaseYear, '
-        '{$GameEntityData._coverField}: $coverFilename, '
-        '{$GameEntityData._statusField}: $status, '
-        '{$GameEntityData._ratingField}: $rating, '
-        '{$GameEntityData._thoughtsField}: $thoughts, '
-        '{$GameEntityData._timeField}: $time, '
-        '{$GameEntityData._saveFolderField}: $saveFolder, '
-        '{$GameEntityData._screenshotFolderField}: $screenshotFolder, '
-        '{$GameEntityData._finishDateField}: $finishDate, '
-        '{$GameEntityData._backupField}: $isBackup'
+    return '${GameEntityData.table}Entity { '
+        '${GameEntityData.idField}: $id, '
+        '${GameEntityData.nameField}: $name, '
+        '${GameEntityData.editionField}: $edition, '
+        '${GameEntityData.releaseYearField}: $releaseYear, '
+        '${GameEntityData.coverField}: $coverFilename, '
+        '${GameEntityData.statusField}: $status, '
+        '${GameEntityData.ratingField}: $rating, '
+        '${GameEntityData.thoughtsField}: $thoughts, '
+        '${GameEntityData.timeField}: $time, '
+        '${GameEntityData.saveFolderField}: $saveFolder, '
+        '${GameEntityData.screenshotFolderField}: $screenshotFolder, '
+        '${GameEntityData.finishDateField}: $finishDate, '
+        '${GameEntityData.backupField}: $isBackup'
         ' }';
 
   }

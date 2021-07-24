@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData;
-import 'package:backend/model/model.dart' show GameView;
+import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameID, GameView;
 
 
 class GameQuery {
@@ -17,7 +16,7 @@ class GameQuery {
     return query;
   }
 
-  static Query updateById(int id, GameEntity entity, GameEntity updatedEntity) {
+  static Query updateById(GameID id, GameEntity entity, GameEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(GameEntityData.table)
@@ -28,7 +27,7 @@ class GameQuery {
     return query;
   }
 
-  static Query updateCoverById(int id, String? coverName) {
+  static Query updateCoverById(GameID id, String? coverName) {
     final Query query = FluentQuery
       .update()
       .table(GameEntityData.table)
@@ -39,7 +38,7 @@ class GameQuery {
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(GameID id) {
     final Query query = FluentQuery
       .delete()
       .from(GameEntityData.table);
@@ -49,13 +48,23 @@ class GameQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(GameID id) {
     final Query query = FluentQuery
       .select()
       .from(GameEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(GameEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -113,8 +122,8 @@ class GameQuery {
     query.field(GameEntityData.backupField, type: bool, table: GameEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(GameEntityData.idField, id, type: int, table: GameEntityData.table);
+  static void _addIdWhere(GameID id, Query query) {
+    query.where(GameEntityData.idField, id.id, type: int, table: GameEntityData.table);
   }
 
   static void _addViewWhere(Query query, GameView view, [int? year]) {

@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
 
+import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import 'item_list_manager.dart';
 
 
-abstract class ItemListManagerBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
+abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
     required this.repository,
   }) : super(ItemListManagerInitialised());
@@ -84,15 +85,6 @@ abstract class ItemListManagerBloc<T extends Item, R extends ItemRepository<T>> 
 
   }
 
-  Future<T?> createFuture(AddItem<T> event) {
-
-    return repository.create(event.item);
-
-  }
-
-  Future<dynamic> deleteFuture(DeleteItem<T> event) {
-
-    return repository.deleteById(event.item.id);
-
-  }
+  Future<T> createFuture(AddItem<T> event);
+  Future<dynamic> deleteFuture(DeleteItem<T> event);
 }

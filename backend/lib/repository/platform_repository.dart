@@ -1,34 +1,36 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show PlatformMapper;
-import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData;
-import 'package:backend/model/model.dart' show Platform, PlatformView;
+import 'package:backend/entity/entity.dart' show GameID, PlatformEntity, PlatformEntityData, PlatformID, SystemID, PlatformView;
 
 import './query/query.dart' show PlatformQuery, PlatformSystemRelationQuery, GamePlatformRelationQuery;
 import 'item_repository.dart';
 
 
-class PlatformRepository extends ItemRepository<Platform> {
+class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
   const PlatformRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
   static const String _imagePrefix = 'icon';
 
+  @override
+  final String recordName = PlatformEntityData.table;
+  @override
+  PlatformEntity entityFromMap(Map<String, Object?> map) => PlatformEntity.fromMap(map);
+  @override
+  PlatformID idFromMap(Map<String, Object?> map) => PlatformEntity.idFromMap(map);
+
   //#region CREATE
   @override
-  Future<Platform?> create(Platform item) {
+  Future<PlatformEntity> create(PlatformEntity entity) {
 
-    final PlatformEntity entity = PlatformMapper.modelToEntity(item);
     final Query query = PlatformQuery.create(entity);
-
-    return createCollectionItem(
+    return createItem(
       query: query,
-      dynamicToId: PlatformEntity.idFromDynamicMap,
     );
 
   }
 
-  Future<dynamic> relatePlatformSystem(int platformId, int systemId) {
+  Future<dynamic> relatePlatformSystem(PlatformID platformId, SystemID systemId) {
 
     final Query query = PlatformSystemRelationQuery.create(platformId, systemId);
     return itemConnector.execute(query);
@@ -38,57 +40,62 @@ class PlatformRepository extends ItemRepository<Platform> {
 
   //#region READ
   @override
-  Stream<Platform?> findById(int id) {
+  Future<PlatformEntity> findById(PlatformID id) {
 
     final Query query = PlatformQuery.selectById(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
 
   @override
-  Stream<List<Platform>> findAll() {
+  Future<List<PlatformEntity>> findAll() {
 
-    return findAllPlatformsWithView(PlatformView.Main);
+    final Query query = PlatformQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Platform>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
+  Future<List<PlatformEntity>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
 
     final Query query = PlatformQuery.selectAllInView(platformView, limit);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Platform>> findAllPlatformsFromGame(int id) {
+  Future<List<PlatformEntity>> findAllPlatformsFromGame(GameID id) {
 
     final Query query = GamePlatformRelationQuery.selectAllPlatformsByGameId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Platform>> findAllPlatformsFromSystem(int id) {
+  Future<List<PlatformEntity>> findAllPlatformsFromSystem(SystemID id) {
 
     final Query query = PlatformSystemRelationQuery.selectAllPlatformsBySystemId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<Platform?> update(Platform item, Platform updatedItem) {
+  Future<PlatformEntity> update(PlatformEntity entity, PlatformEntity updatedEntity) {
 
-    final PlatformEntity entity = PlatformMapper.modelToEntity(item);
-    final PlatformEntity updatedEntity = PlatformMapper.modelToEntity(updatedItem);
-    final Query query = PlatformQuery.updateById(item.id, entity, updatedEntity);
-
-    return updateCollectionItem(
+    final PlatformID id = entity.createId();
+    final Query query = PlatformQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
       query: query,
-      id: item.id,
+      id: id,
     );
 
   }
@@ -96,14 +103,14 @@ class PlatformRepository extends ItemRepository<Platform> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(int id) {
+  Future<dynamic> deleteById(PlatformID id) {
 
     final Query query = PlatformQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelatePlatformSystem(int platformId, int systemId) {
+  Future<dynamic> unrelatePlatformSystem(PlatformID platformId, SystemID systemId) {
 
     final Query query = PlatformSystemRelationQuery.deleteById(platformId, systemId);
     return itemConnector.execute(query);
@@ -112,20 +119,20 @@ class PlatformRepository extends ItemRepository<Platform> {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<Platform>> findAllPlatformsByName(String name, int maxResults) {
+  Future<List<PlatformEntity>> findAllPlatformsByName(String name, int limit) {
 
-    final Query query = PlatformQuery.selectAllByNameLike(name, maxResults);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    final Query query = PlatformQuery.selectAllByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<Platform?> uploadPlatformIcon(int id, String uploadImagePath, [String? oldImageName]) {
+  Future<PlatformEntity> uploadPlatformIcon(PlatformID id, String uploadImagePath, [String? oldImageName]) {
 
-    return uploadCollectionItemImage(
-      tableName: PlatformEntityData.table,
+    return setItemImage(
       uploadImagePath: uploadImagePath,
       initialImageName: _imagePrefix,
       oldImageName: oldImageName,
@@ -135,10 +142,9 @@ class PlatformRepository extends ItemRepository<Platform> {
 
   }
 
-  Future<Platform?> renamePlatformIcon(int id, String imageName, String newImageName) {
+  Future<PlatformEntity> renamePlatformIcon(PlatformID id, String imageName, String newImageName) {
 
-    return renameCollectionItemImage(
-      tableName: PlatformEntityData.table,
+    return renameItemImage(
       oldImageName: imageName,
       newImageName: newImageName,
       queryBuilder: PlatformQuery.updateIconById,
@@ -147,10 +153,9 @@ class PlatformRepository extends ItemRepository<Platform> {
 
   }
 
-  Future<Platform?> deletePlatformIcon(int id, String imageName) {
+  Future<PlatformEntity> deletePlatformIcon(PlatformID id, String imageName) {
 
-    return deleteCollectionItemImage(
-      tableName: PlatformEntityData.table,
+    return deleteItemImage(
       imageName: imageName,
       queryBuilder: PlatformQuery.updateIconById,
       id: id,
@@ -158,26 +163,4 @@ class PlatformRepository extends ItemRepository<Platform> {
 
   }
   //#endregion IMAGE
-
-  //#region DOWNLOAD
-  String? _getPlatformIconURL(String? platformIconName) {
-
-    return platformIconName != null?
-        imageConnector.getURI(
-          tableName: PlatformEntityData.table,
-          imageFilename: platformIconName,
-        )
-        : null;
-
-  }
-  //#endregion DOWNLOAD
-
-  @override
-  List<Platform> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PlatformEntity.fromDynamicMapList(results).map( (PlatformEntity platformEntity) {
-      return PlatformMapper.entityToModel(platformEntity, _getPlatformIconURL(platformEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
 }

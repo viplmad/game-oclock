@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, Platform, Game, System;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, PlatformRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -17,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PlatformDetail extends ItemDetail<Platform, PlatformRepository, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
     Key? key,
     required Platform item,
@@ -101,7 +101,7 @@ class PlatformDetail extends ItemDetail<Platform, PlatformRepository, PlatformDe
 }
 
 // ignore: must_be_immutable
-class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformRepository, PlatformDetailBloc, PlatformDetailManagerBloc> {
+class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
     void Function(Platform? item)? onUpdate,

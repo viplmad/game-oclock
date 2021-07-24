@@ -3,17 +3,15 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
-
-import 'package:backend/repository/item_repository.dart';
+import 'package:backend/model/model.dart' show Item;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<ItemRelationEvent, ItemRelationState> {
+abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Item> extends Bloc<ItemRelationEvent, ItemRelationState> {
   ItemRelationBloc({
-    required this.itemId,
+    required this.id,
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
 
@@ -21,8 +19,8 @@ abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<Ite
 
   }
 
-  final int itemId;
-  final ItemRelationManagerBloc<T, W> managerBloc;
+  final ID id;
+  final ItemRelationManagerBloc<T, ID, W> managerBloc;
   late StreamSubscription<ItemRelationManagerState> managerSubscription;
 
   @override
@@ -46,32 +44,13 @@ abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<Ite
 
   }
 
-  /*Stream<ItemRelationState> _checkConnection() async* {
-
-    if(iCollectionRepository.isClosed()) {
-      yield const ItemRelationNotLoaded('Connection lost. Trying to reconnect');
-
-      try {
-
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
-
-      } catch (e) {
-
-        yield ItemRelationNotLoaded(e.toString());
-
-      }
-    }
-
-  }*/
-
   Stream<ItemRelationState> _mapLoadToState() async* {
 
     yield ItemRelationLoading();
 
     try {
 
-      final List<W> items = await getRelationStream().first;
+      final List<W> items = await getRelationStream();
       yield ItemRelationLoaded<W>(items);
 
     } catch (e) {
@@ -93,7 +72,7 @@ abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<Ite
     if(state is ItemRelationLoaded<W>) {
       final List<W> items = List<W>.from((state as ItemRelationLoaded<W>).otherItems);
 
-      final int listItemIndex = items.indexWhere((W item) => item.id == event.item.id);
+      final int listItemIndex = items.indexWhere((W item) => item == event.item);
       final W listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {
@@ -138,7 +117,7 @@ abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<Ite
       final List<W> items = (state as ItemRelationLoaded<W>).otherItems;
 
       final List<W> updatedItems = items
-          .where((W item) => item.id != managerState.otherItem.id)
+          .where((W item) => item != managerState.otherItem)
           .toList(growable: false);
 
       add(UpdateItemRelation<W>(updatedItems));
@@ -155,9 +134,9 @@ abstract class ItemRelationBloc<T extends Item, W extends Item> extends Bloc<Ite
   }
 
   @mustCallSuper
-  Stream<List<W>> getRelationStream() {
+  Future<List<W>> getRelationStream() {
 
-    return Stream<List<W>>.error('Relation does not exist');
+    return Future<List<W>>.error('Relation does not exist');
 
   }
 }

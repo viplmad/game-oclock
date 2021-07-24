@@ -1,12 +1,12 @@
-import 'model.dart';
+import 'model.dart' show ItemFinish, ItemImage;
 
 
-class GameFinish extends Item {
+class GameFinish extends ItemFinish {
   const GameFinish({
-    required this.dateTime,
-  }) : this.uniqueId = '$dateTime';
-
-  final DateTime dateTime;
+    required DateTime dateTime,
+  }) :
+    this.uniqueId = 'GF$dateTime',
+    super(dateTime: dateTime);
 
   @override
   final String uniqueId;

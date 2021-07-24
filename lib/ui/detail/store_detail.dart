@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, Store, Purchase;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -17,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class StoreDetail extends ItemDetail<Store, StoreRepository, StoreDetailBloc, StoreDetailManagerBloc> {
+class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
     Key? key,
     required Store item,
@@ -90,7 +90,7 @@ class StoreDetail extends ItemDetail<Store, StoreRepository, StoreDetailBloc, St
 }
 
 // ignore: must_be_immutable
-class _StoreDetailBody extends ItemDetailBody<Store, StoreRepository, StoreDetailBloc, StoreDetailManagerBloc> {
+class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key? key,
     void Function(Store? item)? onUpdate,

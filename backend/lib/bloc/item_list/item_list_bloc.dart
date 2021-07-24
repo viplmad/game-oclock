@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
+import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/model/list_style.dart';
 import 'package:backend/repository/repository.dart' show ItemRepository;
@@ -10,7 +11,7 @@ import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemListEvent, ItemListState> {
+abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
     required this.repository,
     required this.managerBloc,
@@ -21,7 +22,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
   }
 
   final R repository;
-  final ItemListManagerBloc<T, R> managerBloc;
+  final ItemListManagerBloc<T, E, ID, R> managerBloc;
   late StreamSubscription<ItemListManagerState> managerSubscription;
 
   @override
@@ -86,7 +87,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
 
     try {
 
-      final List<T> items = await getReadAllStream().first;
+      final List<T> items = await getReadAllStream();
       yield ItemListLoaded<T>(items);
 
     } catch (e) {
@@ -113,7 +114,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
     if(state is ItemListLoaded<T>) {
       final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
 
-      final int listItemIndex = items.indexWhere((T item) => item.id == event.item.id);
+      final int listItemIndex = items.indexWhere((T item) => item == event.item);
       final T listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {
@@ -146,7 +147,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
 
     try {
 
-      final List<T> items = await getReadViewStream(event).first;
+      final List<T> items = await getReadViewStream(event);
       yield ItemListLoaded<T>(
         items,
         event.viewIndex,
@@ -173,7 +174,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
 
     try {
 
-      final List<T> items = await getReadYearViewStream(event).first;
+      final List<T> items = await getReadYearViewStream(event);
       yield ItemListLoaded<T>(
         items,
         event.viewIndex,
@@ -271,7 +272,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = items
-          .where((T item) => item.id != managerState.item.id)
+          .where((T item) => item != managerState.item)
           .toList(growable: false);
 
       add(UpdateItemList<T>(
@@ -292,12 +293,7 @@ abstract class ItemListBloc<T extends Item, R extends ItemRepository<T>> extends
 
   }
 
-  Stream<List<T>> getReadAllStream() {
-
-    return repository.findAll();
-
-  }
-
-  Stream<List<T>> getReadViewStream(UpdateView event);
-  external Stream<List<T>> getReadYearViewStream(UpdateYearView event);
+  Future<List<T>> getReadAllStream();
+  Future<List<T>> getReadViewStream(UpdateView event);
+  external Future<List<T>> getReadYearViewStream(UpdateYearView event);
 }

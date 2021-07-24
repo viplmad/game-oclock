@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, Purchase, Game, DLC, Store, PurchaseType;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -17,7 +17,7 @@ import '../theme/theme.dart';
 import 'item_detail.dart';
 
 
-class PurchaseDetail extends ItemDetail<Purchase, PurchaseRepository, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   const PurchaseDetail({
     Key? key,
     required Purchase item,
@@ -123,7 +123,7 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseRepository, PurchaseDe
 }
 
 // ignore: must_be_immutable
-class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseRepository, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
+class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, PurchaseDetailManagerBloc> {
   _PurchaseDetailBody({
     Key? key,
     void Function(Purchase? item)? onUpdate,

@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameTimeLogEntity, GameTimeLogEntityData, GameEntityData;
+import 'package:backend/entity/entity.dart' show GameEntityData, GameID, GameTimeLogEntity, GameTimeLogEntityData, GameTimeLogID;
 
 import 'query.dart' show GameQuery;
 
@@ -8,26 +8,58 @@ import 'query.dart' show GameQuery;
 class GameTimeLogQuery {
   GameTimeLogQuery._();
 
-  static Query create(GameTimeLogEntity entity, int gameId) {
+  static Query create(GameTimeLogEntity entity) {
     final Query query = FluentQuery
       .insert()
       .into(GameTimeLogEntityData.table)
-      .sets(entity.createMap(gameId));
+      .sets(entity.createMap());
 
     return query;
   }
 
-  static Query deleteById(int gameId, DateTime dateTime) {
+  static Query updateById(GameTimeLogID id, GameTimeLogEntity entity, GameTimeLogEntity updatedEntity) {
+    final Query query = FluentQuery
+      .update()
+      .table(GameTimeLogEntityData.table)
+      .sets(entity.updateMap(updatedEntity));
+
+    _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query deleteById(GameTimeLogID id) {
     final Query query = FluentQuery
       .delete()
       .from(GameTimeLogEntityData.table);
 
-    _addIdWhere(gameId, dateTime, query);
+    _addIdWhere(id, query);
 
     return query;
   }
 
-  static Query selectAllByGame(int id) {
+  static Query selectById(GameTimeLogID id) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTimeLogEntityData.table);
+
+    addFields(query);
+    _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTimeLogEntityData.table);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectAllByGame(GameID id) {
     final Query query = FluentQuery
       .select()
       .from(GameTimeLogEntityData.table)
@@ -57,8 +89,8 @@ class GameTimeLogQuery {
     query.field(GameTimeLogEntityData.dateTimeField, type: DateTime, table: GameTimeLogEntityData.table);
   }
 
-  static void _addIdWhere(int gameId, DateTime dateTime, Query query) {
-    query.where(GameTimeLogEntityData.gameField, gameId, type: int, table: GameTimeLogEntityData.table);
-    query.where(GameTimeLogEntityData.dateTimeField, dateTime, type: DateTime, table: GameTimeLogEntityData.table);
+  static void _addIdWhere(GameTimeLogID id, Query query) {
+    query.where(GameTimeLogEntityData.gameField, id.gameId, type: int, table: GameTimeLogEntityData.table);
+    query.where(GameTimeLogEntityData.dateTimeField, id.dateTime, type: DateTime, table: GameTimeLogEntityData.table);
   }
 }

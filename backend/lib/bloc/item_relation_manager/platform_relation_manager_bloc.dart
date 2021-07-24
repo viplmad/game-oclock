@@ -1,17 +1,19 @@
+import 'package:backend/entity/entity.dart' show GameEntity, PlatformID, SystemEntity;
 import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/mapper/mapper.dart' show GameMapper, SystemMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, PlatformRepository;
 
 import 'item_relation_manager.dart';
 
 
-class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Platform, W> {
+class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Platform, PlatformID, W> {
   PlatformRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
     this.platformRepository = collectionRepository.platformRepository,
-    super(itemId: itemId);
+    super(id: PlatformID(itemId));
 
   final GameRepository gameRepository;
   final PlatformRepository platformRepository;
@@ -19,13 +21,15 @@ class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBlo
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Game:
-        return gameRepository.relateGamePlatform(otherId, itemId);
+        final GameEntity otherEntity = GameMapper.modelToEntity(otherItem as Game);
+        return gameRepository.relateGamePlatform(otherEntity.createId(), id);
       case System:
-        return platformRepository.relatePlatformSystem(itemId, otherId);
+        final SystemEntity otherEntity = SystemMapper.modelToEntity(otherItem as System);
+        return platformRepository.relatePlatformSystem(id, otherEntity.createId());
     }
 
     return super.addRelationFuture(event);
@@ -35,13 +39,15 @@ class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBlo
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Game:
-        return gameRepository.unrelateGamePlatform(otherId, itemId);
+        final GameEntity otherEntity = GameMapper.modelToEntity(otherItem as Game);
+        return gameRepository.unrelateGamePlatform(otherEntity.createId(), id);
       case System:
-        return platformRepository.unrelatePlatformSystem(itemId, otherId);
+        final SystemEntity otherEntity = SystemMapper.modelToEntity(otherItem as System);
+        return platformRepository.unrelatePlatformSystem(id, otherEntity.createId());
     }
 
     return super.deleteRelationFuture(event);

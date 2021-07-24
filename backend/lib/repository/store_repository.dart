@@ -1,32 +1,36 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show StoreMapper;
-import 'package:backend/entity/entity.dart' show StoreEntity, StoreEntityData;
-import 'package:backend/model/model.dart' show Store, StoreView;
+import 'package:backend/entity/entity.dart' show PurchaseID, StoreEntity, StoreEntityData, StoreID, StoreView;
 
 import './query/query.dart' show StoreQuery, PurchaseQuery;
 import 'item_repository.dart';
 
 
-class StoreRepository extends ItemRepository<Store> {
+class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   const StoreRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+
+  static const String _imagePrefix = 'icon';
+
+  @override
+  final String recordName = StoreEntityData.table;
+  @override
+  StoreEntity entityFromMap(Map<String, Object?> map) => StoreEntity.fromMap(map);
+  @override
+  StoreID idFromMap(Map<String, Object?> map) => StoreEntity.idFromMap(map);
 
   //#region CREATE
   @override
-  Future<Store?> create(Store item) {
+  Future<StoreEntity> create(StoreEntity entity) {
 
-    final StoreEntity entity = StoreMapper.modelToEntity(item);
     final Query query = StoreQuery.create(entity);
-
-    return createCollectionItem(
+    return createItem(
       query: query,
-      dynamicToId: StoreEntity.idFromDynamicMap,
     );
 
   }
 
-  Future<dynamic> relateStorePurchase(int storeId, int purchaseId) {
+  Future<dynamic> relateStorePurchase(StoreID storeId, PurchaseID purchaseId) {
 
     final Query query = PurchaseQuery.updateStoreById(purchaseId, storeId);
     return itemConnector.execute(query);
@@ -36,49 +40,53 @@ class StoreRepository extends ItemRepository<Store> {
 
   //#region READ
   @override
-  Stream<Store?> findById(int id) {
+  Future<StoreEntity> findById(StoreID id) {
 
     final Query query = StoreQuery.selectById(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
 
   @override
-  Stream<List<Store>> findAll() {
+  Future<List<StoreEntity>> findAll() {
 
-    return findAllStoresWithView(StoreView.Main);
+    final Query query = StoreQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<Store>> findAllStoresWithView(StoreView storeView, [int? limit]) {
+  Future<List<StoreEntity>> findAllStoresWithView(StoreView storeView, [int? limit]) {
 
     final Query query = StoreQuery.selectAllInView(storeView, limit);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<Store?> findStoreFromPurchase(int id) {
+  Future<StoreEntity> findStoreFromPurchase(PurchaseID id) {
 
     final Query query = PurchaseQuery.selectStoreByPurchase(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<Store?> update(Store item, Store updatedItem) {
+  Future<StoreEntity> update(StoreEntity entity, StoreEntity updatedEntity) {
 
-    final StoreEntity entity = StoreMapper.modelToEntity(item);
-    final StoreEntity updatedEntity = StoreMapper.modelToEntity(updatedItem);
-    final Query query = StoreQuery.updateById(item.id, entity, updatedEntity);
-
-    return updateCollectionItem(
+    final StoreID id = entity.createId();
+    final Query query = StoreQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
       query: query,
-      id: item.id,
+      id: id,
     );
 
   }
@@ -86,14 +94,14 @@ class StoreRepository extends ItemRepository<Store> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(int id) {
+  Future<dynamic> deleteById(StoreID id) {
 
     final Query query = StoreQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelateStorePurchase(int purchaseId) {
+  Future<dynamic> unrelateStorePurchase(PurchaseID purchaseId) {
 
     final Query query = PurchaseQuery.updateStoreById(purchaseId, null);
     return itemConnector.execute(query);
@@ -102,22 +110,22 @@ class StoreRepository extends ItemRepository<Store> {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<Store>> findAllStoresByName(String name, int maxResults) {
+  Future<List<StoreEntity>> findAllStoresByName(String name, int limit) {
 
-    final Query query = StoreQuery.selectAllByNameLike(name, maxResults);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    final Query query = StoreQuery.selectAllByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<Store?> uploadStoreIcon(int id, String uploadImagePath, [String? oldImageName]) {
+  Future<StoreEntity> uploadStoreIcon(StoreID id, String uploadImagePath, [String? oldImageName]) {
 
-    return uploadCollectionItemImage(
-      tableName: StoreEntityData.table,
+    return setItemImage(
       uploadImagePath: uploadImagePath,
-      initialImageName: 'icon',
+      initialImageName: _imagePrefix,
       oldImageName: oldImageName,
       queryBuilder: StoreQuery.updateIconById,
       id: id,
@@ -125,10 +133,9 @@ class StoreRepository extends ItemRepository<Store> {
 
   }
 
-  Future<Store?> renameStoreIcon(int id, String imageName, String newImageName) {
+  Future<StoreEntity> renameStoreIcon(StoreID id, String imageName, String newImageName) {
 
-    return renameCollectionItemImage(
-      tableName: StoreEntityData.table,
+    return renameItemImage(
       oldImageName: imageName,
       newImageName: newImageName,
       queryBuilder: StoreQuery.updateIconById,
@@ -137,10 +144,9 @@ class StoreRepository extends ItemRepository<Store> {
 
   }
 
-  Future<Store?> deleteStoreIcon(int id, String imageName) {
+  Future<StoreEntity> deleteStoreIcon(StoreID id, String imageName) {
 
-    return deleteCollectionItemImage(
-      tableName: StoreEntityData.table,
+    return deleteItemImage(
       imageName: imageName,
       queryBuilder: StoreQuery.updateIconById,
       id: id,
@@ -148,26 +154,4 @@ class StoreRepository extends ItemRepository<Store> {
 
   }
   //#endregion IMAGE
-
-  //#region DOWNLOAD
-  String? _getStoreIconURL(String? storeIconName) {
-
-    return storeIconName != null?
-        imageConnector.getURI(
-          tableName: StoreEntityData.table,
-          imageFilename: storeIconName,
-        )
-        : null;
-
-  }
-  //#endregion DOWNLOAD
-
-  @override
-  List<Store> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return StoreEntity.fromDynamicMapList(results).map( (StoreEntity storeEntity) {
-      return StoreMapper.entityToModel(storeEntity, _getStoreIconURL(storeEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
 }

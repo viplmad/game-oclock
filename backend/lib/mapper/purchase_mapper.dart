@@ -1,5 +1,5 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show PurchaseEntity;
+import 'package:backend/model/model.dart' show Purchase;
 
 
 class PurchaseMapper {
@@ -32,6 +32,20 @@ class PurchaseMapper {
 
       store: entity.store,
     );
+
+  }
+
+  static Future<Purchase> futureEntityToModel(Future<PurchaseEntity> entityFuture) {
+
+    return entityFuture.asStream().map( entityToModel ).first;
+
+  }
+
+  static Future<List<Purchase>> futureEntityListToModelList(Future<List<PurchaseEntity>> entityListFuture) {
+
+    return entityListFuture.asStream().map( (List<PurchaseEntity> entityList) {
+      return entityList.map( entityToModel ).toList(growable: false);
+    }).first;
 
   }
 }

@@ -1,29 +1,31 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show SystemMapper;
-import 'package:backend/entity/entity.dart' show SystemEntity, SystemEntityData;
-import 'package:backend/model/model.dart' show System, SystemView;
+import 'package:backend/entity/entity.dart' show SystemEntity, SystemID, PlatformID, SystemEntityData, SystemView;
 
 import './query/query.dart' show SystemQuery, PlatformSystemRelationQuery;
 import 'item_repository.dart';
 
 
-class SystemRepository extends ItemRepository<System> {
+class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
   const SystemRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
   static const String _imagePrefix = 'icon';
 
+  @override
+  final String recordName = SystemEntityData.table;
+  @override
+  SystemEntity entityFromMap(Map<String, Object?> map) => SystemEntity.fromMap(map);
+  @override
+  SystemID idFromMap(Map<String, Object?> map) => SystemEntity.idFromMap(map);
+
   //#region CREATE
   @override
-  Future<System?> create(System item) {
+  Future<SystemEntity> create(SystemEntity entity) {
 
-    final SystemEntity entity = SystemMapper.modelToEntity(item);
     final Query query = SystemQuery.create(entity);
-
-    return createCollectionItem(
+    return createItem(
       query: query,
-      dynamicToId: SystemEntity.idFromDynamicMap,
     );
 
   }
@@ -31,40 +33,43 @@ class SystemRepository extends ItemRepository<System> {
 
   //#region READ
   @override
-  Stream<System?> findById(int id) {
+  Future<SystemEntity> findById(SystemID id) {
 
     final Query query = SystemQuery.selectById(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
 
   @override
-  Stream<List<System>> findAll() {
+  Future<List<SystemEntity>> findAll() {
 
-    return findAllSystemsWithView(SystemView.Main);
+    final Query query = SystemQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<System>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
+  Future<List<SystemEntity>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
 
     final Query query = SystemQuery.selectAllInView(systemView, limit);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<System?> update(System item, System updatedItem) {
+  Future<SystemEntity> update(SystemEntity entity, SystemEntity updatedEntity) {
 
-    final SystemEntity entity = SystemMapper.modelToEntity(item);
-    final SystemEntity updatedEntity = SystemMapper.modelToEntity(updatedItem);
-    final Query query = SystemQuery.updateById(item.id, entity, updatedEntity);
-
-    return updateCollectionItem(
+    final SystemID id = entity.createId();
+    final Query query = SystemQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
       query: query,
-      id: item.id,
+      id: id,
     );
 
   }
@@ -72,7 +77,7 @@ class SystemRepository extends ItemRepository<System> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(int id) {
+  Future<dynamic> deleteById(SystemID id) {
 
     final Query query = SystemQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -81,28 +86,29 @@ class SystemRepository extends ItemRepository<System> {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<System>> findAllSystemsByName(String name, int maxResults) {
+  Future<List<SystemEntity>> findAllSystemsByName(String name, int limit) {
 
-    final Query query = SystemQuery.selectAllByNameLike(name, maxResults);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    final Query query = SystemQuery.selectAllByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<System>> findAllSystemsFromPlatform(int id) {
+  Future<List<SystemEntity>> findAllSystemsFromPlatform(PlatformID id) {
 
     final Query query = PlatformSystemRelationQuery.selectAllSystemsByPlatformId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<System?> uploadSystemIcon(int id, String uploadImagePath, [String? oldImageName]) {
+  Future<SystemEntity> uploadSystemIcon(SystemID id, String uploadImagePath, [String? oldImageName]) {
 
-    return uploadCollectionItemImage(
-      tableName: SystemEntityData.table,
+    return setItemImage(
       uploadImagePath: uploadImagePath,
       initialImageName: _imagePrefix,
       oldImageName: oldImageName,
@@ -112,10 +118,9 @@ class SystemRepository extends ItemRepository<System> {
 
   }
 
-  Future<System?> renameSystemIcon(int id, String imageName, String newImageName) {
+  Future<SystemEntity> renameSystemIcon(SystemID id, String imageName, String newImageName) {
 
-    return renameCollectionItemImage(
-      tableName: SystemEntityData.table,
+    return renameItemImage(
       oldImageName: imageName,
       newImageName: newImageName,
       queryBuilder: SystemQuery.updateIconById,
@@ -124,10 +129,9 @@ class SystemRepository extends ItemRepository<System> {
 
   }
 
-  Future<System?> deleteSystemIcon(int id, String imageName) {
+  Future<SystemEntity> deleteSystemIcon(SystemID id, String imageName) {
 
-    return deleteCollectionItemImage(
-      tableName: SystemEntityData.table,
+    return deleteItemImage(
       imageName: imageName,
       queryBuilder: SystemQuery.updateIconById,
       id: id,
@@ -135,26 +139,4 @@ class SystemRepository extends ItemRepository<System> {
 
   }
   //#endregion IMAGE
-
-  //#region DOWNLOAD
-  String? _getSystemIconURL(String? systemIconName) {
-
-    return systemIconName != null?
-        imageConnector.getURI(
-          tableName: SystemEntityData.table,
-          imageFilename: systemIconName,
-        )
-        : null;
-
-  }
-  //#endregion DOWNLOAD
-
-  @override
-  List<System> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return SystemEntity.fromDynamicMapList(results).map( (SystemEntity systemEntity) {
-      return SystemMapper.entityToModel(systemEntity, _getSystemIconURL(systemEntity.iconFilename));
-    }).toList(growable: false);
-
-  }
 }

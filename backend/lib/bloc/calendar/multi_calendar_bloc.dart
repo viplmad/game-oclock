@@ -5,20 +5,25 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show GameWithLogsEntity;
+import 'package:backend/model/model.dart' show GameTimeLog, GameWithLogs;
+import 'package:backend/mapper/mapper.dart' show GameTimeLogMapper;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, GameTimeLogRepository;
 import 'package:backend/model/calendar_style.dart';
-
-import 'package:backend/repository/item_repository.dart';
 
 import 'multi_calendar.dart';
 
 
 class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   MultiCalendarBloc({
-    required this.iCollectionRepository,
-  }) : super(CalendarLoading());
+    required GameCollectionRepository collectionRepository,
+  }) :
+    this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
+    this.gameRepository = collectionRepository.gameRepository,
+    super(CalendarLoading());
 
-  final ItemRepository iCollectionRepository;
+  final GameTimeLogRepository gameTimeLogRepository;
+  final GameRepository gameRepository;
   final Set<int> yearsLoaded = Set<int>();
 
   @override
@@ -68,13 +73,13 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Stream<CalendarState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(gameTimeLogRepository.isClosed()) {
       yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        gameTimeLogRepository.reconnect();
+        await gameTimeLogRepository.open();
 
       } catch (e) {
 
@@ -109,7 +114,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     try {
 
-      final List<GameWithLogs> gamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
+      final List<GameWithLogs> gamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year);
 
       final Set<DateTime> logDates = gamesWithLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameWithLogs gameWithLogs) => previousDates..addAll(gameWithLogs.logDates));
 
@@ -169,7 +174,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final DateTime focusedDate = DateTime(year, DateTime.december, 1);
 
-      final List<GameWithLogs> yearGamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year).first;
+      final List<GameWithLogs> yearGamesWithLogs = await getReadAllGameWithTimeLogsInYearStream(year);
 
       for(final GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
         try {
@@ -405,9 +410,10 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
+  Future<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
 
-    return iCollectionRepository.findAllGamesWithTimeLogsByYear(year);
+    final Future<List<GameWithLogsEntity>> entityListFuture = gameTimeLogRepository.findAllGamesWithTimeLogsByYear(year);
+    return GameTimeLogMapper.futureGameWithLogEntityListToModelList(entityListFuture, gameRepository.getImageURI);
 
   }
 }

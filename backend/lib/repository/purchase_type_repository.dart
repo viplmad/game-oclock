@@ -1,27 +1,29 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show PurchaseTypeMapper;
-import 'package:backend/entity/entity.dart' show PurchaseTypeEntity;
-import 'package:backend/model/model.dart' show PurchaseType, TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseID, PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, TypeView;
 
 import './query/query.dart' show PurchaseTypeQuery, PurchaseTypeRelationQuery;
 import 'item_repository.dart';
 
 
-class PurchaseTypeRepository extends ItemRepository<PurchaseType> {
+class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, PurchaseTypeID> {
   const PurchaseTypeRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+
+  @override
+  final String recordName = PurchaseTypeEntityData.table;
+  @override
+  PurchaseTypeEntity entityFromMap(Map<String, Object?> map) => PurchaseTypeEntity.fromMap(map);
+  @override
+  PurchaseTypeID idFromMap(Map<String, Object?> map) => PurchaseTypeEntity.idFromMap(map);
 
   //#region CREATE
   @override
-  Future<PurchaseType?> create(PurchaseType item) {
+  Future<PurchaseTypeEntity> create(PurchaseTypeEntity entity) {
 
-    final PurchaseTypeEntity entity = PurchaseTypeMapper.modelToEntity(item);
     final Query query = PurchaseTypeQuery.create(entity);
-
-    return createCollectionItem(
+    return createItem(
       query: query,
-      dynamicToId: PurchaseTypeEntity.idFromDynamicMap,
     );
 
   }
@@ -29,49 +31,53 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseType> {
 
   //#region READ
   @override
-  Stream<PurchaseType?> findById(int id) {
+  Future<PurchaseTypeEntity> findById(PurchaseTypeID id) {
 
     final Query query = PurchaseTypeQuery.selectById(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToSingle );
+    return readItem(
+      query: query,
+    );
 
   }
 
   @override
-  Stream<List<PurchaseType>> findAll() {
+  Future<List<PurchaseTypeEntity>> findAll() {
 
-    return findAllPurchaseTypesWithView(TypeView.Main);
+    final Query query = PurchaseTypeQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<PurchaseType>> findAllPurchaseTypesWithView(TypeView typeView, [int? limit]) {
+  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesWithView(TypeView typeView, [int? limit]) {
 
     final Query query = PurchaseTypeQuery.selectAllInView(typeView, limit);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
 
-  Stream<List<PurchaseType>> findAllPurchaseTypesFromPurchase(int id) {
+  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesFromPurchase(PurchaseID id) {
 
     final Query query = PurchaseTypeRelationQuery.selectAllTypesByPurchaseId(id);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<PurchaseType?> update(PurchaseType item, PurchaseType updatedItem) {
+  Future<PurchaseTypeEntity> update(PurchaseTypeEntity entity, PurchaseTypeEntity updatedEntity) {
 
-    final PurchaseTypeEntity entity = PurchaseTypeMapper.modelToEntity(item);
-    final PurchaseTypeEntity updatedEntity = PurchaseTypeMapper.modelToEntity(updatedItem);
-    final Query query = PurchaseTypeQuery.updateById(item.id, entity, updatedEntity);
-
-    return updateCollectionItem(
+    final PurchaseTypeID id = entity.createId();
+    final Query query = PurchaseTypeQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
       query: query,
-      id: item.id,
+      id: id,
     );
 
   }
@@ -79,7 +85,7 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseType> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(int id) {
+  Future<dynamic> deleteById(PurchaseTypeID id) {
 
     final Query query = PurchaseTypeQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -88,19 +94,13 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseType> {
   //#endregion DELETE
 
   //#region SEARCH
-  Stream<List<PurchaseType>> findAllPurchaseTypesByName(String name, int maxResults) {
+  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesByName(String name, int limit) {
 
-    final Query query = PurchaseTypeQuery.selectAllByNameLike(name, maxResults);
-    return itemConnector.execute(query)
-      .asStream().map( dynamicToList );
+    final Query query = PurchaseTypeQuery.selectAllByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion SEARCH
-
-  @override
-  List<PurchaseType> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return PurchaseTypeEntity.fromDynamicMapList(results).map( PurchaseTypeMapper.entityToModel ).toList(growable: false);
-
-  }
 }

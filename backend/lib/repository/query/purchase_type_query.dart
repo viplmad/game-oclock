@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeEntityData;
-import 'package:backend/model/model.dart' show TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, TypeView;
 
 
 class PurchaseTypeQuery {
@@ -17,7 +16,7 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query updateById(int id, PurchaseTypeEntity entity, PurchaseTypeEntity updatedEntity) {
+  static Query updateById(PurchaseTypeID id, PurchaseTypeEntity entity, PurchaseTypeEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(PurchaseTypeEntityData.table)
@@ -28,7 +27,7 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(PurchaseTypeID id) {
     final Query query = FluentQuery
       .delete()
       .from(PurchaseTypeEntityData.table);
@@ -38,13 +37,23 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(PurchaseTypeID id) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseTypeEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -79,8 +88,8 @@ class PurchaseTypeQuery {
     query.field(PurchaseTypeEntityData.nameField, type: String, table: PurchaseTypeEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(PurchaseTypeEntityData.idField, id, type: int, table: PurchaseTypeEntityData.table);
+  static void _addIdWhere(PurchaseTypeID id, Query query) {
+    query.where(PurchaseTypeEntityData.idField, id.id, type: int, table: PurchaseTypeEntityData.table);
   }
 
   static void _addViewWhere(Query query, TypeView view) {

@@ -1,4 +1,4 @@
-export 'collection_item_entity.dart';
+export 'item_entity.dart';
 
 export 'game_entity.dart';
 export 'game_time_log_entity.dart';

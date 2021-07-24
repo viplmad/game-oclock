@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum DLCView {
-  Main,
-  LastCreated,
-}
 
 class DLC extends Item {
   const DLC({

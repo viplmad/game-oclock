@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum StoreView {
-  Main,
-  LastCreated,
-}
 
 class Store extends Item {
   const Store({

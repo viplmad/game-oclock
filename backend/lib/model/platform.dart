@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum PlatformView {
-  Main,
-  LastCreated,
-}
 
 class Platform extends Item {
   const Platform({

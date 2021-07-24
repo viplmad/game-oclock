@@ -1,13 +1,13 @@
-import 'dart:async';
-
+import 'package:backend/entity/entity.dart';
 import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/mapper/mapper.dart';
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository, SystemRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, W> {
+class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, PlatformID, W> {
   PlatformRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
@@ -15,19 +15,21 @@ class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, W>
   }) :
     this.gameRepository = collectionRepository.gameRepository,
     this.systemRepository = collectionRepository.systemRepository,
-    super(itemId: itemId, managerBloc: managerBloc);
+    super(id: PlatformID(itemId), managerBloc: managerBloc);
 
   final GameRepository gameRepository;
   final SystemRepository systemRepository;
 
   @override
-  Stream<List<W>> getRelationStream() {
+  Future<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return gameRepository.findAllGamesFromPlatform(itemId) as Stream<List<W>>;
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromPlatform(id);
+        return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
       case System:
-        return systemRepository.findAllSystemsFromPlatform(itemId) as Stream<List<W>>;
+        final Future<List<SystemEntity>> entityListFuture = systemRepository.findAllSystemsFromPlatform(id);
+        return SystemMapper.futureEntityListToModelList(entityListFuture, systemRepository.getImageURI) as Future<List<W>>;
     }
 
     return super.getRelationStream();

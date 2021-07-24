@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show System;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, SystemRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -12,7 +12,7 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class SystemSearch extends ItemSearch<System, SystemRepository, SystemSearchBloc, SystemListManagerBloc> {
+class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManagerBloc> {
   const SystemSearch({
     Key? key,
   }) : super(key: key);
@@ -46,7 +46,7 @@ class SystemSearch extends ItemSearch<System, SystemRepository, SystemSearchBloc
   }
 }
 
-class SystemLocalSearch extends ItemLocalSearch<System, SystemRepository, SystemListManagerBloc> {
+class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   const SystemLocalSearch({
     Key? key,
     required List<System> items,
@@ -78,7 +78,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemRepository, System
   }
 }
 
-class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody<System, SystemRepository, K, SystemListManagerBloc> {
+class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody<System, K, SystemListManagerBloc> {
   const _SystemSearchBody({
     Key? key,
     required void Function() Function(BuildContext, System) onTap,

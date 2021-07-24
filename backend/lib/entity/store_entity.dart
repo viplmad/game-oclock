@@ -1,7 +1,10 @@
-import 'package:backend/model/model.dart';
+import 'entity.dart' show ItemEntity;
 
-import 'entity.dart';
 
+enum StoreView {
+  Main,
+  LastCreated,
+}
 
 class StoreEntityData {
   StoreEntityData._();
@@ -15,17 +18,24 @@ class StoreEntityData {
   static const String iconField = 'Icon';
 }
 
+class StoreID {
+  StoreID(this.id);
+
+  final int id;
+}
+
 class StoreEntity extends ItemEntity {
   const StoreEntity({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconFilename,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
   final String? iconFilename;
 
-  static StoreEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static StoreEntity fromMap(Map<String, dynamic> map) {
 
     return StoreEntity(
       id: map[StoreEntityData.idField] as int,
@@ -35,29 +45,16 @@ class StoreEntity extends ItemEntity {
 
   }
 
-  static List<StoreEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static StoreID idFromMap(Map<String, dynamic> map) {
 
-    final List<StoreEntity> storesList = <StoreEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final StoreEntity store = StoreEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, StoreEntityData.table) );
-
-      storesList.add(store);
-    });
-
-    return storesList;
+    return StoreID(map[StoreEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  StoreID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, StoreEntityData.table);
-      id = map[StoreEntityData.idField] as int;
-    }
+    return StoreID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -92,10 +89,10 @@ class StoreEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$StoreEntityData.table}Entity { '
-        '{$StoreEntityData.idField}: $id, '
-        '{$StoreEntityData._nameField}: $name, '
-        '{$StoreEntityData._iconField}: $iconFilename'
+    return '${StoreEntityData.table}Entity { '
+        '${StoreEntityData.idField}: $id, '
+        '${StoreEntityData.nameField}: $name, '
+        '${StoreEntityData.iconField}: $iconFilename'
         ' }';
 
   }

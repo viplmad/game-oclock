@@ -1,23 +1,7 @@
-import 'package:backend/entity/entity.dart';
+import 'package:backend/entity/entity.dart' show statuses; // TODO
 
-import 'model.dart';
+import 'model.dart' show Item, ItemImage, ItemData, YearData;
 
-
-enum GameView {
-  Main,
-  LastCreated,
-  Playing,
-  NextUp,
-  LastPlayed,
-  LastFinished,
-  Review,
-}
-
-class GameID {
-  GameID(this.id);
-
-  final int id;
-}
 
 class Game extends Item {
   const Game({
@@ -37,7 +21,7 @@ class Game extends Item {
     required this.isBackup,
   }) : this.uniqueId = 'G$id';
 
-  final GameID id;
+  final int id;
   final String name;
   final String edition;
   final int? releaseYear;

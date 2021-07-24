@@ -1,5 +1,5 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show DLCEntity;
+import 'package:backend/model/model.dart' show DLC;
 
 
 class DLCMapper {
@@ -34,20 +34,21 @@ class DLCMapper {
 
   }
 
-  static DLCFinishEntity finishModelToEntity(DLCFinish model) {
+  static Future<DLC> futureEntityToModel(Future<DLCEntity> entityFuture, String? Function(String?) coverFunction) {
 
-    return DLCFinishEntity(
-      dateTime: model.dateTime,
-    );
-
-  }
-
-  static DLCFinish finishEntityToModel(DLCFinishEntity entity) {
-
-    return DLCFinish(
-      dateTime: entity.dateTime,
-    );
+    return entityFuture.asStream().map( (DLCEntity entity) {
+      return entityToModel(entity, coverFunction(entity.coverFilename));
+    }).first;
 
   }
 
+  static Future<List<DLC>> futureEntityListToModelList(Future<List<DLCEntity>> entityListFuture, String? Function(String?) coverFunction) {
+
+    return entityListFuture.asStream().map( (List<DLCEntity> entityList) {
+      return entityList.map( (DLCEntity entity) {
+        return entityToModel(entity, coverFunction(entity.coverFilename));
+      }).toList(growable: false);
+    }).first;
+
+  }
 }

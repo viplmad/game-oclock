@@ -1,7 +1,10 @@
-import 'package:backend/model/model.dart';
+import 'entity.dart' show ItemEntity;
 
-import 'entity.dart';
 
+enum TypeView {
+  Main,
+  LastCreated,
+}
 
 class PurchaseTypeEntityData {
   PurchaseTypeEntityData._();
@@ -14,15 +17,22 @@ class PurchaseTypeEntityData {
   static const String nameField = 'Name';
 }
 
+class PurchaseTypeID {
+  PurchaseTypeID(this.id);
+
+  final int id;
+}
+
 class PurchaseTypeEntity extends ItemEntity {
   const PurchaseTypeEntity({
-    required int id,
+    required this.id,
     required this.name,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
 
-  static PurchaseTypeEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static PurchaseTypeEntity fromMap(Map<String, dynamic> map) {
 
     return PurchaseTypeEntity(
       id: map[PurchaseTypeEntityData.idField] as int,
@@ -31,29 +41,16 @@ class PurchaseTypeEntity extends ItemEntity {
 
   }
 
-  static List<PurchaseTypeEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static PurchaseTypeID idFromMap(Map<String, dynamic> map) {
 
-    final List<PurchaseTypeEntity> typesList = <PurchaseTypeEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseTypeEntity type = PurchaseTypeEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PurchaseTypeEntityData.table) );
-
-      typesList.add(type);
-    });
-
-    return typesList;
+    return PurchaseTypeID(map[PurchaseTypeEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  PurchaseTypeID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PurchaseTypeEntityData.table);
-      id = map[PurchaseTypeEntityData.idField] as int;
-    }
+    return PurchaseTypeID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -85,9 +82,9 @@ class PurchaseTypeEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$PurchaseTypeEntityData.table}Entity { '
-        '{$PurchaseTypeEntityData.idField}: $id, '
-        '{$PurchaseTypeEntityData._nameField}: $name'
+    return '${PurchaseTypeEntityData.table}Entity { '
+        '${PurchaseTypeEntityData.idField}: $id, '
+        '${PurchaseTypeEntityData.nameField}: $name'
         ' }';
 
   }

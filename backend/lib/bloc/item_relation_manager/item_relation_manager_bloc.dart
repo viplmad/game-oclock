@@ -1,17 +1,17 @@
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Item;
 
 import 'item_relation_manager.dart';
 
 
-abstract class ItemRelationManagerBloc<T extends Item, W extends Item> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
+abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W extends Item> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
-    required this.itemId,
+    required this.id,
   }) : super(ItemRelationManagerInitialised());
 
-  final int itemId;
+  final ID id;
 
   @override
   Stream<ItemRelationManagerState> mapEventToState(ItemRelationManagerEvent event) async* {

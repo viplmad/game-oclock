@@ -1,27 +1,30 @@
+import 'package:backend/entity/entity.dart' show PurchaseEntity, StoreID;
 import 'package:backend/model/model.dart' show Item, Store, Purchase;
+import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, StoreRepository;
 
 import 'item_relation_manager.dart';
 
 
-class StoreRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Store, W> {
+class StoreRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Store, StoreID, W> {
   StoreRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
     this.storeRepository = collectionRepository.storeRepository,
-    super(itemId: itemId);
+    super(id: StoreID(itemId));
 
   final StoreRepository storeRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Purchase:
-        return storeRepository.relateStorePurchase(itemId, otherId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return storeRepository.relateStorePurchase(id, otherEntity.createId());
     }
 
     return super.addRelationFuture(event);
@@ -31,11 +34,12 @@ class StoreRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<S
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
       case Purchase:
-        return storeRepository.unrelateStorePurchase(otherId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return storeRepository.unrelateStorePurchase(otherEntity.createId());
     }
 
     return super.deleteRelationFuture(event);

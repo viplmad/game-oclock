@@ -1,11 +1,11 @@
-import 'collection_item.dart';
+import 'collection_item.dart' show Item, ItemImage;
 
 
 class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   const GameTimeLog({
     required this.dateTime,
     required this.time,
-  }) : this.uniqueId = '$dateTime';
+  }) : this.uniqueId = 'GT$dateTime';
 
   final DateTime dateTime;
   final Duration time;

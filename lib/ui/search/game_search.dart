@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show Game;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +13,7 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class GameSearch extends ItemSearch<Game, GameRepository, GameSearchBloc, GameListManagerBloc> {
+class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   const GameSearch({
     Key? key,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class GameSearch extends ItemSearch<Game, GameRepository, GameSearchBloc, GameLi
   }
 }
 
-class GameLocalSearch extends ItemLocalSearch<Game, GameRepository, GameListManagerBloc> {
+class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   const GameLocalSearch({
     Key? key,
     required List<Game> items,
@@ -76,7 +76,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameRepository, GameListMana
   }
 }
 
-class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, GameRepository, K, GameListManagerBloc> {
+class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, K, GameListManagerBloc> {
   const _GameSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Game) onTap,

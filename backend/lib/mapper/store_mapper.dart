@@ -1,5 +1,5 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show StoreEntity;
+import 'package:backend/model/model.dart' show Store;
 
 
 class StoreMapper {
@@ -23,6 +23,24 @@ class StoreMapper {
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
     );
+
+  }
+
+  static Future<Store> futureEntityToModel(Future<StoreEntity> entityFuture, String? Function(String?) iconFunction) {
+
+    return entityFuture.asStream().map( (StoreEntity entity) {
+      return entityToModel(entity, iconFunction(entity.iconFilename));
+    }).first;
+
+  }
+
+  static Future<List<Store>> futureEntityListToModelList(Future<List<StoreEntity>> entityListFuture, String? Function(String?) iconFunction) {
+
+    return entityListFuture.asStream().map( (List<StoreEntity> entityList) {
+      return entityList.map( (StoreEntity entity) {
+        return entityToModel(entity, iconFunction(entity.iconFilename));
+      }).toList(growable: false);
+    }).first;
 
   }
 }

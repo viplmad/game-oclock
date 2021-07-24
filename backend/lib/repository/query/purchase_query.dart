@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show PurchaseEntity, PurchaseEntityData, StoreEntityData;
-import 'package:backend/model/model.dart' show PurchaseView;
+import 'package:backend/entity/entity.dart' show PurchaseEntity, PurchaseEntityData, PurchaseID, StoreEntityData, StoreID, PurchaseView;
 
 import 'query.dart' show StoreQuery;
 
@@ -19,7 +18,7 @@ class PurchaseQuery {
     return query;
   }
 
-  static Query updateById(int id, PurchaseEntity entity, PurchaseEntity updatedEntity) {
+  static Query updateById(PurchaseID id, PurchaseEntity entity, PurchaseEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(PurchaseEntityData.table)
@@ -30,18 +29,18 @@ class PurchaseQuery {
     return query;
   }
 
-  static Query updateStoreById(int id, int? store) {
+  static Query updateStoreById(PurchaseID id, StoreID? store) {
     final Query query = FluentQuery
       .update()
       .table(PurchaseEntityData.table)
-      .set(PurchaseEntityData.storeField, store);
+      .set(PurchaseEntityData.storeField, store?.id);
 
     _addIdWhere(id, query);
 
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(PurchaseID id) {
     final Query query = FluentQuery
       .delete()
       .from(PurchaseEntityData.table);
@@ -51,13 +50,23 @@ class PurchaseQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(PurchaseID id) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -87,23 +96,23 @@ class PurchaseQuery {
     return query;
   }
 
-  static Query selectAllByStore(int id) {
+  static Query selectAllByStore(StoreID id) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseEntityData.table)
-      .where(PurchaseEntityData.storeField, id, type: int, table: PurchaseEntityData.table);
+      .where(PurchaseEntityData.storeField, id.id, type: int, table: PurchaseEntityData.table);
 
     addFields(query);
 
     return query;
   }
 
-  static Query selectStoreByPurchase(int id) {
+  static Query selectStoreByPurchase(PurchaseID id) {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table)
       .join(PurchaseEntityData.table, null, PurchaseEntityData.storeField, StoreEntityData.table, StoreEntityData.idField)
-      .where(PurchaseEntityData.idField, id, type: int, table: PurchaseEntityData.table);
+      .where(PurchaseEntityData.idField, id.id, type: int, table: PurchaseEntityData.table);
 
     StoreQuery.addFields(query);
 
@@ -122,8 +131,8 @@ class PurchaseQuery {
 
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(PurchaseEntityData.idField, id, type: int, table: PurchaseEntityData.table);
+  static void _addIdWhere(PurchaseID id, Query query) {
+    query.where(PurchaseEntityData.idField, id.id, type: int, table: PurchaseEntityData.table);
   }
 
   static void _addViewWhere(Query query, PurchaseView view, [int? year]) {

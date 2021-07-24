@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum SystemView {
-  Main,
-  LastCreated,
-}
 
 class System extends Item {
   const System({

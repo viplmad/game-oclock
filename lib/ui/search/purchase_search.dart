@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show Purchase;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,7 +13,7 @@ import '../theme/theme.dart';
 import 'search.dart';
 
 
-class PurchaseSearch extends ItemSearch<Purchase, PurchaseRepository, PurchaseSearchBloc, PurchaseListManagerBloc> {
+class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
   const PurchaseSearch({
     Key? key,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseRepository, PurchaseSe
   }
 }
 
-class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseRepository, PurchaseListManagerBloc> {
+class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerBloc> {
   const PurchaseLocalSearch({
     Key? key,
     required List<Purchase> items,
@@ -76,7 +76,7 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseRepository, 
   }
 }
 
-class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, PurchaseRepository, K, PurchaseListManagerBloc> {
+class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
   const _PurchaseSearchBody({
     Key? key,
     required void Function() Function(BuildContext, Purchase) onTap,

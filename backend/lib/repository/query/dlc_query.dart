@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCEntityData, GameEntityData;
-import 'package:backend/model/model.dart' show DLCView;
+import 'package:backend/entity/entity.dart' show DLCEntity, DLCID, GameID, DLCEntityData, GameEntityData, DLCView;
 
 import 'query.dart' show GameQuery;
 
@@ -19,7 +18,7 @@ class DLCQuery {
     return query;
   }
 
-  static Query updateById(int id, DLCEntity entity, DLCEntity updatedEntity) {
+  static Query updateById(DLCID id, DLCEntity entity, DLCEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(DLCEntityData.table)
@@ -30,7 +29,7 @@ class DLCQuery {
     return query;
   }
 
-  static Query updateCoverById(int id, String? coverName) {
+  static Query updateCoverById(DLCID id, String? coverName) {
     final Query query = FluentQuery
       .update()
       .table(DLCEntityData.table)
@@ -41,18 +40,18 @@ class DLCQuery {
     return query;
   }
 
-  static Query updateBaseGameById(int id, int? baseGame) {
+  static Query updateBaseGameById(DLCID id, GameID? baseGame) {
     final Query query = FluentQuery
       .update()
       .table(DLCEntityData.table)
-      .set(DLCEntityData.baseGameField, baseGame);
+      .set(DLCEntityData.baseGameField, baseGame?.id);
 
     _addIdWhere(id, query);
 
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(DLCID id) {
     final Query query = FluentQuery
       .delete()
       .from(DLCEntityData.table);
@@ -62,7 +61,7 @@ class DLCQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(DLCID id) {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table);
@@ -108,23 +107,23 @@ class DLCQuery {
     return query;
   }
 
-  static Query selectAllByBaseGame(int id) {
+  static Query selectAllByBaseGame(GameID id) {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table)
-      .where(DLCEntityData.baseGameField, id, type: int, table: DLCEntityData.table);
+      .where(DLCEntityData.baseGameField, id.id, type: int, table: DLCEntityData.table);
 
     addFields(query);
 
     return query;
   }
 
-  static Query selectGameByDLC(int id) {
+  static Query selectGameByDLC(DLCID id) {
     final Query query = FluentQuery
       .select()
       .from(GameEntityData.table)
       .join(DLCEntityData.table, null, DLCEntityData.baseGameField, GameEntityData.table, GameEntityData.idField)
-      .where(DLCEntityData.idField, id, type: int, table: DLCEntityData.table);
+      .where(DLCEntityData.idField, id.id, type: int, table: DLCEntityData.table);
 
     GameQuery.addFields(query);
 
@@ -141,8 +140,8 @@ class DLCQuery {
     query.field(DLCEntityData.baseGameField, type: int, table: DLCEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(DLCEntityData.idField, id, type: int, table: DLCEntityData.table);
+  static void _addIdWhere(DLCID id, Query query) {
+    query.where(DLCEntityData.idField, id.id, type: int, table: DLCEntityData.table);
   }
 
   static void _addViewWhere(Query query, DLCView view) {

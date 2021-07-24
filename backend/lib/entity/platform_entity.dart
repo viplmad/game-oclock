@@ -1,12 +1,15 @@
-import 'package:backend/model/model.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity;
 
 
 const List<String> types = <String>[
   'Physical',
   'Digital',
 ];
+
+enum PlatformView {
+  Main,
+  LastCreated,
+}
 
 class PlatformEntityData {
   PlatformEntityData._();
@@ -21,19 +24,26 @@ class PlatformEntityData {
   static const String typeField = 'Type';
 }
 
+class PlatformID {
+  PlatformID(this.id);
+
+  final int id;
+}
+
 class PlatformEntity extends ItemEntity {
   const PlatformEntity({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconFilename,
     required this.type,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
   final String? iconFilename;
   final String? type;
 
-  static PlatformEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static PlatformEntity fromMap(Map<String, dynamic> map) {
 
     return PlatformEntity(
       id: map[PlatformEntityData.idField] as int,
@@ -44,29 +54,16 @@ class PlatformEntity extends ItemEntity {
 
   }
 
-  static List<PlatformEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static PlatformID idFromMap(Map<String, dynamic> map) {
 
-    final List<PlatformEntity> platformsList = <PlatformEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PlatformEntity platform = PlatformEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PlatformEntityData.table) );
-
-      platformsList.add(platform);
-    });
-
-    return platformsList;
+    return PlatformID(map[PlatformEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  PlatformID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PlatformEntityData.table);
-      id = map[PlatformEntityData.idField] as int;
-    }
+    return PlatformID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -103,11 +100,11 @@ class PlatformEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$PlatformEntityData.table}Entity { '
-        '{$PlatformEntityData.idField}: $id, '
-        '{$PlatformEntityData._nameField}: $name, '
-        '{$PlatformEntityData._iconField}: $iconFilename, '
-        '{$PlatformEntityData._typeField}: $type'
+    return '${PlatformEntityData.table}Entity { '
+        '${PlatformEntityData.idField}: $id, '
+        '${PlatformEntityData.nameField}: $name, '
+        '${PlatformEntityData.iconField}: $iconFilename, '
+        '${PlatformEntityData.typeField}: $type'
         ' }';
 
   }

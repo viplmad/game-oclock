@@ -14,7 +14,7 @@ import '../theme/theme.dart';
 import 'list.dart';
 
 
-class StoreAppBar extends ItemAppBar<Store, StoreRepository, StoreListBloc> {
+class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   const StoreAppBar({
     Key? key,
   }) : super(key: key);
@@ -29,7 +29,7 @@ class StoreAppBar extends ItemAppBar<Store, StoreRepository, StoreListBloc> {
   List<String> views(BuildContext context) => StoreTheme.views(context);
 }
 
-class StoreFAB extends ItemFAB<Store, StoreRepository, StoreListManagerBloc> {
+class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   const StoreFAB({
     Key? key,
   }) : super(key: key);
@@ -44,7 +44,7 @@ class StoreFAB extends ItemFAB<Store, StoreRepository, StoreListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 }
 
-class StoreList extends ItemList<Store, StoreRepository, StoreListBloc, StoreListManagerBloc> {
+class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   const StoreList({
     Key? key,
   }) : super(key: key);
@@ -69,7 +69,7 @@ class StoreList extends ItemList<Store, StoreRepository, StoreListBloc, StoreLis
   }
 }
 
-class _StoreListBody extends ItemListBody<Store, StoreRepository, StoreListBloc> {
+class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   const _StoreListBody({
     Key? key,
     required List<Store> items,

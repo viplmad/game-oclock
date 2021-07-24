@@ -1,6 +1,4 @@
-import 'package:backend/model/model.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity;
 
 
 List<String> manufacturers = <String>[
@@ -9,6 +7,11 @@ List<String> manufacturers = <String>[
   'Microsoft',
   'Sega',
 ];
+
+enum SystemView {
+  Main,
+  LastCreated,
+}
 
 class SystemEntityData {
   SystemEntityData._();
@@ -24,21 +27,28 @@ class SystemEntityData {
   static const String manufacturerField = 'Manufacturer';
 }
 
+class SystemID {
+  SystemID(this.id);
+
+  final int id;
+}
+
 class SystemEntity extends ItemEntity {
   const SystemEntity({
-    required int id,
+    required this.id,
     required this.name,
     required this.iconFilename,
     required this.generation,
     required this.manufacturer,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String name;
   final String? iconFilename;
   final int generation;
   final String? manufacturer;
 
-  static SystemEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static SystemEntity fromMap(Map<String, dynamic> map) {
 
     return SystemEntity(
       id: map[SystemEntityData.idField] as int,
@@ -50,29 +60,16 @@ class SystemEntity extends ItemEntity {
 
   }
 
-  static List<SystemEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static SystemID idFromMap(Map<String, dynamic> map) {
 
-    final List<SystemEntity> systemsList = <SystemEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final SystemEntity system = SystemEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, SystemEntityData.table) );
-
-      systemsList.add(system);
-    });
-
-    return systemsList;
+    return SystemID(map[SystemEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  SystemID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, SystemEntityData.table);
-      id = map[SystemEntityData.idField] as int;
-    }
+    return SystemID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -111,12 +108,12 @@ class SystemEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$SystemEntityData.table}Entity { '
-        '{$SystemEntityData.idField}: $id, '
-        '{$SystemEntityData.nameField}: $name, '
-        '{$SystemEntityData.iconField}: $iconFilename, '
-        '{$SystemEntityData.generationField}: $generation, '
-        '{$SystemEntityData.manufacturerField}: $manufacturer'
+    return '${SystemEntityData.table}Entity { '
+        '${SystemEntityData.idField}: $id, '
+        '${SystemEntityData.nameField}: $name, '
+        '${SystemEntityData.iconField}: $iconFilename, '
+        '${SystemEntityData.generationField}: $generation, '
+        '${SystemEntityData.manufacturerField}: $manufacturer'
         ' }';
 
   }

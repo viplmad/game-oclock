@@ -14,7 +14,7 @@ class DismissibleItem extends StatelessWidget {
     this.confirmDismiss,
   }) : super(key: key);
 
-  final int dismissibleKey;
+  final String dismissibleKey;
   final Widget itemWidget;
   final void Function(DismissDirection direction) onDismissed;
   final IconData dismissIcon;
@@ -27,7 +27,7 @@ class DismissibleItem extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Dismissible(
-        key: ValueKey<int>(dismissibleKey),
+        key: ValueKey<String>(dismissibleKey),
         background: backgroundBuilder(Alignment.centerLeft),
         secondaryBackground: backgroundBuilder(Alignment.centerRight),
         child: itemWidget,

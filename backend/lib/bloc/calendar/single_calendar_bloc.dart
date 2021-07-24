@@ -5,10 +5,11 @@ import 'package:bloc/bloc.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show GameFinishEntity, GameID, GameTimeLogEntity;
+import 'package:backend/model/model.dart' show GameFinish, GameTimeLog;
+import 'package:backend/mapper/mapper.dart' show GameFinishMapper, GameTimeLogMapper;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameFinishRepository, GameTimeLogRepository;
 import 'package:backend/model/calendar_style.dart';
-
-import 'package:backend/repository/item_repository.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'single_calendar.dart';
@@ -16,23 +17,28 @@ import 'single_calendar.dart';
 
 class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   SingleCalendarBloc({
-    required this.itemId,
-    required this.iCollectionRepository,
+    required int itemId,
+    required GameCollectionRepository collectionRepository,
     required this.timeLogManagerBloc,
     required this.finishDateManagerBloc,
-  }) : super(CalendarLoading()) {
+  }) :
+    this.id = GameID(itemId),
+    this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
+    this.gameFinishRepository = collectionRepository.gameFinishRepository,
+    super(CalendarLoading()) {
 
-    timeLogManagerSubscription = timeLogManagerBloc.stream.listen(mapTimeLogManagerStateToEvent);
-    finishDateManagerSubscription = finishDateManagerBloc.stream.listen(mapFinishDateManagerStateToEvent);
+      timeLogManagerSubscription = timeLogManagerBloc.stream.listen(mapTimeLogManagerStateToEvent);
+      finishDateManagerSubscription = finishDateManagerBloc.stream.listen(mapFinishDateManagerStateToEvent);
 
-  }
+    }
 
-  final int itemId;
-  final ItemRepository iCollectionRepository;
-  final GameTimeLogRelationManagerBloc timeLogManagerBloc;
-  final GameFinishRelationManagerBloc finishDateManagerBloc;
-  late StreamSubscription<RelationManagerState> timeLogManagerSubscription;
-  late StreamSubscription<RelationManagerState> finishDateManagerSubscription;
+  final GameID id;
+  final GameTimeLogRepository gameTimeLogRepository;
+  final GameFinishRepository gameFinishRepository;
+  final GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc;
+  final GameRelationManagerBloc<GameFinish> finishDateManagerBloc;
+  late final StreamSubscription<ItemRelationManagerState> timeLogManagerSubscription;
+  late final StreamSubscription<ItemRelationManagerState> finishDateManagerSubscription;
 
   @override
   Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
@@ -77,13 +83,13 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Stream<CalendarState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(gameFinishRepository.isClosed()) {
       yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        gameFinishRepository.reconnect();
+        await gameFinishRepository.open();
 
       } catch (e) {
 
@@ -100,8 +106,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     try {
 
-      final List<GameTimeLog> timeLogs = await getReadAllTimeLogsStream().first;
-      final List<GameFinish> finishDates = await getReadAllFinishDatesStream().first;
+      final List<GameTimeLog> timeLogs = await getReadAllTimeLogsStream();
+      final List<GameFinish> finishDates = await getReadAllFinishDatesStream();
 
       final Set<DateTime> logDates = timeLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameTimeLog log) => previousDates..add(log.dateTime));
 
@@ -298,13 +304,13 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void mapTimeLogManagerStateToEvent(RelationManagerState managerState) {
+  void mapTimeLogManagerStateToEvent(ItemRelationManagerState managerState) {
 
-    if(managerState is RelationAdded<GameTimeLog>) {
+    if(managerState is ItemRelationAdded<GameTimeLog>) {
 
       _mapAddedTimeLogToEvent(managerState);
 
-    } else if(managerState is RelationDeleted<GameTimeLog>) {
+    } else if(managerState is ItemRelationDeleted<GameTimeLog>) {
 
       _mapDeletedTimeLogToEvent(managerState);
 
@@ -312,13 +318,13 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void mapFinishDateManagerStateToEvent(RelationManagerState managerState) {
+  void mapFinishDateManagerStateToEvent(ItemRelationManagerState managerState) {
 
-    if(managerState is RelationAdded<GameFinish>) {
+    if(managerState is ItemRelationAdded<GameFinish>) {
 
       _mapAddedFinishDateToEvent(managerState);
 
-    } else if(managerState is RelationDeleted<GameFinish>) {
+    } else if(managerState is ItemRelationDeleted<GameFinish>) {
 
       _mapDeletedFinishDateToEvent(managerState);
 
@@ -326,7 +332,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapAddedTimeLogToEvent(RelationAdded<GameTimeLog> managerState) {
+  void _mapAddedTimeLogToEvent(ItemRelationAdded<GameTimeLog> managerState) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -368,7 +374,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapDeletedTimeLogToEvent(RelationDeleted<GameTimeLog> managerState) {
+  void _mapDeletedTimeLogToEvent(ItemRelationDeleted<GameTimeLog> managerState) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -414,7 +420,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapAddedFinishDateToEvent(RelationAdded<GameFinish> managerState) {
+  void _mapAddedFinishDateToEvent(ItemRelationAdded<GameFinish> managerState) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -444,7 +450,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapDeletedFinishDateToEvent(RelationDeleted<GameFinish> managerState) {
+  void _mapDeletedFinishDateToEvent(ItemRelationDeleted<GameFinish> managerState) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -518,15 +524,17 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<List<GameTimeLog>> getReadAllTimeLogsStream() {
+  Future<List<GameTimeLog>> getReadAllTimeLogsStream() {
 
-    return iCollectionRepository.findAllGameTimeLogsFromGame(itemId);
+    final Future<List<GameTimeLogEntity>> entityListFuture = gameTimeLogRepository.findAllGameTimeLogsFromGame(id);
+    return GameTimeLogMapper.futureEntityListToModelList(entityListFuture);
 
   }
 
-  Stream<List<GameFinish>> getReadAllFinishDatesStream() {
+  Future<List<GameFinish>> getReadAllFinishDatesStream() {
 
-    return iCollectionRepository.findAllGameFinishFromGame(itemId);
+    final Future<List<GameFinishEntity>> entityListFuture = gameFinishRepository.findAllGameFinishFromGame(id);
+    return GameFinishMapper.futureEntityListToModelList(entityListFuture);
 
   }
 }

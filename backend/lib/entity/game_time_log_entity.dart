@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity, GameEntityData, GameEntity, GameID;
 
 
 class GameTimeLogEntityData {
@@ -13,39 +11,47 @@ class GameTimeLogEntityData {
   static const String timeField = 'Time';
 }
 
-class GameTimeLogEntity extends Equatable {
+class GameTimeLogID {
+  GameTimeLogID(this.gameId, this.dateTime);
+
+  final GameID gameId;
+  final DateTime dateTime;
+}
+
+class GameTimeLogEntity extends ItemEntity {
   const GameTimeLogEntity({
+    required this.gameId,
     required this.dateTime,
     required this.time,
   });
 
+  final int gameId;
   final DateTime dateTime;
   final Duration time;
 
-  static GameTimeLogEntity fromDynamicMap(Map<String, dynamic> map) {
+  static GameTimeLogEntity fromMap(Map<String, dynamic> map) {
 
     return GameTimeLogEntity(
+      gameId: map[GameTimeLogEntityData.gameField] as int,
       dateTime: map[GameTimeLogEntityData.dateTimeField] as DateTime,
       time: Duration(seconds: map[GameTimeLogEntityData.timeField] as int),
     );
 
   }
 
-  static List<GameTimeLogEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static GameTimeLogID idFromMap(Map<String, dynamic> map) {
 
-    final List<GameTimeLogEntity> timeLogsList = <GameTimeLogEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameTimeLogEntity log = GameTimeLogEntity.fromDynamicMap( ItemEntity.combineMaps(manyMap, GameTimeLogEntityData.table) );
-
-      timeLogsList.add(log);
-    });
-
-    return timeLogsList;
+    return GameTimeLogID(GameEntity.idFromMap(map), map[GameTimeLogEntityData.dateTimeField] as DateTime);
 
   }
 
-  Map<String, Object?> createMap(int gameId) {
+  GameTimeLogID createId() {
+
+    return GameTimeLogID(GameID(gameId), dateTime);
+
+  }
+
+  Map<String, Object?> createMap() {
 
     final Map<String, Object?> createMap = <String, Object?>{
       GameTimeLogEntityData.gameField : gameId,
@@ -54,6 +60,17 @@ class GameTimeLogEntity extends Equatable {
     };
 
     return createMap;
+
+  }
+
+  Map<String, Object?> updateMap(GameTimeLogEntity updatedEntity) {
+
+    final Map<String, Object?> updateMap = <String, Object?>{};
+
+    putUpdateMapValue(updateMap, GameTimeLogEntityData.dateTimeField, dateTime, updatedEntity.dateTime);
+    putUpdateMapValue(updateMap, GameTimeLogEntityData.timeField, time, updatedEntity.time);
+
+    return updateMap;
 
   }
 
@@ -66,9 +83,10 @@ class GameTimeLogEntity extends Equatable {
   @override
   String toString() {
 
-    return '{$GameTimeLogEntityData.table}Entity { '
-        '{$GameTimeLogEntityData.dateTimeField}: $dateTime, '
-        '{$GameTimeLogEntityData.timeField}: $time'
+    return '${GameTimeLogEntityData.table}Entity { '
+        '${GameTimeLogEntityData.gameField}: $gameId, '
+        '${GameTimeLogEntityData.dateTimeField}: $dateTime, '
+        '${GameTimeLogEntityData.timeField}: $time'
         ' }';
 
   }

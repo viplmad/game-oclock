@@ -18,7 +18,7 @@ import '../detail/detail.dart';
 import '../statistics/statistics.dart';
 
 
-abstract class ItemAppBar<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>> extends StatelessWidget with PreferredSizeWidget {
+abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget with PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
   }) : super(key: key);
@@ -90,7 +90,7 @@ abstract class ItemAppBar<T extends Item, R extends ItemRepository<T>, K extends
   List<String> views(BuildContext context);
 }
 
-abstract class ItemFAB<T extends Item, R extends ItemRepository<T>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemFAB({
     Key? key,
   }) : super(key: key);
@@ -117,7 +117,7 @@ abstract class ItemFAB<T extends Item, R extends ItemRepository<T>, S extends It
   String typeName(BuildContext context);
 }
 
-abstract class ItemList<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>, S extends ItemListManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemList({
     Key? key,
   }) : super(key: key);
@@ -221,10 +221,10 @@ abstract class ItemList<T extends Item, R extends ItemRepository<T>, K extends I
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, R, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
+  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
 }
 
-abstract class ItemListBody<T extends Item, R extends ItemRepository<T>, K extends ItemListBloc<T, R>> extends StatelessWidget {
+abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
   const ItemListBody({
     Key? key,
     required this.items,
@@ -467,7 +467,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
         final T item = items.elementAt(index);
 
         return DismissibleItem(
-          dismissibleKey: item.id,
+          dismissibleKey: item.uniqueId,
           itemWidget: itemBuilder(context, item),
           onDismissed: (DismissDirection direction) {
             onDismiss(item);

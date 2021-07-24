@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show StoreEntity, StoreEntityData;
-import 'package:backend/model/model.dart' show StoreView;
+import 'package:backend/entity/entity.dart' show StoreEntity, StoreEntityData, StoreID, StoreView;
 
 
 class StoreQuery {
@@ -17,7 +16,7 @@ class StoreQuery {
     return query;
   }
 
-  static Query updateById(int id, StoreEntity entity, StoreEntity updatedEntity) {
+  static Query updateById(StoreID id, StoreEntity entity, StoreEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(StoreEntityData.table)
@@ -28,7 +27,7 @@ class StoreQuery {
     return query;
   }
 
-  static Query updateIconById(int id, String? iconName) {
+  static Query updateIconById(StoreID id, String? iconName) {
     final Query query = FluentQuery
       .update()
       .table(StoreEntityData.table)
@@ -39,7 +38,7 @@ class StoreQuery {
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(StoreID id) {
     final Query query = FluentQuery
       .delete()
       .from(StoreEntityData.table);
@@ -49,13 +48,23 @@ class StoreQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(StoreID id) {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(StoreEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -91,8 +100,8 @@ class StoreQuery {
     query.field(StoreEntityData.iconField, type: String, table: StoreEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(StoreEntityData.idField, id, type: int, table: StoreEntityData.table);
+  static void _addIdWhere(StoreID id, Query query) {
+    query.where(StoreEntityData.idField, id.id, type: int, table: StoreEntityData.table);
   }
 
   static void _addViewWhere(Query query, StoreView view, [int? year]) {

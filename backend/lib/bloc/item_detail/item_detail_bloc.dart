@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show ItemEntity;
+import 'package:backend/model/model.dart' show Item;
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-abstract class ItemDetailBloc<T extends Item, R extends ItemRepository<T>> extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
-    required this.itemId,
+    required this.id,
     required this.repository,
     required this.managerBloc,
   }) : super(ItemLoading()) {
@@ -20,9 +21,9 @@ abstract class ItemDetailBloc<T extends Item, R extends ItemRepository<T>> exten
 
   }
 
-  final int itemId;
+  final ID id;
   final R repository;
-  final ItemDetailManagerBloc<T, R> managerBloc;
+  final ItemDetailManagerBloc<T, E, ID, R> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   @override
@@ -83,7 +84,7 @@ abstract class ItemDetailBloc<T extends Item, R extends ItemRepository<T>> exten
 
     try {
 
-      final T? item = await getReadStream().first;
+      final T? item = await getReadFuture();
       if(item != null) {
         yield ItemLoaded<T>(item);
       } else {
@@ -138,9 +139,5 @@ abstract class ItemDetailBloc<T extends Item, R extends ItemRepository<T>> exten
 
   }
 
-  Stream<T?> getReadStream() {
-
-    return repository.findById(itemId);
-
-  }
+  Future<T> getReadFuture();
 }

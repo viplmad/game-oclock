@@ -1,29 +1,30 @@
-import 'dart:async';
-
+import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
 import 'package:backend/model/model.dart' show Item, Tag, Game;
+import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class TagRelationBloc<W extends Item> extends ItemRelationBloc<Tag, W> {
+class TagRelationBloc<W extends Item> extends ItemRelationBloc<Tag, GameTagID, W> {
   TagRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
     required TagRelationManagerBloc<W> managerBloc,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
-    super(itemId: itemId, managerBloc: managerBloc);
+    super(id: GameTagID(itemId), managerBloc: managerBloc);
 
   final GameRepository gameRepository;
 
   @override
-  Stream<List<W>> getRelationStream() {
+  Future<List<W>> getRelationStream() {
 
     switch(W) {
       case Game:
-        return gameRepository.findAllGamesFromGameTag(itemId) as Stream<List<W>>;
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromGameTag(id);
+        return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
     }
 
     return super.getRelationStream();

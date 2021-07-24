@@ -1,7 +1,13 @@
-import 'package:backend/model/model.dart';
+import 'entity.dart' show ItemEntity;
 
-import 'entity.dart';
 
+enum PurchaseView {
+  Main,
+  LastCreated,
+  Pending,
+  LastPurchased,
+  Review,
+}
 
 class PurchaseEntityData {
   PurchaseEntityData._();
@@ -20,9 +26,15 @@ class PurchaseEntityData {
   static const String storeField = 'Store';
 }
 
+class PurchaseID {
+  PurchaseID(this.id);
+
+  final int id;
+}
+
 class PurchaseEntity extends ItemEntity {
   const PurchaseEntity({
-    required int id,
+    required this.id,
     required this.description,
     required this.price,
     required this.externalCredit,
@@ -30,8 +42,9 @@ class PurchaseEntity extends ItemEntity {
     required this.originalPrice,
 
     required this.store,
-  }) : super(id: id);
+  });
 
+  final int id;
   final String description;
   final double price;
   final double externalCredit;
@@ -40,7 +53,7 @@ class PurchaseEntity extends ItemEntity {
 
   final int? store;
 
-  static PurchaseEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static PurchaseEntity fromMap(Map<String, dynamic> map) {
 
     return PurchaseEntity(
       id: map[PurchaseEntityData.idField] as int,
@@ -55,29 +68,16 @@ class PurchaseEntity extends ItemEntity {
 
   }
 
-  static List<PurchaseEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static PurchaseID idFromMap(Map<String, dynamic> map) {
 
-    final List<PurchaseEntity> purchasesList = <PurchaseEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final PurchaseEntity purchase = PurchaseEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, PurchaseEntityData.table) );
-
-      purchasesList.add(purchase);
-    });
-
-    return purchasesList;
+    return PurchaseID(map[PurchaseEntityData.idField] as int);
 
   }
 
-  static int? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    int? id;
+  PurchaseID createId() {
 
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, PurchaseEntityData.table);
-      id = map[PurchaseEntityData.idField] as int;
-    }
+    return PurchaseID(id);
 
-    return id;
   }
 
   Map<String, dynamic> createMap() {
@@ -118,13 +118,13 @@ class PurchaseEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$PurchaseEntityData.table}Entity { '
-        '{$PurchaseEntityData.idField}: $id, '
-        '{$PurchaseEntityData._descriptionField}: $description, '
-        '{$PurchaseEntityData._priceField}: $price, '
-        '{$PurchaseEntityData._externalCreditField}: $externalCredit, '
-        '{$PurchaseEntityData._dateField}: $date, '
-        '{$PurchaseEntityData._originalPriceField}: $originalPrice'
+    return '${PurchaseEntityData.table}Entity { '
+        '${PurchaseEntityData.idField}: $id, '
+        '${PurchaseEntityData.descriptionField}: $description, '
+        '${PurchaseEntityData.priceField}: $price, '
+        '${PurchaseEntityData.externalCreditField}: $externalCredit, '
+        '${PurchaseEntityData.dateField}: $date, '
+        '${PurchaseEntityData.originalPriceField}: $originalPrice'
         ' }';
 
   }

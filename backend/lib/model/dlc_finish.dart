@@ -1,12 +1,12 @@
-import 'model.dart';
+import 'model.dart' show ItemFinish, ItemImage;
 
 
-class DLCFinish extends Item {
+class DLCFinish extends ItemFinish {
   const DLCFinish({
-    required this.dateTime,
-  }) : this.uniqueId = '$dateTime';
-
-  final DateTime dateTime;
+    required DateTime dateTime,
+  }) :
+    this.uniqueId = 'DF$dateTime',
+    super(dateTime: dateTime);
 
   @override
   final String uniqueId;

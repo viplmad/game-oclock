@@ -12,6 +12,14 @@ abstract class Item extends Equatable {
   Item copyWith();
 }
 
+abstract class ItemFinish extends Item {
+  const ItemFinish({
+    required this.dateTime,
+  });
+
+  final DateTime dateTime;
+}
+
 class ItemImage {
   const ItemImage(String? url, String? filename)
       : this.url = url?? '',

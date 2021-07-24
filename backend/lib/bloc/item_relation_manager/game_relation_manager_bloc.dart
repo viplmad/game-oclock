@@ -1,33 +1,49 @@
-import 'package:backend/model/model.dart' show Item, Game, DLC, Platform, Purchase, Tag;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
+import 'package:backend/entity/entity.dart' show DLCEntity, GameFinishEntity, GameID, GameTagEntity, GameTimeLogEntity, PlatformEntity, PurchaseEntity;
+import 'package:backend/model/model.dart' show DLC, Game, GameFinish, GameTimeLog, Item, Platform, Purchase, Tag;
+import 'package:backend/mapper/mapper.dart' show DLCMapper, GameFinishMapper, GameTagMapper, GameTimeLogMapper, PlatformMapper, PurchaseMapper;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameFinishRepository, GameRepository, GameTimeLogRepository;
 
 import 'item_relation_manager.dart';
 
 
-class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Game, W> {
+class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Game, GameID, W> {
   GameRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
-    super(itemId: itemId);
+    this.gameFinishRepository = collectionRepository.gameFinishRepository,
+    this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
+    super(id: GameID(itemId));
 
   final GameRepository gameRepository;
+  final GameFinishRepository gameFinishRepository;
+  final GameTimeLogRepository gameTimeLogRepository;
 
   @override
   Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
+      case GameFinish:
+        final GameFinishEntity otherEntity = GameFinishMapper.modelToEntity(id.id, otherItem as GameFinish);
+        return gameFinishRepository.create(otherEntity);
+      case GameTimeLog:
+        final GameTimeLogEntity otherEntity = GameTimeLogMapper.modelToEntity(id.id, otherItem as GameTimeLog);
+        return gameTimeLogRepository.create(otherEntity);
       case DLC:
-        return gameRepository.relateGameDLC(itemId, otherId);
+        final DLCEntity otherEntity = DLCMapper.modelToEntity(otherItem as DLC);
+        return gameRepository.relateGameDLC(id, otherEntity.createId());
       case Platform:
-        return gameRepository.relateGamePlatform(itemId, otherId);
+        final PlatformEntity otherEntity = PlatformMapper.modelToEntity(otherItem as Platform);
+        return gameRepository.relateGamePlatform(id, otherEntity.createId());
       case Purchase:
-        return gameRepository.relateGamePurchase(itemId, otherId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return gameRepository.relateGamePurchase(id, otherEntity.createId());
       case Tag:
-        return gameRepository.relateGameTag(itemId, otherId);
+        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as Tag);
+        return gameRepository.relateGameTag(id, otherEntity.createId());
     }
 
     return super.addRelationFuture(event);
@@ -37,62 +53,30 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
   @override
   Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    final int otherId = event.otherItem.id;
+    final W otherItem = event.otherItem;
 
     switch(W) {
+      case GameFinish:
+        final GameFinishEntity otherEntity = GameFinishMapper.modelToEntity(id.id, otherItem as GameFinish);
+        return gameFinishRepository.deleteById(otherEntity.createId());
+      case GameTimeLog:
+        final GameTimeLogEntity otherEntity = GameTimeLogMapper.modelToEntity(id.id, otherItem as GameTimeLog);
+        return gameTimeLogRepository.deleteById(otherEntity.createId());
       case DLC:
-        return gameRepository.unrelateGameDLC(otherId);
+        final DLCEntity otherEntity = DLCMapper.modelToEntity(otherItem as DLC);
+        return gameRepository.unrelateGameDLC(otherEntity.createId());
       case Purchase:
-        return gameRepository.unrelateGamePurchase(itemId, otherId);
+        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        return gameRepository.unrelateGamePurchase(id, otherEntity.createId());
       case Platform:
-        return gameRepository.unrelateGamePlatform(itemId, otherId);
+        final PlatformEntity otherEntity = PlatformMapper.modelToEntity(otherItem as Platform);
+        return gameRepository.unrelateGamePlatform(id, otherEntity.createId());
       case Tag:
-        return gameRepository.unrelateGameTag(itemId, otherId);
+        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as Tag);
+        return gameRepository.unrelateGameTag(id, otherEntity.createId());
     }
 
     return super.deleteRelationFuture(event);
-
-  }
-}
-
-class GameTimeLogRelationManagerBloc extends RelationManagerBloc<Game, GameTimeLog> {
-  GameTimeLogRelationManagerBloc({
-    required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<dynamic> addRelationFuture(AddRelation<GameTimeLog> event) {
-
-    return iCollectionRepository.createGameTimeLog(itemId, event.otherItem);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture(DeleteRelation<GameTimeLog> event) {
-
-    return iCollectionRepository.deleteGameTimeLogById(itemId, event.otherItem.dateTime);
-
-  }
-}
-
-class GameFinishRelationManagerBloc extends RelationManagerBloc<Game, GameFinish> {
-  GameFinishRelationManagerBloc({
-    required int itemId,
-    required CollectionRepository iCollectionRepository,
-  }) : super(itemId: itemId, iCollectionRepository: iCollectionRepository);
-
-  @override
-  Future<dynamic> addRelationFuture(AddRelation<GameFinish> event) {
-
-    return iCollectionRepository.createGameFinish(itemId, event.otherItem);
-
-  }
-
-  @override
-  Future<dynamic> deleteRelationFuture(DeleteRelation<GameFinish> event) {
-
-    return iCollectionRepository.deleteGameFinishById(itemId, event.otherItem.dateTime);
 
   }
 }

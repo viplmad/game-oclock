@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import 'entity.dart';
+import 'entity.dart' show ItemEntity, GameEntityData, GameEntity, GameID;
 
 
 class GameFinishEntityData {
@@ -12,36 +10,44 @@ class GameFinishEntityData {
   static const String dateField = 'Date';
 }
 
-class GameFinishEntity extends Equatable {
+class GameFinishID {
+  GameFinishID(this.gameId, this.dateTime);
+
+  final GameID gameId;
+  final DateTime dateTime;
+}
+
+class GameFinishEntity extends ItemEntity {
   const GameFinishEntity({
+    required this.gameId,
     required this.dateTime,
   });
 
+  final int gameId;
   final DateTime dateTime;
 
-  static GameFinishEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static GameFinishEntity fromMap(Map<String, dynamic> map) {
 
     return GameFinishEntity(
+      gameId: map[GameFinishEntityData.gameField] as int,
       dateTime: map[GameFinishEntityData.dateField] as DateTime,
     );
 
   }
 
-  static List<GameFinishEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static GameFinishID idFromMap(Map<String, dynamic> map) {
 
-    final List<GameFinishEntity> finishList = <GameFinishEntity>[];
-
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final GameFinishEntity date = GameFinishEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, GameFinishEntityData.table) );
-
-      finishList.add(date);
-    });
-
-    return finishList;
+    return GameFinishID(GameEntity.idFromMap(map), map[GameFinishEntityData.dateField] as DateTime);
 
   }
 
-  Map<String, Object?> createMap(int gameId) {
+  GameFinishID createId() {
+
+    return GameFinishID(GameID(gameId), dateTime);
+
+  }
+
+  Map<String, Object?> createMap() {
 
     final Map<String, Object?> createMap = <String, Object?>{
       GameFinishEntityData.gameField : gameId,
@@ -49,6 +55,16 @@ class GameFinishEntity extends Equatable {
     };
 
     return createMap;
+
+  }
+
+  Map<String, Object?> updateMap(GameFinishEntity updatedEntity) {
+
+    final Map<String, Object?> updateMap = <String, Object?>{};
+
+    putUpdateMapValue(updateMap, GameFinishEntityData.dateField, dateTime, updatedEntity.dateTime);
+
+    return updateMap;
 
   }
 
@@ -60,8 +76,9 @@ class GameFinishEntity extends Equatable {
   @override
   String toString() {
 
-    return '{$GameFinishEntityData.table}Entity { '
-        '{$GameFinishEntityData.dateTimeField}: $dateTime'
+    return '${GameFinishEntityData.table}Entity { '
+        '${GameFinishEntityData.gameField}: $gameId, '
+        '${GameFinishEntityData.dateField}: $dateTime'
         ' }';
 
   }

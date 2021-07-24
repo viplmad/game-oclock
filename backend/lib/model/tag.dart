@@ -1,10 +1,5 @@
-import 'model.dart';
+import 'model.dart' show Item, ItemImage;
 
-
-enum TagView {
-  Main,
-  LastCreated,
-}
 
 class Tag extends Item {
   const Tag({

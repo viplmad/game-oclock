@@ -1,55 +1,86 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/mapper/mapper.dart' show DLCMapper;
-import 'package:backend/entity/entity.dart' show DLCFinishEntity;
-import 'package:backend/model/model.dart' show DLCFinish;
+import 'package:backend/entity/entity.dart' show DLCFinishEntity, DLCFinishID, DLCID, DLCFinishEntityData;
 
 import './query/query.dart' show DLCFinishQuery;
 import 'item_repository.dart';
 
 
-class DLCFinishRepository extends ItemRepository<DLCFinish> {
+class DLCFinishRepository extends ItemRepository<DLCFinishEntity, DLCFinishID> {
   DLCFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
 
+  @override
+  final String recordName = DLCFinishEntityData.table;
+  @override
+  DLCFinishEntity entityFromMap(Map<String, Object?> map) => DLCFinishEntity.fromMap(map);
+  @override
+  DLCFinishID idFromMap(Map<String, Object?> map) => DLCFinishEntity.idFromMap(map);
+
   //#region CREATE
-  Future<dynamic> create(int dlcId, DLCFinish finish) {
+  @override
+  Future<DLCFinishEntity> create(DLCFinishEntity entity) {
 
-    final DLCFinishEntity entity = DLCMapper.finishModelToEntity(finish);
-    final Query query = DLCFinishQuery.create(entity, dlcId);
-
-    return itemConnector.execute(query);
+    final Query query = DLCFinishQuery.create(entity);
+    return createItem(
+      query: query,
+    );
 
   }
   //#endregion CREATE
 
   //#region READ
-  Stream<T?> findById(int id) {
+  @override
+  Future<DLCFinishEntity> findById(DLCFinishID id) {
+
+    final Query query = DLCFinishQuery.selectById(id);
+    return readItem(
+      query: query,
+    );
 
   }
-  Stream<List<T>> findAll();
 
-  Stream<List<DLCFinish>> findAllDLCFinishFromDLC(int id) {
+  @override
+  Future<List<DLCFinishEntity>> findAll() {
+
+    final Query query = DLCFinishQuery.selectAll();
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<DLCFinishEntity>> findAllDLCFinishFromDLC(DLCID id) {
 
     final Query query = DLCFinishQuery.selectAllByDLC(id);
-    return itemConnector.execute(query)
-      .asStream().map( _dynamicToListDLCFinish );
+    return readItemList(
+      query: query,
+    );
 
   }
   //#endregion READ
 
-  //#region DELETE
-  Future<dynamic> deleteById(int dlcId, DateTime date) {
+  //#region UPDATE
+  @override
+  Future<DLCFinishEntity> update(DLCFinishEntity entity, DLCFinishEntity updatedEntity) {
 
-    final Query query = DLCFinishQuery.deleteById(dlcId, date);
+    final DLCFinishID id = entity.createId();
+    final Query query = DLCFinishQuery.updateById(id, entity, updatedEntity);
+    return updateItem(
+      query: query,
+      id: id,
+    );
+
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
+  @override
+  Future<dynamic> deleteById(DLCFinishID id) {
+
+    final Query query = DLCFinishQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
   //#region DELETE
-
-  List<DLCFinish> dynamicToList(List<Map<String, Map<String, dynamic>>> results) {
-
-    return DLCFinishEntity.fromDynamicMapList(results).map( DLCMapper.finishEntityToModel ).toList(growable: false);
-
-  }
 }

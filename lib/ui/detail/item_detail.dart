@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:backend/model/model.dart' show Item, ItemImage;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, ItemRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -32,7 +32,7 @@ class DetailArguments<T> {
   final void Function(T? item)? onUpdate;
 }
 
-abstract class ItemDetail<T extends Item, R extends ItemRepository<T>, K extends ItemDetailBloc<T, R>, S extends ItemDetailManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemDetail<T extends Item, K extends Bloc<ItemDetailEvent, ItemDetailState>, S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>> extends StatelessWidget {
   const ItemDetail({
     Key? key,
     required this.item,
@@ -74,11 +74,11 @@ abstract class ItemDetail<T extends Item, R extends ItemRepository<T>, K extends
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository);
 
-  ItemDetailBody<T, R, K, S> detailBodyBuilder();
+  ItemDetailBody<T, K, S> detailBodyBuilder();
 }
 
 // ignore: must_be_immutable
-abstract class ItemDetailBody<T extends Item, R extends ItemRepository<T>, K extends ItemDetailBloc<T, R>, S extends ItemDetailManagerBloc<T, R>> extends StatelessWidget {
+abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, ItemDetailState>, S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>> extends StatelessWidget {
   ItemDetailBody({
     Key? key,
     required this.onUpdate,

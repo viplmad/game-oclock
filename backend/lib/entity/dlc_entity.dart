@@ -1,5 +1,10 @@
-import 'entity.dart';
+import 'entity.dart' show ItemEntity;
 
+
+enum DLCView {
+  Main,
+  LastCreated,
+}
 
 class DLCEntityData {
   DLCEntityData._();
@@ -42,7 +47,7 @@ class DLCEntity extends ItemEntity {
 
   final int? baseGame;
 
-  static DLCEntity _fromDynamicMap(Map<String, dynamic> map) {
+  static DLCEntity fromMap(Map<String, Object?> map) {
 
     return DLCEntity(
       id: map[DLCEntityData.idField] as int,
@@ -56,39 +61,21 @@ class DLCEntity extends ItemEntity {
 
   }
 
-  static List<DLCEntity> fromDynamicMapList(List<Map<String, Map<String, dynamic>>> listMap) {
+  static DLCID idFromMap(Map<String, Object?> map) {
 
-    final List<DLCEntity> dlcsList = <DLCEntity>[];
+    return DLCID(map[DLCEntityData.idField] as int);
 
-    listMap.forEach( (Map<String, Map<String, dynamic>> manyMap) {
-      final DLCEntity dlc = DLCEntity._fromDynamicMap( ItemEntity.combineMaps(manyMap, DLCEntityData.table) );
-
-      dlcsList.add(dlc);
-    });
-
-    return dlcsList;
-
-  }
-
-  static DLCID? idFromDynamicMap(List<Map<String, Map<String, dynamic>>> listMap) {
-    DLCID? id;
-
-    if(listMap.isNotEmpty) {
-      final Map<String, dynamic> map = ItemEntity.combineMaps(listMap.first, DLCEntityData.table);
-      final int dlcId = map[DLCEntityData.idField] as int;
-      id = DLCID(dlcId);
-    }
-
-    return id;
   }
 
   DLCID createId() {
+
     return DLCID(id);
+
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       DLCEntityData.nameField : name,
     };
 
@@ -101,9 +88,9 @@ class DLCEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(DLCEntity updatedEntity) {
+  Map<String, Object?> updateMap(DLCEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, DLCEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, DLCEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear);
@@ -123,12 +110,12 @@ class DLCEntity extends ItemEntity {
   @override
   String toString() {
 
-    return '{$DLCEntityData.table}Entity { '
-        '{$DLCEntityData.idField}: $id, '
-        '{$DLCEntityData._nameField}: $name, '
-        '{$DLCEntityData._releaseYearField}: $releaseYear, '
-        '{$DLCEntityData._coverField}: $coverFilename, '
-        '{$DLCEntityData._finishDateField}: $finishDate'
+    return '${DLCEntityData.table}Entity { '
+        '${DLCEntityData.idField}: $id, '
+        '${DLCEntityData.nameField}: $name, '
+        '${DLCEntityData.releaseYearField}: $releaseYear, '
+        '${DLCEntityData.coverField}: $coverFilename, '
+        '${DLCEntityData.finishDateField}: $finishDate'
         ' }';
 
   }

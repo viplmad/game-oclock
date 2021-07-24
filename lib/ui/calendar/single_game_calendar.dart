@@ -48,17 +48,19 @@ class SingleGameCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final GameTimeLogRelationManagerBloc _timeLogRelationManagerBloc = GameTimeLogRelationManagerBloc(
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
+    final GameRelationManagerBloc<GameTimeLog> _timeLogRelationManagerBloc = GameRelationManagerBloc<GameTimeLog>(
       itemId: itemId,
-      iCollectionRepository: ItemRepository.repository!,
+      collectionRepository: _collectionRepository,
     );
 
-    final GameFinishRelationManagerBloc _finishRelationManagerBloc = GameFinishRelationManagerBloc(
+    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc = GameRelationManagerBloc<GameFinish>(
       itemId: itemId,
-      iCollectionRepository: ItemRepository.repository!,
+      collectionRepository: _collectionRepository,
     );
 
-    final SingleCalendarBloc _bloc = blocBuilder(_timeLogRelationManagerBloc, _finishRelationManagerBloc);
+    final SingleCalendarBloc _bloc = blocBuilder(_collectionRepository, _timeLogRelationManagerBloc, _finishRelationManagerBloc);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -68,12 +70,12 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
 
-        BlocProvider<GameTimeLogRelationManagerBloc>(
+        BlocProvider<GameRelationManagerBloc<GameTimeLog>>(
           create: (BuildContext context) {
             return _timeLogRelationManagerBloc;
           },
         ),
-        BlocProvider<GameFinishRelationManagerBloc>(
+        BlocProvider<GameRelationManagerBloc<GameFinish>>(
           create: (BuildContext context) {
             return _finishRelationManagerBloc;
           },
@@ -127,18 +129,18 @@ class SingleGameCalendar extends StatelessWidget {
 
   }
 
-  SingleCalendarBloc blocBuilder(GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishRelationManagerBloc finishDateManagerBloc) {
+  SingleCalendarBloc blocBuilder(GameCollectionRepository collectionRepository, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
 
     return SingleCalendarBloc(
       itemId: itemId,
-      iCollectionRepository: ItemRepository.repository!,
+      collectionRepository: collectionRepository,
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );
 
   }
 
-  SpeedDial _buildSpeedDial(BuildContext context, GameTimeLogRelationManagerBloc timeLogManagerBloc, GameFinishRelationManagerBloc finishDateManagerBloc) {
+  SpeedDial _buildSpeedDial(BuildContext context, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
 
     return SpeedDial(
       icon: Icons.add,
@@ -183,7 +185,7 @@ class SingleGameCalendar extends StatelessWidget {
                         );
 
                         timeLogManagerBloc.add(
-                          AddRelation<GameTimeLog>(
+                          AddItemRelation<GameTimeLog>(
                             GameTimeLog(dateTime: dateTime, time: duration),
                           ),
                         );
@@ -211,7 +213,9 @@ class SingleGameCalendar extends StatelessWidget {
             ).then((DateTime? value) {
               if(value != null) {
                 finishDateManagerBloc.add(
-                  AddRelation<DateTime>(value),
+                  AddItemRelation<GameFinish>(
+                    GameFinish(dateTime: value),
+                  ),
                 );
               }
             });
@@ -256,9 +260,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
       },
       child: MultiBlocListener(
         listeners: <BlocListener<dynamic, dynamic>>[
-          BlocListener<GameTimeLogRelationManagerBloc, RelationManagerState>(
-            listener: (BuildContext context, RelationManagerState state) {
-              if(state is RelationAdded<GameTimeLog>) {
+          BlocListener<GameRelationManagerBloc<GameTimeLog>, ItemRelationManagerState>(
+            listener: (BuildContext context, ItemRelationManagerState state) {
+              if(state is ItemRelationAdded<GameTimeLog>) {
                 _isUpdated = true;
 
                 final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
@@ -267,7 +271,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   message: message,
                 );
               }
-              if(state is RelationNotAdded) {
+              if(state is ItemRelationNotAdded) {
                 final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
@@ -280,7 +284,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   ),
                 );
               }
-              if(state is RelationDeleted) {
+              if(state is ItemRelationDeleted) {
                 _isUpdated = true;
 
                 final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
@@ -289,7 +293,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   message: message,
                 );
               }
-              if(state is RelationNotDeleted) {
+              if(state is ItemRelationNotDeleted) {
                 final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
                 showSnackBar(
                   context,
@@ -304,9 +308,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
               }
             },
           ),
-          BlocListener<GameFinishRelationManagerBloc, RelationManagerState>(
-            listener: (BuildContext context, RelationManagerState state) {
-              if(state is RelationAdded<DateTime>) {
+          BlocListener<GameRelationManagerBloc<GameFinish>, ItemRelationManagerState>(
+            listener: (BuildContext context, ItemRelationManagerState state) {
+              if(state is ItemRelationAdded<GameFinish>) {
                 _isUpdated = true;
 
                 final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
@@ -315,7 +319,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   message: message,
                 );
               }
-              if(state is RelationNotAdded) {
+              if(state is ItemRelationNotAdded) {
                 final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
@@ -328,7 +332,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   ),
                 );
               }
-              if(state is RelationDeleted) {
+              if(state is ItemRelationDeleted) {
                 _isUpdated = true;
 
                 final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
@@ -337,7 +341,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   message: message,
                 );
               }
-              if(state is RelationNotDeleted) {
+              if(state is ItemRelationNotDeleted) {
                 final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
                 showSnackBar(
                   context,
@@ -476,9 +480,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
       trailing: IconButton(
         icon: const Icon(Icons.link_off),
         onPressed: () {
-          BlocProvider.of<GameFinishRelationManagerBloc>(context).add(
-            DeleteRelation<DateTime>(
-              selectedDate,
+          BlocProvider.of<GameRelationManagerBloc<GameFinish>>(context).add(
+            DeleteItemRelation<GameFinish>(
+              GameFinish(dateTime: selectedDate),
             ),
           );
         },
@@ -504,14 +508,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
         final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
         return DismissibleItem(
-          dismissibleKey: timeLog.dateTime.millisecond,
+          dismissibleKey: timeLog.uniqueId,
           itemWidget: ListTile(
             title: Text(timeLogString),
             trailing: IconButton(
               icon: const Icon(Icons.link_off),
               onPressed: () {
-                BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
-                  DeleteRelation<GameTimeLog>(
+                BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+                  DeleteItemRelation<GameTimeLog>(
                     timeLog,
                   ),
                 );
@@ -519,8 +523,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
             ),
           ),
           onDismissed: (DismissDirection direction) {
-            BlocProvider.of<GameTimeLogRelationManagerBloc>(context).add(
-              DeleteRelation<GameTimeLog>(
+            BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+              DeleteItemRelation<GameTimeLog>(
                 timeLog,
               ),
             );

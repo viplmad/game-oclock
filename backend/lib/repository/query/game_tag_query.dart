@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagEntityData;
-import 'package:backend/model/model.dart' show TagView;
+import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagEntityData, GameTagID, TagView;
 
 
 class GameTagQuery {
@@ -17,7 +16,7 @@ class GameTagQuery {
     return query;
   }
 
-  static Query updateById(int id, GameTagEntity entity, GameTagEntity updatedEntity) {
+  static Query updateById(GameTagID id, GameTagEntity entity, GameTagEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(GameTagEntityData.table)
@@ -28,7 +27,7 @@ class GameTagQuery {
     return query;
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(GameTagID id) {
     final Query query = FluentQuery
       .delete()
       .from(GameTagEntityData.table);
@@ -38,13 +37,23 @@ class GameTagQuery {
     return query;
   }
 
-  static Query selectById(int id) {
+  static Query selectById(GameTagID id) {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table);
 
     addFields(query);
     _addIdWhere(id, query);
+
+    return query;
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTagEntityData.table);
+
+    addFields(query);
 
     return query;
   }
@@ -79,8 +88,8 @@ class GameTagQuery {
     query.field(GameTagEntityData.nameField, type: String, table: GameTagEntityData.table);
   }
 
-  static void _addIdWhere(int id, Query query) {
-    query.where(GameTagEntityData.idField, id, type: int, table: GameTagEntityData.table);
+  static void _addIdWhere(GameTagID id, Query query) {
+    query.where(GameTagEntityData.idField, id.id, type: int, table: GameTagEntityData.table);
   }
 
   static void _addViewWhere(Query query, TagView view) {

@@ -2,6 +2,7 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:query/query/exception.dart';
 
 
 abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
@@ -10,90 +11,119 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   final ItemConnector itemConnector;
   final ImageConnector imageConnector;
 
-  Future<dynamic> open() => itemConnector.open();
-  Future<dynamic> close() => itemConnector.close();
+  Future<Object?> open() => itemConnector.open();
+  Future<Object?> close() => itemConnector.close();
 
   bool isOpen() => itemConnector.isOpen();
   bool isClosed() => itemConnector.isClosed();
 
   void reconnect() => itemConnector.reconnect();
 
-  Future<T?> create(T entity);
-  Stream<T?> findById(ID id);
-  Stream<List<T>> findAll();
-  Future<T?> update(ID id, T entity, T updatedEntity);
-  Future<dynamic> deleteById(ID id);
+  String get recordName;
+  T entityFromMap(Map<String, Object?> map);
+  ID idFromMap(Map<String, Object?> map);
+
+  Future<T> create(T entity);
+  Future<T> findById(ID id);
+  Future<List<T>> findAll();
+  Future<T> update(T entity, T updatedEntity);
+  Future<Object?> deleteById(ID id);
 
   // Utils
-  Future<T?> createCollectionItem({required Query query, required ID? Function(List<Map<String, Map<String, dynamic>>>) dynamicToId}) async {
+  Future<T> createItem({required Query query}) async {
 
     final ID? id = await itemConnector.execute(query)
       .asStream()
-      .map( dynamicToId ).first;
+      .map( _listMapToID ).first;
 
     if(id != null) {
-      return findById(id).first;
+      return findById(id);
     } else {
-      return Future<T?>.value(null);
+      return Future<T>.error('Error during creation');
     }
 
   }
 
-  Future<T?> updateCollectionItem({required Query query, required ID id}) async {
+  Future<T> readItem({required Query query}) {
 
-    await itemConnector.execute(query);
-    return findById(id).first;
+    return itemConnector.execute(query)
+      .asStream().map( _listMapToSingle ).first;
 
   }
 
-  Future<T?> uploadCollectionItemImage({required String tableName, required String uploadImagePath, required String initialImageName, required String? oldImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
+  Future<List<T>> readItemList({required Query query}) {
+
+    return itemConnector.execute(query)
+      .asStream().map( _listMapToList ).first;
+
+  }
+
+  Future<T> updateItem({required Query query, required ID id}) async {
+
+    await itemConnector.execute(query);
+    return findById(id);
+
+  }
+
+  Future<T> setItemImage({required String uploadImagePath, required String initialImageName, required String? oldImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     if(oldImageName != null) {
       await imageConnector.delete(
-        tableName: tableName,
+        tableName: recordName,
         imageName: oldImageName,
       );
     }
 
     final String imageName = await imageConnector.set(
       imagePath: uploadImagePath,
-      tableName: tableName,
+      tableName: recordName,
       imageName: _getImageName(id, initialImageName),
     );
 
-    return updateCollectionItem(
+    return updateItem(
       query: queryBuilder(id, imageName),
       id: id,
     );
 
   }
 
-  Future<T?> renameCollectionItemImage({required String tableName, required String oldImageName, required String newImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
+  Future<T> renameItemImage({required String oldImageName, required String newImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     final String imageName = await imageConnector.rename(
-      tableName: tableName,
+      tableName: recordName,
       oldImageName: oldImageName,
       newImageName: _getImageName(id, newImageName),
     );
 
-    return updateCollectionItem(
+    return updateItem(
       query: queryBuilder(id, imageName),
       id: id,
     );
 
   }
 
-  Future<T?> deleteCollectionItemImage({required String tableName, required String imageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
+  Future<T> deleteItemImage({required String imageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     await imageConnector.delete(
-      tableName: tableName,
+      tableName: recordName,
       imageName: imageName,
     );
 
-    return updateCollectionItem(
+    return updateItem(
       query: queryBuilder(id, null),
       id: id,
     );
+
+  }
+
+  String? getImageURI(String? imageName) {
+
+    return imageName != null?
+        imageConnector.getURI(
+          tableName: recordName,
+          imageFilename: imageName,
+        )
+        : null;
 
   }
 
@@ -104,15 +134,53 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   }
 
   // Mapper
-  List<T> dynamicToList(List<Map<String, Map<String, dynamic>>> results);
+  List<T> _listMapToList(List<Map<String, Map<String, Object?>>> results) {
+    final List<T> entities = <T>[];
 
-  T? dynamicToSingle(List<Map<String, Map<String, dynamic>>> results) {
-    T? singleItem;
+    results.forEach( (Map<String, Map<String, Object?>> manyMap) {
+      final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(manyMap, recordName);
+      final T entity = entityFromMap(map);
 
-    if(results.isNotEmpty) {
-      singleItem = dynamicToList(results).first;
+      entities.add(entity);
+    });
+
+    return entities;
+  }
+
+  T _listMapToSingle(List<Map<String, Map<String, Object?>>> results) {
+    if(results.isEmpty) {
+      throw UnsupportedOperationException('Result set is empty');
     }
 
-    return singleItem;
+    return _listMapToList(results).first;
+  }
+
+  ID? _listMapToID(List<Map<String, Map<String, Object?>>> results) {
+    ID? id;
+
+    if(results.isEmpty) {
+      final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(results.first, recordName);
+      id = idFromMap(map);
+    }
+
+    return id;
+  }
+}
+
+class ItemRepositoryUtils {
+  ItemRepositoryUtils._();
+
+  static Map<String, Object?> combineMaps(Map<String, Map<String, Object?>> manyMap, String primaryTableName) {
+    final Map<String, Object?> combinedMaps = Map<String, Object?>();
+
+    manyMap.forEach((String table, Map<String, Object?> map) {
+
+      if(table.isEmpty || table == primaryTableName) {
+        combinedMaps.addAll( map );
+      }
+
+    });
+
+    return combinedMaps;
   }
 }

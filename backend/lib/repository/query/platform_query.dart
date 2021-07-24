@@ -1,7 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData;
-import 'package:backend/model/model.dart' show PlatformView;
+import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData, PlatformID, PlatformView;
 
 
 class PlatformQuery {
@@ -17,7 +16,7 @@ class PlatformQuery {
     return query;
   }
 
-  static Query updateById(int id, PlatformEntity entity, PlatformEntity updatedEntity) {
+  static Query updateById(PlatformID id, PlatformEntity entity, PlatformEntity updatedEntity) {
     final Query query = FluentQuery
       .update()
       .table(PlatformEntityData.table)
@@ -26,7 +25,7 @@ class PlatformQuery {
     return _addIdWhere(id, query);
   }
 
-  static Query updateIconById(int id, String? iconName) {
+  static Query updateIconById(PlatformID id, String? iconName) {
     final Query query = FluentQuery
       .update()
       .table(PlatformEntityData.table)
@@ -35,7 +34,7 @@ class PlatformQuery {
     return _addIdWhere(id, query);
   }
 
-  static Query deleteById(int id) {
+  static Query deleteById(PlatformID id) {
     final Query query = FluentQuery
       .delete()
       .from(PlatformEntityData.table);
@@ -43,7 +42,7 @@ class PlatformQuery {
     return _addIdWhere(id, query);
   }
 
-  static Query selectById(int id) {
+  static Query selectById(PlatformID id) {
     Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table);
@@ -51,6 +50,16 @@ class PlatformQuery {
     query = addFields(query);
 
     return _addIdWhere(id, query);
+  }
+
+  static Query selectAll() {
+    final Query query = FluentQuery
+      .select()
+      .from(PlatformEntityData.table);
+
+    addFields(query);
+
+    return query;
   }
 
   static Query selectAllByNameLike(String name, int limit) {
@@ -76,8 +85,8 @@ class PlatformQuery {
     return query;
   }
 
-  static Query _addIdWhere(int id, Query query) {
-    query.where(PlatformEntityData.idField, id, type: int, table: PlatformEntityData.table);
+  static Query _addIdWhere(PlatformID id, Query query) {
+    query.where(PlatformEntityData.idField, id.id, type: int, table: PlatformEntityData.table);
 
     return query;
   }
