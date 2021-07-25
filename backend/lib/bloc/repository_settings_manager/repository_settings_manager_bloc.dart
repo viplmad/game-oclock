@@ -25,8 +25,10 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
 
     try {
 
-      await RepositoryPreferences.setPostgresConnector(event.postgresInstance);
-      await RepositoryPreferences.setCloudinaryConnector(event.cloudinaryInstance);
+      await RepositoryPreferences.setItemConnectorType(event.itemType);
+      await RepositoryPreferences.setItemInstance(event.itemInstance);
+      await RepositoryPreferences.setImageConnectorType(event.imageType);
+      await RepositoryPreferences.setImageInstance(event.imageInstance);
 
       await RepositoryPreferences.setRepositoryExist();
 

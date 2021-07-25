@@ -1,8 +1,8 @@
-import 'package:backend/model/repository_tab.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/connector/connector.dart';
+import 'package:backend/connector/connector.dart' show ProviderInstance;
 
+import 'package:backend/model/repository_tab.dart';
 import 'package:backend/model/repository_type.dart';
 
 
@@ -20,19 +20,19 @@ class RepositorySettingsLoading extends RepositorySettingsState {}
 class EmptyRepositorySettings extends RepositorySettingsState {}
 
 class RepositorySettingsLoaded extends RepositorySettingsState {
-  RepositorySettingsLoaded(this.itemType, this.itemConnector, this.imageType, this.imageConnector);
+  RepositorySettingsLoaded(this.itemType, this.itemInstance, this.imageType, this.imageInstance);
 
   final ItemConnectorType itemType;
-  final ItemConnector itemConnector;
+  final ProviderInstance itemInstance;
   final ImageConnectorType imageType;
-  final ImageConnector imageConnector;
+  final ProviderInstance imageInstance;
 
   @override
-  List<Object> get props => <Object>[itemConnector, imageConnector];
+  List<Object> get props => <Object>[itemInstance, imageInstance];
 
   @override
   String toString() => 'RepositorySettingsLoaded { '
-      'itemConnector: $itemConnector, '
-      'imageConnector: $imageConnector'
+      'itemConnector: $itemInstance, '
+      'imageConnector: $imageInstance'
       ' }';
 }

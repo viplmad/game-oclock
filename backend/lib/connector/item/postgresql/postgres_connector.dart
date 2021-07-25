@@ -86,7 +86,7 @@ class PostgresConnector extends ItemConnector {
 
 const String _postgresURIPattern = '^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$';
 
-class PostgresInstance {
+class PostgresInstance extends ProviderInstance {
   const PostgresInstance(this.host, this.port, this.database, this.user, this.password);
 
   final String host;
@@ -115,9 +115,25 @@ class PostgresInstance {
 
   }
 
+  @override
   String connectionString() {
 
     return 'postgres://$user:$password@$host:$port/$database';
 
   }
+}
+
+class PostgresCredentials extends PostgresInstance {
+  PostgresCredentials() : this.host = '', this.port = -1, this.database = '', this.user = '', this.password = '', super('', -1, '', '', '');
+
+  @override
+  String host;
+  @override
+  int port;
+  @override
+  String database;
+  @override
+  String user;
+  @override
+  String password;
 }

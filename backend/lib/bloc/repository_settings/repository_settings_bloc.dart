@@ -34,9 +34,9 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
         yield RepositorySettingsLoaded(
           await RepositoryPreferences.retrieveItemConnectorType(),
-          await RepositoryPreferences.retrieveItemConnector(),
+          await RepositoryPreferences.retrieveItemInstance(),
           await RepositoryPreferences.retrieveImageConnectorType(),
-          await RepositoryPreferences.retrieveImageConnector(),
+          await RepositoryPreferences.retrieveImageInstance(),
         );
 
       } catch(e) {

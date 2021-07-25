@@ -1,5 +1,7 @@
 import 'package:query/query.dart';
 
+export '../provider_instance.dart';
+
 
 abstract class ItemConnector {
   Future<dynamic> open();

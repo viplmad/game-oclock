@@ -109,7 +109,7 @@ class CloudinaryConnector extends ImageConnector {
 
 const String _cloudinaryURIPattern = 'cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$';
 
-class CloudinaryInstance {
+class CloudinaryInstance extends ProviderInstance {
   const CloudinaryInstance(this.cloudName, this.apiKey, this.apiSecret);
 
   final String cloudName;
@@ -134,9 +134,21 @@ class CloudinaryInstance {
 
   }
 
+  @override
   String connectionString() {
 
     return 'cloudinary://$apiKey:$apiSecret@$cloudName';
 
   }
+}
+
+class CloudinaryCredentials extends CloudinaryInstance {
+  CloudinaryCredentials() : this.cloudName = '', this.apiKey = -1, this.apiSecret = '', super('', -1, '');
+
+  @override
+  String cloudName;
+  @override
+  int apiKey;
+  @override
+  String apiSecret;
 }

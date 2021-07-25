@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:backend/model/model.dart';
 
 import 'item_statistics.dart';

@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/connector/connector.dart';
+import 'package:backend/connector/connector.dart' show ProviderInstance;
+
+import 'package:backend/model/repository_type.dart';
 
 
 abstract class RepositorySettingsManagerEvent extends Equatable {
@@ -11,17 +13,19 @@ abstract class RepositorySettingsManagerEvent extends Equatable {
 }
 
 class UpdateConnectionSettings extends RepositorySettingsManagerEvent {
-  const UpdateConnectionSettings(this.postgresInstance, this.cloudinaryInstance);
+  const UpdateConnectionSettings(this.itemType, this.itemInstance, this.imageType, this.imageInstance);
 
-  final PostgresInstance postgresInstance;
-  final CloudinaryInstance cloudinaryInstance;
+  final ItemConnectorType itemType;
+  final ProviderInstance itemInstance;
+  final ImageConnectorType imageType;
+  final ProviderInstance imageInstance;
 
   @override
-  List<Object> get props => <Object>[postgresInstance, cloudinaryInstance];
+  List<Object> get props => <Object>[itemInstance, imageInstance];
 
   @override
   String toString() => 'UpdatePostgresConnectionSettings { '
-      'postgres instance: $postgresInstance, '
-      'cloudinary instance: $cloudinaryInstance'
+      'itemInstance: $itemInstance, '
+      'imageInstance: $imageInstance'
       ' }';
 }

@@ -1,3 +1,6 @@
+export '../provider_instance.dart';
+
+
 abstract class ImageConnector {
   //#region UPLOAD
   Future<String> set({required String imagePath, required String tableName, required String imageName});

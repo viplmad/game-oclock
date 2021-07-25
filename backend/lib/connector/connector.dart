@@ -1,3 +1,5 @@
+export 'provider_instance.dart';
+
 export 'image/image_connector.dart';
 export 'image/cloudinary/cloudinary_connector.dart';
 
