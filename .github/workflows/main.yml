@@ -2,20 +2,20 @@ name: Flutter CI
 
 # This workflow is triggered on pushes to the repository.
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the bloc-pattern branch
   push:
     branches: [ bloc-pattern, new-repository ]
-    
+
 # on: push    # Default will running for every branch.
-    
+
 jobs:
   build:
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
     steps:
-    
+
     # Setup Java environment in order to build the Android app.
     - uses: actions/checkout@v2.3.4
     - uses: actions/setup-java@v2.0.0
@@ -31,12 +31,12 @@ jobs:
     - uses: subosito/flutter-action@v1.4.0
       with:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
-    
+
     # Get flutter dependencies.
     - run: flutter pub get
-    
+
     # Build apk.
-    - run: flutter build apk --no-sound-null-safety
+    - run: flutter build apk
       env:
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
