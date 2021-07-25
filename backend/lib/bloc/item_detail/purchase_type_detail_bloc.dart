@@ -7,11 +7,11 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class TypeDetailBloc extends ItemDetailBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
-  TypeDetailBloc({
+class PurchaseTypeDetailBloc extends ItemDetailBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
+  PurchaseTypeDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required TypeDetailManagerBloc managerBloc,
+    required PurchaseTypeDetailManagerBloc managerBloc,
   }) : super(id: PurchaseTypeID(itemId), repository: collectionRepository.purchaseTypeRepository, managerBloc: managerBloc);
 
   @override

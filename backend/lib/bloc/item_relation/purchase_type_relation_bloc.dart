@@ -7,11 +7,11 @@ import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class TypeRelationBloc<W extends Item> extends ItemRelationBloc<PurchaseType, PurchaseTypeID, W> {
-  TypeRelationBloc({
+class PurchaseTypeRelationBloc<W extends Item> extends ItemRelationBloc<PurchaseType, PurchaseTypeID, W> {
+  PurchaseTypeRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required TypeRelationManagerBloc<W> managerBloc,
+    required PurchaseTypeRelationManagerBloc<W> managerBloc,
   }) :
     this.purchaseRepository = collectionRepository.purchaseRepository,
     super(id: PurchaseTypeID(itemId), managerBloc: managerBloc);

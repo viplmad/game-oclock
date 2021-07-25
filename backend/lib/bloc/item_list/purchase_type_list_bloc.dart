@@ -7,10 +7,10 @@ import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class TypeListBloc extends ItemListBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
-  TypeListBloc({
+class PurchaseTypeListBloc extends ItemListBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
+  PurchaseTypeListBloc({
     required GameCollectionRepository collectionRepository,
-    required TypeListManagerBloc managerBloc,
+    required PurchaseTypeListManagerBloc managerBloc,
   }) : super(repository: collectionRepository.purchaseTypeRepository, managerBloc: managerBloc);
 
   @override

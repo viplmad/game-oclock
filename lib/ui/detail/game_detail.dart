@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item, Game, GameFinish, DLC, Purchase, Platform, GameTag;
+import 'package:backend/model/model.dart' show Item, Game, GameStatus, GameFinish, DLC, Purchase, Platform, GameTag;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
@@ -14,7 +14,7 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../relation/relation.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../calendar/calendar.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
@@ -178,7 +178,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       itemChipField(
         context,
         fieldName: GameCollectionLocalisations.of(context).statusFieldString,
-        value: game.status,
+        value: game.status.index,
         possibleValues: <String>[
           GameCollectionLocalisations.of(context).lowPriorityString,
           GameCollectionLocalisations.of(context).nextUpString,
@@ -187,7 +187,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         ],
         possibleValuesColours: GameTheme.statusColours,
         item: game,
-        itemUpdater: (String newValue) => game.copyWith(status: newValue),
+        itemUpdater: (int newValue) => game.copyWith(status: GameStatus.values.elementAt(newValue)),
       ),
       itemRatingField(
         context,

@@ -6,7 +6,7 @@ import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show DLCTheme, PlatformTheme, PurchaseTheme, GameTagTheme;
 import 'relation.dart';
 
 
@@ -94,7 +94,7 @@ class GameTagRelationList extends _GameRelationList<GameTag> {
   void Function()? onTap(BuildContext context, GameTag item) => null;
 
   @override
-  Widget cardBuilder(BuildContext context, GameTag item) => TagTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameTag item) => GameTagTheme.itemCard(context, item, onTap);
 }
 
 abstract class _GameRelationList<W extends Item> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {

@@ -11,5 +11,5 @@ export 'purchase_search_bloc.dart';
 export 'store_search_bloc.dart';
 export 'platform_search_bloc.dart';
 export 'system_search_bloc.dart';
-export 'tag_search_bloc.dart';
-export 'type_search_bloc.dart';
+export 'game_tag_search_bloc.dart';
+export 'purchase_type_search_bloc.dart';

@@ -8,37 +8,37 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PurchaseTypeTheme;
 import 'search.dart';
 
 
-class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManagerBloc> {
-  const TypeSearch({
+class PurchaseTypeSearch extends ItemSearch<PurchaseType, PurchaseTypeSearchBloc, PurchaseTypeListManagerBloc> {
+  const PurchaseTypeSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  TypeSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
+  PurchaseTypeSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TypeSearchBloc(
+    return PurchaseTypeSearchBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  TypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
+  PurchaseTypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TypeListManagerBloc(
+    return PurchaseTypeListManagerBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  _TypeSearchBody<TypeSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
+  _PurchaseTypeSearchBody<PurchaseTypeSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
-    return _TypeSearchBody<TypeSearchBloc>(
+    return _PurchaseTypeSearchBody<PurchaseTypeSearchBloc>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
@@ -46,8 +46,8 @@ class TypeSearch extends ItemSearch<PurchaseType, TypeSearchBloc, TypeListManage
   }
 }
 
-class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc> {
-  const TypeLocalSearch({
+class PurchaseTypeLocalSearch extends ItemLocalSearch<PurchaseType, PurchaseTypeListManagerBloc> {
+  const PurchaseTypeLocalSearch({
     Key? key,
     required List<PurchaseType> items,
   }) : super(key: key, items: items);
@@ -59,18 +59,18 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   void Function() onTap(BuildContext context, PurchaseType item) => () {};
 
   @override
-  TypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
+  PurchaseTypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TypeListManagerBloc(
+    return PurchaseTypeListManagerBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  _TypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
+  _PurchaseTypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
-    return _TypeSearchBody<ItemLocalSearchBloc<PurchaseType>>(
+    return _PurchaseTypeSearchBody<ItemLocalSearchBloc<PurchaseType>>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
@@ -78,8 +78,8 @@ class TypeLocalSearch extends ItemLocalSearch<PurchaseType, TypeListManagerBloc>
   }
 }
 
-class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, TypeListManagerBloc> {
-  const _TypeSearchBody({
+class _PurchaseTypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, PurchaseTypeListManagerBloc> {
+  const _PurchaseTypeSearchBody({
     Key? key,
     required void Function() Function(BuildContext, PurchaseType) onTap,
     bool allowNewButton = false,
@@ -95,5 +95,5 @@ class _TypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearch
   PurchaseType createItem(String query) => PurchaseType(id: -1, name: query);
 
   @override
-  Widget cardBuilder(BuildContext context, PurchaseType item) => TypeTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, PurchaseType item) => PurchaseTypeTheme.itemCard(context, item, onTap);
 }

@@ -1,9 +1,23 @@
-import 'package:backend/entity/entity.dart' show SystemEntity;
-import 'package:backend/model/model.dart' show System;
+import 'package:backend/entity/entity.dart' show SystemEntity, nintendoValue, sonyValue, microsoftValue, segaValue;
+import 'package:backend/model/model.dart' show System, Manufacturer;
 
 
 class SystemMapper {
   SystemMapper._();
+
+  static const Map<Manufacturer, String> manufacturerToStringMap = <Manufacturer, String> {
+    Manufacturer.Nintendo: nintendoValue,
+    Manufacturer.Sony: sonyValue,
+    Manufacturer.Microsoft: microsoftValue,
+    Manufacturer.Sega: segaValue,
+  };
+
+  static const Map<String, Manufacturer> stringToManufacturerMap = <String, Manufacturer> {
+    nintendoValue: Manufacturer.Nintendo,
+    sonyValue: Manufacturer.Sony,
+    microsoftValue: Manufacturer.Microsoft,
+    segaValue: Manufacturer.Sega,
+  };
 
   static SystemEntity modelToEntity(System model) {
 
@@ -12,7 +26,7 @@ class SystemMapper {
       name: model.name,
       iconFilename: model.iconFilename,
       generation: model.generation,
-      manufacturer: model.manufacturer,
+      manufacturer: manufacturerToStringMap[model.manufacturer],
     );
 
   }
@@ -25,7 +39,7 @@ class SystemMapper {
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
       generation: entity.generation,
-      manufacturer: entity.manufacturer,
+      manufacturer: stringToManufacturerMap[entity.manufacturer],
     );
 
   }

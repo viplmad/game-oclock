@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:backend/model/model.dart' show GameStatus, Manufacturer, PlatformType;
+
 import 'localisations_en.dart';
 
 
@@ -82,6 +84,7 @@ abstract class GameCollectionLocalisations {
   String get nextUpString;
   String get playingString;
   String get playedString;
+  String gameStatusString(GameStatus? status);
   String get editionFieldString;
   String get statusFieldString;
   String get ratingFieldString;
@@ -185,12 +188,28 @@ abstract class GameCollectionLocalisations {
 
   String get physicalString;
   String get digitalString;
+  String platformTypeString(PlatformType? type);
   String get platformTypeFieldString;
   //#endregion Platform
 
   //#region System
   String get systemString;
   String get systemsString;
+
+  static String manufacturerString(Manufacturer? manufacturer) {
+    switch(manufacturer){
+      case Manufacturer.Nintendo:
+        return 'Nintendo';
+      case Manufacturer.Sony:
+        return 'Sony';
+      case Manufacturer.Microsoft:
+        return 'Microsoft';
+      case Manufacturer.Sega:
+        return 'Sega';
+      default:
+        return '';
+    }
+  }
   //#endregion System
 
   //#region Tag

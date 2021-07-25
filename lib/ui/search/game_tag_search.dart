@@ -8,37 +8,37 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTagTheme;
 import 'search.dart';
 
 
-class TagSearch extends ItemSearch<GameTag, TagSearchBloc, TagListManagerBloc> {
-  const TagSearch({
+class GameTagSearch extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListManagerBloc> {
+  const GameTagSearch({
     Key? key,
   }) : super(key: key);
 
   @override
-  TagSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
+  GameTagSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TagSearchBloc(
+    return GameTagSearchBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  TagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
+  GameTagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TagListManagerBloc(
+    return GameTagListManagerBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  _TagSearchBody<TagSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
+  _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
 
-    return _TagSearchBody<TagSearchBloc>(
+    return _GameTagSearchBody<GameTagSearchBloc>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
@@ -46,8 +46,8 @@ class TagSearch extends ItemSearch<GameTag, TagSearchBloc, TagListManagerBloc> {
   }
 }
 
-class TagLocalSearch extends ItemLocalSearch<GameTag, TagListManagerBloc> {
-  const TagLocalSearch({
+class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc> {
+  const GameTagLocalSearch({
     Key? key,
     required List<GameTag> items,
   }) : super(key: key, items: items);
@@ -59,18 +59,18 @@ class TagLocalSearch extends ItemLocalSearch<GameTag, TagListManagerBloc> {
   void Function() onTap(BuildContext context, GameTag item) => () {};
 
   @override
-  TagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
+  GameTagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
-    return TagListManagerBloc(
+    return GameTagListManagerBloc(
       collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  _TagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
+  _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
 
-    return _TagSearchBody<ItemLocalSearchBloc<GameTag>>(
+    return _GameTagSearchBody<ItemLocalSearchBloc<GameTag>>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
@@ -78,8 +78,8 @@ class TagLocalSearch extends ItemLocalSearch<GameTag, TagListManagerBloc> {
   }
 }
 
-class _TagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBody<GameTag, K, TagListManagerBloc> {
-  const _TagSearchBody({
+class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBody<GameTag, K, GameTagListManagerBloc> {
+  const _GameTagSearchBody({
     Key? key,
     required void Function() Function(BuildContext, GameTag) onTap,
     bool allowNewButton = false,
@@ -95,5 +95,5 @@ class _TagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBody<G
   GameTag createItem(String query) => GameTag(id: -1, name: query);
 
   @override
-  Widget cardBuilder(BuildContext context, GameTag item) => TagTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameTag item) => GameTagTheme.itemCard(context, item, onTap);
 }

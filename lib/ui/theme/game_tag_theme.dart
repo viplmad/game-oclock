@@ -5,8 +5,8 @@ import 'package:backend/model/model.dart';
 import '../common/item_view.dart';
 
 
-class TypeTheme {
-  static Widget itemCard(BuildContext context, PurchaseType item, void Function()? Function(BuildContext, PurchaseType) onTap, [void Function()? Function(BuildContext, PurchaseType)? onLongPress]) {
+class GameTagTheme {
+  static Widget itemCard(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap, [void Function()? Function(BuildContext, GameTag)? onLongPress]) {
 
     return ItemCard(
       title: _getTitle(item),
@@ -17,7 +17,7 @@ class TypeTheme {
 
   }
 
-  static Widget itemGrid(BuildContext context, PurchaseType item, void Function()? Function(BuildContext, PurchaseType) onTap) {
+  static Widget itemGrid(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap) {
 
     return ItemGrid(
       title: _getTitle(item),
@@ -27,7 +27,7 @@ class TypeTheme {
 
   }
 
-  static String _getTitle(PurchaseType item) {
+  static String _getTitle(GameTag item) {
 
     return item.name;
 

@@ -8,5 +8,5 @@ export 'purchase_list_manager_bloc.dart';
 export 'store_list_manager_bloc.dart';
 export 'platform_list_manager_bloc.dart';
 export 'system_list_manager_bloc.dart';
-export 'tag_list_manager_bloc.dart';
-export 'type_list_manager_bloc.dart';
+export 'game_tag_list_manager_bloc.dart';
+export 'purchase_type_list_manager_bloc.dart';

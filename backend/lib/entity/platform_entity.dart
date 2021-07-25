@@ -1,10 +1,8 @@
 import 'entity.dart' show ItemEntity;
 
 
-const List<String> types = <String>[
-  'Physical',
-  'Digital',
-];
+const String physicalValue = 'Physical';
+const String digitalValue = 'Digital';
 
 enum PlatformView {
   Main,

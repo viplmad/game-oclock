@@ -1,7 +1,12 @@
-import 'package:backend/entity/entity.dart' show statuses; // TODO
-
 import 'model.dart' show Item, ItemImage, ItemData, YearData;
 
+
+enum GameStatus {
+  LowPriority,
+  NextUp,
+  Playing,
+  Played,
+}
 
 class Game extends Item {
   const Game({
@@ -27,7 +32,7 @@ class Game extends Item {
   final int? releaseYear;
   final String? coverURL;
   final String? coverFilename;
-  final String status;
+  final GameStatus status;
   final int rating;
   final String thoughts;
   final Duration time;
@@ -54,7 +59,7 @@ class Game extends Item {
     int? releaseYear,
     String? coverURL,
     String? coverFilename,
-    String? status,
+    GameStatus? status,
     int? rating,
     String? thoughts,
     Duration? time,
@@ -130,25 +135,25 @@ class GamesData extends ItemData<Game> {
   final List<int> finishYears;
 
   int lowPriorityCount() {
-    final int lowPriorityCount = items.where((Game item) => item.status == statuses.elementAt(0)).length;
+    final int lowPriorityCount = items.where((Game item) => item.status == GameStatus.LowPriority).length;
 
     return lowPriorityCount;
   }
 
   int nextUpCount() {
-    final int nextUpCount = items.where((Game item) => item.status == statuses.elementAt(1)).length;
+    final int nextUpCount = items.where((Game item) => item.status == GameStatus.NextUp).length;
 
     return nextUpCount;
   }
 
   int playingCount() {
-    final int playingCount = items.where((Game item) => item.status == statuses.elementAt(2)).length;
+    final int playingCount = items.where((Game item) => item.status == GameStatus.Playing).length;
 
     return playingCount;
   }
 
   int playedCount() {
-    final int playedCount = items.where((Game item) => item.status == statuses.elementAt(3)).length;
+    final int playedCount = items.where((Game item) => item.status == GameStatus.Played).length;
 
     return playedCount;
   }

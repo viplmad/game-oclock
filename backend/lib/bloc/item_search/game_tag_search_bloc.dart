@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_search.dart';
 
 
-class TagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
-  TagSearchBloc({
+class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
+  GameTagSearchBloc({
     required GameCollectionRepository collectionRepository,
   }) : super(repository: collectionRepository.gameTagRepository);
 

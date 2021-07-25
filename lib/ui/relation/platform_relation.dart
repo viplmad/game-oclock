@@ -6,7 +6,7 @@ import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme, SystemTheme;
 import 'relation.dart';
 
 

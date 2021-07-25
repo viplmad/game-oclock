@@ -13,7 +13,7 @@ import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show StoreTheme;
 import 'item_detail.dart';
 
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Game;
+import 'package:backend/model/model.dart' show Game, GameStatus;
 import 'package:backend/model/list_style.dart';
 import 'package:backend/model/app_tab.dart';
 
@@ -13,7 +13,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
 import '../statistics/statistics.dart';
@@ -127,7 +127,7 @@ abstract class _GameFAB<S extends Bloc<ItemListManagerEvent, ItemListManagerStat
   final Color themeColor = GameTheme.primaryColour;
 
   @override
-  Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: /* TODO */ 'Low Priority', rating: 0, thoughts: '', time: Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
+  Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', time: Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;

@@ -1,6 +1,11 @@
 import 'model.dart' show Item, ItemImage;
 
 
+enum PlatformType {
+  Physical,
+  Digital,
+}
+
 class Platform extends Item {
   const Platform({
     required this.id,
@@ -14,7 +19,7 @@ class Platform extends Item {
   final String name;
   final String? iconURL;
   final String? iconFilename;
-  final String? type;
+  final PlatformType? type;
 
   @override
   final String uniqueId;
@@ -32,7 +37,7 @@ class Platform extends Item {
     String? name,
     String? iconURL,
     String? iconName,
-    String? type,
+    PlatformType? type,
   }) {
 
     return Platform(

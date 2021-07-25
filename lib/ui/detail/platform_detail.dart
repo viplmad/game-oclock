@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item, Platform, Game, System;
+import 'package:backend/model/model.dart' show Item, Platform, PlatformType, Game, System;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
@@ -13,7 +13,7 @@ import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PlatformTheme;
 import 'item_detail.dart';
 
 
@@ -124,14 +124,14 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc, P
       itemChipField(
         context,
         fieldName: GameCollectionLocalisations.of(context).platformTypeFieldString,
-        value: platform.type,
+        value: platform.type?.index,
         possibleValues: <String>[
           GameCollectionLocalisations.of(context).physicalString,
           GameCollectionLocalisations.of(context).digitalString,
         ],
         possibleValuesColours: PlatformTheme.typeColours,
         item: platform,
-        itemUpdater: (String newValue) => platform.copyWith(type: newValue),
+        itemUpdater: (int newValue) => platform.copyWith(type: PlatformType.values.elementAt(newValue)),
       ),
     ];
 

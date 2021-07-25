@@ -157,12 +157,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case tagSearchRoute:
       return _pageRoute<GameTag>(
-        const TagSearch(),
+        const GameTagSearch(),
       );
 
     case typeSearchRoute:
       return _pageRoute<PurchaseType>(
-        const TypeSearch(),
+        const PurchaseTypeSearch(),
       );
 
     case gameLocalSearchRoute:
@@ -214,14 +214,14 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case tagLocalSearchRoute:
       return _pageRoute(
-        TagLocalSearch(
+        GameTagLocalSearch(
           items: settings.arguments as List<GameTag>,
         ),
       );
 
     case typeLocalSearchRoute:
       return _pageRoute(
-        TypeLocalSearch(
+        PurchaseTypeLocalSearch(
           items: settings.arguments as List<PurchaseType>,
         ),
       );

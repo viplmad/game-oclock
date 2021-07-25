@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_relation_manager.dart';
 
 
-class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<PurchaseType, PurchaseTypeID, W> {
-  TypeRelationManagerBloc({
+class PurchaseTypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<PurchaseType, PurchaseTypeID, W> {
+  PurchaseTypeRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :

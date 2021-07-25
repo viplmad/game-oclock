@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_search.dart';
 
 
-class TypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
-  TypeSearchBloc({
+class PurchaseTypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
+  PurchaseTypeSearchBloc({
     required GameCollectionRepository collectionRepository,
   }) : super(repository: collectionRepository.purchaseTypeRepository);
 

@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_detail_manager.dart';
 
 
-class TypeDetailManagerBloc extends ItemDetailManagerBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
-  TypeDetailManagerBloc({
+class PurchaseTypeDetailManagerBloc extends ItemDetailManagerBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
+  PurchaseTypeDetailManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) : super(id: PurchaseTypeID(itemId), repository: collectionRepository.purchaseTypeRepository);

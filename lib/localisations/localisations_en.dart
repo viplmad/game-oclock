@@ -1,3 +1,5 @@
+import 'package:backend/model/model.dart' show GameStatus, PlatformType, Manufacturer;
+
 import 'localisations.dart';
 
 
@@ -166,6 +168,21 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String playingString = 'Playing';
   @override
   final String playedString = 'Played';
+  @override
+  String gameStatusString(GameStatus? status) {
+    switch(status){
+      case GameStatus.LowPriority:
+        return lowPriorityString;
+      case GameStatus.NextUp:
+        return nextUpString;
+      case GameStatus.Playing:
+        return playingString;
+      case GameStatus.Played:
+        return playedString;
+      default:
+        return '';
+    }
+  }
   @override
   final String editionFieldString = 'Edition';
   @override
@@ -356,6 +373,17 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String physicalString = 'Physical';
   @override
   final String digitalString = 'Digital';
+  @override
+  String platformTypeString(PlatformType? type) {
+    switch(type) {
+      case PlatformType.Physical:
+        return physicalString;
+      case PlatformType.Digital:
+        return digitalString;
+      default:
+        return '';
+    }
+  }
   @override
   final String platformTypeFieldString = 'Type';
   //#endregion Platform

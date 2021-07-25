@@ -5,8 +5,6 @@ import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:duration_picker/duration_picker.dart';
 
-import 'package:game_collection/utils/datetime_extension.dart';
-
 import 'package:backend/model/model.dart';
 import 'package:backend/model/calendar_style.dart';
 
@@ -15,9 +13,11 @@ import 'package:backend/repository/repository.dart';
 import 'package:backend/bloc/calendar/single_calendar.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
+import 'package:backend/utils/datetime_extension.dart';
+
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';

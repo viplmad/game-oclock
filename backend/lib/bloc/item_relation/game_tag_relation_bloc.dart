@@ -7,11 +7,11 @@ import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class TagRelationBloc<W extends Item> extends ItemRelationBloc<GameTag, GameTagID, W> {
-  TagRelationBloc({
+class GameTagRelationBloc<W extends Item> extends ItemRelationBloc<GameTag, GameTagID, W> {
+  GameTagRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required TagRelationManagerBloc<W> managerBloc,
+    required GameTagRelationManagerBloc<W> managerBloc,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
     super(id: GameTagID(itemId), managerBloc: managerBloc);

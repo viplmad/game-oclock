@@ -11,7 +11,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PurchaseTheme;
 import '../common/year_picker_dialog.dart';
 import 'list.dart';
 

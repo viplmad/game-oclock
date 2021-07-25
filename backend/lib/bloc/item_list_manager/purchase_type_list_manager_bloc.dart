@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_list_manager.dart';
 
 
-class TypeListManagerBloc extends ItemListManagerBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
-  TypeListManagerBloc({
+class PurchaseTypeListManagerBloc extends ItemListManagerBloc<PurchaseType, PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
+  PurchaseTypeListManagerBloc({
     required GameCollectionRepository collectionRepository,
   }) : super(repository: collectionRepository.purchaseTypeRepository);
 

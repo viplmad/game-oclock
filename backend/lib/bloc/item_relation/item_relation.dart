@@ -8,5 +8,5 @@ export 'purchase_relation_bloc.dart';
 export 'store_relation_bloc.dart';
 export 'platform_relation_bloc.dart';
 export 'system_relation_bloc.dart';
-export 'tag_relation_bloc.dart';
-export 'type_relation_bloc.dart';
+export 'game_tag_relation_bloc.dart';
+export 'purchase_type_relation_bloc.dart';

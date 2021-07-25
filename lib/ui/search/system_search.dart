@@ -8,7 +8,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart';
+import '../theme/theme.dart' show SystemTheme;
 import 'search.dart';
 
 

@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_list_manager.dart';
 
 
-class TagListManagerBloc extends ItemListManagerBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
-  TagListManagerBloc({
+class GameTagListManagerBloc extends ItemListManagerBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
+  GameTagListManagerBloc({
     required GameCollectionRepository collectionRepository,
   }) : super(repository: collectionRepository.gameTagRepository);
 

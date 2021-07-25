@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show Game;
+import 'package:backend/model/model.dart' show Game, GameStatus;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
@@ -9,7 +9,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import 'search.dart';
 
 
@@ -90,7 +90,7 @@ class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Gam
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;
 
   @override
-  Game createItem(String query) => Game(id: -1, name: query, edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: /* TODO */ 'Low Priority', rating: 0, thoughts: '', time: const Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
+  Game createItem(String query) => Game(id: -1, name: query, edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', time: const Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

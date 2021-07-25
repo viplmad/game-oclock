@@ -555,14 +555,14 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   }
 
-  Widget itemChipField(BuildContext context, {required String fieldName, required String? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(String newValue) itemUpdater}) {
+  Widget itemChipField(BuildContext context, {required String fieldName, required int? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _EnumField(
       fieldName: fieldName,
       value: value,
       enumValues: possibleValues,
       enumColours: possibleValuesColours,
-      update: _updateFunction<String>(
+      update: _updateFunction<int>(
         context,
         item: item,
         itemUpdater: itemUpdater,
@@ -907,10 +907,10 @@ class _EnumField extends StatelessWidget {
   }) : super(key: key);
 
   final String fieldName;
-  final String? value;
+  final int? value;
   final List<String> enumValues;
   final List<Color> enumColours;
-  final Function(String) update;
+  final Function(int) update;
 
   @override
   Widget build(BuildContext context) {
@@ -927,19 +927,19 @@ class _EnumField extends StatelessWidget {
           alignment: WrapAlignment.spaceEvenly,
           children: List<Widget>.generate(
             enumValues.length,
-                (int index) {
+            (int index) {
               final String option = enumValues[index];
               final Color optionColour = enumColours.elementAt(index);
 
               return ChoiceChip(
                 label: Text(option),
                 labelStyle: const TextStyle(color: Colors.black87),
-                selected: value == option,
+                selected: value == index,
                 selectedColor: optionColour.withOpacity(0.5),
                 pressElevation: 2.0,
                 onSelected: (bool newChoice) {
                   if(newChoice) {
-                    update(option);
+                    update(index);
                   }
                 },
               );

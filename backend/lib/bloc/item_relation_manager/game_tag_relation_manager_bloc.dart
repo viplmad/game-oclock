@@ -6,8 +6,8 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'item_relation_manager.dart';
 
 
-class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<GameTag, GameTagID, W> {
-  TagRelationManagerBloc({
+class GameTagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<GameTag, GameTagID, W> {
+  GameTagRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :

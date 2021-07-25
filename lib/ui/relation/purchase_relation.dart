@@ -6,7 +6,7 @@ import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show DLCTheme, GameTheme, StoreTheme, PurchaseTypeTheme;
 import 'relation.dart';
 
 
@@ -97,7 +97,7 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   void Function()? onTap(BuildContext context, PurchaseType item) => null;
 
   @override
-  Widget cardBuilder(BuildContext context, PurchaseType item) => TypeTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, PurchaseType item) => PurchaseTypeTheme.itemCard(context, item, onTap);
 }
 
 abstract class _PurchaseRelationList<W extends Item> extends ItemRelationList<Purchase, W, PurchaseRelationBloc<W>, PurchaseRelationManagerBloc<W>> {

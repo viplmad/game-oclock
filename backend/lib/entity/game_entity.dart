@@ -1,12 +1,10 @@
 import 'entity.dart' show ItemEntity;
 
 
-const List<String> statuses = <String>[
-  'Low Priority',
-  'Next Up',
-  'Playing',
-  'Played',
-];
+const String lowPriorityValue = 'Low Priority';
+const String nextUpValue = 'Next Up';
+const String playingValue = 'Playing';
+const String playedValue = 'Played';
 
 enum GameView {
   Main,

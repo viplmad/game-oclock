@@ -7,10 +7,10 @@ import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class TagListBloc extends ItemListBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
-  TagListBloc({
+class GameTagListBloc extends ItemListBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
+  GameTagListBloc({
     required GameCollectionRepository collectionRepository,
-    required TagListManagerBloc managerBloc,
+    required GameTagListManagerBloc managerBloc,
   }) : super(repository: collectionRepository.gameTagRepository, managerBloc: managerBloc);
 
   @override

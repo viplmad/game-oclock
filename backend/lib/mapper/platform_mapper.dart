@@ -1,9 +1,19 @@
-import 'package:backend/entity/entity.dart' show PlatformEntity;
-import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/entity/entity.dart' show PlatformEntity, physicalValue, digitalValue;
+import 'package:backend/model/model.dart' show Platform, PlatformType;
 
 
 class PlatformMapper {
   PlatformMapper._();
+
+  static const Map<PlatformType, String> typeToStringMap = <PlatformType, String> {
+    PlatformType.Physical: physicalValue,
+    PlatformType.Digital: digitalValue,
+  };
+
+  static const Map<String, PlatformType> stringToTypeMap = <String, PlatformType> {
+    physicalValue: PlatformType.Physical,
+    digitalValue: PlatformType.Digital,
+  };
 
   static PlatformEntity modelToEntity(Platform model) {
 
@@ -11,7 +21,7 @@ class PlatformMapper {
       id: model.id,
       name: model.name,
       iconFilename: model.iconFilename,
-      type: model.type,
+      type: typeToStringMap[model.type],
     );
 
   }
@@ -23,7 +33,7 @@ class PlatformMapper {
       name: entity.name,
       iconURL: iconURL,
       iconFilename: entity.iconFilename,
-      type: entity.type,
+      type: stringToTypeMap[entity.type],
     );
 
   }

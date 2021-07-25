@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
-import 'package:game_collection/utils/datetime_extension.dart';
-
 import 'package:backend/model/model.dart' show Game, GameWithLogs;
 import 'package:backend/model/calendar_style.dart';
 
@@ -12,10 +10,12 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 
 import 'package:backend/bloc/calendar/multi_calendar.dart';
 
+import 'package:backend/utils/datetime_extension.dart';
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../common/loading_icon.dart';
 //import '../common/statistics_histogram.dart';
 import '../detail/detail.dart';

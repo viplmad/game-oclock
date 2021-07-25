@@ -7,11 +7,11 @@ import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 
-class TagDetailBloc extends ItemDetailBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
-  TagDetailBloc({
+class GameTagDetailBloc extends ItemDetailBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
+  GameTagDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required TagDetailManagerBloc managerBloc,
+    required GameTagDetailManagerBloc managerBloc,
   }) : super(id: GameTagID(itemId), repository: collectionRepository.gameTagRepository, managerBloc: managerBloc);
 
   @override

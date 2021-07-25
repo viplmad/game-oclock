@@ -1,6 +1,13 @@
 import 'model.dart' show Item, ItemImage;
 
 
+enum Manufacturer {
+  Nintendo,
+  Sony,
+  Microsoft,
+  Sega,
+}
+
 class System extends Item {
   const System({
     required this.id,
@@ -16,7 +23,7 @@ class System extends Item {
   final String? iconURL;
   final String? iconFilename;
   final int generation;
-  final String? manufacturer;
+  final Manufacturer? manufacturer;
 
   @override
   final String uniqueId;
@@ -35,7 +42,7 @@ class System extends Item {
     String? iconURL,
     String? iconFilename,
     int? generation,
-    String? manufacturer,
+    Manufacturer? manufacturer,
   }) {
 
     return System(

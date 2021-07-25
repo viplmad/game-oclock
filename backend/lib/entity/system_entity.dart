@@ -1,12 +1,10 @@
 import 'entity.dart' show ItemEntity;
 
 
-List<String> manufacturers = <String>[
-  'Nintendo',
-  'Sony',
-  'Microsoft',
-  'Sega',
-];
+const String nintendoValue = 'Nintendo';
+const String sonyValue = 'Sony';
+const String microsoftValue = 'Microsoft';
+const String segaValue = 'Sega';
 
 enum SystemView {
   Main,

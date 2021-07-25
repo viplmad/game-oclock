@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart';
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 
@@ -38,7 +39,7 @@ class SystemTheme {
 
   static String _getSubtitle(System item) {
 
-    return item.manufacturer?? '';
+    return GameCollectionLocalisations.manufacturerString(item.manufacturer);
 
   }
 }
