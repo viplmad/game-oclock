@@ -26,7 +26,7 @@ class GameFinishEntity extends ItemEntity {
   final int gameId;
   final DateTime dateTime;
 
-  static GameFinishEntity fromMap(Map<String, dynamic> map) {
+  static GameFinishEntity fromMap(Map<String, Object?> map) {
 
     return GameFinishEntity(
       gameId: map[GameFinishEntityData.gameField] as int,
@@ -35,7 +35,7 @@ class GameFinishEntity extends ItemEntity {
 
   }
 
-  static GameFinishID idFromMap(Map<String, dynamic> map) {
+  static GameFinishID idFromMap(Map<String, Object?> map) {
 
     return GameFinishID(GameEntity.idFromMap(map), map[GameFinishEntityData.dateField] as DateTime);
 

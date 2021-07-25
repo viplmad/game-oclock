@@ -25,10 +25,10 @@ class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, Pl
 
     switch(W) {
       case Game:
-        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromPlatform(id);
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllFromPlatform(id);
         return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
       case System:
-        final Future<List<SystemEntity>> entityListFuture = systemRepository.findAllSystemsFromPlatform(id);
+        final Future<List<SystemEntity>> entityListFuture = systemRepository.findAllFromPlatform(id);
         return SystemMapper.futureEntityListToModelList(entityListFuture, systemRepository.getImageURI) as Future<List<W>>;
     }
 

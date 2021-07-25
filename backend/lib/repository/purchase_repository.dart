@@ -28,7 +28,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<dynamic> relatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
+  Future<Object?> relatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
 
     final Query query = PurchaseTypeRelationQuery.create(purchaseId, typeId);
     return itemConnector.execute(query);
@@ -57,7 +57,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesWithView(PurchaseView purchaseView, [int? limit]) {
+  Future<List<PurchaseEntity>> findAllWithView(PurchaseView purchaseView, [int? limit]) {
 
     final Query query = PurchaseQuery.selectAllInView(purchaseView, limit);
     return readItemList(
@@ -66,7 +66,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
+  Future<List<PurchaseEntity>> findAllWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
 
     final Query query = PurchaseQuery.selectAllInView(purchaseView, limit, year);
     return readItemList(
@@ -75,7 +75,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesFromGame(GameID id) {
+  Future<List<PurchaseEntity>> findAllFromGame(GameID id) {
 
     final Query query = GamePurchaseRelationQuery.selectAllPurchasesByGameId(id);
     return readItemList(
@@ -84,7 +84,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesFromStore(StoreID storeId) {
+  Future<List<PurchaseEntity>> findAllFromStore(StoreID storeId) {
 
     final Query query = PurchaseQuery.selectAllByStore(storeId);
     return readItemList(
@@ -93,7 +93,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesFromDLC(DLCID id) {
+  Future<List<PurchaseEntity>> findAllFromDLC(DLCID id) {
 
     final Query query = DLCPurchaseRelationQuery.selectAllPurchasesByDLCId(id);
     return readItemList(
@@ -102,7 +102,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findAllPurchasesFromPurchaseType(PurchaseTypeID id) {
+  Future<List<PurchaseEntity>> findAllFromPurchaseType(PurchaseTypeID id) {
 
     final Query query = PurchaseTypeRelationQuery.selectAllPurchasesByTypeId(id);
     return readItemList(
@@ -128,14 +128,14 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(PurchaseID id) {
+  Future<Object?> deleteById(PurchaseID id) {
 
     final Query query = PurchaseQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
+  Future<Object?> unrelatePurchaseType(PurchaseID purchaseId, PurchaseTypeID typeId) {
 
     final Query query = PurchaseTypeRelationQuery.deleteById(purchaseId, typeId);
     return itemConnector.execute(query);
@@ -144,7 +144,7 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PurchaseEntity>> findAllPurchasesByDescription(String description, int limit) {
+  Future<List<PurchaseEntity>> findAllByDescription(String description, int limit) {
 
     final Query query = PurchaseQuery.selectAllByDescriptionLike(description, limit);
     return readItemList(

@@ -1,7 +1,7 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/entity/entity.dart' show GameID, GameTagEntity, GameTagEntityData, GameTagID, TagView;
+import 'package:backend/entity/entity.dart' show GameID, GameTagEntity, GameTagEntityData, GameTagID, GameTagView;
 
 import './query/query.dart' show GameTagQuery, GameTagRelationQuery;
 import 'item_repository.dart';
@@ -50,7 +50,7 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
 
   }
 
-  Future<List<GameTagEntity>> findAllGameTagsWithView(TagView tagView, [int? limit]) {
+  Future<List<GameTagEntity>> findAllWithView(GameTagView tagView, [int? limit]) {
 
     final Query query = GameTagQuery.selectAllInView(tagView, limit);
     return readItemList(
@@ -59,7 +59,7 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
 
   }
 
-  Future<List<GameTagEntity>> findAllGameTagsFromGame(GameID id) {
+  Future<List<GameTagEntity>> findAllFromGame(GameID id) {
 
     final Query query = GameTagRelationQuery.selectAllTagsByGameId(id);
     return readItemList(
@@ -85,7 +85,7 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(GameTagID id) {
+  Future<Object?> deleteById(GameTagID id) {
 
     final Query query = GameTagQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -94,7 +94,7 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<GameTagEntity>> findAllGameTagsByName(String name, int limit) {
+  Future<List<GameTagEntity>> findAllByName(String name, int limit) {
 
     final Query query = GameTagQuery.selectAllByNameLike(name, limit);
     return readItemList(

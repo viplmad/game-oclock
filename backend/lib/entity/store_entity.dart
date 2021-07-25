@@ -35,7 +35,7 @@ class StoreEntity extends ItemEntity {
   final String name;
   final String? iconFilename;
 
-  static StoreEntity fromMap(Map<String, dynamic> map) {
+  static StoreEntity fromMap(Map<String, Object?> map) {
 
     return StoreEntity(
       id: map[StoreEntityData.idField] as int,
@@ -45,7 +45,7 @@ class StoreEntity extends ItemEntity {
 
   }
 
-  static StoreID idFromMap(Map<String, dynamic> map) {
+  static StoreID idFromMap(Map<String, Object?> map) {
 
     return StoreID(map[StoreEntityData.idField] as int);
 
@@ -57,9 +57,9 @@ class StoreEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       StoreEntityData.nameField : name,
     };
 
@@ -69,9 +69,9 @@ class StoreEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(StoreEntity updatedEntity) {
+  Map<String, Object?> updateMap(StoreEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, StoreEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, StoreEntityData.iconField, iconFilename, updatedEntity.iconFilename);

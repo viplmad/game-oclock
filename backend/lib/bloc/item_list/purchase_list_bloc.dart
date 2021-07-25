@@ -16,7 +16,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity, PurchaseID
   @override
   Future<List<Purchase>> getReadAllStream() {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllPurchasesWithView(PurchaseView.Main);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(PurchaseView.Main);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -25,7 +25,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity, PurchaseID
   Future<List<Purchase>> getReadViewStream(UpdateView event) {
 
     final PurchaseView view = PurchaseView.values[event.viewIndex];
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllPurchasesWithView(view);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(view);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -34,7 +34,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity, PurchaseID
   Future<List<Purchase>> getReadYearViewStream(UpdateYearView event) {
 
     final PurchaseView view = PurchaseView.values[event.viewIndex];
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllPurchasesWithYearView(view, event.year);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithYearView(view, event.year);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }

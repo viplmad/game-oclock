@@ -11,7 +11,7 @@ abstract class ImageConnector {
   //#endregion RENAME
 
   //#region DELETE
-  Future<dynamic> delete({required String tableName, required String imageName});
+  Future<Object?> delete({required String tableName, required String imageName});
   //#endregion DELETE
 
   //#region DOWNLOAD

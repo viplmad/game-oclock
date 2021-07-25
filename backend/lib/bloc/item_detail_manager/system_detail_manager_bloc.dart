@@ -25,7 +25,7 @@ class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemEntity
   @override
   Future<System> addImage(AddItemImage<System> event) {
 
-    final Future<SystemEntity> entityFuture = repository.uploadSystemIcon(id, event.imagePath, event.oldImageName);
+    final Future<SystemEntity> entityFuture = repository.uploadIcon(id, event.imagePath, event.oldImageName);
     return SystemMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -33,7 +33,7 @@ class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemEntity
   @override
   Future<System> updateImageName(UpdateItemImageName<System> event) {
 
-    final Future<SystemEntity> entityFuture = repository.renameSystemIcon(id, event.oldImageName, event.newImageName);
+    final Future<SystemEntity> entityFuture = repository.renameIcon(id, event.oldImageName, event.newImageName);
     return SystemMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -41,7 +41,7 @@ class SystemDetailManagerBloc extends ItemDetailManagerBloc<System, SystemEntity
   @override
   Future<System> deleteImage(DeleteItemImage<System> event) {
 
-    final Future<SystemEntity> entityFuture = repository.deleteSystemIcon(id, event.imageName);
+    final Future<SystemEntity> entityFuture = repository.deleteIcon(id, event.imageName);
     return SystemMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }

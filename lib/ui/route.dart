@@ -156,7 +156,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case tagSearchRoute:
-      return _pageRoute<Tag>(
+      return _pageRoute<GameTag>(
         const TagSearch(),
       );
 
@@ -215,7 +215,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case tagLocalSearchRoute:
       return _pageRoute(
         TagLocalSearch(
-          items: settings.arguments as List<Tag>,
+          items: settings.arguments as List<GameTag>,
         ),
       );
 

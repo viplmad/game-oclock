@@ -412,7 +412,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Future<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
 
-    final Future<List<GameWithLogsEntity>> entityListFuture = gameTimeLogRepository.findAllGamesWithTimeLogsByYear(year);
+    final Future<List<GameWithLogsEntity>> entityListFuture = gameTimeLogRepository.findAllWithGameByYear(year);
     return GameTimeLogMapper.futureGameWithLogEntityListToModelList(entityListFuture, gameRepository.getImageURI);
 
   }

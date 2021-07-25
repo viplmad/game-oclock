@@ -23,7 +23,7 @@ class TypeRelationBloc<W extends Item> extends ItemRelationBloc<PurchaseType, Pu
 
     switch(W) {
       case Purchase:
-        final Future<List<PurchaseEntity>> entityListFuture = purchaseRepository.findAllPurchasesFromPurchaseType(id);
+        final Future<List<PurchaseEntity>> entityListFuture = purchaseRepository.findAllFromPurchaseType(id);
         return PurchaseMapper.futureEntityListToModelList(entityListFuture) as Future<List<W>>;
     }
 

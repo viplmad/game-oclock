@@ -21,7 +21,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform, PlatformEnti
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<Platform> event) {
+  Future<Object?> deleteFuture(DeleteItem<Platform> event) {
 
     final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

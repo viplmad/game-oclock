@@ -73,12 +73,12 @@ class GameDLCRelationList extends _GameRelationList<DLC> {
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
 }
 
-class GameTagRelationList extends _GameRelationList<Tag> {
+class GameTagRelationList extends _GameRelationList<GameTag> {
   const GameTagRelationList({
     Key? key,
     required String relationName,
     required String relationTypeName,
-    List<Widget> Function(List<Tag>)? trailingBuilder,
+    List<Widget> Function(List<GameTag>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -91,10 +91,10 @@ class GameTagRelationList extends _GameRelationList<Tag> {
   final String localSearchRouteName = tagLocalSearchRoute;
 
   @override
-  void Function()? onTap(BuildContext context, Tag item) => null;
+  void Function()? onTap(BuildContext context, GameTag item) => null;
 
   @override
-  Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameTag item) => TagTheme.itemCard(context, item, onTap);
 }
 
 abstract class _GameRelationList<W extends Item> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {

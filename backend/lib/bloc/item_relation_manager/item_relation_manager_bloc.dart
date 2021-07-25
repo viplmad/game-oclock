@@ -81,15 +81,15 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
   }
 
   @mustCallSuper
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
-    return Future<dynamic>.error('Relation does not exist');
+    return Future<Object?>.error('Relation does not exist');
 
   }
   @mustCallSuper
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    return Future<dynamic>.error('Relation does not exist');
+    return Future<Object?>.error('Relation does not exist');
 
   }
 }

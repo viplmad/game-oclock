@@ -19,7 +19,7 @@ class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBlo
   final PlatformRepository platformRepository;
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -37,7 +37,7 @@ class PlatformRelationManagerBloc<W extends Item> extends ItemRelationManagerBlo
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 

@@ -1,7 +1,7 @@
 import 'entity.dart' show ItemEntity;
 
 
-enum TagView {
+enum GameTagView {
   Main,
   LastCreated,
 }
@@ -32,7 +32,7 @@ class GameTagEntity extends ItemEntity {
   final int id;
   final String name;
 
-  static GameTagEntity fromMap(Map<String, dynamic> map) {
+  static GameTagEntity fromMap(Map<String, Object?> map) {
 
     return GameTagEntity(
       id: map[GameTagEntityData.idField] as int,
@@ -41,7 +41,7 @@ class GameTagEntity extends ItemEntity {
 
   }
 
-  static GameTagID idFromMap(Map<String, dynamic> map) {
+  static GameTagID idFromMap(Map<String, Object?> map) {
 
     return GameTagID(map[GameTagEntityData.idField] as int);
 
@@ -53,9 +53,9 @@ class GameTagEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       GameTagEntityData.nameField : name,
     };
 
@@ -63,9 +63,9 @@ class GameTagEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(GameTagEntity updatedEntity) {
+  Map<String, Object?> updateMap(GameTagEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, GameTagEntityData.nameField, name, updatedEntity.name);
 

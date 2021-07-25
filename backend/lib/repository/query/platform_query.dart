@@ -85,17 +85,17 @@ class PlatformQuery {
     return query;
   }
 
-  static Query _addIdWhere(PlatformID id, Query query) {
-    query.where(PlatformEntityData.idField, id.id, type: int, table: PlatformEntityData.table);
-
-    return query;
-  }
-
   static Query addFields(Query query) {
     query.field(PlatformEntityData.idField, type: int, table: PlatformEntityData.table);
     query.field(PlatformEntityData.nameField, type: String, table: PlatformEntityData.table);
     query.field(PlatformEntityData.iconField, type: String, table: PlatformEntityData.table);
     query.field(PlatformEntityData.typeField, type: String, table: PlatformEntityData.table);
+
+    return query;
+  }
+
+  static Query _addIdWhere(PlatformID id, Query query) {
+    query.where(PlatformEntityData.idField, id.id, type: int, table: PlatformEntityData.table);
 
     return query;
   }

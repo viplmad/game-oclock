@@ -50,7 +50,7 @@ class GameFinishRepository extends ItemRepository<GameFinishEntity, GameFinishID
 
   }
 
-  Future<List<GameFinishEntity>> findAllGameFinishFromGame(GameID id) {
+  Future<List<GameFinishEntity>> findAllFromGame(GameID id) {
 
     final Query query = GameFinishQuery.selectAllByGame(id);
     return readItemList(
@@ -76,7 +76,7 @@ class GameFinishRepository extends ItemRepository<GameFinishEntity, GameFinishID
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(GameFinishID id) {
+  Future<Object?> deleteById(GameFinishID id) {
 
     final Query query = GameFinishQuery.deleteById(id);
     return itemConnector.execute(query);

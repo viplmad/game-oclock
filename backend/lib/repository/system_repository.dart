@@ -52,12 +52,21 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
 
   }
 
-  Future<List<SystemEntity>> findAllSystemsWithView(SystemView systemView, [int? limit]) {
+  Future<List<SystemEntity>> findAllWithView(SystemView systemView, [int? limit]) {
 
     final Query query = SystemQuery.selectAllInView(systemView, limit);
     return readItemList(
       query: query,
     );
+  }
+
+  Future<List<SystemEntity>> findAllFromPlatform(PlatformID id) {
+
+    final Query query = PlatformSystemRelationQuery.selectAllSystemsByPlatformId(id);
+    return readItemList(
+      query: query,
+    );
+
   }
   //#endregion READ
 
@@ -77,7 +86,7 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(SystemID id) {
+  Future<Object?> deleteById(SystemID id) {
 
     final Query query = SystemQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -86,18 +95,9 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<SystemEntity>> findAllSystemsByName(String name, int limit) {
+  Future<List<SystemEntity>> findAllByName(String name, int limit) {
 
     final Query query = SystemQuery.selectAllByNameLike(name, limit);
-    return readItemList(
-      query: query,
-    );
-
-  }
-
-  Future<List<SystemEntity>> findAllSystemsFromPlatform(PlatformID id) {
-
-    final Query query = PlatformSystemRelationQuery.selectAllSystemsByPlatformId(id);
     return readItemList(
       query: query,
     );
@@ -106,7 +106,7 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<SystemEntity> uploadSystemIcon(SystemID id, String uploadImagePath, [String? oldImageName]) {
+  Future<SystemEntity> uploadIcon(SystemID id, String uploadImagePath, [String? oldImageName]) {
 
     return setItemImage(
       uploadImagePath: uploadImagePath,
@@ -118,7 +118,7 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
 
   }
 
-  Future<SystemEntity> renameSystemIcon(SystemID id, String imageName, String newImageName) {
+  Future<SystemEntity> renameIcon(SystemID id, String imageName, String newImageName) {
 
     return renameItemImage(
       oldImageName: imageName,
@@ -129,7 +129,7 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
 
   }
 
-  Future<SystemEntity> deleteSystemIcon(SystemID id, String imageName) {
+  Future<SystemEntity> deleteIcon(SystemID id, String imageName) {
 
     return deleteItemImage(
       imageName: imageName,

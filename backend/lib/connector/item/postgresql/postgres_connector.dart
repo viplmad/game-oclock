@@ -32,14 +32,14 @@ class PostgresConnector extends ItemConnector {
   }
 
   @override
-  Future<dynamic> open() {
+  Future<Object?> open() {
 
     return _connection.open();
 
   }
 
   @override
-  Future<dynamic> close() {
+  Future<Object?> close() {
 
     return _connection.close();
 
@@ -74,7 +74,7 @@ class PostgresConnector extends ItemConnector {
   }
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> execute(Query query) {
+  Future<List<Map<String, Map<String, Object?>>>> execute(Query query) {
 
     return _connection.mappedResultsQuery(
       SQLQueryBuilder.buildString(query, this._builderOptions),

@@ -17,7 +17,7 @@ class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Pu
   final PurchaseRepository purchaseRepository;
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -32,7 +32,7 @@ class TypeRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Pu
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 

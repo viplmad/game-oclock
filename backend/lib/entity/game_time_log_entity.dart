@@ -29,7 +29,7 @@ class GameTimeLogEntity extends ItemEntity {
   final DateTime dateTime;
   final Duration time;
 
-  static GameTimeLogEntity fromMap(Map<String, dynamic> map) {
+  static GameTimeLogEntity fromMap(Map<String, Object?> map) {
 
     return GameTimeLogEntity(
       gameId: map[GameTimeLogEntityData.gameField] as int,
@@ -39,7 +39,7 @@ class GameTimeLogEntity extends ItemEntity {
 
   }
 
-  static GameTimeLogID idFromMap(Map<String, dynamic> map) {
+  static GameTimeLogID idFromMap(Map<String, Object?> map) {
 
     return GameTimeLogID(GameEntity.idFromMap(map), map[GameTimeLogEntityData.dateTimeField] as DateTime);
 

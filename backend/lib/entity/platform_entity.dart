@@ -43,7 +43,7 @@ class PlatformEntity extends ItemEntity {
   final String? iconFilename;
   final String? type;
 
-  static PlatformEntity fromMap(Map<String, dynamic> map) {
+  static PlatformEntity fromMap(Map<String, Object?> map) {
 
     return PlatformEntity(
       id: map[PlatformEntityData.idField] as int,
@@ -54,7 +54,7 @@ class PlatformEntity extends ItemEntity {
 
   }
 
-  static PlatformID idFromMap(Map<String, dynamic> map) {
+  static PlatformID idFromMap(Map<String, Object?> map) {
 
     return PlatformID(map[PlatformEntityData.idField] as int);
 
@@ -66,9 +66,9 @@ class PlatformEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       PlatformEntityData.nameField : name,
     };
 
@@ -79,9 +79,9 @@ class PlatformEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(PlatformEntity updatedEntity) {
+  Map<String, Object?> updateMap(PlatformEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, PlatformEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, PlatformEntityData.iconField, iconFilename, updatedEntity.iconFilename);

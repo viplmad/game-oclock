@@ -25,7 +25,7 @@ class GameDetailManagerBloc extends ItemDetailManagerBloc<Game, GameEntity, Game
   @override
   Future<Game> addImage(AddItemImage<Game> event) {
 
-    final Future<GameEntity> entityFuture = repository.uploadGameCover(id, event.imagePath, event.oldImageName);
+    final Future<GameEntity> entityFuture = repository.uploadCover(id, event.imagePath, event.oldImageName);
     return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -33,7 +33,7 @@ class GameDetailManagerBloc extends ItemDetailManagerBloc<Game, GameEntity, Game
   @override
   Future<Game> updateImageName(UpdateItemImageName<Game> event) {
 
-    final Future<GameEntity> entityFuture = repository.renameGameCover(id, event.oldImageName, event.newImageName);
+    final Future<GameEntity> entityFuture = repository.renameCover(id, event.oldImageName, event.newImageName);
     return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -41,7 +41,7 @@ class GameDetailManagerBloc extends ItemDetailManagerBloc<Game, GameEntity, Game
   @override
   Future<Game> deleteImage(DeleteItemImage<Game> event) {
 
-    final Future<GameEntity> entityFuture = repository.deleteGameCover(id, event.imageName);
+    final Future<GameEntity> entityFuture = repository.deleteCover(id, event.imageName);
     return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }

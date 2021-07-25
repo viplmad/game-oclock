@@ -20,7 +20,7 @@ class GameCollectionRepository {
     purchaseTypeRepository = PurchaseTypeRepository(itemConnector, imageConnector);
   }
 
-  Future<dynamic> open() => gameRepository.open();
+  Future<Object?> open() => gameRepository.open();
   void reconnect() => gameRepository.reconnect();
 
   late final GameRepository gameRepository;

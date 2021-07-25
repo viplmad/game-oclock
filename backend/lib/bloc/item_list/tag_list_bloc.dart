@@ -1,5 +1,5 @@
-import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagID, TagView;
-import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagID, GameTagView;
+import 'package:backend/model/model.dart' show GameTag;
 import 'package:backend/mapper/mapper.dart' show GameTagMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameTagRepository;
 
@@ -7,25 +7,25 @@ import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 
-class TagListBloc extends ItemListBloc<Tag, GameTagEntity, GameTagID, GameTagRepository> {
+class TagListBloc extends ItemListBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
   TagListBloc({
     required GameCollectionRepository collectionRepository,
     required TagListManagerBloc managerBloc,
   }) : super(repository: collectionRepository.gameTagRepository, managerBloc: managerBloc);
 
   @override
-  Future<List<Tag>> getReadAllStream() {
+  Future<List<GameTag>> getReadAllStream() {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllGameTagsWithView(TagView.Main);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.Main);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }
 
   @override
-  Future<List<Tag>> getReadViewStream(UpdateView event) {
+  Future<List<GameTag>> getReadViewStream(UpdateView event) {
 
-    final TagView view = TagView.values[event.viewIndex];
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllGameTagsWithView(view);
+    final GameTagView view = GameTagView.values[event.viewIndex];
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(view);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }

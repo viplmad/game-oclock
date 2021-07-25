@@ -1,8 +1,8 @@
 import 'model.dart' show Item, ItemImage;
 
 
-class Tag extends Item {
-  const Tag({
+class GameTag extends Item {
+  const GameTag({
     required this.id,
     required this.name,
   }) : this.uniqueId = 'Tg$id';
@@ -22,11 +22,11 @@ class Tag extends Item {
   String get queryableTerms => this.name;
 
   @override
-  Tag copyWith({
+  GameTag copyWith({
     String? name,
   }) {
 
-    return Tag(
+    return GameTag(
       id: id,
       name: name?? this.name,
     );

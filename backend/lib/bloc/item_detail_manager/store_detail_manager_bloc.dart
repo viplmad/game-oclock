@@ -25,7 +25,7 @@ class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store, StoreEntity, S
   @override
   Future<Store> addImage(AddItemImage<Store> event) {
 
-    final Future<StoreEntity> entityFuture = repository.uploadStoreIcon(id, event.imagePath, event.oldImageName);
+    final Future<StoreEntity> entityFuture = repository.uploadIcon(id, event.imagePath, event.oldImageName);
     return StoreMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -33,7 +33,7 @@ class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store, StoreEntity, S
   @override
   Future<Store> updateImageName(UpdateItemImageName<Store> event) {
 
-    final Future<StoreEntity> entityFuture = repository.renameStoreIcon(id, event.oldImageName, event.newImageName);
+    final Future<StoreEntity> entityFuture = repository.renameIcon(id, event.oldImageName, event.newImageName);
     return StoreMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -41,7 +41,7 @@ class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store, StoreEntity, S
   @override
   Future<Store> deleteImage(DeleteItemImage<Store> event) {
 
-    final Future<StoreEntity> entityFuture = repository.deleteStoreIcon(id, event.imageName);
+    final Future<StoreEntity> entityFuture = repository.deleteIcon(id, event.imageName);
     return StoreMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }

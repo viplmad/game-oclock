@@ -29,16 +29,16 @@ class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, Pu
 
     switch(W) {
       case Game:
-        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromPurchase(id);
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllFromPurchase(id);
         return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
       case DLC:
         final Future<List<DLCEntity>> entityListFuture = dlcRepository.findAllFromPurchase(id);
         return DLCMapper.futureEntityListToModelList(entityListFuture, dlcRepository.getImageURI) as Future<List<W>>;
       case Store:
-        final Future<StoreEntity> entityFuture = storeRepository.findStoreFromPurchase(id); // TODO can be null store != null? <Store>[store] : <Store>[]
-        return StoreMapper.futureEntityToModel(entityFuture, storeRepository.getImageURI) as Future<List<W>>;
+        final Future<StoreEntity?> entityFuture = storeRepository.findOneFromPurchase(id);
+        return entityFuture.asStream().map( (StoreEntity? entity) => entity != null? <Store>[StoreMapper.entityToModel(entity, storeRepository.getImageURI(entity.iconFilename))] : <Store>[] ).first as Future<List<W>>;
       case PurchaseType:
-        final Future<List<PurchaseTypeEntity>> entityListFuture = purchaseTypeRepository.findAllPurchaseTypesFromPurchase(id);
+        final Future<List<PurchaseTypeEntity>> entityListFuture = purchaseTypeRepository.findAllFromPurchase(id);
         return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture) as Future<List<W>>;
     }
 

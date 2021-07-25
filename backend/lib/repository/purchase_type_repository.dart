@@ -1,7 +1,7 @@
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:backend/entity/entity.dart' show PurchaseID, PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseID, PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, PurchaseTypeView;
 
 import './query/query.dart' show PurchaseTypeQuery, PurchaseTypeRelationQuery;
 import 'item_repository.dart';
@@ -50,7 +50,7 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
 
   }
 
-  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesWithView(TypeView typeView, [int? limit]) {
+  Future<List<PurchaseTypeEntity>> findAllWithView(PurchaseTypeView typeView, [int? limit]) {
 
     final Query query = PurchaseTypeQuery.selectAllInView(typeView, limit);
     return readItemList(
@@ -59,7 +59,7 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
 
   }
 
-  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesFromPurchase(PurchaseID id) {
+  Future<List<PurchaseTypeEntity>> findAllFromPurchase(PurchaseID id) {
 
     final Query query = PurchaseTypeRelationQuery.selectAllTypesByPurchaseId(id);
     return readItemList(
@@ -85,7 +85,7 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(PurchaseTypeID id) {
+  Future<Object?> deleteById(PurchaseTypeID id) {
 
     final Query query = PurchaseTypeQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -94,7 +94,7 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PurchaseTypeEntity>> findAllPurchaseTypesByName(String name, int limit) {
+  Future<List<PurchaseTypeEntity>> findAllByName(String name, int limit) {
 
     final Query query = PurchaseTypeQuery.selectAllByNameLike(name, limit);
     return readItemList(

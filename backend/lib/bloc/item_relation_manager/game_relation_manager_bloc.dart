@@ -1,5 +1,5 @@
 import 'package:backend/entity/entity.dart' show DLCEntity, GameFinishEntity, GameID, GameTagEntity, GameTimeLogEntity, PlatformEntity, PurchaseEntity;
-import 'package:backend/model/model.dart' show DLC, Game, GameFinish, GameTimeLog, Item, Platform, Purchase, Tag;
+import 'package:backend/model/model.dart' show DLC, Game, GameFinish, GameTimeLog, Item, Platform, Purchase, GameTag;
 import 'package:backend/mapper/mapper.dart' show DLCMapper, GameFinishMapper, GameTagMapper, GameTimeLogMapper, PlatformMapper, PurchaseMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameFinishRepository, GameRepository, GameTimeLogRepository;
 
@@ -21,7 +21,7 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
   final GameTimeLogRepository gameTimeLogRepository;
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -41,8 +41,8 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
       case Purchase:
         final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
         return gameRepository.relateGamePurchase(id, otherEntity.createId());
-      case Tag:
-        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as Tag);
+      case GameTag:
+        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as GameTag);
         return gameRepository.relateGameTag(id, otherEntity.createId());
     }
 
@@ -51,7 +51,7 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -71,8 +71,8 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
       case Platform:
         final PlatformEntity otherEntity = PlatformMapper.modelToEntity(otherItem as Platform);
         return gameRepository.unrelateGamePlatform(id, otherEntity.createId());
-      case Tag:
-        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as Tag);
+      case GameTag:
+        final GameTagEntity otherEntity = GameTagMapper.modelToEntity(otherItem as GameTag);
         return gameRepository.unrelateGameTag(id, otherEntity.createId());
     }
 

@@ -30,7 +30,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<dynamic> relatePlatformSystem(PlatformID platformId, SystemID systemId) {
+  Future<Object?> relatePlatformSystem(PlatformID platformId, SystemID systemId) {
 
     final Query query = PlatformSystemRelationQuery.create(platformId, systemId);
     return itemConnector.execute(query);
@@ -59,7 +59,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<List<PlatformEntity>> findAllPlatformsWithView(PlatformView platformView, [int? limit]) {
+  Future<List<PlatformEntity>> findAllWithView(PlatformView platformView, [int? limit]) {
 
     final Query query = PlatformQuery.selectAllInView(platformView, limit);
     return readItemList(
@@ -68,7 +68,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<List<PlatformEntity>> findAllPlatformsFromGame(GameID id) {
+  Future<List<PlatformEntity>> findAllFromGame(GameID id) {
 
     final Query query = GamePlatformRelationQuery.selectAllPlatformsByGameId(id);
     return readItemList(
@@ -77,7 +77,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<List<PlatformEntity>> findAllPlatformsFromSystem(SystemID id) {
+  Future<List<PlatformEntity>> findAllFromSystem(SystemID id) {
 
     final Query query = PlatformSystemRelationQuery.selectAllPlatformsBySystemId(id);
     return readItemList(
@@ -103,14 +103,14 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(PlatformID id) {
+  Future<Object?> deleteById(PlatformID id) {
 
     final Query query = PlatformQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelatePlatformSystem(PlatformID platformId, SystemID systemId) {
+  Future<Object?> unrelatePlatformSystem(PlatformID platformId, SystemID systemId) {
 
     final Query query = PlatformSystemRelationQuery.deleteById(platformId, systemId);
     return itemConnector.execute(query);
@@ -119,7 +119,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PlatformEntity>> findAllPlatformsByName(String name, int limit) {
+  Future<List<PlatformEntity>> findAllByName(String name, int limit) {
 
     final Query query = PlatformQuery.selectAllByNameLike(name, limit);
     return readItemList(
@@ -130,7 +130,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<PlatformEntity> uploadPlatformIcon(PlatformID id, String uploadImagePath, [String? oldImageName]) {
+  Future<PlatformEntity> uploadIcon(PlatformID id, String uploadImagePath, [String? oldImageName]) {
 
     return setItemImage(
       uploadImagePath: uploadImagePath,
@@ -142,7 +142,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<PlatformEntity> renamePlatformIcon(PlatformID id, String imageName, String newImageName) {
+  Future<PlatformEntity> renameIcon(PlatformID id, String imageName, String newImageName) {
 
     return renameItemImage(
       oldImageName: imageName,
@@ -153,7 +153,7 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
 
   }
 
-  Future<PlatformEntity> deletePlatformIcon(PlatformID id, String imageName) {
+  Future<PlatformEntity> deleteIcon(PlatformID id, String imageName) {
 
     return deleteItemImage(
       imageName: imageName,

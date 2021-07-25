@@ -4,13 +4,13 @@ export '../provider_instance.dart';
 
 
 abstract class ItemConnector {
-  Future<dynamic> open();
-  Future<dynamic> close();
+  Future<Object?> open();
+  Future<Object?> close();
   bool isOpen();
   bool isClosed();
   bool isUpdating();
 
   void reconnect();
 
-  Future<List<Map<String, Map<String, dynamic>>>> execute(Query query);
+  Future<List<Map<String, Map<String, Object?>>>> execute(Query query);
 }

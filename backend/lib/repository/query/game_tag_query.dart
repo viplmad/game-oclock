@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagEntityData, GameTagID, TagView;
+import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagEntityData, GameTagID, GameTagView;
 
 
 class GameTagQuery {
@@ -70,7 +70,7 @@ class GameTagQuery {
     return query;
   }
 
-  static Query selectAllInView(TagView view, [int? limit]) {
+  static Query selectAllInView(GameTagView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table)
@@ -92,23 +92,23 @@ class GameTagQuery {
     query.where(GameTagEntityData.idField, id.id, type: int, table: GameTagEntityData.table);
   }
 
-  static void _addViewWhere(Query query, TagView view) {
+  static void _addViewWhere(Query query, GameTagView view) {
     switch(view) {
-      case TagView.Main:
+      case GameTagView.Main:
         // TODO: Handle this case.
         break;
-      case TagView.LastCreated:
+      case GameTagView.LastCreated:
         // TODO: Handle this case.
         break;
     }
   }
 
-  static void _addViewOrder(Query query, TagView view) {
+  static void _addViewOrder(Query query, GameTagView view) {
     switch(view) {
-      case TagView.Main:
+      case GameTagView.Main:
         // TODO: Handle this case.
         break;
-      case TagView.LastCreated:
+      case GameTagView.LastCreated:
         // TODO: Handle this case.
         break;
     }

@@ -26,7 +26,7 @@ class DLCFinishEntity extends ItemEntity {
   final int dlcId;
   final DateTime dateTime;
 
-  static DLCFinishEntity fromMap(Map<String, dynamic> map) {
+  static DLCFinishEntity fromMap(Map<String, Object?> map) {
 
     return DLCFinishEntity(
       dlcId: map[DLCFinishEntityData.dlcField] as int,
@@ -35,7 +35,7 @@ class DLCFinishEntity extends ItemEntity {
 
   }
 
-  static DLCFinishID idFromMap(Map<String, dynamic> map) {
+  static DLCFinishID idFromMap(Map<String, Object?> map) {
 
     return DLCFinishID(DLCEntity.idFromMap(map), map[DLCFinishEntityData.dateField] as DateTime);
 
@@ -47,9 +47,9 @@ class DLCFinishEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       DLCFinishEntityData.dlcField : dlcId,
       DLCFinishEntityData.dateField : dateTime,
     };

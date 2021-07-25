@@ -14,7 +14,7 @@ class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity, 
   @override
   Future<List<Platform>> getInitialItems() {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllPlatformsWithView(PlatformView.LastCreated, super.maxSuggestions);
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.LastCreated, super.maxSuggestions);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,7 +22,7 @@ class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity, 
   @override
   Future<List<Platform>> getSearchItems(String query) {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllPlatformsByName(query, super.maxResults);
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

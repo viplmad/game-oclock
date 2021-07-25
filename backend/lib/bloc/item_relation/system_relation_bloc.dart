@@ -23,7 +23,7 @@ class SystemRelationBloc<W extends Item> extends ItemRelationBloc<System, System
 
     switch(W) {
       case Platform:
-        final Future<List<PlatformEntity>> entityListFuture = platformRepository.findAllPlatformsFromSystem(id);
+        final Future<List<PlatformEntity>> entityListFuture = platformRepository.findAllFromSystem(id);
         return PlatformMapper.futureEntityListToModelList(entityListFuture, platformRepository.getImageURI) as Future<List<W>>;
     }
 

@@ -94,13 +94,13 @@ class GameQuery {
     return query;
   }
 
-  static Query selectAllInViewAndOwned(GameView view, [int? limit, int? year]) {
+  static Query selectAllOwnedInView(GameView view, [int? limit, int? year]) {
     final Query query = selectAllInView(view, limit, year);
     // TODO subquery to cross with purchases
     return query;
   }
 
-  static Query selectAllInViewAndRom(GameView view, [int? limit, int? year]) {
+  static Query selectAllRomInView(GameView view, [int? limit, int? year]) {
     final Query query = selectAllInView(view, limit, year);
     // TODO subquery to cross with purchases
     return query;

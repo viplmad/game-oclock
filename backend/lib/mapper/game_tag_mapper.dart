@@ -1,11 +1,11 @@
 import 'package:backend/entity/entity.dart' show GameTagEntity;
-import 'package:backend/model/model.dart' show Tag;
+import 'package:backend/model/model.dart' show GameTag;
 
 
 class GameTagMapper {
   GameTagMapper._();
 
-  static GameTagEntity modelToEntity(Tag model) {
+  static GameTagEntity modelToEntity(GameTag model) {
 
     return GameTagEntity(
       id: model.id,
@@ -14,22 +14,22 @@ class GameTagMapper {
 
   }
 
-  static Tag entityToModel(GameTagEntity entity) {
+  static GameTag entityToModel(GameTagEntity entity) {
 
-    return Tag(
+    return GameTag(
       id: entity.id,
       name: entity.name,
     );
 
   }
 
-  static Future<Tag> futureEntityToModel(Future<GameTagEntity> entityFuture) {
+  static Future<GameTag> futureEntityToModel(Future<GameTagEntity> entityFuture) {
 
     return entityFuture.asStream().map( entityToModel ).first;
 
   }
 
-  static Future<List<Tag>> futureEntityListToModelList(Future<List<GameTagEntity>> entityListFuture) {
+  static Future<List<GameTag>> futureEntityListToModelList(Future<List<GameTagEntity>> entityListFuture) {
 
     return entityListFuture.asStream().map( (List<GameTagEntity> entityList) {
       return entityList.map( entityToModel ).toList(growable: false);

@@ -39,7 +39,7 @@ class GameListManagerBloc extends ItemListManagerBloc<Game, GameEntity, GameID, 
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<Game> event) {
+  Future<Object?> deleteFuture(DeleteItem<Game> event) {
 
     final GameEntity entity = GameMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

@@ -2,6 +2,7 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
 import 'package:backend/entity/entity.dart' show DLCID, GameEntity, GameEntityData, GameID, GameTagID, PlatformID, PurchaseID, GameView;
+import 'package:backend/utils/empty_result_set_exception.dart';
 
 import './query/query.dart' show GameQuery, DLCQuery, GamePlatformRelationQuery, GamePurchaseRelationQuery, GameTagRelationQuery;
 import 'item_repository.dart';
@@ -30,27 +31,27 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<dynamic> relateGamePlatform(GameID gameId, PlatformID platformId) {
+  Future<Object?> relateGamePlatform(GameID gameId, PlatformID platformId) {
 
     final Query query = GamePlatformRelationQuery.create(gameId, platformId);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> relateGamePurchase(GameID gameId, PurchaseID purchaseId) {
+  Future<Object?> relateGamePurchase(GameID gameId, PurchaseID purchaseId) {
 
     final Query query = GamePurchaseRelationQuery.create(gameId, purchaseId);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> relateGameDLC(GameID gameId, DLCID dlcId) {
+  Future<Object?> relateGameDLC(GameID gameId, DLCID dlcId) {
 
     final Query query = DLCQuery.updateBaseGameById(dlcId, gameId);
     return itemConnector.execute(query);
 
   }
-  Future<dynamic> relateGameTag(GameID gameId, GameTagID tagId) {
+  Future<Object?> relateGameTag(GameID gameId, GameTagID tagId) {
 
     final Query query = GameTagRelationQuery.create(gameId, tagId);
     return itemConnector.execute(query);
@@ -79,19 +80,19 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllOwnedGames() {
+  Future<List<GameEntity>> findAllOwned() {
 
-    return findAllOwnedGamesWithView(GameView.Main);
-
-  }
-
-  Future<List<GameEntity>> findAllRomGames() {
-
-    return findAllRomGamesWithView(GameView.Main);
+    return findAllOwnedWithView(GameView.Main);
 
   }
 
-  Future<List<GameEntity>> findAllGamesWithView(GameView gameView, [int? limit]) {
+  Future<List<GameEntity>> findAllRom() {
+
+    return findAllRomWithView(GameView.Main);
+
+  }
+
+  Future<List<GameEntity>> findAllWithView(GameView gameView, [int? limit]) {
 
     final Query query = GameQuery.selectAllInView(gameView, limit);
     return readItemList(
@@ -100,7 +101,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllGamesWithYearView(GameView gameView, int year, [int? limit]) {
+  Future<List<GameEntity>> findAllWithYearView(GameView gameView, int year, [int? limit]) {
 
     final Query query = GameQuery.selectAllInView(gameView, limit, year);
     return readItemList(
@@ -109,52 +110,56 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllOwnedGamesWithView(GameView gameView, [int? limit]) {
+  Future<List<GameEntity>> findAllOwnedWithView(GameView gameView, [int? limit]) {
 
-    final Query query = GameQuery.selectAllInViewAndOwned(gameView, limit, null);
+    final Query query = GameQuery.selectAllOwnedInView(gameView, limit, null);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllOwnedGamesWithYearView(GameView gameView, int year, [int? limit]) {
+  Future<List<GameEntity>> findAllOwnedWithYearView(GameView gameView, int year, [int? limit]) {
 
-    final Query query = GameQuery.selectAllInViewAndOwned(gameView, limit, year);
+    final Query query = GameQuery.selectAllOwnedInView(gameView, limit, year);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllRomGamesWithView(GameView gameView, [int? limit]) {
+  Future<List<GameEntity>> findAllRomWithView(GameView gameView, [int? limit]) {
 
-    final Query query = GameQuery.selectAllInViewAndRom(gameView, limit, null);
+    final Query query = GameQuery.selectAllRomInView(gameView, limit, null);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllRomGamesWithYearView(GameView gameView, int year, [int? limit]) {
+  Future<List<GameEntity>> findAllRomWithYearView(GameView gameView, int year, [int? limit]) {
 
-    final Query query = GameQuery.selectAllInViewAndRom(gameView, limit, year);
+    final Query query = GameQuery.selectAllRomInView(gameView, limit, year);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<GameEntity> findBaseGameFromDLC(DLCID dlcId) {
+  Future<GameEntity?> findOneFromDLC(DLCID dlcId) {
 
     final Query query = DLCQuery.selectGameByDLC(dlcId);
-    return readItem(
-      query: query,
-    );
+    try {
+      return readItem(
+        query: query,
+      );
+    } on EmptyResultSetException {
+      return Future<GameEntity?>.value(null);
+    }
 
   }
 
-  Future<List<GameEntity>> findAllGamesFromPlatform(PlatformID id) {
+  Future<List<GameEntity>> findAllFromPlatform(PlatformID id) {
 
     final Query query = GamePlatformRelationQuery.selectAllGamesByPlatformId(id);
     return readItemList(
@@ -163,7 +168,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllGamesFromPurchase(PurchaseID id) {
+  Future<List<GameEntity>> findAllFromPurchase(PurchaseID id) {
 
     final Query query = GamePurchaseRelationQuery.selectAllGamesByPurchaseId(id);
     return readItemList(
@@ -172,7 +177,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllGamesFromGameTag(GameTagID id) {
+  Future<List<GameEntity>> findAllFromGameTag(GameTagID id) {
 
     final Query query = GameTagRelationQuery.selectAllGamesByTagId(id);
     return readItemList(
@@ -205,28 +210,28 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<dynamic> unrelateGamePlatform(GameID gameId, PlatformID platformId) {
+  Future<Object?> unrelateGamePlatform(GameID gameId, PlatformID platformId) {
 
     final Query query = GamePlatformRelationQuery.deleteById(gameId, platformId);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelateGamePurchase(GameID gameId, PurchaseID purchaseId) {
+  Future<Object?> unrelateGamePurchase(GameID gameId, PurchaseID purchaseId) {
 
     final Query query = GamePurchaseRelationQuery.deleteById(gameId, purchaseId);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelateGameDLC(DLCID dlcId) {
+  Future<Object?> unrelateGameDLC(DLCID dlcId) {
 
     final Query query = DLCQuery.updateBaseGameById(dlcId, null);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelateGameTag(GameID gameId, GameTagID tagId) {
+  Future<Object?> unrelateGameTag(GameID gameId, GameTagID tagId) {
 
     final Query query = GameTagRelationQuery.deleteById(gameId, tagId);
     return itemConnector.execute(query);
@@ -235,7 +240,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<GameEntity>> findAllGamesByName(String name, int limit) {
+  Future<List<GameEntity>> findAllByName(String name, int limit) {
 
     final Query query = GameQuery.selectAllByNameLike(name, limit);
     return readItemList(
@@ -246,7 +251,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<GameEntity> uploadGameCover(GameID id, String uploadImagePath, [String? oldImageName]) async {
+  Future<GameEntity> uploadCover(GameID id, String uploadImagePath, [String? oldImageName]) async {
 
     return setItemImage(
       uploadImagePath: uploadImagePath,
@@ -258,7 +263,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<GameEntity> renameGameCover(GameID id, String imageName, String newImageName) {
+  Future<GameEntity> renameCover(GameID id, String imageName, String newImageName) {
 
     return renameItemImage(
       oldImageName: imageName,
@@ -269,7 +274,7 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<GameEntity> deleteGameCover(GameID id, String imageName) {
+  Future<GameEntity> deleteCover(GameID id, String imageName) {
 
     return deleteItemImage(
       imageName: imageName,

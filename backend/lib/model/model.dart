@@ -11,7 +11,7 @@ export 'platform.dart';
 export 'purchase.dart';
 export 'store.dart';
 export 'system.dart';
-export 'tag.dart';
-export 'type.dart';
+export 'game_tag.dart';
+export 'purchase_type.dart';
 
 export 'game_with_logs.dart';

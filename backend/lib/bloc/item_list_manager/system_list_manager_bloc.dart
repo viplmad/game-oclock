@@ -21,7 +21,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System, SystemEntity, Sy
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<System> event) {
+  Future<Object?> deleteFuture(DeleteItem<System> event) {
 
     final SystemEntity entity = SystemMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

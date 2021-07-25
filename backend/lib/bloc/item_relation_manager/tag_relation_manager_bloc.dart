@@ -1,12 +1,12 @@
 import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
-import 'package:backend/model/model.dart' show Item, Tag, Game;
+import 'package:backend/model/model.dart' show Item, GameTag, Game;
 import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 
 
-class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag, GameTagID, W> {
+class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<GameTag, GameTagID, W> {
   TagRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
@@ -17,7 +17,7 @@ class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag
   final GameRepository gameRepository;
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -32,7 +32,7 @@ class TagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Tag
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 

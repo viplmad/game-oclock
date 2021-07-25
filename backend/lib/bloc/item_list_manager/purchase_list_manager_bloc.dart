@@ -21,7 +21,7 @@ class PurchaseListManagerBloc extends ItemListManagerBloc<Purchase, PurchaseEnti
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<Purchase> event) {
+  Future<Object?> deleteFuture(DeleteItem<Purchase> event) {
 
     final PurchaseEntity entity = PurchaseMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

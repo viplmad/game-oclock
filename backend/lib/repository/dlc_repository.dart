@@ -119,7 +119,7 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<DLCEntity>> findAllDLCsByName(String name, int limit) {
+  Future<List<DLCEntity>> findAllByName(String name, int limit) {
 
     final Query query = DLCQuery.selectAllByNameLike(name, limit);
     return readItemList(
@@ -130,7 +130,7 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<DLCEntity> uploadDLCCover(DLCID id, String uploadImagePath, [String? oldImageName]) {
+  Future<DLCEntity> uploadCover(DLCID id, String uploadImagePath, [String? oldImageName]) {
 
     return setItemImage(
       uploadImagePath: uploadImagePath,
@@ -142,7 +142,7 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
 
   }
 
-  Future<DLCEntity> renameDLCCover(DLCID id, String imageName, String newImageName) {
+  Future<DLCEntity> renameCover(DLCID id, String imageName, String newImageName) {
 
     return renameItemImage(
       oldImageName: imageName,
@@ -153,7 +153,7 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
 
   }
 
-  Future<DLCEntity> deleteDLCCover(DLCID id, String imageName) {
+  Future<DLCEntity> deleteCover(DLCID id, String imageName) {
 
     return deleteItemImage(
       imageName: imageName,

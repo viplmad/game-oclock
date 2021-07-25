@@ -86,5 +86,5 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
   }
 
   Future<T> createFuture(AddItem<T> event);
-  Future<dynamic> deleteFuture(DeleteItem<T> event);
+  Future<Object?> deleteFuture(DeleteItem<T> event);
 }

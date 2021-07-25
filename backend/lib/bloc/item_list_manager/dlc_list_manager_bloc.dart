@@ -21,7 +21,7 @@ class DLCListManagerBloc extends ItemListManagerBloc<DLC, DLCEntity, DLCID, DLCR
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<DLC> event) {
+  Future<Object?> deleteFuture(DeleteItem<DLC> event) {
 
     final DLCEntity entity = DLCMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

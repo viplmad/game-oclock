@@ -1,7 +1,7 @@
 import 'entity.dart' show ItemEntity;
 
 
-enum TypeView {
+enum PurchaseTypeView {
   Main,
   LastCreated,
 }
@@ -32,7 +32,7 @@ class PurchaseTypeEntity extends ItemEntity {
   final int id;
   final String name;
 
-  static PurchaseTypeEntity fromMap(Map<String, dynamic> map) {
+  static PurchaseTypeEntity fromMap(Map<String, Object?> map) {
 
     return PurchaseTypeEntity(
       id: map[PurchaseTypeEntityData.idField] as int,
@@ -41,7 +41,7 @@ class PurchaseTypeEntity extends ItemEntity {
 
   }
 
-  static PurchaseTypeID idFromMap(Map<String, dynamic> map) {
+  static PurchaseTypeID idFromMap(Map<String, Object?> map) {
 
     return PurchaseTypeID(map[PurchaseTypeEntityData.idField] as int);
 
@@ -53,9 +53,9 @@ class PurchaseTypeEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       PurchaseTypeEntityData.nameField : name,
     };
 
@@ -63,9 +63,9 @@ class PurchaseTypeEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(PurchaseTypeEntity updatedEntity) {
+  Map<String, Object?> updateMap(PurchaseTypeEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, PurchaseTypeEntityData.nameField, name, updatedEntity.name);
 

@@ -27,13 +27,13 @@ class DLCRelationBloc<W extends Item> extends ItemRelationBloc<DLC, DLCID, W> {
 
     switch(W) {
       case DLCFinish:
-        final Future<List<DLCFinishEntity>> entityListFuture = dlcFinishRepository.findAllDLCFinishFromDLC(id);
+        final Future<List<DLCFinishEntity>> entityListFuture = dlcFinishRepository.findAllFromDLC(id);
         return DLCFinishMapper.futureEntityListToModelList(entityListFuture) as Future<List<W>>;
       case Game:
-        final Future<GameEntity> entityFuture = gameRepository.findBaseGameFromDLC(id); // TODO can be null game != null? <Game>[game] : <Game>[]
-        return GameMapper.futureEntityToModel(entityFuture, gameRepository.getImageURI) as Future<List<W>>;
+        final Future<GameEntity?> entityFuture = gameRepository.findOneFromDLC(id);
+        return entityFuture.asStream().map( (GameEntity? entity) => entity != null? <Game>[GameMapper.entityToModel(entity, gameRepository.getImageURI(entity.coverFilename))] : <Game>[] ).first as Future<List<W>>;
       case Purchase:
-        final Future<List<PurchaseEntity>> entityListFuture = purchaseRepository.findAllPurchasesFromDLC(id);
+        final Future<List<PurchaseEntity>> entityListFuture = purchaseRepository.findAllFromDLC(id);
         return PurchaseMapper.futureEntityListToModelList(entityListFuture) as Future<List<W>>;
     }
 

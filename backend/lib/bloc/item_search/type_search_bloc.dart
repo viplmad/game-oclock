@@ -1,4 +1,4 @@
-import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeID, TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeView;
 import 'package:backend/model/model.dart' show PurchaseType;
 import 'package:backend/mapper/mapper.dart' show PurchaseTypeMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
@@ -14,7 +14,7 @@ class TypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, PurchaseTypeEnti
   @override
   Future<List<PurchaseType>> getInitialItems() {
 
-    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllPurchaseTypesWithView(TypeView.LastCreated, super.maxSuggestions);
+    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllWithView(PurchaseTypeView.LastCreated, super.maxSuggestions);
     return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -22,7 +22,7 @@ class TypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, PurchaseTypeEnti
   @override
   Future<List<PurchaseType>> getSearchItems(String query) {
 
-    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllPurchaseTypesByName(query, super.maxResults);
+    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
     return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture);
 
   }

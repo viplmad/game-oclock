@@ -53,7 +53,7 @@ class PurchaseEntity extends ItemEntity {
 
   final int? store;
 
-  static PurchaseEntity fromMap(Map<String, dynamic> map) {
+  static PurchaseEntity fromMap(Map<String, Object?> map) {
 
     return PurchaseEntity(
       id: map[PurchaseEntityData.idField] as int,
@@ -68,7 +68,7 @@ class PurchaseEntity extends ItemEntity {
 
   }
 
-  static PurchaseID idFromMap(Map<String, dynamic> map) {
+  static PurchaseID idFromMap(Map<String, Object?> map) {
 
     return PurchaseID(map[PurchaseEntityData.idField] as int);
 
@@ -80,9 +80,9 @@ class PurchaseEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       PurchaseEntityData.descriptionField : description,
       PurchaseEntityData.priceField : price,
       PurchaseEntityData.externalCreditField : externalCredit,
@@ -95,9 +95,9 @@ class PurchaseEntity extends ItemEntity {
     return createMap;
   }
 
-  Map<String, dynamic> updateMap(PurchaseEntity updatedEntity) {
+  Map<String, Object?> updateMap(PurchaseEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, PurchaseEntityData.descriptionField, description, updatedEntity.description);
     putUpdateMapValue(updateMap, PurchaseEntityData.priceField, price, updatedEntity.price);

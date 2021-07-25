@@ -2,6 +2,7 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
 import 'package:backend/entity/entity.dart' show PurchaseID, StoreEntity, StoreEntityData, StoreID, StoreView;
+import 'package:backend/utils/empty_result_set_exception.dart';
 
 import './query/query.dart' show StoreQuery, PurchaseQuery;
 import 'item_repository.dart';
@@ -30,7 +31,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   }
 
-  Future<dynamic> relateStorePurchase(StoreID storeId, PurchaseID purchaseId) {
+  Future<Object?> relateStorePurchase(StoreID storeId, PurchaseID purchaseId) {
 
     final Query query = PurchaseQuery.updateStoreById(purchaseId, storeId);
     return itemConnector.execute(query);
@@ -59,7 +60,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   }
 
-  Future<List<StoreEntity>> findAllStoresWithView(StoreView storeView, [int? limit]) {
+  Future<List<StoreEntity>> findAllWithView(StoreView storeView, [int? limit]) {
 
     final Query query = StoreQuery.selectAllInView(storeView, limit);
     return readItemList(
@@ -68,12 +69,16 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   }
 
-  Future<StoreEntity> findStoreFromPurchase(PurchaseID id) {
+  Future<StoreEntity?> findOneFromPurchase(PurchaseID id) {
 
     final Query query = PurchaseQuery.selectStoreByPurchase(id);
-    return readItem(
-      query: query,
-    );
+    try {
+      return readItem(
+        query: query,
+      );
+    } on EmptyResultSetException {
+      return Future<StoreEntity?>.value(null);
+    }
 
   }
   //#endregion READ
@@ -94,14 +99,14 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(StoreID id) {
+  Future<Object?> deleteById(StoreID id) {
 
     final Query query = StoreQuery.deleteById(id);
     return itemConnector.execute(query);
 
   }
 
-  Future<dynamic> unrelateStorePurchase(PurchaseID purchaseId) {
+  Future<Object?> unrelateStorePurchase(PurchaseID purchaseId) {
 
     final Query query = PurchaseQuery.updateStoreById(purchaseId, null);
     return itemConnector.execute(query);
@@ -110,7 +115,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<StoreEntity>> findAllStoresByName(String name, int limit) {
+  Future<List<StoreEntity>> findAllByName(String name, int limit) {
 
     final Query query = StoreQuery.selectAllByNameLike(name, limit);
     return readItemList(
@@ -121,7 +126,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   //#endregion SEARCH
 
   //#region IMAGE
-  Future<StoreEntity> uploadStoreIcon(StoreID id, String uploadImagePath, [String? oldImageName]) {
+  Future<StoreEntity> uploadIcon(StoreID id, String uploadImagePath, [String? oldImageName]) {
 
     return setItemImage(
       uploadImagePath: uploadImagePath,
@@ -133,7 +138,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   }
 
-  Future<StoreEntity> renameStoreIcon(StoreID id, String imageName, String newImageName) {
+  Future<StoreEntity> renameIcon(StoreID id, String imageName, String newImageName) {
 
     return renameItemImage(
       oldImageName: imageName,
@@ -144,7 +149,7 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
 
   }
 
-  Future<StoreEntity> deleteStoreIcon(StoreID id, String imageName) {
+  Future<StoreEntity> deleteIcon(StoreID id, String imageName) {
 
     return deleteItemImage(
       imageName: imageName,

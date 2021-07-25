@@ -55,7 +55,7 @@ class CloudinaryConnector extends ImageConnector {
 
   //#region DELETE
   @override
-  Future<dynamic> delete({required String tableName, required String imageName}) {
+  Future<Object?> delete({required String tableName, required String imageName}) {
 
     return _connection.deleteImage(
       folder: tableName,

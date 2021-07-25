@@ -1,4 +1,4 @@
-import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeID, TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeView;
 import 'package:backend/model/model.dart' show PurchaseType;
 import 'package:backend/mapper/mapper.dart' show PurchaseTypeMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseTypeRepository;
@@ -16,7 +16,7 @@ class TypeListBloc extends ItemListBloc<PurchaseType, PurchaseTypeEntity, Purcha
   @override
   Future<List<PurchaseType>> getReadAllStream() {
 
-    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllPurchaseTypesWithView(TypeView.Main);
+    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllWithView(PurchaseTypeView.Main);
     return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -24,8 +24,8 @@ class TypeListBloc extends ItemListBloc<PurchaseType, PurchaseTypeEntity, Purcha
   @override
   Future<List<PurchaseType>> getReadViewStream(UpdateView event) {
 
-    final TypeView view = TypeView.values[event.viewIndex];
-    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllPurchaseTypesWithView(view);
+    final PurchaseTypeView view = PurchaseTypeView.values[event.viewIndex];
+    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllWithView(view);
     return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture);
 
   }

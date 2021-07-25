@@ -25,7 +25,7 @@ class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC, DLCEntity, DLCID, 
   @override
   Future<DLC> addImage(AddItemImage<DLC> event) async {
 
-    final Future<DLCEntity> entityFuture = repository.uploadDLCCover(id, event.imagePath, event.oldImageName);
+    final Future<DLCEntity> entityFuture = repository.uploadCover(id, event.imagePath, event.oldImageName);
     return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -33,7 +33,7 @@ class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC, DLCEntity, DLCID, 
   @override
   Future<DLC> updateImageName(UpdateItemImageName<DLC> event) {
 
-    final Future<DLCEntity> entityFuture = repository.renameDLCCover(id, event.oldImageName, event.newImageName);
+    final Future<DLCEntity> entityFuture = repository.renameCover(id, event.oldImageName, event.newImageName);
     return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -41,7 +41,7 @@ class DLCDetailManagerBloc extends ItemDetailManagerBloc<DLC, DLCEntity, DLCID, 
   @override
   Future<DLC> deleteImage(DeleteItemImage<DLC> event) {
 
-    final Future<DLCEntity> entityFuture = repository.deleteDLCCover(id, event.imageName);
+    final Future<DLCEntity> entityFuture = repository.deleteCover(id, event.imageName);
     return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }

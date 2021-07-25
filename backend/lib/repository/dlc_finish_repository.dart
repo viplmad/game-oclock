@@ -50,7 +50,7 @@ class DLCFinishRepository extends ItemRepository<DLCFinishEntity, DLCFinishID> {
 
   }
 
-  Future<List<DLCFinishEntity>> findAllDLCFinishFromDLC(DLCID id) {
+  Future<List<DLCFinishEntity>> findAllFromDLC(DLCID id) {
 
     final Query query = DLCFinishQuery.selectAllByDLC(id);
     return readItemList(
@@ -76,7 +76,7 @@ class DLCFinishRepository extends ItemRepository<DLCFinishEntity, DLCFinishID> {
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(DLCFinishID id) {
+  Future<Object?> deleteById(DLCFinishID id) {
 
     final Query query = DLCFinishQuery.deleteById(id);
     return itemConnector.execute(query);

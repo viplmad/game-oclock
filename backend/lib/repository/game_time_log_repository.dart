@@ -49,7 +49,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
     );
 
   }
-  Future<List<GameTimeLogEntity>> findAllGameTimeLogsFromGame(GameID id) {
+  Future<List<GameTimeLogEntity>> findAllFromGame(GameID id) {
 
     final Query query = GameTimeLogQuery.selectAllByGame(id);
     return readItemList(
@@ -58,7 +58,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
 
   }
 
-  Future<List<GameWithLogsEntity>> findAllGamesWithTimeLogsByYear(int year) {
+  Future<List<GameWithLogsEntity>> findAllWithGameByYear(int year) {
 
     final Query query = GameTimeLogQuery.selectAllWithGameByYear(year);
     return itemConnector.execute(query)
@@ -83,7 +83,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
 
   //#region DELETE
   @override
-  Future<dynamic> deleteById(GameTimeLogID id) {
+  Future<Object?> deleteById(GameTimeLogID id) {
 
     final Query query = GameTimeLogQuery.deleteById(id);
     return itemConnector.execute(query);
@@ -91,15 +91,15 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
   }
   //#endregion DELETE
 
-  List<GameWithLogsEntity> _listMapToListGamesWithLogs(List<Map<String, Map<String, dynamic>>> results) {
+  List<GameWithLogsEntity> _listMapToListGamesWithLogs(List<Map<String, Map<String, Object?>>> results) {
     final List<GameWithLogsEntity> entities = <GameWithLogsEntity>[];
 
     results.forEach( (Map<String, Map<String, Object?>> manyMap) {
 
-      final Map<String, dynamic> gameMap = manyMap[GameEntityData.table]!;
+      final Map<String, Object?> gameMap = manyMap[GameEntityData.table]!;
       final GameEntity gameEntity = GameEntity.fromMap(gameMap);
 
-      final Map<String, dynamic> timeLogMap = ItemRepositoryUtils.combineMaps(manyMap, GameTimeLogEntityData.table);
+      final Map<String, Object?> timeLogMap = ItemRepositoryUtils.combineMaps(manyMap, GameTimeLogEntityData.table);
       final GameTimeLogEntity timeLogEntity = GameTimeLogEntity.fromMap(timeLogMap);
 
       GameWithLogsEntity entity;

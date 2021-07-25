@@ -1,5 +1,5 @@
 import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
-import 'package:backend/model/model.dart' show Item, Tag, Game;
+import 'package:backend/model/model.dart' show Item, GameTag, Game;
 import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
@@ -7,7 +7,7 @@ import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 
-class TagRelationBloc<W extends Item> extends ItemRelationBloc<Tag, GameTagID, W> {
+class TagRelationBloc<W extends Item> extends ItemRelationBloc<GameTag, GameTagID, W> {
   TagRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
@@ -23,7 +23,7 @@ class TagRelationBloc<W extends Item> extends ItemRelationBloc<Tag, GameTagID, W
 
     switch(W) {
       case Game:
-        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllGamesFromGameTag(id);
+        final Future<List<GameEntity>> entityListFuture = gameRepository.findAllFromGameTag(id);
         return GameMapper.futureEntityListToModelList(entityListFuture, gameRepository.getImageURI) as Future<List<W>>;
     }
 

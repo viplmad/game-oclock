@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, TypeView;
+import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, PurchaseTypeView;
 
 
 class PurchaseTypeQuery {
@@ -70,7 +70,7 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query selectAllInView(TypeView view, [int? limit]) {
+  static Query selectAllInView(PurchaseTypeView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table)
@@ -92,20 +92,20 @@ class PurchaseTypeQuery {
     query.where(PurchaseTypeEntityData.idField, id.id, type: int, table: PurchaseTypeEntityData.table);
   }
 
-  static void _addViewWhere(Query query, TypeView view) {
+  static void _addViewWhere(Query query, PurchaseTypeView view) {
     switch(view) {
-      case TypeView.Main:
+      case PurchaseTypeView.Main:
         break;
-      case TypeView.LastCreated:
+      case PurchaseTypeView.LastCreated:
         break;
     }
   }
 
-  static void _addViewOrder(Query query, TypeView view) {
+  static void _addViewOrder(Query query, PurchaseTypeView view) {
     switch(view) {
-      case TypeView.Main:
+      case PurchaseTypeView.Main:
         break;
-      case TypeView.LastCreated:
+      case PurchaseTypeView.LastCreated:
         query.order(PurchaseTypeEntityData.idField, PurchaseTypeEntityData.table, direction: SortOrder.DESC);
         break;
     }

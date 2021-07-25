@@ -16,7 +16,7 @@ class AllListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllGamesWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllWithView(GameView.Main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -25,7 +25,7 @@ class AllListBloc extends GameListBloc {
   Future<List<Game>> getReadViewStream(UpdateView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllGamesWithView(view);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllWithView(view);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -34,7 +34,7 @@ class AllListBloc extends GameListBloc {
   Future<List<Game>> getReadYearViewStream(UpdateYearView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllGamesWithYearView(view, event.year);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllWithYearView(view, event.year);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -49,7 +49,7 @@ class OwnedListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedGamesWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.Main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -58,7 +58,7 @@ class OwnedListBloc extends GameListBloc {
   Future<List<Game>> getReadViewStream(UpdateView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedGamesWithView(view);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(view);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -67,7 +67,7 @@ class OwnedListBloc extends GameListBloc {
   Future<List<Game>> getReadYearViewStream(UpdateYearView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedGamesWithView(view, event.year);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(view, event.year);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -82,7 +82,7 @@ class RomListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllRomGamesWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllRomWithView(GameView.Main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -91,7 +91,7 @@ class RomListBloc extends GameListBloc {
   Future<List<Game>> getReadViewStream(UpdateView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllRomGamesWithView(view);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllRomWithView(view);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -100,7 +100,7 @@ class RomListBloc extends GameListBloc {
   Future<List<Game>> getReadYearViewStream(UpdateYearView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllRomGamesWithYearView(view, event.year);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllRomWithYearView(view, event.year);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

@@ -2,7 +2,8 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
-import 'package:query/query/exception.dart';
+
+import 'package:backend/utils/empty_result_set_exception.dart';
 
 
 abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
@@ -149,7 +150,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   T _listMapToSingle(List<Map<String, Map<String, Object?>>> results) {
     if(results.isEmpty) {
-      throw UnsupportedOperationException('Result set is empty');
+      throw EmptyResultSetException('Result set is empty');
     }
 
     return _listMapToList(results).first;

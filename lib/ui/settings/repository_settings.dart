@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/connector/connector.dart' show CloudinaryCredentials, CloudinaryConnector, CloudinaryInstance, ImageConnector, ItemConnector, PostgresConnector, PostgresCredentials, PostgresInstance, ProviderInstance;
+import 'package:backend/connector/connector.dart' show CloudinaryCredentials, CloudinaryConnector, CloudinaryInstance, PostgresConnector, PostgresCredentials, PostgresInstance, ProviderInstance;
 
 import 'package:backend/model/repository_type.dart';
 import 'package:backend/model/repository_tab.dart';

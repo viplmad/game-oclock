@@ -21,7 +21,7 @@ class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC
   final DLCRepository dlcRepository;
 
   @override
-  Future<dynamic> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 
@@ -42,7 +42,7 @@ class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC
   }
 
   @override
-  Future<dynamic> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     final W otherItem = event.otherItem;
 

@@ -25,7 +25,7 @@ class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform, Platform
   @override
   Future<Platform> addImage(AddItemImage<Platform> event) {
 
-    final Future<PlatformEntity> entityFuture = repository.uploadPlatformIcon(id, event.imagePath, event.oldImageName);
+    final Future<PlatformEntity> entityFuture = repository.uploadIcon(id, event.imagePath, event.oldImageName);
     return PlatformMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -33,7 +33,7 @@ class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform, Platform
   @override
   Future<Platform> updateImageName(UpdateItemImageName<Platform> event) {
 
-    final Future<PlatformEntity> entityFuture = repository.renamePlatformIcon(id, event.oldImageName, event.newImageName);
+    final Future<PlatformEntity> entityFuture = repository.renameIcon(id, event.oldImageName, event.newImageName);
     return PlatformMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }
@@ -41,7 +41,7 @@ class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform, Platform
   @override
   Future<Platform> deleteImage(DeleteItemImage<Platform> event) {
 
-    final Future<PlatformEntity> entityFuture = repository.deletePlatformIcon(id, event.imageName);
+    final Future<PlatformEntity> entityFuture = repository.deleteIcon(id, event.imageName);
     return PlatformMapper.futureEntityToModel(entityFuture, repository.getImageURI);
 
   }

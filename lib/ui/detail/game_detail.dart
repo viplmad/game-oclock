@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item, Game, GameFinish, DLC, Purchase, Platform, Tag;
+import 'package:backend/model/model.dart' show Item, Game, GameFinish, DLC, Purchase, Platform, GameTag;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
@@ -66,7 +66,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<Tag> _tagRelationManagerBloc = GameRelationManagerBloc<Tag>(
+    final GameRelationManagerBloc<GameTag> _tagRelationManagerBloc = GameRelationManagerBloc<GameTag>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
@@ -80,7 +80,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
       blocProviderRelationBuilder<Platform>(collectionRepository, _platformRelationManagerBloc),
       blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
       blocProviderRelationBuilder<DLC>(collectionRepository, _dlcRelationManagerBloc),
-      blocProviderRelationBuilder<Tag>(collectionRepository, _tagRelationManagerBloc),
+      blocProviderRelationBuilder<GameTag>(collectionRepository, _tagRelationManagerBloc),
       blocProviderRelationBuilder<GameFinish>(collectionRepository, _finishRelationManagerBloc),
 
       BlocProvider<GameRelationManagerBloc<Platform>>(
@@ -98,7 +98,7 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
           return _dlcRelationManagerBloc;
         },
       ),
-      BlocProvider<GameRelationManagerBloc<Tag>>(
+      BlocProvider<GameRelationManagerBloc<GameTag>>(
         create: (BuildContext context) {
           return _tagRelationManagerBloc;
         },

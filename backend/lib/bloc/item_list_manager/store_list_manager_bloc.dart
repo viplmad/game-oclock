@@ -21,7 +21,7 @@ class StoreListManagerBloc extends ItemListManagerBloc<Store, StoreEntity, Store
   }
 
   @override
-  Future<dynamic> deleteFuture(DeleteItem<Store> event) {
+  Future<Object?> deleteFuture(DeleteItem<Store> event) {
 
     final StoreEntity entity = StoreMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

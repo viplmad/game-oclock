@@ -77,7 +77,7 @@ class GameEntity extends ItemEntity {
   final DateTime? finishDate;
   final bool isBackup;
 
-  static GameEntity fromMap(Map<String, dynamic> map) {
+  static GameEntity fromMap(Map<String, Object?> map) {
 
     return GameEntity(
       id: map[GameEntityData.idField] as int,
@@ -97,7 +97,7 @@ class GameEntity extends ItemEntity {
 
   }
 
-  static GameID idFromMap(Map<String, dynamic> map) {
+  static GameID idFromMap(Map<String, Object?> map) {
 
     return GameID(map[GameEntityData.idField] as int);
 

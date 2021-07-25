@@ -271,9 +271,9 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
               Text(GameCollectionLocalisations.of(context).uploadImageString),
             leading: const Icon(Icons.file_upload),
             onTap: () {
-              _picker.getImage(
+              _picker.pickImage(
                   source: ImageSource.gallery,
-              ).then( (PickedFile? imagePicked) {
+              ).then( (XFile? imagePicked) {
                 if(imagePicked != null) {
 
                   BlocProvider.of<S>(outerContext).add(

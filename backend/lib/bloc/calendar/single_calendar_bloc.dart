@@ -526,14 +526,14 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   Future<List<GameTimeLog>> getReadAllTimeLogsStream() {
 
-    final Future<List<GameTimeLogEntity>> entityListFuture = gameTimeLogRepository.findAllGameTimeLogsFromGame(id);
+    final Future<List<GameTimeLogEntity>> entityListFuture = gameTimeLogRepository.findAllFromGame(id);
     return GameTimeLogMapper.futureEntityListToModelList(entityListFuture);
 
   }
 
   Future<List<GameFinish>> getReadAllFinishDatesStream() {
 
-    final Future<List<GameFinishEntity>> entityListFuture = gameFinishRepository.findAllGameFinishFromGame(id);
+    final Future<List<GameFinishEntity>> entityListFuture = gameFinishRepository.findAllFromGame(id);
     return GameFinishMapper.futureEntityListToModelList(entityListFuture);
 
   }

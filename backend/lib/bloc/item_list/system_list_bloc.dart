@@ -16,7 +16,7 @@ class SystemListBloc extends ItemListBloc<System, SystemEntity, SystemID, System
   @override
   Future<List<System>> getReadAllStream() {
 
-    final Future<List<SystemEntity>> entityListFuture = repository.findAllSystemsWithView(SystemView.Main);
+    final Future<List<SystemEntity>> entityListFuture = repository.findAllWithView(SystemView.Main);
     return SystemMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -25,7 +25,7 @@ class SystemListBloc extends ItemListBloc<System, SystemEntity, SystemID, System
   Future<List<System>> getReadViewStream(UpdateView event) {
 
     final SystemView view = SystemView.values[event.viewIndex];
-    final Future<List<SystemEntity>> entityListFuture = repository.findAllSystemsWithView(view);
+    final Future<List<SystemEntity>> entityListFuture = repository.findAllWithView(view);
     return SystemMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

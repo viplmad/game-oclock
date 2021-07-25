@@ -48,7 +48,7 @@ class SystemEntity extends ItemEntity {
   final int generation;
   final String? manufacturer;
 
-  static SystemEntity fromMap(Map<String, dynamic> map) {
+  static SystemEntity fromMap(Map<String, Object?> map) {
 
     return SystemEntity(
       id: map[SystemEntityData.idField] as int,
@@ -60,7 +60,7 @@ class SystemEntity extends ItemEntity {
 
   }
 
-  static SystemID idFromMap(Map<String, dynamic> map) {
+  static SystemID idFromMap(Map<String, Object?> map) {
 
     return SystemID(map[SystemEntityData.idField] as int);
 
@@ -72,9 +72,9 @@ class SystemEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> createMap() {
+  Map<String, Object?> createMap() {
 
-    final Map<String, dynamic> createMap = <String, dynamic>{
+    final Map<String, Object?> createMap = <String, Object?>{
       SystemEntityData.nameField : name,
       SystemEntityData.generationField : generation,
     };
@@ -86,9 +86,9 @@ class SystemEntity extends ItemEntity {
 
   }
 
-  Map<String, dynamic> updateMap(SystemEntity updatedEntity) {
+  Map<String, Object?> updateMap(SystemEntity updatedEntity) {
 
-    final Map<String, dynamic> updateMap = <String, dynamic>{};
+    final Map<String, Object?> updateMap = <String, Object?>{};
 
     putUpdateMapValue(updateMap, SystemEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, SystemEntityData.iconField, iconFilename, updatedEntity.iconFilename);
