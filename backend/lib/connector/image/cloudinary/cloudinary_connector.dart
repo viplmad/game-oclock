@@ -9,20 +9,20 @@ const String _baseRESURL = 'https://res.cloudinary.com/';
 class CloudinaryConnector extends ImageConnector {
   CloudinaryConnector.fromConnectionString(String connectionString) {
 
-    this._instance = CloudinaryInstance.fromString(connectionString);
+    this.instance = CloudinaryInstance.fromString(connectionString);
     createConnection();
 
   }
 
-  late CloudinaryInstance _instance;
+  late CloudinaryInstance instance;
   late CloudinaryConnection _connection;
 
   void createConnection() {
 
     this._connection = CloudinaryConnection(
-      _instance.apiKey.toString(),
-      _instance.apiSecret,
-      _instance.cloudName,
+      instance.apiKey.toString(),
+      instance.apiSecret,
+      instance.cloudName,
     );
 
   }
@@ -80,7 +80,7 @@ class CloudinaryConnector extends ImageConnector {
   //#region Helpers
   String getCompleteResURL(String folderName, String imageFilename) {
 
-    final String url = _baseRESURL + _instance.cloudName + '/image/upload/$folderName/$imageFilename';
+    final String url = _baseRESURL + instance.cloudName + '/image/upload/$folderName/$imageFilename';
 
     return url;
 
@@ -88,7 +88,7 @@ class CloudinaryConnector extends ImageConnector {
 
   String getCompleteAPIURL() {
 
-    final String url = _baseAPIURL + _instance.cloudName + '/image/upload';
+    final String url = _baseAPIURL + instance.cloudName + '/image/upload';
 
     return url;
 

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/model/list_style.dart';
-import 'package:backend/repository/repository.dart' show ItemRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';

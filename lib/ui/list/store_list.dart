@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show Store;
 import 'package:backend/model/list_style.dart';
-import 'package:backend/repository/repository.dart' show StoreRepository;
 
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';

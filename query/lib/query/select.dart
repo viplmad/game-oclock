@@ -1,5 +1,3 @@
-import 'package:query/query/block/returning_field_block.dart';
-
 import 'block/block.dart';
 
 import 'query.dart';

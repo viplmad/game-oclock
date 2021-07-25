@@ -19,8 +19,8 @@ abstract class GameCollectionLocalisations {
   String get repositorySettingsString;
   String get unableToUpdateConnectionString;
   String get saveString;
-  String get remoteRepositoryString;
-  String get localRepositoryString;
+  String get itemConnectionString;
+  String get imageConnectionString;
   String get hostString;
   String get portString;
   String get databaseString;

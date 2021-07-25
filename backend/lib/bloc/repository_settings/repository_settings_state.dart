@@ -1,3 +1,4 @@
+import 'package:backend/model/repository_tab.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:backend/connector/connector.dart';
@@ -6,7 +7,9 @@ import 'package:backend/model/repository_type.dart';
 
 
 abstract class RepositorySettingsState extends Equatable {
-  const RepositorySettingsState();
+  const RepositorySettingsState([this.repositoryTab = RepositoryTab.Item]);
+
+  final RepositoryTab repositoryTab; // TODO move to own bloc only for tab similar to TabBloc
 
   @override
   List<Object> get props => <Object>[];

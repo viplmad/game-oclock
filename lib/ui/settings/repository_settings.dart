@@ -3,14 +3,16 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/connector/connector.dart';
+import 'package:backend/connector/connector.dart' show CloudinaryConnector, CloudinaryInstance, ImageConnector, ItemConnector, PostgresConnector, PostgresInstance;
 
 import 'package:backend/model/repository_type.dart';
+import 'package:backend/model/repository_tab.dart';
 
 import 'package:backend/bloc/repository_settings/repository_settings.dart';
 import 'package:backend/bloc/repository_settings_manager/repository_settings_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/tabs_delegate.dart';
 
 import '../common/show_snackbar.dart';
 import '../route_constants.dart';
@@ -39,24 +41,71 @@ class RepositorySettings extends StatelessWidget {
         ),
       ],
 
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
-        ),
-        body: const _RepositorySettingsBody(),
-      ),
+      child: _RepositorySettingsBody(),
     );
 
   }
 }
 
+// ignore: must_be_immutable
 class _RepositorySettingsBody extends StatelessWidget {
-  const _RepositorySettingsBody({
+  _RepositorySettingsBody({
     Key? key,
   }) : super(key: key);
 
+  String _host = '';
+  int _port = -1;
+  String _db = '';
+  String _user = '';
+  String _pass = '';
+
+  String _cloud = '';
+  int _apiKey = -1;
+  String _apiSecret = '';
+
   @override
   Widget build(BuildContext context) {
+
+    final GlobalKey<FormState> _itemFormKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> _imageFormKey = GlobalKey<FormState>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton.extended(
+        tooltip: GameCollectionLocalisations.of(context).saveString,
+        label: Text(GameCollectionLocalisations.of(context).saveString),
+        icon: const Icon(Icons.save),
+        onPressed: () {
+          if (_itemFormKey.currentState != null && _itemFormKey.currentState!.validate() && _imageFormKey.currentState != null && _imageFormKey.currentState!.validate()) {
+            _itemFormKey.currentState!.save();
+            _imageFormKey.currentState!.save();
+
+            BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+              UpdateConnectionSettings(
+                PostgresInstance(
+                  _host,
+                  _port,
+                  _db,
+                  _user,
+                  _pass,
+                ),
+                CloudinaryInstance(
+                  _cloud,
+                  _apiKey,
+                  _apiSecret,
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody() {
 
     return SingleChildScrollView(
       child: Container(
@@ -84,51 +133,66 @@ class _RepositorySettingsBody extends StatelessWidget {
           },
           child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
             builder: (BuildContext context, RepositorySettingsState state) {
-              PostgresInstance? postgresInstance;
-              CloudinaryInstance? cloudinaryInstance;
-              RepositoryType radioGroup = RepositoryType.Remote;
+              ItemConnector? itemConnector;
+              ImageConnector? imageConnector;
+              ItemConnectorType itemRadioGroup = ItemConnectorType.Postgres;
+              ImageConnectorType imageRadioGroup = ImageConnectorType.Cloudinary;
 
               if(state is RepositorySettingsLoading) {
 
                 return const LinearProgressIndicator();
 
               }
-              if(state is EmptyRepositorySettings) {
-                radioGroup = RepositoryType.Remote;
+              if(state is RepositorySettingsLoaded) {
+                itemRadioGroup = state.itemType;
+                imageRadioGroup = state.imageType;
+                itemConnector = state.itemConnector;
+                imageConnector = state.imageConnector;
               }
-              if(state is RemoteRepositorySettingsLoaded) {
-                radioGroup = state.radio;
-                postgresInstance = state.postgresInstance;
-                cloudinaryInstance = state.cloudinaryInstance;
-              }
-              /*if(state is Local) {}*/
 
-              return ExpansionPanelList(
-                expansionCallback: (int panelIndex, bool isExpanded) {
+              final List<String> tabTitles = <String>[
+                GameCollectionLocalisations.of(context).itemConnectionString,
+                GameCollectionLocalisations.of(context).imageConnectionString,
+              ];
 
-                  if(panelIndex == 0) {
-                    if(!isExpanded) {
+              return DefaultTabController(
+                length: tabTitles.length,
+                initialIndex: state.repositoryTab.index,
+                child: Builder(
+                  builder: (BuildContext context) {
+                    DefaultTabController.of(context)!.addListener( () {
+                      final RepositoryTab newTab = RepositoryTab.values.elementAt(DefaultTabController.of(context)!.index);
 
-                      BlocProvider.of<RepositorySettingsBloc>(context).add(
-                        const UpdateRepositorySettingsRadio(RepositoryType.Remote),
-                      );
+                      BlocProvider.of<RepositorySettingsBloc>(context).add(UpdateRepositoryTab(newTab));
+                    });
 
-                    }
-                  } else if(panelIndex == 1) {
-                    if(!isExpanded) {
-
-                      BlocProvider.of<RepositorySettingsBloc>(context).add(
-                        const UpdateRepositorySettingsRadio(RepositoryType.Local),
-                      );
-
-                    }
-                  }
-
-                },
-                children: <ExpansionPanel>[
-                  _remoteExpansionPanel(context, radioGroup, postgresInstance, cloudinaryInstance),
-                  //_localRepositoryPanel(context, radioGroup),
-                ],
+                    return NestedScrollView(
+                      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                        return <Widget>[
+                          SliverPersistentHeader(
+                            pinned: true,
+                            floating: true,
+                            delegate: TabsDelegate(
+                              tabBar: TabBar(
+                                tabs: tabTitles.map<Tab>( (String title) {
+                                  return Tab(
+                                    text: title,
+                                  );
+                                }).toList(growable: false),
+                              ),
+                            ),
+                          ),
+                        ];
+                      },
+                      body: TabBarView(
+                        children: <Widget>[
+                          _itemExpansionPanelList(context, itemRadioGroup, itemConnector),
+                          _imageExpansionPanelList(context, imageRadioGroup, imageConnector),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               );
 
             },
@@ -139,25 +203,75 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _remoteExpansionPanel(BuildContext context, RepositoryType radioGroup, [PostgresInstance? postgresInstance, CloudinaryInstance? cloudinaryInstance]) {
+  ExpansionPanelList _itemExpansionPanelList(BuildContext context, ItemConnectorType radioGroup, ItemConnector? itemConnector) {
+    return ExpansionPanelList(
+      expansionCallback: (int panelIndex, bool isExpanded) {
 
-    String _host = '';
-    int _port = -1;
-    String _db = '';
-    String _user = '';
-    String _pass = '';
+        if(panelIndex == 0) {
+          if(!isExpanded) {
 
-    String _cloud = '';
-    int _apiKey = -1;
-    String _apiSecret = '';
+            BlocProvider.of<RepositorySettingsBloc>(context).add(
+              const UpdateItemTypeSettingsRadio(ItemConnectorType.Postgres),
+            );
 
-    return _repositoryExpansionPanel(
+          }
+        } else if(panelIndex == 1) {
+          if(!isExpanded) {
+
+            BlocProvider.of<RepositorySettingsBloc>(context).add(
+              const UpdateItemTypeSettingsRadio(ItemConnectorType.Local),
+            );
+
+          }
+        }
+
+      },
+      children: <ExpansionPanel>[
+        _postgresExpansionPanel(context, radioGroup, itemConnector as PostgresConnector?),
+        //_localExpansionPanel(context, radioGroup),
+      ],
+    );
+  }
+
+  ExpansionPanelList _imageExpansionPanelList(BuildContext context, ImageConnectorType radioGroup, ImageConnector? imageConnector) {
+    return ExpansionPanelList(
+      expansionCallback: (int panelIndex, bool isExpanded) {
+
+        if(panelIndex == 0) {
+          if(!isExpanded) {
+
+            BlocProvider.of<RepositorySettingsBloc>(context).add(
+              const UpdateImageTypeSettingsRadio(ImageConnectorType.Cloudinary),
+            );
+
+          }
+        } else if(panelIndex == 1) {
+          if(!isExpanded) {
+
+            BlocProvider.of<RepositorySettingsBloc>(context).add(
+              const UpdateImageTypeSettingsRadio(ImageConnectorType.Local),
+            );
+
+          }
+        }
+
+      },
+      children: <ExpansionPanel>[
+        _cloudinaryExpansionPanel(context, radioGroup, imageConnector as CloudinaryConnector?),
+        //_localExpansionPanel(context, radioGroup),
+      ],
+    );
+  }
+
+  ExpansionPanel _postgresExpansionPanel(BuildContext context, ItemConnectorType radioGroup, PostgresConnector? itemConnector) {
+    final PostgresInstance? postgresInstance = itemConnector?.instance;
+
+    return _itemExpansionPanel(
       context,
-      title: GameCollectionLocalisations.of(context).remoteRepositoryString,
       radioGroup: radioGroup,
-      radioValue: RepositoryType.Remote,
+      radioValue: ItemConnectorType.Postgres,
+      title: 'Postgres',
       textForms: <Widget>[
-        _headerText(context, 'Postgres'),
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).hostString,
           initialValue: postgresInstance?.host,
@@ -194,7 +308,19 @@ class _RepositorySettingsBody extends StatelessWidget {
             _pass = value?? _pass;
           },
         ),
-        _headerText(context, 'Cloudinary'),
+      ],
+    );
+  }
+
+  ExpansionPanel _cloudinaryExpansionPanel(BuildContext context, ImageConnectorType radioGroup, CloudinaryConnector? imageConnector) {
+    final CloudinaryInstance? cloudinaryInstance = imageConnector?.instance;
+
+    return _imageExpansionPanel(
+      context,
+      radioGroup: radioGroup,
+      radioValue: ImageConnectorType.Cloudinary,
+      title: 'Cloudinary',
+      textForms: <Widget>[
         _textFormField(
           labelText: GameCollectionLocalisations.of(context).cloudNameString,
           initialValue: cloudinaryInstance?.cloudName,
@@ -218,47 +344,7 @@ class _RepositorySettingsBody extends StatelessWidget {
           },
         ),
       ],
-      onUpdate: () {
-        BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-          UpdateRemoteConnectionSettings(
-            PostgresInstance(
-              _host,
-              _port,
-              _db,
-              _user,
-              _pass,
-            ),
-            CloudinaryInstance(
-              _cloud,
-              _apiKey,
-              _apiSecret,
-            ),
-          ),
-        );
-      }
     );
-
-  }
-
-  /*ExpansionPanel _localRepositoryPanel(BuildContext context, RepositoryType radioGroup) {
-
-    return _repositoryExpansionPanel(
-      context,
-      title: GameCollectionLocalisations.of(context).localRepositoryString,
-      radioGroup: radioGroup,
-      radioValue: RepositoryType.Local,
-      textForms: [],
-    );
-
-  }*/
-
-  Widget _headerText(BuildContext context, String text) {
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(text, style: Theme.of(context).textTheme.headline6),
-    );
-
   }
 
   Widget _textFormField({required String labelText, required String? initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
@@ -288,7 +374,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   }
 
-  ExpansionPanel _repositoryExpansionPanel(BuildContext context, {required RepositoryType radioGroup, required RepositoryType radioValue, required String title, required List<Widget> textForms, required void Function() onUpdate}) {
+  ExpansionPanel _itemExpansionPanel(BuildContext context, {required ItemConnectorType radioGroup, required ItemConnectorType radioValue, required String title, required List<Widget> textForms}) {
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -298,7 +384,7 @@ class _RepositorySettingsBody extends StatelessWidget {
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
           leading: IgnorePointer(
-            child: Radio<RepositoryType>(
+            child: Radio<ItemConnectorType>(
                 groupValue: radioGroup,
                 value: radioValue,
                 onChanged: (_) {}
@@ -311,37 +397,37 @@ class _RepositorySettingsBody extends StatelessWidget {
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: textForms..add(
-            SizedBox(
-              width: double.maxFinite,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  child: Text(
-                    GameCollectionLocalisations.of(context).saveString,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      onUpdate();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                  ).copyWith(
-                    elevation: MaterialStateProperty.resolveWith<double?>( (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return 2.0;
-                      }
+          children: textForms,
+        ),
+      ),
+    );
 
-                      return 1.0;
-                    }),
-                  ),
-                ),
-              ),
+  }
+
+  ExpansionPanel _imageExpansionPanel(BuildContext context, {required ImageConnectorType radioGroup, required ImageConnectorType radioValue, required String title, required List<Widget> textForms}) {
+
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+    return ExpansionPanel(
+      isExpanded: radioGroup == radioValue,
+      canTapOnHeader: true,
+      headerBuilder: (BuildContext context, bool isExpanded) {
+        return ListTile(
+          leading: IgnorePointer(
+            child: Radio<ImageConnectorType>(
+                groupValue: radioGroup,
+                value: radioValue,
+                onChanged: (_) {}
             ),
           ),
+          title: Text(title),
+        );
+      },
+      body: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: textForms,
         ),
       ),
     );

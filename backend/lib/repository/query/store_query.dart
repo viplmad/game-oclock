@@ -104,7 +104,7 @@ class StoreQuery {
     query.where(StoreEntityData.idField, id.id, type: int, table: StoreEntityData.table);
   }
 
-  static void _addViewWhere(Query query, StoreView view, [int? year]) {
+  static void _addViewWhere(Query query, StoreView view) {
     switch(view) {
       case StoreView.Main:
         // TODO: Handle this case.

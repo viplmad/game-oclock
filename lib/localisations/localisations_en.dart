@@ -20,9 +20,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String saveString = 'Save';
   @override
-  final String remoteRepositoryString = 'Remote repository';
+  final String itemConnectionString = 'Item connection';
   @override
-  final String localRepositoryString = 'Local repository';
+  final String imageConnectionString = 'Image connection';
   @override
   final String hostString = 'Host';
   @override
