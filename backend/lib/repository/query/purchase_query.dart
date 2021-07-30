@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show PurchaseEntity, PurchaseEntityData, PurchaseID, StoreEntityData, StoreID, PurchaseView;
+import 'package:backend/entity/entity.dart' show DLCPurchaseRelationData, GamePurchaseRelationData, PurchaseEntity, PurchaseEntityData, PurchaseID, PurchaseView, StoreEntityData, StoreID;
 
 import 'query.dart' show StoreQuery;
 
@@ -86,12 +86,10 @@ class PurchaseQuery {
   static Query selectAllInView(PurchaseView view, [int? limit, int? year]) {
     final Query query = FluentQuery
       .select()
-      .from(PurchaseEntityData.table)
-      .limit(limit);
+      .from(PurchaseEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view, year);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit, year);
 
     return query;
   }
@@ -128,49 +126,53 @@ class PurchaseQuery {
     query.field(PurchaseEntityData.originalPriceField, type: double, table: PurchaseEntityData.table);
 
     query.field(PurchaseEntityData.storeField, type: int, table: PurchaseEntityData.table);
-
   }
 
   static void _addIdWhere(PurchaseID id, Query query) {
     query.where(PurchaseEntityData.idField, id.id, type: int, table: PurchaseEntityData.table);
   }
 
-  static void _addViewWhere(Query query, PurchaseView view, [int? year]) {
+  static void _completeView(Query query, PurchaseView view, int? limit, [int? year]) {
     switch(view) {
       case PurchaseView.Main:
-        // TODO: Handle this case.
+        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.DESC);
+        query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
+        query.limit(limit);
         break;
       case PurchaseView.LastCreated:
-        // TODO: Handle this case.
+        query.order(PurchaseEntityData.idField, PurchaseEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
       case PurchaseView.Pending:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastPurchased:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Review:
-        // TODO: Handle this case.
-        break;
-    }
-  }
+        query.where(PurchaseEntityData.dateField, null, type: DateTime, table: PurchaseEntityData.table);
 
-  static void _addViewOrder(Query query, PurchaseView view) {
-    switch(view) {
-      case PurchaseView.Main:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.LastCreated:
-        // TODO: Handle this case.
-        break;
-      case PurchaseView.Pending:
-        // TODO: Handle this case.
+        final Query countGamePurchase = FluentQuery
+          .select()
+          .field(GamePurchaseRelationData.gameField, type: int, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
+          .from(GamePurchaseRelationData.table)
+          .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
+        query.orWhereSubquery(countGamePurchase, 0, divider: DividerType.START);
+
+        final Query countDLCPurchase = FluentQuery
+          .select()
+          .field(DLCPurchaseRelationData.dlcField, type: int, table: DLCPurchaseRelationData.table, function: FunctionType.COUNT)
+          .from(DLCPurchaseRelationData.table)
+          .whereFields(DLCPurchaseRelationData.table, DLCPurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
+        query.whereSubquery(countDLCPurchase, 0, divider: DividerType.END);
+
+        query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         break;
       case PurchaseView.LastPurchased:
-        // TODO: Handle this case.
+        query.where(PurchaseEntityData.dateField, null, type: DateTime, table: PurchaseEntityData.table, operator: OperatorType.NOT_EQ);
+        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.DESC, nullsLast: true);
+        query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
+        query.limit(limit?? 100);
         break;
       case PurchaseView.Review:
-        // TODO: Handle this case.
+        year = year?? DateTime.now().year;
+        query.whereDatePart(PurchaseEntityData.dateField, year, DatePart.YEAR, table: PurchaseEntityData.table);
+        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table);
+        query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         break;
     }
   }

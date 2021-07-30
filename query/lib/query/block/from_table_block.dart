@@ -1,5 +1,5 @@
-import '../query.dart';
-import 'table_block_base.dart';
+import '../query.dart' show Query;
+import 'block.dart' show TableBlockBase;
 
 
 /// FROM table

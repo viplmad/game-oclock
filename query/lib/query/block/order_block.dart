@@ -1,6 +1,5 @@
-import '../query.dart';
-import '../sort_order.dart';
-import 'block.dart';
+import '../query.dart' show Query, SortOrder, FunctionType;
+import 'block.dart' show Block;
 import 'order_node.dart';
 import 'field_node.dart';
 
@@ -16,8 +15,8 @@ class OrderBlock extends Block {
   /// Add an ORDER BY transformation for the given setField in the given order.
   /// @param field Field
   /// @param dir Order
-  void setOrder(String field, String? table, {SortOrder direction = SortOrder.ASC, bool nullsLast = false}) {
-    final FieldNode fieldNode = FieldStringNode(field, null, table, null);
+  void setOrder(String field, String? table, {SortOrder direction = SortOrder.ASC, bool nullsLast = false, FunctionType function = FunctionType.NONE}) {
+    final FieldNode fieldNode = FieldStringNode(field, null, table, function, null);
     final OrderNode node = OrderFieldNode(fieldNode, direction, nullsLast);
     orders.add(node);
   }

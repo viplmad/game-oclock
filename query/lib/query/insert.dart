@@ -1,6 +1,6 @@
-import 'block/block.dart';
+import 'block/block.dart' show Block, InsertBlock, InsertFieldValueBlock, InsertFieldsFromQueryBlock, IntoTableBlock, ReturningFieldBlock;
 
-import 'query.dart';
+import 'query.dart' show Query;
 
 
 /// An INSERT query builder.
@@ -15,7 +15,8 @@ class Insert extends Query {
     ],
   );
 
-  IntoTableBlock _intoTableBlock() {
+  @override
+  IntoTableBlock intoTableBlock() {
     return blocks[1] as IntoTableBlock;
   }
 
@@ -23,18 +24,14 @@ class Insert extends Query {
     return blocks[2] as InsertFieldValueBlock;
   }
 
-  InsertFieldsFromQueryBlock _insertFieldsFromQueryBlock() {
+  @override
+  InsertFieldsFromQueryBlock insertFieldsFromQueryBlock() {
     return blocks[3] as InsertFieldsFromQueryBlock;
   }
 
-  ReturningFieldBlock _returningFieldBlock() {
-    return blocks[4] as ReturningFieldBlock;
-  }
-
   @override
-  Query into(String table) {
-    _intoTableBlock().setInto(table);
-    return this;
+  ReturningFieldBlock returningFieldBlock() {
+    return blocks[4] as ReturningFieldBlock;
   }
 
   @override
@@ -48,18 +45,6 @@ class Insert extends Query {
     fieldsAndValues.forEach((String field, Object? value) {
       _insertFieldValueBlock().setFieldValue(field, value);
     });
-    return this;
-  }
-
-  @override
-  Query fromQuery(Iterable<String> fields, Query query) {
-    _insertFieldsFromQueryBlock().setFromQuery(fields, query);
-    return this;
-  }
-
-  @override
-  Query returningField(String field) {
-    _returningFieldBlock().setRetuningField(field);
     return this;
   }
 }

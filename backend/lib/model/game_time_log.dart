@@ -1,4 +1,4 @@
-import 'collection_item.dart' show Item, ItemImage;
+import 'model.dart' show Item, ItemImage;
 
 
 class GameTimeLog extends Item implements Comparable<GameTimeLog> {

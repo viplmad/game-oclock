@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCID, GameID, DLCEntityData, GameEntityData, DLCView;
+import 'package:backend/entity/entity.dart' show DLCEntity, DLCEntityData, DLCFinishEntityData, DLCID, DLCView, GameEntityData, GameID;
 
 import 'query.dart' show GameQuery;
 
@@ -97,12 +97,10 @@ class DLCQuery {
   static Query selectAllInView(DLCView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
-      .from(DLCEntityData.table)
-      .limit(limit);
+      .from(DLCEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit);
 
     return query;
   }
@@ -135,7 +133,13 @@ class DLCQuery {
     query.field(DLCEntityData.nameField, type: String, table: DLCEntityData.table);
     query.field(DLCEntityData.releaseYearField, type: int, table: DLCEntityData.table);
     query.field(DLCEntityData.coverField, type: String, table: DLCEntityData.table);
-    query.field(DLCEntityData.finishDateField, type: DateTime, table: DLCEntityData.table);
+
+    final Query firstFinishQuery = FluentQuery
+      .select()
+      .field(DLCFinishEntityData.dateField, type: DateTime, table: DLCFinishEntityData.table, function: FunctionType.MIN)
+      .from(DLCFinishEntityData.table)
+      .whereFields(DLCFinishEntityData.table, DLCFinishEntityData.dlcField, DLCEntityData.table, DLCEntityData.idField);
+    query.fieldSubquery(firstFinishQuery, alias: DLCEntityData.finishDateField);
 
     query.field(DLCEntityData.baseGameField, type: int, table: DLCEntityData.table);
   }
@@ -144,24 +148,17 @@ class DLCQuery {
     query.where(DLCEntityData.idField, id.id, type: int, table: DLCEntityData.table);
   }
 
-  static void _addViewWhere(Query query, DLCView view) {
+  static void _completeView(Query query, DLCView view, int? limit) {
     switch(view) {
       case DLCView.Main:
-        // TODO: Handle this case.
+        query.order(DLCEntityData.baseGameField, DLCEntityData.table);
+        query.order(DLCEntityData.releaseYearField, DLCEntityData.table);
+        query.order(DLCEntityData.nameField, DLCEntityData.table);
+        query.limit(limit);
         break;
       case DLCView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, DLCView view) {
-    switch(view) {
-      case DLCView.Main:
-        // TODO: Handle this case.
-        break;
-      case DLCView.LastCreated:
-        // TODO: Handle this case.
+        query.order(DLCEntityData.idField, DLCEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
   }

@@ -1,6 +1,4 @@
-import '../query.dart';
-import '../join_type.dart';
-import '../operator_type.dart';
+import '../query.dart' show Query, JoinType, OperatorType;
 import 'field_node.dart';
 import 'table_node.dart';
 

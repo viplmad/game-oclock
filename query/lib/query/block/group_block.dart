@@ -1,5 +1,5 @@
-import '../query.dart';
-import 'block.dart';
+import '../query.dart' show Query;
+import 'block.dart' show Block;
 import 'group_node.dart';
 
 

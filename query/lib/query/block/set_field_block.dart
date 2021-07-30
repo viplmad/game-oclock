@@ -1,4 +1,4 @@
-import 'set_field_block_base.dart';
+import 'block.dart' show SetFieldBlockBase;
 
 
 /// (UPDATE) SET setField=value

@@ -73,12 +73,10 @@ class PurchaseTypeQuery {
   static Query selectAllInView(PurchaseTypeView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
-      .from(PurchaseTypeEntityData.table)
-      .limit(limit);
+      .from(PurchaseTypeEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit);
 
     return query;
   }
@@ -92,21 +90,15 @@ class PurchaseTypeQuery {
     query.where(PurchaseTypeEntityData.idField, id.id, type: int, table: PurchaseTypeEntityData.table);
   }
 
-  static void _addViewWhere(Query query, PurchaseTypeView view) {
+  static void _completeView(Query query, PurchaseTypeView view, int? limit) {
     switch(view) {
       case PurchaseTypeView.Main:
-        break;
-      case PurchaseTypeView.LastCreated:
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, PurchaseTypeView view) {
-    switch(view) {
-      case PurchaseTypeView.Main:
+        query.order(PurchaseTypeEntityData.nameField, PurchaseTypeEntityData.table);
+        query.limit(limit);
         break;
       case PurchaseTypeView.LastCreated:
         query.order(PurchaseTypeEntityData.idField, PurchaseTypeEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
   }

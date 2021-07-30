@@ -1,4 +1,4 @@
-import '../query.dart';
+import '../query.dart' show Query;
 
 
 abstract class TableNode {

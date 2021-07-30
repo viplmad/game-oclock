@@ -1,4 +1,4 @@
-import 'table_block_base.dart';
+import 'block.dart' show TableBlockBase;
 
 
 /// Update table.

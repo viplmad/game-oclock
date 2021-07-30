@@ -1,5 +1,6 @@
-import 'block/block.dart';
-import 'query.dart';
+import 'block/block.dart' show Block, RawBlock;
+
+import 'query.dart' show Query;
 
 
 /// Raw query builder.

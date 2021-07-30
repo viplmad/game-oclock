@@ -22,7 +22,9 @@ class PlatformQuery {
       .table(PlatformEntityData.table)
       .sets(entity.updateMap(updatedEntity));
 
-    return _addIdWhere(id, query);
+    _addIdWhere(id, query);
+
+    return query;
   }
 
   static Query updateIconById(PlatformID id, String? iconName) {
@@ -31,7 +33,9 @@ class PlatformQuery {
       .table(PlatformEntityData.table)
       .set(PlatformEntityData.iconField, iconName);
 
-    return _addIdWhere(id, query);
+    _addIdWhere(id, query);
+
+    return query;
   }
 
   static Query deleteById(PlatformID id) {
@@ -39,17 +43,20 @@ class PlatformQuery {
       .delete()
       .from(PlatformEntityData.table);
 
-    return _addIdWhere(id, query);
+    _addIdWhere(id, query);
+
+    return query;
   }
 
   static Query selectById(PlatformID id) {
-    Query query = FluentQuery
+    final Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table);
 
-    query = addFields(query);
+    addFields(query);
+    _addIdWhere(id, query);
 
-    return _addIdWhere(id, query);
+    return query;
   }
 
   static Query selectAll() {
@@ -73,53 +80,38 @@ class PlatformQuery {
   }
 
   static Query selectAllInView(PlatformView view, [int? limit]) {
-    Query query = FluentQuery
+    final Query query = FluentQuery
       .select()
-      .from(PlatformEntityData.table)
-      .limit(limit);
+      .from(PlatformEntityData.table);
 
-    query = addFields(query);
-    query = _addViewWhere(query, view);
-    query = _addViewOrder(query, view);
+    addFields(query);
+    _completeView(query, view, limit);
 
     return query;
   }
 
-  static Query addFields(Query query) {
+  static void addFields(Query query) {
     query.field(PlatformEntityData.idField, type: int, table: PlatformEntityData.table);
     query.field(PlatformEntityData.nameField, type: String, table: PlatformEntityData.table);
     query.field(PlatformEntityData.iconField, type: String, table: PlatformEntityData.table);
     query.field(PlatformEntityData.typeField, type: String, table: PlatformEntityData.table);
-
-    return query;
   }
 
-  static Query _addIdWhere(PlatformID id, Query query) {
+  static void _addIdWhere(PlatformID id, Query query) {
     query.where(PlatformEntityData.idField, id.id, type: int, table: PlatformEntityData.table);
-
-    return query;
   }
 
-  static Query _addViewWhere(Query query, PlatformView view) {
+  static void _completeView(Query query, PlatformView view, int? limit) {
     switch(view) {
       case PlatformView.Main:
-        break;
-      case PlatformView.LastCreated:
-        break;
-    }
-
-    return query;
-  }
-
-  static Query _addViewOrder(Query query, PlatformView view) {
-    switch(view) {
-      case PlatformView.Main:
+        query.order(PlatformEntityData.typeField, PlatformEntityData.table);
+        query.order(PlatformEntityData.nameField, PlatformEntityData.table);
+        query.limit(limit);
         break;
       case PlatformView.LastCreated:
         query.order(PlatformEntityData.idField, PlatformEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
-
-    return query;
   }
 }

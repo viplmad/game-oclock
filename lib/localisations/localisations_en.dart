@@ -1,4 +1,4 @@
-import 'package:backend/model/model.dart' show GameStatus, PlatformType, Manufacturer;
+import 'package:backend/model/model.dart' show GameStatus, PlatformType;
 
 import 'localisations.dart';
 

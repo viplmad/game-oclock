@@ -25,17 +25,17 @@ class GetFieldBlock extends Block {
   /// Add the given field to the final result.
   /// @param field Field to add
   /// @param alias Field's alias
-  void setField(String name, Type? type, String? table, String? alias) {
+  void setField(String name, Type? type, String? table, String? alias, {FunctionType function = FunctionType.NONE}) {
     _chackAlias(alias);
 
-    final FieldNode node = FieldStringNode(name, type, table, alias);
+    final FieldNode node = FieldStringNode(name, type, table, function, alias);
     fields.add(node);
   }
 
-  void setFieldFromSubquery(Query query, String? alias) {
+  void setFieldFromSubquery(Query query, String? alias, {FunctionType function = FunctionType.NONE}) {
     _chackAlias(alias);
 
-    final FieldNode node = FieldSubqueryNode(query, alias);
+    final FieldNode node = FieldSubqueryNode(query, function, alias);
     fields.add(node);
   }
 

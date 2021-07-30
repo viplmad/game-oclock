@@ -1,5 +1,4 @@
-import '../query.dart';
-import '../sort_order.dart';
+import '../query.dart' show Query, SortOrder;
 import 'field_node.dart';
 
 

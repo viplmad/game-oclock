@@ -84,12 +84,10 @@ class StoreQuery {
   static Query selectAllInView(StoreView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
-      .from(StoreEntityData.table)
-      .limit(limit);
+      .from(StoreEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit);
 
     return query;
   }
@@ -104,24 +102,15 @@ class StoreQuery {
     query.where(StoreEntityData.idField, id.id, type: int, table: StoreEntityData.table);
   }
 
-  static void _addViewWhere(Query query, StoreView view) {
+  static void _completeView(Query query, StoreView view, int? limit) {
     switch(view) {
       case StoreView.Main:
-        // TODO: Handle this case.
+        query.order(StoreEntityData.nameField, StoreEntityData.table);
+        query.limit(limit);
         break;
       case StoreView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, StoreView view) {
-    switch(view) {
-      case StoreView.Main:
-        // TODO: Handle this case.
-        break;
-      case StoreView.LastCreated:
-        // TODO: Handle this case.
+        query.order(StoreEntityData.idField, StoreEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
   }

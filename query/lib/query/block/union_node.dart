@@ -1,5 +1,4 @@
-import '../query.dart';
-import '../union_type.dart';
+import '../query.dart' show Query, UnionType;
 
 
 abstract class UnionNode {

@@ -1,14 +1,15 @@
-import '../query.dart';
+import '../query.dart' show Query, FunctionType;
 
 
 abstract class FieldNode {
-  FieldNode(this.alias);
+  FieldNode(this.function, this.alias);
 
+  final FunctionType function;
   final String? alias;
 }
 
 class FieldStringNode extends FieldNode {
-  FieldStringNode(this.name, this.type, this.table, String? alias) : super(alias);
+  FieldStringNode(this.name, this.type, this.table, FunctionType function, String? alias) : super(function, alias);
 
   final String name;
   final Type? type;
@@ -16,7 +17,7 @@ class FieldStringNode extends FieldNode {
 }
 
 class FieldSubqueryNode extends FieldNode {
-  FieldSubqueryNode(this.query, String? alias) : super(alias);
+  FieldSubqueryNode(this.query, FunctionType function, String? alias) : super(function, alias);
 
   final Query query;
 }

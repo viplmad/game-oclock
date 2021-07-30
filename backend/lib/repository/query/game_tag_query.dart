@@ -73,12 +73,10 @@ class GameTagQuery {
   static Query selectAllInView(GameTagView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
-      .from(GameTagEntityData.table)
-      .limit(limit);
+      .from(GameTagEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit);
 
     return query;
   }
@@ -92,24 +90,15 @@ class GameTagQuery {
     query.where(GameTagEntityData.idField, id.id, type: int, table: GameTagEntityData.table);
   }
 
-  static void _addViewWhere(Query query, GameTagView view) {
+  static void _completeView(Query query, GameTagView view, int? limit) {
     switch(view) {
       case GameTagView.Main:
-        // TODO: Handle this case.
+        query.order(GameTagEntityData.nameField, GameTagEntityData.table);
+        query.limit(limit);
         break;
       case GameTagView.LastCreated:
-        // TODO: Handle this case.
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, GameTagView view) {
-    switch(view) {
-      case GameTagView.Main:
-        // TODO: Handle this case.
-        break;
-      case GameTagView.LastCreated:
-        // TODO: Handle this case.
+        query.order(GameTagEntityData.idField, GameTagEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
   }

@@ -1,6 +1,5 @@
-import '../query.dart';
-import '../union_type.dart';
-import 'block.dart';
+import '../query.dart' show Query, UnionType;
+import 'block.dart' show Block;
 import 'union_node.dart';
 
 

@@ -1,4 +1,4 @@
-import 'block.dart';
+import 'block.dart' show Block;
 
 
 /// An Update Block

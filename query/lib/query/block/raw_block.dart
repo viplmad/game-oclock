@@ -1,4 +1,4 @@
-import 'block.dart';
+import 'block.dart' show Block;
 
 
 /// A Raw Block

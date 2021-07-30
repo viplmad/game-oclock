@@ -1,14 +1,10 @@
-import '../query.dart';
-import '../operator_type.dart';
-import '../divider_type.dart';
-import '../date_part.dart';
+import '../query.dart' show Query, OperatorType, DividerType, DatePart;
 import 'field_node.dart';
 
 
 abstract class WhereNode {
-  WhereNode(this.value, this.operator, this.divider, this.combiner);
+  WhereNode(this.operator, this.divider, this.combiner);
 
-  final Object? value;
   final OperatorType operator;
   final DividerType divider;
   final CombinerType combiner;
@@ -20,9 +16,10 @@ enum CombinerType {
 }
 
 class WhereFieldNode extends WhereNode{
-  WhereFieldNode(this.field, Object? value, OperatorType operator, DividerType divider, CombinerType combiner) : super(value, operator, divider, combiner);
+  WhereFieldNode(this.field, this.value, OperatorType operator, DividerType divider, CombinerType combiner) : super(operator, divider, combiner);
 
   final FieldStringNode field;
+  final Object? value;
 }
 
 class WhereFieldDatePartNode extends WhereFieldNode {
@@ -31,8 +28,16 @@ class WhereFieldDatePartNode extends WhereFieldNode {
   final DatePart datePart;
 }
 
+class WhereFieldsNode extends WhereNode{
+  WhereFieldsNode(this.field, this.otherField, OperatorType operator, DividerType divider, CombinerType combiner) : super(operator, divider, combiner);
+
+  final FieldStringNode field;
+  final FieldStringNode otherField;
+}
+
 class WhereSubqueryNode extends WhereNode {
-  WhereSubqueryNode(this.query, Object? value, OperatorType operator, DividerType divider, CombinerType combiner) : super(value, operator, divider, combiner);
+  WhereSubqueryNode(this.query, this.value, OperatorType operator, DividerType divider, CombinerType combiner) : super(operator, divider, combiner);
 
   final Query query;
+  final Object? value;
 }

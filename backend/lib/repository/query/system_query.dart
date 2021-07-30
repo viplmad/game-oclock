@@ -84,12 +84,10 @@ class SystemQuery {
   static Query selectAllInView(SystemView view, [int? limit]) {
     final Query query = FluentQuery
       .select()
-      .from(SystemEntityData.table)
-      .limit(limit);
+      .from(SystemEntityData.table);
 
     addFields(query);
-    _addViewWhere(query, view);
-    _addViewOrder(query, view);
+    _completeView(query, view, limit);
 
     return query;
   }
@@ -106,21 +104,17 @@ class SystemQuery {
     query.where(SystemEntityData.idField, id.id, type: int, table: SystemEntityData.table);
   }
 
-  static void _addViewWhere(Query query, SystemView view) {
+  static void _completeView(Query query, SystemView view, int? limit) {
     switch(view) {
       case SystemView.Main:
-        break;
-      case SystemView.LastCreated:
-        break;
-    }
-  }
-
-  static void _addViewOrder(Query query, SystemView view) {
-    switch(view) {
-      case SystemView.Main:
+        query.order(SystemEntityData.generationField, SystemEntityData.table);
+        query.order(SystemEntityData.manufacturerField, SystemEntityData.table);
+        query.order(SystemEntityData.nameField, SystemEntityData.table);
+        query.limit(limit);
         break;
       case SystemView.LastCreated:
         query.order(SystemEntityData.idField, SystemEntityData.table, direction: SortOrder.DESC);
+        query.limit(limit?? 50);
         break;
     }
   }

@@ -1,5 +1,6 @@
 enum OperatorType {
   EQ,
+  NOT_EQ,
   LIKE,
   GREATER_THAN,
   GREATER_THAN_EQUAL,
