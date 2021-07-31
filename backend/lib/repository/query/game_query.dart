@@ -210,7 +210,7 @@ class GameQuery {
           .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);
         query.whereSubquery(finishCountInYearQuery, 0, operator: OperatorType.GREATER_THAN);
 
-        query.order(GameEntityData.finishDateField, GameEntityData.table);
+        query.order(GameEntityData.finishDateField, GameEntityData.table); // TODO order by finish date same year
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
     }

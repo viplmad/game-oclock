@@ -12,7 +12,7 @@ class SQLQueryBuilder {
   static const String _SET_PARAM = 'setParam';
   static const String _WHERE_PARAM = 'whereParam';
 
-  static String buildString(Query query, SQLBuilderOptions options) {
+  static String buildString(Query query, SQLBuilderOptions options) { // TODO continue param index from previous query
     final List<String> results = <String>[];
     for (final Block block in query.blocks) {
       results.add(_buildBlockString(block, options));
@@ -103,7 +103,7 @@ class SQLQueryBuilder {
     final StringBuffer sb = StringBuffer();
 
     if(node is TableStringNode) {
-        final String table = Validator.sanitizeTable(node. table, options);
+        final String table = Validator.sanitizeTable(node.table, options);
         sb.write(table);
       } else if(node is TableSubqueryNode) {
         sb.write('(');
@@ -243,7 +243,9 @@ class SQLQueryBuilder {
   static String _buildIntoTableString(IntoTableBlock block, SQLBuilderOptions options) {
     assert(block.table != null && block.table!.isNotEmpty);
 
-    return 'INTO ${block.table}';
+    final String table = Validator.sanitizeTable(block.table!, options);
+
+    return 'INTO $table';
   }
 
   static String _buildLimitString(LimitBlock block, SQLBuilderOptions options) {
@@ -390,12 +392,12 @@ class SQLQueryBuilder {
     for (int index = 0; index < block.wheres.length; index++) {
       final WhereNode node = block.wheres.elementAt(index);
 
-      final String combiner = index == 0? 'WHERE' : _combinerTypeToString(node.combiner);
+      final String combiner = index == 0? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
 
       if(node.divider == DividerType.NONE) {
         sb.write('$combiner ');
       } else if(node.divider == DividerType.START) {
-        sb.write(' $combiner ( ');
+        sb.write('$combiner ( ');
       }
 
       if(node is WhereValueNode) {
@@ -410,7 +412,9 @@ class SQLQueryBuilder {
 
           sb.write(field);
         } else if(node is WhereSubqueryNode) {
+          sb.write('(');
           sb.write(buildString(node.query, options));
+          sb.write(')');
         }
         sb.write(' $operator ');
 

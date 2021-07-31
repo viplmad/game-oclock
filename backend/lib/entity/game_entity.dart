@@ -86,7 +86,7 @@ class GameEntity extends ItemEntity {
       status: map[GameEntityData.statusField] as String,
       rating: map[GameEntityData.ratingField] as int,
       thoughts: map[GameEntityData.thoughtsField] as String,
-      time: Duration(seconds: map[GameEntityData.timeField] as int),
+      time: Duration(seconds: (map[GameEntityData.timeField] as int?)?? 0),
       saveFolder: map[GameEntityData.saveFolderField] as String,
       screenshotFolder: map[GameEntityData.screenshotFolderField] as String,
       finishDate: map[GameEntityData.finishDateField] as DateTime?,

@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:query/query.dart' show Query;
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
@@ -30,7 +31,19 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   Future<T> update(T entity, T updatedEntity);
   Future<Object?> deleteById(ID id);
 
+  String? getImageURI(String? imageName) {
+
+    return imageName != null?
+        imageConnector.getURI(
+          tableName: recordName,
+          imageFilename: imageName,
+        )
+        : null;
+
+  }
+
   // Utils
+  @protected
   Future<T> createItem({required Query query}) async {
 
     final ID? id = await itemConnector.execute(query)
@@ -45,6 +58,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<T> readItem({required Query query}) {
 
     return itemConnector.execute(query)
@@ -52,6 +66,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<List<T>> readItemList({required Query query}) {
 
     return itemConnector.execute(query)
@@ -59,6 +74,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<T> updateItem({required Query query, required ID id}) async {
 
     await itemConnector.execute(query);
@@ -66,6 +82,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<T> setItemImage({required String uploadImagePath, required String initialImageName, required String? oldImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     if(oldImageName != null) {
@@ -88,6 +105,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<T> renameItemImage({required String oldImageName, required String newImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     final String imageName = await imageConnector.rename(
@@ -103,6 +121,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
+  @protected
   Future<T> deleteItemImage({required String imageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     await imageConnector.delete(
@@ -114,17 +133,6 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
       query: queryBuilder(id, null),
       id: id,
     );
-
-  }
-
-  String? getImageURI(String? imageName) {
-
-    return imageName != null?
-        imageConnector.getURI(
-          tableName: recordName,
-          imageFilename: imageName,
-        )
-        : null;
 
   }
 

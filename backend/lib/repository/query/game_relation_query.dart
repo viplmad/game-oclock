@@ -7,12 +7,12 @@ import 'query.dart' show GameQuery, PlatformQuery, PurchaseQuery, GameTagQuery;
 class GamePlatformRelationQuery {
   GamePlatformRelationQuery._();
 
-  static Query create(GameID gameId, PlatformID plaformId) {
+  static Query create(GameID gameId, PlatformID platformId) {
     final Query query = FluentQuery
       .insert()
       .into(GamePlatformRelationData.table)
       .set(GamePlatformRelationData.gameField, gameId.id)
-      .set(GamePlatformRelationData.platformField, plaformId.id);
+      .set(GamePlatformRelationData.platformField, platformId.id);
 
     return query;
   }
