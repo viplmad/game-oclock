@@ -12,7 +12,7 @@ class StoreRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<S
     required GameCollectionRepository collectionRepository,
   }) :
     this.storeRepository = collectionRepository.storeRepository,
-    super(id: StoreID(itemId));
+    super(id: StoreID(itemId), collectionRepository: collectionRepository);
 
   final StoreRepository storeRepository;
 

@@ -16,7 +16,7 @@ class DLCRelationBloc<W extends Item> extends ItemRelationBloc<DLC, DLCID, W> {
     this.dlcFinishRepository = collectionRepository.dlcFinishRepository,
     this.gameRepository = collectionRepository.gameRepository,
     this.purchaseRepository = collectionRepository.purchaseRepository,
-    super(id: DLCID(itemId), managerBloc: managerBloc);
+    super(id: DLCID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final DLCFinishRepository dlcFinishRepository;
   final GameRepository gameRepository;

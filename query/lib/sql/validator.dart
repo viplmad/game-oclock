@@ -1,5 +1,4 @@
 import '../query/query.dart';
-import '../util.dart';
 
 import 'sql_builder.dart';
 import 'sql_builder_options.dart';
@@ -38,7 +37,7 @@ class Validator {
             newParts.add(quoteChar + part + quoteChar);
           }
         }
-        result = Util.join('.', newParts);
+        result = newParts.join('.');
       }
     }
 

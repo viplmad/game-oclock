@@ -14,7 +14,7 @@ class StoreRelationBloc<W extends Item> extends ItemRelationBloc<Store, StoreID,
     required StoreRelationManagerBloc<W> managerBloc,
   }) :
     this.purchaseRepository = collectionRepository.purchaseRepository,
-    super(id: StoreID(itemId), managerBloc: managerBloc);
+    super(id: StoreID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final PurchaseRepository purchaseRepository;
 

@@ -12,7 +12,7 @@ class PurchaseTypeRelationManagerBloc<W extends Item> extends ItemRelationManage
     required GameCollectionRepository collectionRepository,
   }) :
     this.purchaseRepository = collectionRepository.purchaseRepository,
-    super(id: PurchaseTypeID(itemId));
+    super(id: PurchaseTypeID(itemId), collectionRepository: collectionRepository);
 
   final PurchaseRepository purchaseRepository;
 

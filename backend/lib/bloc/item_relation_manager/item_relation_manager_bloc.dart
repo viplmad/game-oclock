@@ -2,6 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import 'item_relation_manager.dart';
 
@@ -9,14 +10,16 @@ import 'item_relation_manager.dart';
 abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W extends Item> extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
     required this.id,
+    required this.collectionRepository,
   }) : super(ItemRelationManagerInitialised());
 
   final ID id;
+  final GameCollectionRepository collectionRepository;
 
   @override
   Stream<ItemRelationManagerState> mapEventToState(ItemRelationManagerEvent event) async* {
 
-    //yield* _checkConnection(); // TODO
+    yield* _checkConnection();
 
     if(event is AddItemRelation<W>) {
 
@@ -32,14 +35,14 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
 
   }
 
-  /*Stream<ItemRelationManagerState> _checkConnection() async* {
+  Stream<ItemRelationManagerState> _checkConnection() async* {
 
-    if(iCollectionRepository.isClosed()) {
+    if(collectionRepository.isClosed()) {
 
       try {
 
-        iCollectionRepository.reconnect();
-        await iCollectionRepository.open();
+        collectionRepository.reconnect();
+        await collectionRepository.open();
 
       } catch (e) {
 
@@ -48,7 +51,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
       }
     }
 
-  }*/
+  }
 
   Stream<ItemRelationManagerState> _mapAddRelationToState(AddItemRelation<W> event) async* {
 

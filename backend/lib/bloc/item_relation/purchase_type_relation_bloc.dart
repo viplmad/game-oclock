@@ -14,7 +14,7 @@ class PurchaseTypeRelationBloc<W extends Item> extends ItemRelationBloc<Purchase
     required PurchaseTypeRelationManagerBloc<W> managerBloc,
   }) :
     this.purchaseRepository = collectionRepository.purchaseRepository,
-    super(id: PurchaseTypeID(itemId), managerBloc: managerBloc);
+    super(id: PurchaseTypeID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final PurchaseRepository purchaseRepository;
 

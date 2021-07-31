@@ -362,39 +362,6 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
 
     return null;
 
-    //TODO
-    /*int duplicateKey = 0;
-    int deleteKey = 1;
-
-    return () {
-      showMenu<int>(
-        context: context,
-        position: position,
-        items: <PopupMenuItem<int>>[
-          PopupMenuItem<int>(
-            child: ListTile(
-              title: Text(GameCollectionLocalisations.of(context).duplicateString),
-            ),
-            value: duplicateKey,
-          ),
-          PopupMenuItem<int>(
-            child: ListTile(
-              title: Text(GameCollectionLocalisations.of(context).deleteString),
-            ),
-            value: deleteKey,
-          ),
-        ],
-      ).then((int? value) => {
-        if(value != null) {
-          if(value == duplicateKey) {
-            onDuplicate(item);
-          } else if(value == deleteKey) {
-            onDelete(item);
-          }
-        }
-      });
-    };*/
-
   }
 
   void Function() _onSearchTap(BuildContext context) {

@@ -18,7 +18,7 @@ class GameRelationBloc<W extends Item> extends ItemRelationBloc<Game, GameID, W>
     this.platformRepository = collectionRepository.platformRepository,
     this.purchaseRepository = collectionRepository.purchaseRepository,
     this.gameTagRepository = collectionRepository.gameTagRepository,
-    super(id: GameID(itemId), managerBloc: managerBloc);
+    super(id: GameID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final GameFinishRepository gameFinishRepository;
   final DLCRepository dlcRepository;

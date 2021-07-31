@@ -47,7 +47,7 @@ class WhereBlock extends Block {
 
   void _setWhere(String field, Type? type, String? table, Object? value, OperatorType operator, FunctionType function, DividerType divider, CombinerType combiner) {
     final FieldStringNode fieldNode = FieldStringNode(field, type, table, function, null);
-    final WhereNode node = WhereFieldNode(fieldNode, value, operator, divider, combiner);
+    final WhereNode node = WhereFieldValueNode(fieldNode, value, operator, divider, combiner);
     wheres.add(node);
   }
 

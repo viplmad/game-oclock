@@ -14,7 +14,7 @@ class SystemRelationBloc<W extends Item> extends ItemRelationBloc<System, System
     required SystemRelationManagerBloc<W> managerBloc,
   }) :
     this.platformRepository = collectionRepository.platformRepository,
-    super(id: SystemID(itemId), managerBloc: managerBloc);
+    super(id: SystemID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final PlatformRepository platformRepository;
 

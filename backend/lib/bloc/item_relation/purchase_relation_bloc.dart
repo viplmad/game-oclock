@@ -17,7 +17,7 @@ class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, Pu
     this.dlcRepository = collectionRepository.dlcRepository,
     this.storeRepository = collectionRepository.storeRepository,
     this.purchaseTypeRepository = collectionRepository.purchaseTypeRepository,
-    super(id: PurchaseID(itemId), managerBloc: managerBloc);
+    super(id: PurchaseID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final GameRepository gameRepository;
   final DLCRepository dlcRepository;

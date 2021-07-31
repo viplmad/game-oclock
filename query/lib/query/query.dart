@@ -24,7 +24,6 @@ abstract class Query {
     this.blocks = blocks ?? <Block>[];
   }
 
-  @protected
   late final List<Block> blocks;
 
   @protected

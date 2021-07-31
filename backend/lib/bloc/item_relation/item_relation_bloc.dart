@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
@@ -12,6 +13,7 @@ import 'item_relation.dart';
 abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Item> extends Bloc<ItemRelationEvent, ItemRelationState> {
   ItemRelationBloc({
     required this.id,
+    required this.collectionRepository,
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
 
@@ -20,13 +22,14 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
   }
 
   final ID id;
+  final GameCollectionRepository collectionRepository;
   final ItemRelationManagerBloc<T, ID, W> managerBloc;
   late StreamSubscription<ItemRelationManagerState> managerSubscription;
 
   @override
   Stream<ItemRelationState> mapEventToState(ItemRelationEvent event) async* {
 
-    //yield* _checkConnection(); // TODO
+    yield* _checkConnection();
 
     if(event is LoadItemRelation) {
 
@@ -40,6 +43,25 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
 
       yield* _mapUpdateItemToState(event);
 
+    }
+
+  }
+
+  Stream<ItemRelationState> _checkConnection() async* {
+
+    if(collectionRepository.isClosed()) {
+      yield const ItemRelationNotLoaded('Connection lost. Trying to reconnect');
+
+      try {
+
+        collectionRepository.reconnect();
+        await collectionRepository.open();
+
+      } catch (e) {
+
+        yield ItemRelationNotLoaded(e.toString());
+
+      }
     }
 
   }

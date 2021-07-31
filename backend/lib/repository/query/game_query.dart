@@ -1,7 +1,6 @@
-import 'package:backend/entity/game_time_log_entity.dart';
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameFinishEntityData, GameID, GameView;
+import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameFinishEntityData, GameID, GamePurchaseRelationData, GameTimeLogEntityData, GameView, nextUpValue, playingValue, playedValue;
 
 
 class GameQuery {
@@ -95,13 +94,27 @@ class GameQuery {
 
   static Query selectAllOwnedInView(GameView view, [int? limit, int? year]) {
     final Query query = selectAllInView(view, limit, year);
-    // TODO subquery to cross with purchases
+
+    final Query countGamePurchaseQuery = FluentQuery
+      .select()
+      .field(GamePurchaseRelationData.gameField, type: int, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
+      .from(GamePurchaseRelationData.table)
+      .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.gameField, GameEntityData.table, GameEntityData.idField);
+    query.whereSubquery(countGamePurchaseQuery, 0, operator: OperatorType.GREATER_THAN);
+
     return query;
   }
 
   static Query selectAllRomInView(GameView view, [int? limit, int? year]) {
     final Query query = selectAllInView(view, limit, year);
-    // TODO subquery to cross with purchases
+
+    final Query countGamePurchaseQuery = FluentQuery
+      .select()
+      .field(GamePurchaseRelationData.gameField, type: int, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
+      .from(GamePurchaseRelationData.table)
+      .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.gameField, GameEntityData.table, GameEntityData.idField);
+    query.whereSubquery(countGamePurchaseQuery, 0);
+
     return query;
   }
 
@@ -151,38 +164,54 @@ class GameQuery {
         query.limit(limit?? 50);
         break;
       case GameView.Playing:
-        query.where(GameEntityData.statusField, '\'Playing\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
         query.order(GameEntityData.releaseYearField, GameEntityData.table);
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.NextUp:
-        query.where(GameEntityData.statusField, '\'Next Up\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, '\'$nextUpValue\'::game_status', table: GameEntityData.table);
         query.order(GameEntityData.releaseYearField, GameEntityData.table);
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.LastPlayed:
-        query.where(GameEntityData.statusField, '\'Playing\'::game_status', table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, '\'Played\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
+        query.orWhere(GameEntityData.statusField, '\'$playedValue\'::game_status', table: GameEntityData.table);
 
-        final Query lastFinishQuery = FluentQuery
+        final Query lastTimeLogQuery = FluentQuery
           .select()
-          .field(GameTimeLogEntityData.dateTimeField, type: DateTime, table: GameTimeLogEntityData.table, function: FunctionType.SUM)
+          .field(GameTimeLogEntityData.dateTimeField, type: Duration, table: GameTimeLogEntityData.table, function: FunctionType.MAX)
           .from(GameTimeLogEntityData.table)
           .whereFields(GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, GameEntityData.table, GameEntityData.idField);
-        query.orderSubquery(lastFinishQuery, direction: SortOrder.DESC, nullsLast: true);
+        query.orderSubquery(lastTimeLogQuery, direction: SortOrder.DESC, nullsLast: true);
 
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.LastFinished:
-        query.where(GameEntityData.statusField, '\'Playing\'::game_status', table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, '\'Played\'::game_status', table: GameEntityData.table);
-        query.order(GameEntityData.finishDateField, GameEntityData.table, direction: SortOrder.DESC, nullsLast: true);
+        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
+        query.orWhere(GameEntityData.statusField, '\'$playedValue\'::game_status', table: GameEntityData.table);
+
+        final Query lastFinishQuery = FluentQuery
+          .select()
+          .field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table, function: FunctionType.MAX)
+          .from(GameFinishEntityData.table)
+          .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField);
+        query.orderSubquery(lastFinishQuery, direction: SortOrder.DESC, nullsLast: true);
+
         query.order(GameEntityData.nameField, GameEntityData.table);
+        query.limit(limit?? 100);
         break;
       case GameView.Review:
         year = year?? DateTime.now().year;
-        // TODO cross ref with GameFinish
-        query.whereDatePart(GameEntityData.finishDateField, year, DatePart.YEAR, table: GameEntityData.table);
+
+        final Query finishCountInYearQuery = FluentQuery
+          .select()
+          .field(GameFinishEntityData.gameField, type: int, table: GameFinishEntityData.table, function: FunctionType.COUNT)
+          .from(GameFinishEntityData.table)
+          .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);
+        query.whereSubquery(finishCountInYearQuery, 0, operator: OperatorType.GREATER_THAN);
+
+        query.order(GameEntityData.finishDateField, GameEntityData.table);
+        query.order(GameEntityData.nameField, GameEntityData.table);
         break;
     }
   }

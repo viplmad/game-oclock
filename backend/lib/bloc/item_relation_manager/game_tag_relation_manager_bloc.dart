@@ -12,7 +12,7 @@ class GameTagRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc
     required GameCollectionRepository collectionRepository,
   }) :
     this.gameRepository = collectionRepository.gameRepository,
-    super(id: GameTagID(itemId));
+    super(id: GameTagID(itemId), collectionRepository: collectionRepository);
 
   final GameRepository gameRepository;
 
