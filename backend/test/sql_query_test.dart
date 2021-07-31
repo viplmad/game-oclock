@@ -6,12 +6,16 @@ import 'package:backend/entity/entity.dart';
 
 
 void main() {
-  const SQLBuilderOptions _builderOptions = SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false);
+  final SQLBuilderOptions _builderOptions = SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false);
 
   void printQuery(Query query) {
     final String sqlString = SQLQueryBuilder.buildString(query, _builderOptions);
     // ignore: avoid_print
-    print(sqlString);
+    print('SQL: $sqlString');
+
+    final Map<String, Object?> sqlSubstitutionValues = SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
+    // ignore: avoid_print
+    print('Substitution values: $sqlSubstitutionValues');
   }
 
   test('DLC Query test', () {

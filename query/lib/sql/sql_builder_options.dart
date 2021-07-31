@@ -1,5 +1,5 @@
 class SQLBuilderOptions {
-  const SQLBuilderOptions({
+  SQLBuilderOptions({
     this.autoQuoteTableNames = true,
     this.autoQuoteFieldNames = true,
     this.autoQuoteAliasNames = true,
@@ -64,4 +64,26 @@ class SQLBuilderOptions {
   ///  SELECT "tablename"."fieldname" FROM tablename
   final bool quoteStringWithFieldsTablesSeparator;
   final String fieldsTablesSeparator;
+
+  int insertParamIndex = 0;
+  int setParamIndex = 0;
+  int whereParamIndex = 0;
+
+  void incrementInsertParamIndex() {
+    insertParamIndex++;
+  }
+
+  void incrementSetParamIndex() {
+    setParamIndex++;
+  }
+
+  void incrementWhereParamIndex() {
+    whereParamIndex++;
+  }
+
+  void resetIndexes() {
+    this.insertParamIndex = 0;
+    this.setParamIndex = 0;
+    this.whereParamIndex = 0;
+  }
 }

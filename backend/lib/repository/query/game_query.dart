@@ -207,10 +207,18 @@ class GameQuery {
           .select()
           .field(GameFinishEntityData.gameField, type: int, table: GameFinishEntityData.table, function: FunctionType.COUNT)
           .from(GameFinishEntityData.table)
+          .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField)
           .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);
         query.whereSubquery(finishCountInYearQuery, 0, operator: OperatorType.GREATER_THAN);
 
-        query.order(GameEntityData.finishDateField, GameEntityData.table); // TODO order by finish date same year
+        final Query firstFinishInYearQuery = FluentQuery
+          .select()
+          .field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table, function: FunctionType.MIN)
+          .from(GameFinishEntityData.table)
+          .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField)
+          .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);
+        query.orderSubquery(firstFinishInYearQuery);
+
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
     }
