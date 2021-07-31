@@ -18,7 +18,7 @@ class GameStatisticsBloc extends ItemStatisticsBloc<Game, GamesData> {
   @override
   Future<GamesData> getItemData(LoadYearItemStatistics event) {
 
-    final List<Game> yearItems = items.where((Game item) => item.finishDate?.year == event.year).toList(growable: false);
+    final List<Game> yearItems = items.where((Game item) => item.firstFinishDate?.year == event.year).toList(growable: false);
     return Future<GamesData>.value(GamesData(yearItems));
 
   }

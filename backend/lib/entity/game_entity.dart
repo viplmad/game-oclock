@@ -31,11 +31,12 @@ class GameEntityData {
   static const String statusField = 'Status';
   static const String ratingField = 'Rating';
   static const String thoughtsField = 'Thoughts';
-  static const String timeField = 'Time';
   static const String saveFolderField = 'Save Folder';
   static const String screenshotFolderField = 'Screenshot Folder';
-  static const String finishDateField = 'Finish Date';
   static const String backupField = 'Backup';
+
+  static const String firstFinishDateField = 'First Finish Date';
+  static const String totalTimeField = 'Total Time';
 }
 
 class GameID {
@@ -54,11 +55,11 @@ class GameEntity extends ItemEntity {
     required this.status,
     required this.rating,
     required this.thoughts,
-    required this.time,
     required this.saveFolder,
     required this.screenshotFolder,
-    required this.finishDate,
     required this.isBackup,
+    required this.firstFinishDate,
+    required this.totalTime,
   });
 
   final int id;
@@ -69,11 +70,11 @@ class GameEntity extends ItemEntity {
   final String status;
   final int rating;
   final String thoughts;
-  final Duration time;
   final String saveFolder;
   final String screenshotFolder;
-  final DateTime? finishDate;
   final bool isBackup;
+  final DateTime? firstFinishDate;
+  final Duration totalTime;
 
   static GameEntity fromMap(Map<String, Object?> map) {
 
@@ -86,11 +87,11 @@ class GameEntity extends ItemEntity {
       status: map[GameEntityData.statusField] as String,
       rating: map[GameEntityData.ratingField] as int,
       thoughts: map[GameEntityData.thoughtsField] as String,
-      time: Duration(seconds: (map[GameEntityData.timeField] as int?)?? 0),
       saveFolder: map[GameEntityData.saveFolderField] as String,
       screenshotFolder: map[GameEntityData.screenshotFolderField] as String,
-      finishDate: map[GameEntityData.finishDateField] as DateTime?,
       isBackup: map[GameEntityData.backupField] as bool,
+      firstFinishDate: map[GameEntityData.firstFinishDateField] as DateTime?,
+      totalTime: Duration(seconds: (map[GameEntityData.totalTimeField] as int?)?? 0),
     );
 
   }
@@ -115,7 +116,6 @@ class GameEntity extends ItemEntity {
       GameEntityData.statusField : status,
       GameEntityData.ratingField : rating,
       GameEntityData.thoughtsField : thoughts,
-      GameEntityData.timeField : time,
       GameEntityData.saveFolderField : saveFolder,
       GameEntityData.screenshotFolderField : screenshotFolder,
       GameEntityData.backupField : isBackup,
@@ -123,7 +123,6 @@ class GameEntity extends ItemEntity {
 
     putCreateMapValueNullable(createMap, GameEntityData.releaseYearField, releaseYear);
     putCreateMapValueNullable(createMap, GameEntityData.coverField, coverFilename);
-    putCreateMapValueNullable(createMap, GameEntityData.finishDateField, finishDate);
 
     return createMap;
 
@@ -140,10 +139,8 @@ class GameEntity extends ItemEntity {
     putUpdateMapValue(updateMap, GameEntityData.statusField, status, updatedEntity.status);
     putUpdateMapValue(updateMap, GameEntityData.ratingField, rating, updatedEntity.rating);
     putUpdateMapValue(updateMap, GameEntityData.thoughtsField, thoughts, updatedEntity.thoughts);
-    putUpdateMapValue(updateMap, GameEntityData.timeField, time, updatedEntity.time);
     putUpdateMapValue(updateMap, GameEntityData.saveFolderField, saveFolder, updatedEntity.saveFolder);
     putUpdateMapValue(updateMap, GameEntityData.screenshotFolderField, screenshotFolder, updatedEntity.screenshotFolder);
-    putUpdateMapValueNullable(updateMap, GameEntityData.finishDateField, finishDate, updatedEntity.finishDate);
     putUpdateMapValue(updateMap, GameEntityData.backupField, isBackup, updatedEntity.isBackup);
 
     return updateMap;
@@ -168,11 +165,11 @@ class GameEntity extends ItemEntity {
         '${GameEntityData.statusField}: $status, '
         '${GameEntityData.ratingField}: $rating, '
         '${GameEntityData.thoughtsField}: $thoughts, '
-        '${GameEntityData.timeField}: $time, '
         '${GameEntityData.saveFolderField}: $saveFolder, '
         '${GameEntityData.screenshotFolderField}: $screenshotFolder, '
-        '${GameEntityData.finishDateField}: $finishDate, '
-        '${GameEntityData.backupField}: $isBackup'
+        '${GameEntityData.backupField}: $isBackup, '
+        '${GameEntityData.firstFinishDateField}: $firstFinishDate, '
+        '${GameEntityData.totalTimeField}: $totalTime'
         ' }';
 
   }

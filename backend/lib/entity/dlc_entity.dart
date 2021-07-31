@@ -17,9 +17,9 @@ class DLCEntityData {
   static const String nameField = 'Name';
   static const String releaseYearField = 'Release Year';
   static const String coverField = 'Cover';
-  static const String finishDateField = 'Finish Date';
-
   static const String baseGameField = 'Base Game';
+
+  static const String firstfinishDateField = 'First Finish Date';
 }
 
 class DLCID {
@@ -34,18 +34,16 @@ class DLCEntity extends ItemEntity {
     required this.name,
     required this.releaseYear,
     required this.coverFilename,
-    required this.finishDate,
-
     required this.baseGame,
+    required this.firstFinishDate,
   });
 
   final int id;
   final String name;
   final int? releaseYear;
   final String? coverFilename;
-  final DateTime? finishDate;
-
   final int? baseGame;
+  final DateTime? firstFinishDate;
 
   static DLCEntity fromMap(Map<String, Object?> map) {
 
@@ -54,9 +52,8 @@ class DLCEntity extends ItemEntity {
       name: map[DLCEntityData.nameField] as String,
       releaseYear: map[DLCEntityData.releaseYearField] as int?,
       coverFilename: map[DLCEntityData.coverField] as String?,
-      finishDate: map[DLCEntityData.finishDateField] as DateTime?,
-
       baseGame: map[DLCEntityData.baseGameField] as int?,
+      firstFinishDate: map[DLCEntityData.firstfinishDateField] as DateTime?,
     );
 
   }
@@ -81,7 +78,6 @@ class DLCEntity extends ItemEntity {
 
     putCreateMapValueNullable(createMap, DLCEntityData.releaseYearField, releaseYear);
     putCreateMapValueNullable(createMap, DLCEntityData.coverField, coverFilename);
-    putCreateMapValueNullable(createMap, DLCEntityData.finishDateField, finishDate);
     putCreateMapValueNullable(createMap, DLCEntityData.baseGameField, baseGame);
 
     return createMap;
@@ -95,7 +91,6 @@ class DLCEntity extends ItemEntity {
     putUpdateMapValue(updateMap, DLCEntityData.nameField, name, updatedEntity.name);
     putUpdateMapValueNullable(updateMap, DLCEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear);
     putUpdateMapValueNullable(updateMap, DLCEntityData.coverField, coverFilename, updatedEntity.coverFilename);
-    putUpdateMapValueNullable(updateMap, DLCEntityData.finishDateField, finishDate, updatedEntity.finishDate);
 
     return updateMap;
 
@@ -115,7 +110,7 @@ class DLCEntity extends ItemEntity {
         '${DLCEntityData.nameField}: $name, '
         '${DLCEntityData.releaseYearField}: $releaseYear, '
         '${DLCEntityData.coverField}: $coverFilename, '
-        '${DLCEntityData.finishDateField}: $finishDate'
+        '${DLCEntityData.firstfinishDateField}: $firstFinishDate'
         ' }';
 
   }

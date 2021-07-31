@@ -8,9 +8,8 @@ class DLC extends Item {
     required this.releaseYear,
     required this.coverURL,
     required this.coverFilename,
-    required this.finishDate,
-
     required this.baseGame,
+    required this.firstFinishDate,
   }) : this.uniqueId = 'D$id';
 
   final int id;
@@ -18,9 +17,8 @@ class DLC extends Item {
   final int? releaseYear;
   final String? coverURL;
   final String? coverFilename;
-  final DateTime? finishDate;
-
   final int? baseGame;
+  final DateTime? firstFinishDate;
 
   @override
   final String uniqueId;
@@ -39,9 +37,8 @@ class DLC extends Item {
     int? releaseYear,
     String? coverURL,
     String? coverFilename,
-    DateTime? finishDate,
-
     int? baseGame,
+    DateTime? firstFinishDate,
   }) {
 
     return DLC(
@@ -50,9 +47,8 @@ class DLC extends Item {
       releaseYear: releaseYear?? this.releaseYear,
       coverURL: coverURL?? this.coverURL,
       coverFilename: coverFilename?? this.coverFilename,
-      finishDate: finishDate?? this.finishDate,
-
       baseGame: baseGame?? this.baseGame,
+      firstFinishDate: firstFinishDate?? this.firstFinishDate,
     );
 
   }
@@ -63,7 +59,7 @@ class DLC extends Item {
     name,
     releaseYear?? -1,
     coverURL?? '',
-    finishDate?? DateTime(1970),
+    firstFinishDate?? DateTime(1970),
   ];
 
   @override
@@ -74,7 +70,7 @@ class DLC extends Item {
         'Name: $name, '
         'Release Year: $releaseYear, '
         'Cover URL: $coverURL, '
-        'Finish Date: $finishDate'
+        'First Finish Date: $firstFinishDate'
         ' }';
 
   }

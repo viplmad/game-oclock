@@ -90,7 +90,7 @@ class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Gam
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;
 
   @override
-  Game createItem(String query) => Game(id: -1, name: query, edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', time: const Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
+  Game createItem(String query) => Game(id: -1, name: query, edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', saveFolder: '', screenshotFolder: '', isBackup: false, firstFinishDate: null, totalTime: const Duration());
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

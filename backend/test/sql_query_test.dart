@@ -16,10 +16,13 @@ void main() {
     final Map<String, Object?> sqlSubstitutionValues = SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
     // ignore: avoid_print
     print('Substitution values: $sqlSubstitutionValues');
+
+    // ignore: avoid_print
+    print('------------------------------------------------------------------------------------------------');
   }
 
   test('DLC Query test', () {
-    final DLCEntity entity = DLCEntity(id: 1, name: 'name', releaseYear: 1994, coverFilename: 'coverFilename', finishDate: DateTime.now(), baseGame: 2);
+    final DLCEntity entity = DLCEntity(id: 1, name: 'name', releaseYear: 1994, coverFilename: 'coverFilename', baseGame: 2, firstFinishDate: DateTime.now());
     final DLCID id = entity.createId();
     final GameID gameId = GameID(99);
 
@@ -39,7 +42,7 @@ void main() {
   });
 
   test('Game Query test', () {
-    final GameEntity entity = GameEntity(id: 1, name: 'name', edition: 'edition', releaseYear: 1999, coverFilename: 'coverFilename', status: 'status', rating: 8, thoughts: 'thoughts', time: const Duration(minutes: 156), saveFolder: 'saveFolder', screenshotFolder: 'screenshotFolder', finishDate: DateTime.now(), isBackup: false);
+    final GameEntity entity = GameEntity(id: 1, name: 'name', edition: 'edition', releaseYear: 1999, coverFilename: 'coverFilename', status: 'status', rating: 8, thoughts: 'thoughts', saveFolder: 'saveFolder', screenshotFolder: 'screenshotFolder', isBackup: false, firstFinishDate: DateTime.now(), totalTime: const Duration(minutes: 156));
     final GameID id = entity.createId();
 
     printQuery(GameQuery.create(entity));

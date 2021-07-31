@@ -30,11 +30,11 @@ class GameMapper {
       status: statusToStringMap[model.status]!,
       rating: model.rating,
       thoughts: model.thoughts,
-      time: model.time,
       saveFolder: model.saveFolder,
       screenshotFolder: model.screenshotFolder,
-      finishDate: model.finishDate,
       isBackup: model.isBackup,
+      firstFinishDate: model.firstFinishDate,
+      totalTime: model.totalTime,
     );
 
   }
@@ -51,11 +51,11 @@ class GameMapper {
       status: stringToStatusMap[entity.status]?? GameStatus.LowPriority,
       rating: entity.rating,
       thoughts: entity.thoughts,
-      time: entity.time,
       saveFolder: entity.saveFolder,
       screenshotFolder: entity.screenshotFolder,
-      finishDate: entity.finishDate,
       isBackup: entity.isBackup,
+      firstFinishDate: entity.firstFinishDate,
+      totalTime: entity.totalTime,
     );
 
   }

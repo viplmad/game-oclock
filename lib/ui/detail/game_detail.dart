@@ -247,11 +247,11 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       itemDurationField(
         context,
         fieldName: GameCollectionLocalisations.of(context).timeLogsFieldString,
-        value: game.time,
+        value: game.totalTime,
       ),
       GameFinishDateList(
         fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
-        value: game.finishDate,
+        value: game.firstFinishDate,
         relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
         onUpdate: () {
           BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());

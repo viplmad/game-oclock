@@ -127,7 +127,7 @@ abstract class _GameFAB<S extends Bloc<ItemListManagerEvent, ItemListManagerStat
   final Color themeColor = GameTheme.primaryColour;
 
   @override
-  Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', time: Duration(), saveFolder: '', screenshotFolder: '', finishDate: null, isBackup: false);
+  Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', saveFolder: '', screenshotFolder: '', isBackup: false, firstFinishDate: null, totalTime: Duration());
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;

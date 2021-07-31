@@ -127,25 +127,23 @@ class GameQuery {
     query.field(GameEntityData.statusField, type: String, table: GameEntityData.table);
     query.field(GameEntityData.ratingField, type: int, table: GameEntityData.table);
     query.field(GameEntityData.thoughtsField, type: String, table: GameEntityData.table);
-
-    final Query totalTimeQuery = FluentQuery
-      .select()
-      .field(GameTimeLogEntityData.timeField, type: Duration, table: GameTimeLogEntityData.table, function: FunctionType.SUM)
-      .from(GameTimeLogEntityData.table)
-      .whereFields(GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, GameEntityData.table, GameEntityData.idField);
-    query.fieldSubquery(totalTimeQuery, alias: GameEntityData.timeField);
-
     query.field(GameEntityData.saveFolderField, type: String, table: GameEntityData.table);
     query.field(GameEntityData.screenshotFolderField, type: String, table: GameEntityData.table);
+    query.field(GameEntityData.backupField, type: bool, table: GameEntityData.table);
 
     final Query firstFinishQuery = FluentQuery
       .select()
       .field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table, function: FunctionType.MIN)
       .from(GameFinishEntityData.table)
       .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField);
-    query.fieldSubquery(firstFinishQuery, alias: GameEntityData.finishDateField);
+    query.fieldSubquery(firstFinishQuery, alias: GameEntityData.firstFinishDateField);
 
-    query.field(GameEntityData.backupField, type: bool, table: GameEntityData.table);
+    final Query totalTimeQuery = FluentQuery
+      .select()
+      .field(GameTimeLogEntityData.timeField, type: Duration, table: GameTimeLogEntityData.table, function: FunctionType.SUM)
+      .from(GameTimeLogEntityData.table)
+      .whereFields(GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, GameEntityData.table, GameEntityData.idField);
+    query.fieldSubquery(totalTimeQuery, alias: GameEntityData.totalTimeField);
   }
 
   static void _addIdWhere(GameID id, Query query) {

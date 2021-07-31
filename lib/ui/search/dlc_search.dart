@@ -89,7 +89,7 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, 
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
 
   @override
-  DLC createItem(String query) => DLC(id: -1, name: query, releaseYear: null, coverURL: null, coverFilename: null, finishDate: null, baseGame: null);
+  DLC createItem(String query) => DLC(id: -1, name: query, releaseYear: null, coverURL: null, coverFilename: null, baseGame: null, firstFinishDate: null);
 
   @override
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);

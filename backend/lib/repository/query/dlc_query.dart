@@ -133,15 +133,14 @@ class DLCQuery {
     query.field(DLCEntityData.nameField, type: String, table: DLCEntityData.table);
     query.field(DLCEntityData.releaseYearField, type: int, table: DLCEntityData.table);
     query.field(DLCEntityData.coverField, type: String, table: DLCEntityData.table);
+    query.field(DLCEntityData.baseGameField, type: int, table: DLCEntityData.table);
 
     final Query firstFinishQuery = FluentQuery
       .select()
       .field(DLCFinishEntityData.dateField, type: DateTime, table: DLCFinishEntityData.table, function: FunctionType.MIN)
       .from(DLCFinishEntityData.table)
       .whereFields(DLCFinishEntityData.table, DLCFinishEntityData.dlcField, DLCEntityData.table, DLCEntityData.idField);
-    query.fieldSubquery(firstFinishQuery, alias: DLCEntityData.finishDateField);
-
-    query.field(DLCEntityData.baseGameField, type: int, table: DLCEntityData.table);
+    query.fieldSubquery(firstFinishQuery, alias: DLCEntityData.firstfinishDateField);
   }
 
   static void _addIdWhere(DLCID id, Query query) {

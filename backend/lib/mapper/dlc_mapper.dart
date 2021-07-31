@@ -12,9 +12,8 @@ class DLCMapper {
       name: model.name,
       releaseYear: model.releaseYear,
       coverFilename: model.coverFilename,
-      finishDate: model.finishDate,
-
       baseGame: model.baseGame,
+      firstFinishDate: model.firstFinishDate,
     );
 
   }
@@ -27,9 +26,8 @@ class DLCMapper {
       releaseYear: entity.releaseYear,
       coverURL: coverURL,
       coverFilename: entity.coverFilename,
-      finishDate: entity.finishDate,
-
       baseGame: entity.baseGame,
+      firstFinishDate: entity.firstFinishDate,
     );
 
   }

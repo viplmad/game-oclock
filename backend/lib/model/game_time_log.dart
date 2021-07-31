@@ -23,12 +23,12 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   @override
   GameTimeLog copyWith({
     DateTime? dateTime,
-    Duration? time,
+    Duration? totalTime,
   }) {
 
     return GameTimeLog(
       dateTime: dateTime?? this.dateTime,
-      time: time?? this.time,
+      time: totalTime?? this.time,
     );
 
   }

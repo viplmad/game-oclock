@@ -306,10 +306,8 @@ class SQLQueryBuilder {
 
     final List<String> setsString = <String>[];
 
-    for(int index = 0; index < block.sets.length; index++) {
-      final SetNode node = block.sets.elementAt(index);
-
-      final String field = _buildSetNodeString(node, index, options);
+    for(final SetNode node in block.sets) {
+      final String field = _buildSetNodeString(node, options);
 
       setsString.add(field);
     }
@@ -317,7 +315,7 @@ class SQLQueryBuilder {
     return 'SET ${setsString.join(', ')}';
   }
 
-  static String _buildSetNodeString(SetNode node, int index, SQLBuilderOptions options) {
+  static String _buildSetNodeString(SetNode node, SQLBuilderOptions options) {
     final String name = _buildSetNodeNameString(node, options);
     final String value = _buildSetValueString(options);
 

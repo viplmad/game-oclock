@@ -19,11 +19,11 @@ class Game extends Item {
     required this.status,
     required this.rating,
     required this.thoughts,
-    required this.time,
     required this.saveFolder,
     required this.screenshotFolder,
-    required this.finishDate,
     required this.isBackup,
+    required this.firstFinishDate,
+    required this.totalTime,
   }) : this.uniqueId = 'G$id';
 
   final int id;
@@ -35,11 +35,11 @@ class Game extends Item {
   final GameStatus status;
   final int rating;
   final String thoughts;
-  final Duration time;
   final String saveFolder;
   final String screenshotFolder;
-  final DateTime? finishDate;
   final bool isBackup;
+  final DateTime? firstFinishDate;
+  final Duration totalTime;
 
   @override
   final String uniqueId;
@@ -62,11 +62,11 @@ class Game extends Item {
     GameStatus? status,
     int? rating,
     String? thoughts,
-    Duration? time,
     String? saveFolder,
     String? screenshotFolder,
-    DateTime? finishDate,
     bool? isBackup,
+    DateTime? firstFinishDate,
+    Duration? totalTime,
   }) {
 
     return Game(
@@ -79,11 +79,11 @@ class Game extends Item {
       status: status?? this.status,
       rating: rating?? this.rating,
       thoughts: thoughts?? this.thoughts,
-      time: time?? this.time,
       saveFolder: saveFolder?? this.saveFolder,
       screenshotFolder: screenshotFolder?? this.screenshotFolder,
-      finishDate: finishDate?? this.finishDate,
       isBackup: isBackup?? this.isBackup,
+      firstFinishDate: firstFinishDate?? this.firstFinishDate,
+      totalTime: totalTime?? this.totalTime,
     );
 
   }
@@ -98,11 +98,11 @@ class Game extends Item {
     status,
     rating,
     thoughts,
-    time,
     saveFolder,
     screenshotFolder,
-    finishDate?? DateTime(1970),
     isBackup,
+    firstFinishDate?? DateTime(1970),
+    totalTime,
   ];
 
   @override
@@ -117,11 +117,11 @@ class Game extends Item {
         'Status: $status, '
         'Rating: $rating, '
         'Thoughts: $thoughts, '
-        'Time: $time, '
         'Save Folder: $saveFolder, '
         'Screenshot Folder: $screenshotFolder, '
-        'Finish Date: $finishDate, '
-        'Backup: $isBackup'
+        'Backup: $isBackup, '
+        'Total Time: $totalTime, '
+        'First Finish Date: $firstFinishDate'
         ' }';
 
   }
@@ -129,7 +129,7 @@ class Game extends Item {
 
 class GamesData extends ItemData<Game> {
   GamesData(List<Game> items)
-      : this.finishYears = (items.map<int>((Game item) => item.finishDate?.year?? -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
+      : this.finishYears = (items.map<int>((Game item) => item.firstFinishDate?.year?? -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
         super(items);
 
   final List<int> finishYears;
@@ -159,7 +159,7 @@ class GamesData extends ItemData<Game> {
   }
 
   int minutesSum() {
-    final int minutesSum = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.time.inMinutes);
+    final int minutesSum = items.fold(0, (int previousMinutes, Game item) => previousMinutes + item.totalTime.inMinutes);
 
     return minutesSum;
   }
@@ -174,7 +174,7 @@ class GamesData extends ItemData<Game> {
 
     return yearlyFieldSum<int>(
       years,
-      (Game item, int year) => item.finishDate?.year == year,
+      (Game item, int year) => item.firstFinishDate?.year == year,
       0,
       (Game item) => item.rating,
       sumOperation: (int yearSum, int length) => (length > 0)? yearSum ~/ length : 0,
@@ -186,9 +186,9 @@ class GamesData extends ItemData<Game> {
 
     return yearlyFieldSum<int>(
       years,
-      (Game item, int year) => item.finishDate?.year == year,
+      (Game item, int year) => item.firstFinishDate?.year == year,
       0,
-      (Game item) => item.time.inMinutes,
+      (Game item) => item.totalTime.inMinutes,
       sumOperation: (int yearSum, int length) => yearSum ~/ 60,
     );
 
@@ -198,7 +198,7 @@ class GamesData extends ItemData<Game> {
 
     return yearlyItemCount(
       years,
-      (Game item, int year) => item.finishDate?.year == year,
+      (Game item, int year) => item.firstFinishDate?.year == year,
     );
 
   }
@@ -206,9 +206,9 @@ class GamesData extends ItemData<Game> {
   YearData<int> monthlyHoursSum() {
 
     return monthlyFieldSum<int>(
-      (Game item, int month) => item.finishDate?.month == month,
+      (Game item, int month) => item.firstFinishDate?.month == month,
       0,
-      (Game item) => item.time.inMinutes,
+      (Game item) => item.totalTime.inMinutes,
       sumOperation: (int monthSum, int length) => monthSum ~/ 60,
     );
 
@@ -236,7 +236,7 @@ class GamesData extends ItemData<Game> {
 
     return intervalCountWithInitialAndLast<int>(
       intervals,
-      (Game item) => item.time.inHours,
+      (Game item) => item.totalTime.inHours,
     );
 
   }

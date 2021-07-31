@@ -142,7 +142,7 @@ class _DLCDetailBody extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManager
       ),
       DLCFinishList(
         fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
-        value: dlc.finishDate,
+        value: dlc.firstFinishDate,
         relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
         onUpdate: () {
           BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
