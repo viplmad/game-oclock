@@ -167,7 +167,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   ID? _listMapToID(List<Map<String, Map<String, Object?>>> results) {
     ID? id;
 
-    if(results.isEmpty) {
+    if(results.isNotEmpty) {
       final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(results.first, recordName);
       id = idFromMap(map);
     }
