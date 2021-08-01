@@ -76,6 +76,8 @@ class PlatformQuery {
       .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.LIKE)
       .limit(limit);
 
+    addFields(query);
+
     return query;
   }
 

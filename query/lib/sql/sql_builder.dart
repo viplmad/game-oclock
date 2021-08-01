@@ -404,10 +404,10 @@ class SQLQueryBuilder {
     for (final WhereNode node in block.wheres) {
       final String combiner = sb.length == 0? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
 
-      if(node.divider == DividerType.NONE) {
-        sb.write('$combiner ');
-      } else if(node.divider == DividerType.START) {
+      if(node.divider == DividerType.START) {
         sb.write('$combiner ( ');
+      } else {
+        sb.write('$combiner ');
       }
 
       if(node is WhereValueNode) {
