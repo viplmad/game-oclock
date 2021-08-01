@@ -63,7 +63,7 @@ class GameTimeLogQuery {
     final Query query = FluentQuery
       .select()
       .from(GameTimeLogEntityData.table)
-      .where(GameTimeLogEntityData.gameField, id, type: int, table: GameTimeLogEntityData.table);
+      .where(GameTimeLogEntityData.gameField, id.id, type: int, table: GameTimeLogEntityData.table);
 
     addFields(query);
 
@@ -74,7 +74,7 @@ class GameTimeLogQuery {
     final Query query = FluentQuery
       .select()
       .from(GameTimeLogEntityData.table)
-      .join(GameEntityData.table, null, GameEntityData.idField, GameTimeLogEntityData.gameField, GameTimeLogEntityData.gameField, type: JoinType.LEFT)
+      .join(GameEntityData.table, null, GameEntityData.idField, GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, type: JoinType.LEFT)
       .whereDatePart(GameTimeLogEntityData.dateTimeField, year, DatePart.YEAR, table: GameTimeLogEntityData.table)
       .order(GameTimeLogEntityData.gameField, GameTimeLogEntityData.table);
 
@@ -87,10 +87,11 @@ class GameTimeLogQuery {
   static void addFields(Query query) {
     query.field(GameTimeLogEntityData.gameField, type: int, table: GameTimeLogEntityData.table);
     query.field(GameTimeLogEntityData.dateTimeField, type: DateTime, table: GameTimeLogEntityData.table);
+    query.field(GameTimeLogEntityData.timeField, type: Duration, table: GameTimeLogEntityData.table);
   }
 
   static void _addIdWhere(GameTimeLogID id, Query query) {
-    query.where(GameTimeLogEntityData.gameField, id.gameId, type: int, table: GameTimeLogEntityData.table);
+    query.where(GameTimeLogEntityData.gameField, id.gameId.id, type: int, table: GameTimeLogEntityData.table);
     query.where(GameTimeLogEntityData.dateTimeField, id.dateTime, type: DateTime, table: GameTimeLogEntityData.table);
   }
 }

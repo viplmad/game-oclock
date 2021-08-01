@@ -177,7 +177,7 @@ class GameQuery {
 
         final Query lastTimeLogQuery = FluentQuery
           .select()
-          .field(GameTimeLogEntityData.dateTimeField, type: Duration, table: GameTimeLogEntityData.table, function: FunctionType.MAX)
+          .field(GameTimeLogEntityData.dateTimeField, table: GameTimeLogEntityData.table, function: FunctionType.MAX)
           .from(GameTimeLogEntityData.table)
           .whereFields(GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, GameEntityData.table, GameEntityData.idField);
         query.orderSubquery(lastTimeLogQuery, direction: SortOrder.DESC, nullsLast: true);
@@ -190,7 +190,7 @@ class GameQuery {
 
         final Query lastFinishQuery = FluentQuery
           .select()
-          .field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table, function: FunctionType.MAX)
+          .field(GameFinishEntityData.dateField, table: GameFinishEntityData.table, function: FunctionType.MAX)
           .from(GameFinishEntityData.table)
           .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField);
         query.orderSubquery(lastFinishQuery, direction: SortOrder.DESC, nullsLast: true);
@@ -203,7 +203,7 @@ class GameQuery {
 
         final Query finishCountInYearQuery = FluentQuery
           .select()
-          .field(GameFinishEntityData.gameField, type: int, table: GameFinishEntityData.table, function: FunctionType.COUNT)
+          .field(GameFinishEntityData.gameField, table: GameFinishEntityData.table, function: FunctionType.COUNT)
           .from(GameFinishEntityData.table)
           .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField)
           .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);
@@ -211,7 +211,7 @@ class GameQuery {
 
         final Query firstFinishInYearQuery = FluentQuery
           .select()
-          .field(GameFinishEntityData.dateField, type: DateTime, table: GameFinishEntityData.table, function: FunctionType.MIN)
+          .field(GameFinishEntityData.dateField, table: GameFinishEntityData.table, function: FunctionType.MIN)
           .from(GameFinishEntityData.table)
           .whereFields(GameFinishEntityData.table, GameFinishEntityData.gameField, GameEntityData.table, GameEntityData.idField)
           .whereDatePart(GameFinishEntityData.dateField, year, DatePart.YEAR, table: GameFinishEntityData.table);

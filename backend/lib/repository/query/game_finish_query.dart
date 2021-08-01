@@ -74,7 +74,7 @@ class GameFinishQuery {
   }
 
   static void _addIdWhere(GameFinishID id, Query query) {
-    query.where(GameFinishEntityData.gameField, id.gameId, type: int, table: GameFinishEntityData.table);
+    query.where(GameFinishEntityData.gameField, id.gameId.id, type: int, table: GameFinishEntityData.table);
     query.where(GameFinishEntityData.dateField, id.dateTime, type: DateTime, table: GameFinishEntityData.table);
   }
 }

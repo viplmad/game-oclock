@@ -65,8 +65,10 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
     try {
 
-      final T updatedItem = await updateFuture(event);
-      yield ItemFieldUpdated<T>(updatedItem);
+      if(event.item != event.updatedItem) {
+        final T updatedItem = await updateFuture(event);
+        yield ItemFieldUpdated<T>(updatedItem);
+      }
 
     } catch(e) {
 

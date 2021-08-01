@@ -148,14 +148,14 @@ class PurchaseQuery {
 
         final Query countGamePurchase = FluentQuery
           .select()
-          .field(GamePurchaseRelationData.gameField, type: int, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
+          .field(GamePurchaseRelationData.gameField, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
           .from(GamePurchaseRelationData.table)
           .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
         query.orWhereSubquery(countGamePurchase, 0, divider: DividerType.START);
 
         final Query countDLCPurchase = FluentQuery
           .select()
-          .field(DLCPurchaseRelationData.dlcField, type: int, table: DLCPurchaseRelationData.table, function: FunctionType.COUNT)
+          .field(DLCPurchaseRelationData.dlcField, table: DLCPurchaseRelationData.table, function: FunctionType.COUNT)
           .from(DLCPurchaseRelationData.table)
           .whereFields(DLCPurchaseRelationData.table, DLCPurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
         query.whereSubquery(countDLCPurchase, 0, divider: DividerType.END);

@@ -74,7 +74,7 @@ class DLCFinishQuery {
   }
 
   static void _addIdWhere(DLCFinishID id, Query query) {
-    query.where(DLCFinishEntityData.dlcField, id.dlcId, type: int, table: DLCFinishEntityData.table);
+    query.where(DLCFinishEntityData.dlcField, id.dlcId.id, type: int, table: DLCFinishEntityData.table);
     query.where(DLCFinishEntityData.dateField, id.dateTime, type: DateTime, table: DLCFinishEntityData.table);
   }
 }
