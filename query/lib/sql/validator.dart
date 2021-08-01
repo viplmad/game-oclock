@@ -58,7 +58,7 @@ class Validator {
 
   static Object? formatValue(Object? value, SQLBuilderOptions options) {
     if (value == null) {
-      return formatNull();
+      return null;
     } else {
       if (value is String) {
         return formatString(value, options);
