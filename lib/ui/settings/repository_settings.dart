@@ -119,97 +119,93 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   Widget _buildBody() {
 
-    return SingleChildScrollView(
-      child: Container(
-        child: BlocListener<RepositorySettingsManagerBloc, RepositorySettingsManagerState>(
-          listener: (BuildContext context, RepositorySettingsManagerState state) {
-            if(state is RepositorySettingsUpdated) {
-              Navigator.pushReplacementNamed(
-                context,
-                connectRoute,
-              );
-            }
-            if(state is RepositorySettingsNotUpdated) {
-              final String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
-              showSnackBar(
-                context,
-                message: message,
-                snackBarAction: dialogSnackBarAction(
-                  context,
-                  label: GameCollectionLocalisations.of(context).moreString,
-                  title: message,
-                  content: state.error,
-                ),
-              );
-            }
-          },
-          child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
-            builder: (BuildContext context, RepositorySettingsState state) {
-              ProviderInstance? itemInstance;
-              ProviderInstance? imageInstance;
-              ItemConnectorType itemRadioGroup = ItemConnectorType.Postgres;
-              ImageConnectorType imageRadioGroup = ImageConnectorType.Cloudinary;
+    return BlocListener<RepositorySettingsManagerBloc, RepositorySettingsManagerState>(
+      listener: (BuildContext context, RepositorySettingsManagerState state) {
+        if(state is RepositorySettingsUpdated) {
+          Navigator.pushReplacementNamed(
+            context,
+            connectRoute,
+          );
+        }
+        if(state is RepositorySettingsNotUpdated) {
+          final String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
+        builder: (BuildContext context, RepositorySettingsState state) {
+          ProviderInstance? itemInstance;
+          ProviderInstance? imageInstance;
+          ItemConnectorType itemRadioGroup = ItemConnectorType.Postgres;
+          ImageConnectorType imageRadioGroup = ImageConnectorType.Cloudinary;
 
-              if(state is RepositorySettingsLoading) {
+          if(state is RepositorySettingsLoading) {
 
-                return const LinearProgressIndicator();
+            return const LinearProgressIndicator();
 
-              }
-              if(state is RepositorySettingsLoaded) {
-                itemRadioGroup = state.itemType;
-                imageRadioGroup = state.imageType;
-                itemInstance = state.itemInstance;
-                imageInstance = state.imageInstance;
-              }
+          }
+          if(state is RepositorySettingsLoaded) {
+            itemRadioGroup = state.itemType;
+            imageRadioGroup = state.imageType;
+            itemInstance = state.itemInstance;
+            imageInstance = state.imageInstance;
+          }
 
-              final List<String> tabTitles = <String>[
-                GameCollectionLocalisations.of(context).itemConnectionString,
-                GameCollectionLocalisations.of(context).imageConnectionString,
-              ];
+          final List<String> tabTitles = <String>[
+            GameCollectionLocalisations.of(context).itemConnectionString,
+            GameCollectionLocalisations.of(context).imageConnectionString,
+          ];
 
-              return DefaultTabController(
-                length: tabTitles.length,
-                initialIndex: state.repositoryTab.index,
-                child: Builder(
-                  builder: (BuildContext context) {
-                    DefaultTabController.of(context)!.addListener( () {
-                      final RepositoryTab newTab = RepositoryTab.values.elementAt(DefaultTabController.of(context)!.index);
+          return DefaultTabController(
+            length: tabTitles.length,
+            initialIndex: state.repositoryTab.index,
+            child: Builder(
+              builder: (BuildContext context) {
+                DefaultTabController.of(context)!.addListener( () {
+                  final RepositoryTab newTab = RepositoryTab.values.elementAt(DefaultTabController.of(context)!.index);
 
-                      BlocProvider.of<RepositorySettingsBloc>(context).add(UpdateRepositoryTab(newTab));
-                    });
+                  BlocProvider.of<RepositorySettingsBloc>(context).add(UpdateRepositoryTab(newTab));
+                });
 
-                    return NestedScrollView(
-                      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverPersistentHeader(
-                            pinned: true,
-                            floating: true,
-                            delegate: TabsDelegate(
-                              tabBar: TabBar(
-                                tabs: tabTitles.map<Tab>( (String title) {
-                                  return Tab(
-                                    text: title,
-                                  );
-                                }).toList(growable: false),
-                              ),
-                            ),
+                return NestedScrollView(
+                  headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverPersistentHeader(
+                        pinned: true,
+                        floating: true,
+                        delegate: TabsDelegate(
+                          tabBar: TabBar(
+                            tabs: tabTitles.map<Tab>( (String title) {
+                              return Tab(
+                                text: title,
+                              );
+                            }).toList(growable: false),
                           ),
-                        ];
-                      },
-                      body: TabBarView(
-                        children: <Widget>[
-                          _itemExpansionPanelList(context, itemRadioGroup, itemInstance),
-                          _imageExpansionPanelList(context, imageRadioGroup, imageInstance),
-                        ],
+                        ),
                       ),
-                    );
+                    ];
                   },
-                ),
-              );
+                  body: TabBarView(
+                    children: <Widget>[
+                      _itemExpansionPanelList(context, itemRadioGroup, itemInstance),
+                      _imageExpansionPanelList(context, imageRadioGroup, imageInstance),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
 
-            },
-          ),
-        ),
+        },
       ),
     );
 
