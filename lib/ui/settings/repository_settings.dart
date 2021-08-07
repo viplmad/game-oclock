@@ -49,14 +49,23 @@ class RepositorySettings extends StatelessWidget {
           title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
         ),
         body: _RepositorySettingsBody(),
-        floatingActionButton: FloatingActionButton.extended(
-          tooltip: GameCollectionLocalisations.of(context).connectString,
-          label: Text(GameCollectionLocalisations.of(context).connectString),
-          icon: const Icon(Icons.send),
-          onPressed: () {
-            Navigator.pushReplacementNamed(
-              context,
-              connectRoute,
+        floatingActionButton: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
+          builder: (BuildContext context, RepositorySettingsState state) {
+            bool active = false;
+            if(state is RepositorySettingsLoaded) {
+              active = state.ready;
+            }
+
+            return FloatingActionButton.extended(
+              tooltip: GameCollectionLocalisations.of(context).connectString,
+              label: Text(GameCollectionLocalisations.of(context).connectString),
+              icon: const Icon(Icons.send),
+              onPressed: active? () {
+                Navigator.pushReplacementNamed(
+                  context,
+                  connectRoute,
+                );
+              } : null,
             );
           },
         ),
@@ -66,7 +75,6 @@ class RepositorySettings extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
 class _RepositorySettingsBody extends StatelessWidget {
   _RepositorySettingsBody({
     Key? key,
@@ -202,7 +210,7 @@ class _RepositorySettingsBody extends StatelessWidget {
               builder: (BuildContext context, RepositorySettingsDetailState state) {
                 if(state is RepositorySettingsDetailLoaded) {
                   return PostgresTextDialog(
-                    instance: state.instance as PostgresInstance,
+                    instance: state.instance as PostgresInstance?,
                   );
                 }
 
@@ -248,7 +256,7 @@ class _RepositorySettingsBody extends StatelessWidget {
               builder: (BuildContext context, RepositorySettingsDetailState state) {
                 if(state is RepositorySettingsDetailLoaded) {
                   return CloudinaryTextDialog(
-                    instance: state.instance as CloudinaryInstance,
+                    instance: state.instance as CloudinaryInstance?,
                   );
                 }
 
