@@ -104,7 +104,7 @@ class RepositoryPreferences {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_typeItemConnectorKey).then<ItemConnectorType>((String value) {
+    return sharedPreferences.getString(_typeItemConnectorKey).then<ItemConnectorType?>((String value) {
 
       switch(value) {
         case _postgresItemConnectorValue:
@@ -123,7 +123,7 @@ class RepositoryPreferences {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_typeImageConnectorKey).then<ImageConnectorType>((String value) {
+    return sharedPreferences.getString(_typeImageConnectorKey).then<ImageConnectorType?>((String value) {
 
       switch(value) {
         case _cloudinaryImageConnectorValue:
