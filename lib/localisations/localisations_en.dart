@@ -31,6 +31,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String itemConnectionString = 'Item connection';
   @override
   final String imageConnectionString = 'Image connection';
+
   @override
   final String hostString = 'Host';
   @override
@@ -41,12 +42,16 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String userString = 'User';
   @override
   final String passwordString = 'Password';
+
   @override
   final String cloudNameString = 'Cloud name';
   @override
   final String apiKeyString = 'API Key';
   @override
   final String apiSecretString = 'API Secret';
+
+  @override
+  final String localString = 'Local';
 
   @override
   final String changeOrderString = 'Change Order';

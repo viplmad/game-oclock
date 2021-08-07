@@ -11,7 +11,7 @@ import 'localisations_en.dart';
 abstract class GameCollectionLocalisations {
   const GameCollectionLocalisations._();
 
-  static String appTitle = 'Game Collection';
+  static const String appTitle = 'Game Collection';
 
   String get connectingString;
   String get connectString;
@@ -26,14 +26,20 @@ abstract class GameCollectionLocalisations {
   String get saveString;
   String get itemConnectionString;
   String get imageConnectionString;
+
+  static const String postgresString = 'Postgres';
   String get hostString;
   String get portString;
   String get databaseString;
   String get userString;
   String get passwordString;
+
+  static const String cloudinaryString = 'Cloudinary';
   String get cloudNameString;
   String get apiKeyString;
   String get apiSecretString;
+
+  String get localString;
 
   String get changeOrderString;
   String get changeStyleString;

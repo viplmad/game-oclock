@@ -195,7 +195,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   RadioListTile<ItemConnectorType> _postgresRadio(BuildContext context, ItemConnectorType? radioGroup) {
     return RadioListTile<ItemConnectorType>(
-      title: const Text('Postgres'),
+      title: const Text(GameCollectionLocalisations.postgresString),
       groupValue: radioGroup,
       value: ItemConnectorType.Postgres,
       onChanged: (_) {
@@ -232,7 +232,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   RadioListTile<ItemConnectorType> _localItemRadio(BuildContext context, ItemConnectorType? radioGroup) {
     return RadioListTile<ItemConnectorType>(
-      title: const Text('Local'),
+      title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
       value: ItemConnectorType.Local,
       onChanged: null,
@@ -241,7 +241,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   RadioListTile<ImageConnectorType> _cloudinaryRadio(BuildContext context, ImageConnectorType? radioGroup) {
     return RadioListTile<ImageConnectorType>(
-      title: const Text('Cloudinary'),
+      title: const Text(GameCollectionLocalisations.cloudinaryString),
       groupValue: radioGroup,
       value: ImageConnectorType.Cloudinary,
       onChanged: (_) {
@@ -278,7 +278,7 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   RadioListTile<ImageConnectorType> _localImageRadio(BuildContext context, ImageConnectorType? radioGroup) {
     return RadioListTile<ImageConnectorType>(
-      title: const Text('Local'),
+      title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
       value: ImageConnectorType.Local,
       onChanged: null,
@@ -300,8 +300,9 @@ class PostgresTextDialog extends TextDialog {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final PostgresCredentials _instance = PostgresCredentials();
 
-    return Dialog(
-      child: Column(
+    return AlertDialog(
+      title: const Text(GameCollectionLocalisations.postgresString),
+      content: Column(
         children: <Widget>[
           Form(
             key: _formKey,
@@ -347,27 +348,25 @@ class PostgresTextDialog extends TextDialog {
               ],
             ),
           ),
-          ButtonBar(
-            children: <Widget>[
-              TextButton(
-                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                onPressed: () {
-                  Navigator.maybePop<PostgresInstance>(context);
-                },
-              ),
-              TextButton(
-                child: Text(MaterialLocalizations.of(context).saveButtonLabel),
-                onPressed: () {
-                  if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    Navigator.maybePop<PostgresInstance>(context, _instance);
-                  }
-                },
-              ),
-            ],
-          ),
         ],
       ),
+      actions: <Widget>[
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          onPressed: () {
+            Navigator.maybePop<PostgresInstance>(context);
+          },
+        ),
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
+          onPressed: () {
+            if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              Navigator.maybePop<PostgresInstance>(context, _instance);
+            }
+          },
+        ),
+      ],
     );
 
   }
@@ -387,8 +386,9 @@ class CloudinaryTextDialog extends TextDialog {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final CloudinaryCredentials _instance = CloudinaryCredentials();
 
-    return Dialog(
-      child: Column(
+    return AlertDialog(
+      title: const Text(GameCollectionLocalisations.cloudinaryString),
+      content: Column(
         children: <Widget>[
           Form(
             key: _formKey,
@@ -420,27 +420,25 @@ class CloudinaryTextDialog extends TextDialog {
               ],
             ),
           ),
-          ButtonBar(
-            children: <Widget>[
-              TextButton(
-                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                onPressed: () {
-                  Navigator.maybePop<CloudinaryCredentials>(context);
-                },
-              ),
-              TextButton(
-                child: Text(MaterialLocalizations.of(context).saveButtonLabel),
-                onPressed: () {
-                  if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    Navigator.maybePop<CloudinaryCredentials>(context, _instance);
-                  }
-                },
-              ),
-            ],
-          ),
         ],
       ),
+      actions: <Widget>[
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          onPressed: () {
+            Navigator.maybePop<CloudinaryCredentials>(context);
+          },
+        ),
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).saveButtonLabel),
+          onPressed: () {
+            if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              Navigator.maybePop<CloudinaryCredentials>(context, _instance);
+            }
+          },
+        ),
+      ],
     );
 
   }
