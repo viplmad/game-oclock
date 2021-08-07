@@ -9,7 +9,7 @@ class RepositoryPreferences {
   const RepositoryPreferences._();
 
   static const String _typeItemConnectorKey = 'itemConnectorType';
-  static const String _typeImageConnectorKey = 'itemConnectorType';
+  static const String _typeImageConnectorKey = 'imageConnectorType';
 
   static const String _itemConnectionStringKey = 'itemConnectionString';
   static const String _imageConnectionStringKey = 'imageConnectionString';
@@ -51,12 +51,12 @@ class RepositoryPreferences {
 
   }
 
-  static Future<bool> setActiveImageConnectorType(ImageConnectorType itemType) {
+  static Future<bool> setActiveImageConnectorType(ImageConnectorType imageType) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     String value;
-    switch(itemType) {
+    switch(imageType) {
       case ImageConnectorType.Cloudinary:
         value = _cloudinaryImageConnectorValue;
         break;
