@@ -111,9 +111,9 @@ class RepositoryPreferences {
           return ItemConnectorType.Postgres;
         case _localItemConnectorValue:
           return ItemConnectorType.Local;
+        default:
+          return null;
       }
-
-      throw const FormatException();
 
     }, onError: (Object error) => null);
 
@@ -130,9 +130,9 @@ class RepositoryPreferences {
           return ImageConnectorType.Cloudinary;
         case _localImageConnectorValue:
           return ImageConnectorType.Local;
+        default:
+          return null;
       }
-
-      throw const FormatException();
 
     }, onError: (Object error) => null);
 
