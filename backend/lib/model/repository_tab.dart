@@ -1,4 +1,0 @@
-enum RepositoryTab {
-  Item,
-  Image,
-}

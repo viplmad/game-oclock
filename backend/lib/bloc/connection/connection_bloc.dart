@@ -35,7 +35,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
     yield Connecting();
 
-    final bool existsConnection = await RepositoryPreferences.existsRepository();
+    final bool existsConnection = await RepositoryPreferences.existsConnection();
     if(!existsConnection) {
 
       yield NonexistentConnection();
@@ -44,8 +44,8 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
       try {
 
-        final ItemConnector itemConnector = await RepositoryPreferences.retrieveItemConnector();
-        final ImageConnector imageConnector = await RepositoryPreferences.retrieveImageConnector();
+        final ItemConnector itemConnector = await RepositoryPreferences.retrieveActiveItemConnector();
+        final ImageConnector imageConnector = await RepositoryPreferences.retrieveActiveImageConnector();
 
         collectionRepository.connect(itemConnector, imageConnector);
         await collectionRepository.open();

@@ -10,5 +10,6 @@ export 'item_relation_manager/item_relation_manager.dart';
 export 'item_search/item_search.dart';
 export 'item_statistics/item_statistics.dart';
 export 'repository_settings/repository_settings.dart';
+export 'repository_settings_detail/repository_settings_detail.dart';
 export 'repository_settings_manager/repository_settings_manager.dart';
 export 'tab/tab.dart';

@@ -14,7 +14,7 @@ import 'item_list.dart';
 abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
     required this.repository,
-    required this.managerBloc,
+    required ItemListManagerBloc<T, E, ID, R> managerBloc,
   }) : super(ItemListLoading()) {
 
     managerSubscription = managerBloc.stream.listen(mapListManagerStateToEvent);
@@ -22,8 +22,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
   }
 
   final R repository;
-  final ItemListManagerBloc<T, E, ID, R> managerBloc;
-  late StreamSubscription<ItemListManagerState> managerSubscription;
+  late final StreamSubscription<ItemListManagerState> managerSubscription;
 
   @override
   Stream<ItemListState> mapEventToState(ItemListEvent event) async* {

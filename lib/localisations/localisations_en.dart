@@ -9,6 +9,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String connectingString = 'Connecting...';
   @override
+  final String connectString = 'Connect';
+  @override
   final String failedConnectionString = 'Failed connection';
   @override
   final String retryString = 'Retry';
@@ -17,6 +19,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   final String repositorySettingsString = 'Repository settings';
+  @override
+  final String updatedItemConnectionString = 'Updated item connection';
+  @override
+  final String updatedImageConnectionString = 'Updated image connection';
   @override
   final String unableToUpdateConnectionString = 'Unable to update connection';
   @override

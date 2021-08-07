@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:backend/model/repository_type.dart';
+
 
 abstract class RepositorySettingsManagerState extends Equatable {
   const RepositorySettingsManagerState();
@@ -10,7 +12,33 @@ abstract class RepositorySettingsManagerState extends Equatable {
 
 class Initialised extends RepositorySettingsManagerState {}
 
-class RepositorySettingsUpdated extends RepositorySettingsManagerState {}
+class ItemConnectionSettingsUpdated extends RepositorySettingsManagerState {
+  ItemConnectionSettingsUpdated(this.type);
+
+  final ItemConnectorType type;
+
+  @override
+  List<Object> get props => <Object>[type];
+
+  @override
+  String toString() => 'ItemConnectionSettingsUpdated { '
+      'type: $type'
+      ' }';
+}
+
+class ImageConnectionSettingsUpdated extends RepositorySettingsManagerState {
+  ImageConnectionSettingsUpdated(this.type);
+
+  final ImageConnectorType type;
+
+  @override
+  List<Object> get props => <Object>[type];
+
+  @override
+  String toString() => 'ImageConnectionSettingsUpdated { '
+      'type: $type'
+      ' }';
+}
 
 class RepositorySettingsNotUpdated extends RepositorySettingsManagerState {
   const RepositorySettingsNotUpdated(this.error);

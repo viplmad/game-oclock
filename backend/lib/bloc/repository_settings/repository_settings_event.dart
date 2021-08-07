@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/repository_type.dart';
-import 'package:backend/model/repository_tab.dart';
 
 
 abstract class RepositorySettingsEvent extends Equatable {
@@ -13,44 +12,18 @@ abstract class RepositorySettingsEvent extends Equatable {
 
 class LoadRepositorySettings extends RepositorySettingsEvent {}
 
-class UpdateRepositoryTab extends RepositorySettingsEvent {
-  const UpdateRepositoryTab(this.repositoryTab);
+class UpdateRepositorySettings extends RepositorySettingsEvent {
+  const UpdateRepositorySettings(this.savedItemConnection, this.savedImageConnection);
 
-  final RepositoryTab repositoryTab;
-
-  @override
-  List<Object> get props => <Object>[repositoryTab];
+  final ItemConnectorType? savedItemConnection;
+  final ImageConnectorType? savedImageConnection;
 
   @override
-  String toString() => 'UpdateRepositoryTab { '
-      'repositoryTab: $repositoryTab'
-      ' }';
-}
-
-class UpdateItemTypeSettingsRadio extends RepositorySettingsEvent {
-  const UpdateItemTypeSettingsRadio(this.itemType);
-
-  final ItemConnectorType itemType;
+  List<Object> get props => <Object>[savedItemConnection?? '', savedImageConnection?? ''];
 
   @override
-  List<Object> get props => <Object>[itemType];
-
-  @override
-  String toString() => 'UpdateItemTypeSettingsRadio { '
-      'itemType: $itemType'
-      ' }';
-}
-
-class UpdateImageTypeSettingsRadio extends RepositorySettingsEvent {
-  const UpdateImageTypeSettingsRadio(this.imageType);
-
-  final ImageConnectorType imageType;
-
-  @override
-  List<Object> get props => <Object>[imageType];
-
-  @override
-  String toString() => 'UpdateImageTypeSettingsRadio { '
-      'itemType: $imageType'
+  String toString() => 'UpdateRepositorySettings { '
+      'savedItemConnection: $savedItemConnection, '
+      'savedImageConnection: $savedImageConnection'
       ' }';
 }

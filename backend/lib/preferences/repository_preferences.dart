@@ -6,7 +6,7 @@ import 'package:backend/model/repository_type.dart';
 
 
 class RepositoryPreferences {
-  static const String _repositorySetKey = 'isRepositorySet';
+  const RepositoryPreferences._();
 
   static const String _typeItemConnectorKey = 'itemConnectorType';
   static const String _typeImageConnectorKey = 'itemConnectorType';
@@ -20,32 +20,28 @@ class RepositoryPreferences {
   static const String _cloudinaryImageConnectorValue = 'cloudinary';
   static const String _localImageConnectorValue = 'local';
 
-  static const String _trueValue = '1';
-
-  static Future<bool> existsRepository(){
+  static Future<bool> existsConnection() async {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_repositorySetKey).then<bool>((String value) {
+    final bool existsItem = await sharedPreferences.getString(_itemConnectionStringKey).then<bool>((String value) {
 
-      return value == _trueValue;
+      return value.isNotEmpty;
 
     }, onError: (Object error) => false);
 
-  }
+    final bool existsImage = await sharedPreferences.getString(_imageConnectionStringKey).then<bool>((String value) {
 
-  static Future<bool> setRepositoryExist() {
+      return value.isNotEmpty;
 
-    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
+    }, onError: (Object error) => false);
 
-    return sharedPreferences.setString(
-      _repositorySetKey,
-      _trueValue,
-    );
+    return Future<bool>.value(existsItem && existsImage);
 
   }
 
-  static Future<bool> setItemConnectorType(ItemConnectorType itemType) {
+  //#region SET
+  static Future<bool> setActiveItemConnectorType(ItemConnectorType itemType) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -66,7 +62,7 @@ class RepositoryPreferences {
 
   }
 
-  static Future<bool> setImageConnectorType(ImageConnectorType itemType) {
+  static Future<bool> setActiveImageConnectorType(ImageConnectorType itemType) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -112,8 +108,10 @@ class RepositoryPreferences {
     );
 
   }
+  //#endregion SET
 
-  static Future<ItemConnectorType> retrieveItemConnectorType() {
+  //#region RETRIEVE
+  static Future<ItemConnectorType> retrieveActiveItemConnectorType() {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -132,7 +130,7 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ImageConnectorType> retrieveImageConnectorType() {
+  static Future<ImageConnectorType> retrieveActiveImageConnectorType() {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -151,9 +149,9 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ProviderInstance> retrieveItemInstance() async {
+  static Future<ProviderInstance> retrieveActiveItemInstance() async {
 
-    final ItemConnectorType itemType = await retrieveItemConnectorType();
+    final ItemConnectorType itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -170,9 +168,9 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ProviderInstance> retrieveImageInstance() async {
+  static Future<ProviderInstance> retrieveActiveImageInstance() async {
 
-    final ImageConnectorType imageType = await retrieveImageConnectorType();
+    final ImageConnectorType imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -189,9 +187,9 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ItemConnector> retrieveItemConnector() async {
+  static Future<ItemConnector> retrieveActiveItemConnector() async {
 
-    final ItemConnectorType itemType = await retrieveItemConnectorType();
+    final ItemConnectorType itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -208,9 +206,9 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ImageConnector> retrieveImageConnector() async {
+  static Future<ImageConnector> retrieveActiveImageConnector() async {
 
-    final ImageConnectorType imageType = await retrieveImageConnectorType();
+    final ImageConnectorType imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 

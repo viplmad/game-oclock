@@ -12,20 +12,32 @@ abstract class RepositorySettingsManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateConnectionSettings extends RepositorySettingsManagerEvent {
-  const UpdateConnectionSettings(this.itemType, this.itemInstance, this.imageType, this.imageInstance);
+class UpdateItemConnectionSettings extends RepositorySettingsManagerEvent {
+  const UpdateItemConnectionSettings(this.type, this.instance);
 
-  final ItemConnectorType itemType;
-  final ProviderInstance itemInstance;
-  final ImageConnectorType imageType;
-  final ProviderInstance imageInstance;
+  final ItemConnectorType type;
+  final ProviderInstance instance;
 
   @override
-  List<Object> get props => <Object>[itemInstance, imageInstance];
+  List<Object> get props => <Object>[instance];
 
   @override
-  String toString() => 'UpdatePostgresConnectionSettings { '
-      'itemInstance: $itemInstance, '
-      'imageInstance: $imageInstance'
+  String toString() => 'UpdateItemConnectionSettings { '
+      'instance: $instance'
+      ' }';
+}
+
+class UpdateImageConnectionSettings extends RepositorySettingsManagerEvent {
+  const UpdateImageConnectionSettings(this.type, this.instance);
+
+  final ImageConnectorType type;
+  final ProviderInstance instance;
+
+  @override
+  List<Object> get props => <Object>[instance];
+
+  @override
+  String toString() => 'UpdateImageConnectionSettings { '
+      'instance: $instance'
       ' }';
 }

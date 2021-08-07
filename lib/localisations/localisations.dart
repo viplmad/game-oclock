@@ -9,16 +9,19 @@ import 'localisations_en.dart';
 
 
 abstract class GameCollectionLocalisations {
-  const GameCollectionLocalisations();
+  const GameCollectionLocalisations._();
 
   static String appTitle = 'Game Collection';
 
   String get connectingString;
+  String get connectString;
   String get failedConnectionString;
   String get retryString;
   String get changeRepositoryString;
 
   String get repositorySettingsString;
+  String get updatedItemConnectionString;
+  String get updatedImageConnectionString;
   String get unableToUpdateConnectionString;
   String get saveString;
   String get itemConnectionString;

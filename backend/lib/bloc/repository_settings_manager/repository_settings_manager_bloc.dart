@@ -11,9 +11,13 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
   @override
   Stream<RepositorySettingsManagerState> mapEventToState(RepositorySettingsManagerEvent event) async* {
 
-    if(event is UpdateConnectionSettings) {
+    if(event is UpdateItemConnectionSettings) {
 
-      yield* _mapUpdateRemoteToState(event);
+      yield* _mapUpdateItemToState(event);
+
+    } else if(event is UpdateImageConnectionSettings) {
+
+      yield* _mapUpdateImageToState(event);
 
     }
 
@@ -21,18 +25,31 @@ class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent,
 
   }
 
-  Stream<RepositorySettingsManagerState> _mapUpdateRemoteToState(UpdateConnectionSettings event) async* {
+  Stream<RepositorySettingsManagerState> _mapUpdateItemToState(UpdateItemConnectionSettings event) async* {
 
     try {
 
-      await RepositoryPreferences.setItemConnectorType(event.itemType);
-      await RepositoryPreferences.setItemInstance(event.itemInstance);
-      await RepositoryPreferences.setImageConnectorType(event.imageType);
-      await RepositoryPreferences.setImageInstance(event.imageInstance);
+      await RepositoryPreferences.setActiveItemConnectorType(event.type);
+      await RepositoryPreferences.setItemInstance(event.instance);
 
-      await RepositoryPreferences.setRepositoryExist();
+      yield ItemConnectionSettingsUpdated(event.type);
 
-      yield RepositorySettingsUpdated();
+    } catch(e) {
+
+      yield RepositorySettingsNotUpdated(e.toString());
+
+    }
+
+  }
+
+  Stream<RepositorySettingsManagerState> _mapUpdateImageToState(UpdateImageConnectionSettings event) async* {
+
+    try {
+
+      await RepositoryPreferences.setActiveImageConnectorType(event.type);
+      await RepositoryPreferences.setImageInstance(event.instance);
+
+      yield ImageConnectionSettingsUpdated(event.type);
 
     } catch(e) {
 

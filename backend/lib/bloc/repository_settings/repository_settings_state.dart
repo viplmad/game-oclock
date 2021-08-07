@@ -1,15 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/connector/connector.dart' show ProviderInstance;
-
-import 'package:backend/model/repository_tab.dart';
 import 'package:backend/model/repository_type.dart';
 
 
 abstract class RepositorySettingsState extends Equatable {
-  const RepositorySettingsState([this.repositoryTab = RepositoryTab.Item]);
-
-  final RepositoryTab repositoryTab; // TODO move to own bloc only for tab similar to TabBloc
+  const RepositorySettingsState();
 
   @override
   List<Object> get props => <Object>[];
@@ -17,22 +12,35 @@ abstract class RepositorySettingsState extends Equatable {
 
 class RepositorySettingsLoading extends RepositorySettingsState {}
 
-class EmptyRepositorySettings extends RepositorySettingsState {}
-
 class RepositorySettingsLoaded extends RepositorySettingsState {
-  RepositorySettingsLoaded(this.itemType, this.itemInstance, this.imageType, this.imageInstance);
+  const RepositorySettingsLoaded([this.activeItemConnection, this.activeImageConnection])
+    : ready = activeItemConnection != null && activeImageConnection != null;
 
-  final ItemConnectorType itemType;
-  final ProviderInstance itemInstance;
-  final ImageConnectorType imageType;
-  final ProviderInstance imageInstance;
+  final ItemConnectorType? activeItemConnection;
+  final ImageConnectorType? activeImageConnection;
+  final bool ready;
 
   @override
-  List<Object> get props => <Object>[itemInstance, imageInstance];
+  List<Object> get props => <Object>[activeItemConnection?? '', activeImageConnection?? ''];
 
   @override
   String toString() => 'RepositorySettingsLoaded { '
-      'itemConnector: $itemInstance, '
-      'imageConnector: $imageInstance'
+      'savedItemConnection: $activeItemConnection, '
+      'savedImageConnection: $activeImageConnection, '
+      'ready: $ready'
+      ' }';
+}
+
+class RepositorySettingsNotLoaded extends RepositorySettingsState {
+  const RepositorySettingsNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'RepositorySettingsNotLoaded { '
+      'error: $error'
       ' }';
 }
