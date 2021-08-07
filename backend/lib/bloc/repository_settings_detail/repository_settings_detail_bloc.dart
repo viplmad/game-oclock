@@ -31,7 +31,7 @@ class RepositorySettingsDetailBloc extends Bloc<RepositorySettingsDetailEvent, R
 
     try {
 
-      final ItemConnectorType activeItemType = await RepositoryPreferences.retrieveActiveItemConnectorType();
+      final ItemConnectorType? activeItemType = await RepositoryPreferences.retrieveActiveItemConnectorType();
 
       ProviderInstance? instance;
       if(activeItemType == event.itemType) {
@@ -54,7 +54,7 @@ class RepositorySettingsDetailBloc extends Bloc<RepositorySettingsDetailEvent, R
 
     try {
 
-      final ImageConnectorType activeImageType = await RepositoryPreferences.retrieveActiveImageConnectorType();
+      final ImageConnectorType? activeImageType = await RepositoryPreferences.retrieveActiveImageConnectorType();
 
       ProviderInstance? instance;
       if(activeImageType == event.imageType) {

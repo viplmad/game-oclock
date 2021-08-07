@@ -22,19 +22,8 @@ class RepositoryPreferences {
 
   static Future<bool> existsConnection() async {
 
-    final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
-
-    final bool existsItem = await sharedPreferences.getString(_itemConnectionStringKey).then<bool>((String value) {
-
-      return value.isNotEmpty;
-
-    }, onError: (Object error) => false);
-
-    final bool existsImage = await sharedPreferences.getString(_imageConnectionStringKey).then<bool>((String value) {
-
-      return value.isNotEmpty;
-
-    }, onError: (Object error) => false);
+    final bool existsItem = await retrieveActiveItemConnectorType() != null;
+    final bool existsImage = await retrieveActiveImageConnectorType() != null;
 
     return Future<bool>.value(existsItem && existsImage);
 
@@ -111,7 +100,7 @@ class RepositoryPreferences {
   //#endregion SET
 
   //#region RETRIEVE
-  static Future<ItemConnectorType> retrieveActiveItemConnectorType() {
+  static Future<ItemConnectorType?> retrieveActiveItemConnectorType() {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -130,7 +119,7 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ImageConnectorType> retrieveActiveImageConnectorType() {
+  static Future<ImageConnectorType?> retrieveActiveImageConnectorType() {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -151,13 +140,13 @@ class RepositoryPreferences {
 
   static Future<ProviderInstance> retrieveActiveItemInstance() async {
 
-    final ItemConnectorType itemType = await retrieveActiveItemConnectorType();
+    final ItemConnectorType? itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_itemConnectionStringKey).then<ProviderInstance>((String value) {
 
-      switch(itemType) {
+      switch(itemType!) {
         case ItemConnectorType.Postgres:
           return PostgresInstance.fromString(value);
         case ItemConnectorType.Local:
@@ -170,13 +159,13 @@ class RepositoryPreferences {
 
   static Future<ProviderInstance> retrieveActiveImageInstance() async {
 
-    final ImageConnectorType imageType = await retrieveActiveImageConnectorType();
+    final ImageConnectorType? imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_imageConnectionStringKey).then<ProviderInstance>((String value) {
 
-      switch(imageType) {
+      switch(imageType!) {
         case ImageConnectorType.Cloudinary:
           return CloudinaryInstance.fromString(value);
         case ImageConnectorType.Local:
@@ -189,13 +178,13 @@ class RepositoryPreferences {
 
   static Future<ItemConnector> retrieveActiveItemConnector() async {
 
-    final ItemConnectorType itemType = await retrieveActiveItemConnectorType();
+    final ItemConnectorType? itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_itemConnectionStringKey).then<ItemConnector>((String value) {
 
-      switch(itemType) {
+      switch(itemType!) {
         case ItemConnectorType.Postgres:
           return PostgresConnector.fromConnectionString(value);
         case ItemConnectorType.Local:
@@ -208,13 +197,13 @@ class RepositoryPreferences {
 
   static Future<ImageConnector> retrieveActiveImageConnector() async {
 
-    final ImageConnectorType imageType = await retrieveActiveImageConnectorType();
+    final ImageConnectorType? imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
     return sharedPreferences.getString(_imageConnectionStringKey).then<ImageConnector>((String value) {
 
-      switch(imageType) {
+      switch(imageType!) {
         case ImageConnectorType.Cloudinary:
           return CloudinaryConnector.fromConnectionString(value);
         case ImageConnectorType.Local:

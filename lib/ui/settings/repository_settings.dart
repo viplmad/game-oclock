@@ -213,9 +213,6 @@ class _RepositorySettingsBody extends StatelessWidget {
                     instance: state.instance as PostgresInstance?,
                   );
                 }
-                if(state is RepositorySettingsDetailNotLoaded) {
-                  return Dialog(child: Center(child: Text(state.error)));
-                }
 
                 return const Dialog(child: CircularProgressIndicator());
               },
@@ -261,9 +258,6 @@ class _RepositorySettingsBody extends StatelessWidget {
                   return CloudinaryTextDialog(
                     instance: state.instance as CloudinaryInstance?,
                   );
-                }
-                if(state is RepositorySettingsDetailNotLoaded) {
-                  return Dialog(child: Center(child: Text(state.error)));
                 }
 
                 return const Dialog(child: CircularProgressIndicator());
