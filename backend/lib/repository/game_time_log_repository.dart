@@ -49,6 +49,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
     );
 
   }
+
   Future<List<GameTimeLogEntity>> findAllFromGame(GameID id) {
 
     final Query query = GameTimeLogQuery.selectAllByGame(id);

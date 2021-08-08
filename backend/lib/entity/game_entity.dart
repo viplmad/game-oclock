@@ -92,7 +92,7 @@ class GameEntity extends ItemEntity {
       screenshotFolder: map[GameEntityData.screenshotFolderField] as String,
       isBackup: map[GameEntityData.backupField] as bool,
       firstFinishDate: map[GameEntityData.firstFinishDateField] as DateTime?,
-      totalTime: Duration(seconds: (map[GameEntityData.totalTimeField] as int?)?? 0),
+      totalTime: Duration(minutes: (map[GameEntityData.totalTimeField] as int?)?? 0),
     );
 
   }

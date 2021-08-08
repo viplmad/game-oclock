@@ -87,7 +87,7 @@ class GameTimeLogQuery {
   static void addFields(Query query) {
     query.field(GameTimeLogEntityData.gameField, type: int, table: GameTimeLogEntityData.table);
     query.field(GameTimeLogEntityData.dateTimeField, type: DateTime, table: GameTimeLogEntityData.table);
-    query.field(GameTimeLogEntityData.timeField, type: Duration, table: GameTimeLogEntityData.table);
+    query.field(GameTimeLogEntityData.timeField, type: Duration, table: GameTimeLogEntityData.table, alias: GameTimeLogEntityData.timeField);
   }
 
   static void _addIdWhere(GameTimeLogID id, Query query) {

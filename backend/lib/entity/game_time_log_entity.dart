@@ -34,7 +34,7 @@ class GameTimeLogEntity extends ItemEntity {
     return GameTimeLogEntity(
       gameId: map[GameTimeLogEntityData.gameField] as int,
       dateTime: map[GameTimeLogEntityData.dateTimeField] as DateTime,
-      time: Duration(seconds: map[GameTimeLogEntityData.timeField] as int),
+      time: Duration(minutes: map[GameTimeLogEntityData.timeField] as int),
     );
 
   }
