@@ -1,4 +1,4 @@
-import 'package:backend/entity/entity.dart' show PlatformEntity, physicalValue, digitalValue;
+import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData;
 import 'package:backend/model/model.dart' show Platform, PlatformType;
 
 
@@ -6,13 +6,13 @@ class PlatformMapper {
   PlatformMapper._();
 
   static const Map<PlatformType, String> typeToStringMap = <PlatformType, String> {
-    PlatformType.Physical: physicalValue,
-    PlatformType.Digital: digitalValue,
+    PlatformType.Physical: PlatformEntityData.physicalValue,
+    PlatformType.Digital: PlatformEntityData.digitalValue,
   };
 
   static const Map<String, PlatformType> stringToTypeMap = <String, PlatformType> {
-    physicalValue: PlatformType.Physical,
-    digitalValue: PlatformType.Digital,
+    PlatformEntityData.physicalValue: PlatformType.Physical,
+    PlatformEntityData.digitalValue: PlatformType.Digital,
   };
 
   static PlatformEntity modelToEntity(Platform model) {

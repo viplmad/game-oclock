@@ -1,4 +1,4 @@
-import 'package:backend/entity/entity.dart' show SystemEntity, nintendoValue, sonyValue, microsoftValue, segaValue;
+import 'package:backend/entity/entity.dart' show SystemEntity, SystemEntityData;
 import 'package:backend/model/model.dart' show System, Manufacturer;
 
 
@@ -6,17 +6,17 @@ class SystemMapper {
   SystemMapper._();
 
   static const Map<Manufacturer, String> manufacturerToStringMap = <Manufacturer, String> {
-    Manufacturer.Nintendo: nintendoValue,
-    Manufacturer.Sony: sonyValue,
-    Manufacturer.Microsoft: microsoftValue,
-    Manufacturer.Sega: segaValue,
+    Manufacturer.Nintendo: SystemEntityData.nintendoValue,
+    Manufacturer.Sony: SystemEntityData.sonyValue,
+    Manufacturer.Microsoft: SystemEntityData.microsoftValue,
+    Manufacturer.Sega: SystemEntityData.segaValue,
   };
 
   static const Map<String, Manufacturer> stringToManufacturerMap = <String, Manufacturer> {
-    nintendoValue: Manufacturer.Nintendo,
-    sonyValue: Manufacturer.Sony,
-    microsoftValue: Manufacturer.Microsoft,
-    segaValue: Manufacturer.Sega,
+    SystemEntityData.nintendoValue: Manufacturer.Nintendo,
+    SystemEntityData.sonyValue: Manufacturer.Sony,
+    SystemEntityData.microsoftValue: Manufacturer.Microsoft,
+    SystemEntityData.segaValue: Manufacturer.Sega,
   };
 
   static SystemEntity modelToEntity(System model) {

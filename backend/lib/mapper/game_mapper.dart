@@ -1,4 +1,4 @@
-import 'package:backend/entity/entity.dart' show GameEntity, lowPriorityValue, nextUpValue, playingValue, playedValue;
+import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData;
 import 'package:backend/model/model.dart' show Game, GameStatus;
 
 
@@ -6,17 +6,17 @@ class GameMapper {
   GameMapper._();
 
   static const Map<GameStatus, String> statusToStringMap = <GameStatus, String> {
-    GameStatus.LowPriority: lowPriorityValue,
-    GameStatus.NextUp: nextUpValue,
-    GameStatus.Playing: playingValue,
-    GameStatus.Played: playedValue,
+    GameStatus.LowPriority: GameEntityData.lowPriorityValue,
+    GameStatus.NextUp: GameEntityData.nextUpValue,
+    GameStatus.Playing: GameEntityData.playingValue,
+    GameStatus.Played: GameEntityData.playedValue,
   };
 
   static const Map<String, GameStatus> stringToStatusMap = <String, GameStatus> {
-    lowPriorityValue: GameStatus.LowPriority,
-    nextUpValue: GameStatus.NextUp,
-    playingValue: GameStatus.Playing,
-    playedValue :GameStatus.Played,
+    GameEntityData.lowPriorityValue: GameStatus.LowPriority,
+    GameEntityData.nextUpValue: GameStatus.NextUp,
+    GameEntityData.playingValue: GameStatus.Playing,
+    GameEntityData.playedValue :GameStatus.Played,
   };
 
   static GameEntity modelToEntity(Game model) {

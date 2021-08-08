@@ -1,9 +1,6 @@
 import 'entity.dart' show ItemEntity;
 
 
-const String physicalValue = 'Physical';
-const String digitalValue = 'Digital';
-
 enum PlatformView {
   Main,
   LastCreated,
@@ -20,6 +17,10 @@ class PlatformEntityData {
   static const String nameField = 'Name';
   static const String iconField = 'Icon';
   static const String typeField = 'Type';
+
+  static const String platformTypeEnum = 'platform_type';
+  static const String physicalValue = 'Physical';
+  static const String digitalValue = 'Digital';
 }
 
 class PlatformID {

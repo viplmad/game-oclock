@@ -1,6 +1,6 @@
 import 'package:query/query.dart';
 
-import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameFinishEntityData, GameID, GamePurchaseRelationData, GameTimeLogEntityData, GameView, nextUpValue, playingValue, playedValue;
+import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameFinishEntityData, GameID, GamePurchaseRelationData, GameTimeLogEntityData, GameView;
 
 
 class GameQuery {
@@ -162,18 +162,18 @@ class GameQuery {
         query.limit(limit?? 50);
         break;
       case GameView.Playing:
-        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
         query.order(GameEntityData.releaseYearField, GameEntityData.table);
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.NextUp:
-        query.where(GameEntityData.statusField, '\'$nextUpValue\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.nextUpValue, table: GameEntityData.table);
         query.order(GameEntityData.releaseYearField, GameEntityData.table);
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.LastPlayed:
-        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, '\'$playedValue\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
+        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table);
 
         final Query lastTimeLogQuery = FluentQuery
           .select()
@@ -185,8 +185,8 @@ class GameQuery {
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.LastFinished:
-        query.where(GameEntityData.statusField, '\'$playingValue\'::game_status', table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, '\'$playedValue\'::game_status', table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
+        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table);
 
         final Query lastFinishQuery = FluentQuery
           .select()

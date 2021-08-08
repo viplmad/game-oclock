@@ -1,11 +1,6 @@
 import 'entity.dart' show ItemEntity;
 
 
-const String nintendoValue = 'Nintendo';
-const String sonyValue = 'Sony';
-const String microsoftValue = 'Microsoft';
-const String segaValue = 'Sega';
-
 enum SystemView {
   Main,
   LastCreated,
@@ -23,6 +18,12 @@ class SystemEntityData {
   static const String iconField = 'Icon';
   static const String generationField = 'Generation';
   static const String manufacturerField = 'Manufacturer';
+
+  static const String systemManufacturerEnum = 'system_manufacturer';
+  static const String nintendoValue = 'Nintendo';
+  static const String sonyValue = 'Sony';
+  static const String microsoftValue = 'Microsoft';
+  static const String segaValue = 'Sega';
 }
 
 class SystemID {

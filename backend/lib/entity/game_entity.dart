@@ -1,11 +1,6 @@
 import 'entity.dart' show ItemEntity;
 
 
-const String lowPriorityValue = 'Low Priority';
-const String nextUpValue = 'Next Up';
-const String playingValue = 'Playing';
-const String playedValue = 'Played';
-
 enum GameView {
   Main,
   LastCreated,
@@ -37,6 +32,12 @@ class GameEntityData {
 
   static const String firstFinishDateField = 'First Finish Date';
   static const String totalTimeField = 'Total Time';
+
+  static const String gameStatusEnum = 'game_status';
+  static const String lowPriorityValue = 'Low Priority';
+  static const String nextUpValue = 'Next Up';
+  static const String playingValue = 'Playing';
+  static const String playedValue = 'Played';
 }
 
 class GameID {
