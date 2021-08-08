@@ -261,9 +261,9 @@ class _HomepageDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
+            child: const Text(
               GameCollectionLocalisations.appTitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),

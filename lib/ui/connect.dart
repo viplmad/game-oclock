@@ -41,7 +41,7 @@ class _ConnectpageBody extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(GameCollectionLocalisations.appTitle),
+        title: const Text(GameCollectionLocalisations.appTitle),
       ),
       body: BlocListener<ConnectionBloc, ConnectState>(
         listener: (BuildContext context, ConnectState state) {

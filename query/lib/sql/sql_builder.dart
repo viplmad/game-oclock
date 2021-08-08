@@ -236,14 +236,29 @@ class SQLQueryBuilder {
     return '@${_INSERT_PARAM}${options.insertParamIndex}';
   }
 
+  static String _buildInsertSubstitutionValueString(SQLBuilderOptions options) {
+    options.incrementInsertParamIndex();
+    return '${_INSERT_PARAM}${options.insertParamIndex}';
+  }
+
   static String _buildSetValueString(SQLBuilderOptions options) {
     options.incrementSetParamIndex();
     return '@${_SET_PARAM}${options.setParamIndex}';
   }
 
+  static String _buildSetSubstitutionValueString(SQLBuilderOptions options) {
+    options.incrementSetParamIndex();
+    return '${_SET_PARAM}${options.setParamIndex}';
+  }
+
   static String _buildWhereValueString(SQLBuilderOptions options) {
     options.incrementWhereParamIndex();
     return '@${_WHERE_PARAM}${options.whereParamIndex}';
+  }
+
+  static String _buildWhereSubstitutionValueString(SQLBuilderOptions options) {
+    options.incrementWhereParamIndex();
+    return '${_WHERE_PARAM}${options.whereParamIndex}';
   }
 
   static String _buildInsertFieldsFromQueryString(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
@@ -582,7 +597,7 @@ class SQLQueryBuilder {
     for(final SetNode node in block.sets) {
       final Object? value = Validator.formatValue(node.value, options);
 
-      result.addAll(<String, Object?>{_buildInsertValueString(options): value});
+      result.addAll(<String, Object?>{_buildInsertSubstitutionValueString(options): value});
     }
 
     return result;
@@ -597,7 +612,7 @@ class SQLQueryBuilder {
     for(final SetNode node in block.sets) {
       final Object? value = Validator.formatValue(node.value, options);
 
-      result.addAll(<String, Object?>{_buildSetValueString(options): value});
+      result.addAll(<String, Object?>{_buildSetSubstitutionValueString(options): value});
     }
 
     return result;
@@ -621,7 +636,7 @@ class SQLQueryBuilder {
           value = '%$value%';
         }
 
-        result.addAll(<String, Object?>{_buildWhereValueString(options): value});
+        result.addAll(<String, Object?>{_buildWhereSubstitutionValueString(options): value});
       }
     }
 
