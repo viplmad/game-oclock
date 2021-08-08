@@ -1,4 +1,4 @@
-import 'package:cloudinary/cloudinary.dart';
+import 'package:cloudinary_client/cloudinary_client.dart';
 
 import '../image_connector.dart';
 
@@ -15,14 +15,16 @@ class CloudinaryConnector extends ImageConnector {
   }
 
   late CloudinaryInstance _instance;
-  late CloudinaryConnection _connection;
+  late Image _connection;
 
   void createConnection() {
 
-    this._connection = CloudinaryConnection(
-      _instance.apiKey.toString(),
-      _instance.apiSecret,
-      _instance.cloudName,
+    this._connection = Image(
+      Credentials(
+        _instance.apiKey.toString(),
+        _instance.apiSecret,
+        _instance.cloudName,
+      ),
     );
 
   }
@@ -31,10 +33,10 @@ class CloudinaryConnector extends ImageConnector {
   @override
   Future<String> set({required String imagePath, required String tableName, required String imageName}) {
 
-    return _connection.uploadImage(
+    return _connection.upload(
       imagePath,
+      filename: imageName,
       folder: tableName,
-      imageName: imageName,
     ).asStream().map( getFilename ).first;
 
   }
@@ -44,10 +46,10 @@ class CloudinaryConnector extends ImageConnector {
   @override
   Future<String> rename({required String tableName, required String oldImageName, required String newImageName}) {
 
-    return _connection.renameImage(
+    return _connection.rename(
+      filename: oldImageName,
+      newFilename: newImageName,
       folder: tableName,
-      imageName: oldImageName,
-      newImageName: newImageName,
     ).asStream().map( getFilename ).first;
 
   }
@@ -57,9 +59,9 @@ class CloudinaryConnector extends ImageConnector {
   @override
   Future<Object?> delete({required String tableName, required String imageName}) {
 
-    return _connection.deleteImage(
+    return _connection.delete(
+      filename: imageName,
       folder: tableName,
-      imageName: imageName,
     ).asStream().first;
 
   }
@@ -95,9 +97,9 @@ class CloudinaryConnector extends ImageConnector {
   }
 
   String getFilename(CloudinaryResponse response) {
-
     String filename = '';
-    if(!response.isError) {
+
+    if(response is CloudinaryResponseSuccess) {
       filename = response.publicId!.split('/').last + '.' + response.format!;
     }
 

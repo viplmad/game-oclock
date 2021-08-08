@@ -64,15 +64,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  cloudinary:
+  cloudinary_client:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "29f79a3403d16840093e20d083f87eb741d2a645"
-      url: "https://github.com/viplmad/cloudinary.git"
+      resolved-ref: "93a14d2aac92190d52bb03deb11a87eadff7d4be"
+      url: "https://github.com/viplmad/cloudinary_client.git"
     source: git
-    version: "0.0.9"
+    version: "0.1.0"
   collection:
     dependency: transitive
     description:
@@ -94,29 +94,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  dio:
-    dependency: transitive
-    description:
-      name: dio
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   encrypt:
     dependency: transitive
     description:
       name: encrypt
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "5.0.1"
   encrypted_shared_preferences:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: cd4419fd4b388421060ba3748406669513442484
-      url: "https://github.com/viplmad/encrypted_shared_preferences.git"
-    source: git
-    version: "1.0.7"
+      name: encrypted_shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   equatable:
     dependency: "direct main"
     description:
@@ -271,7 +262,7 @@ packages:
       path: "../query"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   shared_preferences:
     dependency: transitive
     description:
