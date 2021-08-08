@@ -425,9 +425,9 @@ class SQLQueryBuilder {
         sb.write('$combiner ');
       }
 
-      if(node is WhereValueNode) {
-        final String operator = _operatorTypeToString(node.operator, isValueNull: node.value == null);
+      final String operator = _operatorTypeToString(node.operator);
 
+      if(node is WhereValueNode) {
         if(node is WhereFieldValueNode) {
           String field = _buildFieldNodeString(node.field, options);
 
@@ -446,8 +446,6 @@ class SQLQueryBuilder {
         final String value = _buildWhereValueString(options);
         sb.write(value);
       } else if(node is WhereFieldsNode) {
-          final String operator = _operatorTypeToString(node.operator);
-
           final String field = _buildFieldNodeString(node.field, options);
           final String otherField = _buildFieldNodeString(node.otherField, options);
 
@@ -506,12 +504,12 @@ class SQLQueryBuilder {
     }
   }
 
-  static String _operatorTypeToString(OperatorType type, {bool isValueNull = false}) {
+  static String _operatorTypeToString(OperatorType type) {
     switch(type) {
       case OperatorType.EQ:
-        return isValueNull? 'IS' : '=';
+        return '=';
       case OperatorType.NOT_EQ:
-        return isValueNull? 'IS NOT' : '!=';
+        return '!=';
       case OperatorType.LIKE:
         return 'ILIKE';
       case OperatorType.GREATER_THAN:
