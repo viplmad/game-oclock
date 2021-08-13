@@ -12,6 +12,8 @@ class SQLQueryBuilder {
   static const String _SET_PARAM = 'setParam';
   static const String _WHERE_PARAM = 'whereParam';
 
+  static const String NULL_VALUE = 'NULL';
+
   static String buildString(Query query, SQLBuilderOptions options) {
     options.resetIndexes();
 
@@ -27,14 +29,14 @@ class SQLQueryBuilder {
     return Util.joinNonEmpty(options.separator, results);
   }
 
-  static Map<String, Object?> buildSubstitutionValues(Query query, SQLBuilderOptions options) {
+  static Map<String, Object> buildSubstitutionValues(Query query, SQLBuilderOptions options) {
     options.resetIndexes();
 
     return _buildSubstitutionValues(query, options);
   }
 
-  static Map<String, Object?> _buildSubstitutionValues(Query query, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildSubstitutionValues(Query query, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     for (final Block block in query.blocks) {
       result.addAll(_buildBlockSubstitutionValues(block, options));
     }
@@ -220,7 +222,8 @@ class SQLQueryBuilder {
       final String name = _buildSetNodeNameString(node, options);
       names.add(name);
 
-      final String value = _buildInsertValueString(options);
+      final bool isValueNull = node.value == null;
+      final String value = isValueNull? NULL_VALUE : _buildInsertValueString(options);
       values.add(value);
     }
 
@@ -332,7 +335,9 @@ class SQLQueryBuilder {
 
   static String _buildSetNodeString(SetNode node, SQLBuilderOptions options) {
     final String name = _buildSetNodeNameString(node, options);
-    final String value = _buildSetValueString(options);
+
+    final bool isValueNull = node.value == null;
+    final String value = isValueNull? NULL_VALUE : _buildSetValueString(options);
 
     return '$name = $value';
   }
@@ -425,9 +430,10 @@ class SQLQueryBuilder {
         sb.write('$combiner ');
       }
 
-      final String operator = _operatorTypeToString(node.operator);
-
       if(node is WhereValueNode) {
+        final bool isValueNull = node.value == null;
+        final String operator = _operatorTypeToString(node.operator, isValueNull: isValueNull);
+
         if(node is WhereFieldValueNode) {
           String field = _buildFieldNodeString(node.field, options);
 
@@ -443,9 +449,11 @@ class SQLQueryBuilder {
         }
         sb.write(' $operator ');
 
-        final String value = _buildWhereValueString(options);
+        final String value = isValueNull? NULL_VALUE : _buildWhereValueString(options);
         sb.write(value);
       } else if(node is WhereFieldsNode) {
+          final String operator = _operatorTypeToString(node.operator);
+
           final String field = _buildFieldNodeString(node.field, options);
           final String otherField = _buildFieldNodeString(node.otherField, options);
 
@@ -504,12 +512,12 @@ class SQLQueryBuilder {
     }
   }
 
-  static String _operatorTypeToString(OperatorType type) {
+  static String _operatorTypeToString(OperatorType type, {bool isValueNull = false}) {
     switch(type) {
       case OperatorType.EQ:
-        return '=';
+        return isValueNull? 'IS' : '=';
       case OperatorType.NOT_EQ:
-        return '!=';
+        return isValueNull? 'IS NOT' : '!=';
       case OperatorType.LIKE:
         return 'ILIKE';
       case OperatorType.GREATER_THAN:
@@ -561,7 +569,7 @@ class SQLQueryBuilder {
   }
 
   // Build Substitution Values
-  static Map<String, Object?> _buildBlockSubstitutionValues(Block block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildBlockSubstitutionValues(Block block, SQLBuilderOptions options) {
     if(block is InsertFieldValueBlock) {
       return _buildInsertFieldSubstitutionValues(block, options);
     } else if(block is SetFieldBlock) {
@@ -584,40 +592,46 @@ class SQLQueryBuilder {
       return _buildUnionSubstitutionValues(block, options);
     }
 
-    return <String, Object?>{};
+    return <String, Object>{};
   }
-  static Map<String, Object?> _buildInsertFieldSubstitutionValues(InsertFieldValueBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildInsertFieldSubstitutionValues(InsertFieldValueBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.sets.isEmpty) {
       return result;
     }
 
     for(final SetNode node in block.sets) {
-      final Object? value = Validator.formatValue(node.value, options);
+      final bool isValueNull = node.value == null;
+      if(!isValueNull) {
+        final Object value = Validator.formatValue(node.value!, options);
 
-      result.addAll(<String, Object?>{_buildInsertSubstitutionValueString(options): value});
+        result.addAll(<String, Object>{_buildInsertSubstitutionValueString(options): value});
+      }
     }
 
     return result;
   }
 
-  static Map<String, Object?> _buildSetFieldSubstitutionValues(SetFieldBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildSetFieldSubstitutionValues(SetFieldBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.sets.isEmpty) {
       return result;
     }
 
     for(final SetNode node in block.sets) {
-      final Object? value = Validator.formatValue(node.value, options);
+      final bool isValueNull = node.value == null;
+      if(!isValueNull) {
+        final Object value = Validator.formatValue(node.value!, options);
 
-      result.addAll(<String, Object?>{_buildSetSubstitutionValueString(options): value});
+        result.addAll(<String, Object>{_buildSetSubstitutionValueString(options): value});
+      }
     }
 
     return result;
   }
 
-  static Map<String, Object?> _buildWhereSubstitutionValues(WhereBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildWhereSubstitutionValues(WhereBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.wheres.isEmpty) {
       return result;
     }
@@ -628,21 +642,24 @@ class SQLQueryBuilder {
           result.addAll(_buildSubstitutionValues(node.query, options));
         }
 
-        Object? value = Validator.formatValue(node.value, options);
+        final bool isValueNull = node.value == null;
+        if(!isValueNull) {
+          Object value = Validator.formatValue(node.value!, options);
 
-        if(node.operator == OperatorType.LIKE) {
-          value = '%$value%';
+          if(node.operator == OperatorType.LIKE) {
+            value = '%$value%';
+          }
+
+          result.addAll(<String, Object>{_buildWhereSubstitutionValueString(options): value});
         }
-
-        result.addAll(<String, Object?>{_buildWhereSubstitutionValueString(options): value});
       }
     }
 
     return result;
   }
 
-  static Map<String, Object?> _buildTableSubstitutionValues(TableBlockBase block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildTableSubstitutionValues(TableBlockBase block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.tables.isEmpty) {
       return result;
     }
@@ -656,8 +673,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildGetFieldSubstitutionValues(GetFieldBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildGetFieldSubstitutionValues(GetFieldBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.fields.isEmpty) {
       return result;
     }
@@ -671,8 +688,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildGroupSubstitutionValues(GroupBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildGroupSubstitutionValues(GroupBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.groups.isEmpty) {
       return result;
     }
@@ -686,8 +703,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildOrderSubstitutionValues(OrderBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildOrderSubstitutionValues(OrderBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.orders.isEmpty) {
       return result;
     }
@@ -701,8 +718,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildInsertFieldsFromQuerySubstitutionValues(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildInsertFieldsFromQuerySubstitutionValues(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.query == null) {
       return result;
     }
@@ -712,8 +729,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildJoinSubstitutionValues(JoinBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildJoinSubstitutionValues(JoinBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.joins.isEmpty) {
       return result;
     }
@@ -727,8 +744,8 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object?> _buildUnionSubstitutionValues(UnionBlock block, SQLBuilderOptions options) {
-    final Map<String, Object?> result = <String, Object?>{};
+  static Map<String, Object> _buildUnionSubstitutionValues(UnionBlock block, SQLBuilderOptions options) {
+    final Map<String, Object> result = <String, Object>{};
     if (block.unions.isEmpty) {
       return result;
     }

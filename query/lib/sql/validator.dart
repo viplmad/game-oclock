@@ -56,24 +56,16 @@ class Validator {
         : '';
   }
 
-  static Object? formatValue(Object? value, SQLBuilderOptions options) {
-    if (value == null) {
-      return null;
-    } else {
-      if (value is String) {
-        return formatString(value, options);
-      } else if (value is Query) {
-        return formatQueryBuilder(value, options);
-      } else if (value is Duration) {
-        return formatDuration(value, options);
-      }
+  static Object formatValue(Object value, SQLBuilderOptions options) {
+    if (value is String) {
+      return formatString(value, options);
+    } else if (value is Query) {
+      return formatQueryBuilder(value, options);
+    } else if (value is Duration) {
+      return formatDuration(value, options);
     }
 
     return value.toString();
-  }
-
-  static String formatNull() {
-    return 'NULL';
   }
 
   static String formatString(String value, SQLBuilderOptions options) {
