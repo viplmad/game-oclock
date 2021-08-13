@@ -172,8 +172,8 @@ class GameQuery {
         query.order(GameEntityData.nameField, GameEntityData.table);
         break;
       case GameView.LastPlayed:
-        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table, divider: DividerType.START);
+        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table, divider: DividerType.END);
 
         final Query lastTimeLogQuery = FluentQuery
           .select()
@@ -183,10 +183,11 @@ class GameQuery {
         query.orderSubquery(lastTimeLogQuery, direction: SortOrder.DESC, nullsLast: true);
 
         query.order(GameEntityData.nameField, GameEntityData.table);
+        query.limit(limit?? 100);
         break;
       case GameView.LastFinished:
-        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
-        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table);
+        query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table, divider: DividerType.START);
+        query.orWhere(GameEntityData.statusField, GameEntityData.playedValue, table: GameEntityData.table, divider: DividerType.END);
 
         final Query lastFinishQuery = FluentQuery
           .select()

@@ -67,7 +67,7 @@ class OwnedListBloc extends GameListBloc {
   Future<List<Game>> getReadYearViewStream(UpdateYearView event) {
 
     final GameView view = GameView.values[event.viewIndex];
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(view, event.year);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithYearView(view, event.year);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
