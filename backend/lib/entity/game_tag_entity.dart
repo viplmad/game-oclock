@@ -21,6 +21,9 @@ class GameTagID {
   GameTagID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class GameTagEntity extends ItemEntity {

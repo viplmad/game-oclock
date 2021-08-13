@@ -44,6 +44,9 @@ class GameID {
   GameID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class GameEntity extends ItemEntity {

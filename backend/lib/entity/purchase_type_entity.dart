@@ -21,6 +21,9 @@ class PurchaseTypeID {
   PurchaseTypeID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class PurchaseTypeEntity extends ItemEntity {

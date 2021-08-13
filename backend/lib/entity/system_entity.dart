@@ -30,6 +30,9 @@ class SystemID {
   SystemID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class SystemEntity extends ItemEntity {

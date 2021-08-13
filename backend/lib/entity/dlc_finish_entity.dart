@@ -15,6 +15,9 @@ class DLCFinishID {
 
   final DLCID dlcId;
   final DateTime dateTime;
+
+  @override
+  String toString() => dlcId.toString();
 }
 
 class DLCFinishEntity extends ItemEntity {

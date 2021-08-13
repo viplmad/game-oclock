@@ -101,6 +101,12 @@ class CloudinaryConnector extends ImageConnector {
 
     if(response is CloudinaryResponseSuccess) {
       filename = response.publicId!.split('/').last + '.' + response.format!;
+    } else if(response is CloudinaryResponseError) {
+      throw Exception(response.error);
+    }
+
+    if(filename.isEmpty) {
+      throw const FormatException('Error obtaining image filename');
     }
 
     return filename;

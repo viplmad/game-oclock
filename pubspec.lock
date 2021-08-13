@@ -118,7 +118,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "93a14d2aac92190d52bb03deb11a87eadff7d4be"
+      resolved-ref: "78d68a25324e1f7439c19a5ab45be7424a3bd7fb"
       url: "https://github.com/viplmad/cloudinary_client.git"
     source: git
     version: "0.1.0"

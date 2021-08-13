@@ -30,6 +30,9 @@ class PurchaseID {
   PurchaseID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class PurchaseEntity extends ItemEntity {

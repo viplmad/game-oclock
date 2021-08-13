@@ -22,6 +22,9 @@ class StoreID {
   StoreID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class StoreEntity extends ItemEntity {

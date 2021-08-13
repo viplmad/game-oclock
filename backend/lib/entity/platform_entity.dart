@@ -27,6 +27,9 @@ class PlatformID {
   PlatformID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class PlatformEntity extends ItemEntity {

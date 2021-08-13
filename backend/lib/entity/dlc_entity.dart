@@ -26,6 +26,9 @@ class DLCID {
   DLCID(this.id);
 
   final int id;
+
+  @override
+  String toString() => '$id';
 }
 
 class DLCEntity extends ItemEntity {

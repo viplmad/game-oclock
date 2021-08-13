@@ -16,6 +16,9 @@ class GameTimeLogID {
 
   final GameID gameId;
   final DateTime dateTime;
+
+  @override
+  String toString() => gameId.toString();
 }
 
 class GameTimeLogEntity extends ItemEntity {
