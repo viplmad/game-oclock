@@ -358,12 +358,6 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
 
   }
 
-  void Function()? onLongTap(BuildContext context, T item) {
-
-    return null;
-
-  }
-
   void Function() _onSearchTap(BuildContext context) {
 
     return () {

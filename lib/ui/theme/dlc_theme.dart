@@ -46,14 +46,13 @@ class DLCTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, DLC item, void Function()? Function(BuildContext, DLC) onTap, [void Function()? Function(BuildContext, DLC)? onLongPress]) {
+  static Widget itemCard(BuildContext context, DLC item, void Function()? Function(BuildContext, DLC) onTap) {
 
     return ItemCard(
       title: itemTitle(item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }

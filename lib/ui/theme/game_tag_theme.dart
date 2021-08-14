@@ -6,13 +6,12 @@ import '../common/item_view.dart';
 
 
 class GameTagTheme {
-  static Widget itemCard(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap, [void Function()? Function(BuildContext, GameTag)? onLongPress]) {
+  static Widget itemCard(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap) {
 
     return ItemCard(
       title: _getTitle(item),
       hasImage: item.hasImage,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }

@@ -66,7 +66,6 @@ class ItemCard extends StatelessWidget {
     required this.hasImage,
     this.imageURL,
     required this.onTap,
-    this.onLongPress,
   }) : super(key: key);
 
   final String title;
@@ -75,7 +74,6 @@ class ItemCard extends StatelessWidget {
   final bool hasImage;
   final String? imageURL;
   final void Function()? onTap;
-  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,6 @@ class ItemCard extends StatelessWidget {
           imageURL: imageURL,
         ),
         onTap: onTap,
-        onLongPress: onLongPress,
       ),
       margin: const EdgeInsets.all(0.0),
     );

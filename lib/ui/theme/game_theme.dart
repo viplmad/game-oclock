@@ -63,7 +63,7 @@ class GameTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Game item, void Function()? Function(BuildContext, Game) onTap, [void Function()? Function(BuildContext, Game)? onLongPress]) {
+  static Widget itemCard(BuildContext context, Game item, void Function()? Function(BuildContext, Game) onTap) {
 
     return ItemCard(
       title: itemTitle(item),
@@ -71,12 +71,11 @@ class GameTheme {
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
 
-  static Widget itemCardWithTime(BuildContext context, Game item, Duration totalTime, void Function()? Function(BuildContext, Game) onTap, [void Function()? Function(BuildContext, Game)? onLongPress]) {
+  static Widget itemCardWithTime(BuildContext context, Game item, Duration totalTime, void Function()? Function(BuildContext, Game) onTap) {
 
     return ItemCard(
       title: itemTitle(item),
@@ -85,7 +84,6 @@ class GameTheme {
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
