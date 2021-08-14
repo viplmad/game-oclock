@@ -113,6 +113,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String nameFieldString = 'Name';
   @override
+  final String filenameString = 'Filename';
+  @override
   final String releaseYearFieldString = 'Release Year';
   @override
   final String finishDateFieldString = 'Finish Date';

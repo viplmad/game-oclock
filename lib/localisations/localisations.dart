@@ -67,6 +67,7 @@ abstract class GameCollectionLocalisations {
   String get enterTextString;
 
   String get nameFieldString;
+  String get filenameString;
   String get releaseYearFieldString;
   String get finishDateFieldString;
   String get finishDatesFieldString;

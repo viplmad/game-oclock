@@ -303,7 +303,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
                 builder: (BuildContext context) {
 
                   return AlertDialog(
-                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).nameFieldString)),
+                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).filenameString)),
                     content: TextField(
                       controller: fieldController,
                       keyboardType: TextInputType.text,
@@ -313,7 +313,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
                         FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                       ],
                       decoration: InputDecoration(
-                        hintText: GameCollectionLocalisations.of(context).nameFieldString,
+                        hintText: GameCollectionLocalisations.of(context).filenameString,
                       ),
                     ),
                     actions: <Widget>[
