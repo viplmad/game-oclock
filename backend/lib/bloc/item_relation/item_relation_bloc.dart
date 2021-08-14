@@ -94,7 +94,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
     if(state is ItemRelationLoaded<W>) {
       final List<W> items = List<W>.from((state as ItemRelationLoaded<W>).otherItems);
 
-      final int listItemIndex = items.indexWhere((W item) => item == event.item);
+      final int listItemIndex = items.indexWhere((W item) => item.uniqueId == event.item.uniqueId);
       final W listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {

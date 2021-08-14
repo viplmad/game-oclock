@@ -178,7 +178,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       for(final GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
         try {
-          final GameWithLogs gameWithLogs = gamesWithLogs.singleWhere((GameWithLogs tempGameWithLogs) => tempGameWithLogs.game.id == yearGameWithLogs.game.id);
+          final GameWithLogs gameWithLogs = gamesWithLogs.singleWhere((GameWithLogs tempGameWithLogs) => tempGameWithLogs.game.uniqueId == yearGameWithLogs.game.uniqueId);
           gameWithLogs.timeLogs.addAll(yearGameWithLogs.timeLogs);
         } catch(IterableElementError) {
           gamesWithLogs.add(yearGameWithLogs);
@@ -371,8 +371,8 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<GameWithLogs> gamesWithLogs = List<GameWithLogs>.from((state as MultiCalendarLoaded).gamesWithLogs);
       final List<GameWithLogs> selectedGamesWithLogs = List<GameWithLogs>.from((state as MultiCalendarLoaded).selectedGamesWithLogs);
 
-      final int listItemIndex = gamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
-      final int selectedListItemIndex = selectedGamesWithLogs.indexWhere((GameWithLogs item) => item.game.id == event.item.id);
+      final int listItemIndex = gamesWithLogs.indexWhere((GameWithLogs item) => item.game.uniqueId == event.item.uniqueId);
+      final int selectedListItemIndex = selectedGamesWithLogs.indexWhere((GameWithLogs item) => item.game.uniqueId == event.item.uniqueId);
       final GameWithLogs listItem = gamesWithLogs.elementAt(listItemIndex);
 
       if(listItem.game != event.item) {

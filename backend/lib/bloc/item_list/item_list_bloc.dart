@@ -113,7 +113,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     if(state is ItemListLoaded<T>) {
       final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
 
-      final int listItemIndex = items.indexWhere((T item) => item == event.item);
+      final int listItemIndex = items.indexWhere((T item) => item.uniqueId == event.item.uniqueId);
       final T listItem = items.elementAt(listItemIndex);
 
       if(listItem != event.item) {
