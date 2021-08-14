@@ -15,10 +15,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String retryString = 'Retry';
   @override
-  final String changeRepositoryString = 'Change Repository Settings';
+  final String changeRepositoryString = 'Change connection settings';
 
   @override
-  final String repositorySettingsString = 'Repository settings';
+  final String repositorySettingsString = 'Connection settings';
   @override
   final String updatedItemConnectionString = 'Updated item connection';
   @override
@@ -89,8 +89,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     return 'Unable to delete $typeString';
   }
 
-  @override
-  final String duplicateString = 'Duplicate';
   @override
   final String deleteString = 'Delete';
   @override
@@ -223,7 +221,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String selectedDateIsFinishDateString = 'Finished this day';
   @override
-  final String gameCalendarEventsString = 'Game Event';
+  final String gameCalendarEventsString = 'Calendar Event';
   @override
   String get firstTimeLog => 'First $timeLogsFieldString';
   @override
@@ -506,7 +504,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String moreString = 'More';
   @override
-  final String searchInListString = 'Search in List';
+  final String searchInListString = 'Search in list';
   @override
   String linkedString(String typeString) {
     return 'Linked $typeString';

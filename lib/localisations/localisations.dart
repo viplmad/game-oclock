@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:backend/model/model.dart' show GameStatus, Manufacturer, PlatformType;
 
 import 'localisations_en.dart';
+import 'localisations_es.dart';
 
 
 abstract class GameCollectionLocalisations {
@@ -55,7 +56,6 @@ abstract class GameCollectionLocalisations {
   String deletedString(String typeString);
   String unableToDeleteString(String typeString);
 
-  String get duplicateString;
   String get deleteString;
   String deleteDialogTitle(String itemString);
   String get deleteDialogSubtitle;
@@ -292,7 +292,7 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
       case 'en':
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
       case 'es':
-        //TODO spanish localisation
+        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEs());
       default:
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
     }
