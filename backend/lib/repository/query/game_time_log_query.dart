@@ -12,7 +12,9 @@ class GameTimeLogQuery {
     final Query query = FluentQuery
       .insert()
       .into(GameTimeLogEntityData.table)
-      .sets(entity.createMap());
+      .sets(entity.createMap())
+      .returningField(GameTimeLogEntityData.gameField)
+      .returningField(GameTimeLogEntityData.dateTimeField);;
 
     return query;
   }

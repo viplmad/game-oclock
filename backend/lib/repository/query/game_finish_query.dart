@@ -10,7 +10,9 @@ class GameFinishQuery {
     final Query query = FluentQuery
       .insert()
       .into(GameFinishEntityData.table)
-      .sets(entity.createMap());
+      .sets(entity.createMap())
+      .returningField(GameFinishEntityData.gameField)
+      .returningField(GameFinishEntityData.dateField);;
 
     return query;
   }

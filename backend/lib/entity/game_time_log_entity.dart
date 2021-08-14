@@ -1,4 +1,4 @@
-import 'entity.dart' show ItemEntity, GameEntityData, GameEntity, GameID;
+import 'entity.dart' show ItemEntity, GameEntityData, GameID;
 
 
 class GameTimeLogEntityData {
@@ -44,7 +44,7 @@ class GameTimeLogEntity extends ItemEntity {
 
   static GameTimeLogID idFromMap(Map<String, Object?> map) {
 
-    return GameTimeLogID(GameEntity.idFromMap(map), map[GameTimeLogEntityData.dateTimeField] as DateTime);
+    return GameTimeLogID(GameID(map[GameTimeLogEntityData.gameField] as int), map[GameTimeLogEntityData.dateTimeField] as DateTime);
 
   }
 

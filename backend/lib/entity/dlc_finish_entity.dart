@@ -1,4 +1,4 @@
-import 'entity.dart' show ItemEntity, DLCEntityData, DLCEntity, DLCID;
+import 'entity.dart' show ItemEntity, DLCEntityData, DLCID;
 
 
 class DLCFinishEntityData {
@@ -40,7 +40,7 @@ class DLCFinishEntity extends ItemEntity {
 
   static DLCFinishID idFromMap(Map<String, Object?> map) {
 
-    return DLCFinishID(DLCEntity.idFromMap(map), map[DLCFinishEntityData.dateField] as DateTime);
+    return DLCFinishID(DLCID(map[DLCFinishEntityData.dlcField] as int), map[DLCFinishEntityData.dateField] as DateTime);
 
   }
 

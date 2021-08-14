@@ -10,7 +10,9 @@ class DLCFinishQuery {
     final Query query = FluentQuery
       .insert()
       .into(DLCFinishEntityData.table)
-      .sets(entity.createMap());
+      .sets(entity.createMap())
+      .returningField(DLCFinishEntityData.dlcField)
+      .returningField(DLCFinishEntityData.dateField);;
 
     return query;
   }
