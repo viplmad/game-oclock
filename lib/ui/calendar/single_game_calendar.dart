@@ -154,7 +154,7 @@ class SingleGameCalendar extends StatelessWidget {
         SpeedDialChild(
           child: const Icon(Icons.add_alarm),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
-          labelStyle: const TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.black),
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
