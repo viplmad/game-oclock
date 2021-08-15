@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Game, GameStatus;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import 'search.dart';
 
 
@@ -20,19 +19,19 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   }) : super(key: key);
 
   @override
-  GameSearchBloc searchBlocBuilder() {
+  GameSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  GameListManagerBloc managerBlocBuilder() {
+  GameListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -58,10 +57,10 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   final String detailRouteName = gameDetailRoute;
 
   @override
-  GameListManagerBloc managerBlocBuilder() {
+  GameListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -89,6 +88,9 @@ class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Gam
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gamesString;
+
+  @override
+  Game createItem(String query) => Game(id: -1, name: query, edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', saveFolder: '', screenshotFolder: '', isBackup: false, firstFinishDate: null, totalTime: const Duration());
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

@@ -1,4 +1,0 @@
-enum RepositoryType {
-  Remote,
-  Local,
-}

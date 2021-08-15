@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme, SystemTheme;
 import 'relation.dart';
 
 
@@ -55,7 +55,7 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
 }
 
-abstract class _PlatformRelationList<W extends CollectionItem> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
+abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   const _PlatformRelationList({
     Key? key,
     required String relationName,

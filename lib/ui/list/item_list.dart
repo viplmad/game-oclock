@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
+import 'package:backend/model/model.dart' show Item;
+import 'package:backend/model/list_style.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -17,7 +17,7 @@ import '../detail/detail.dart';
 import '../statistics/statistics.dart';
 
 
-abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget with PreferredSizeWidget {
+abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget with PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
   }) : super(key: key);
@@ -89,7 +89,7 @@ abstract class ItemAppBar<T extends CollectionItem, K extends ItemListBloc<T>> e
   List<String> views(BuildContext context);
 }
 
-abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemFAB({
     Key? key,
   }) : super(key: key);
@@ -104,16 +104,19 @@ abstract class ItemFAB<T extends CollectionItem, S extends ItemListManagerBloc<T
       child: const Icon(Icons.add),
       backgroundColor: themeColor,
       onPressed: () {
-        BlocProvider.of<S>(context).add(const AddItem());
+        BlocProvider.of<S>(context).add(
+          AddItem<T>(createItem()),
+        );
       },
     );
 
   }
 
+  T createItem();
   String typeName(BuildContext context);
 }
 
-abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemList({
     Key? key,
   }) : super(key: key);
@@ -220,7 +223,7 @@ abstract class ItemList<T extends CollectionItem, K extends ItemListBloc<T>, S e
   ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
 }
 
-abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>> extends StatelessWidget {
+abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
   const ItemListBody({
     Key? key,
     required this.items,
@@ -355,45 +358,6 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
 
   }
 
-  void Function()? onLongTap(BuildContext context, T item) {
-
-    return null;
-
-    //TODO
-    /*int duplicateKey = 0;
-    int deleteKey = 1;
-
-    return () {
-      showMenu<int>(
-        context: context,
-        position: position,
-        items: <PopupMenuItem<int>>[
-          PopupMenuItem<int>(
-            child: ListTile(
-              title: Text(GameCollectionLocalisations.of(context).duplicateString),
-            ),
-            value: duplicateKey,
-          ),
-          PopupMenuItem<int>(
-            child: ListTile(
-              title: Text(GameCollectionLocalisations.of(context).deleteString),
-            ),
-            value: deleteKey,
-          ),
-        ],
-      ).then((int? value) => {
-        if(value != null) {
-          if(value == duplicateKey) {
-            onDuplicate(item);
-          } else if(value == deleteKey) {
-            onDelete(item);
-          }
-        }
-      });
-    };*/
-
-  }
-
   void Function() _onSearchTap(BuildContext context) {
 
     return () {
@@ -439,7 +403,7 @@ abstract class ItemListBody<T extends CollectionItem, K extends ItemListBloc<T>>
   Widget gridBuilder(BuildContext context, T item);
 }
 
-class ItemCardView<T extends CollectionItem> extends StatelessWidget {
+class ItemCardView<T extends Item> extends StatelessWidget {
   const ItemCardView({
     Key? key,
     required this.items,
@@ -463,7 +427,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
         final T item = items.elementAt(index);
 
         return DismissibleItem(
-          dismissibleKey: item.id,
+          dismissibleKey: item.uniqueId,
           itemWidget: itemBuilder(context, item),
           onDismissed: (DismissDirection direction) {
             onDismiss(item);
@@ -487,7 +451,7 @@ class ItemCardView<T extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class ItemGridView<T extends CollectionItem> extends StatelessWidget {
+class ItemGridView<T extends Item> extends StatelessWidget {
   const ItemGridView({
     Key? key,
     required this.items,

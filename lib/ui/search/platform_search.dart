@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PlatformTheme;
 import 'search.dart';
 
 
@@ -20,19 +19,19 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   }) : super(key: key);
 
   @override
-  PlatformSearchBloc searchBlocBuilder() {
+  PlatformSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  PlatformListManagerBloc managerBlocBuilder() {
+  PlatformListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -58,10 +57,10 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   final String detailRouteName = platformDetailRoute;
 
   @override
-  PlatformListManagerBloc managerBlocBuilder() {
+  PlatformListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -89,6 +88,9 @@ class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearch
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
+
+  @override
+  Platform createItem(String query) => Platform(id: -1, name: query, iconURL: null, iconFilename: null, type: null);
 
   @override
   Widget cardBuilder(BuildContext context, Platform item) => PlatformTheme.itemCard(context, item, onTap);

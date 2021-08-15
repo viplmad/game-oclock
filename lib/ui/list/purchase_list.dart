@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
+import 'package:backend/model/model.dart' show Purchase;
+import 'package:backend/model/list_style.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PurchaseTheme;
 import '../common/year_picker_dialog.dart';
 import 'list.dart';
 
@@ -66,6 +66,9 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
 
   @override
   final Color themeColor = PurchaseTheme.primaryColour;
+
+  @override
+  Purchase createItem() => const Purchase(id: -1, description: '', price: 0.0, externalCredit: 0.0, date: null, originalPrice: 0.0, store: null);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme, PurchaseTheme;
 import 'relation.dart';
 
 
@@ -55,7 +55,7 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
 }
 
-abstract class _DLCRelationList<W extends CollectionItem> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
+abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
   const _DLCRelationList({
     Key? key,
     required String relationName,

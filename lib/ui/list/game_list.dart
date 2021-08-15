@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
-import 'package:game_collection/model/app_tab.dart';
+import 'package:backend/model/model.dart' show Game, GameStatus;
+import 'package:backend/model/list_style.dart';
+import 'package:backend/model/app_tab.dart';
 
-import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/tab/tab.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
 import '../statistics/statistics.dart';
@@ -47,7 +47,7 @@ class _AllAppBar extends _GameAppBar<AllListBloc> {}
 class _OwnedAppBar extends _GameAppBar<OwnedListBloc> {}
 class _RomAppBar extends _GameAppBar<RomListBloc> {}
 
-abstract class _GameAppBar<K extends ItemListBloc<Game>> extends ItemAppBar<Game, K> {
+abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>> extends ItemAppBar<Game, K> {
   const _GameAppBar({
     Key? key,
   }) : super(key: key);
@@ -118,13 +118,16 @@ class _AllFAB extends _GameFAB<AllListManagerBloc> {}
 class _OwnedFAB extends _GameFAB<OwnedListManagerBloc> {}
 class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 
-abstract class _GameFAB<S extends ItemListManagerBloc<Game>> extends ItemFAB<Game, S> {
+abstract class _GameFAB<S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends ItemFAB<Game, S> {
   const _GameFAB({
     Key? key,
   }) : super(key: key);
 
   @override
   final Color themeColor = GameTheme.primaryColour;
+
+  @override
+  Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', saveFolder: '', screenshotFolder: '', isBackup: false, firstFinishDate: null, totalTime: Duration());
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
@@ -213,7 +216,7 @@ class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
   }) : super(tabTitle: tabTitle);
 }
 
-abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManagerBloc<Game>> extends ItemList<Game, K, S> {
+abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends ItemList<Game, K, S> {
   const _GameList({
     Key? key,
     required this.tabTitle,
@@ -242,7 +245,7 @@ abstract class _GameList<K extends ItemListBloc<Game>, S extends ItemListManager
   }
 }
 
-class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> {
+class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemListBody<Game, K> {
   const _GameListBody({
     Key? key,
     required List<Game> items,
@@ -298,7 +301,7 @@ class _GameListBody<K extends ItemListBloc<Game>> extends ItemListBody<Game, K> 
   String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap, onLongTap);
+  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
 
   @override
   Widget gridBuilder(BuildContext context, Game item) => GameTheme.itemGrid(context, item, onTap);

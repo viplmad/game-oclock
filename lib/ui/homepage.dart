@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/app_tab.dart';
-import 'package:game_collection/model/bar_data.dart';
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/bloc/tab/tab.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/bloc/tab/tab.dart';
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/model/app_tab.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
-
+import 'common/bar_data.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({
@@ -26,32 +25,34 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
     final AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     final PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: _collectionRepository,
     );
 
     return MultiBlocProvider(
@@ -65,7 +66,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _allListManagerBloc,
             )..add(LoadItemList());
           },
@@ -73,7 +74,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
             return OwnedListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _ownedListManagerBloc,
             )..add(LoadItemList());
           },
@@ -81,7 +82,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _romListManagerBloc,
             )..add(LoadItemList());
           },
@@ -89,7 +90,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _dlcListManagerBloc,
             )..add(LoadItemList());
           },
@@ -97,7 +98,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _purchaseListManagerBloc,
             )..add(LoadItemList());
           },
@@ -105,7 +106,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _storeListManagerBloc,
             )..add(LoadItemList());
           },
@@ -113,7 +114,7 @@ class Homepage extends StatelessWidget {
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+              collectionRepository: _collectionRepository,
               managerBloc: _platformListManagerBloc,
             )..add(LoadItemList());
           },
@@ -260,9 +261,9 @@ class _HomepageDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
+            child: const Text(
               GameCollectionLocalisations.appTitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),

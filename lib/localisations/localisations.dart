@@ -3,32 +3,44 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:backend/model/model.dart' show GameStatus, Manufacturer, PlatformType;
+
 import 'localisations_en.dart';
+import 'localisations_es.dart';
 
 
 abstract class GameCollectionLocalisations {
-  const GameCollectionLocalisations();
+  const GameCollectionLocalisations._();
 
-  static String appTitle = 'Game Collection';
+  static const String appTitle = 'Game Collection';
 
   String get connectingString;
+  String get connectString;
   String get failedConnectionString;
   String get retryString;
   String get changeRepositoryString;
 
   String get repositorySettingsString;
+  String get updatedItemConnectionString;
+  String get updatedImageConnectionString;
   String get unableToUpdateConnectionString;
   String get saveString;
-  String get remoteRepositoryString;
-  String get localRepositoryString;
+  String get itemConnectionString;
+  String get imageConnectionString;
+
+  static const String postgresString = 'Postgres';
   String get hostString;
   String get portString;
   String get databaseString;
   String get userString;
   String get passwordString;
+
+  static const String cloudinaryString = 'Cloudinary';
   String get cloudNameString;
   String get apiKeyString;
   String get apiSecretString;
+
+  String get localString;
 
   String get changeOrderString;
   String get changeStyleString;
@@ -44,7 +56,6 @@ abstract class GameCollectionLocalisations {
   String deletedString(String typeString);
   String unableToDeleteString(String typeString);
 
-  String get duplicateString;
   String get deleteString;
   String deleteDialogTitle(String itemString);
   String get deleteDialogSubtitle;
@@ -56,6 +67,7 @@ abstract class GameCollectionLocalisations {
   String get enterTextString;
 
   String get nameFieldString;
+  String get filenameString;
   String get releaseYearFieldString;
   String get finishDateFieldString;
   String get finishDatesFieldString;
@@ -82,6 +94,7 @@ abstract class GameCollectionLocalisations {
   String get nextUpString;
   String get playingString;
   String get playedString;
+  String gameStatusString(GameStatus? status);
   String get editionFieldString;
   String get statusFieldString;
   String get ratingFieldString;
@@ -185,12 +198,28 @@ abstract class GameCollectionLocalisations {
 
   String get physicalString;
   String get digitalString;
+  String platformTypeString(PlatformType? type);
   String get platformTypeFieldString;
   //#endregion Platform
 
   //#region System
   String get systemString;
   String get systemsString;
+
+  static String manufacturerString(Manufacturer? manufacturer) {
+    switch(manufacturer){
+      case Manufacturer.Nintendo:
+        return 'Nintendo';
+      case Manufacturer.Sony:
+        return 'Sony';
+      case Manufacturer.Microsoft:
+        return 'Microsoft';
+      case Manufacturer.Sega:
+        return 'Sega';
+      default:
+        return '';
+    }
+  }
   //#endregion System
 
   //#region Tag
@@ -212,6 +241,7 @@ abstract class GameCollectionLocalisations {
   String yearString(int year);
   String shortYearString(int year);
   String hoursString(int hours);
+  String minutesString(int minutes);
 
   String editString(String fieldString);
   String addString(String fieldString);
@@ -263,7 +293,7 @@ class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameColl
       case 'en':
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
       case 'es':
-        //TODO
+        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEs());
       default:
         return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
     }

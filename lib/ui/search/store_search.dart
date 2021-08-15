@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Store;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show StoreTheme;
 import 'search.dart';
 
 
@@ -20,19 +19,19 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   }) : super(key: key);
 
   @override
-  StoreSearchBloc searchBlocBuilder() {
+  StoreSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  StoreListManagerBloc managerBlocBuilder() {
+  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -58,10 +57,10 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   final String detailRouteName = storeDetailRoute;
 
   @override
-  StoreListManagerBloc managerBlocBuilder() {
+  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -89,6 +88,9 @@ class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<S
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
+
+  @override
+  Store createItem(String query) => Store(id: -1, name: query, iconURL: null, iconFilename: null);
 
   @override
   Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);

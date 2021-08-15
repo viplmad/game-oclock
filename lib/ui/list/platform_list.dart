@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
+import 'package:backend/model/model.dart' show Platform;
+import 'package:backend/model/list_style.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PlatformTheme;
 import 'list.dart';
 
 
@@ -35,6 +35,9 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 
   @override
   final Color themeColor = PlatformTheme.primaryColour;
+
+  @override
+  Platform createItem() => const Platform(id: -1, name: '', iconURL: null, iconFilename: null, type: null);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;

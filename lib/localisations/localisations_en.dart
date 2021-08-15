@@ -1,3 +1,5 @@
+import 'package:backend/model/model.dart' show GameStatus, PlatformType;
+
 import 'localisations.dart';
 
 
@@ -7,22 +9,29 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String connectingString = 'Connecting...';
   @override
+  final String connectString = 'Connect';
+  @override
   final String failedConnectionString = 'Failed connection';
   @override
   final String retryString = 'Retry';
   @override
-  final String changeRepositoryString = 'Change Repository Settings';
+  final String changeRepositoryString = 'Change connection settings';
 
   @override
-  final String repositorySettingsString = 'Repository settings';
+  final String repositorySettingsString = 'Connection settings';
+  @override
+  final String updatedItemConnectionString = 'Updated item connection';
+  @override
+  final String updatedImageConnectionString = 'Updated image connection';
   @override
   final String unableToUpdateConnectionString = 'Unable to update connection';
   @override
   final String saveString = 'Save';
   @override
-  final String remoteRepositoryString = 'Remote repository';
+  final String itemConnectionString = 'Item connection';
   @override
-  final String localRepositoryString = 'Local repository';
+  final String imageConnectionString = 'Image connection';
+
   @override
   final String hostString = 'Host';
   @override
@@ -33,12 +42,16 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String userString = 'User';
   @override
   final String passwordString = 'Password';
+
   @override
   final String cloudNameString = 'Cloud name';
   @override
   final String apiKeyString = 'API Key';
   @override
   final String apiSecretString = 'API Secret';
+
+  @override
+  final String localString = 'Local';
 
   @override
   final String changeOrderString = 'Change Order';
@@ -77,8 +90,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
 
   @override
-  final String duplicateString = 'Duplicate';
-  @override
   final String deleteString = 'Delete';
   @override
   String deleteDialogTitle(String itemString) {
@@ -99,6 +110,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   final String nameFieldString = 'Name';
+  @override
+  final String filenameString = 'Filename';
   @override
   final String releaseYearFieldString = 'Release Year';
   @override
@@ -167,6 +180,21 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String playedString = 'Played';
   @override
+  String gameStatusString(GameStatus? status) {
+    switch(status){
+      case GameStatus.LowPriority:
+        return lowPriorityString;
+      case GameStatus.NextUp:
+        return nextUpString;
+      case GameStatus.Playing:
+        return playingString;
+      case GameStatus.Played:
+        return playedString;
+      default:
+        return '';
+    }
+  }
+  @override
   final String editionFieldString = 'Edition';
   @override
   final String statusFieldString = 'Status';
@@ -193,7 +221,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String selectedDateIsFinishDateString = 'Finished this day';
   @override
-  final String gameCalendarEventsString = 'Game Event';
+  final String gameCalendarEventsString = 'Calendar Event';
   @override
   String get firstTimeLog => 'First $timeLogsFieldString';
   @override
@@ -357,6 +385,17 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String digitalString = 'Digital';
   @override
+  String platformTypeString(PlatformType? type) {
+    switch(type) {
+      case PlatformType.Physical:
+        return physicalString;
+      case PlatformType.Digital:
+        return digitalString;
+      default:
+        return '';
+    }
+  }
+  @override
   final String platformTypeFieldString = 'Type';
   //#endregion Platform
 
@@ -410,9 +449,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    final String hoursString = duration.inHours.toString();
-    final String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
-    return '$hoursString h $minutesString min';
+    final String hourString = hoursString(duration.inHours);
+    final String minuteString = minutesString((duration.inMinutes - (duration.inHours * 60)));
+    return '$hourString $minuteString';
   }
   @override
   String yearString(int year) {
@@ -425,6 +464,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String hoursString(int hours) {
     return '$hours h';
+  }
+  @override
+  String minutesString(int minutes) {
+    final String minuteString = minutes.toString().padLeft(2, '0');
+    return '$minuteString min.';
   }
 
   @override
@@ -465,7 +509,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String moreString = 'More';
   @override
-  final String searchInListString = 'Search in List';
+  final String searchInListString = 'Search in list';
   @override
   String linkedString(String typeString) {
     return 'Linked $typeString';

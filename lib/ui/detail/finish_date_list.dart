@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Item, ItemFinish;
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -14,8 +14,8 @@ import '../common/show_date_picker.dart';
 
 
 // ignore: must_be_immutable
-abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T, DateTime>, S extends RelationManagerBloc<T, DateTime>> extends StatelessWidget {
-  FinishDateList({
+abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
+  FinishList({
     Key? key,
     required this.fieldName,
     required this.value,
@@ -36,9 +36,9 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
 
     final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
 
-    return BlocListener<S, RelationManagerState>(
-      listener: (BuildContext context, RelationManagerState state) {
-        if(state is RelationAdded<DateTime>) {
+    return BlocListener<S, ItemRelationManagerState>(
+      listener: (BuildContext context, ItemRelationManagerState state) {
+        if(state is ItemRelationAdded<F>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
@@ -47,7 +47,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
             message: message,
           );
         }
-        if(state is RelationNotAdded) {
+        if(state is ItemRelationNotAdded) {
           final String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
           showSnackBar(
             context,
@@ -60,7 +60,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
             ),
           );
         }
-        if(state is RelationDeleted<DateTime>) {
+        if(state is ItemRelationDeleted<F>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
@@ -69,7 +69,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
             message: message,
           );
         }
-        if(state is RelationNotDeleted) {
+        if(state is ItemRelationNotDeleted) {
           final String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
           showSnackBar(
             context,
@@ -86,10 +86,10 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
       child: ListTileTheme.merge(
         child: ListTile(
           title: Text(fieldName),
-          trailing: BlocBuilder<K, RelationState>(
-            builder: (BuildContext context, RelationState state) {
+          trailing: BlocBuilder<K, ItemRelationState>(
+            builder: (BuildContext context, ItemRelationState state) {
               String extra = '';
-              if(state is RelationLoaded<DateTime>) {
+              if(state is ItemRelationLoaded<F>) {
 
                 extra = state.otherItems.length > 1? '(+)' : '';
 
@@ -115,13 +115,13 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                     title: Text(fieldName),
                     content: SizedBox(
                       width: double.maxFinite,
-                      child: BlocBuilder<K, RelationState>(
+                      child: BlocBuilder<K, ItemRelationState>(
                         bloc: BlocProvider.of<K>(outerContext),
-                        builder: (BuildContext context, RelationState state) {
+                        builder: (BuildContext context, ItemRelationState state) {
 
-                          if(state is RelationLoaded<DateTime>) {
+                          if(state is ItemRelationLoaded<F>) {
 
-                            final List<DateTime> values = state.otherItems;
+                            final List<F> values = state.otherItems;
 
                             if(values.isEmpty) {
                               return Text(GameCollectionLocalisations.of(context).emptyFinishDatesString);
@@ -131,8 +131,8 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                               shrinkWrap: true,
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
-                                final DateTime date = values.elementAt(index);
-                                final String dateString = GameCollectionLocalisations.of(context).dateString(date);
+                                final F finish = values.elementAt(index);
+                                final String dateString = GameCollectionLocalisations.of(context).dateString(finish.dateTime);
 
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
@@ -142,7 +142,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                                       icon: const Icon(Icons.link_off),
                                       onPressed: () {
                                         BlocProvider.of<S>(outerContext).add(
-                                          DeleteRelation<DateTime>(date),
+                                          DeleteItemRelation<F>(finish),
                                         );
                                       },
                                     ),
@@ -152,7 +152,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                             );
                           }
 
-                          if(state is RelationNotLoaded) {
+                          if(state is ItemRelationNotLoaded) {
                             return Center(
                               child: Text(state.error),
                             );
@@ -178,7 +178,7 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
                           ).then((DateTime? value) {
                             if(value != null) {
                               BlocProvider.of<S>(outerContext).add(
-                                AddRelation<DateTime>(value),
+                                AddItemRelation<F>(createFinish(value)),
                               );
                             }
                           });
@@ -204,4 +204,6 @@ abstract class FinishDateList<T extends CollectionItem, K extends RelationBloc<T
     );
 
   }
+
+  F createFinish(DateTime dateTime);
 }

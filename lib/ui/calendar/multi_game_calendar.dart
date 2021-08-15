@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
-import 'package:game_collection/utils/datetime_extension.dart';
+import 'package:backend/model/model.dart' show Game, GameWithLogs;
+import 'package:backend/model/calendar_style.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/calendar_style.dart';
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
+import 'package:backend/bloc/calendar/multi_calendar.dart';
 
-import 'package:game_collection/bloc/calendar/multi_calendar.dart';
+import 'package:backend/utils/datetime_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show GameTheme;
 import '../common/loading_icon.dart';
 //import '../common/statistics_histogram.dart';
 import '../detail/detail.dart';
@@ -30,12 +30,12 @@ class MultiGameCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final MultiCalendarBloc _bloc = MultiCalendarBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: RepositoryProvider.of<GameCollectionRepository>(context),
     );
 
     return BlocProvider<MultiCalendarBloc>(
       create: (BuildContext context) {
-        return _bloc..add(LoadCalendar(DateTime.now().year));
+        return _bloc..add(LoadMultiCalendar(DateTime.now().year));
       },
       child: Scaffold(
         appBar: AppBar(
@@ -101,10 +101,10 @@ class _MultiGameCalendarBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<MultiCalendarBloc, MultiCalendarState>(
-      builder: (BuildContext context, MultiCalendarState state) {
+    return BlocBuilder<MultiCalendarBloc, CalendarState>(
+      builder: (BuildContext context, CalendarState state) {
 
-        if(state is CalendarLoaded) {
+        if(state is MultiCalendarLoaded) {
 
           return Column(
             mainAxisSize: MainAxisSize.max,
@@ -174,7 +174,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       ),
       onPageChanged: (DateTime date) {
         BlocProvider.of<MultiCalendarBloc>(context).add(
-          LoadCalendar(
+          LoadMultiCalendar(
             date.year,
           ),
         );
@@ -251,7 +251,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
             if(updatedItem != null) {
 
               BlocProvider.of<MultiCalendarBloc>(context).add(
-                UpdateListItem(
+                UpdateCalendarListItem(
                   updatedItem,
                 ),
               );

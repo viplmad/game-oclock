@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show DLCTheme, PlatformTheme, PurchaseTheme, GameTagTheme;
 import 'relation.dart';
 
 
@@ -73,12 +73,12 @@ class GameDLCRelationList extends _GameRelationList<DLC> {
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
 }
 
-class GameTagRelationList extends _GameRelationList<Tag> {
+class GameTagRelationList extends _GameRelationList<GameTag> {
   const GameTagRelationList({
     Key? key,
     required String relationName,
     required String relationTypeName,
-    List<Widget> Function(List<Tag>)? trailingBuilder,
+    List<Widget> Function(List<GameTag>)? trailingBuilder,
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
@@ -91,13 +91,13 @@ class GameTagRelationList extends _GameRelationList<Tag> {
   final String localSearchRouteName = tagLocalSearchRoute;
 
   @override
-  void Function()? onTap(BuildContext context, Tag item) => null;
+  void Function()? onTap(BuildContext context, GameTag item) => null;
 
   @override
-  Widget cardBuilder(BuildContext context, Tag item) => TagTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameTag item) => GameTagTheme.itemCard(context, item, onTap);
 }
 
-abstract class _GameRelationList<W extends CollectionItem> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {
+abstract class _GameRelationList<W extends Item> extends ItemRelationList<Game, W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {
   const _GameRelationList({
     Key? key,
     required String relationName,

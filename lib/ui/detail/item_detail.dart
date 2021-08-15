@@ -4,14 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:numberpicker/numberpicker.dart';
-import './smooth_star_rating/smooth_star_rating.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Item, ItemImage;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
+import 'package:backend/bloc/item_detail/item_detail.dart';
+import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -31,7 +32,7 @@ class DetailArguments<T> {
   final void Function(T? item)? onUpdate;
 }
 
-abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
+abstract class ItemDetail<T extends Item, K extends Bloc<ItemDetailEvent, ItemDetailState>, S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>> extends StatelessWidget {
   const ItemDetail({
     Key? key,
     required this.item,
@@ -44,13 +45,15 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
   @override
   Widget build(BuildContext context) {
 
-    final S _managerBloc = managerBlocBuilder();
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
+    final S _managerBloc = managerBlocBuilder(_collectionRepository);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return detailBlocBuilder(_managerBloc)..add(LoadItem());
+            return detailBlocBuilder(_collectionRepository, _managerBloc)..add(LoadItem());
           },
         ),
 
@@ -59,7 +62,7 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
             return _managerBloc;
           },
         ),
-      ]..addAll(relationBlocsBuilder()),
+      ]..addAll(relationBlocsBuilder(_collectionRepository)),
       child: Scaffold(
         body: detailBodyBuilder()
       ),
@@ -67,15 +70,15 @@ abstract class ItemDetail<T extends CollectionItem, K extends ItemDetailBloc<T>,
 
   }
 
-  K detailBlocBuilder(S managerBloc);
-  S managerBlocBuilder();
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder();
+  K detailBlocBuilder(GameCollectionRepository collectionRepository, S managerBloc);
+  S managerBlocBuilder(GameCollectionRepository collectionRepository);
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository);
 
   ItemDetailBody<T, K, S> detailBodyBuilder();
 }
 
 // ignore: must_be_immutable
-abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc<T>, S extends ItemDetailManagerBloc<T>> extends StatelessWidget {
+abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, ItemDetailState>, S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>> extends StatelessWidget {
   ItemDetailBody({
     Key? key,
     required this.onUpdate,
@@ -268,9 +271,9 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
               Text(GameCollectionLocalisations.of(context).uploadImageString),
             leading: const Icon(Icons.file_upload),
             onTap: () {
-              _picker.getImage(
+              _picker.pickImage(
                   source: ImageSource.gallery,
-              ).then( (PickedFile? imagePicked) {
+              ).then( (XFile? imagePicked) {
                 if(imagePicked != null) {
 
                   BlocProvider.of<S>(outerContext).add(
@@ -300,7 +303,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                 builder: (BuildContext context) {
 
                   return AlertDialog(
-                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).nameFieldString)),
+                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).filenameString)),
                     content: TextField(
                       controller: fieldController,
                       keyboardType: TextInputType.text,
@@ -310,7 +313,7 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
                         FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                       ],
                       decoration: InputDecoration(
-                        hintText: GameCollectionLocalisations.of(context).nameFieldString,
+                        hintText: GameCollectionLocalisations.of(context).filenameString,
                       ),
                     ),
                     actions: <Widget>[
@@ -367,35 +370,45 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  void Function(O) _updateFieldFunction<O>(BuildContext context, String fieldName) {
+  void Function(O) _updateFunction<O>(BuildContext context, {required T item, required T Function(O newValue) itemUpdater}) {
 
     return (O newValue) {
+      final T updatedItem = itemUpdater(newValue);
+
       BlocProvider.of<S>(context).add(
-        UpdateItemField<T>(
-          fieldName,
-          newValue,
-        ),
-      );
+          UpdateItemField<T>(
+            item,
+            updatedItem,
+          ),
+        );
     };
 
   }
 
-  Widget itemTextField(BuildContext context, {required String fieldName, required String field, required String value}) {
+  Widget itemTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, field),
+      update: _updateFunction<String>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
 
-  Widget itemURLField(BuildContext context, {required String fieldName, required String field, required String value}) {
+  Widget itemURLField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, field),
+      update: _updateFunction<String>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
       onLongPress: () async {
         if (await canLaunch(value)) {
           await launch(value);
@@ -411,18 +424,22 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemLongTextField(BuildContext context, {required String fieldName, required String field, required String value}) {
+  Widget itemLongTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
     return _ItemTextField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<String>(context, field),
+      update: _updateFunction<String>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
       isLongText: true,
     );
 
   }
 
-  Widget itemMoneyField(BuildContext context, {required String fieldName, required String field, required double? value}) {
+  Widget itemMoneyField(BuildContext context, {required String fieldName, required double? value, required T item, required T Function(double newValue) itemUpdater}) {
 
     return _ItemDoubleField(
       fieldName: fieldName,
@@ -431,7 +448,11 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
         GameCollectionLocalisations.of(context).euroString(value)
         :
         null,
-      update: _updateFieldFunction<double>(context, field),
+      update: _updateFunction<double>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
@@ -478,54 +499,74 @@ abstract class ItemDetailBody<T extends CollectionItem, K extends ItemDetailBloc
 
   }
 
-  Widget itemYearField(BuildContext context, {required String fieldName, required String field, required int? value}) {
+  Widget itemYearField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _ItemYearField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<int>(context, field),
+      update: _updateFunction<int>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
 
-  Widget itemDateTimeField(BuildContext context, {required String fieldName, required String field, required DateTime? value}) {
+  Widget itemDateTimeField(BuildContext context, {required String fieldName, required DateTime? value, required T item, required T Function(DateTime newValue) itemUpdater}) {
 
     return _ItemDateTimeField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<DateTime>(context, field),
+      update: _updateFunction<DateTime>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
 
-  Widget itemRatingField(BuildContext context, {required String fieldName, required String field, required int? value}) {
+  Widget itemRatingField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _RatingField(
       fieldName: fieldName,
       value: value?? 0,
-      update: _updateFieldFunction<int>(context, field),
+      update: _updateFunction<int>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
 
-  Widget itemBoolField(BuildContext context, {required String fieldName, required String field, required bool value}) {
+  Widget itemBoolField(BuildContext context, {required String fieldName, required bool value, required T item, required T Function(bool newValue) itemUpdater}) {
 
     return _BoolField(
       fieldName: fieldName,
       value: value,
-      update: _updateFieldFunction<bool>(context, field),
+      update: _updateFunction<bool>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
 
-  Widget itemChipField(BuildContext context, {required String fieldName, required String field, required String? value, required List<String> possibleValues, required List<Color> possibleValuesColours}) {
+  Widget itemChipField(BuildContext context, {required String fieldName, required int? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(int newValue) itemUpdater}) {
 
     return _EnumField(
       fieldName: fieldName,
       value: value,
       enumValues: possibleValues,
       enumColours: possibleValuesColours,
-      update: _updateFieldFunction<String>(context, field),
+      update: _updateFunction<int>(
+        context,
+        item: item,
+        itemUpdater: itemUpdater,
+      ),
     );
 
   }
@@ -819,11 +860,7 @@ class _RatingField extends StatelessWidget {
           size: 35.0,
           onRated: (double? newRating) {
             if (newRating != null) {
-
-              int updatedRating = newRating.toInt();
-              if(updatedRating == value) {
-                updatedRating = 0;
-              }
+              final int updatedRating = newRating.toInt();
 
               update(updatedRating);
             }
@@ -870,10 +907,10 @@ class _EnumField extends StatelessWidget {
   }) : super(key: key);
 
   final String fieldName;
-  final String? value;
+  final int? value;
   final List<String> enumValues;
   final List<Color> enumColours;
-  final Function(String) update;
+  final Function(int) update;
 
   @override
   Widget build(BuildContext context) {
@@ -890,19 +927,19 @@ class _EnumField extends StatelessWidget {
           alignment: WrapAlignment.spaceEvenly,
           children: List<Widget>.generate(
             enumValues.length,
-                (int index) {
+            (int index) {
               final String option = enumValues[index];
               final Color optionColour = enumColours.elementAt(index);
 
               return ChoiceChip(
                 label: Text(option),
                 labelStyle: const TextStyle(color: Colors.black87),
-                selected: value == option,
+                selected: value == index,
                 selectedColor: optionColour.withOpacity(0.5),
                 pressElevation: 2.0,
                 onSelected: (bool newChoice) {
                   if(newChoice) {
-                    update(option);
+                    update(index);
                   }
                 },
               );

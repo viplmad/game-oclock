@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -14,7 +14,7 @@ import '../common/item_view.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemRelationList<T extends CollectionItem, W extends CollectionItem, K extends ItemRelationBloc<T, W>, S extends ItemRelationManagerBloc<T, W>> extends StatelessWidget {
+abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
   const ItemRelationList({
     Key? key,
     required this.relationName,
@@ -303,7 +303,7 @@ class _ResultsList extends StatelessWidget {
   }
 }
 
-class _LinkButton<W extends CollectionItem> extends StatelessWidget {
+class _LinkButton<W extends Item> extends StatelessWidget {
   const _LinkButton({
     Key? key,
     required this.typeName,
@@ -350,7 +350,7 @@ class _LinkButton<W extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
+class _ResultsListSingle<W extends Item> extends StatelessWidget {
   const _ResultsListSingle({
     Key? key,
     required this.items,
@@ -383,7 +383,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
           final W result = items[index];
 
           return DismissibleItem(
-            dismissibleKey: result.id,
+            dismissibleKey: result.uniqueId,
             itemWidget: itemBuilder(context, result),
             onDismissed: (DismissDirection direction) {
               updateDelete(result);
@@ -404,7 +404,7 @@ class _ResultsListSingle<W extends CollectionItem> extends StatelessWidget {
   }
 }
 
-class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
+class _ResultsListMany<W extends Item> extends StatelessWidget {
   const _ResultsListMany({
     Key? key,
     required this.items,
@@ -445,7 +445,7 @@ class _ResultsListMany<W extends CollectionItem> extends StatelessWidget {
             final W result = items[index];
 
             return DismissibleItem(
-              dismissibleKey: result.id,
+              dismissibleKey: result.uniqueId,
               itemWidget: itemBuilder(context, result),
               onDismissed: (DismissDirection direction) {
                 updateDelete(result);

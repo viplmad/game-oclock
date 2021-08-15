@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show DLCTheme;
 import 'search.dart';
 
 
@@ -20,19 +19,19 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   }) : super(key: key);
 
   @override
-  DLCSearchBloc searchBlocBuilder() {
+  DLCSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  DLCListManagerBloc managerBlocBuilder() {
+  DLCListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -57,10 +56,10 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   @override
   final String detailRouteName = dlcDetailRoute;
 
-  @override DLCListManagerBloc managerBlocBuilder() {
+  @override DLCListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -88,6 +87,9 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, 
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
+
+  @override
+  DLC createItem(String query) => DLC(id: -1, name: query, releaseYear: null, coverURL: null, coverFilename: null, baseGame: null, firstFinishDate: null);
 
   @override
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);

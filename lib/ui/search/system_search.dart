@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show System;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-//import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show SystemTheme;
 import 'search.dart';
 
 
@@ -20,19 +18,19 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   }) : super(key: key);
 
   @override
-  SystemSearchBloc searchBlocBuilder() {
+  SystemSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return SystemSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  SystemListManagerBloc managerBlocBuilder() {
+  SystemListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return SystemListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -61,10 +59,10 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   void Function() onTap(BuildContext context, System item) => () {};
 
   @override
-  SystemListManagerBloc managerBlocBuilder() {
+  SystemListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return SystemListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -92,6 +90,9 @@ class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).systemsString;
+
+  @override
+  System createItem(String query) => System(id: -1, name: query, iconURL: null, iconFilename: null, generation: 0, manufacturer: null);
 
   @override
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);

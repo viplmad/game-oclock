@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Item;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -13,7 +14,7 @@ import '../common/show_snackbar.dart';
 import '../detail/detail.dart';
 
 
-abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemSearch({
     Key? key,
   }) : super(key: key);
@@ -21,17 +22,19 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
   @override
   Widget build(BuildContext context) {
 
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return searchBlocBuilder()..add(const SearchTextChanged());
+            return searchBlocBuilder(_collectionRepository)..add(const SearchTextChanged());
           },
         ),
 
         BlocProvider<S>(
           create: (BuildContext context) {
-            return managerBlocBuilder();
+            return managerBlocBuilder(_collectionRepository);
           },
         ),
 
@@ -52,13 +55,13 @@ abstract class ItemSearch<T extends CollectionItem, K extends ItemSearchBloc<T>,
 
   }
 
-  K searchBlocBuilder();
-  S managerBlocBuilder();
+  K searchBlocBuilder(GameCollectionRepository collectionRepository);
+  S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
   ItemSearchBody<T, K, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
-abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManagerBloc<T>> extends StatelessWidget {
+abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemLocalSearch({
     Key? key,
     required this.items,
@@ -70,6 +73,8 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
 
   @override
   Widget build(BuildContext context) {
+
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -83,7 +88,7 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
 
         BlocProvider<S>(
           create: (BuildContext context) {
-            return managerBlocBuilder();
+            return managerBlocBuilder(_collectionRepository);
           },
         ),
 
@@ -110,12 +115,12 @@ abstract class ItemLocalSearch<T extends CollectionItem, S extends ItemListManag
 
   }
 
-  S managerBlocBuilder();
+  S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
   ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
-abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends StatefulWidget {
+abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatefulWidget {
   const ItemSearchBody({
     Key? key,
     required this.onTap,
@@ -128,12 +133,13 @@ abstract class ItemSearchBody<T extends CollectionItem, K extends ItemSearchBloc
   String typeName(BuildContext context);
   String typesName(BuildContext context);
 
+  T createItem(String query);
   Widget cardBuilder(BuildContext context, T item);
 
   @override
   State<ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
 }
-class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>, S extends ItemListManagerBloc<T>> extends State<ItemSearchBody<T, K, S>> {
+class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends State<ItemSearchBody<T, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -254,7 +260,9 @@ class _ItemSearchBodyState<T extends CollectionItem, K extends ItemSearchBloc<T>
         child: Text(GameCollectionLocalisations.of(context).newWithTitleString(widget.typeName(context), query)),
         onPressed: () {
 
-          BlocProvider.of<S>(context).add(AddItem(query));
+          BlocProvider.of<S>(context).add(
+            AddItem<T>(widget.createItem(query)),
+          );
 
         },
         style: TextButton.styleFrom(

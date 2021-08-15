@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/bar_data.dart';
+import 'package:backend/model/model.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
+import '../common/bar_data.dart';
 
 
 class PurchaseTheme {
@@ -49,14 +49,13 @@ class PurchaseTheme {
 
   }
 
-  static Widget itemCard(BuildContext context, Purchase item, void Function()? Function(BuildContext, Purchase) onTap, [void Function()? Function(BuildContext, Purchase)? onLongPress]) {
+  static Widget itemCard(BuildContext context, Purchase item, void Function()? Function(BuildContext, Purchase) onTap) {
 
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
       hasImage: item.hasImage,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }

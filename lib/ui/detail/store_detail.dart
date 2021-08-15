@@ -2,21 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection/entity/entity.dart';
+import 'package:backend/model/model.dart' show Item, Store, Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/model/model.dart';
-
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_detail/item_detail.dart';
-import 'package:game_collection/bloc/item_detail_manager/item_detail_manager.dart';
-import 'package:game_collection/bloc/item_relation/item_relation.dart';
-import 'package:game_collection/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:backend/bloc/item_detail/item_detail.dart';
+import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
+import 'package:backend/bloc/item_relation/item_relation.dart';
+import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show StoreTheme;
 import 'item_detail.dart';
 
 
@@ -28,36 +25,36 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  StoreDetailBloc detailBlocBuilder(StoreDetailManagerBloc managerBloc) {
+  StoreDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, StoreDetailManagerBloc managerBloc) {
 
     return StoreDetailBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
 
   }
 
   @override
-  StoreDetailManagerBloc managerBlocBuilder() {
+  StoreDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreDetailManagerBloc(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder() {
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
 
     final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Purchase>(_purchaseRelationManagerBloc),
+      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
 
       BlocProvider<StoreRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
@@ -77,13 +74,13 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
 
   }
 
-  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends CollectionItem>(StoreRelationManagerBloc<W> managerBloc) {
+  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, StoreRelationManagerBloc<W> managerBloc) {
 
     return BlocProvider<StoreRelationBloc<W>>(
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
           itemId: item.id,
-          iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+          collectionRepository: collectionRepository,
           managerBloc: managerBloc,
         )..add(LoadItemRelation());
       },
@@ -109,8 +106,9 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
-        field: stor_nameField,
         value: store.name,
+        item: store,
+        itemUpdater: (String newValue) => store.copyWith(name: newValue),
       ),
     ];
 

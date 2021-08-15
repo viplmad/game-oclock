@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
 
 import 'route_constants.dart';
 import 'connect.dart';
@@ -11,6 +11,8 @@ import 'search/search.dart';
 import 'statistics/statistics.dart';
 import 'calendar/calendar.dart';
 import 'theme/theme.dart';
+
+export 'route_constants.dart';
 
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -154,13 +156,13 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case tagSearchRoute:
-      return _pageRoute<Tag>(
-        const TagSearch(),
+      return _pageRoute<GameTag>(
+        const GameTagSearch(),
       );
 
     case typeSearchRoute:
       return _pageRoute<PurchaseType>(
-        const TypeSearch(),
+        const PurchaseTypeSearch(),
       );
 
     case gameLocalSearchRoute:
@@ -212,14 +214,14 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case tagLocalSearchRoute:
       return _pageRoute(
-        TagLocalSearch(
-          items: settings.arguments as List<Tag>,
+        GameTagLocalSearch(
+          items: settings.arguments as List<GameTag>,
         ),
       );
 
     case typeLocalSearchRoute:
       return _pageRoute(
-        TypeLocalSearch(
+        PurchaseTypeLocalSearch(
           items: settings.arguments as List<PurchaseType>,
         ),
       );

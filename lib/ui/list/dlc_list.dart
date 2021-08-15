@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
-import 'package:game_collection/model/list_style.dart';
+import 'package:backend/model/model.dart' show DLC;
+import 'package:backend/model/list_style.dart';
 
-import 'package:game_collection/bloc/item_list/item_list.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_list/item_list.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show DLCTheme;
 import 'list.dart';
 
 
@@ -35,6 +35,9 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
 
   @override
   final Color themeColor = DLCTheme.primaryColour;
+
+  @override
+  DLC createItem() => const DLC(id: -1, name: '', releaseYear: null, coverURL: null, coverFilename: null, baseGame: null, firstFinishDate: null);
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;

@@ -11,10 +11,11 @@ description: A simple and intuitive game collection manager.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.9.1+110
+version: 2.0.0+195
+publish_to: none
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,31 +27,27 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  shared_preferences: ^2.0.4
-  encrypt: ^5.0.0
-
   # BLoC pattern
-  bloc: ^7.0.0
   flutter_bloc: ^7.0.0
-  equatable: ^2.0.0
 
   # Back-end
-  postgres: ^2.3.0
-  http: ^0.13.0
-  dio: ^4.0.0
+  backend:
+    path: ./backend
 
   # Front-end
-  #smooth_star_rating: ^1.0.0
+  smooth_star_rating:
+    git:
+      url: https://github.com/viplmad/smoothratingbar.git
+      ref: dev
   numberpicker: ^2.0.0
-  image_picker: ^0.7.2+1
+  image_picker: ^0.8.0
   cached_network_image: ^3.0.0
   url_launcher: ^6.0.2
   flutter_launcher_icons: ^0.9.0
   table_calendar: ^3.0.0
-  flutter_speed_dial: ^3.0.5
-
-  #fl_chart: ^0.35.0
-  charts_flutter: ^0.10.0
+  flutter_speed_dial: ^4.1.0
+  duration_picker: ^1.0.1
+  charts_flutter: ^0.11.0
 
 dev_dependencies:
   flutter_test:

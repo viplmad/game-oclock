@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart';
+import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 
 
 class SystemTheme {
-  static Widget itemCard(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap, [void Function()? Function(BuildContext, System)? onLongPress]) {
+  static Widget itemCard(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
 
     return ItemCard(
       title: _getTitle(item),
@@ -14,7 +15,6 @@ class SystemTheme {
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
-      onLongPress: onLongPress != null? onLongPress(context, item) : null,
     );
 
   }
@@ -38,7 +38,7 @@ class SystemTheme {
 
   static String _getSubtitle(System item) {
 
-    return item.manufacturer?? '';
+    return GameCollectionLocalisations.manufacturerString(item.manufacturer);
 
   }
 }

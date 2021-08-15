@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/model/model.dart';
+import 'package:backend/model/model.dart' show Purchase;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
-import 'package:game_collection/repository/icollection_repository.dart';
-
-import 'package:game_collection/bloc/item_search/item_search.dart';
-import 'package:game_collection/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/item_search/item_search.dart';
+import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart';
+import '../theme/theme.dart' show PurchaseTheme;
 import 'search.dart';
 
 
@@ -20,19 +19,19 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
   }) : super(key: key);
 
   @override
-  PurchaseSearchBloc searchBlocBuilder() {
+  PurchaseSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseSearchBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
 
   @override
-  PurchaseListManagerBloc managerBlocBuilder() {
+  PurchaseListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -58,10 +57,10 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   final String detailRouteName = purchaseDetailRoute;
 
   @override
-  PurchaseListManagerBloc managerBlocBuilder() {
+  PurchaseListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseListManagerBloc(
-      iCollectionRepository: ICollectionRepository.iCollectionRepository!,
+      collectionRepository: collectionRepository,
     );
 
   }
@@ -89,6 +88,9 @@ class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearch
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).purchasesString;
+
+  @override
+  Purchase createItem(String query) => Purchase(id: -1, description: query, price: 0.0, externalCredit: 0.0, date: null, originalPrice: 0.0, store: null);
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
