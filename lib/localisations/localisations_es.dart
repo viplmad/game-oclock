@@ -20,7 +20,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String repositorySettingsString = 'Ajustes de conexión';
   @override
-  final String updatedItemConnectionString = 'Conexión de ítem actualizadas';
+  final String updatedItemConnectionString = 'Conexión de ítem actualizada';
   @override
   final String updatedImageConnectionString = 'Conexión de imagen actualizada';
   @override
@@ -64,7 +64,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String searchInViewString = 'Búsqueda en vista';
   @override
-  final String statsInViewString = 'Estadísticas en vista';
+  final String statsInViewString = 'Vista de estadísticas';
 
   @override
   String newString(String typeString) {
@@ -134,28 +134,28 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String changeYearString = 'Cambiar año';
   @override
   final List<String> shortMonths = const <String>[
-    'Ene',
-    'Feb',
-    'Mar',
-    'Abr',
-    'May',
-    'Jun',
-    'Jul',
-    'Ago',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
+    'Ene.',
+    'Feb.',
+    'Mar.',
+    'Abr.',
+    'May.',
+    'Jun.',
+    'Jul.',
+    'Ago.',
+    'Sep.',
+    'Oct.',
+    'Nov.',
+    'Dec.',
   ];
   @override
   final List<String> shortDaysOfWeek = const <String>[
-    'Lun',
-    'Mar',
-    'Mie',
-    'Jue',
-    'Vie',
-    'Sáb',
-    'Dom',
+    'Lun.',
+    'Mar.',
+    'Mie.',
+    'Jue.',
+    'Vie.',
+    'Sáb.',
+    'Dom.',
   ];
   //#endregion Common
 
@@ -238,7 +238,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String playingViewString = 'Jugando';
   @override
-  final String nextUpViewString = 'Siguiente';
+  final String nextUpViewString = 'Siguientes';
   @override
   final String lastPlayedString = 'Últimos jugaodos';
   @override
@@ -246,7 +246,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
 
   @override
   String gamesFromYearString(int year) {
-    return 'Termiando el ' + yearString(year);
+    return 'Terminado el ' + yearString(year);
   }
   @override
   String get totalGamesString => '$gamesString totales';
@@ -306,7 +306,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String discountFieldString = 'Descuento';
 
   @override
-  final String pendingViewString = 'Pendiente';
+  final String pendingViewString = 'Pendientes';
   @override
   final String lastPurchasedViewString = 'Últimos comprados';
 
@@ -449,9 +449,9 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    final String hoursString = duration.inHours.toString();
-    final String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
-    return '$hoursString h. $minutesString min.';
+    final String hourString = hoursString(duration.inHours);
+    final String minuteString = minutesString((duration.inMinutes - (duration.inHours * 60)));
+    return '$hourString $minuteString';
   }
   @override
   String yearString(int year) {
@@ -464,6 +464,11 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   String hoursString(int hours) {
     return '$hours h.';
+  }
+  @override
+  String minutesString(int minutes) {
+    final String minuteString = minutes.toString().padLeft(2, '0');
+    return '$minuteString min.';
   }
 
   @override

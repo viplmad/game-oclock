@@ -241,6 +241,7 @@ abstract class GameCollectionLocalisations {
   String yearString(int year);
   String shortYearString(int year);
   String hoursString(int hours);
+  String minutesString(int minutes);
 
   String editString(String fieldString);
   String addString(String fieldString);

@@ -449,9 +449,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    final String hoursString = duration.inHours.toString();
-    final String minutesString = (duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0');
-    return '$hoursString h $minutesString min';
+    final String hourString = hoursString(duration.inHours);
+    final String minuteString = minutesString((duration.inMinutes - (duration.inHours * 60)));
+    return '$hourString $minuteString';
   }
   @override
   String yearString(int year) {
@@ -464,6 +464,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String hoursString(int hours) {
     return '$hours h';
+  }
+  @override
+  String minutesString(int minutes) {
+    final String minuteString = minutes.toString().padLeft(2, '0');
+    return '$minuteString min.';
   }
 
   @override

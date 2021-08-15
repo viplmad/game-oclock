@@ -172,7 +172,6 @@ class SingleGameCalendar extends StatelessWidget {
                     showDurationPicker(
                       context: context,
                       snapToMins: 5.0,
-                      //decoration: GameCollectionLocalisations.of(context).editTimeString, TODO
                       initialTime: Duration.zero,
                     ).then((Duration? duration) {
                       if(duration != null) {
