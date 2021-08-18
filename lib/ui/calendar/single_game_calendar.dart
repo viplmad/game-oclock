@@ -152,9 +152,10 @@ class SingleGameCalendar extends StatelessWidget {
       overlayOpacity: 0.5,
       children: <SpeedDialChild>[
         SpeedDialChild(
-          child: const Icon(Icons.add_alarm),
+          child: const Icon(Icons.add_alarm, color: Colors.white),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
-          labelStyle: const TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.white),
+          labelBackgroundColor: Colors.grey[800],
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
@@ -202,9 +203,10 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
-          child: const Icon(Icons.event_available),
+          child: const Icon(Icons.event_available, color: Colors.white),
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).finishDateFieldString),
-          labelStyle: const TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.white),
+          labelBackgroundColor: Colors.grey[800],
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
