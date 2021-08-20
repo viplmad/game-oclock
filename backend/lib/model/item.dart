@@ -2,12 +2,17 @@ import 'package:equatable/equatable.dart';
 
 
 abstract class Item extends Equatable {
-  const Item();
+  const Item({
+    required this.uniqueId,
+    required this.hasImage,
+    required this.queryableTerms,
+  });
 
-  String get uniqueId;
-  bool get hasImage;
+  final String uniqueId;
+  final bool hasImage;
+  final String queryableTerms;
+
   ItemImage get image;
-  String get queryableTerms;
 
   Item copyWith();
 }
@@ -15,9 +20,17 @@ abstract class Item extends Equatable {
 abstract class ItemFinish extends Item {
   const ItemFinish({
     required this.dateTime,
-  });
+    required String uniqueId,
+  }) : super(
+    uniqueId: uniqueId,
+    hasImage: false,
+    queryableTerms: '',
+  );
 
   final DateTime dateTime;
+
+  @override
+  final ItemImage image = const ItemImage(null, null);
 }
 
 class ItemImage {

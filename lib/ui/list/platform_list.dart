@@ -16,10 +16,10 @@ import 'list.dart';
 class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   const PlatformAppBar({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = PlatformTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: PlatformTheme.primaryColour,
+  );
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
@@ -31,10 +31,10 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
 class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
   const PlatformFAB({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = PlatformTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: PlatformTheme.primaryColour,
+  );
 
   @override
   Platform createItem() => const Platform(id: -1, name: '', iconURL: null, iconFilename: null, type: null);
@@ -46,10 +46,10 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final String detailRouteName = platformDetailRoute;
+  }) : super(
+    key: key,
+    detailRouteName: platformDetailRoute,
+  );
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
@@ -83,19 +83,9 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    detailRouteName: platformDetailRoute,
+    localSearchRouteName: platformLocalSearchRoute,
   );
-
-  @override
-  final String detailRouteName = platformDetailRoute;
-
-  @override
-  final String localSearchRouteName = platformLocalSearchRoute;
-
-  @override
-  final String statisticsRouteName = '';
-
-  @override
-  final String calendarRouteName = '';
 
   @override
   String itemTitle(Platform item) => PlatformTheme.itemTitle(item);

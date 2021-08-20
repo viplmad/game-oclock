@@ -10,8 +10,8 @@ class SystemTheme {
   static Widget itemCard(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
 
     return ItemCard(
-      title: _getTitle(item),
-      subtitle: _getSubtitle(item),
+      title: _itemTitle(item),
+      subtitle: _itemSubtitle(item),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
@@ -22,21 +22,20 @@ class SystemTheme {
   static Widget itemGrid(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
 
     return ItemGrid(
-      title: _getTitle(item),
-      hasImage: item.hasImage,
+      title: _itemTitle(item),
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
 
   }
 
-  static String _getTitle(System item) {
+  static String _itemTitle(System item) {
 
     return item.name;
 
   }
 
-  static String _getSubtitle(System item) {
+  static String _itemSubtitle(System item) {
 
     return GameCollectionLocalisations.manufacturerString(item.manufacturer);
 

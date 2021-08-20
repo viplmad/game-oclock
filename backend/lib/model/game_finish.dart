@@ -1,22 +1,13 @@
-import 'model.dart' show ItemFinish, ItemImage;
+import 'model.dart' show ItemFinish;
 
 
 class GameFinish extends ItemFinish {
   const GameFinish({
     required DateTime dateTime,
-  }) :
-    this.uniqueId = 'GF$dateTime',
-    super(dateTime: dateTime);
-
-  @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = false;
-  @override
-  final ItemImage image = const ItemImage(null, null);
-  @override
-  final String queryableTerms = '';
+  }) : super(
+    dateTime: dateTime,
+    uniqueId: 'GF$dateTime',
+  );
 
   @override
   GameFinish copyWith({

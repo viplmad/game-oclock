@@ -82,16 +82,13 @@ class GameTagRelationList extends _GameRelationList<GameTag> {
   }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
 
   @override
-  final String detailRouteName = '';
+  final String detailRouteName = gameTagDetailRoute;
 
   @override
-  final String searchRouteName = tagSearchRoute;
+  final String searchRouteName = gameTagSearchRoute;
 
   @override
-  final String localSearchRouteName = tagLocalSearchRoute;
-
-  @override
-  void Function()? onTap(BuildContext context, GameTag item) => null;
+  final String localSearchRouteName = gameTagLocalSearchRoute;
 
   @override
   Widget cardBuilder(BuildContext context, GameTag item) => GameTagTheme.itemCard(context, item, onTap);

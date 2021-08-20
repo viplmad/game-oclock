@@ -19,10 +19,11 @@ import 'list.dart';
 class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
   const PurchaseAppBar({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = PurchaseTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: PurchaseTheme.primaryColour,
+    gridAllowed: false,
+  );
 
   @override
   void Function(int) onSelected(BuildContext context, List<String> views) {
@@ -62,10 +63,10 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
 class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
   const PurchaseFAB({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = PurchaseTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: PurchaseTheme.primaryColour,
+  );
 
   @override
   Purchase createItem() => const Purchase(id: -1, description: '', price: 0.0, externalCredit: 0.0, date: null, originalPrice: 0.0, store: null);
@@ -77,10 +78,10 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
 class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListManagerBloc> {
   const PurchaseList({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final String detailRouteName = purchaseDetailRoute;
+  }) : super(
+    key: key,
+    detailRouteName: purchaseDetailRoute,
+  );
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
@@ -114,19 +115,10 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    detailRouteName: purchaseDetailRoute,
+    localSearchRouteName: purchaseLocalSearchRoute,
+    statisticsRouteName: purchaseStatisticsRoute,
   );
-
-  @override
-  final String detailRouteName = purchaseDetailRoute;
-
-  @override
-  final String localSearchRouteName = purchaseLocalSearchRoute;
-
-  @override
-  final String statisticsRouteName = purchaseStatisticsRoute;
-
-  @override
-  final String calendarRouteName = '';
 
   @override
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
@@ -136,7 +128,4 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
-
-  @override
-  Widget gridBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemGrid(context, item, onTap);
 }

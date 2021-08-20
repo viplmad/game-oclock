@@ -67,6 +67,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String statsInViewString = 'Stats in View';
 
   @override
+  final String gameListsString = 'Game Lists';
+
+  @override
   String newString(String typeString) {
     return 'New $typeString';
   }
@@ -408,9 +411,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   //#region Tag
   @override
-  final String tagString = 'Tag';
+  final String gameTagString = 'Tag';
   @override
-  String get tagsString => _plural(tagString);
+  String get gameTagsString => _plural(gameTagString);
   //#endregion Tag
 
   //#region PurchaseType

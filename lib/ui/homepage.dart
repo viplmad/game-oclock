@@ -273,6 +273,17 @@ class _HomepageDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.list),
+            title: Text(GameCollectionLocalisations.of(context).gameListsString),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                gameTagListRoute,
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
             leading: const Icon(Icons.settings),
             title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
             onTap: () {

@@ -11,8 +11,12 @@ class Purchase extends Item {
     required this.originalPrice,
 
     required this.store,
-  }) : this.uniqueId = 'Pu$id',
-       this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0;
+  }) : this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
+  super(
+    uniqueId: 'Pu$id',
+    hasImage: false,
+    queryableTerms: description,
+  );
 
   final int id;
   final String description;
@@ -25,15 +29,7 @@ class Purchase extends Item {
   final int? store;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = false;
-  @override
   final ItemImage image = const ItemImage(null, null);
-
-  @override
-  String get queryableTerms => this.description;
 
   @override
   Purchase copyWith({

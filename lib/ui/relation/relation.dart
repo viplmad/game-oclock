@@ -5,3 +5,4 @@ export 'dlc_relation.dart';
 export 'purchase_relation.dart';
 export 'store_relation.dart';
 export 'platform_relation.dart';
+export 'game_tag_relation.dart';

@@ -10,7 +10,11 @@ class DLC extends Item {
     required this.coverFilename,
     required this.baseGame,
     required this.firstFinishDate,
-  }) : this.uniqueId = 'D$id';
+  }) : super(
+    uniqueId: 'D$id',
+    hasImage: true,
+    queryableTerms: name,
+  );
 
   final int id;
   final String name;
@@ -21,15 +25,7 @@ class DLC extends Item {
   final DateTime? firstFinishDate;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = true;
-  @override
   ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
-
-  @override
-  String get queryableTerms => this.name;
 
   @override
   DLC copyWith({

@@ -13,7 +13,11 @@ class Platform extends Item {
     required this.iconURL,
     required this.iconFilename,
     required this.type,
-  }) : this.uniqueId = 'Pl$id';
+  }) : super(
+    uniqueId: 'Pl$id',
+    hasImage: true,
+    queryableTerms: name,
+  );
 
   final int id;
   final String name;
@@ -22,15 +26,7 @@ class Platform extends Item {
   final PlatformType? type;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = true;
-  @override
   ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
-
-  @override
-  String get queryableTerms => this.name;
 
   @override
   Platform copyWith({

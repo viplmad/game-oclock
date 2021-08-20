@@ -50,10 +50,10 @@ class _RomAppBar extends _GameAppBar<RomListBloc> {}
 abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>> extends ItemAppBar<Game, K> {
   const _GameAppBar({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = GameTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: GameTheme.primaryColour,
+  );
 
   @override
   void Function(int) onSelected(BuildContext context, List<String> views) {
@@ -121,10 +121,10 @@ class _RomFAB extends _GameFAB<RomListManagerBloc> {}
 abstract class _GameFAB<S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends ItemFAB<Game, S> {
   const _GameFAB({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = GameTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: GameTheme.primaryColour,
+  );
 
   @override
   Game createItem() => const Game(id: -1, name: '', edition: '', releaseYear: null, coverURL: null, coverFilename: null, status: GameStatus.LowPriority, rating: 0, thoughts: '', saveFolder: '', screenshotFolder: '', isBackup: false, firstFinishDate: null, totalTime: Duration());
@@ -220,12 +220,12 @@ abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>, S extends
   const _GameList({
     Key? key,
     required this.tabTitle,
-  }) : super(key: key);
+  }) : super(
+    key: key,
+    detailRouteName: gameDetailRoute,
+  );
 
   final String tabTitle;
-
-  @override
-  final String detailRouteName = gameDetailRoute;
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
@@ -261,21 +261,13 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    detailRouteName: gameDetailRoute,
+    localSearchRouteName: gameLocalSearchRoute,
+    statisticsRouteName: gameStatisticsRoute,
+    calendarRouteName: gameMultiCalendarRoute,
   );
 
   final String tabTitle;
-
-  @override
-  final String detailRouteName = gameDetailRoute;
-
-  @override
-  final String localSearchRouteName = gameLocalSearchRoute;
-
-  @override
-  final String statisticsRouteName = gameStatisticsRoute;
-
-  @override
-  final String calendarRouteName = gameMultiCalendarRoute;
 
   @override
   void Function() onStatisticsTap(BuildContext context) {

@@ -34,7 +34,7 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
   Future<GameTagEntity> findById(GameTagID id) {
 
     final Query query = GameTagQuery.selectById(id);
-    return createItem(
+    return readItem(
       query: query,
     );
 

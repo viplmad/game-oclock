@@ -60,16 +60,6 @@ class PurchaseTheme {
 
   }
 
-  static Widget itemGrid(BuildContext context, Purchase item, void Function()? Function(BuildContext, Purchase) onTap) {
-
-    return ItemGrid(
-      title: itemTitle(item),
-      hasImage: item.hasImage,
-      onTap: onTap(context, item),
-    );
-
-  }
-
   static String itemTitle(Purchase item) {
 
     return item.description;

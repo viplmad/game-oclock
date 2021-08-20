@@ -69,7 +69,6 @@ class PlatformTheme {
 
     return ItemGrid(
       title: itemTitle(item),
-      hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

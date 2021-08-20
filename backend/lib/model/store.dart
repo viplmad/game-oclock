@@ -7,7 +7,11 @@ class Store extends Item {
     required this.name,
     required this.iconURL,
     required this.iconFilename,
-  }) : this.uniqueId = 'St$id';
+  }) : super(
+    uniqueId: 'St$id',
+    hasImage: true,
+    queryableTerms: name,
+  );
 
   final int id;
   final String name;
@@ -15,15 +19,7 @@ class Store extends Item {
   final String? iconFilename;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = true;
-  @override
   ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
-
-  @override
-  String get queryableTerms => this.name;
 
   @override
   Store copyWith({

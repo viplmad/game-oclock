@@ -16,10 +16,10 @@ import 'list.dart';
 class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   const DLCAppBar({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = DLCTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: DLCTheme.primaryColour,
+  );
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
@@ -31,10 +31,10 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
 class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
   const DLCFAB({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = DLCTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: DLCTheme.primaryColour,
+  );
 
   @override
   DLC createItem() => const DLC(id: -1, name: '', releaseYear: null, coverURL: null, coverFilename: null, baseGame: null, firstFinishDate: null);
@@ -46,10 +46,10 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
 class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final String detailRouteName = dlcDetailRoute;
+  }) : super(
+    key: key,
+    detailRouteName: dlcDetailRoute,
+  );
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
@@ -83,19 +83,9 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    detailRouteName: dlcDetailRoute,
+    localSearchRouteName: dlcLocalSearchRoute,
   );
-
-  @override
-  final String detailRouteName = dlcDetailRoute;
-
-  @override
-  final String localSearchRouteName = dlcLocalSearchRoute;
-
-  @override
-  final String statisticsRouteName = '';
-
-  @override
-  final String calendarRouteName = '';
 
   @override
   String itemTitle(DLC item) => DLCTheme.itemTitle(item);

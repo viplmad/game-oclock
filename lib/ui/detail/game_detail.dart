@@ -278,8 +278,8 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         relationTypeName: GameCollectionLocalisations.of(context).dlcString,
       ),
       GameTagRelationList(
-        relationName: GameCollectionLocalisations.of(context).tagsString,
-        relationTypeName: GameCollectionLocalisations.of(context).tagString,
+        relationName: GameCollectionLocalisations.of(context).gameTagsString,
+        relationTypeName: GameCollectionLocalisations.of(context).gameTagString,
       ),
     ];
 

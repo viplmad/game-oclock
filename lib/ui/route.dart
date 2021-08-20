@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart';
+import 'package:game_collection/ui/list/game_tag_list.dart';
 
 import 'route_constants.dart';
 import 'connect.dart';
@@ -83,6 +84,22 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         themeDataBuilder: PlatformTheme.themeData,
       );
 
+    case gameTagDetailRoute:
+      final DetailArguments<GameTag> detailArguments = settings.arguments as DetailArguments<GameTag>;
+      return _pageRoute(
+        GameTagDetail(
+          item: detailArguments.item,
+          onUpdate: detailArguments.onUpdate,
+        ),
+        themeDataBuilder: GameTagTheme.themeData,
+      );
+
+    case gameTagListRoute:
+      return _pageRoute(
+        const GameTagList(),
+        themeDataBuilder: GameTagTheme.themeData,
+      );
+
     case gameStatisticsRoute:
       final GameStatisticsArguments statisticsArguments = settings.arguments as GameStatisticsArguments;
       return _pageRoute(
@@ -155,12 +172,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         const SystemSearch(),
       );
 
-    case tagSearchRoute:
+    case gameTagSearchRoute:
       return _pageRoute<GameTag>(
         const GameTagSearch(),
       );
 
-    case typeSearchRoute:
+    case purchaseTypeSearchRoute:
       return _pageRoute<PurchaseType>(
         const PurchaseTypeSearch(),
       );
@@ -212,14 +229,14 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
       );
 
-    case tagLocalSearchRoute:
+    case gameTagLocalSearchRoute:
       return _pageRoute(
         GameTagLocalSearch(
           items: settings.arguments as List<GameTag>,
         ),
       );
 
-    case typeLocalSearchRoute:
+    case purchaseTypeLocalSearchRoute:
       return _pageRoute(
         PurchaseTypeLocalSearch(
           items: settings.arguments as List<PurchaseType>,

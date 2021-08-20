@@ -20,12 +20,16 @@ import '../statistics/statistics.dart';
 abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget with PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
+    required this.themeColor,
+    this.gridAllowed = true,
   }) : super(key: key);
+
+  final Color themeColor;
+  final bool gridAllowed;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  Color get themeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +45,13 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
             BlocProvider.of<K>(context).add(UpdateSortOrder());
           },
         ),
-        IconButton(
+        gridAllowed? IconButton(
           icon: const Icon(Icons.grid_on),
           tooltip: GameCollectionLocalisations.of(context).changeStyleString,
           onPressed: () {
             BlocProvider.of<K>(context).add(UpdateStyle());
           },
-        ),
+        ) : Container(),
         _viewActionBuilder(
           context,
           views: views(context),
@@ -92,9 +96,10 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
 abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemFAB({
     Key? key,
+    required this.themeColor,
   }) : super(key: key);
 
-  Color get themeColor;
+  final Color themeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +124,10 @@ abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, Item
 abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemList({
     Key? key,
+    this.detailRouteName = '',
   }) : super(key: key);
 
-  String get detailRouteName;
+  final String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +237,10 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
     required this.viewYear,
     required this.onDelete,
     required this.style,
+    this.detailRouteName = '',
+    this.localSearchRouteName = '',
+    this.statisticsRouteName = '',
+    this.calendarRouteName = '',
   }) : super(key: key);
 
   final List<T> items;
@@ -239,10 +249,10 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
   final void Function(T) onDelete;
   final ListStyle style;
 
-  String get detailRouteName;
-  String get localSearchRouteName;
-  String get statisticsRouteName;
-  String get calendarRouteName;
+  final String detailRouteName;
+  final String localSearchRouteName;
+  final String statisticsRouteName;
+  final String calendarRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -400,7 +410,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
   String viewTitle(BuildContext context);
 
   Widget cardBuilder(BuildContext context, T item);
-  Widget gridBuilder(BuildContext context, T item);
+  external Widget gridBuilder(BuildContext context, T item);
 }
 
 class ItemCardView<T extends Item> extends StatelessWidget {

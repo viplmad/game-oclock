@@ -16,7 +16,11 @@ class System extends Item {
     required this.iconFilename,
     required this.generation,
     required this.manufacturer,
-  }) : this.uniqueId = 'Sy$id';
+  }) : super(
+    uniqueId: 'Sy$id',
+    hasImage: true,
+    queryableTerms: name,
+  );
 
   final int id;
   final String name;
@@ -26,15 +30,7 @@ class System extends Item {
   final Manufacturer? manufacturer;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = true;
-  @override
   ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
-
-  @override
-  String get queryableTerms => this.name;
 
   @override
   System copyWith({

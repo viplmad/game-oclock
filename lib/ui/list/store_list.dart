@@ -16,10 +16,10 @@ import 'list.dart';
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   const StoreAppBar({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = StoreTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: StoreTheme.primaryColour,
+  );
 
   @override
   String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
@@ -31,10 +31,10 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
 class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   const StoreFAB({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final Color themeColor = StoreTheme.primaryColour;
+  }) : super(
+    key: key,
+    themeColor: StoreTheme.primaryColour,
+  );
 
   @override
   Store createItem() => const Store(id: -1, name: '', iconURL: null, iconFilename: null);
@@ -46,10 +46,10 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
 class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   const StoreList({
     Key? key,
-  }) : super(key: key);
-
-  @override
-  final String detailRouteName = storeDetailRoute;
+  }) : super(
+    key: key,
+    detailRouteName: storeDetailRoute,
+  );
 
   @override
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
@@ -83,19 +83,9 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    detailRouteName: storeDetailRoute,
+    localSearchRouteName: storeLocalSearchRoute,
   );
-
-  @override
-  final String detailRouteName = storeDetailRoute;
-
-  @override
-  final String localSearchRouteName = storeLocalSearchRoute;
-
-  @override
-  final String statisticsRouteName = '';
-
-  @override
-  final String calendarRouteName = '';
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);

@@ -88,10 +88,10 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   final String detailRouteName = '';
 
   @override
-  final String searchRouteName = typeSearchRoute;
+  final String searchRouteName = purchaseTypeSearchRoute;
 
   @override
-  final String localSearchRouteName = typeLocalSearchRoute;
+  final String localSearchRouteName = purchaseTypeLocalSearchRoute;
 
   @override
   void Function()? onTap(BuildContext context, PurchaseType item) => null;

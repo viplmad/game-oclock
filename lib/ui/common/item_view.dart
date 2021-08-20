@@ -146,13 +146,11 @@ class ItemGrid extends StatelessWidget {
   const ItemGrid({
     Key? key,
     required this.title,
-    required this.hasImage,
     this.imageURL,
     required this.onTap,
   }) : super(key: key);
 
   final String title;
-  final bool hasImage;
   final String? imageURL;
   final void Function()? onTap;
 
@@ -163,7 +161,6 @@ class ItemGrid extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(4.0),),
         child: _ItemGridTile(
           title: title,
-          hasImage: hasImage,
           imageURL: imageURL,
         ),
         onTap: onTap,
@@ -176,25 +173,22 @@ class _ItemGridTile extends StatelessWidget {
   const _ItemGridTile({
     Key? key,
     required this.title,
-    required this.hasImage,
     this.imageURL,
   }) : super(key: key);
 
   final String title;
-  final bool hasImage;
   final String? imageURL;
 
   @override
   Widget build(BuildContext context) {
 
     return GridTile(
-      child: hasImage?
-        CachedImage(
-          imageURL: imageURL?? '',
-          fit: BoxFit.cover,
-          backgroundColour: Colors.black87,
-          applyGradient: false,
-        ) : Container(),
+      child: CachedImage(
+        imageURL: imageURL?? '',
+        fit: BoxFit.cover,
+        backgroundColour: Colors.black87,
+        applyGradient: false,
+      ),
       footer: Container(
         color: Colors.black87.withOpacity(0.5),
         child: Text(title, style: const TextStyle(fontSize: 18.0, color: Colors.white),),

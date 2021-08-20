@@ -20,11 +20,13 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
     required this.relationName,
     required this.relationTypeName,
     this.trailingBuilder,
+    this.limitHeight = true,
   }) : super(key: key);
 
   final String relationName;
   final String relationTypeName;
   final List<Widget> Function(List<W>)? trailingBuilder;
+  final bool limitHeight;
 
   final bool isSingleList = false;
 
@@ -128,6 +130,7 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
                 updateDelete: _deleteRelationFunction(context),
                 trailingBuilder: trailingBuilder,
                 onListSearch: state.otherItems.isNotEmpty? _onLocalSearchTap(context, state.otherItems) : null,
+                limitHeight: limitHeight,
               );
 
           }
@@ -416,6 +419,7 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
     required this.updateDelete,
     this.trailingBuilder,
     this.onListSearch,
+    this.limitHeight = true,
   }) : super(key: key);
 
   final List<W> items;
@@ -427,6 +431,7 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
   final void Function(W) updateDelete;
   final List<Widget> Function(List<W>)? trailingBuilder;
   final void Function()? onListSearch;
+  final bool limitHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -434,9 +439,9 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
     return _ResultsList(
       headerText: relationName + ' (' + items.length.toString() + ')',
       resultList: Container(
-        constraints: BoxConstraints.loose(
+        constraints: limitHeight? BoxConstraints.loose(
           Size.fromHeight( (MediaQuery.of(context).size.height / 3), ),
-        ),
+        ) : null,
         child: ListView.builder(
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),

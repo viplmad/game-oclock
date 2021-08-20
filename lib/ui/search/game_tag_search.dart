@@ -86,10 +86,10 @@ class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBo
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).tagString;
+  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagString;
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).tagsString;
+  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagsString;
 
   @override
   GameTag createItem(String query) => GameTag(id: -1, name: query);

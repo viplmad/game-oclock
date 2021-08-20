@@ -24,7 +24,11 @@ class Game extends Item {
     required this.isBackup,
     required this.firstFinishDate,
     required this.totalTime,
-  }) : this.uniqueId = 'G$id';
+  }) : super(
+    uniqueId: 'G$id',
+    hasImage: true,
+    queryableTerms: name + edition,
+  );
 
   final int id;
   final String name;
@@ -42,15 +46,7 @@ class Game extends Item {
   final Duration totalTime;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = true;
-  @override
   ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
-
-  @override
-  String get queryableTerms => <String>[this.name, this.edition].join(',');
 
   @override
   Game copyWith({

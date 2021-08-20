@@ -49,6 +49,8 @@ abstract class GameCollectionLocalisations {
   String get searchInViewString;
   String get statsInViewString;
 
+  String get gameListsString;
+
   String newString(String typeString);
   String get openString;
   String addedString(String typeString);
@@ -222,10 +224,10 @@ abstract class GameCollectionLocalisations {
   }
   //#endregion System
 
-  //#region Tag
-  String get tagString;
-  String get tagsString;
-  //#endregion Tag
+  //#region GameTag
+  String get gameTagString;
+  String get gameTagsString;
+  //#endregion GameTag
 
   //#region PurchaseType
   String get purchaseTypeString;

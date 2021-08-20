@@ -5,21 +5,17 @@ class GameTag extends Item {
   const GameTag({
     required this.id,
     required this.name,
-  }) : this.uniqueId = 'Tg$id';
+  }) : super(
+    uniqueId: 'T$id',
+    hasImage: false,
+    queryableTerms: name,
+  );
 
   final int id;
   final String name;
 
   @override
-  final String uniqueId;
-
-  @override
-  final bool hasImage = false;
-  @override
   final ItemImage image = const ItemImage(null, null);
-
-  @override
-  String get queryableTerms => this.name;
 
   @override
   GameTag copyWith({
