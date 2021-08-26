@@ -149,13 +149,9 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
   Future<GameEntity?> findOneFromDLC(DLCID dlcId) {
 
     final Query query = DLCQuery.selectGameByDLC(dlcId);
-    try {
-      return readItem(
-        query: query,
-      );
-    } on EmptyResultSetException {
-      return Future<GameEntity?>.value(null);
-    }
+    return readItemNullable(
+      query: query,
+    );
 
   }
 

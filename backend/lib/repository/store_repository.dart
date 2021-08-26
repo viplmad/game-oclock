@@ -72,13 +72,9 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   Future<StoreEntity?> findOneFromPurchase(PurchaseID id) {
 
     final Query query = PurchaseQuery.selectStoreByPurchase(id);
-    try {
-      return readItem(
-        query: query,
-      );
-    } on EmptyResultSetException {
-      return Future<StoreEntity?>.value(null);
-    }
+    return readItemNullable(
+      query: query,
+    );
 
   }
   //#endregion READ

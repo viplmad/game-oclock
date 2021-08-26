@@ -1,5 +1,10 @@
 class UnsupportedOperationException implements Exception {
-  UnsupportedOperationException(this.cause);
+  UnsupportedOperationException(this.message);
 
-  final String cause;
+  final String message;
+
+  @override
+  String toString() {
+    return 'UnsupportedOperationException: $message';
+  }
 }

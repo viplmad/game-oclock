@@ -1,5 +1,10 @@
 class EmptyResultSetException implements Exception {
-  EmptyResultSetException(this.cause);
+  EmptyResultSetException(this.message);
 
-  final String cause;
+  final String message;
+
+  @override
+  String toString() {
+    return 'EmptyResultSetException: $message';
+  }
 }

@@ -67,6 +67,14 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   }
 
   @protected
+  Future<T?> readItemNullable({required Query query}) {
+
+    return itemConnector.execute(query)
+      .asStream().map( _listMapToSingleNullable ).first;
+
+  }
+
+  @protected
   Future<List<T>> readItemList({required Query query}) {
 
     return itemConnector.execute(query)
@@ -162,6 +170,14 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
     }
 
     return _listMapToList(results).first;
+  }
+
+  T? _listMapToSingleNullable(List<Map<String, Map<String, Object?>>> results) {
+    if(results.isEmpty) {
+      return null;
+    }
+
+    return _listMapToSingle(results);
   }
 
   ID? _listMapToID(List<Map<String, Map<String, Object?>>> results) {
