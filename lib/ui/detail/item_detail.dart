@@ -92,10 +92,12 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
   Widget build(BuildContext context) {
 
     return WillPopScope(
-      onWillPop: () {
+      onWillPop: () async {
 
-        if(onUpdate != null) { onUpdate!(_updatedItem); }
-        return Future<bool>.value(true);
+        if(onUpdate != null) {
+          onUpdate!(_updatedItem);
+        }
+        return true;
 
       },
       child: BlocListener<S, ItemDetailManagerState>(

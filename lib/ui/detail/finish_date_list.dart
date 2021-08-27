@@ -105,10 +105,12 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
               builder: (BuildContext context) {
 
                 return WillPopScope(
-                  onWillPop: () {
+                  onWillPop: () async {
 
-                    if(_hasUpdated) { onUpdate(); }
-                    return Future<bool>.value(true);
+                    if(_hasUpdated) {
+                      onUpdate();
+                    }
+                    return true;
 
                   },
                   child: AlertDialog(
