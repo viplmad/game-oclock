@@ -51,10 +51,11 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   const GameLocalSearch({
     Key? key,
     required List<Game> items,
-  }) : super(key: key, items: items);
-
-  @override
-  final String detailRouteName = gameDetailRoute;
+  }) : super(
+    key: key,
+    items: items,
+    detailRouteName: gameDetailRoute,
+  );
 
   @override
   GameListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {

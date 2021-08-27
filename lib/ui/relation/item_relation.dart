@@ -21,18 +21,21 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
     required this.relationTypeName,
     this.trailingBuilder,
     this.limitHeight = true,
+    this.isSingleList = false,
+    this.detailRouteName = '',
+    this.searchRouteName = '',
+    this.localSearchRouteName = '',
   }) : super(key: key);
 
   final String relationName;
   final String relationTypeName;
   final List<Widget> Function(List<W>)? trailingBuilder;
   final bool limitHeight;
+  final bool isSingleList;
 
-  final bool isSingleList = false;
-
-  String get detailRouteName;
-  String get searchRouteName;
-  String get localSearchRouteName;
+  final String detailRouteName;
+  final String searchRouteName;
+  final String localSearchRouteName;
 
   @override
   Widget build(BuildContext context) {

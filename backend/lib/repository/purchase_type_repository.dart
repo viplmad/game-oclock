@@ -8,10 +8,8 @@ import 'item_repository.dart';
 
 
 class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, PurchaseTypeID> {
-  const PurchaseTypeRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const PurchaseTypeRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: PurchaseTypeEntityData.table);
 
-  @override
-  final String recordName = PurchaseTypeEntityData.table;
   @override
   PurchaseTypeEntity entityFromMap(Map<String, Object?> map) => PurchaseTypeEntity.fromMap(map);
   @override

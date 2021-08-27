@@ -16,16 +16,16 @@ class GameTagGameRelationList extends _GameTagRelationList<Game> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder, limitHeight: false);
-
-  @override
-  final String detailRouteName = gameDetailRoute;
-
-  @override
-  final String searchRouteName = gameSearchRoute;
-
-  @override
-  final String localSearchRouteName = gameLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    limitHeight: false,
+    detailRouteName: gameDetailRoute,
+    searchRouteName: gameSearchRoute,
+    localSearchRouteName: gameLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
@@ -38,5 +38,19 @@ abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<Gam
     required String relationTypeName,
     List<Widget> Function(List<W>)? trailingBuilder,
     bool limitHeight = true,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder, limitHeight: limitHeight);
+    bool isSingleList = false,
+    String detailRouteName = '',
+    String searchRouteName = '',
+    String localSearchRouteName = '',
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    limitHeight: limitHeight,
+    isSingleList: isSingleList,
+    detailRouteName: detailRouteName,
+    searchRouteName: searchRouteName,
+    localSearchRouteName: localSearchRouteName,
+  );
 }

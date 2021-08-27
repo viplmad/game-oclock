@@ -51,10 +51,11 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   const DLCLocalSearch({
     Key? key,
     required List<DLC> items,
-  }) : super(key: key, items: items);
-
-  @override
-  final String detailRouteName = dlcDetailRoute;
+  }) : super(
+    key: key,
+    items: items,
+    detailRouteName: dlcDetailRoute,
+  );
 
   @override DLCListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 

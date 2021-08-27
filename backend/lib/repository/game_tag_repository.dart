@@ -8,10 +8,8 @@ import 'item_repository.dart';
 
 
 class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
-  const GameTagRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const GameTagRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameTagEntityData.table);
 
-  @override
-  final String recordName = GameTagEntityData.table;
   @override
   GameTagEntity entityFromMap(Map<String, Object?> map) => GameTagEntity.fromMap(map);
   @override

@@ -53,9 +53,6 @@ class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc
   }) : super(key: key, items: items);
 
   @override
-  final String detailRouteName = '';
-
-  @override
   void Function() onTap(BuildContext context, GameTag item) => () {};
 
   @override

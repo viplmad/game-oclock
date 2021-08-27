@@ -2,19 +2,16 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
 import 'package:backend/entity/entity.dart' show DLCID, GameEntity, GameEntityData, GameID, GameTagID, PlatformID, PurchaseID, GameView;
-import 'package:backend/utils/empty_result_set_exception.dart';
 
 import './query/query.dart' show GameQuery, DLCQuery, GamePlatformRelationQuery, GamePurchaseRelationQuery, GameTagRelationQuery;
 import 'item_repository.dart';
 
 
 class GameRepository extends ItemRepository<GameEntity, GameID> {
-  const GameRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const GameRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameEntityData.table);
 
   static const String _imagePrefix = 'header';
 
-  @override
-  final String recordName = GameEntityData.table;
   @override
   GameEntity entityFromMap(Map<String, Object?> map) => GameEntity.fromMap(map);
   @override

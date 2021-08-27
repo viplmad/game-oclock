@@ -8,12 +8,10 @@ import 'item_repository.dart';
 
 
 class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
-  const PlatformRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const PlatformRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: PlatformEntityData.table);
 
   static const String _imagePrefix = 'icon';
 
-  @override
-  final String recordName = PlatformEntityData.table;
   @override
   PlatformEntity entityFromMap(Map<String, Object?> map) => PlatformEntity.fromMap(map);
   @override

@@ -8,10 +8,8 @@ import 'item_repository.dart';
 
 
 class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLogID> {
-  GameTimeLogRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const GameTimeLogRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameTimeLogEntityData.table);
 
-  @override
-  final String recordName = GameTimeLogEntityData.table;
   @override
   GameTimeLogEntity entityFromMap(Map<String, Object?> map) => GameTimeLogEntity.fromMap(map);
   @override

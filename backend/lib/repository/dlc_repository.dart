@@ -8,12 +8,10 @@ import 'item_repository.dart';
 
 
 class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
-  const DLCRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const DLCRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: DLCEntityData.table);
 
   static const String _imagePrefix = 'header';
 
-  @override
-  final String recordName = DLCEntityData.table;
   @override
   DLCEntity entityFromMap(Map<String, Object?> map) => DLCEntity.fromMap(map);
   @override

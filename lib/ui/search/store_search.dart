@@ -51,10 +51,11 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   const StoreLocalSearch({
     Key? key,
     required List<Store> items,
-  }) : super(key: key, items: items);
-
-  @override
-  final String detailRouteName = storeDetailRoute;
+  }) : super(
+    key: key,
+    items: items,
+    detailRouteName: storeDetailRoute,
+  );
 
   @override
   StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {

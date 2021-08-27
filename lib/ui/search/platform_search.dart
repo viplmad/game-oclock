@@ -51,10 +51,11 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   const PlatformLocalSearch({
     Key? key,
     required List<Platform> items,
-  }) : super(key: key, items: items);
-
-  @override
-  final String detailRouteName = platformDetailRoute;
+  }) : super(
+    key: key,
+    items: items,
+    detailRouteName: platformDetailRoute,
+  );
 
   @override
   PlatformListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {

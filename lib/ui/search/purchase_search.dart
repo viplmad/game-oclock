@@ -51,10 +51,10 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   const PurchaseLocalSearch({
     Key? key,
     required List<Purchase> items,
-  }) : super(key: key, items: items);
-
-  @override
-  final String detailRouteName = purchaseDetailRoute;
+  }) : super(
+    key: key,
+    items: items,
+    detailRouteName: purchaseDetailRoute);
 
   @override
   PurchaseListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {

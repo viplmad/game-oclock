@@ -8,10 +8,8 @@ import 'item_repository.dart';
 
 
 class GameFinishRepository extends ItemRepository<GameFinishEntity, GameFinishID> {
-  GameFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const GameFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameFinishEntityData.table);
 
-  @override
-  final String recordName = GameFinishEntityData.table;
   @override
   GameFinishEntity entityFromMap(Map<String, Object?> map) => GameFinishEntity.fromMap(map);
   @override

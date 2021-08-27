@@ -2,19 +2,16 @@ import 'package:query/query.dart' show Query;
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
 import 'package:backend/entity/entity.dart' show PurchaseID, StoreEntity, StoreEntityData, StoreID, StoreView;
-import 'package:backend/utils/empty_result_set_exception.dart';
 
 import './query/query.dart' show StoreQuery, PurchaseQuery;
 import 'item_repository.dart';
 
 
 class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
-  const StoreRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector);
+  const StoreRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: StoreEntityData.table);
 
   static const String _imagePrefix = 'icon';
 
-  @override
-  final String recordName = StoreEntityData.table;
   @override
   StoreEntity entityFromMap(Map<String, Object?> map) => StoreEntity.fromMap(map);
   @override

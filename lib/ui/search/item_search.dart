@@ -65,11 +65,11 @@ abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEve
   const ItemLocalSearch({
     Key? key,
     required this.items,
+    this.detailRouteName = '',
   }) : super(key: key);
 
   final List<T> items;
-
-  String get detailRouteName;
+  final String detailRouteName;
 
   @override
   Widget build(BuildContext context) {

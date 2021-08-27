@@ -16,19 +16,16 @@ class PurchaseStoreRelationList extends _PurchaseRelationList<Store> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<Store>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final bool isSingleList = true;
-
-  @override
-  final String detailRouteName = storeDetailRoute;
-
-  @override
-  final String searchRouteName = storeSearchRoute;
-
-  @override
-  final String localSearchRouteName = storeLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    isSingleList: true,
+    detailRouteName: storeDetailRoute,
+    searchRouteName: storeSearchRoute,
+    localSearchRouteName: storeLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);
@@ -40,16 +37,15 @@ class PurchaseGameRelationList extends _PurchaseRelationList<Game> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final String detailRouteName = gameDetailRoute;
-
-  @override
-  final String searchRouteName = gameSearchRoute;
-
-  @override
-  final String localSearchRouteName = gameLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    detailRouteName: gameDetailRoute,
+    searchRouteName: gameSearchRoute,
+    localSearchRouteName: gameLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
@@ -61,16 +57,15 @@ class PurchaseDLCRelationList extends _PurchaseRelationList<DLC> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<DLC>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final String detailRouteName = dlcDetailRoute;
-
-  @override
-  final String searchRouteName = dlcSearchRoute;
-
-  @override
-  final String localSearchRouteName = dlcLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    detailRouteName: dlcDetailRoute,
+    searchRouteName: dlcSearchRoute,
+    localSearchRouteName: dlcLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
@@ -82,16 +77,14 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<PurchaseType>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final String detailRouteName = '';
-
-  @override
-  final String searchRouteName = purchaseTypeSearchRoute;
-
-  @override
-  final String localSearchRouteName = purchaseTypeLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    searchRouteName: purchaseTypeSearchRoute,
+    localSearchRouteName: purchaseTypeLocalSearchRoute,
+  );
 
   @override
   void Function()? onTap(BuildContext context, PurchaseType item) => null;
@@ -106,5 +99,20 @@ abstract class _PurchaseRelationList<W extends Item> extends ItemRelationList<Pu
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<W>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+    bool limitHeight = true,
+    bool isSingleList = false,
+    String detailRouteName = '',
+    String searchRouteName = '',
+    String localSearchRouteName = '',
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    limitHeight: limitHeight,
+    isSingleList: isSingleList,
+    detailRouteName: detailRouteName,
+    searchRouteName: searchRouteName,
+    localSearchRouteName: localSearchRouteName,
+  );
 }

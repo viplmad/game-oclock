@@ -8,10 +8,13 @@ import 'package:backend/utils/empty_result_set_exception.dart';
 
 
 abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
-  const ItemRepository(this.itemConnector, this.imageConnector);
+  const ItemRepository(this.itemConnector, this.imageConnector, {
+    required this.recordName,
+  });
 
   final ItemConnector itemConnector;
   final ImageConnector imageConnector;
+  final String recordName;
 
   Future<Object?> open() => itemConnector.open();
   Future<Object?> close() => itemConnector.close();
@@ -21,7 +24,6 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   void reconnect() => itemConnector.reconnect();
 
-  String get recordName;
   T entityFromMap(Map<String, Object?> map);
   ID idFromMap(Map<String, Object?> map);
 

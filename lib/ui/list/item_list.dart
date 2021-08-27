@@ -30,7 +30,6 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-
   @override
   Widget build(BuildContext context) {
 

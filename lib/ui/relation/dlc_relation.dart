@@ -16,19 +16,16 @@ class DLCGameRelationList extends _DLCRelationList<Game> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final bool isSingleList = true;
-
-  @override
-  final String detailRouteName = gameDetailRoute;
-
-  @override
-  final String searchRouteName = gameSearchRoute;
-
-  @override
-  final String localSearchRouteName = gameLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    isSingleList: true,
+    detailRouteName: gameDetailRoute,
+    searchRouteName: gameSearchRoute,
+    localSearchRouteName: gameLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
@@ -40,16 +37,15 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<Purchase>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
-
-  @override
-  final String detailRouteName = purchaseDetailRoute;
-
-  @override
-  final String searchRouteName = purchaseSearchRoute;
-
-  @override
-  final String localSearchRouteName = purchaseLocalSearchRoute;
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    detailRouteName: purchaseDetailRoute,
+    searchRouteName: purchaseSearchRoute,
+    localSearchRouteName: purchaseLocalSearchRoute,
+  );
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
@@ -61,5 +57,20 @@ abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W,
     required String relationName,
     required String relationTypeName,
     List<Widget> Function(List<W>)? trailingBuilder,
-  }) : super(key: key, relationName: relationName, relationTypeName: relationTypeName, trailingBuilder: trailingBuilder);
+    bool limitHeight = true,
+    bool isSingleList = false,
+    String detailRouteName = '',
+    String searchRouteName = '',
+    String localSearchRouteName = '',
+  }) : super(
+    key: key,
+    relationName: relationName,
+    relationTypeName: relationTypeName,
+    trailingBuilder: trailingBuilder,
+    limitHeight: limitHeight,
+    isSingleList: isSingleList,
+    detailRouteName: detailRouteName,
+    searchRouteName: searchRouteName,
+    localSearchRouteName: localSearchRouteName,
+  );
 }
