@@ -9,6 +9,7 @@ import 'package:backend/entity/entity.dart' show GameFinishEntity, GameID, GameT
 import 'package:backend/model/model.dart' show GameFinish, GameTimeLog;
 import 'package:backend/mapper/mapper.dart' show GameFinishMapper, GameTimeLogMapper;
 import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameFinishRepository, GameTimeLogRepository;
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
@@ -52,6 +53,10 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     } else if(event is UpdateSelectedDate) {
 
       yield* _mapUpdateSelectedDateToState(event);
+
+    } else if(event is UpdateCalendarRange) {
+
+      yield* _mapUpdateRangeToState(event);
 
     } else if(event is UpdateCalendarStyle) {
 
@@ -112,19 +117,16 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final Set<DateTime> logDates = timeLogs.fold(SplayTreeSet<DateTime>(), (Set<DateTime> previousDates, GameTimeLog log) => previousDates..add(log.dateTime));
 
       DateTime selectedDate = DateTime.now();
-      List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
       if(logDates.isNotEmpty) {
         selectedDate = logDates.last;
-
-        selectedTimeLogs = timeLogs
-            .where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate))
-            .toList(growable: false)..sort();
       }
 
-      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDate(selectedDate));
+      final CalendarRange range = CalendarRange.Day;
+      final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, range);
 
-      final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
-      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+      final Duration selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+
+      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDay(selectedDate));
 
       yield SingleCalendarLoaded(
         timeLogs,
@@ -134,6 +136,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
       );
 
     } catch (e) {
@@ -150,19 +153,25 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
       final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
       final List<GameFinish> finishDates = (state as SingleCalendarLoaded).finishDates;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
       final DateTime previousSelectedDate = (state as SingleCalendarLoaded).selectedDate;
+
       List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
       Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      if((range == CalendarRange.Day && !event.date.isSameDay(previousSelectedDate))
+        || (range == CalendarRange.Week && !event.date.isInWeekOf(previousSelectedDate))
+        || (range == CalendarRange.Month && !event.date.isInMonthAndYearOf(previousSelectedDate))
+        || (range == CalendarRange.Year && !event.date.isInYearOf(previousSelectedDate))) {
+        selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, event.date, range);
 
-      if((style == CalendarStyle.List) || (style == CalendarStyle.Graph && !event.date.isInWeekOf(previousSelectedDate))) {
-        selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, event.date, style);
-
-        final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
-        selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+        selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+      } else {
+        selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
+        selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
       }
 
-      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDate(event.date));
+      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDay(event.date));
 
       yield SingleCalendarLoaded(
         timeLogs,
@@ -172,6 +181,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
         style,
       );
     }
@@ -215,7 +225,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime? previousDate;
       if(logDates.isNotEmpty) {
         final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
 
         for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
@@ -241,7 +251,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime? nextDate;
       if(logDates.isNotEmpty) {
         final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
 
         for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {
@@ -258,7 +268,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateStyleToState(UpdateCalendarStyle event) async* {
+  Stream<CalendarState> _mapUpdateRangeToState(UpdateCalendarRange event) async* {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -266,14 +276,19 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<GameFinish> finishDates = (state as SingleCalendarLoaded).finishDates;
       final DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
       final bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
+      final CalendarStyle style = (state as SingleCalendarLoaded).style;
+      final CalendarRange previousRange = (state as SingleCalendarLoaded).range;
 
-      final int rotatingIndex = ((state as SingleCalendarLoaded).style.index + 1) % CalendarStyle.values.length;
-      final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
+      List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
+      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      if(event.range != previousRange) {
+        selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, event.range);
 
-      final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInStyle(timeLogs, selectedDate, updatedStyle);
-
-      final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
-      final Duration selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+        selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+      } else {
+        selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
+        selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      }
 
       yield SingleCalendarLoaded(
         timeLogs,
@@ -283,6 +298,37 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        event.range,
+        style,
+      );
+    }
+
+  }
+
+  Stream<CalendarState> _mapUpdateStyleToState(UpdateCalendarStyle event) async* {
+
+    if(state is SingleCalendarLoaded) {
+      final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
+      final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
+      final List<GameFinish> finishDates = (state as SingleCalendarLoaded).finishDates;
+      final DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
+      final List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
+      final bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
+      final Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
+
+      final int rotatingIndex = ((state as SingleCalendarLoaded).style.index + 1) % CalendarStyle.values.length;
+      final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
+
+      yield SingleCalendarLoaded(
+        timeLogs,
+        logDates,
+        finishDates,
+        selectedDate,
+        selectedTimeLogs,
+        isSelectedDateFinish,
+        selectedTotalTime,
+        range,
         updatedStyle,
       );
     }
@@ -299,6 +345,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       event.selectedTimeLogs,
       event.isSelectedDateFinish,
       event.selectedTotalTime,
+      event.range,
       event.style,
     );
 
@@ -341,23 +388,42 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
       List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
-      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
 
+      final GameTimeLog addedGameLog = managerState.otherItem;
+
       if(timeLogs.isEmpty) {
-        selectedDate = managerState.otherItem.dateTime;
+        selectedDate = addedGameLog.dateTime;
       }
 
-      final List<GameTimeLog> updatedTimeLogs = List<GameTimeLog>.from(timeLogs)..add(managerState.otherItem);
-      final Set<DateTime> updatedLogDates = SplayTreeSet<DateTime>.from(logDates)..add(managerState.otherItem.dateTime);
+      final List<GameTimeLog> updatedTimeLogs = List<GameTimeLog>.from(timeLogs)..add(addedGameLog);
+      final Set<DateTime> updatedLogDates = SplayTreeSet<DateTime>.from(logDates)..add(addedGameLog.dateTime);
 
-      if((style == CalendarStyle.List && managerState.otherItem.dateTime.isSameDate(selectedDate))
-          || (style == CalendarStyle.Graph && managerState.otherItem.dateTime.isInWeekOf(selectedDate))) {
-        selectedTimeLogs = List<GameTimeLog>.from(selectedTimeLogs)..add(managerState.otherItem);
+      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      if(range == CalendarRange.Day && addedGameLog.dateTime.isSameDay(selectedDate)) {
+        selectedTimeLogs = List<GameTimeLog>.from(selectedTimeLogs)..add(addedGameLog);
         selectedTimeLogs..sort();
 
-        final int selectedTotalTimeSeconds = selectedTimeLogs.fold(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
-        selectedTotalTime = Duration(seconds: selectedTotalTimeSeconds);
+        selectedTotalTime = selectedTotalTime + addedGameLog.time;
+      } else if(range == CalendarRange.Week && addedGameLog.dateTime.isInWeekOf(selectedDate)) {
+        final int weekIndex = addedGameLog.dateTime.weekday - 1;
+        final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(weekIndex);
+        selectedTimeLogs[weekIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time + addedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime + addedGameLog.time;
+      } else if(range == CalendarRange.Month && addedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
+        final int monthIndex = addedGameLog.dateTime.day - 1;
+        final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(monthIndex);
+        selectedTimeLogs[monthIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time + addedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime + addedGameLog.time;
+      } else if(range == CalendarRange.Year && addedGameLog.dateTime.isInYearOf(selectedDate)) {
+        final int yearIndex = addedGameLog.dateTime.month - 1;
+        final GameTimeLog monthTimeLog = selectedTimeLogs.elementAt(yearIndex);
+        selectedTimeLogs[yearIndex] = GameTimeLog(dateTime: monthTimeLog.dateTime, time: monthTimeLog.time + addedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime + addedGameLog.time;
       }
 
       add(UpdateSingleCalendar(
@@ -368,6 +434,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
         style,
       ));
     }
@@ -383,27 +450,48 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
       List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
       final bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
-      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
 
+      final GameTimeLog deletedGameLog = managerState.otherItem;
+
       final List<GameTimeLog> updatedTimeLogs = timeLogs
-          .where((GameTimeLog log) => log.dateTime != managerState.otherItem.dateTime)
+          .where((GameTimeLog log) => log.dateTime != deletedGameLog.dateTime)
           .toList(growable: false);
 
-      if(!updatedTimeLogs.any((GameTimeLog log) => log.dateTime.isSameDate(managerState.otherItem.dateTime))) {
-        logDates.removeWhere((DateTime date) => date.isSameDate(managerState.otherItem.dateTime));
+      if(!updatedTimeLogs.any((GameTimeLog log) => log.dateTime.isSameDay(deletedGameLog.dateTime))) {
+        logDates.removeWhere((DateTime date) => date.isSameDay(deletedGameLog.dateTime));
       }
 
       if(updatedTimeLogs.isEmpty) {
         selectedDate = DateTime.now();
       }
 
-      if(managerState.otherItem.dateTime.isInWeekOf(selectedDate)) {
+      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      if(range == CalendarRange.Day && deletedGameLog.dateTime.isSameDay(selectedDate)) {
         selectedTimeLogs = selectedTimeLogs
-            .where((GameTimeLog log) => log.dateTime != managerState.otherItem.dateTime)
+            .where((GameTimeLog log) => !log.dateTime.isSameDay(deletedGameLog.dateTime))
             .toList(growable: false);
 
-        selectedTotalTime = Duration(seconds: selectedTotalTime.inSeconds - managerState.otherItem.time.inSeconds);
+        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
+      } else if(range == CalendarRange.Week && deletedGameLog.dateTime.isInWeekOf(selectedDate)) {
+        final int weekIndex = deletedGameLog.dateTime.weekday - 1;
+        final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(weekIndex);
+        selectedTimeLogs[weekIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time - deletedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
+      } else if(range == CalendarRange.Month && deletedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
+        final int monthIndex = deletedGameLog.dateTime.day - 1;
+        final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(monthIndex);
+        selectedTimeLogs[monthIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time - deletedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
+      } else if(range == CalendarRange.Year && deletedGameLog.dateTime.isInYearOf(selectedDate)) {
+        final int yearIndex = deletedGameLog.dateTime.month - 1;
+        final GameTimeLog monthTimeLog = selectedTimeLogs.elementAt(yearIndex);
+        selectedTimeLogs[yearIndex] = GameTimeLog(dateTime: monthTimeLog.dateTime, time: monthTimeLog.time - deletedGameLog.time);
+
+        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
       }
 
       add(UpdateSingleCalendar(
@@ -414,6 +502,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
         style,
       ));
     }
@@ -428,13 +517,14 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<GameFinish> finishDates = (state as SingleCalendarLoaded).finishDates;
       final DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
       final List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
-      bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
       final Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
+      bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
 
       final List<GameFinish> updatedFinishDates = List<GameFinish>.from(finishDates)..add(managerState.otherItem);
 
-      isSelectedDateFinish = isSelectedDateFinish || managerState.otherItem.dateTime.isSameDate(selectedDate);
+      isSelectedDateFinish = isSelectedDateFinish || managerState.otherItem.dateTime.isSameDay(selectedDate);
 
       add(UpdateSingleCalendar(
         timeLogs,
@@ -444,6 +534,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
         style,
       ));
     }
@@ -458,15 +549,16 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final List<GameFinish> finishDates = (state as SingleCalendarLoaded).finishDates;
       final DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
       final List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
-      bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
       final Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
+      bool isSelectedDateFinish = (state as SingleCalendarLoaded).isSelectedDateFinish;
 
       final List<GameFinish> updatedFinishDates = finishDates
-          .where((GameFinish finish) => !finish.dateTime.isSameDate(managerState.otherItem.dateTime))
+          .where((GameFinish finish) => !finish.dateTime.isSameDay(managerState.otherItem.dateTime))
           .toList(growable: false);
 
-      isSelectedDateFinish = !(isSelectedDateFinish && managerState.otherItem.dateTime.isSameDate(selectedDate));
+      isSelectedDateFinish = !(isSelectedDateFinish && managerState.otherItem.dateTime.isSameDay(selectedDate));
 
       add(UpdateSingleCalendar(
         timeLogs,
@@ -476,38 +568,83 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedTimeLogs,
         isSelectedDateFinish,
         selectedTotalTime,
+        range,
         style,
       ));
     }
 
   }
 
-  List<GameTimeLog> _selectedTimeLogsInStyle(List<GameTimeLog> timeLogs, DateTime selectedDate, CalendarStyle style) {
+  List<GameTimeLog> _selectedTimeLogsInRange(List<GameTimeLog> timeLogs, DateTime selectedDate, CalendarRange range) {
     List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
 
-    switch(style) {
-      case CalendarStyle.List:
+    switch(range) {
+      case CalendarRange.Day:
         selectedTimeLogs = timeLogs
-            .where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate))
-            .toList(growable: false);
+              .where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate))
+              .toList(growable: false);
         break;
-      case CalendarStyle.Graph:
+      case CalendarRange.Week: // Create a List of 7 timelogs -> sum of each day of week
         final DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
 
-        final Duration dayDuration = const Duration(days: 1);
         DateTime dateOfWeek = mondayOfSelectedDate;
-        for(int index = 0; index < 7; index++) {
-          final Iterable<GameTimeLog> dayTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDate(dateOfWeek));
+        for(int weekIndex = 0; weekIndex < 7; weekIndex++) {
+          final Iterable<GameTimeLog> dayTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDay(dateOfWeek));
 
           if(dayTimeLogs.isNotEmpty) {
-            selectedTimeLogs.addAll(dayTimeLogs);
+            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
+
+            selectedTimeLogs.add(
+              GameTimeLog(dateTime: dateOfWeek, time: dayTimeSum),
+            );
           } else {
             selectedTimeLogs.add(
               GameTimeLog(dateTime: dateOfWeek, time: const Duration()),
             );
           }
 
-          dateOfWeek = dateOfWeek.add(dayDuration);
+          dateOfWeek = dateOfWeek.addDays(1);
+        }
+        break;
+      case CalendarRange.Month: // Create a List of 31* timelogs -> sum of each day of month
+        final DateTime firstDayOfSelectedMonth = selectedDate.getFirstDayOfMonth();
+
+        DateTime dateOfMonth = firstDayOfSelectedMonth;
+        while(dateOfMonth.isInMonthAndYearOf(selectedDate)) { // While month does not change
+          final Iterable<GameTimeLog> dayTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDay(dateOfMonth));
+
+          if(dayTimeLogs.isNotEmpty) {
+            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
+
+            selectedTimeLogs.add(
+              GameTimeLog(dateTime: dateOfMonth, time: dayTimeSum),
+            );
+          } else {
+            selectedTimeLogs.add(
+              GameTimeLog(dateTime: dateOfMonth, time: const Duration()),
+            );
+          }
+
+          dateOfMonth = dateOfMonth.addDays(1);
+        }
+        break;
+      case CalendarRange.Year: // Create a List of 12 timelogs -> sum of each month of year
+        for(int monthIndex = 1; monthIndex <= 12; monthIndex++) {
+          final DateTime firstDayOfMonth = DateTime(selectedDate.year, monthIndex, 1);
+
+          final Iterable<GameTimeLog> monthTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isInMonthAndYearOf(firstDayOfMonth));
+
+          if(monthTimeLogs.isNotEmpty) {
+            final Duration dayTimeSum = monthTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
+
+            selectedTimeLogs.add(
+              GameTimeLog(dateTime: firstDayOfMonth, time: dayTimeSum),
+            );
+          } else {
+            selectedTimeLogs.add(
+              GameTimeLog(dateTime: firstDayOfMonth, time: const Duration()),
+            );
+          }
         }
         break;
     }

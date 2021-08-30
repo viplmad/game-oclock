@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show GameStatus, Manufacturer, PlatformType;
+import 'package:backend/model/calendar_range.dart';
 
 import 'localisations_en.dart';
 import 'localisations_es.dart';
@@ -45,6 +46,7 @@ abstract class GameCollectionLocalisations {
   String get changeOrderString;
   String get changeStyleString;
   String get changeViewString;
+  String get changeRangeString;
   String get calendarView;
   String get searchInViewString;
   String get statsInViewString;
@@ -81,8 +83,10 @@ abstract class GameCollectionLocalisations {
 
   String get generalString;
   String get changeYearString;
-  List<String> get shortMonths;
+  List<String> get daysOfWeek;
   List<String> get shortDaysOfWeek;
+  List<String> get months;
+  List<String> get shortMonths;
   //#endregion Common
 
   //#region Game
@@ -106,6 +110,7 @@ abstract class GameCollectionLocalisations {
   String get saveFolderFieldString;
   String get screenshotFolderFieldString;
   String get backupFieldString;
+
   String get singleCalendarViewString;
   String get multiCalendarViewString;
   String get editTimeString;
@@ -116,7 +121,7 @@ abstract class GameCollectionLocalisations {
   String get previousTimeLog;
   String get nextTimeLog;
   String get emptyTimeLogsString;
-  String get weekString;
+  String rangeString(CalendarRange range);
 
   String get playingViewString;
   String get nextUpViewString;

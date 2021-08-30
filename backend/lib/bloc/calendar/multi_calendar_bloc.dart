@@ -123,10 +123,10 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(logDates.isNotEmpty) {
         selectedDate = logDates.last;
 
-        if(logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
+        if(logDates.any((DateTime date) => date.isSameDay(selectedDate))) {
           for(final GameWithLogs gameWithLogs in gamesWithLogs) {
             final List<GameTimeLog> logs = gameWithLogs.timeLogs
-                .where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate))
+                .where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate))
                 .toList(growable: false);
 
             if(logs.isNotEmpty) {
@@ -216,9 +216,9 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final DateTime selectedDate = event.date;
 
-      if(logDates.isNotEmpty && logDates.any((DateTime date) => date.isSameDate(selectedDate))) {
+      if(logDates.isNotEmpty && logDates.any((DateTime date) => date.isSameDay(selectedDate))) {
         for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-          final List<GameTimeLog> logs = gameWithLogs.timeLogs.where((GameTimeLog log) => log.dateTime.isSameDate(selectedDate)).toList(growable: false);
+          final List<GameTimeLog> logs = gameWithLogs.timeLogs.where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate)).toList(growable: false);
 
           if(logs.isNotEmpty) {
             selectedGamesWithLogs.add(
@@ -284,7 +284,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime? previousDate;
       if(logDates.isNotEmpty) {
         final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
 
         for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
@@ -310,7 +310,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       DateTime? nextDate;
       if(logDates.isNotEmpty) {
         final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDate(selectedDate));
+        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
         selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
 
         for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {

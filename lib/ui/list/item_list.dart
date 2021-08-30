@@ -66,7 +66,7 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
       icon: const Icon(Icons.view_carousel),
       tooltip: GameCollectionLocalisations.of(context).changeViewString,
       itemBuilder: (BuildContext context) {
-        return views.map( (String view) {
+        return views.map<PopupMenuItem<int>>( (String view) {
           return PopupMenuItem<int>(
             child: ListTile(
               title: Text(view),

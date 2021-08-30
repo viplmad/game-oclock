@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart' show GameStatus, PlatformType;
+import 'package:backend/model/calendar_range.dart';
 
 import 'localisations.dart';
 
@@ -59,6 +60,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String changeStyleString = 'Change Style';
   @override
   final String changeViewString = 'Change View';
+  @override
+  final String changeRangeString = 'Change Range';
   @override
   final String calendarView = 'Calendar View';
   @override
@@ -136,6 +139,41 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String changeYearString = 'Change year';
   @override
+  final List<String> daysOfWeek = const <String>[
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  @override
+  final List<String> shortDaysOfWeek = const <String>[
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+  @override
+  final List<String> months = const <String>[
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  @override
   final List<String> shortMonths = const <String>[
     'Jan',
     'Feb',
@@ -149,16 +187,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     'Oct',
     'Nov',
     'Dec',
-  ];
-  @override
-  final List<String> shortDaysOfWeek = const <String>[
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
   ];
   //#endregion Common
 
@@ -215,6 +243,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String screenshotFolderFieldString = 'Screenshot Folder';
   @override
   final String backupFieldString = 'Backup';
+
   @override
   String get singleCalendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
   @override
@@ -236,7 +265,18 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get emptyTimeLogsString => 'No $timeLogsFieldString';
   @override
-  final String weekString = 'Week';
+  String rangeString(CalendarRange range) {
+    switch(range){
+      case CalendarRange.Day:
+        return 'Day';
+      case CalendarRange.Week:
+        return 'Week';
+      case CalendarRange.Month:
+        return 'Month';
+      case CalendarRange.Year:
+        return 'Year';
+    }
+  }
 
   @override
   final String playingViewString = 'Playing';
@@ -452,8 +492,22 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    final String hourString = hoursString(duration.inHours);
-    final String minuteString = minutesString((duration.inMinutes - (duration.inHours * 60)));
+    final int hours = duration.inHours;
+    final int minutes = (duration.inMinutes - (hours * 60));
+
+    if(hours == 0 && minutes == 0) {
+      return '0';
+    }
+
+    final String hourString = hoursString(hours);
+    final String minuteString = minutesString(minutes);
+
+    if(hours == 0) {
+      return minuteString;
+    } else if(minutes == 0) {
+      return hourString;
+    }
+
     return '$hourString $minuteString';
   }
   @override

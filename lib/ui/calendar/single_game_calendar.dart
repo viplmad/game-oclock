@@ -5,7 +5,8 @@ import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:duration_picker/duration_picker.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show GameTimeLog, GameFinish;
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
 import 'package:backend/repository/repository.dart';
@@ -86,7 +87,7 @@ class SingleGameCalendar extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
-          actions: <IconButton>[
+          actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),
               tooltip: GameCollectionLocalisations.of(context).firstTimeLog,
@@ -113,6 +114,25 @@ class SingleGameCalendar extends StatelessWidget {
               tooltip: GameCollectionLocalisations.of(context).lastTimeLog,
               onPressed: () {
                 _bloc.add(UpdateSelectedDateLast());
+              },
+            ),
+            PopupMenuButton<CalendarRange>(
+              icon: const Icon(Icons.date_range),
+              tooltip: GameCollectionLocalisations.of(context).changeRangeString,
+              itemBuilder: (BuildContext context) {
+                return CalendarRange.values.map<PopupMenuItem<CalendarRange>>( (CalendarRange range) {
+                  return PopupMenuItem<CalendarRange>(
+                    child: ListTile(
+                      title: Text(GameCollectionLocalisations.of(context).rangeString(range)),
+                    ),
+                    value: range,
+                  );
+                }).toList(growable: false);
+              },
+              onSelected: (CalendarRange range) {
+                _bloc.add(
+                  UpdateCalendarRange(range)
+                );
               },
             ),
             IconButton(
@@ -386,10 +406,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
-                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).weekString + ')' : '')),
+                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.range == CalendarRange.Day && state.style == CalendarStyle.List)? '' : ' (' + GameCollectionLocalisations.of(context).rangeString(state.range) + ')')),
                     trailing: Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)),
                   ),
-                  Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedTimeLogs) : _buildEventGraph(context, state.selectedTimeLogs)),
+                  Expanded(child: (state.style == CalendarStyle.List)? _buildTimeLogsList(context, state.selectedTimeLogs, state.range) : _buildTimeLogsGraph(context, state.selectedTimeLogs, state.range)),
                 ],
               );
 
@@ -424,7 +444,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
       lastDay: lastDate,
       focusedDay: selectedDate,
       selectedDayPredicate: (DateTime day) {
-        return day.isSameDate(selectedDate);
+        return day.isSameDay(selectedDate);
       },
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         BlocProvider.of<SingleCalendarBloc>(context).add(
@@ -434,10 +454,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
+        return logDates.where((DateTime logDate) => date.isSameDay(logDate)).toList(growable: false);
       },
       holidayPredicate: (DateTime date) {
-        return finishDates.any((GameFinish finish) => date.isSameDate(finish.dateTime));
+        return finishDates.any((GameFinish finish) => date.isSameDay(finish.dateTime));
       },
       startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
       weekendDays: const <int>[
@@ -508,7 +528,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   }
 
-  Widget _buildEventList(BuildContext context, List<GameTimeLog> timeLogs) {
+  Widget _buildTimeLogsList(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
 
     if(timeLogs.isEmpty) {
       return Center(
@@ -521,58 +541,123 @@ class _SingleGameCalendarBody extends StatelessWidget {
       itemCount: timeLogs.length,
       itemBuilder: (BuildContext context, int index) {
         final GameTimeLog timeLog = timeLogs.elementAt(index);
-        final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + GameCollectionLocalisations.of(context).durationString(timeLog.time);
+        final String durationString = GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
-        return DismissibleItem(
-          dismissibleKey: timeLog.uniqueId,
-          itemWidget: ListTile(
-            title: Text(timeLogString),
-            trailing: IconButton(
-              icon: const Icon(Icons.link_off),
-              onPressed: () {
-                BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
-                  DeleteItemRelation<GameTimeLog>(
-                    timeLog,
-                  ),
-                );
-              },
-            ),
-          ),
-          onDismissed: (DismissDirection direction) {
-            BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
-              DeleteItemRelation<GameTimeLog>(
-                timeLog,
+        if(range == CalendarRange.Day) {
+         final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + durationString;
+
+          return DismissibleItem(
+            dismissibleKey: timeLog.uniqueId,
+            itemWidget: ListTile(
+              title: Text(timeLogString),
+              trailing: IconButton(
+                icon: const Icon(Icons.link_off),
+                onPressed: () {
+                  BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+                    DeleteItemRelation<GameTimeLog>(
+                      timeLog,
+                    ),
+                  );
+                },
               ),
-            );
-          },
-          dismissIcon: Icons.link_off,
-        );
+            ),
+            onDismissed: (DismissDirection direction) {
+              BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+                DeleteItemRelation<GameTimeLog>(
+                  timeLog,
+                ),
+              );
+            },
+            dismissIcon: Icons.link_off,
+          );
+        } else {
+          String rangeString = '';
+          if(range == CalendarRange.Week) {
+            rangeString = GameCollectionLocalisations.of(context).daysOfWeek.elementAt(index);
+          } else if(range == CalendarRange.Month) {
+            rangeString = index.toString();
+          } else if(range == CalendarRange.Year) {
+            rangeString = GameCollectionLocalisations.of(context).months.elementAt(index);
+          }
+          final String timeLogString = rangeString + ' - ' + durationString;
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+            child: ListTile(
+              title: Text(timeLogString),
+            ),
+          );
+        }
       },
     );
 
   }
 
-  Widget _buildEventGraph(BuildContext context, List<GameTimeLog> timeLogs) {
-    final List<int> values = <int>[];
+  Widget _buildTimeLogsGraph(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
+    List<int> values = <int>[];
+    List<String> labels = <String>[];
 
-    final List<DateTime> distinctLogDates = <DateTime>[];
-    timeLogs.forEach((GameTimeLog log) {
-      if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
-        distinctLogDates.add(log.dateTime);
+    if(range == CalendarRange.Day) {
+      // Create list where each entry is the time in an hour
+      values = List<int>.filled(24, 0, growable: false);
+      timeLogs.forEach( (GameTimeLog log) {
+        int currentHour = log.dateTime.hour;
+        final int pendingMinToChangeHour = 60 - log.dateTime.minute;
+        final int logMin = log.time.inMinutes;
+
+        if(pendingMinToChangeHour > logMin) {
+          // Not enough time to change hour, put the whole log time
+          values[currentHour] = logMin;
+        } else {
+          // Enough time, put time to change hour
+          values[currentHour] = pendingMinToChangeHour;
+
+          // Now compute for next hours
+          int leftMin = logMin - pendingMinToChangeHour;
+          while(leftMin > 0) {
+            currentHour++;
+
+            if(60 >= leftMin) {
+              // Less than an hour left, put whole time left
+              values[currentHour] = leftMin;
+
+              leftMin = 0;
+            } else {
+              // More than an hour left, put hour and continue for next hours
+              values[currentHour] = 60;
+
+              leftMin -= 60;
+            }
+          }
+        }
+      });
+
+      // Only show labels for 6, 12 and 18 hours
+      labels = List<String>.generate(24, (int index) {
+        if(index == 6 || index == 12 || index == 18) {
+          return '$index:00';
+        }
+
+        return '$index';
+      });
+    } else {
+      values = timeLogs.map<int>( (GameTimeLog log) {
+        return log.time.inMinutes;
+      }).toList(growable: false);
+
+      if(range == CalendarRange.Week) {
+        labels = GameCollectionLocalisations.of(context).shortDaysOfWeek;
+      } else if(range == CalendarRange.Month) {
+        labels = List<String>.generate(values.length, (int index) => (index + 1).toString());
+      } else if(range == CalendarRange.Year) {
+        labels = GameCollectionLocalisations.of(context).shortMonths;
       }
-    });
-    distinctLogDates.sort();
-
-    distinctLogDates.forEach((DateTime date) {
-      final List<Duration> dateDurations = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDate(date)).map((GameTimeLog log) => log.time).toList(growable: false);
-      final int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
-      values.add(daySum);
-    });
+    }
 
     return Container(
       child: StatisticsHistogram<int>(
         histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
-        domainLabels: GameCollectionLocalisations.of(context).shortDaysOfWeek,
+        domainLabels: labels,
         values: values,
         vertical: true,
         hideDomainLabels: false,

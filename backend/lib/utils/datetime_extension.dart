@@ -1,7 +1,6 @@
 extension DateOnlyCompare on DateTime {
-  bool isSameDate(DateTime other) {
-    return this.year == other.year && this.month == other.month
-        && this.day == other.day;
+  bool isSameDay(DateTime other) {
+    return this.day == other.day && this.isInMonthAndYearOf(other);
   }
 
   DateTime getMondayOfWeek() {
@@ -23,7 +22,7 @@ extension DateOnlyCompare on DateTime {
     final Duration dayDuration = const Duration(days: 1);
     DateTime dateInWeek = other.getMondayOfWeek();
     for(int index = 0; index < 7 && !resultFound; index++) {
-      resultFound = this.isSameDate(dateInWeek);
+      resultFound = this.isSameDay(dateInWeek);
 
       dateInWeek = dateInWeek.add(dayDuration);
     }
@@ -31,7 +30,23 @@ extension DateOnlyCompare on DateTime {
     return resultFound;
   }
 
+  DateTime getFirstDayOfMonth() {
+    return DateTime(this.year, this.month, 1);
+  }
+
+  bool isInMonthAndYearOf(DateTime other) {
+    return this.month == other.month && this.isInYearOf(other);
+  }
+
+  bool isInYearOf(DateTime other) {
+    return this.year == other.year;
+  }
+
   DateTime toDate() {
     return DateTime(this.year, this.month, this.day);
+  }
+
+  DateTime addDays(int days) {
+    return this.add(Duration(days: days));
   }
 }

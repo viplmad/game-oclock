@@ -24,7 +24,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String Function(N) labelAccessor = valueFormatter?? (N value) => value.toString();
-    
+
     final List<_SeriesElement<N>> data = <_SeriesElement<N>>[];
 
     for(int index = 0; index < domainLabels.length; index++) {
@@ -42,6 +42,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       measureFn: (_SeriesElement<N> element, _) => element.value,
       data: data,
 
+      //domainFormatterFn: (_, index) => domainAccessor(index),
       labelAccessorFn: (_SeriesElement<N> element, _) => labelAccessor(element.value),
     );
 

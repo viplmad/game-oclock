@@ -1,4 +1,5 @@
 import 'package:backend/model/model.dart';
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
 import 'calendar_state.dart';
@@ -13,7 +14,7 @@ abstract class SingleCalendarState extends CalendarState {
 
 class SingleCalendarLoaded extends SingleCalendarState {
   // ignore: avoid_positional_boolean_parameters
-  const SingleCalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, [this.style = CalendarStyle.List]);
+  const SingleCalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, this.range, [this.style = CalendarStyle.List]);
 
   final List<GameTimeLog> timeLogs;
   final Set<DateTime> logDates;
@@ -22,10 +23,11 @@ class SingleCalendarLoaded extends SingleCalendarState {
   final List<GameTimeLog> selectedTimeLogs;
   final bool isSelectedDateFinish;
   final Duration selectedTotalTime;
+  final CalendarRange range;
   final CalendarStyle style;
 
   @override
-  List<Object> get props => <Object>[timeLogs, logDates, finishDates, selectedDate, style];
+  List<Object> get props => <Object>[timeLogs, logDates, finishDates, selectedDate, range, style];
 
   @override
   String toString() => 'SingleCalendarLoaded { '
@@ -36,6 +38,7 @@ class SingleCalendarLoaded extends SingleCalendarState {
       'selectedTimeLogs: $selectedTimeLogs, '
       'isSelectedDateFinish: $isSelectedDateFinish, '
       'selectedTotalTime: $selectedTotalTime, '
+      'range: $range, '
       'style: $style'
       ' }';
 }

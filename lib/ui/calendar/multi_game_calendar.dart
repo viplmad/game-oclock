@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
 import 'package:backend/model/model.dart' show Game, GameWithLogs;
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
 import 'package:backend/repository/repository.dart' show GameCollectionRepository;
@@ -112,7 +113,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
               _buildTableCalendar(context, state.logDates, state.focusedDate, state.selectedDate),
               const Divider(height: 4.0),
               ListTile(
-                title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).weekString + ')' : '')),
+                title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).rangeString(CalendarRange.Week) + ')' : '')),
                 trailing: Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)),
               ),
               Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedGamesWithLogs) : Container()), // _buildEventGraph(context, state.selectedTimeLogs)),
@@ -146,7 +147,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       lastDay: lastDate,
       focusedDay: focusedDate,
       selectedDayPredicate: (DateTime day) {
-        return day.isSameDate(selectedDate);
+        return day.isSameDay(selectedDate);
       },
       onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
         BlocProvider.of<MultiCalendarBloc>(context).add(
@@ -156,7 +157,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return logDates.where((DateTime logDate) => date.isSameDate(logDate)).toList(growable: false);
+        return logDates.where((DateTime logDate) => date.isSameDay(logDate)).toList(growable: false);
       },
       startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
       weekendDays: const <int>[
