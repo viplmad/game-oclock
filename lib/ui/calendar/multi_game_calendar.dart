@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
-import 'package:backend/model/model.dart' show Game, GameWithLogs;
+import 'package:backend/model/model.dart' show Game, GameTimeLog, GameWithLogs;
 import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
@@ -18,7 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
 import '../common/loading_icon.dart';
-//import '../common/statistics_histogram.dart';
+import '../common/statistics_histogram.dart';
 import '../detail/detail.dart';
 
 
@@ -41,7 +41,7 @@ class MultiGameCalendar extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).multiCalendarViewString),
-          actions: <IconButton>[
+          actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),
               tooltip: GameCollectionLocalisations.of(context).firstTimeLog,
@@ -70,13 +70,32 @@ class MultiGameCalendar extends StatelessWidget {
                 _bloc.add(UpdateSelectedDateLast());
               },
             ),
-            /*IconButton(
-              icon: Icon(Icons.insert_chart),
+            PopupMenuButton<CalendarRange>(
+              icon: const Icon(Icons.date_range),
+              tooltip: GameCollectionLocalisations.of(context).changeRangeString,
+              itemBuilder: (BuildContext context) {
+                return CalendarRange.values.map<PopupMenuItem<CalendarRange>>( (CalendarRange range) {
+                  return PopupMenuItem<CalendarRange>(
+                    child: ListTile(
+                      title: Text(GameCollectionLocalisations.of(context).rangeString(range)),
+                    ),
+                    value: range,
+                  );
+                }).toList(growable: false);
+              },
+              onSelected: (CalendarRange range) {
+                _bloc.add(
+                  UpdateCalendarRange(range)
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.insert_chart),
               tooltip: GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
-                _bloc.add(UpdateStyle());
+                _bloc.add(UpdateCalendarStyle());
               },
-            ),*/
+            ),
           ],
         ),
         body: bodyBuilder(),
@@ -106,6 +125,12 @@ class _MultiGameCalendarBody extends StatelessWidget {
       builder: (BuildContext context, CalendarState state) {
 
         if(state is MultiCalendarLoaded) {
+          Widget timeLogsWidget = Container();
+          if(state is MultiCalendarListLoaded) {
+            timeLogsWidget = _buildTimeLogsList(context, state.selectedGamesWithLogs);
+          } else if(state is MultiCalendarGraphLoaded) {
+            timeLogsWidget = _buildTimeLogsGraph(context, state.selectedTimeLogs, state.range);
+          }
 
           return Column(
             mainAxisSize: MainAxisSize.max,
@@ -113,10 +138,10 @@ class _MultiGameCalendarBody extends StatelessWidget {
               _buildTableCalendar(context, state.logDates, state.focusedDate, state.selectedDate),
               const Divider(height: 4.0),
               ListTile(
-                title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.style == CalendarStyle.Graph)? ' (' + GameCollectionLocalisations.of(context).rangeString(CalendarRange.Week) + ')' : '')),
+                title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.range == CalendarRange.Day && state.style == CalendarStyle.List)? '' : ' (' + GameCollectionLocalisations.of(context).rangeString(state.range) + ')')),
                 trailing: Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)),
               ),
-              Expanded(child: (state.style == CalendarStyle.List)? _buildEventList(context, state.selectedGamesWithLogs) : Container()), // _buildEventGraph(context, state.selectedTimeLogs)),
+              Expanded(child: timeLogsWidget),
             ],
           );
 
@@ -216,7 +241,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
     );
   }
 
-  Widget _buildEventList(BuildContext context, List<GameWithLogs> gamesWithLogs) {
+  Widget _buildTimeLogsList(BuildContext context, List<GameWithLogs> gamesWithLogs) {
 
     if(gamesWithLogs.isEmpty) {
       return Center(
@@ -232,7 +257,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
-          child: GameTheme.itemCardWithTime(context, gameWithLogs.game, Duration(seconds: gameWithLogs.totalTimeSeconds), onTap),
+          child: GameTheme.itemCardWithTime(context, gameWithLogs.game, gameWithLogs.totalTime, onTap),
         );
       },
     );
@@ -266,33 +291,78 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
   }
 
-  /*Widget _buildEventGraph(BuildContext context, List<TimeLog> timeLogs) {
+  Widget _buildTimeLogsGraph(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
     List<int> values = <int>[];
+    List<String> labels = <String>[];
 
-    List<DateTime> distinctLogDates = <DateTime>[];
-    timeLogs.forEach((TimeLog log) {
-      if(!distinctLogDates.any((DateTime date) => date.isSameDate(log.dateTime))) {
-        distinctLogDates.add(log.dateTime);
+    if(range == CalendarRange.Day) {
+      // Create list where each entry is the time in an hour
+      values = List<int>.filled(24, 0, growable: false);
+      timeLogs.forEach( (GameTimeLog log) {
+        int currentHour = log.dateTime.hour;
+        final int pendingMinToChangeHour = 60 - log.dateTime.minute;
+        final int logMin = log.time.inMinutes;
+
+        if(pendingMinToChangeHour > logMin) {
+          // Not enough time to change hour, put the whole log time
+          values[currentHour] = logMin;
+        } else {
+          // Enough time, put time to change hour
+          values[currentHour] = pendingMinToChangeHour;
+
+          // Now compute for next hours
+          int leftMin = logMin - pendingMinToChangeHour;
+          while(leftMin > 0) {
+            currentHour++;
+
+            if(60 >= leftMin) {
+              // Less than an hour left, put whole time left
+              values[currentHour] = leftMin;
+
+              leftMin = 0;
+            } else {
+              // More than an hour left, put hour and continue for next hours
+              values[currentHour] = 60;
+
+              leftMin -= 60;
+            }
+          }
+        }
+      });
+
+      // Only show labels for 6, 12 and 18 hours
+      labels = List<String>.generate(24, (int index) {
+        if(index == 6 || index == 12 || index == 18) {
+          return '$index:00';
+        }
+
+        return '$index';
+      });
+    } else {
+      values = timeLogs.map<int>( (GameTimeLog log) {
+        return log.time.inMinutes;
+      }).toList(growable: false);
+
+      if(range == CalendarRange.Week) {
+        labels = GameCollectionLocalisations.of(context).shortDaysOfWeek;
+      } else if(range == CalendarRange.Month) {
+        labels = List<String>.generate(values.length, (int index) => (index + 1).toString());
+      } else if(range == CalendarRange.Year) {
+        labels = GameCollectionLocalisations.of(context).shortMonths;
       }
-    });
-    distinctLogDates.sort();
+    }
 
-    distinctLogDates.forEach((DateTime date) {
-      List<Duration> dateDurations = timeLogs.where((TimeLog log) => log.dateTime.isSameDate(date)).map((TimeLog log) => log.time).toList(growable: false);
-      int daySum = dateDurations.fold<int>(0, (int previousValue, Duration duration) => previousValue + duration.inMinutes);
-      values.add(daySum);
-    });
 
     return Container(
       child: StatisticsHistogram<int>(
         histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
-        domainLabels: GameCollectionLocalisations.of(context).shortDaysOfWeek,
+        domainLabels: labels,
         values: values,
         vertical: true,
         hideDomainLabels: false,
-        labelAccessor: (String domainLabel, int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+        valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
       ),
     );
-  }*/
+  }
 
 }

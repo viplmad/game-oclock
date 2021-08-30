@@ -157,8 +157,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
       final DateTime previousSelectedDate = (state as SingleCalendarLoaded).selectedDate;
 
-      List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
-      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+      List<GameTimeLog> selectedTimeLogs;
+      Duration selectedTotalTime;
       if((range == CalendarRange.Day && !event.date.isSameDay(previousSelectedDate))
         || (range == CalendarRange.Week && !event.date.isInWeekOf(previousSelectedDate))
         || (range == CalendarRange.Month && !event.date.isInMonthAndYearOf(previousSelectedDate))
@@ -279,28 +279,23 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarStyle style = (state as SingleCalendarLoaded).style;
       final CalendarRange previousRange = (state as SingleCalendarLoaded).range;
 
-      List<GameTimeLog> selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
-      Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
       if(event.range != previousRange) {
-        selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, event.range);
+        final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, event.range);
 
-        selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
-      } else {
-        selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
-        selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
+        final Duration selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+
+        yield SingleCalendarLoaded(
+          timeLogs,
+          logDates,
+          finishDates,
+          selectedDate,
+          selectedTimeLogs,
+          isSelectedDateFinish,
+          selectedTotalTime,
+          event.range,
+          style,
+        );
       }
-
-      yield SingleCalendarLoaded(
-        timeLogs,
-        logDates,
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        isSelectedDateFinish,
-        selectedTotalTime,
-        event.range,
-        style,
-      );
     }
 
   }
@@ -581,8 +576,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     switch(range) {
       case CalendarRange.Day:
         selectedTimeLogs = timeLogs
-              .where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate))
-              .toList(growable: false);
+          .where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate))
+          .toList(growable: false);
         break;
       case CalendarRange.Week: // Create a List of 7 timelogs -> sum of each day of week
         final DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();

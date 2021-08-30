@@ -47,5 +47,5 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   }
 
   @override
-  int compareTo(GameTimeLog other) => this.dateTime.compareTo(other.dateTime);
+  int compareTo(GameTimeLog other) => this.dateTime.compareTo(other.dateTime); // Earlier dates first
 }

@@ -6,7 +6,7 @@ import 'model.dart' show Game, GameTimeLog;
 
 
 // ignore: must_be_immutable
-class GameWithLogs extends Equatable {
+class GameWithLogs extends Equatable implements Comparable<GameWithLogs> {
   GameWithLogs({
     required this.game,
     required this.timeLogs,
@@ -17,7 +17,7 @@ class GameWithLogs extends Equatable {
 
   Set<DateTime> get logDates => timeLogs.map<DateTime>((GameTimeLog log) => log.dateTime.toDate()).toSet();
 
-  int get totalTimeSeconds => timeLogs.fold<int>(0, (int previousSeconds, GameTimeLog log) => previousSeconds + log.time.inSeconds);
+  Duration get totalTime => timeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
 
   @override
   List<Object> get props => <Object>[
@@ -34,4 +34,7 @@ class GameWithLogs extends Equatable {
         ' }';
 
   }
+
+  @override
+  int compareTo(GameWithLogs other) => other.totalTime.compareTo(this.totalTime); // Longer total time first
 }
