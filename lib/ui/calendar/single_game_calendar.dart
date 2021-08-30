@@ -407,7 +407,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
                     title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.range == CalendarRange.Day && state.style == CalendarStyle.List)? '' : ' (' + GameCollectionLocalisations.of(context).rangeString(state.range) + ')')),
-                    trailing: Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)),
+                    trailing: state.selectedTotalTime.inMinutes != 0? Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)) : null,
                   ),
                   Expanded(child: (state.style == CalendarStyle.List)? _buildTimeLogsList(context, state.selectedTimeLogs, state.range) : CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range)),
                 ],

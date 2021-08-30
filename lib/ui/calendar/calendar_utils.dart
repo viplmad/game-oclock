@@ -12,9 +12,14 @@ class CalendarUtils {
   CalendarUtils._();
 
   static Widget buildTimeLogsGraph(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
+    if(timeLogs.isEmpty) {
+      return Center(
+        child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
+      );
+    }
+
     List<int> values = <int>[];
     List<String> labels = <String>[];
-    double heightFactor = 1.5;
 
     if(range == CalendarRange.Day) {
       // Create list where each entry is the time in an hour
@@ -51,16 +56,10 @@ class CalendarUtils {
         }
       });
 
-      // Only show labels for 6, 12 and 18 hours
+      // TODO: Only show labels for 6, 12 and 18 hours
       labels = List<String>.generate(24, (int index) {
-        if(index == 6 || index == 12 || index == 18) {
-          return '$index:00';
-        }
-
-        return '$index';
+        return '$index:00';
       });
-
-      heightFactor = 1;
     } else {
       values = timeLogs.map<int>( (GameTimeLog log) {
         return log.time.inMinutes;
@@ -68,34 +67,45 @@ class CalendarUtils {
 
       if(range == CalendarRange.Week) {
         labels = GameCollectionLocalisations.of(context).shortDaysOfWeek;
-
-        heightFactor = 1.5;
       } else if(range == CalendarRange.Month) {
         labels = List<String>.generate(values.length, (int index) => (index + 1).toString());
-
-        heightFactor = 1;
       } else if(range == CalendarRange.Year) {
         labels = GameCollectionLocalisations.of(context).shortMonths;
-
-        heightFactor = 1.5;
       }
     }
 
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        SizedBox(
-          height: MediaQuery.of(context).size.height / heightFactor,
-          child: StatisticsHistogram<int>(
-            histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
-            domainLabels: labels,
-            values: values,
-            vertical: false,
-            hideDomainLabels: false,
-            valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+    if(range == CalendarRange.Day || range == CalendarRange.Month) {
+
+      return ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: StatisticsHistogram<int>(
+              histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
+              domainLabels: labels,
+              values: values,
+              vertical: (range == CalendarRange.Week || range == CalendarRange.Year),
+              hideDomainLabels: false,
+              valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+            ),
           ),
+        ],
+      );
+
+    } else {
+
+      return Container(
+        child: StatisticsHistogram<int>(
+          histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
+          domainLabels: labels,
+          values: values,
+          vertical: true,
+          hideDomainLabels: false,
+          valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
         ),
-      ],
-    );
+      );
+
+    }
   }
 }
