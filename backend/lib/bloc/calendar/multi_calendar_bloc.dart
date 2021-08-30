@@ -298,23 +298,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
       final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
+      final CalendarRange range = (state as MultiCalendarLoaded).range;
 
-      DateTime? previousDate;
-      if(logDates.isNotEmpty) {
-        final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
-        selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
+      final DateTime previousDate = RangeListUtils.getPreviousDateWithLogs(logDates, selectedDate, range);
 
-        for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
-          final DateTime date = listLogDates.elementAt(index);
-
-          if(date.isBefore(selectedDate)) {
-            previousDate = date;
-          }
-        }
-      }
-
-      add(UpdateSelectedDate(previousDate?? selectedDate));
+      add(UpdateSelectedDate(previousDate));
     }
 
   }
@@ -324,23 +312,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
       final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
+      final CalendarRange range = (state as MultiCalendarLoaded).range;
 
-      DateTime? nextDate;
-      if(logDates.isNotEmpty) {
-        final List<DateTime> listLogDates = logDates.toList(growable: false);
-        int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
-        selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
+      final DateTime nextDate = RangeListUtils.getNextDateWithLogs(logDates, selectedDate, range);
 
-        for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {
-          final DateTime date = listLogDates.elementAt(index);
-
-          if(date.isAfter(selectedDate)) {
-            nextDate = date;
-          }
-        }
-      }
-
-      add(UpdateSelectedDate(nextDate?? selectedDate));
+      add(UpdateSelectedDate(nextDate));
     }
 
   }

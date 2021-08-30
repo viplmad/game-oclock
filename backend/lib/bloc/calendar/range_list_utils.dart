@@ -90,4 +90,60 @@ class RangeListUtils {
 
     return selectedTimeLogs;
   }
+
+  static DateTime getPreviousDateWithLogs(Set<DateTime> logDates, DateTime selectedDate, CalendarRange range) {
+    DateTime? previousDate;
+
+    if(logDates.isNotEmpty) {
+      final List<DateTime> listLogDates = logDates.toList(growable: false);
+      int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
+      selectedIndex = (selectedIndex.isNegative)? listLogDates.length : selectedIndex;
+
+      for(int index = selectedIndex - 1; index >= 0 && previousDate == null; index--) {
+        final DateTime date = listLogDates.elementAt(index);
+
+        if(date.isBefore(selectedDate)) { // Find previous day with logs
+          if(range == CalendarRange.Day
+            // Week range -> Need to be previous week
+            || (range == CalendarRange.Week && !date.isInWeekOf(selectedDate))
+            // Month range -> Need to be previous month
+            || (range == CalendarRange.Month && !date.isInMonthAndYearOf(selectedDate))
+            // Year range -> Need to be previous year
+            || (range == CalendarRange.Year && !date.isInYearOf(selectedDate))) {
+            previousDate = date;
+          }
+        }
+      }
+    }
+
+    return previousDate?? selectedDate;
+  }
+
+  static DateTime getNextDateWithLogs(Set<DateTime> logDates, DateTime selectedDate, CalendarRange range) {
+    DateTime? nextDate;
+
+    if(logDates.isNotEmpty) {
+      final List<DateTime> listLogDates = logDates.toList(growable: false);
+      int selectedIndex = listLogDates.indexWhere((DateTime date) => date.isSameDay(selectedDate));
+      selectedIndex = (selectedIndex.isNegative)? 0 : selectedIndex;
+
+      for(int index = selectedIndex + 1; index < listLogDates.length && nextDate == null; index++) {
+        final DateTime date = listLogDates.elementAt(index);
+
+        if(date.isAfter(selectedDate)) { // Find next day with logs
+          if(range == CalendarRange.Day
+            // Week range -> Need to be next week
+            || (range == CalendarRange.Week && !date.isInWeekOf(selectedDate))
+            // Month range -> Need to be next month
+            || (range == CalendarRange.Month && !date.isInMonthAndYearOf(selectedDate))
+            // Year range -> Need to be next year
+            || (range == CalendarRange.Year && !date.isInYearOf(selectedDate))) {
+            nextDate = date;
+          }
+        }
+      }
+    }
+
+    return nextDate?? selectedDate;
+  }
 }
