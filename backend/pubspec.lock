@@ -69,7 +69,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "78d68a25324e1f7439c19a5ab45be7424a3bd7fb"
+      resolved-ref: "277996ee92be1b1cb3185264ab4de5bc021b77db"
       url: "https://github.com/viplmad/cloudinary_client.git"
     source: git
     version: "0.1.0"
@@ -241,14 +241,14 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.1"
+    version: "3.3.2"
   postgres:
     dependency: "direct main"
     description:
       name: postgres
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.1+2"
   process:
     dependency: transitive
     description:
@@ -283,7 +283,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "2.0.7"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -311,7 +311,7 @@ packages:
       name: shared_preferences_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   shared_preferences_windows:
     dependency: transitive
     description:
@@ -393,7 +393,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.5"
+    version: "2.2.8"
   xdg_directories:
     dependency: transitive
     description:

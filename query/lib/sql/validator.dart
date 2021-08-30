@@ -61,8 +61,6 @@ class Validator {
       return formatString(value, options);
     } else if (value is Query) {
       return formatQueryBuilder(value, options);
-    } else if (value is Duration) {
-      return formatDuration(value, options);
     }
 
     return value.toString();
@@ -78,10 +76,6 @@ class Validator {
 
   static String formatQueryBuilder(Query value, SQLBuilderOptions options) {
     return '(' + SQLQueryBuilder.buildString(value, options) + ')';
-  }
-
-  static int formatDuration(Duration value, SQLBuilderOptions options) {
-    return value.inSeconds;
   }
 
   static String escapeValue(String value, SQLBuilderOptions options) {

@@ -157,13 +157,7 @@ class SQLQueryBuilder {
     if(node is FieldStringNode) {
       final String field = Validator.sanitizeTableDotField(node.table, node.name, options);
 
-      if(node.type == double) {
-        sb.write(field + '::float');
-      } else if(node.type == Duration) {
-        sb.write('(Extract(hours from ' + field + ') * 60 + EXTRACT(minutes from ' + field + '))::int');
-      } else {
-        sb.write(field);
-      }
+      sb.write(field);
     } else if(node is FieldSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
