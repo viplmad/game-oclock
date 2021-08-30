@@ -13,6 +13,7 @@ import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
 import 'multi_calendar.dart';
+import 'range_list_utils.dart';
 
 
 class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
@@ -220,10 +221,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(style == CalendarStyle.List) {
         List<GameWithLogs> selectedGamesWithLogs;
         Duration selectedTotalTime;
-        if((range == CalendarRange.Day && !event.date.isSameDay(previousSelectedDate))
-        || (range == CalendarRange.Week && !event.date.isInWeekOf(previousSelectedDate))
-        || (range == CalendarRange.Month && !event.date.isInMonthAndYearOf(previousSelectedDate))
-        || (range == CalendarRange.Year && !event.date.isInYearOf(previousSelectedDate))) {
+        if(RangeListUtils.doesNewDateNeedRecalculation(event.date, previousSelectedDate, range)) {
           selectedGamesWithLogs = _selectedGameWithLogsInRange(gamesWithLogs, logDates, event.date, range);
 
           selectedTotalTime = selectedGamesWithLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameWithLogs gameWithLogs) => previousDuration + gameWithLogs.totalTime);
@@ -244,10 +242,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       } else if(style == CalendarStyle.Graph) {
         List<GameTimeLog> selectedTimeLogs;
         Duration selectedTotalTime;
-        if((range == CalendarRange.Day && !event.date.isSameDay(previousSelectedDate))
-        || (range == CalendarRange.Week && !event.date.isInWeekOf(previousSelectedDate))
-        || (range == CalendarRange.Month && !event.date.isInMonthAndYearOf(previousSelectedDate))
-        || (range == CalendarRange.Year && !event.date.isInYearOf(previousSelectedDate))) {
+        if(RangeListUtils.doesNewDateNeedRecalculation(event.date, previousSelectedDate, range)) {
           selectedTimeLogs = _selectedTimeLogsInRange(gamesWithLogs, logDates, event.date, range);
 
           selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
@@ -493,79 +488,37 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   List<GameWithLogs> _selectedGameWithLogsInRange(List<GameWithLogs> gamesWithLogs, Set<DateTime> logDates, DateTime selectedDate, CalendarRange range) {
     final List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
 
+    bool Function(DateTime) dateComparer;
     switch(range) {
       case CalendarRange.Day:
-        if(logDates.any((DateTime date) => date.isSameDay(selectedDate))) {
-          for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<GameTimeLog> logs = gameWithLogs.timeLogs
-              .where((GameTimeLog log) => log.dateTime.isSameDay(selectedDate))
-              .toList(growable: false);
-
-            if(logs.isNotEmpty) {
-              selectedGamesWithLogs.add(
-                GameWithLogs(
-                  game: gameWithLogs.game,
-                  timeLogs: logs,
-                )
-              );
-            }
-          }
-        }
+        dateComparer = selectedDate.isSameDay;
         break;
       case CalendarRange.Week:
-        if(logDates.any((DateTime date) => date.isInWeekOf(selectedDate))) {
-          for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<GameTimeLog> logs = gameWithLogs.timeLogs
-              .where((GameTimeLog log) => log.dateTime.isInWeekOf(selectedDate))
-              .toList(growable: false);
-
-            if(logs.isNotEmpty) {
-              selectedGamesWithLogs.add(
-                GameWithLogs(
-                  game: gameWithLogs.game,
-                  timeLogs: logs,
-                )
-              );
-            }
-          }
-        }
+        dateComparer = selectedDate.isInWeekOf;
         break;
       case CalendarRange.Month:
-        if(logDates.any((DateTime date) => date.isInMonthAndYearOf(selectedDate))) {
-          for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<GameTimeLog> logs = gameWithLogs.timeLogs
-              .where((GameTimeLog log) => log.dateTime.isInMonthAndYearOf(selectedDate))
-              .toList(growable: false);
-
-            if(logs.isNotEmpty) {
-              selectedGamesWithLogs.add(
-                GameWithLogs(
-                  game: gameWithLogs.game,
-                  timeLogs: logs,
-                )
-              );
-            }
-          }
-        }
+        dateComparer = selectedDate.isInMonthAndYearOf;
         break;
       case CalendarRange.Year:
-        if(logDates.any((DateTime date) => date.isInYearOf(selectedDate))) {
-          for(final GameWithLogs gameWithLogs in gamesWithLogs) {
-            final List<GameTimeLog> logs = gameWithLogs.timeLogs
-              .where((GameTimeLog log) => log.dateTime.isInYearOf(selectedDate))
-              .toList(growable: false);
-
-            if(logs.isNotEmpty) {
-              selectedGamesWithLogs.add(
-                GameWithLogs(
-                  game: gameWithLogs.game,
-                  timeLogs: logs,
-                )
-              );
-            }
-          }
-        }
+        dateComparer = selectedDate.isInYearOf;
         break;
+    }
+
+    if(logDates.any(dateComparer)) {
+      for(final GameWithLogs gameWithLogs in gamesWithLogs) {
+        final List<GameTimeLog> logs = gameWithLogs.timeLogs
+          .where((GameTimeLog log) => dateComparer(log.dateTime))
+          .toList(growable: false);
+
+        if(logs.isNotEmpty) {
+          selectedGamesWithLogs.add(
+            GameWithLogs(
+              game: gameWithLogs.game,
+              timeLogs: logs,
+            )
+          );
+        }
+      }
     }
 
     return selectedGamesWithLogs..sort();
@@ -576,72 +529,13 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     final List<GameWithLogs> selectedGameWithLogs = _selectedGameWithLogsInRange(gamesWithLogs, logDates, selectedDate, range);
     final List<GameTimeLog> timeLogs = selectedGameWithLogs.fold<List<GameTimeLog>>(<GameTimeLog>[], (List<GameTimeLog> previousList, GameWithLogs gameWithLogs) => previousList..addAll(gameWithLogs.timeLogs));
+
     switch(range) {
       case CalendarRange.Day:
         selectedTimeLogs = timeLogs;
         break;
-      case CalendarRange.Week: // Create a List of 7 timelogs -> sum of each day of week
-        final DateTime mondayOfSelectedDate = selectedDate.getMondayOfWeek();
-
-        DateTime dateOfWeek = mondayOfSelectedDate;
-        for(int weekIndex = 0; weekIndex < 7; weekIndex++) {
-          final Iterable<GameTimeLog> dayTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDay(dateOfWeek));
-
-          if(dayTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
-
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfWeek, time: dayTimeSum),
-            );
-          } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfWeek, time: const Duration()),
-            );
-          }
-
-          dateOfWeek = dateOfWeek.addDays(1);
-        }
-        break;
-      case CalendarRange.Month: // Create a List of 31* timelogs -> sum of each day of month
-        final DateTime firstDayOfSelectedMonth = selectedDate.getFirstDayOfMonth();
-
-        DateTime dateOfMonth = firstDayOfSelectedMonth;
-        while(dateOfMonth.isInMonthAndYearOf(selectedDate)) { // While month does not change
-          final Iterable<GameTimeLog> dayTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isSameDay(dateOfMonth));
-
-          if(dayTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
-
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfMonth, time: dayTimeSum),
-            );
-          } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfMonth, time: const Duration()),
-            );
-          }
-
-          dateOfMonth = dateOfMonth.addDays(1);
-        }
-        break;
-      case CalendarRange.Year: // Create a List of 12 timelogs -> sum of each month of year
-        for(int monthIndex = 1; monthIndex <= 12; monthIndex++) {
-          final DateTime firstDayOfMonth = DateTime(selectedDate.year, monthIndex, 1);
-
-          final Iterable<GameTimeLog> monthTimeLogs = timeLogs.where((GameTimeLog log) => log.dateTime.isInMonthAndYearOf(firstDayOfMonth));
-
-          if(monthTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = monthTimeLogs.fold<Duration>(const Duration(), (Duration previousValue, GameTimeLog log) => previousValue + log.time);
-
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: firstDayOfMonth, time: dayTimeSum),
-            );
-          } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: firstDayOfMonth, time: const Duration()),
-            );
-          }
-        }
+      default:
+        selectedTimeLogs = RangeListUtils.createTimeLogListByRange(timeLogs, selectedDate, range);
         break;
     }
 

@@ -19,12 +19,11 @@ extension DateOnlyCompare on DateTime {
   bool isInWeekOf(DateTime other) {
     bool resultFound = false;
 
-    final Duration dayDuration = const Duration(days: 1);
     DateTime dateInWeek = other.getMondayOfWeek();
     for(int index = 0; index < 7 && !resultFound; index++) {
       resultFound = this.isSameDay(dateInWeek);
 
-      dateInWeek = dateInWeek.add(dayDuration);
+      dateInWeek = dateInWeek.addDays(1);
     }
 
     return resultFound;
