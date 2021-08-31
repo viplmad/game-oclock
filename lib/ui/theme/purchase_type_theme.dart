@@ -6,6 +6,8 @@ import '../common/item_view.dart';
 
 
 class PurchaseTypeTheme {
+  PurchaseTypeTheme._();
+
   static Widget itemCard(BuildContext context, PurchaseType item, void Function()? Function(BuildContext, PurchaseType) onTap) {
 
     return ItemCard(

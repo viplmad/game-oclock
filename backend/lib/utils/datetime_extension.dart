@@ -1,4 +1,4 @@
-extension DateOnlyCompare on DateTime {
+extension DateExtension on DateTime {
   bool isSameDay(DateTime other) {
     return this.day == other.day && this.isInMonthAndYearOf(other);
   }
@@ -6,14 +6,27 @@ extension DateOnlyCompare on DateTime {
   DateTime getMondayOfWeek() {
     DateTime mondayOfDate;
 
-    if(this.weekday == 1) {
+    if(this.weekday == DateTime.monday) {
       mondayOfDate = this;
     } else {
-      final int daysToRemove = this.weekday - 1;
-      mondayOfDate = this.subtract(Duration(days: daysToRemove));
+      final int daysToRemove = this.weekday - DateTime.monday;
+      mondayOfDate = this.substractDays(daysToRemove);
     }
 
     return mondayOfDate;
+  }
+
+  DateTime getSundayOfWeek() {
+    DateTime sundayOfDate;
+
+    if(this.weekday == DateTime.sunday) {
+      sundayOfDate = this;
+    } else {
+      final int daysToAdd = DateTime.sunday - this.weekday;
+      sundayOfDate = this.addDays(daysToAdd);
+    }
+
+    return sundayOfDate;
   }
 
   bool isInWeekOf(DateTime other) {
@@ -47,5 +60,9 @@ extension DateOnlyCompare on DateTime {
 
   DateTime addDays(int days) {
     return this.add(Duration(days: days));
+  }
+
+  DateTime substractDays(int days) {
+    return this.subtract(Duration(days: days));
   }
 }

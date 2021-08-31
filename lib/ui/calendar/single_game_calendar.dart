@@ -15,10 +15,11 @@ import 'package:backend/bloc/calendar/single_calendar.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
+import 'package:backend/utils/duration_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../theme/theme.dart' show GameTheme;
+import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
@@ -397,6 +398,21 @@ class _SingleGameCalendarBody extends StatelessWidget {
           builder: (BuildContext context, CalendarState state) {
 
             if(state is SingleCalendarLoaded) {
+              Widget timeLogsWidget;
+              if(state.selectedTotalTime.isZero()) {
+                timeLogsWidget = Center(
+                  child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
+                );
+              } else {
+                switch(state.style) {
+                  case CalendarStyle.List:
+                    timeLogsWidget = _buildTimeLogsList(context, state.selectedTimeLogs, state.range);
+                    break;
+                  case CalendarStyle.Graph:
+                    timeLogsWidget = CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range);
+                    break;
+                }
+              }
 
               return Column(
                 mainAxisSize: MainAxisSize.max,
@@ -406,10 +422,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
-                    title: Text(GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + GameCollectionLocalisations.of(context).dateString(state.selectedDate) + ((state.range == CalendarRange.Day && state.style == CalendarStyle.List)? '' : ' (' + GameCollectionLocalisations.of(context).rangeString(state.range) + ')')),
-                    trailing: state.selectedTotalTime.inMinutes != 0? Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)) : null,
+                    title: Text(CalendarUtils.titleString(context, state.selectedDate, state.range)),
+                    trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)) : null,
                   ),
-                  Expanded(child: (state.style == CalendarStyle.List)? _buildTimeLogsList(context, state.selectedTimeLogs, state.range) : CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range)),
+                  Expanded(child: timeLogsWidget),
                 ],
               );
 
@@ -478,31 +494,31 @@ class _SingleGameCalendarBody extends StatelessWidget {
         isTodayHighlighted: true,
         outsideDaysVisible: false,
         todayDecoration: BoxDecoration(
-          color: Colors.yellow[800],
-          shape: BoxShape.circle,
+          color: CalendarTheme.todayColour,
+          shape: CalendarTheme.shape,
         ),
         selectedDecoration: const BoxDecoration(
-          color: GameTheme.primaryColour,
-          shape: BoxShape.circle,
+          color: CalendarTheme.selectedColour,
+          shape: CalendarTheme.shape,
         ),
         ///EVENTS
         markersMaxCount: 1,
         markersAlignment: Alignment.bottomRight,
         markerSizeScale: 0.35,
         markerDecoration: const BoxDecoration(
-          color: GameTheme.playingStatusColour,
-          shape: BoxShape.circle,
+          color: CalendarTheme.playedColour,
+          shape: CalendarTheme.shape,
         ),
         ///HOLIDAY
         holidayDecoration: const BoxDecoration(
-          color: GameTheme.playedStatusColour,
-          shape: BoxShape.circle,
+          color: CalendarTheme.finishedColour,
+          shape: CalendarTheme.shape,
         ),
         holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
         ///WEEKEND
         weekendDecoration: BoxDecoration(
-          color: Colors.grey.withAlpha(50),
-          shape: BoxShape.circle,
+          color: CalendarTheme.weekendColour,
+          shape: CalendarTheme.shape,
         ),
         weekendTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
       ),
@@ -523,18 +539,12 @@ class _SingleGameCalendarBody extends StatelessWidget {
           );
         },
       ),
-      tileColor: GameTheme.playedStatusColour,
+      tileColor: CalendarTheme.finishedColour,
     );
 
   }
 
   Widget _buildTimeLogsList(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
-
-    if(timeLogs.isEmpty) {
-      return Center(
-        child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
-      );
-    }
 
     return ListView.builder(
       shrinkWrap: true,
@@ -542,6 +552,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final GameTimeLog timeLog = timeLogs.elementAt(index);
         final String durationString = GameCollectionLocalisations.of(context).durationString(timeLog.time);
+
+        if(timeLog.time.isZero()) {
+          return Container(); // TODO: test
+        }
 
         if(range == CalendarRange.Day) {
          final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + durationString;

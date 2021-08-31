@@ -8,6 +8,8 @@ import '../common/item_view.dart';
 
 
 class GameTagTheme {
+  GameTagTheme._();
+
   static const Color primaryColour = Colors.black87;
   static const Color accentColour = Colors.black12;
 

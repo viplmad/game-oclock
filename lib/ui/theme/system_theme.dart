@@ -7,6 +7,8 @@ import '../common/item_view.dart';
 
 
 class SystemTheme {
+  SystemTheme._();
+
   static Widget itemCard(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
 
     return ItemCard(

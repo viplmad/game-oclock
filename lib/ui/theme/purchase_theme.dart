@@ -9,6 +9,8 @@ import '../common/bar_data.dart';
 
 
 class PurchaseTheme {
+  PurchaseTheme._();
+
   static const Color primaryColour = Colors.lightBlue;
   static const Color accentColour = Colors.lightBlueAccent;
 

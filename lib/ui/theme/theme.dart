@@ -6,3 +6,5 @@ export 'platform_theme.dart';
 export 'system_theme.dart';
 export 'game_tag_theme.dart';
 export 'purchase_type_theme.dart';
+
+export 'calendar_theme.dart';

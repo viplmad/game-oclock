@@ -9,6 +9,8 @@ import '../common/bar_data.dart';
 
 
 class GameTheme {
+  GameTheme._();
+
   static const Color primaryColour = Colors.red;
   static const Color accentColour = Colors.redAccent;
 

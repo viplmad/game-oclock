@@ -125,9 +125,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarRange range = CalendarRange.Day;
       final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, range);
 
-      final Duration selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+      final Duration selectedTotalTime = RangeListUtils.getTotalTime(selectedTimeLogs);
 
-      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDay(selectedDate));
+      final bool isSelectedDateFinish = _isSelectedDateFinish(finishDates, selectedDate);
 
       yield SingleCalendarLoaded(
         timeLogs,
@@ -163,13 +163,13 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(RangeListUtils.doesNewDateNeedRecalculation(event.date, previousSelectedDate, range)) {
         selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, event.date, range);
 
-        selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+        selectedTotalTime = RangeListUtils.getTotalTime(selectedTimeLogs);
       } else {
         selectedTimeLogs = (state as SingleCalendarLoaded).selectedTimeLogs;
         selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
       }
 
-      final bool isSelectedDateFinish = finishDates.any((GameFinish finish) => finish.dateTime.isSameDay(event.date));
+      final bool isSelectedDateFinish = _isSelectedDateFinish(finishDates, event.date);
 
       yield SingleCalendarLoaded(
         timeLogs,
@@ -256,7 +256,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(event.range != previousRange) {
         final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, event.range);
 
-        final Duration selectedTotalTime = selectedTimeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+        final Duration selectedTotalTime = RangeListUtils.getTotalTime(selectedTimeLogs);
 
         yield SingleCalendarLoaded(
           timeLogs,
@@ -547,6 +547,10 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   List<GameTimeLog> _selectedTimeLogsInRange(List<GameTimeLog> timeLogs, DateTime selectedDate, CalendarRange range) {
     final List<GameTimeLog> selectedTimeLogs = RangeListUtils.createTimeLogListByRange(timeLogs, selectedDate, range);
     return selectedTimeLogs..sort();
+  }
+
+  bool _isSelectedDateFinish(List<GameFinish> finishDates, DateTime selectedDate) {
+    return finishDates.any((GameFinish finish) => finish.dateTime.isSameDay(selectedDate));
   }
 
   @override

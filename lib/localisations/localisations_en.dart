@@ -1,6 +1,8 @@
 import 'package:backend/model/model.dart' show GameStatus, PlatformType;
 import 'package:backend/model/calendar_range.dart';
 
+import 'package:backend/utils/duration_extension.dart';
+
 import 'localisations.dart';
 
 
@@ -277,6 +279,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
         return 'Year';
     }
   }
+  @override
+  String totalGames(int total) {
+    return '$total ' + (total > 1? gamesString : gameString);
+  }
 
   @override
   final String playingViewString = 'Playing';
@@ -475,8 +481,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String timeString(DateTime date) {
-    final String hourString = date.hour.toString().padLeft(2, '0');
-    final String minuteString = date.minute.toString().padLeft(2, '0');
+    final String hourString = LocalisationsUtils.padTwoLeadingZeros(date.hour);
+    final String minuteString = LocalisationsUtils.padTwoLeadingZeros(date.minute);
     return '$hourString:$minuteString';
   }
   @override
@@ -492,12 +498,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String durationString(Duration duration) {
-    final int hours = duration.inHours;
-    final int minutes = (duration.inMinutes - (hours * 60));
-
-    if(hours == 0 && minutes == 0) {
+    if(duration.isZero()) {
       return '0';
     }
+
+    final int hours = duration.inHours;
+    final int minutes = duration.extractNormalisedMinutes();
 
     final String hourString = hoursString(hours);
     final String minuteString = minutesString(minutes);
@@ -509,6 +515,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
     }
 
     return '$hourString $minuteString';
+  }
+  @override
+  String monthYearString(DateTime date) {
+    final String month = months.elementAt(date.month - 1);
+    final String year = yearString(date.year);
+    return '$month $year';
   }
   @override
   String yearString(int year) {
@@ -524,7 +536,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String minutesString(int minutes) {
-    final String minuteString = minutes.toString().padLeft(2, '0');
+    final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minutes);
     return '$minuteString min.';
   }
 

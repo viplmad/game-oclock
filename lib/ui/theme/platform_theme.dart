@@ -9,6 +9,8 @@ import '../common/bar_data.dart';
 
 
 class PlatformTheme {
+  PlatformTheme._();
+
   static const Color primaryColour = Colors.black87;
   static const Color accentColour = Colors.black12;
 

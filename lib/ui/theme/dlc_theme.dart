@@ -9,6 +9,8 @@ import '../common/bar_data.dart';
 
 
 class DLCTheme {
+  DLCTheme._();
+
   static const Color primaryColour = Colors.deepPurple;
   static const Color accentColour = Colors.deepPurpleAccent;
 

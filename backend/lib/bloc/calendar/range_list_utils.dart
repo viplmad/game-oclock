@@ -14,6 +14,10 @@ class RangeListUtils {
       || (range == CalendarRange.Year && !date.isInYearOf(previousDate));
   }
 
+  static Duration getTotalTime(List<GameTimeLog> timeLogs) {
+    return timeLogs.fold<Duration>(const Duration(), (Duration previousDuration, GameTimeLog log) => previousDuration + log.time);
+  }
+
   static List<GameTimeLog> createTimeLogListByRange(List<GameTimeLog> timeLogs, DateTime date, CalendarRange range) {
     List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
 

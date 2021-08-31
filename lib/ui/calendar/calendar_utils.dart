@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:backend/model/model.dart' show GameTimeLog;
 import 'package:backend/model/calendar_range.dart';
 
+import 'package:backend/utils/datetime_extension.dart';
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/statistics_histogram.dart';
@@ -11,13 +13,26 @@ import '../common/statistics_histogram.dart';
 class CalendarUtils {
   CalendarUtils._();
 
-  static Widget buildTimeLogsGraph(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
-    if(timeLogs.isEmpty) {
-      return Center(
-        child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
-      );
+  static String titleString(BuildContext context, DateTime date, CalendarRange range) {
+    String rangeDateString;
+    switch(range) {
+      case CalendarRange.Day:
+        rangeDateString = GameCollectionLocalisations.of(context).dateString(date);
+        break;
+      case CalendarRange.Week:
+        rangeDateString = GameCollectionLocalisations.of(context).dateString(date.getMondayOfWeek()) + ' -> ' + GameCollectionLocalisations.of(context).dateString(date.getSundayOfWeek());
+        break;
+      case CalendarRange.Month:
+        rangeDateString = GameCollectionLocalisations.of(context).monthYearString(date);
+        break;
+      case CalendarRange.Year:
+        rangeDateString = GameCollectionLocalisations.of(context).yearString(date.year);
+        break;
     }
+    return GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + rangeDateString + ' (' + GameCollectionLocalisations.of(context).rangeString(range) + ')';
+  }
 
+  static Widget buildTimeLogsGraph(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
     List<int> values = <int>[];
     List<String> labels = <String>[];
 

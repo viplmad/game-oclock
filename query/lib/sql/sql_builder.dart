@@ -157,7 +157,11 @@ class SQLQueryBuilder {
     if(node is FieldStringNode) {
       final String field = Validator.sanitizeTableDotField(node.table, node.name, options);
 
-      sb.write(field);
+      if(node.type == double) {
+        sb.write(field + '::float');
+      } else {
+        sb.write(field);
+      }
     } else if(node is FieldSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));

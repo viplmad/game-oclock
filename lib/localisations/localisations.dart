@@ -122,6 +122,7 @@ abstract class GameCollectionLocalisations {
   String get nextTimeLog;
   String get emptyTimeLogsString;
   String rangeString(CalendarRange range);
+  String totalGames(int total);
 
   String get playingViewString;
   String get nextUpViewString;
@@ -245,6 +246,7 @@ abstract class GameCollectionLocalisations {
   String dateString(DateTime date);
   String dateTimeString(DateTime date);
   String durationString(Duration duration);
+  String monthYearString(DateTime date);
   String yearString(int year);
   String shortYearString(int year);
   String hoursString(int hours);
@@ -284,6 +286,14 @@ abstract class GameCollectionLocalisations {
     }
 
     return localisations;
+  }
+}
+
+class LocalisationsUtils {
+  LocalisationsUtils._();
+
+  static String padTwoLeadingZeros(int value) {
+    return value.toString().padLeft(2, '0');
   }
 }
 
