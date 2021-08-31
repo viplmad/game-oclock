@@ -78,14 +78,15 @@ class CalendarUtils {
 
       return ListView(
         shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width * 2,
             child: StatisticsHistogram<int>(
               histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
               domainLabels: labels,
               values: values,
-              vertical: (range == CalendarRange.Week || range == CalendarRange.Year),
+              vertical: true,
               hideDomainLabels: false,
               valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
             ),
