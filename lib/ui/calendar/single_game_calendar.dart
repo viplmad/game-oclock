@@ -554,7 +554,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
         final String durationString = GameCollectionLocalisations.of(context).durationString(timeLog.time);
 
         if(timeLog.time.isZero()) {
-          return Container(); // TODO: test
+          return Container();
         }
 
         if(range == CalendarRange.Day) {
