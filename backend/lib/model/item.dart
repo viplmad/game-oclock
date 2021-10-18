@@ -64,7 +64,7 @@ abstract class ItemData<T extends Item> {
   }
 
   List<N> yearlyFieldSum<N extends num>(List<int> years, bool Function(T, int) yearComparator, N foldInitialValue, N Function(T) fieldExtractor, {N Function(N, int)? sumOperation}) {
-    final List<N> values = List<N>.filled(years.length, 0 as N);
+    final List<N> values = List<N>.filled(years.length, _numZero<N>() as N);
     int index = 0;
 
     for(int yearsIndex = 0; yearsIndex < years.length; yearsIndex++) {
@@ -210,7 +210,7 @@ abstract class ItemData<T extends Item> {
 
 class YearData<N extends num> {
   YearData() {
-    values = List<N>.filled(12, 0 as N);
+    values = List<N>.filled(12, _numZero<N>() as N);
     _month = 0;
   }
 
@@ -223,3 +223,6 @@ class YearData<N extends num> {
     }
   }
 }
+
+// fix to get a generci num zero
+num _numZero<N extends num>() => (N == double? 0.0 : 0);

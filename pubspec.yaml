@@ -11,7 +11,7 @@ description: A simple and intuitive game collection manager.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.2+216
+version: 2.2.3+217
 publish_to: none
 
 environment:
@@ -47,7 +47,13 @@ dependencies:
   table_calendar: ^3.0.0
   flutter_speed_dial: ^4.1.0
   duration_picker: ^1.0.1
-  charts_flutter: ^0.11.0
+
+  #charts_flutter: ^0.11.0
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
+      ref: 03c2aa67d12952e7f3cbba1d87646d96a9a7cdc4
 
 dev_dependencies:
   flutter_lints: ^1.0.4
