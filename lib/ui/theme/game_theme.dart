@@ -12,7 +12,7 @@ class GameTheme {
   GameTheme._();
 
   static const Color primaryColour = Colors.red;
-  static const Color accentColour = Colors.redAccent;
+  static const Color secondaryColour = Colors.redAccent;
 
   static const Color lowPriorityStatusColour = Colors.grey;
   static const Color nextUpStatusColour = Colors.redAccent;
@@ -31,9 +31,9 @@ class GameTheme {
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData gameTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
-      accentColor: accentColour,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
+        secondary: secondaryColour,
       ),
     );
 

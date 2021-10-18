@@ -106,7 +106,7 @@ class MultiGameCalendar extends StatelessWidget {
 
   _MultiGameCalendarBody bodyBuilder() {
 
-    return _MultiGameCalendarBody();
+    return const _MultiGameCalendarBody();
 
   }
 
@@ -114,7 +114,7 @@ class MultiGameCalendar extends StatelessWidget {
 
 // ignore: must_be_immutable
 class _MultiGameCalendarBody extends StatelessWidget {
-  _MultiGameCalendarBody({
+  const _MultiGameCalendarBody({
     Key? key,
   }) : super(key: key);
 

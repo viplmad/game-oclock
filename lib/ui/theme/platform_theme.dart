@@ -12,7 +12,7 @@ class PlatformTheme {
   PlatformTheme._();
 
   static const Color primaryColour = Colors.black87;
-  static const Color accentColour = Colors.black12;
+  static const Color secondaryColour = Colors.black12;
 
   static const Color physicalTypeColour = Colors.blueAccent;
   static const Color digitalTypeColour = Colors.deepPurpleAccent;
@@ -27,9 +27,9 @@ class PlatformTheme {
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData platformTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
-      accentColor: accentColour,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
+        secondary: secondaryColour,
       ),
     );
 

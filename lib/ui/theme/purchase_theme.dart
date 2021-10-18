@@ -12,16 +12,16 @@ class PurchaseTheme {
   PurchaseTheme._();
 
   static const Color primaryColour = Colors.lightBlue;
-  static const Color accentColour = Colors.lightBlueAccent;
+  static const Color secondaryColour = Colors.lightBlueAccent;
 
   static ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData purchaseTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
-      accentColor: accentColour,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
+        secondary: secondaryColour,
       ),
     );
 

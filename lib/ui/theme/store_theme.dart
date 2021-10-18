@@ -12,16 +12,16 @@ class StoreTheme {
   StoreTheme._();
 
   static const Color primaryColour = Colors.blueGrey;
-  static const Color accentColour = Colors.grey;
+  static const Color secondaryColour = Colors.grey;
 
   static ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData storeTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
-      accentColor: accentColour,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
+        secondary: secondaryColour,
       ),
     );
 

@@ -39,7 +39,7 @@ class CalendarUtils {
     if(range == CalendarRange.Day) {
       // Create list where each entry is the time in an hour
       values = List<int>.filled(24, 0, growable: false);
-      timeLogs.forEach( (GameTimeLog log) {
+      for (final GameTimeLog log in timeLogs) {
         int currentHour = log.dateTime.hour;
         final int pendingMinToChangeHour = 60 - log.dateTime.minute;
         final int logMin = log.time.inMinutes;
@@ -69,7 +69,7 @@ class CalendarUtils {
             }
           }
         }
-      });
+      }
 
       // TODO: Only show labels for 6, 12 and 18 hours
       labels = List<String>.generate(24, (int index) {
@@ -111,15 +111,13 @@ class CalendarUtils {
 
     } else {
 
-      return Container(
-        child: StatisticsHistogram<int>(
-          histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
-          domainLabels: labels,
-          values: values,
-          vertical: true,
-          hideDomainLabels: false,
-          valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
-        ),
+      return StatisticsHistogram<int>(
+        histogramName: GameCollectionLocalisations.of(context).timeLogsFieldString,
+        domainLabels: labels,
+        values: values,
+        vertical: true,
+        hideDomainLabels: false,
+        valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
       );
 
     }

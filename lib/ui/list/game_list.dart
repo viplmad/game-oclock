@@ -174,7 +174,7 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
-                    color: GameTheme.accentColour,
+                    color: GameTheme.secondaryColour,
                   ),
                 ),
               ];

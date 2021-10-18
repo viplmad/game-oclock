@@ -62,7 +62,9 @@ abstract class ItemDetail<T extends Item, K extends Bloc<ItemDetailEvent, ItemDe
             return _managerBloc;
           },
         ),
-      ]..addAll(relationBlocsBuilder(_collectionRepository)),
+
+        ...relationBlocsBuilder(_collectionRepository)
+      ],
       child: Scaffold(
         body: detailBodyBuilder()
       ),
@@ -259,115 +261,113 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
     final ImagePicker _picker = ImagePicker();
     final bool withImage = imageFilename.isNotEmpty;
 
-    return Container(
-      child: Wrap(
-        children: <Widget>[
-          ListTile(
-            title: Text(withImage? imageFilename : ''),
-          ),
-          const Divider(),
-          ListTile(
-            title: withImage?
-              Text(GameCollectionLocalisations.of(context).replaceImageString)
-              :
-              Text(GameCollectionLocalisations.of(context).uploadImageString),
-            leading: const Icon(Icons.file_upload),
-            onTap: () {
-              _picker.pickImage(
-                  source: ImageSource.gallery,
-              ).then( (XFile? imagePicked) {
-                if(imagePicked != null) {
+    return Wrap(
+      children: <Widget>[
+        ListTile(
+          title: Text(withImage? imageFilename : ''),
+        ),
+        const Divider(),
+        ListTile(
+          title: withImage?
+            Text(GameCollectionLocalisations.of(context).replaceImageString)
+            :
+            Text(GameCollectionLocalisations.of(context).uploadImageString),
+          leading: const Icon(Icons.file_upload),
+          onTap: () {
+            _picker.pickImage(
+                source: ImageSource.gallery,
+            ).then( (XFile? imagePicked) {
+              if(imagePicked != null) {
 
-                  BlocProvider.of<S>(outerContext).add(
-                    AddItemImage<T>(
-                      imagePicked.path,
-                      withImage? imageFilename.split('.').first : null,
-                    ),
-                  );
+                BlocProvider.of<S>(outerContext).add(
+                  AddItemImage<T>(
+                    imagePicked.path,
+                    withImage? imageFilename.split('.').first : null,
+                  ),
+                );
 
-                }
-
-                Navigator.maybePop(context);
-              });
-            },
-          ),
-          ListTile(
-            title: Text(GameCollectionLocalisations.of(context).renameImageString),
-            leading: const Icon(Icons.edit),
-            enabled: withImage,
-            onTap: () {
-              final TextEditingController fieldController = TextEditingController();
-              final String imageName = imageFilename.split('.').first;
-              fieldController.text = imageName.split('-').last.split('_').first;
-
-              showDialog<String>(
-                context: context,
-                builder: (BuildContext context) {
-
-                  return AlertDialog(
-                    title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).filenameString)),
-                    content: TextField(
-                      controller: fieldController,
-                      keyboardType: TextInputType.text,
-                      autofocus: true,
-                      maxLines: null,
-                      inputFormatters: <TextInputFormatter> [
-                        FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: GameCollectionLocalisations.of(context).filenameString,
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                        onPressed: () {
-                          Navigator.maybePop<String>(context);
-                        },
-                      ),
-                      TextButton(
-                        child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                        onPressed: () {
-                          Navigator.maybePop<String>(context, fieldController.text.trim());
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ).then( (String? newName) {
-                if(newName != null) {
-
-                  BlocProvider.of<S>(outerContext).add(
-                    UpdateItemImageName<T>(
-                      imageName,
-                      newName,
-                    ),
-                  );
-
-                }
-
-                Navigator.maybePop(context);
-              });
-            },
-          ),
-          ListTile(
-            title: Text(GameCollectionLocalisations.of(context).deleteImageString),
-            leading: const Icon(Icons.delete),
-            enabled: withImage,
-            onTap: () {
-              final String imageName = imageFilename.split('.').first;
-
-              BlocProvider.of<S>(outerContext).add(
-                DeleteItemImage<T>(
-                  imageName,
-                ),
-              );
+              }
 
               Navigator.maybePop(context);
-            },
-          )
-        ],
-      ),
+            });
+          },
+        ),
+        ListTile(
+          title: Text(GameCollectionLocalisations.of(context).renameImageString),
+          leading: const Icon(Icons.edit),
+          enabled: withImage,
+          onTap: () {
+            final TextEditingController fieldController = TextEditingController();
+            final String imageName = imageFilename.split('.').first;
+            fieldController.text = imageName.split('-').last.split('_').first;
+
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+
+                return AlertDialog(
+                  title: Text(GameCollectionLocalisations.of(context).editString(GameCollectionLocalisations.of(context).filenameString)),
+                  content: TextField(
+                    controller: fieldController,
+                    keyboardType: TextInputType.text,
+                    autofocus: true,
+                    maxLines: null,
+                    inputFormatters: <TextInputFormatter> [
+                      FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: GameCollectionLocalisations.of(context).filenameString,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                      onPressed: () {
+                        Navigator.maybePop<String>(context);
+                      },
+                    ),
+                    TextButton(
+                      child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                      onPressed: () {
+                        Navigator.maybePop<String>(context, fieldController.text.trim());
+                      },
+                    ),
+                  ],
+                );
+              },
+            ).then( (String? newName) {
+              if(newName != null) {
+
+                BlocProvider.of<S>(outerContext).add(
+                  UpdateItemImageName<T>(
+                    imageName,
+                    newName,
+                  ),
+                );
+
+              }
+
+              Navigator.maybePop(context);
+            });
+          },
+        ),
+        ListTile(
+          title: Text(GameCollectionLocalisations.of(context).deleteImageString),
+          leading: const Icon(Icons.delete),
+          enabled: withImage,
+          onTap: () {
+            final String imageName = imageFilename.split('.').first;
+
+            BlocProvider.of<S>(outerContext).add(
+              DeleteItemImage<T>(
+                imageName,
+              ),
+            );
+
+            Navigator.maybePop(context);
+          },
+        )
+      ],
     );
 
   }

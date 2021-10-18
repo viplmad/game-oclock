@@ -48,7 +48,7 @@ class RepositorySettings extends StatelessWidget {
         appBar: AppBar(
           title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
         ),
-        body: _RepositorySettingsBody(),
+        body: const _RepositorySettingsBody(),
         floatingActionButton: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
           builder: (BuildContext context, RepositorySettingsState state) {
             bool active = false;
@@ -76,7 +76,7 @@ class RepositorySettings extends StatelessWidget {
 }
 
 class _RepositorySettingsBody extends StatelessWidget {
-  _RepositorySettingsBody({
+  const _RepositorySettingsBody({
     Key? key,
   }) : super(key: key);
 

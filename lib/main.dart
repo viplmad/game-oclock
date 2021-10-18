@@ -35,11 +35,11 @@ class GameCollection extends StatelessWidget {
         ),
         initialRoute: connectRoute,
         onGenerateRoute: onGenerateRoute,
-        localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
-          const GameCollectionLocalisationsDelegate(),
+          GameCollectionLocalisationsDelegate(),
         ],
         supportedLocales: const <Locale>[
           Locale('en', 'GB'),

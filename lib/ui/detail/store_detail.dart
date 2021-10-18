@@ -125,10 +125,10 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
 
           double totalSpent = 0.0;
           double totalValue = 0.0;
-          purchases.forEach( (Purchase purchase) {
+          for(final Purchase purchase in purchases) {
             totalSpent += purchase.price;
             totalValue += purchase.originalPrice;
-          });
+          }
 
           final double totalSaved = totalValue - totalSpent;
           final double totalPercentageSaved = totalValue > 0? (1 - totalSpent / totalValue) : 0;

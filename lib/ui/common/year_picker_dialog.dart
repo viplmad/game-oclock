@@ -31,56 +31,54 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
   Widget build(BuildContext context) {
 
     return Dialog(
-      child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              color: Theme.of(context).primaryColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
-                  )
-                ],
-              ),
-            ),
-            Flexible(
-              child: _YearPicker(
-                firstDate: DateTime(1970),
-                lastDate: DateTime.now(),
-                initialDate: _selectedDate,
-                selectedDate: _selectedDate,
-                onChanged: (DateTime newDate) {
-                  setState(() {
-                    _selectedDate = newDate;
-                  });
-                },
-              ),
-            ),
-            ButtonBar(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            color: Theme.of(context).primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TextButton(
-                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<int>(context);
-                  },
-                ),
-                TextButton(
-                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<int>(context, _selectedDate.year);
-                  },
-                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
+                )
               ],
             ),
-          ],
-        ),
+          ),
+          Flexible(
+            child: _YearPicker(
+              firstDate: DateTime(1970),
+              lastDate: DateTime.now(),
+              initialDate: _selectedDate,
+              selectedDate: _selectedDate,
+              onChanged: (DateTime newDate) {
+                setState(() {
+                  _selectedDate = newDate;
+                });
+              },
+            ),
+          ),
+          ButtonBar(
+            children: <Widget>[
+              TextButton(
+                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                onPressed: () {
+                  Navigator.maybePop<int>(context);
+                },
+              ),
+              TextButton(
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                onPressed: () {
+                  Navigator.maybePop<int>(context, _selectedDate.year);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
 

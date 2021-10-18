@@ -249,7 +249,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get singleCalendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
   @override
-  String get multiCalendarViewString => '$timeLogsFieldString';
+  String get multiCalendarViewString => timeLogsFieldString;
   @override
   final String editTimeString = 'Time';
   @override

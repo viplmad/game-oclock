@@ -162,8 +162,8 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const LinearProgressIndicator(),
+                            children: const <Widget>[
+                              LinearProgressIndicator(),
                             ],
                           );
                         },

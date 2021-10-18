@@ -146,9 +146,9 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Divider(),
-              const LinearProgressIndicator(),
+            children: const <Widget>[
+              Divider(),
+              LinearProgressIndicator(),
             ],
           );
 

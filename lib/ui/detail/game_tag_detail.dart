@@ -18,7 +18,7 @@ import 'item_detail.dart';
 
 
 class GameTagDetail extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetailManagerBloc> {
-  GameTagDetail({
+  const GameTagDetail({
     Key? key,
     required GameTag item,
     void Function(GameTag? item)? onUpdate,

@@ -12,16 +12,16 @@ class DLCTheme {
   DLCTheme._();
 
   static const Color primaryColour = Colors.deepPurple;
-  static const Color accentColour = Colors.deepPurpleAccent;
+  static const Color secondaryColour = Colors.deepPurpleAccent;
 
   static ThemeData themeData(BuildContext context) {
 
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData dlcTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
-      accentColor: accentColour,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primaryColour,
+        secondary: secondaryColour,
       ),
     );
 
