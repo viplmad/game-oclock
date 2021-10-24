@@ -8,7 +8,6 @@ void showSnackBar(BuildContext context, {required String message, int seconds = 
     content: Text(message),
     duration: Duration(seconds: seconds),
     action: snackBarAction,
-    padding: const EdgeInsets.only(left: 16.0, right: 8.0),
   );
 
   final ScaffoldMessengerState messengerState = ScaffoldMessenger.of(context);
