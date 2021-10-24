@@ -57,9 +57,12 @@ class RepositorySettings extends StatelessWidget {
             }
 
             return FloatingActionButton.extended(
-              tooltip: GameCollectionLocalisations.of(context).connectString,
               label: Text(GameCollectionLocalisations.of(context).connectString),
               icon: const Icon(Icons.send),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              ),
+              tooltip: GameCollectionLocalisations.of(context).connectString,
               onPressed: active? () {
                 Navigator.pushReplacementNamed(
                   context,

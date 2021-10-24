@@ -104,8 +104,11 @@ abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, Item
   Widget build(BuildContext context) {
 
     return FloatingActionButton(
-      tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
       child: const Icon(Icons.add),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+      ),
+      tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
       backgroundColor: themeColor,
       onPressed: () {
         BlocProvider.of<S>(context).add(
