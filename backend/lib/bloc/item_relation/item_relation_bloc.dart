@@ -17,6 +17,10 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
 
+    on<LoadItemRelation>(_mapLoadToState);
+    on<UpdateItemRelation<W>>(_mapUpdateRelationToState);
+    on<UpdateRelationItem<W>>(_mapUpdateItemToState);
+
     managerSubscription = managerBloc.stream.listen(mapRelationManagerStateToEvent);
 
   }
@@ -26,31 +30,12 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
   final ItemRelationManagerBloc<T, ID, W> managerBloc;
   late StreamSubscription<ItemRelationManagerState> managerSubscription;
 
-  @override
-  Stream<ItemRelationState> mapEventToState(ItemRelationEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is LoadItemRelation) {
-
-      yield* _mapLoadToState();
-
-    } else if(event is UpdateItemRelation<W>) {
-
-      yield* _mapUpdateRelationToState(event);
-
-    } else if(event is UpdateRelationItem<W>) {
-
-      yield* _mapUpdateItemToState(event);
-
-    }
-
-  }
-
-  Stream<ItemRelationState> _checkConnection() async* {
+  void _checkConnection(Emitter<ItemRelationState> emit) async {
 
     if(collectionRepository.isClosed()) {
-      yield const ItemRelationNotLoaded('Connection lost. Trying to reconnect');
+      emit(
+        const ItemRelationNotLoaded('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -59,37 +44,49 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
 
       } catch (e) {
 
-        yield ItemRelationNotLoaded(e.toString());
+        emit(
+          ItemRelationNotLoaded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemRelationState> _mapLoadToState() async* {
+  void _mapLoadToState(LoadItemRelation event, Emitter<ItemRelationState> emit) async {
 
-    yield ItemRelationLoading();
+    _checkConnection(emit);
+
+    emit(
+      ItemRelationLoading(),
+    );
 
     try {
 
       final List<W> items = await getRelationStream();
-      yield ItemRelationLoaded<W>(items);
+      emit(
+        ItemRelationLoaded<W>(items),
+      );
 
     } catch (e) {
 
-      yield ItemRelationNotLoaded(e.toString());
+      emit(
+        ItemRelationNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<ItemRelationState> _mapUpdateRelationToState(UpdateItemRelation<W> event) async* {
+  void _mapUpdateRelationToState(UpdateItemRelation<W> event, Emitter<ItemRelationState> emit) {
 
-    yield ItemRelationLoaded<W>(event.otherItems);
+    emit(
+      ItemRelationLoaded<W>(event.otherItems),
+    );
 
   }
 
-  Stream<ItemRelationState> _mapUpdateItemToState(UpdateRelationItem<W> event) async* {
+  void _mapUpdateItemToState(UpdateRelationItem<W> event, Emitter<ItemRelationState> emit) {
 
     if(state is ItemRelationLoaded<W>) {
       final List<W> items = List<W>.from((state as ItemRelationLoaded<W>).otherItems);
@@ -100,7 +97,9 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
       if(listItem != event.item) {
         items[listItemIndex] = event.item;
 
-        yield ItemRelationLoaded<W>(items);
+        emit(
+          ItemRelationLoaded<W>(items),
+        );
       }
 
     }
@@ -156,6 +155,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
   }
 
   @mustCallSuper
+  @protected
   Future<List<W>> getRelationStream() {
 
     return Future<List<W>>.error('Relation does not exist');

@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 export 'date_part.dart';
 export 'divider_type.dart';
 export 'function_type.dart';
@@ -5,8 +7,6 @@ export 'join_type.dart';
 export 'operator_type.dart';
 export 'sort_order.dart';
 export 'union_type.dart';
-
-import 'package:meta/meta.dart';
 
 import 'block/block.dart';
 import 'date_part.dart';

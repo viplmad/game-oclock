@@ -6,56 +6,60 @@ import 'repository_settings_manager.dart';
 
 
 class RepositorySettingsManagerBloc extends Bloc<RepositorySettingsManagerEvent, RepositorySettingsManagerState> {
-  RepositorySettingsManagerBloc() : super(Initialised());
+  RepositorySettingsManagerBloc() : super(Initialised()) {
 
-  @override
-  Stream<RepositorySettingsManagerState> mapEventToState(RepositorySettingsManagerEvent event) async* {
-
-    if(event is UpdateItemConnectionSettings) {
-
-      yield* _mapUpdateItemToState(event);
-
-    } else if(event is UpdateImageConnectionSettings) {
-
-      yield* _mapUpdateImageToState(event);
-
-    }
-
-    yield Initialised();
+    on<UpdateItemConnectionSettings>(_mapUpdateItemToState);
+    on<UpdateImageConnectionSettings>(_mapUpdateImageToState);
 
   }
 
-  Stream<RepositorySettingsManagerState> _mapUpdateItemToState(UpdateItemConnectionSettings event) async* {
+  void _mapUpdateItemToState(UpdateItemConnectionSettings event, Emitter<RepositorySettingsManagerState> emit) async {
 
     try {
 
       await RepositoryPreferences.setActiveItemConnectorType(event.type);
       await RepositoryPreferences.setItemInstance(event.instance);
 
-      yield ItemConnectionSettingsUpdated(event.type);
+      emit(
+        ItemConnectionSettingsUpdated(event.type),
+      );
 
     } catch(e) {
 
-      yield RepositorySettingsNotUpdated(e.toString());
+      emit(
+        RepositorySettingsNotUpdated(e.toString()),
+      );
 
     }
 
+    emit(
+      Initialised(),
+    );
+
   }
 
-  Stream<RepositorySettingsManagerState> _mapUpdateImageToState(UpdateImageConnectionSettings event) async* {
+  void _mapUpdateImageToState(UpdateImageConnectionSettings event, Emitter<RepositorySettingsManagerState> emit) async {
 
     try {
 
       await RepositoryPreferences.setActiveImageConnectorType(event.type);
       await RepositoryPreferences.setImageInstance(event.instance);
 
-      yield ImageConnectionSettingsUpdated(event.type);
+      emit(
+        ImageConnectionSettingsUpdated(event.type),
+      );
 
     } catch(e) {
 
-      yield RepositorySettingsNotUpdated(e.toString());
+      emit(
+        RepositorySettingsNotUpdated(e.toString()),
+      );
 
     }
+
+    emit(
+      Initialised(),
+    );
 
   }
 }

@@ -14,48 +14,44 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
     required RepositorySettingsManagerBloc managerBloc,
   }) : super(RepositorySettingsLoading()) {
 
+    on<LoadRepositorySettings>(_mapLoadToState);
+    on<UpdateRepositorySettings>(_mapUpdateToState);
+
     managerSubscription = managerBloc.stream.listen(mapManagerStateToEvent);
 
   }
 
   late final StreamSubscription<RepositorySettingsManagerState> managerSubscription;
 
-  @override
-  Stream<RepositorySettingsState> mapEventToState(RepositorySettingsEvent event) async* {
+  void _mapLoadToState(LoadRepositorySettings event, Emitter<RepositorySettingsState> emit) async {
 
-    if(event is LoadRepositorySettings) {
-
-      yield* _mapLoadToState();
-
-    } else if(event is UpdateRepositorySettings) {
-
-      yield* _mapUpdateToState(event);
-
-    }
-
-  }
-
-  Stream<RepositorySettingsState> _mapLoadToState() async* {
-
-    yield RepositorySettingsLoading();
+    emit(
+      RepositorySettingsLoading(),
+    );
 
     final bool existsConnection = await RepositoryPreferences.existsConnection();
     if(!existsConnection) {
 
-      yield const RepositorySettingsLoaded();
+      emit(
+        const RepositorySettingsLoaded(),
+      );
 
     } else {
 
       try {
 
-        yield RepositorySettingsLoaded(
-          await RepositoryPreferences.retrieveActiveItemConnectorType(),
-          await RepositoryPreferences.retrieveActiveImageConnectorType(),
+        emit(
+          RepositorySettingsLoaded(
+            await RepositoryPreferences.retrieveActiveItemConnectorType(),
+            await RepositoryPreferences.retrieveActiveImageConnectorType(),
+          ),
         );
 
       } catch(e) {
 
-        yield RepositorySettingsNotLoaded(e.toString());
+        emit(
+          RepositorySettingsNotLoaded(e.toString()),
+        );
 
       }
 
@@ -63,11 +59,13 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
   }
 
-  Stream<RepositorySettingsState> _mapUpdateToState(UpdateRepositorySettings event) async* {
+  void _mapUpdateToState(UpdateRepositorySettings event, Emitter<RepositorySettingsState> emit) {
 
-    yield RepositorySettingsLoaded(
-      event.savedItemConnection,
-      event.savedImageConnection,
+    emit(
+      RepositorySettingsLoaded(
+        event.savedItemConnection,
+        event.savedImageConnection,
+      ),
     );
 
   }

@@ -9,25 +9,18 @@ import 'repository_settings_detail.dart';
 
 
 class RepositorySettingsDetailBloc extends Bloc<RepositorySettingsDetailEvent, RepositorySettingsDetailState> {
-  RepositorySettingsDetailBloc() : super(RepositorySettingsDetailLoading());
+  RepositorySettingsDetailBloc() : super(RepositorySettingsDetailLoading()) {
 
-  @override
-  Stream<RepositorySettingsDetailState> mapEventToState(RepositorySettingsDetailEvent event) async* {
+    on<LoadItemSettingsDetail>(_mapLoadItemToState);
+    on<LoadImageSettingsDetail>(_mapLoadImageToState);
 
-    if(event is LoadItemSettingsDetail) {
-
-      yield* _mapLoadItemToState(event);
-
-    } else if(event is LoadImageSettingsDetail) {
-
-      yield* _mapLoadImageToState(event);
-
-    }
   }
 
-  Stream<RepositorySettingsDetailState> _mapLoadItemToState(LoadItemSettingsDetail event) async* {
+  void _mapLoadItemToState(LoadItemSettingsDetail event, Emitter<RepositorySettingsDetailState> emit) async {
 
-    yield RepositorySettingsDetailLoading();
+    emit(
+      RepositorySettingsDetailLoading(),
+    );
 
     try {
 
@@ -38,19 +31,25 @@ class RepositorySettingsDetailBloc extends Bloc<RepositorySettingsDetailEvent, R
         instance = await RepositoryPreferences.retrieveActiveItemInstance();
       }
 
-      yield RepositorySettingsDetailLoaded(instance);
+      emit(
+        RepositorySettingsDetailLoaded(instance),
+      );
 
     } catch(e) {
 
-      yield RepositorySettingsDetailNotLoaded(e.toString());
+      emit(
+        RepositorySettingsDetailNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<RepositorySettingsDetailState> _mapLoadImageToState(LoadImageSettingsDetail event) async* {
+  void _mapLoadImageToState(LoadImageSettingsDetail event, Emitter<RepositorySettingsDetailState> emit) async {
 
-    yield RepositorySettingsDetailLoading();
+    emit(
+      RepositorySettingsDetailLoading(),
+    );
 
     try {
 
@@ -61,11 +60,15 @@ class RepositorySettingsDetailBloc extends Bloc<RepositorySettingsDetailEvent, R
         instance = await RepositoryPreferences.retrieveActiveImageInstance();
       }
 
-      yield RepositorySettingsDetailLoaded(instance);
+      emit(
+        RepositorySettingsDetailLoaded(instance),
+      );
 
     } catch(e) {
 
-      yield RepositorySettingsDetailNotLoaded(e.toString());
+      emit(
+        RepositorySettingsDetailNotLoaded(e.toString()),
+      );
 
     }
 

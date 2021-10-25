@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
@@ -12,33 +10,27 @@ import 'connection.dart';
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
   ConnectionBloc({
     required this.collectionRepository
-  }) : super(Connecting());
+  }) : super(Connecting()) {
 
-  final GameCollectionRepository collectionRepository;
-
-  @override
-  Stream<ConnectState> mapEventToState(ConnectionEvent event) async* {
-
-    if(event is Connect) {
-
-      yield* _mapConnectToState();
-
-    } else if(event is Reconnect) {
-
-      yield* _mapReconnectToState();
-
-    }
+    on<Connect>(_mapConnectToState);
+    on<Reconnect>(_mapReconnectToState);
 
   }
 
-  Stream<ConnectState> _mapConnectToState() async* {
+  final GameCollectionRepository collectionRepository;
 
-    yield Connecting();
+  void _mapConnectToState(Connect event, Emitter<ConnectState> emit) async {
+
+    emit(
+      Connecting(),
+    );
 
     final bool existsConnection = await RepositoryPreferences.existsConnection();
     if(!existsConnection) {
 
-      yield NonexistentConnection();
+      emit(
+        NonexistentConnection(),
+      );
 
     } else {
 
@@ -50,11 +42,15 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
         collectionRepository.connect(itemConnector, imageConnector);
         await collectionRepository.open();
 
-        yield Connected();
+        emit(
+          Connected(),
+        );
 
       } catch(e) {
 
-        yield FailedConnection(e.toString());
+        emit(
+          FailedConnection(e.toString()),
+        );
 
       }
 
@@ -62,19 +58,26 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
 
   }
 
-  Stream<ConnectState> _mapReconnectToState() async* {
+  void _mapReconnectToState(Reconnect event, Emitter<ConnectState> emit) async {
 
-    yield Connecting();
+    emit(
+      Connecting(),
+    );
 
     try {
 
       collectionRepository.reconnect();
       await collectionRepository.open();
-      yield Connected();
+
+      emit(
+        Connected(),
+      );
 
     } catch(e) {
 
-      yield FailedConnection(e.toString());
+      emit(
+        FailedConnection(e.toString()),
+      );
 
     }
 

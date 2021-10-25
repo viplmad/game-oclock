@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:bloc/bloc.dart';
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
@@ -14,19 +14,12 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
 
   final R repository;
 
-  @override
-  Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
-
-    yield* checkConnection();
-
-    yield* super.mapEventToState(event);
-
-  }
-
-  Stream<ItemSearchState> checkConnection() async* {
+  void _checkConnection(Emitter<ItemSearchState> emit) async {
 
     if(repository.isClosed()) {
-      yield const ItemSearchError('Connection lost. Trying to reconnect');
+      emit(
+        const ItemSearchError('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -35,10 +28,21 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
 
       } catch(e) {
 
-        yield ItemSearchError(e.toString());
+        emit(
+          ItemSearchError(e.toString()),
+        );
 
       }
     }
+
+  }
+
+  @override
+  void mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
+
+    _checkConnection(emit);
+
+    super.mapTextChangedToState(event, emit);
 
   }
 }

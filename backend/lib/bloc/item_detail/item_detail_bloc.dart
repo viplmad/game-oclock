@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
@@ -17,6 +18,10 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
     required this.managerBloc,
   }) : super(ItemLoading()) {
 
+    on<LoadItem>(_mapLoadToState);
+    on<ReloadItem>(_mapReloadToState);
+    on<UpdateItem<T>>(_mapUpdateToState);
+
     managerSubscription = managerBloc.stream.listen(_mapDetailManagerStateToEvent);
 
   }
@@ -26,31 +31,12 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
   final ItemDetailManagerBloc<T, E, ID, R> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
-  @override
-  Stream<ItemDetailState> mapEventToState(ItemDetailEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is LoadItem) {
-
-      yield* _mapLoadToState(event);
-
-    } else if(event is ReloadItem) {
-
-      yield* _mapReloadToState(event);
-
-    } else if(event is UpdateItem<T>) {
-
-      yield* _mapUpdateToState(event);
-
-    }
-
-  }
-
-  Stream<ItemDetailState> _checkConnection() async* {
+  void _checkConnection(Emitter<ItemDetailState> emit) async {
 
     if(repository.isClosed()) {
-      yield const ItemNotLoaded('Connection lost. Trying to reconnect');
+      emit(
+        const ItemNotLoaded('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -59,49 +45,57 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
 
       } catch (e) {
 
-        yield ItemNotLoaded(e.toString());
+        emit(
+          ItemNotLoaded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemDetailState> _mapLoadToState(LoadItem event) async* {
+  void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) {
 
-    yield ItemLoading();
+    emit(
+      ItemLoading(),
+    );
 
-    yield* _mapAnyLoadToState();
-
-  }
-
-  Stream<ItemDetailState> _mapReloadToState(ReloadItem event) async* {
-
-    yield* _mapAnyLoadToState();
+    _mapAnyLoadToState(emit);
 
   }
 
-  Stream<ItemDetailState> _mapAnyLoadToState() async* {
+  void _mapReloadToState(ReloadItem event, Emitter<ItemDetailState> emit) {
+
+    _mapAnyLoadToState(emit);
+
+  }
+
+  void _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
-      final T? item = await getReadFuture();
-      if(item != null) {
-        yield ItemLoaded<T>(item);
-      } else {
-        throw Exception();
-      }
+      final T item = await getReadFuture();
+      emit(
+        ItemLoaded<T>(item),
+      );
 
     } catch (e) {
 
-      yield ItemNotLoaded(e.toString());
+      emit(
+        ItemNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<ItemDetailState> _mapUpdateToState(UpdateItem<T> event) async* {
+  void _mapUpdateToState(UpdateItem<T> event,Emitter<ItemDetailState> emit) {
 
-    yield ItemLoaded<T>(event.item);
+    emit(
+      ItemLoaded<T>(event.item),
+    );
 
   }
 
@@ -139,5 +133,6 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
 
   }
 
+  @protected
   Future<T> getReadFuture();
 }

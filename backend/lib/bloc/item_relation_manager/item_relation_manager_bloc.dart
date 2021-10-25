@@ -11,31 +11,17 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
   ItemRelationManagerBloc({
     required this.id,
     required this.collectionRepository,
-  }) : super(ItemRelationManagerInitialised());
+  }) : super(ItemRelationManagerInitialised()) {
+
+    on<AddItemRelation<W>>(_mapAddRelationToState);
+    on<DeleteItemRelation<W>>(_mapDeleteRelationToState);
+
+  }
 
   final ID id;
   final GameCollectionRepository collectionRepository;
 
-  @override
-  Stream<ItemRelationManagerState> mapEventToState(ItemRelationManagerEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is AddItemRelation<W>) {
-
-    yield* _mapAddRelationToState(event);
-
-    } else if(event is DeleteItemRelation<W>) {
-
-    yield* _mapDeleteRelationToState(event);
-
-    }
-
-    yield ItemRelationManagerInitialised();
-
-  }
-
-  Stream<ItemRelationManagerState> _checkConnection() async* {
+  void _checkConnection(Emitter<ItemRelationManagerState> emit) async {
 
     if(collectionRepository.isClosed()) {
 
@@ -46,50 +32,75 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
 
       } catch (e) {
 
-        yield ItemRelationNotAdded(e.toString());
+        emit(
+          ItemRelationNotAdded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemRelationManagerState> _mapAddRelationToState(AddItemRelation<W> event) async* {
+  void _mapAddRelationToState(AddItemRelation<W> event, Emitter<ItemRelationManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try{
 
       await addRelationFuture(event);
-      yield ItemRelationAdded<W>(event.otherItem);
+      emit(
+        ItemRelationAdded<W>(event.otherItem),
+      );
 
     } catch(e) {
 
-      yield ItemRelationNotAdded(e.toString());
+      emit(
+        ItemRelationNotAdded(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemRelationManagerInitialised(),
+    );
+
   }
 
-  Stream<ItemRelationManagerState> _mapDeleteRelationToState(DeleteItemRelation<W> event) async* {
+  void _mapDeleteRelationToState(DeleteItemRelation<W> event, Emitter<ItemRelationManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try{
 
       await deleteRelationFuture(event);
-      yield ItemRelationDeleted<W>(event.otherItem);
+      emit(
+        ItemRelationDeleted<W>(event.otherItem),
+      );
 
     } catch(e) {
 
-      yield ItemRelationNotDeleted(e.toString());
+      emit(
+        ItemRelationNotDeleted(e.toString()),
+      );
 
     }
+
+    emit(
+      ItemRelationManagerInitialised(),
+    );
 
   }
 
   @mustCallSuper
+  @protected
   Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
     return Future<Object?>.error('Relation does not exist');
 
   }
+
   @mustCallSuper
+  @protected
   Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
     return Future<Object?>.error('Relation does not exist');

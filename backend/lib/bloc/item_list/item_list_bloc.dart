@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
@@ -17,6 +18,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     required ItemListManagerBloc<T, E, ID, R> managerBloc,
   }) : super(ItemListLoading()) {
 
+    on<LoadItemList>(_mapLoadToState);
+    on<UpdateItemList<T>>(_mapUpdateListToState);
+    on<UpdateListItem<T>>(_mapUpdateItemToState);
+    on<UpdateView>(_mapUpdateViewToState);
+    on<UpdateYearView>(_mapUpdateYearViewToState);
+    on<UpdateSortOrder>(_mapUpdateSortOrderToState);
+    on<UpdateStyle>(_mapUpdateStyleToState);
+
     managerSubscription = managerBloc.stream.listen(mapListManagerStateToEvent);
 
   }
@@ -24,47 +33,12 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
   final R repository;
   late final StreamSubscription<ItemListManagerState> managerSubscription;
 
-  @override
-  Stream<ItemListState> mapEventToState(ItemListEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is LoadItemList) {
-
-      yield* _mapLoadToState();
-
-    } else if(event is UpdateItemList<T>) {
-
-      yield* _mapUpdateListToState(event);
-
-    } else if(event is UpdateListItem<T>) {
-
-      yield* _mapUpdateItemToState(event);
-
-    } else if(event is UpdateView) {
-
-      yield* _mapUpdateViewToState(event);
-
-    } else if(event is UpdateYearView) {
-
-      yield* _mapUpdateYearViewToState(event);
-
-    } else if(event is UpdateSortOrder) {
-
-      yield* _mapUpdateSortOrderToState(event);
-
-    } else if(event is UpdateStyle) {
-
-      yield* _mapUpdateStyleToState(event);
-
-    }
-
-  }
-
-  Stream<ItemListState> _checkConnection() async* {
+  void _checkConnection(Emitter<ItemListState> emit) async {
 
     if(repository.isClosed()) {
-      yield const ItemListNotLoaded('Connection lost. Trying to reconnect');
+      emit(
+        const ItemListNotLoaded('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -73,42 +47,54 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
       } catch (e) {
 
-        yield ItemListNotLoaded(e.toString());
+        emit(
+          ItemListNotLoaded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemListState> _mapLoadToState() async* {
+  void _mapLoadToState(LoadItemList event, Emitter<ItemListState> emit) async {
 
-    yield ItemListLoading();
+    _checkConnection(emit);
+
+    emit(
+      ItemListLoading(),
+    );
 
     try {
 
       final List<T> items = await getReadAllStream();
-      yield ItemListLoaded<T>(items);
+      emit(
+        ItemListLoaded<T>(items),
+      );
 
     } catch (e) {
 
-      yield ItemListNotLoaded(e.toString());
+      emit(
+        ItemListNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<ItemListState> _mapUpdateListToState(UpdateItemList<T> event) async* {
+  void _mapUpdateListToState(UpdateItemList<T> event, Emitter<ItemListState> emit) {
 
-    yield ItemListLoaded<T>(
-      event.items,
-      event.viewIndex,
-      event.year,
-      event.style,
+    emit(
+      ItemListLoaded<T>(
+        event.items,
+        event.viewIndex,
+        event.year,
+        event.style,
+      ),
     );
 
   }
 
-  Stream<ItemListState> _mapUpdateItemToState(UpdateListItem<T> event) async* {
+  void _mapUpdateItemToState(UpdateListItem<T> event, Emitter<ItemListState> emit) {
 
     if(state is ItemListLoaded<T>) {
       final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
@@ -123,11 +109,13 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
         final int year = (state as ItemListLoaded<T>).year;
         final ListStyle style = (state as ItemListLoaded<T>).style;
 
-        yield ItemListLoaded<T>(
-          items,
-          viewIndex,
-          year,
-          style,
+        emit(
+          ItemListLoaded<T>(
+            items,
+            viewIndex,
+            year,
+            style,
+          ),
         );
       }
 
@@ -135,61 +123,77 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   }
 
-  Stream<ItemListState> _mapUpdateViewToState(UpdateView event) async* {
+  void _mapUpdateViewToState(UpdateView event, Emitter<ItemListState> emit) async {
+
+    _checkConnection(emit);
 
     ListStyle? style;
     if(state is ItemListLoaded<T>) {
        style = (state as ItemListLoaded<T>).style;
     }
 
-    yield ItemListLoading();
+    emit(
+      ItemListLoading(),
+    );
 
     try {
 
       final List<T> items = await getReadViewStream(event);
-      yield ItemListLoaded<T>(
-        items,
-        event.viewIndex,
-        null,
-        style,
+      emit(
+        ItemListLoaded<T>(
+          items,
+          event.viewIndex,
+          null,
+          style,
+        ),
       );
 
     } catch(e) {
 
-      yield ItemListNotLoaded(e.toString());
+      emit(
+        ItemListNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<ItemListState> _mapUpdateYearViewToState(UpdateYearView event) async* {
+  void _mapUpdateYearViewToState(UpdateYearView event, Emitter<ItemListState> emit) async {
+
+    _checkConnection(emit);
 
     ListStyle? style;
     if(state is ItemListLoaded<T>) {
        style = (state as ItemListLoaded<T>).style;
     }
 
-    yield ItemListLoading();
+    emit(
+      ItemListLoading(),
+    );
 
     try {
 
       final List<T> items = await getReadYearViewStream(event);
-      yield ItemListLoaded<T>(
-        items,
-        event.viewIndex,
-        event.year,
-        style,
+      emit(
+        ItemListLoaded<T>(
+          items,
+          event.viewIndex,
+          event.year,
+          style,
+        ),
       );
 
     } catch(e) {
 
-      yield ItemListNotLoaded(e.toString());
+      emit(
+        ItemListNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<ItemListState> _mapUpdateSortOrderToState(UpdateSortOrder event) async* {
+  void _mapUpdateSortOrderToState(UpdateSortOrder event, Emitter<ItemListState> emit) {
 
     if(state is ItemListLoaded<T>) {
       final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList(growable: false);
@@ -198,17 +202,19 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
       final int year = (state as ItemListLoaded<T>).year;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
-      yield ItemListLoaded<T>(
-        reversedItems,
-        viewIndex,
-        year,
-        style,
+      emit(
+        ItemListLoaded<T>(
+          reversedItems,
+          viewIndex,
+          year,
+          style,
+        ),
       );
     }
 
   }
 
-  Stream<ItemListState> _mapUpdateStyleToState(UpdateStyle event) async* {
+  void _mapUpdateStyleToState(UpdateStyle event, Emitter<ItemListState> emit) {
 
     if(state is ItemListLoaded<T>) {
       final int rotatingIndex = ((state as ItemListLoaded<T>).style.index + 1) % ListStyle.values.length;
@@ -218,11 +224,13 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
 
-      yield ItemListLoaded<T>(
-        items,
-        viewIndex,
-        year,
-        updatedStyle,
+      emit(
+        ItemListLoaded<T>(
+          items,
+          viewIndex,
+          year,
+          updatedStyle,
+        ),
       );
     }
 
@@ -292,7 +300,10 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   }
 
+  @protected
   Future<List<T>> getReadAllStream();
+  @protected
   Future<List<T>> getReadViewStream(UpdateView event);
+  @protected
   external Future<List<T>> getReadYearViewStream(UpdateYearView event);
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
@@ -29,6 +30,16 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     this.gameFinishRepository = collectionRepository.gameFinishRepository,
     super(CalendarLoading()) {
 
+      on<LoadSingleCalendar>(_mapLoadToState);
+      on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
+      on<UpdateCalendarRange>(_mapUpdateRangeToState);
+      on<UpdateCalendarStyle>(_mapUpdateStyleToState);
+      on<UpdateSelectedDateFirst>(_mapUpdateSelectedDateFirstToState);
+      on<UpdateSelectedDateLast>(_mapUpdateSelectedDateLastToState);
+      on<UpdateSelectedDatePrevious>(_mapUpdateSelectedDatePreviousToState);
+      on<UpdateSelectedDateNext>(_mapUpdateSelectedDateNextToState);
+      on<UpdateSingleCalendar>(_mapUpdateToState);
+
       timeLogManagerSubscription = timeLogManagerBloc.stream.listen(mapTimeLogManagerStateToEvent);
       finishDateManagerSubscription = finishDateManagerBloc.stream.listen(mapFinishDateManagerStateToEvent);
 
@@ -42,55 +53,12 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   late final StreamSubscription<ItemRelationManagerState> timeLogManagerSubscription;
   late final StreamSubscription<ItemRelationManagerState> finishDateManagerSubscription;
 
-  @override
-  Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is LoadSingleCalendar) {
-
-      yield* _mapLoadToState();
-
-    } else if(event is UpdateSelectedDate) {
-
-      yield* _mapUpdateSelectedDateToState(event);
-
-    } else if(event is UpdateCalendarRange) {
-
-      yield* _mapUpdateRangeToState(event);
-
-    } else if(event is UpdateCalendarStyle) {
-
-      yield* _mapUpdateStyleToState(event);
-
-    } else if(event is UpdateSelectedDateFirst) {
-
-      yield* _mapUpdateSelectedDateFirstToState(event);
-
-    } else if(event is UpdateSelectedDateLast) {
-
-      yield* _mapUpdateSelectedDateLastToState(event);
-
-    } else if(event is UpdateSelectedDatePrevious) {
-
-      yield* _mapUpdateSelectedDatePreviousToState(event);
-
-    } else if(event is UpdateSelectedDateNext) {
-
-      yield* _mapUpdateSelectedDateNextToState(event);
-
-    } else if(event is UpdateSingleCalendar) {
-
-      yield* _mapUpdateToState(event);
-
-    }
-
-  }
-
-  Stream<CalendarState> _checkConnection() async* {
+  void _checkConnection(Emitter<CalendarState> emit) async {
 
     if(gameFinishRepository.isClosed()) {
-      yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
+      emit(
+        const CalendarNotLoaded('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -99,16 +67,22 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       } catch (e) {
 
-        yield CalendarNotLoaded(e.toString());
+        emit(
+          CalendarNotLoaded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<CalendarState> _mapLoadToState() async* {
+  void _mapLoadToState(LoadSingleCalendar event, Emitter<CalendarState> emit) async {
 
-    yield CalendarLoading();
+    _checkConnection(emit);
+
+    emit(
+      CalendarLoading(),
+    );
 
     try {
 
@@ -129,26 +103,30 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final bool isSelectedDateFinish = _isSelectedDateFinish(finishDates, selectedDate);
 
-      yield SingleCalendarLoaded(
-        timeLogs,
-        logDates,
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        isSelectedDateFinish,
-        selectedTotalTime,
-        range,
+      emit(
+        SingleCalendarLoaded(
+          timeLogs,
+          logDates,
+          finishDates,
+          selectedDate,
+          selectedTimeLogs,
+          isSelectedDateFinish,
+          selectedTotalTime,
+          range,
+        ),
       );
 
     } catch (e) {
 
-      yield CalendarNotLoaded(e.toString());
+      emit(
+        CalendarNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateToState(UpdateSelectedDate event) async* {
+  void _mapUpdateSelectedDateToState(UpdateSelectedDate event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -171,22 +149,24 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final bool isSelectedDateFinish = _isSelectedDateFinish(finishDates, event.date);
 
-      yield SingleCalendarLoaded(
-        timeLogs,
-        logDates,
-        finishDates,
-        event.date,
-        selectedTimeLogs,
-        isSelectedDateFinish,
-        selectedTotalTime,
-        range,
-        style,
+      emit(
+        SingleCalendarLoaded(
+          timeLogs,
+          logDates,
+          finishDates,
+          event.date,
+          selectedTimeLogs,
+          isSelectedDateFinish,
+          selectedTotalTime,
+          range,
+          style,
+        ),
       );
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
+  void _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
@@ -200,7 +180,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
+  void _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
@@ -214,7 +194,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
+  void _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
@@ -228,7 +208,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
+  void _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
@@ -242,7 +222,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateRangeToState(UpdateCalendarRange event) async* {
+  void _mapUpdateRangeToState(UpdateCalendarRange event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -258,23 +238,25 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
         final Duration selectedTotalTime = RangeListUtils.getTotalTime(selectedTimeLogs);
 
-        yield SingleCalendarLoaded(
-          timeLogs,
-          logDates,
-          finishDates,
-          selectedDate,
-          selectedTimeLogs,
-          isSelectedDateFinish,
-          selectedTotalTime,
-          event.range,
-          style,
+        emit(
+          SingleCalendarLoaded(
+            timeLogs,
+            logDates,
+            finishDates,
+            selectedDate,
+            selectedTimeLogs,
+            isSelectedDateFinish,
+            selectedTotalTime,
+            event.range,
+            style,
+          ),
         );
       }
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateStyleToState(UpdateCalendarStyle event) async* {
+  void _mapUpdateStyleToState(UpdateCalendarStyle event, Emitter<CalendarState> emit) {
 
     if(state is SingleCalendarLoaded) {
       final List<GameTimeLog> timeLogs = (state as SingleCalendarLoaded).timeLogs;
@@ -289,33 +271,37 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final int rotatingIndex = ((state as SingleCalendarLoaded).style.index + 1) % CalendarStyle.values.length;
       final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
 
-      yield SingleCalendarLoaded(
-        timeLogs,
-        logDates,
-        finishDates,
-        selectedDate,
-        selectedTimeLogs,
-        isSelectedDateFinish,
-        selectedTotalTime,
-        range,
-        updatedStyle,
+      emit(
+        SingleCalendarLoaded(
+          timeLogs,
+          logDates,
+          finishDates,
+          selectedDate,
+          selectedTimeLogs,
+          isSelectedDateFinish,
+          selectedTotalTime,
+          range,
+          updatedStyle,
+        ),
       );
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateToState(UpdateSingleCalendar event) async* {
+  void _mapUpdateToState(UpdateSingleCalendar event, Emitter<CalendarState> emit) {
 
-    yield SingleCalendarLoaded(
-      event.timeLogs,
-      event.logDates,
-      event.finishDates,
-      event.selectedDate,
-      event.selectedTimeLogs,
-      event.isSelectedDateFinish,
-      event.selectedTotalTime,
-      event.range,
-      event.style,
+    emit(
+      SingleCalendarLoaded(
+        event.timeLogs,
+        event.logDates,
+        event.finishDates,
+        event.selectedDate,
+        event.selectedTimeLogs,
+        event.isSelectedDateFinish,
+        event.selectedTotalTime,
+        event.range,
+        event.style,
+      ),
     );
 
   }
@@ -562,6 +548,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
+  @protected
   Future<List<GameTimeLog>> getReadAllTimeLogsStream() {
 
     final Future<List<GameTimeLogEntity>> entityListFuture = gameTimeLogRepository.findAllFromGame(id);
@@ -569,6 +556,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
+  @protected
   Future<List<GameFinish>> getReadAllFinishDatesStream() {
 
     final Future<List<GameFinishEntity>> entityListFuture = gameFinishRepository.findAllFromGame(id);

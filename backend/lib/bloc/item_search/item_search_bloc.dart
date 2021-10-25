@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
@@ -8,25 +9,21 @@ import 'item_search.dart';
 
 
 abstract class ItemSearchBloc<T extends Item> extends Bloc<ItemSearchEvent, ItemSearchState> {
-  ItemSearchBloc() : super(ItemSearchEmpty<T>());
+  ItemSearchBloc() : super(ItemSearchEmpty<T>()) {
+
+    on<SearchTextChanged>(mapTextChangedToState);
+
+  }
 
   final int maxResults = 10;
   final int maxSuggestions = 6;
 
-  @override
-  Stream<ItemSearchState> mapEventToState(ItemSearchEvent event) async* {
+  @protected
+  void mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
 
-    if(event is SearchTextChanged) {
-
-      yield* _mapTextChangedToState(event);
-
-    }
-
-  }
-
-  Stream<ItemSearchState> _mapTextChangedToState(SearchTextChanged event) async* {
-
-    yield ItemSearchLoading();
+    emit(
+      ItemSearchLoading(),
+    );
 
     try {
 
@@ -34,23 +31,31 @@ abstract class ItemSearchBloc<T extends Item> extends Bloc<ItemSearchEvent, Item
       if(query.isEmpty) {
 
         final List<T> initialItems = await getInitialItems();
-        yield ItemSearchEmpty<T>(initialItems);
+        emit(
+          ItemSearchEmpty<T>(initialItems),
+        );
 
       } else {
 
         final List<T> items = await getSearchItems(query);
-        yield ItemSearchSuccess<T>(items);
+        emit(
+          ItemSearchSuccess<T>(items),
+        );
 
       }
 
     } catch(e) {
 
-      yield ItemSearchError(e.toString());
+      emit(
+        ItemSearchError(e.toString()),
+      );
 
     }
 
   }
 
+  @protected
   Future<List<T>> getInitialItems();
+  @protected
   Future<List<T>> getSearchItems(String query);
 }

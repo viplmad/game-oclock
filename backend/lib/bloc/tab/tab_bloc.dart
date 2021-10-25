@@ -1,55 +1,46 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 
 import 'tab.dart';
 
 
 class TabBloc extends Bloc<TabEvent, TabState> {
-  TabBloc() : super(const TabState());
+  TabBloc() : super(const TabState()) {
 
-  @override
-  Stream<TabState> mapEventToState(TabEvent event) async* {
-
-    if(event is UpdateTab) {
-
-      yield* _mapUpdateTabToState(event);
-
-    } else if(event is UpdateMainTab) {
-
-      yield* _mapUpdateMainTabToState(event);
-
-    } else if(event is UpdateGameTab) {
-
-      yield* _mapUpdateGameTabToState(event);
-
-    }
+    on<UpdateTab>(_mapUpdateTabToState);
+    on<UpdateMainTab>(_mapUpdateMainTabToState);
+    on<UpdateGameTab>(_mapUpdateGameTabToState);
 
   }
 
-  Stream<TabState> _mapUpdateTabToState(UpdateTab event) async* {
+  void _mapUpdateTabToState(UpdateTab event, Emitter<TabState> emit) {
 
-    yield TabState(
-      event.mainTab,
-      event.gameTab,
+    emit(
+      TabState(
+        event.mainTab,
+        event.gameTab,
+      ),
     );
 
   }
 
-  Stream<TabState> _mapUpdateMainTabToState(UpdateMainTab event) async* {
+  void _mapUpdateMainTabToState(UpdateMainTab event, Emitter<TabState> emit) {
 
-    yield TabState(
-      event.mainTab,
-      state.gameTab,
+    emit(
+      TabState(
+        event.mainTab,
+        state.gameTab,
+      ),
     );
 
   }
 
-  Stream<TabState> _mapUpdateGameTabToState(UpdateGameTab event) async* {
+  void _mapUpdateGameTabToState(UpdateGameTab event, Emitter<TabState> emit) {
 
-    yield TabState(
-      state.mainTab,
-      event.gameTab,
+    emit(
+      TabState(
+        state.mainTab,
+        event.gameTab,
+      ),
     );
 
   }

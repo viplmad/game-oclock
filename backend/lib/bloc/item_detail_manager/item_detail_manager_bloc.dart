@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
@@ -11,39 +12,19 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
   ItemDetailManagerBloc({
     required this.id,
     required this.repository,
-  }) : super(ItemDetailManagerInitialised());
+  }) : super(ItemDetailManagerInitialised()) {
+
+    on<UpdateItemField<T>>(_mapUpdateFieldToState);
+    on<AddItemImage<T>>(_mapAddImageToState);
+    on<UpdateItemImageName<T>>(_mapUpdateImageNameToState);
+    on<DeleteItemImage<T>>(_mapDeleteImageToState);
+
+  }
 
   final ID id;
   final R repository;
 
-  @override
-  Stream<ItemDetailManagerState> mapEventToState(ItemDetailManagerEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is UpdateItemField<T>) {
-
-      yield* _mapUpdateFieldToState(event);
-
-    } else if(event is AddItemImage<T>) {
-
-      yield* _mapAddImageToState(event);
-
-    } else if(event is UpdateItemImageName<T>) {
-
-      yield* _mapUpdateImageNameToState(event);
-
-    } else if(event is DeleteItemImage<T>) {
-
-      yield* _mapDeleteImageToState(event);
-
-    }
-
-    yield ItemDetailManagerInitialised();
-
-  }
-
-  Stream<ItemDetailManagerState> _checkConnection() async* {
+  void _checkConnection(Emitter<ItemDetailManagerState> emit) async {
 
     if(repository.isClosed()) {
 
@@ -54,77 +35,123 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
       } catch(e) {
 
-        yield ItemFieldNotUpdated(e.toString());
+        emit(
+          ItemFieldNotUpdated(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemDetailManagerState> _mapUpdateFieldToState(UpdateItemField<T> event) async* {
+  void _mapUpdateFieldToState(UpdateItemField<T> event, Emitter<ItemDetailManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
       if(event.item != event.updatedItem) {
         final T updatedItem = await updateFuture(event);
-        yield ItemFieldUpdated<T>(updatedItem);
+        emit(
+          ItemFieldUpdated<T>(updatedItem),
+        );
       }
 
     } catch(e) {
 
-      yield ItemFieldNotUpdated(e.toString());
+      emit(
+        ItemFieldNotUpdated(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemDetailManagerInitialised(),
+    );
+
   }
 
-  Stream<ItemDetailManagerState> _mapAddImageToState(AddItemImage<T> event) async* {
+  void _mapAddImageToState(AddItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
       final T updatedItem = await addImage(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      emit(
+        ItemImageUpdated<T>(updatedItem),
+      );
 
     } catch(e) {
 
-      yield ItemImageNotUpdated(e.toString());
+      emit(
+        ItemImageNotUpdated(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemDetailManagerInitialised(),
+    );
+
   }
 
-  Stream<ItemDetailManagerState> _mapUpdateImageNameToState(UpdateItemImageName<T> event) async* {
+  void _mapUpdateImageNameToState(UpdateItemImageName<T> event, Emitter<ItemDetailManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
       final T updatedItem = await updateImageName(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      emit(
+        ItemImageUpdated<T>(updatedItem),)
+      ;
 
     } catch(e) {
 
-      yield ItemImageNotUpdated(e.toString());
+      emit(
+        ItemImageNotUpdated(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemDetailManagerInitialised(),
+    );
+
   }
 
-  Stream<ItemDetailManagerState> _mapDeleteImageToState(DeleteItemImage<T> event) async* {
+  void _mapDeleteImageToState(DeleteItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
       final T updatedItem = await deleteImage(event);
-      yield ItemImageUpdated<T>(updatedItem);
+      emit(
+        ItemImageUpdated<T>(updatedItem),
+      );
 
     } catch(e) {
 
-      yield ItemImageNotUpdated(e.toString());
+      emit(
+        ItemImageNotUpdated(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemDetailManagerInitialised(),
+    );
+
   }
 
+  @protected
   Future<T> updateFuture(UpdateItemField<T> event) ;
+  @protected
   external Future<T> addImage(AddItemImage<T> event);
+  @protected
   external Future<T> deleteImage(DeleteItemImage<T> event);
+  @protected
   external Future<T> updateImageName(UpdateItemImageName<T> event);
 }

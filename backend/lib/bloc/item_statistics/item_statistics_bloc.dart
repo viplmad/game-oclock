@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart';
@@ -10,62 +11,66 @@ import 'item_statistics.dart';
 abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
   ItemStatisticsBloc({
     required this.items,
-  }) : super(ItemStatisticsLoading());
+  }) : super(ItemStatisticsLoading()) {
 
-  final List<T> items;
-
-  @override
-  Stream<ItemStatisticsState> mapEventToState(ItemStatisticsEvent event) async* {
-
-    if(event is LoadGeneralItemStatistics) {
-
-      yield* _mapLoadGeneralToState();
-
-    } else if(event is LoadYearItemStatistics) {
-
-      yield* _mapLoadYearToState(event);
-
-    }
+    on<LoadGeneralItemStatistics>(_mapLoadGeneralToState);
+    on<LoadYearItemStatistics>(_mapLoadYearToState);
 
   }
 
-  Stream<ItemStatisticsState> _mapLoadGeneralToState() async* {
+  final List<T> items;
 
-    yield ItemStatisticsLoading();
+  void _mapLoadGeneralToState(LoadGeneralItemStatistics event, Emitter<ItemStatisticsState> emit) async {
+
+    emit(
+      ItemStatisticsLoading(),
+    );
 
     try {
 
       final D itemData = await getGeneralItemData();
-      yield ItemGeneralStatisticsLoaded<T, D>(itemData);
-
-    } catch (e) {
-
-      yield ItemStatisticsNotLoaded(e.toString());
-
-    }
-
-  }
-
-  Stream<ItemStatisticsState> _mapLoadYearToState(LoadYearItemStatistics event) async* {
-
-    yield ItemStatisticsLoading();
-
-    try {
-
-      final D itemData = await getItemData(event);
-      yield ItemYearStatisticsLoaded<T, D>(
-        itemData,
-        event.year,
+      emit(
+        ItemGeneralStatisticsLoaded<T, D>(itemData),
       );
 
     } catch (e) {
 
-      yield ItemStatisticsNotLoaded(e.toString());
+      emit(
+        ItemStatisticsNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
+  void _mapLoadYearToState(LoadYearItemStatistics event, Emitter<ItemStatisticsState> emit) async {
+
+    emit(
+      ItemStatisticsLoading(),
+    );
+
+    try {
+
+      final D itemData = await getItemData(event);
+      emit(
+        ItemYearStatisticsLoaded<T, D>(
+          itemData,
+          event.year,
+        ),
+      );
+
+    } catch (e) {
+
+      emit(
+        ItemStatisticsNotLoaded(e.toString()),
+      );
+
+    }
+
+  }
+
+  @protected
   Future<D> getGeneralItemData();
+  @protected
   Future<D> getItemData(LoadYearItemStatistics event);
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/utils/datetime_extension.dart';
@@ -22,61 +23,30 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }) :
     this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
     this.gameRepository = collectionRepository.gameRepository,
-    super(CalendarLoading());
+    super(CalendarLoading()) {
+
+      on<LoadMultiCalendar>(_mapLoadToState);
+      on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
+      on<UpdateCalendarRange>(_mapUpdateRangeToState);
+      on<UpdateCalendarStyle>(_mapUpdateStyleToState);
+      on<UpdateSelectedDateFirst>(_mapUpdateSelectedDateFirstToState);
+      on<UpdateSelectedDateLast>(_mapUpdateSelectedDateLastToState);
+      on<UpdateSelectedDatePrevious>(_mapUpdateSelectedDatePreviousToState);
+      on<UpdateSelectedDateNext>(_mapUpdateSelectedDateNextToState);
+      on<UpdateCalendarListItem>(_mapUpdateListItemToState);
+
+    }
 
   final GameTimeLogRepository gameTimeLogRepository;
   final GameRepository gameRepository;
   final Set<int> yearsLoaded = Set<int>();
 
-  @override
-  Stream<CalendarState> mapEventToState(CalendarEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is LoadMultiCalendar) {
-
-      yield* _mapLoadToState(event);
-
-    } else if(event is UpdateSelectedDate) {
-
-      yield* _mapUpdateSelectedDateToState(event);
-
-    } else if(event is UpdateCalendarRange) {
-
-      yield* _mapUpdateRangeToState(event);
-
-    } else if(event is UpdateCalendarStyle) {
-
-      yield* _mapUpdateStyleToState(event);
-
-    } else if(event is UpdateSelectedDateFirst) {
-
-      yield* _mapUpdateSelectedDateFirstToState(event);
-
-    } else if(event is UpdateSelectedDateLast) {
-
-      yield* _mapUpdateSelectedDateLastToState(event);
-
-    } else if(event is UpdateSelectedDatePrevious) {
-
-      yield* _mapUpdateSelectedDatePreviousToState(event);
-
-    } else if(event is UpdateSelectedDateNext) {
-
-      yield* _mapUpdateSelectedDateNextToState(event);
-
-    } else if(event is UpdateCalendarListItem) {
-
-      yield* _mapUpdateListItemToState(event);
-
-    }
-
-  }
-
-  Stream<CalendarState> _checkConnection() async* {
+  void _checkConnection(Emitter<CalendarState> emit) async {
 
     if(gameTimeLogRepository.isClosed()) {
-      yield const CalendarNotLoaded('Connection lost. Trying to reconnect');
+      emit(
+        const CalendarNotLoaded('Connection lost. Trying to reconnect'),
+      );
 
       try {
 
@@ -85,24 +55,28 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       } catch (e) {
 
-        yield CalendarNotLoaded(e.toString());
+        emit(
+          CalendarNotLoaded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<CalendarState> _mapLoadToState(LoadMultiCalendar event) async* {
+  void _mapLoadToState(LoadMultiCalendar event, Emitter<CalendarState> emit) {
+
+    _checkConnection(emit);
 
     if(event.year <= DateTime.now().year && yearsLoaded.add(event.year)) {
 
       if(state is MultiCalendarLoaded) {
 
-        yield* _mapLoadAdditionalCalendar(event.year);
+        _mapLoadAdditionalCalendar(event.year, emit);
 
       } else {
 
-        yield* _mapLoadInitialCalendar(event.year);
+        _mapLoadInitialCalendar(event.year, emit);
 
       }
 
@@ -110,9 +84,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapLoadInitialCalendar(int year) async* {
+  void _mapLoadInitialCalendar(int year, Emitter<CalendarState> emit) async {
 
-    yield CalendarLoading();
+    emit(
+      CalendarLoading(),
+    );
 
     try {
 
@@ -130,25 +106,29 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final Duration selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
 
-      yield MultiCalendarLoaded(
-        gamesWithLogs,
-        logDates,
-        selectedDate,
-        selectedDate,
-        selectedGamesWithLogs,
-        selectedTotalTime,
-        range,
+      emit(
+        MultiCalendarLoaded(
+          gamesWithLogs,
+          logDates,
+          selectedDate,
+          selectedDate,
+          selectedGamesWithLogs,
+          selectedTotalTime,
+          range,
+        ),
       );
 
     } catch (e) {
 
-      yield CalendarNotLoaded(e.toString());
+      emit(
+        CalendarNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<CalendarState> _mapLoadAdditionalCalendar(int year) async* {
+  void _mapLoadAdditionalCalendar(int year, Emitter<CalendarState> emit) async {
 
     try {
 
@@ -179,37 +159,43 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(style == CalendarStyle.Graph) {
         final List<GameTimeLog> selectedTimeLogs = (state as MultiCalendarGraphLoaded).selectedTimeLogs;
 
-        yield MultiCalendarGraphLoaded(
-          gamesWithLogs,
-          logDates,
-          focusedDate,
-          selectedDate,
-          selectedGamesWithLogs,
-          selectedTimeLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarGraphLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTimeLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       } else {
-        yield MultiCalendarLoaded(
-          gamesWithLogs,
-          logDates,
-          focusedDate,
-          selectedDate,
-          selectedGamesWithLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       }
 
     } catch (e) {
 
-      yield CalendarNotLoaded(e.toString());
+      emit(
+        CalendarNotLoaded(e.toString()),
+      );
 
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateToState(UpdateSelectedDate event) async* {
+  void _mapUpdateSelectedDateToState(UpdateSelectedDate event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final List<GameWithLogs> gamesWithLogs = (state as MultiCalendarLoaded).gamesWithLogs;
@@ -232,32 +218,36 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       if(style == CalendarStyle.Graph) {
         final List<GameTimeLog> selectedTimeLogs =  _selectedTimeLogsInRange(selectedGamesWithLogs, event.date, range);
 
-        yield MultiCalendarGraphLoaded(
-          gamesWithLogs,
-          logDates,
-          event.date,
-          event.date,
-          selectedGamesWithLogs,
-          selectedTimeLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarGraphLoaded(
+            gamesWithLogs,
+            logDates,
+            event.date,
+            event.date,
+            selectedGamesWithLogs,
+            selectedTimeLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       } else {
-        yield MultiCalendarLoaded(
-          gamesWithLogs,
-          logDates,
-          event.date,
-          event.date,
-          selectedGamesWithLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarLoaded(
+            gamesWithLogs,
+            logDates,
+            event.date,
+            event.date,
+            selectedGamesWithLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       }
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event) async* {
+  void _mapUpdateSelectedDateFirstToState(UpdateSelectedDateFirst event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
@@ -271,7 +261,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event) async* {
+  void _mapUpdateSelectedDateLastToState(UpdateSelectedDateLast event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
@@ -285,7 +275,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event) async* {
+  void _mapUpdateSelectedDatePreviousToState(UpdateSelectedDatePrevious event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
@@ -299,7 +289,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event) async* {
+  void _mapUpdateSelectedDateNextToState(UpdateSelectedDateNext event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
@@ -313,7 +303,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  Stream<CalendarState> _mapUpdateRangeToState(UpdateCalendarRange event) async* {
+  void _mapUpdateRangeToState(UpdateCalendarRange event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final List<GameWithLogs> gamesWithLogs = (state as MultiCalendarLoaded).gamesWithLogs;
@@ -331,32 +321,36 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         if(style == CalendarStyle.Graph) {
           final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(selectedGamesWithLogs, selectedDate, event.range);
 
-          yield MultiCalendarGraphLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
-            selectedTimeLogs,
-            selectedTotalTime,
-            event.range,
+          emit(
+            MultiCalendarGraphLoaded(
+              gamesWithLogs,
+              logDates,
+              focusedDate,
+              selectedDate,
+              selectedGamesWithLogs,
+              selectedTimeLogs,
+              selectedTotalTime,
+              event.range,
+            ),
           );
         } else {
-          yield MultiCalendarLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
-            selectedTotalTime,
-            event.range,
+          emit(
+            MultiCalendarLoaded(
+              gamesWithLogs,
+              logDates,
+              focusedDate,
+              selectedDate,
+              selectedGamesWithLogs,
+              selectedTotalTime,
+              event.range,
+            ),
           );
         }
       }
     }
   }
 
-  Stream<CalendarState> _mapUpdateStyleToState(UpdateCalendarStyle event) async* {
+  void _mapUpdateStyleToState(UpdateCalendarStyle event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final List<GameWithLogs> gamesWithLogs = (state as MultiCalendarLoaded).gamesWithLogs;
@@ -371,34 +365,38 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarStyle updatedStyle = CalendarStyle.values.elementAt(rotatingIndex);
 
       if(updatedStyle == CalendarStyle.List) {
-        yield MultiCalendarLoaded(
-          gamesWithLogs,
-          logDates,
-          focusedDate,
-          selectedDate,
-          selectedGamesWithLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       } else if(updatedStyle == CalendarStyle.Graph) {
         final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(selectedGamesWithLogs, selectedDate, range);
 
-        yield MultiCalendarGraphLoaded(
-          gamesWithLogs,
-          logDates,
-          focusedDate,
-          selectedDate,
-          selectedGamesWithLogs,
-          selectedTimeLogs,
-          selectedTotalTime,
-          range,
+        emit(
+          MultiCalendarGraphLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTimeLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
       }
     }
 
   }
 
-  Stream<CalendarState> _mapUpdateListItemToState(UpdateCalendarListItem event) async* {
+  void _mapUpdateListItemToState(UpdateCalendarListItem event, Emitter<CalendarState> emit) {
 
     if(state is MultiCalendarLoaded) {
       final List<GameWithLogs> gamesWithLogs = List<GameWithLogs>.from((state as MultiCalendarLoaded).gamesWithLogs);
@@ -426,25 +424,29 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         if(style == CalendarStyle.Graph) {
           final List<GameTimeLog> selectedTimeLogs = (state as MultiCalendarGraphLoaded).selectedTimeLogs;
 
-          yield MultiCalendarGraphLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
-            selectedTimeLogs,
-            selectedTotalTime,
-            range,
+          emit(
+            MultiCalendarGraphLoaded(
+              gamesWithLogs,
+              logDates,
+              focusedDate,
+              selectedDate,
+              selectedGamesWithLogs,
+              selectedTimeLogs,
+              selectedTotalTime,
+              range,
+            ),
           );
         } else {
-          yield MultiCalendarLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
-            selectedTotalTime,
-            range,
+          emit(
+            MultiCalendarLoaded(
+              gamesWithLogs,
+              logDates,
+              focusedDate,
+              selectedDate,
+              selectedGamesWithLogs,
+              selectedTotalTime,
+              range,
+            ),
           );
         }
       }
@@ -520,6 +522,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
+  @protected
   Future<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
 
     final Future<List<GameWithLogsEntity>> entityListFuture = gameTimeLogRepository.findAllWithGameByYear(year);

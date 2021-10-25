@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/entity/entity.dart' show ItemEntity;
@@ -10,30 +11,16 @@ import 'item_list_manager.dart';
 abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
     required this.repository,
-  }) : super(ItemListManagerInitialised());
+  }) : super(ItemListManagerInitialised()) {
 
-  final R repository;
-
-  @override
-  Stream<ItemListManagerState> mapEventToState(ItemListManagerEvent event) async* {
-
-    yield* _checkConnection();
-
-    if(event is AddItem<T>) {
-
-      yield* _mapAddItemToState(event);
-
-    } else if(event is DeleteItem<T>) {
-
-      yield* _mapDeleteItemToState(event);
-
-    }
-
-    yield ItemListManagerInitialised();
+    on<AddItem<T>>(_mapAddItemToState);
+    on<DeleteItem<T>>(_mapDeleteItemToState);
 
   }
 
-  Stream<ItemListManagerState> _checkConnection() async* {
+  final R repository;
+
+  void _checkConnection(Emitter<ItemListManagerState> emit) async {
 
     if(repository.isClosed()) {
 
@@ -44,47 +31,71 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
 
       } catch (e) {
 
-        yield ItemNotAdded(e.toString());
+        emit(
+          ItemNotAdded(e.toString()),
+        );
 
       }
     }
 
   }
 
-  Stream<ItemListManagerState> _mapAddItemToState(AddItem<T> event) async* {
+  void _mapAddItemToState(AddItem<T> event, Emitter<ItemListManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 
       final T? item = await createFuture(event);
       if(item != null) {
-        yield ItemAdded<T>(item);
+        emit(
+          ItemAdded<T>(item),
+        );
       } else {
         throw Exception();
       }
 
     } catch (e) {
 
-      yield ItemNotAdded(e.toString());
+      emit(
+        ItemNotAdded(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemListManagerInitialised(),
+    );
+
   }
 
-  Stream<ItemListManagerState> _mapDeleteItemToState(DeleteItem<T> event) async* {
+  void _mapDeleteItemToState(DeleteItem<T> event, Emitter<ItemListManagerState> emit) async {
+
+    _checkConnection(emit);
 
     try{
 
       await deleteFuture(event);
-      yield ItemDeleted<T>(event.item);
+      emit(
+        ItemDeleted<T>(event.item),
+      );
 
     } catch (e) {
 
-      yield ItemNotDeleted(e.toString());
+      emit(
+        ItemNotDeleted(e.toString()),
+      );
 
     }
 
+    emit(
+      ItemListManagerInitialised(),
+    );
+
   }
 
+  @protected
   Future<T> createFuture(AddItem<T> event);
+  @protected
   Future<Object?> deleteFuture(DeleteItem<T> event);
 }
