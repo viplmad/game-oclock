@@ -112,7 +112,6 @@ class MultiGameCalendar extends StatelessWidget {
 
 }
 
-// ignore: must_be_immutable
 class _MultiGameCalendarBody extends StatelessWidget {
   const _MultiGameCalendarBody({
     Key? key,

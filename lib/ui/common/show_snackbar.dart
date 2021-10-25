@@ -21,6 +21,7 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {required String label
 
   return SnackBarAction(
     label: label,
+    textColor: Colors.white,
     onPressed: () {
       showDialog<bool>(
         context: context,

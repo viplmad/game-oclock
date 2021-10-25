@@ -5,7 +5,6 @@ import 'package:backend/utils/datetime_extension.dart';
 import 'model.dart' show Game, GameTimeLog;
 
 
-// ignore: must_be_immutable
 class GameWithLogs extends Equatable implements Comparable<GameWithLogs> {
   GameWithLogs({
     required this.game,

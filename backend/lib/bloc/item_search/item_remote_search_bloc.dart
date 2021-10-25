@@ -4,6 +4,7 @@ import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
+import '../bloc_utils.dart';
 import 'item_search.dart';
 
 
@@ -16,24 +17,7 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
 
   void _checkConnection(Emitter<ItemSearchState> emit) async {
 
-    if(repository.isClosed()) {
-      emit(
-        const ItemSearchError('Connection lost. Trying to reconnect'),
-      );
-
-      try {
-
-        repository.reconnect();
-        await repository.open();
-
-      } catch(e) {
-
-        emit(
-          ItemSearchError(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<R, ItemSearchState, ItemSearchError>(repository, emit, (final String error) => ItemSearchError(error));
 
   }
 

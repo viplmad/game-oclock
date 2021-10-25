@@ -5,6 +5,7 @@ import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
+import '../bloc_utils.dart';
 import 'item_detail_manager.dart';
 
 
@@ -26,21 +27,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
   void _checkConnection(Emitter<ItemDetailManagerState> emit) async {
 
-    if(repository.isClosed()) {
-
-      try {
-
-        repository.reconnect();
-        await repository.open();
-
-      } catch(e) {
-
-        emit(
-          ItemFieldNotUpdated(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<R, ItemDetailManagerState, ItemFieldNotUpdated>(repository, emit, (final String error) => ItemFieldNotUpdated(error));
 
   }
 

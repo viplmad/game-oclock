@@ -13,6 +13,7 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
+import '../bloc_utils.dart';
 import 'multi_calendar.dart';
 import 'range_list_utils.dart';
 
@@ -43,30 +44,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   void _checkConnection(Emitter<CalendarState> emit) async {
 
-    if(gameTimeLogRepository.isClosed()) {
-      emit(
-        const CalendarNotLoaded('Connection lost. Trying to reconnect'),
-      );
-
-      try {
-
-        gameTimeLogRepository.reconnect();
-        await gameTimeLogRepository.open();
-
-      } catch (e) {
-
-        emit(
-          CalendarNotLoaded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<GameTimeLogRepository, CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
 
   }
 
   void _mapLoadToState(LoadMultiCalendar event, Emitter<CalendarState> emit) {
-
-    _checkConnection(emit);
 
     if(event.year <= DateTime.now().year && yearsLoaded.add(event.year)) {
 
@@ -85,6 +67,8 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   void _mapLoadInitialCalendar(int year, Emitter<CalendarState> emit) async {
+
+    _checkConnection(emit);
 
     emit(
       CalendarLoading(),
@@ -129,6 +113,8 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   void _mapLoadAdditionalCalendar(int year, Emitter<CalendarState> emit) async {
+
+    _checkConnection(emit);
 
     try {
 

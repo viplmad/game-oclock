@@ -8,6 +8,7 @@ import 'package:backend/model/model.dart' show Item;
 import 'package:backend/model/list_style.dart';
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
+import '../bloc_utils.dart';
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
@@ -35,24 +36,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   void _checkConnection(Emitter<ItemListState> emit) async {
 
-    if(repository.isClosed()) {
-      emit(
-        const ItemListNotLoaded('Connection lost. Trying to reconnect'),
-      );
-
-      try {
-
-        repository.reconnect();
-        await repository.open();
-
-      } catch (e) {
-
-        emit(
-          ItemListNotLoaded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<R, ItemListState, ItemListNotLoaded>(repository, emit, (final String error) => ItemListNotLoaded(error));
 
   }
 

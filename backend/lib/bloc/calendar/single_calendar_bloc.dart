@@ -13,6 +13,7 @@ import 'package:backend/repository/repository.dart' show GameCollectionRepositor
 import 'package:backend/model/calendar_range.dart';
 import 'package:backend/model/calendar_style.dart';
 
+import '../bloc_utils.dart';
 import '../item_relation_manager/item_relation_manager.dart';
 import 'single_calendar.dart';
 import 'range_list_utils.dart';
@@ -55,24 +56,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   void _checkConnection(Emitter<CalendarState> emit) async {
 
-    if(gameFinishRepository.isClosed()) {
-      emit(
-        const CalendarNotLoaded('Connection lost. Trying to reconnect'),
-      );
-
-      try {
-
-        gameFinishRepository.reconnect();
-        await gameFinishRepository.open();
-
-      } catch (e) {
-
-        emit(
-          CalendarNotLoaded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<GameTimeLogRepository, CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
 
   }
 

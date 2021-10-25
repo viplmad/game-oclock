@@ -5,6 +5,7 @@ import 'package:backend/entity/entity.dart' show ItemEntity;
 import 'package:backend/model/model.dart' show Item;
 import 'package:backend/repository/repository.dart' show ItemRepository;
 
+import '../bloc_utils.dart';
 import 'item_list_manager.dart';
 
 
@@ -22,21 +23,7 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
 
   void _checkConnection(Emitter<ItemListManagerState> emit) async {
 
-    if(repository.isClosed()) {
-
-      try {
-
-        repository.reconnect();
-        await repository.open();
-
-      } catch (e) {
-
-        emit(
-          ItemNotAdded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<R, ItemListManagerState, ItemNotAdded>(repository, emit, (final String error) => ItemNotAdded(error));
 
   }
 
@@ -46,14 +33,10 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
 
     try {
 
-      final T? item = await createFuture(event);
-      if(item != null) {
-        emit(
-          ItemAdded<T>(item),
-        );
-      } else {
-        throw Exception();
-      }
+      final T item = await createFuture(event);
+      emit(
+        ItemAdded<T>(item),
+      );
 
     } catch (e) {
 

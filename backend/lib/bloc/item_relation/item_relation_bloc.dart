@@ -4,8 +4,9 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
+import '../bloc_utils.dart';
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
@@ -32,24 +33,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
 
   void _checkConnection(Emitter<ItemRelationState> emit) async {
 
-    if(collectionRepository.isClosed()) {
-      emit(
-        const ItemRelationNotLoaded('Connection lost. Trying to reconnect'),
-      );
-
-      try {
-
-        collectionRepository.reconnect();
-        await collectionRepository.open();
-
-      } catch (e) {
-
-        emit(
-          ItemRelationNotLoaded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<GameRepository, ItemRelationState, ItemRelationNotLoaded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotLoaded(error));
 
   }
 

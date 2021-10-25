@@ -2,8 +2,9 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
 
+import '../bloc_utils.dart';
 import 'item_relation_manager.dart';
 
 
@@ -23,21 +24,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
 
   void _checkConnection(Emitter<ItemRelationManagerState> emit) async {
 
-    if(collectionRepository.isClosed()) {
-
-      try {
-
-        collectionRepository.reconnect();
-        await collectionRepository.open();
-
-      } catch (e) {
-
-        emit(
-          ItemRelationNotAdded(e.toString()),
-        );
-
-      }
-    }
+    await BlocUtils.checkConnection<GameRepository, ItemRelationManagerState, ItemRelationNotAdded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotAdded(error));
 
   }
 
