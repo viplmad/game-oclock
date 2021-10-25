@@ -54,15 +54,15 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   late final StreamSubscription<ItemRelationManagerState> timeLogManagerSubscription;
   late final StreamSubscription<ItemRelationManagerState> finishDateManagerSubscription;
 
-  void _checkConnection(Emitter<CalendarState> emit) async {
+  Future<void> _checkConnection(Emitter<CalendarState> emit) async {
 
-    await BlocUtils.checkConnection<GameTimeLogRepository, CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
+    await BlocUtils.checkConnection<CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
 
   }
 
   void _mapLoadToState(LoadSingleCalendar event, Emitter<CalendarState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     emit(
       CalendarLoading(),

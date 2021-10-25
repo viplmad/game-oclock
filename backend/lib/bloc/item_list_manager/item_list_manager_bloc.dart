@@ -21,15 +21,15 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
 
   final R repository;
 
-  void _checkConnection(Emitter<ItemListManagerState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemListManagerState> emit) async {
 
-    await BlocUtils.checkConnection<R, ItemListManagerState, ItemNotAdded>(repository, emit, (final String error) => ItemNotAdded(error));
+    await BlocUtils.checkConnection<ItemListManagerState, ItemNotAdded>(repository, emit, (final String error) => ItemNotAdded(error));
 
   }
 
   void _mapAddItemToState(AddItem<T> event, Emitter<ItemListManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 
@@ -54,7 +54,7 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID exte
 
   void _mapDeleteItemToState(DeleteItem<T> event, Emitter<ItemListManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try{
 

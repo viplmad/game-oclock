@@ -15,16 +15,16 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
 
   final R repository;
 
-  void _checkConnection(Emitter<ItemSearchState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemSearchState> emit) async {
 
-    await BlocUtils.checkConnection<R, ItemSearchState, ItemSearchError>(repository, emit, (final String error) => ItemSearchError(error));
+    await BlocUtils.checkConnection<ItemSearchState, ItemSearchError>(repository, emit, (final String error) => ItemSearchError(error));
 
   }
 
   @override
   void mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     super.mapTextChangedToState(event, emit);
 

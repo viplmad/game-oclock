@@ -9,7 +9,7 @@ class BlocUtils {
   static const String _connectionLostMessage = 'Connection lost. Trying to reconnect';
 
   // ignore: always_specify_types
-  static Future<void> checkConnection<T extends ItemRepository, K extends Object, S extends K>(T itemRepository, Emitter<K> emit, S Function(String) notLoadedEvent) async {
+  static Future<void> checkConnection<K extends Object, S extends K>(ItemRepository itemRepository, Emitter<K> emit, S Function(String) notLoadedEvent) async {
 
     if(itemRepository.isClosed()) {
       emit(

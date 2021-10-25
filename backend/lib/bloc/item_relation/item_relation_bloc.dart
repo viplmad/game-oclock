@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import '../bloc_utils.dart';
 import '../item_relation_manager/item_relation_manager.dart';
@@ -31,15 +31,15 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
   final ItemRelationManagerBloc<T, ID, W> managerBloc;
   late StreamSubscription<ItemRelationManagerState> managerSubscription;
 
-  void _checkConnection(Emitter<ItemRelationState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemRelationState> emit) async {
 
-    await BlocUtils.checkConnection<GameRepository, ItemRelationState, ItemRelationNotLoaded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotLoaded(error));
+    await BlocUtils.checkConnection<ItemRelationState, ItemRelationNotLoaded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotLoaded(error));
 
   }
 
   void _mapLoadToState(LoadItemRelation event, Emitter<ItemRelationState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     emit(
       ItemRelationLoading(),

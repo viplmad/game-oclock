@@ -34,15 +34,15 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
   final R repository;
   late final StreamSubscription<ItemListManagerState> managerSubscription;
 
-  void _checkConnection(Emitter<ItemListState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemListState> emit) async {
 
-    await BlocUtils.checkConnection<R, ItemListState, ItemListNotLoaded>(repository, emit, (final String error) => ItemListNotLoaded(error));
+    await BlocUtils.checkConnection<ItemListState, ItemListNotLoaded>(repository, emit, (final String error) => ItemListNotLoaded(error));
 
   }
 
   void _mapLoadToState(LoadItemList event, Emitter<ItemListState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     emit(
       ItemListLoading(),
@@ -109,7 +109,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   void _mapUpdateViewToState(UpdateView event, Emitter<ItemListState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     ListStyle? style;
     if(state is ItemListLoaded<T>) {
@@ -144,7 +144,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   void _mapUpdateYearViewToState(UpdateYearView event, Emitter<ItemListState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     ListStyle? style;
     if(state is ItemListLoaded<T>) {

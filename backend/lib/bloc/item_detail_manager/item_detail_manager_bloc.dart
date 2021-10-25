@@ -25,15 +25,15 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
   final ID id;
   final R repository;
 
-  void _checkConnection(Emitter<ItemDetailManagerState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemDetailManagerState> emit) async {
 
-    await BlocUtils.checkConnection<R, ItemDetailManagerState, ItemFieldNotUpdated>(repository, emit, (final String error) => ItemFieldNotUpdated(error));
+    await BlocUtils.checkConnection<ItemDetailManagerState, ItemFieldNotUpdated>(repository, emit, (final String error) => ItemFieldNotUpdated(error));
 
   }
 
   void _mapUpdateFieldToState(UpdateItemField<T> event, Emitter<ItemDetailManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 
@@ -60,7 +60,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
   void _mapAddImageToState(AddItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 
@@ -85,7 +85,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
   void _mapUpdateImageNameToState(UpdateItemImageName<T> event, Emitter<ItemDetailManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 
@@ -110,7 +110,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID ex
 
   void _mapDeleteImageToState(DeleteItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 

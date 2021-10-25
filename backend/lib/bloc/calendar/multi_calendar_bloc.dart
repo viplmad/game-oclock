@@ -42,9 +42,9 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final GameRepository gameRepository;
   final Set<int> yearsLoaded = Set<int>();
 
-  void _checkConnection(Emitter<CalendarState> emit) async {
+  Future<void> _checkConnection(Emitter<CalendarState> emit) async {
 
-    await BlocUtils.checkConnection<GameTimeLogRepository, CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
+    await BlocUtils.checkConnection<CalendarState, CalendarNotLoaded>(gameTimeLogRepository, emit, (final String error) => CalendarNotLoaded(error));
 
   }
 
@@ -68,7 +68,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   void _mapLoadInitialCalendar(int year, Emitter<CalendarState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     emit(
       CalendarLoading(),
@@ -114,7 +114,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   void _mapLoadAdditionalCalendar(int year, Emitter<CalendarState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 

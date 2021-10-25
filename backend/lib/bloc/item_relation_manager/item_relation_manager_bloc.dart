@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameRepository;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository;
 
 import '../bloc_utils.dart';
 import 'item_relation_manager.dart';
@@ -22,15 +22,15 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
   final ID id;
   final GameCollectionRepository collectionRepository;
 
-  void _checkConnection(Emitter<ItemRelationManagerState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemRelationManagerState> emit) async {
 
-    await BlocUtils.checkConnection<GameRepository, ItemRelationManagerState, ItemRelationNotAdded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotAdded(error));
+    await BlocUtils.checkConnection<ItemRelationManagerState, ItemRelationNotAdded>(collectionRepository.gameRepository, emit, (final String error) => ItemRelationNotAdded(error));
 
   }
 
   void _mapAddRelationToState(AddItemRelation<W> event, Emitter<ItemRelationManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try{
 
@@ -55,7 +55,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
 
   void _mapDeleteRelationToState(DeleteItemRelation<W> event, Emitter<ItemRelationManagerState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try{
 

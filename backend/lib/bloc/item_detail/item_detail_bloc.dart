@@ -32,9 +32,9 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
   final ItemDetailManagerBloc<T, E, ID, R> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
-  void _checkConnection(Emitter<ItemDetailState> emit) async {
+  Future<void> _checkConnection(Emitter<ItemDetailState> emit) async {
 
-    await BlocUtils.checkConnection<R, ItemDetailState, ItemNotLoaded>(repository, emit, (final String error) => ItemNotLoaded(error));
+    await BlocUtils.checkConnection<ItemDetailState, ItemNotLoaded>(repository, emit, (final String error) => ItemNotLoaded(error));
 
   }
 
@@ -56,7 +56,7 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
 
   void _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
 
-    _checkConnection(emit);
+    await _checkConnection(emit);
 
     try {
 
