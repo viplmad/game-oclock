@@ -47,7 +47,7 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
           showSnackBar(
             context,
             message: message,
-            snackBarAction: SnackBarAction(
+            snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
 
@@ -79,7 +79,7 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
           showSnackBar(
             context,
             message: message,
-            snackBarAction: SnackBarAction(
+            snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
 

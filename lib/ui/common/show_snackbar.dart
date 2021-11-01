@@ -23,6 +23,7 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {required String label
     label: label,
     textColor: Colors.white,
     onPressed: () {
+
       showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
@@ -46,7 +47,18 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {required String label
           );
         },
       );
+
     },
+  );
+
+}
+
+SnackBarAction backgroundSnackBarAction({required String label, required void Function() onPressed}) {
+
+  return SnackBarAction(
+    label: label,
+    textColor: Colors.white,
+    onPressed: onPressed,
   );
 
 }

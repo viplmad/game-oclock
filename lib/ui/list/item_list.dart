@@ -143,9 +143,10 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
             context,
             message: message,
             seconds: 2,
-            snackBarAction: SnackBarAction(
+            snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).openString,
               onPressed: () {
+
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
@@ -153,6 +154,7 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
                     item: state.item,
                   )
                 );
+
               },
             ),
           );
