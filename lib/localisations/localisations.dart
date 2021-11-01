@@ -61,6 +61,7 @@ abstract class GameCollectionLocalisations {
   String unableToDeleteString(String typeString);
 
   String get deleteString;
+  String get deleteButtonLabel;
   String deleteDialogTitle(String itemString);
   String get deleteDialogSubtitle;
 

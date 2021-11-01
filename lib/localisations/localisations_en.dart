@@ -100,6 +100,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String deleteString = 'Delete';
   @override
+  final String deleteButtonLabel = 'DELETE';
+  @override
   String deleteDialogTitle(String itemString) {
     return 'Are you sure you want to delete $itemString?';
   }

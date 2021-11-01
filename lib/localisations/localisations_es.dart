@@ -100,6 +100,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String deleteString = 'Borrar';
   @override
+  final String deleteButtonLabel = 'BORRAR';
+  @override
   String deleteDialogTitle(String itemString) {
     return 'Estás seguro que quieres borrar $itemString?';
   }
