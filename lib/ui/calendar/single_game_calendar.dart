@@ -50,8 +50,6 @@ class SingleGameCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ValueNotifier<bool> dialOpenNotifier = ValueNotifier<bool>(false);
-
     final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
 
     final GameRelationManagerBloc<GameTimeLog> _timeLogRelationManagerBloc = GameRelationManagerBloc<GameTimeLog>(
@@ -145,8 +143,8 @@ class SingleGameCalendar extends StatelessWidget {
             ),
           ],
         ),
-        body: bodyBuilder(dialOpenNotifier),
-        floatingActionButton: _buildSpeedDial(context, dialOpenNotifier, _timeLogRelationManagerBloc, _finishRelationManagerBloc),
+        body: bodyBuilder(),
+        floatingActionButton: _buildSpeedDial(context, _timeLogRelationManagerBloc, _finishRelationManagerBloc),
       ),
     );
 
@@ -163,7 +161,7 @@ class SingleGameCalendar extends StatelessWidget {
 
   }
 
-  SpeedDial _buildSpeedDial(BuildContext context, ValueNotifier<bool> dialOpenNotifier, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
+  SpeedDial _buildSpeedDial(BuildContext context, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
 
     return SpeedDial(
       icon: Icons.add,
@@ -176,7 +174,7 @@ class SingleGameCalendar extends StatelessWidget {
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
       overlayOpacity: 0.5,
-      openCloseDial: dialOpenNotifier,
+      closeDialOnPop: true,
       children: <SpeedDialChild>[
         SpeedDialChild(
           child: const Icon(Icons.add_alarm, color: Colors.white),
@@ -262,11 +260,10 @@ class SingleGameCalendar extends StatelessWidget {
 
   }
 
-  _SingleGameCalendarBody bodyBuilder(ValueNotifier<bool> dialOpenNotifier) {
+  _SingleGameCalendarBody bodyBuilder() {
 
     return _SingleGameCalendarBody(
       onUpdate: onUpdate,
-      dialOpenNotifier: dialOpenNotifier,
     );
 
   }
@@ -278,11 +275,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
   _SingleGameCalendarBody({
     Key? key,
     required this.onUpdate,
-    required this.dialOpenNotifier,
   }) : super(key: key);
 
   final void Function()? onUpdate;
-  final ValueNotifier<bool> dialOpenNotifier;
 
   bool _isUpdated = false;
 
@@ -291,12 +286,6 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-
-        // Fix to hide SpeedDial if back button is pressed
-        if (dialOpenNotifier.value) {
-          dialOpenNotifier.value = false;
-          return false;
-        }
 
         if(_isUpdated && onUpdate != null) {
           onUpdate!();

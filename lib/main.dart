@@ -31,6 +31,11 @@ class GameCollection extends StatelessWidget {
       child: MaterialApp(
         onGenerateTitle: (BuildContext context) => GameCollectionLocalisations.appTitle,
         theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.blue,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
           primarySwatch: Colors.blue,
         ),
         initialRoute: connectRoute,
