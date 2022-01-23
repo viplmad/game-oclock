@@ -2,10 +2,10 @@ import 'model.dart' show Item, ItemImage;
 
 
 enum Manufacturer {
-  Nintendo,
-  Sony,
-  Microsoft,
-  Sega,
+  nintendo,
+  sony,
+  microsoft,
+  sega,
 }
 
 class System extends Item {
@@ -30,7 +30,7 @@ class System extends Item {
   final Manufacturer? manufacturer;
 
   @override
-  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+  ItemImage get image => ItemImage(iconURL, iconFilename);
 
   @override
   System copyWith({

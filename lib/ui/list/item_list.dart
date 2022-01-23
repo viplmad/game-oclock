@@ -333,14 +333,14 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
   Widget _listBuilder(BuildContext context) {
 
     switch(style) {
-      case ListStyle.Card:
+      case ListStyle.card:
         return ItemCardView<T>(
           items: items,
           itemBuilder: cardBuilder,
           onDismiss: onDelete,
           confirmDelete: _confirmDelete,
         );
-      case ListStyle.Grid:
+      case ListStyle.grid:
         return ItemGridView<T>(
           items: items,
           itemBuilder: gridBuilder,

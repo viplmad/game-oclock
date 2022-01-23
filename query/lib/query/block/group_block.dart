@@ -6,7 +6,7 @@ import 'group_node.dart';
 /// GROUP BY
 class GroupBlock extends Block {
   GroupBlock() :
-    this.groups = <GroupNode>[],
+    groups = <GroupNode>[],
     super();
 
   final List<GroupNode> groups;

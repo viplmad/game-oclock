@@ -35,8 +35,8 @@ abstract class ItemFinish extends Item {
 
 class ItemImage {
   const ItemImage(String? url, String? filename)
-      : this.url = url?? '',
-        this.filename = filename?? '';
+      : url = url?? '',
+        filename = filename?? '';
 
   final String url;
   final String filename;

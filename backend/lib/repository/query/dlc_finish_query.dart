@@ -12,7 +12,7 @@ class DLCFinishQuery {
       .into(DLCFinishEntityData.table)
       .sets(entity.createMap())
       .returningField(DLCFinishEntityData.dlcField)
-      .returningField(DLCFinishEntityData.dateField);;
+      .returningField(DLCFinishEntityData.dateField);
 
     return query;
   }

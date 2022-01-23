@@ -6,17 +6,17 @@ class SystemMapper {
   SystemMapper._();
 
   static const Map<Manufacturer, String> manufacturerToStringMap = <Manufacturer, String> {
-    Manufacturer.Nintendo: SystemEntityData.nintendoValue,
-    Manufacturer.Sony: SystemEntityData.sonyValue,
-    Manufacturer.Microsoft: SystemEntityData.microsoftValue,
-    Manufacturer.Sega: SystemEntityData.segaValue,
+    Manufacturer.nintendo: SystemEntityData.nintendoValue,
+    Manufacturer.sony: SystemEntityData.sonyValue,
+    Manufacturer.microsoft: SystemEntityData.microsoftValue,
+    Manufacturer.sega: SystemEntityData.segaValue,
   };
 
   static const Map<String, Manufacturer> stringToManufacturerMap = <String, Manufacturer> {
-    SystemEntityData.nintendoValue: Manufacturer.Nintendo,
-    SystemEntityData.sonyValue: Manufacturer.Sony,
-    SystemEntityData.microsoftValue: Manufacturer.Microsoft,
-    SystemEntityData.segaValue: Manufacturer.Sega,
+    SystemEntityData.nintendoValue: Manufacturer.nintendo,
+    SystemEntityData.sonyValue: Manufacturer.sony,
+    SystemEntityData.microsoftValue: Manufacturer.microsoft,
+    SystemEntityData.segaValue: Manufacturer.sega,
   };
 
   static SystemEntity modelToEntity(System model) {

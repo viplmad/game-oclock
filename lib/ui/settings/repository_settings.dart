@@ -200,7 +200,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     return RadioListTile<ItemConnectorType>(
       title: const Text(GameCollectionLocalisations.postgresString),
       groupValue: radioGroup,
-      value: ItemConnectorType.Postgres,
+      value: ItemConnectorType.postgres,
       onChanged: (_) {
 
         showDialog<PostgresInstance>(
@@ -209,7 +209,7 @@ class _RepositorySettingsBody extends StatelessWidget {
             final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
 
             return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-              bloc: detailBloc..add(const LoadItemSettingsDetail(ItemConnectorType.Postgres)),
+              bloc: detailBloc..add(const LoadItemSettingsDetail(ItemConnectorType.postgres)),
               builder: (BuildContext context, RepositorySettingsDetailState state) {
                 if(state is RepositorySettingsDetailLoaded) {
                   return PostgresTextDialog(
@@ -224,7 +224,7 @@ class _RepositorySettingsBody extends StatelessWidget {
         ).then((PostgresInstance? instance) {
           if(instance != null) {
             BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-              UpdateItemConnectionSettings(ItemConnectorType.Postgres, instance),
+              UpdateItemConnectionSettings(ItemConnectorType.postgres, instance),
             );
           }
         });
@@ -237,7 +237,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     return RadioListTile<ItemConnectorType>(
       title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
-      value: ItemConnectorType.Local,
+      value: ItemConnectorType.local,
       onChanged: null,
     );
   }
@@ -246,7 +246,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     return RadioListTile<ImageConnectorType>(
       title: const Text(GameCollectionLocalisations.cloudinaryString),
       groupValue: radioGroup,
-      value: ImageConnectorType.Cloudinary,
+      value: ImageConnectorType.cloudinary,
       onChanged: (_) {
 
         showDialog<CloudinaryInstance>(
@@ -255,7 +255,7 @@ class _RepositorySettingsBody extends StatelessWidget {
             final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
 
             return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-              bloc: detailBloc..add(const LoadImageSettingsDetail(ImageConnectorType.Cloudinary)),
+              bloc: detailBloc..add(const LoadImageSettingsDetail(ImageConnectorType.cloudinary)),
               builder: (BuildContext context, RepositorySettingsDetailState state) {
                 if(state is RepositorySettingsDetailLoaded) {
                   return CloudinaryTextDialog(
@@ -270,7 +270,7 @@ class _RepositorySettingsBody extends StatelessWidget {
         ).then((CloudinaryInstance? instance) {
           if(instance != null) {
             BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-              UpdateImageConnectionSettings(ImageConnectorType.Cloudinary, instance),
+              UpdateImageConnectionSettings(ImageConnectorType.cloudinary, instance),
             );
           }
         });
@@ -283,7 +283,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     return RadioListTile<ImageConnectorType>(
       title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
-      value: ImageConnectorType.Local,
+      value: ImageConnectorType.local,
       onChanged: null,
     );
   }

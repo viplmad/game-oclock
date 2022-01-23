@@ -1,8 +1,8 @@
 enum FunctionType {
-  NONE,
-  COUNT,
-  SUM,
-  MIN,
-  MAX,
-  AVERAGE,
+  none,
+  count,
+  sum,
+  min,
+  max,
+  average,
 }

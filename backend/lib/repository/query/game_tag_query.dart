@@ -62,7 +62,7 @@ class GameTagQuery {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table)
-      .where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.LIKE)
+      .where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -92,12 +92,12 @@ class GameTagQuery {
 
   static void _completeView(Query query, GameTagView view, int? limit) {
     switch(view) {
-      case GameTagView.Main:
+      case GameTagView.main:
         query.order(GameTagEntityData.nameField, GameTagEntityData.table);
         query.limit(limit);
         break;
-      case GameTagView.LastCreated:
-        query.order(GameTagEntityData.idField, GameTagEntityData.table, direction: SortOrder.DESC);
+      case GameTagView.lastCreated:
+        query.order(GameTagEntityData.idField, GameTagEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

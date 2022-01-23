@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:query/query.dart' show Query, SQLQueryBuilder, SQLBuilderOptions;
 
@@ -10,14 +12,11 @@ void main() {
 
   void printQuery(Query query) {
     final String sqlString = SQLQueryBuilder.buildString(query, _builderOptions);
-    // ignore: avoid_print
     print('SQL: $sqlString');
 
     final Map<String, Object?> sqlSubstitutionValues = SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
-    // ignore: avoid_print
     print('Substitution values: $sqlSubstitutionValues');
 
-    // ignore: avoid_print
     print('------------------------------------------------------------------------------------------------');
   }
 
@@ -40,8 +39,8 @@ void main() {
   });
 
   test('Platform Query test', () {
-    final PlatformEntity entity = const PlatformEntity(id: 1, name: 'name', iconFilename: 'iconFilename', type: 'type');
-    final PlatformEntity updatedEntity = const PlatformEntity(id: 1, name: 'name2', iconFilename: 'iconFilename', type: 'type2');
+    const PlatformEntity entity = PlatformEntity(id: 1, name: 'name', iconFilename: 'iconFilename', type: 'type');
+    const PlatformEntity updatedEntity = PlatformEntity(id: 1, name: 'name2', iconFilename: 'iconFilename', type: 'type2');
     final PlatformID id = entity.createId();
 
     //printQuery(PlatformQuery.updateById(id, entity, entity));
@@ -58,8 +57,8 @@ void main() {
   });
 
   test('Store Query test', () {
-    final StoreEntity entity = const StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
-    final StoreEntity updatedEntity = const StoreEntity(id: 1, name: 'name2', iconFilename: 'iconFilename');
+    const StoreEntity entity = StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
+    const StoreEntity updatedEntity = StoreEntity(id: 1, name: 'name2', iconFilename: 'iconFilename');
     final StoreID id = entity.createId();
 
     //printQuery(StoreQuery.updateById(id, entity, entity));
@@ -67,8 +66,8 @@ void main() {
   });
 
   test('System Query test', () {
-    final SystemEntity entity = const SystemEntity(id: 1, name: 'name', iconFilename: 'iconFilename', generation: 6, manufacturer: 'manufacturer');
-    final SystemEntity updatedEntity = const SystemEntity(id: 1, name: 'name2', iconFilename: 'iconFilename', generation: 1, manufacturer: 'manufacturer2');
+    const SystemEntity entity = SystemEntity(id: 1, name: 'name', iconFilename: 'iconFilename', generation: 6, manufacturer: 'manufacturer');
+    const SystemEntity updatedEntity = SystemEntity(id: 1, name: 'name2', iconFilename: 'iconFilename', generation: 1, manufacturer: 'manufacturer2');
     final SystemID id = entity.createId();
 
     //printQuery(SystemQuery.updateById(id, entity, entity));
@@ -76,8 +75,8 @@ void main() {
   });
 
   test('Game Tag Query test', () {
-    final GameTagEntity entity = const GameTagEntity(id: 1, name: 'name');
-    final GameTagEntity updatedEntity = const GameTagEntity(id: 1, name: 'name2');
+    const GameTagEntity entity = GameTagEntity(id: 1, name: 'name');
+    const GameTagEntity updatedEntity = GameTagEntity(id: 1, name: 'name2');
     final GameTagID id = entity.createId();
 
     //printQuery(GameTagQuery.updateById(id, entity, entity));
@@ -85,8 +84,8 @@ void main() {
   });
 
   test('Purchase Type Query test', () {
-    final PurchaseTypeEntity entity = const PurchaseTypeEntity(id: 1, name: 'name');
-    final PurchaseTypeEntity updatedEntity = const PurchaseTypeEntity(id: 1, name: 'name2');
+    const PurchaseTypeEntity entity = PurchaseTypeEntity(id: 1, name: 'name');
+    const PurchaseTypeEntity updatedEntity = PurchaseTypeEntity(id: 1, name: 'name2');
     final PurchaseTypeID id = entity.createId();
 
     //printQuery(PurchaseTypeQuery.updateById(id, entity, entity));

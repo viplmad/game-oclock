@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:query/query.dart' show Query, SQLQueryBuilder, SQLBuilderOptions;
 
@@ -10,14 +12,11 @@ void main() {
 
   void printQuery(Query query) {
     final String sqlString = SQLQueryBuilder.buildString(query, _builderOptions);
-    // ignore: avoid_print
     print('SQL: $sqlString');
 
     final Map<String, Object?> sqlSubstitutionValues = SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
-    // ignore: avoid_print
     print('Substitution values: $sqlSubstitutionValues');
 
-    // ignore: avoid_print
     print('------------------------------------------------------------------------------------------------');
   }
 
@@ -37,8 +36,8 @@ void main() {
     //printQuery(DLCQuery.updateById(id, entity, updatedEntity));
     printQuery(DLCQuery.updateCoverById(id, 'newCoverName'));
 
-    printQuery(DLCQuery.selectAllInView(DLCView.LastCreated));
-    printQuery(DLCQuery.selectAllInView(DLCView.Main));
+    printQuery(DLCQuery.selectAllInView(DLCView.lastCreated));
+    printQuery(DLCQuery.selectAllInView(DLCView.main));
   });
 
   test('Game Query test', () {
@@ -53,34 +52,34 @@ void main() {
     //printQuery(GameQuery.updateById(id, entity, updatedEntity));
     printQuery(GameQuery.updateCoverById(id, 'newCoverName'));
 
-    printQuery(GameQuery.selectAllInView(GameView.LastCreated));
-    printQuery(GameQuery.selectAllInView(GameView.LastFinished));
-    printQuery(GameQuery.selectAllInView(GameView.LastPlayed));
-    printQuery(GameQuery.selectAllInView(GameView.Main));
-    printQuery(GameQuery.selectAllInView(GameView.NextUp));
-    printQuery(GameQuery.selectAllInView(GameView.Playing));
-    printQuery(GameQuery.selectAllInView(GameView.Review));
+    printQuery(GameQuery.selectAllInView(GameView.lastCreated));
+    printQuery(GameQuery.selectAllInView(GameView.lastFinished));
+    printQuery(GameQuery.selectAllInView(GameView.lastPlayed));
+    printQuery(GameQuery.selectAllInView(GameView.main));
+    printQuery(GameQuery.selectAllInView(GameView.nextUp));
+    printQuery(GameQuery.selectAllInView(GameView.playing));
+    printQuery(GameQuery.selectAllInView(GameView.review));
 
 
-    printQuery(GameQuery.selectAllOwnedInView(GameView.LastCreated));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.LastFinished));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.LastPlayed));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.Main));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.NextUp));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.Playing));
-    printQuery(GameQuery.selectAllOwnedInView(GameView.Review));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.lastCreated));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.lastFinished));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.lastPlayed));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.main));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.nextUp));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.playing));
+    printQuery(GameQuery.selectAllOwnedInView(GameView.review));
 
-    printQuery(GameQuery.selectAllRomInView(GameView.LastCreated));
-    printQuery(GameQuery.selectAllRomInView(GameView.LastFinished));
-    printQuery(GameQuery.selectAllRomInView(GameView.LastPlayed));
-    printQuery(GameQuery.selectAllRomInView(GameView.Main));
-    printQuery(GameQuery.selectAllRomInView(GameView.NextUp));
-    printQuery(GameQuery.selectAllRomInView(GameView.Playing));
-    printQuery(GameQuery.selectAllRomInView(GameView.Review));
+    printQuery(GameQuery.selectAllRomInView(GameView.lastCreated));
+    printQuery(GameQuery.selectAllRomInView(GameView.lastFinished));
+    printQuery(GameQuery.selectAllRomInView(GameView.lastPlayed));
+    printQuery(GameQuery.selectAllRomInView(GameView.main));
+    printQuery(GameQuery.selectAllRomInView(GameView.nextUp));
+    printQuery(GameQuery.selectAllRomInView(GameView.playing));
+    printQuery(GameQuery.selectAllRomInView(GameView.review));
   });
 
   test('Platform Query test', () {
-    final PlatformEntity entity = const PlatformEntity(id: 1, name: 'name', iconFilename: 'iconFilename', type: 'type');
+    const PlatformEntity entity = PlatformEntity(id: 1, name: 'name', iconFilename: 'iconFilename', type: 'type');
     final PlatformID id = entity.createId();
 
     printQuery(PlatformQuery.create(entity));
@@ -91,8 +90,8 @@ void main() {
     //printQuery(PlatformQuery.updateById(id, entity, updatedEntity));
     printQuery(PlatformQuery.updateIconById(id, 'newIconName'));
 
-    printQuery(PlatformQuery.selectAllInView(PlatformView.LastCreated));
-    printQuery(PlatformQuery.selectAllInView(PlatformView.Main));
+    printQuery(PlatformQuery.selectAllInView(PlatformView.lastCreated));
+    printQuery(PlatformQuery.selectAllInView(PlatformView.main));
   });
 
   test('Purchase Query test', () {
@@ -110,15 +109,15 @@ void main() {
     //printQuery(PurchaseQuery.updateById(id, entity, updatedEntity));
     printQuery(PurchaseQuery.updateStoreById(id, storeId));
 
-    printQuery(PurchaseQuery.selectAllInView(PurchaseView.LastCreated));
-    printQuery(PurchaseQuery.selectAllInView(PurchaseView.LastPurchased));
-    printQuery(PurchaseQuery.selectAllInView(PurchaseView.Main));
-    printQuery(PurchaseQuery.selectAllInView(PurchaseView.Pending));
-    printQuery(PurchaseQuery.selectAllInView(PurchaseView.Review));
+    printQuery(PurchaseQuery.selectAllInView(PurchaseView.lastCreated));
+    printQuery(PurchaseQuery.selectAllInView(PurchaseView.lastPurchased));
+    printQuery(PurchaseQuery.selectAllInView(PurchaseView.main));
+    printQuery(PurchaseQuery.selectAllInView(PurchaseView.pending));
+    printQuery(PurchaseQuery.selectAllInView(PurchaseView.review));
   });
 
   test('Store Query test', () {
-    final StoreEntity entity = const StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
+    const StoreEntity entity = StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
     final StoreID id = entity.createId();
 
     printQuery(StoreQuery.create(entity));
@@ -129,12 +128,12 @@ void main() {
     //printQuery(StoreQuery.updateById(id, entity, updatedEntity));
     printQuery(StoreQuery.updateIconById(id, 'newIconName'));
 
-    printQuery(StoreQuery.selectAllInView(StoreView.LastCreated));
-    printQuery(StoreQuery.selectAllInView(StoreView.Main));
+    printQuery(StoreQuery.selectAllInView(StoreView.lastCreated));
+    printQuery(StoreQuery.selectAllInView(StoreView.main));
   });
 
   test('System Query test', () {
-    final SystemEntity entity = const SystemEntity(id: 1, name: 'name', iconFilename: 'iconFilename', generation: 6, manufacturer: 'manufacturer');
+    const SystemEntity entity = SystemEntity(id: 1, name: 'name', iconFilename: 'iconFilename', generation: 6, manufacturer: 'manufacturer');
     final SystemID id = entity.createId();
 
     printQuery(SystemQuery.create(entity));
@@ -145,12 +144,12 @@ void main() {
     //printQuery(SystemQuery.updateById(id, entity, updatedEntity));
     printQuery(SystemQuery.updateIconById(id, 'newIconName'));
 
-    printQuery(SystemQuery.selectAllInView(SystemView.LastCreated));
-    printQuery(SystemQuery.selectAllInView(SystemView.Main));
+    printQuery(SystemQuery.selectAllInView(SystemView.lastCreated));
+    printQuery(SystemQuery.selectAllInView(SystemView.main));
   });
 
   test('Game Tag Query test', () {
-    final GameTagEntity entity = const GameTagEntity(id: 1, name: 'name');
+    const GameTagEntity entity = GameTagEntity(id: 1, name: 'name');
     final GameTagID id = entity.createId();
 
     printQuery(GameTagQuery.create(entity));
@@ -160,12 +159,12 @@ void main() {
     printQuery(GameTagQuery.selectById(id));
     //printQuery(GameTagQuery.updateById(id, entity, updatedEntity));
 
-    printQuery(GameTagQuery.selectAllInView(GameTagView.LastCreated));
-    printQuery(GameTagQuery.selectAllInView(GameTagView.Main));
+    printQuery(GameTagQuery.selectAllInView(GameTagView.lastCreated));
+    printQuery(GameTagQuery.selectAllInView(GameTagView.main));
   });
 
   test('Purchase Type Query test', () {
-    final PurchaseTypeEntity entity = const PurchaseTypeEntity(id: 1, name: 'name');
+    const PurchaseTypeEntity entity = PurchaseTypeEntity(id: 1, name: 'name');
     final PurchaseTypeID id = entity.createId();
 
     printQuery(PurchaseTypeQuery.create(entity));
@@ -175,8 +174,8 @@ void main() {
     printQuery(PurchaseTypeQuery.selectById(id));
     //printQuery(PurchaseTypeQuery.updateById(id, entity, updatedEntity));
 
-    printQuery(PurchaseTypeQuery.selectAllInView(PurchaseTypeView.LastCreated));
-    printQuery(PurchaseTypeQuery.selectAllInView(PurchaseTypeView.Main));
+    printQuery(PurchaseTypeQuery.selectAllInView(PurchaseTypeView.lastCreated));
+    printQuery(PurchaseTypeQuery.selectAllInView(PurchaseTypeView.main));
   });
 
   test('DLC Finish Query test', () {

@@ -1,4 +1,4 @@
 enum ListStyle {
-  Card,
-  Grid,
+  card,
+  grid,
 }

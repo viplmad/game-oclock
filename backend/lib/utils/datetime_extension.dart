@@ -1,16 +1,16 @@
 extension DateExtension on DateTime {
   bool isSameDay(DateTime other) {
-    return this.day == other.day && this.isInMonthAndYearOf(other);
+    return day == other.day && isInMonthAndYearOf(other);
   }
 
   DateTime getMondayOfWeek() {
     DateTime mondayOfDate;
 
-    if(this.weekday == DateTime.monday) {
+    if(weekday == DateTime.monday) {
       mondayOfDate = this;
     } else {
-      final int daysToRemove = this.weekday - DateTime.monday;
-      mondayOfDate = this.substractDays(daysToRemove);
+      final int daysToRemove = weekday - DateTime.monday;
+      mondayOfDate = substractDays(daysToRemove);
     }
 
     return mondayOfDate;
@@ -19,11 +19,11 @@ extension DateExtension on DateTime {
   DateTime getSundayOfWeek() {
     DateTime sundayOfDate;
 
-    if(this.weekday == DateTime.sunday) {
+    if(weekday == DateTime.sunday) {
       sundayOfDate = this;
     } else {
-      final int daysToAdd = DateTime.sunday - this.weekday;
-      sundayOfDate = this.addDays(daysToAdd);
+      final int daysToAdd = DateTime.sunday - weekday;
+      sundayOfDate = addDays(daysToAdd);
     }
 
     return sundayOfDate;
@@ -34,7 +34,7 @@ extension DateExtension on DateTime {
 
     DateTime dateInWeek = other.getMondayOfWeek();
     for(int index = 0; index < 7 && !resultFound; index++) {
-      resultFound = this.isSameDay(dateInWeek);
+      resultFound = isSameDay(dateInWeek);
 
       dateInWeek = dateInWeek.addDays(1);
     }
@@ -43,26 +43,26 @@ extension DateExtension on DateTime {
   }
 
   DateTime getFirstDayOfMonth() {
-    return DateTime(this.year, this.month, 1);
+    return DateTime(year, month, 1);
   }
 
   bool isInMonthAndYearOf(DateTime other) {
-    return this.month == other.month && this.isInYearOf(other);
+    return month == other.month && isInYearOf(other);
   }
 
   bool isInYearOf(DateTime other) {
-    return this.year == other.year;
+    return year == other.year;
   }
 
   DateTime toDate() {
-    return DateTime(this.year, this.month, this.day);
+    return DateTime(year, month, day);
   }
 
   DateTime addDays(int days) {
-    return this.add(Duration(days: days));
+    return add(Duration(days: days));
   }
 
   DateTime substractDays(int days) {
-    return this.subtract(Duration(days: days));
+    return subtract(Duration(days: days));
   }
 }

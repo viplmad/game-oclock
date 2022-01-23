@@ -403,10 +403,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               } else {
                 switch(state.style) {
-                  case CalendarStyle.List:
+                  case CalendarStyle.list:
                     timeLogsWidget = _buildTimeLogsList(context, state.selectedTimeLogs, state.range);
                     break;
-                  case CalendarStyle.Graph:
+                  case CalendarStyle.graph:
                     timeLogsWidget = CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range);
                     break;
                 }
@@ -555,7 +555,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           return Container();
         }
 
-        if(range == CalendarRange.Day) {
+        if(range == CalendarRange.day) {
          final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + durationString;
 
           return DismissibleItem(
@@ -584,11 +584,11 @@ class _SingleGameCalendarBody extends StatelessWidget {
           );
         } else {
           String rangeString = '';
-          if(range == CalendarRange.Week) {
+          if(range == CalendarRange.week) {
             rangeString = GameCollectionLocalisations.of(context).daysOfWeek.elementAt(index);
-          } else if(range == CalendarRange.Month) {
+          } else if(range == CalendarRange.month) {
             rangeString = index.toString();
-          } else if(range == CalendarRange.Year) {
+          } else if(range == CalendarRange.year) {
             rangeString = GameCollectionLocalisations.of(context).months.elementAt(index);
           }
           final String timeLogString = rangeString + ' - ' + durationString;

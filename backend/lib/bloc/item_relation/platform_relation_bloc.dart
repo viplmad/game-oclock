@@ -13,8 +13,8 @@ class PlatformRelationBloc<W extends Item> extends ItemRelationBloc<Platform, Pl
     required GameCollectionRepository collectionRepository,
     required PlatformRelationManagerBloc<W> managerBloc,
   }) :
-    this.gameRepository = collectionRepository.gameRepository,
-    this.systemRepository = collectionRepository.systemRepository,
+    gameRepository = collectionRepository.gameRepository,
+    systemRepository = collectionRepository.systemRepository,
     super(id: PlatformID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final GameRepository gameRepository;

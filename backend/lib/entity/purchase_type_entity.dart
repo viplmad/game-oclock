@@ -2,8 +2,8 @@ import 'entity.dart' show ItemEntity;
 
 
 enum PurchaseTypeView {
-  Main,
-  LastCreated,
+  main,
+  lastCreated,
 }
 
 class PurchaseTypeEntityData {

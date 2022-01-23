@@ -14,7 +14,7 @@ class GameTimeLogQuery {
       .into(GameTimeLogEntityData.table)
       .sets(entity.createMap())
       .returningField(GameTimeLogEntityData.gameField)
-      .returningField(GameTimeLogEntityData.dateTimeField);;
+      .returningField(GameTimeLogEntityData.dateTimeField);
 
     return query;
   }
@@ -76,8 +76,8 @@ class GameTimeLogQuery {
     final Query query = FluentQuery
       .select()
       .from(GameTimeLogEntityData.table)
-      .join(GameEntityData.table, null, GameEntityData.idField, GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, type: JoinType.LEFT)
-      .whereDatePart(GameTimeLogEntityData.dateTimeField, year, DatePart.YEAR, table: GameTimeLogEntityData.table)
+      .join(GameEntityData.table, null, GameEntityData.idField, GameTimeLogEntityData.table, GameTimeLogEntityData.gameField, type: JoinType.left)
+      .whereDatePart(GameTimeLogEntityData.dateTimeField, year, DatePart.year, table: GameTimeLogEntityData.table)
       .order(GameTimeLogEntityData.gameField, GameTimeLogEntityData.table);
 
     addFields(query);

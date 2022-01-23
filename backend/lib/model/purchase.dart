@@ -11,7 +11,7 @@ class Purchase extends Item {
     required this.originalPrice,
 
     required this.store,
-  }) : this.discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
+  }) : discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
   super(
     uniqueId: 'Pu$id',
     hasImage: false,
@@ -82,8 +82,8 @@ class Purchase extends Item {
 
 class PurchasesData extends ItemData<Purchase> {
   PurchasesData(List<Purchase> items)
-      : this.itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
-        this.years = (items.map<int>((Purchase item) => item.date?.year?? -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
+      : itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
+        years = (items.map<int>((Purchase item) => item.date?.year?? -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
         super(items);
 
   final List<Purchase> itemsWithoutPromotion;

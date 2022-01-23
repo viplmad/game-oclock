@@ -73,7 +73,7 @@ class StoreQuery {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table)
-      .where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.LIKE)
+      .where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -104,12 +104,12 @@ class StoreQuery {
 
   static void _completeView(Query query, StoreView view, int? limit) {
     switch(view) {
-      case StoreView.Main:
+      case StoreView.main:
         query.order(StoreEntityData.nameField, StoreEntityData.table);
         query.limit(limit);
         break;
-      case StoreView.LastCreated:
-        query.order(StoreEntityData.idField, StoreEntityData.table, direction: SortOrder.DESC);
+      case StoreView.lastCreated:
+        query.order(StoreEntityData.idField, StoreEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

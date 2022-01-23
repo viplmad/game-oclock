@@ -217,13 +217,13 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   String gameStatusString(GameStatus? status) {
     switch(status){
-      case GameStatus.LowPriority:
+      case GameStatus.lowPriority:
         return lowPriorityString;
-      case GameStatus.NextUp:
+      case GameStatus.nextUp:
         return nextUpString;
-      case GameStatus.Playing:
+      case GameStatus.playing:
         return playingString;
-      case GameStatus.Played:
+      case GameStatus.played:
         return playedString;
       default:
         return '';
@@ -271,13 +271,13 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   String rangeString(CalendarRange range) {
     switch(range){
-      case CalendarRange.Day:
+      case CalendarRange.day:
         return 'Día';
-      case CalendarRange.Week:
+      case CalendarRange.week:
         return 'Semana';
-      case CalendarRange.Month:
+      case CalendarRange.month:
         return 'Mes';
-      case CalendarRange.Year:
+      case CalendarRange.year:
         return 'Año';
     }
   }
@@ -438,9 +438,9 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   String platformTypeString(PlatformType? type) {
     switch(type) {
-      case PlatformType.Physical:
+      case PlatformType.physical:
         return physicalString;
-      case PlatformType.Digital:
+      case PlatformType.digital:
         return digitalString;
       default:
         return '';

@@ -13,11 +13,11 @@ class GameRelationBloc<W extends Item> extends ItemRelationBloc<Game, GameID, W>
     required GameCollectionRepository collectionRepository,
     required GameRelationManagerBloc<W> managerBloc,
   }) :
-    this.gameFinishRepository = collectionRepository.gameFinishRepository,
-    this.dlcRepository = collectionRepository.dlcRepository,
-    this.platformRepository = collectionRepository.platformRepository,
-    this.purchaseRepository = collectionRepository.purchaseRepository,
-    this.gameTagRepository = collectionRepository.gameTagRepository,
+    gameFinishRepository = collectionRepository.gameFinishRepository,
+    dlcRepository = collectionRepository.dlcRepository,
+    platformRepository = collectionRepository.platformRepository,
+    purchaseRepository = collectionRepository.purchaseRepository,
+    gameTagRepository = collectionRepository.gameTagRepository,
     super(id: GameID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final GameFinishRepository gameFinishRepository;

@@ -14,7 +14,7 @@ class SystemSearchBloc extends ItemRemoteSearchBloc<System, SystemEntity, System
   @override
   Future<List<System>> getInitialItems() {
 
-    final Future<List<SystemEntity>> entityListFuture = repository.findAllWithView(SystemView.LastCreated, super.maxSuggestions);
+    final Future<List<SystemEntity>> entityListFuture = repository.findAllWithView(SystemView.lastCreated, super.maxSuggestions);
     return SystemMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

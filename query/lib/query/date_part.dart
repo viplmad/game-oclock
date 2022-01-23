@@ -1,5 +1,5 @@
 enum DatePart {
-  DAY,
-  MONTH,
-  YEAR,
+  day,
+  month,
+  year,
 }

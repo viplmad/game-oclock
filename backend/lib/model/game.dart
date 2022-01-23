@@ -2,10 +2,10 @@ import 'model.dart' show Item, ItemImage, ItemData, YearData;
 
 
 enum GameStatus {
-  LowPriority,
-  NextUp,
-  Playing,
-  Played,
+  lowPriority,
+  nextUp,
+  playing,
+  played,
 }
 
 class Game extends Item {
@@ -46,7 +46,7 @@ class Game extends Item {
   final Duration totalTime;
 
   @override
-  ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
+  ItemImage get image => ItemImage(coverURL, coverFilename);
 
   @override
   Game copyWith({
@@ -125,31 +125,31 @@ class Game extends Item {
 
 class GamesData extends ItemData<Game> {
   GamesData(List<Game> items)
-      : this.finishYears = (items.map<int>((Game item) => item.firstFinishDate?.year?? -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
+      : finishYears = (items.map<int>((Game item) => item.firstFinishDate?.year?? -1).toSet()..removeWhere((int? year) => year == -1)).toList(growable: false)..sort(),
         super(items);
 
   final List<int> finishYears;
 
   int lowPriorityCount() {
-    final int lowPriorityCount = items.where((Game item) => item.status == GameStatus.LowPriority).length;
+    final int lowPriorityCount = items.where((Game item) => item.status == GameStatus.lowPriority).length;
 
     return lowPriorityCount;
   }
 
   int nextUpCount() {
-    final int nextUpCount = items.where((Game item) => item.status == GameStatus.NextUp).length;
+    final int nextUpCount = items.where((Game item) => item.status == GameStatus.nextUp).length;
 
     return nextUpCount;
   }
 
   int playingCount() {
-    final int playingCount = items.where((Game item) => item.status == GameStatus.Playing).length;
+    final int playingCount = items.where((Game item) => item.status == GameStatus.playing).length;
 
     return playingCount;
   }
 
   int playedCount() {
-    final int playedCount = items.where((Game item) => item.status == GameStatus.Played).length;
+    final int playedCount = items.where((Game item) => item.status == GameStatus.played).length;
 
     return playedCount;
   }

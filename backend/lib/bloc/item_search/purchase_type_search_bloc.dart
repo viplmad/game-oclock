@@ -14,7 +14,7 @@ class PurchaseTypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType, Purchase
   @override
   Future<List<PurchaseType>> getInitialItems() {
 
-    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllWithView(PurchaseTypeView.LastCreated, super.maxSuggestions);
+    final Future<List<PurchaseTypeEntity>> entityListFuture = repository.findAllWithView(PurchaseTypeView.lastCreated, super.maxSuggestions);
     return PurchaseTypeMapper.futureEntityListToModelList(entityListFuture);
 
   }

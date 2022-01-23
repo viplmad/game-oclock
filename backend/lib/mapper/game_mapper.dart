@@ -6,17 +6,17 @@ class GameMapper {
   GameMapper._();
 
   static const Map<GameStatus, String> statusToStringMap = <GameStatus, String> {
-    GameStatus.LowPriority: GameEntityData.lowPriorityValue,
-    GameStatus.NextUp: GameEntityData.nextUpValue,
-    GameStatus.Playing: GameEntityData.playingValue,
-    GameStatus.Played: GameEntityData.playedValue,
+    GameStatus.lowPriority: GameEntityData.lowPriorityValue,
+    GameStatus.nextUp: GameEntityData.nextUpValue,
+    GameStatus.playing: GameEntityData.playingValue,
+    GameStatus.played: GameEntityData.playedValue,
   };
 
   static const Map<String, GameStatus> stringToStatusMap = <String, GameStatus> {
-    GameEntityData.lowPriorityValue: GameStatus.LowPriority,
-    GameEntityData.nextUpValue: GameStatus.NextUp,
-    GameEntityData.playingValue: GameStatus.Playing,
-    GameEntityData.playedValue :GameStatus.Played,
+    GameEntityData.lowPriorityValue: GameStatus.lowPriority,
+    GameEntityData.nextUpValue: GameStatus.nextUp,
+    GameEntityData.playingValue: GameStatus.playing,
+    GameEntityData.playedValue :GameStatus.played,
   };
 
   static GameEntity modelToEntity(Game model) {
@@ -48,7 +48,7 @@ class GameMapper {
       releaseYear: entity.releaseYear,
       coverURL: coverURL,
       coverFilename: entity.coverFilename,
-      status: stringToStatusMap[entity.status]?? GameStatus.LowPriority,
+      status: stringToStatusMap[entity.status]?? GameStatus.lowPriority,
       rating: entity.rating,
       thoughts: entity.thoughts,
       saveFolder: entity.saveFolder,

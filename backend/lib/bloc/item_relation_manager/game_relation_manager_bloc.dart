@@ -11,9 +11,9 @@ class GameRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<Ga
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
-    this.gameRepository = collectionRepository.gameRepository,
-    this.gameFinishRepository = collectionRepository.gameFinishRepository,
-    this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
+    gameRepository = collectionRepository.gameRepository,
+    gameFinishRepository = collectionRepository.gameFinishRepository,
+    gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
     super(id: GameID(itemId), collectionRepository: collectionRepository);
 
   final GameRepository gameRepository;

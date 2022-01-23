@@ -14,7 +14,7 @@ class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreEntity, StoreID, 
   @override
   Future<List<Store>> getInitialItems() {
 
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.LastCreated, super.maxSuggestions);
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.lastCreated, super.maxSuggestions);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

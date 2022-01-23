@@ -62,7 +62,7 @@ class PurchaseTypeQuery {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table)
-      .where(PurchaseTypeEntityData.nameField, name, type: String, table: PurchaseTypeEntityData.table, operator: OperatorType.LIKE)
+      .where(PurchaseTypeEntityData.nameField, name, type: String, table: PurchaseTypeEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -92,12 +92,12 @@ class PurchaseTypeQuery {
 
   static void _completeView(Query query, PurchaseTypeView view, int? limit) {
     switch(view) {
-      case PurchaseTypeView.Main:
+      case PurchaseTypeView.main:
         query.order(PurchaseTypeEntityData.nameField, PurchaseTypeEntityData.table);
         query.limit(limit);
         break;
-      case PurchaseTypeView.LastCreated:
-        query.order(PurchaseTypeEntityData.idField, PurchaseTypeEntityData.table, direction: SortOrder.DESC);
+      case PurchaseTypeView.lastCreated:
+        query.order(PurchaseTypeEntityData.idField, PurchaseTypeEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

@@ -5,7 +5,7 @@ import 'block.dart' show Block;
 /// (INSERT INTO) ... setField ... (SELECT ... FROM ...)
 class InsertFieldsFromQueryBlock extends Block {
   InsertFieldsFromQueryBlock() :
-    this.fields = <String>[],
+    fields = <String>[],
     super();
 
   List<String> fields;

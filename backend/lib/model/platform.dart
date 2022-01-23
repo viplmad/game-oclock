@@ -2,8 +2,8 @@ import 'model.dart' show Item, ItemImage;
 
 
 enum PlatformType {
-  Physical,
-  Digital,
+  physical,
+  digital,
 }
 
 class Platform extends Item {
@@ -26,7 +26,7 @@ class Platform extends Item {
   final PlatformType? type;
 
   @override
-  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+  ItemImage get image => ItemImage(iconURL, iconFilename);
 
   @override
   Platform copyWith({
@@ -40,7 +40,7 @@ class Platform extends Item {
       id: id,
       name: name?? this.name,
       iconURL: iconURL?? this.iconURL,
-      iconFilename: iconName?? this.iconFilename,
+      iconFilename: iconName?? iconFilename,
       type: type?? this.type,
     );
 

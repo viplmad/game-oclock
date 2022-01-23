@@ -14,7 +14,7 @@ class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity, 
   @override
   Future<List<Platform>> getInitialItems() {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.LastCreated, super.maxSuggestions);
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.lastCreated, super.maxSuggestions);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

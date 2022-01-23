@@ -1,5 +1,5 @@
 enum DividerType {
-  NONE,
-  START,
-  END,
+  none,
+  start,
+  end,
 }

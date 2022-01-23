@@ -82,8 +82,8 @@ class SQLBuilderOptions {
   }
 
   void resetIndexes() {
-    this.insertParamIndex = 0;
-    this.setParamIndex = 0;
-    this.whereParamIndex = 0;
+    insertParamIndex = 0;
+    setParamIndex = 0;
+    whereParamIndex = 0;
   }
 }

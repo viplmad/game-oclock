@@ -2,8 +2,8 @@ import 'entity.dart' show ItemEntity;
 
 
 enum GameTagView {
-  Main,
-  LastCreated,
+  main,
+  lastCreated,
 }
 
 class GameTagEntityData {

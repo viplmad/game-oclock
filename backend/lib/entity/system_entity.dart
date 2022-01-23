@@ -2,8 +2,8 @@ import 'entity.dart' show ItemEntity;
 
 
 enum SystemView {
-  Main,
-  LastCreated,
+  main,
+  lastCreated,
 }
 
 class SystemEntityData {

@@ -8,11 +8,11 @@ import 'validator.dart';
 class SQLQueryBuilder {
   SQLQueryBuilder._();
 
-  static const String _INSERT_PARAM = 'insertParam';
-  static const String _SET_PARAM = 'setParam';
-  static const String _WHERE_PARAM = 'whereParam';
+  static const String insertParam = 'insertParam';
+  static const String setParam = 'setParam';
+  static const String whereParam = 'whereParam';
 
-  static const String NULL_VALUE = 'NULL';
+  static const String nullValue = 'NULL';
 
   static String buildString(Query query, SQLBuilderOptions options) {
     options.resetIndexes();
@@ -149,7 +149,7 @@ class SQLQueryBuilder {
   static String _buildFieldNodeString(FieldNode node, SQLBuilderOptions options) {
     final StringBuffer sb = StringBuffer();
 
-    if(node.function != FunctionType.NONE) {
+    if(node.function != FunctionType.none) {
       final String function = _functionTypeToString(node.function);
       sb.write('$function(');
     }
@@ -168,7 +168,7 @@ class SQLQueryBuilder {
       sb.write(')');
     }
 
-    if(node.function != FunctionType.NONE) {
+    if(node.function != FunctionType.none) {
       sb.write(')');
     }
 
@@ -221,7 +221,7 @@ class SQLQueryBuilder {
       names.add(name);
 
       final bool isValueNull = node.value == null;
-      final String value = isValueNull? NULL_VALUE : _buildInsertValueString(options);
+      final String value = isValueNull? nullValue : _buildInsertValueString(options);
       values.add(value);
     }
 
@@ -234,32 +234,32 @@ class SQLQueryBuilder {
 
   static String _buildInsertValueString(SQLBuilderOptions options) {
     options.incrementInsertParamIndex();
-    return '@${_INSERT_PARAM}${options.insertParamIndex}';
+    return '@$insertParam${options.insertParamIndex}';
   }
 
   static String _buildInsertSubstitutionValueString(SQLBuilderOptions options) {
     options.incrementInsertParamIndex();
-    return '${_INSERT_PARAM}${options.insertParamIndex}';
+    return '$insertParam${options.insertParamIndex}';
   }
 
   static String _buildSetValueString(SQLBuilderOptions options) {
     options.incrementSetParamIndex();
-    return '@${_SET_PARAM}${options.setParamIndex}';
+    return '@$setParam${options.setParamIndex}';
   }
 
   static String _buildSetSubstitutionValueString(SQLBuilderOptions options) {
     options.incrementSetParamIndex();
-    return '${_SET_PARAM}${options.setParamIndex}';
+    return '$setParam${options.setParamIndex}';
   }
 
   static String _buildWhereValueString(SQLBuilderOptions options) {
     options.incrementWhereParamIndex();
-    return '@${_WHERE_PARAM}${options.whereParamIndex}';
+    return '@$whereParam${options.whereParamIndex}';
   }
 
   static String _buildWhereSubstitutionValueString(SQLBuilderOptions options) {
     options.incrementWhereParamIndex();
-    return '${_WHERE_PARAM}${options.whereParamIndex}';
+    return '$whereParam${options.whereParamIndex}';
   }
 
   static String _buildInsertFieldsFromQueryString(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
@@ -311,7 +311,7 @@ class SQLQueryBuilder {
       sb.write(')');
     }
     sb.write(' ');
-    sb.write(node.direction == SortOrder.ASC ? 'ASC' : 'DESC');
+    sb.write(node.direction == SortOrder.asc ? 'ASC' : 'DESC');
     sb.write(node.nullsLast ? ' NULLS LAST' : '');
 
     return sb.toString();
@@ -335,7 +335,7 @@ class SQLQueryBuilder {
     final String name = _buildSetNodeNameString(node, options);
 
     final bool isValueNull = node.value == null;
-    final String value = isValueNull? NULL_VALUE : _buildSetValueString(options);
+    final String value = isValueNull? nullValue : _buildSetValueString(options);
 
     return '$name = $value';
   }
@@ -422,7 +422,7 @@ class SQLQueryBuilder {
     for (final WhereNode node in block.wheres) {
       final String combiner = sb.length == 0? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
 
-      if(node.divider == DividerType.START) {
+      if(node.divider == DividerType.start) {
         sb.write('$combiner ( ');
       } else {
         sb.write('$combiner ');
@@ -447,7 +447,7 @@ class SQLQueryBuilder {
         }
         sb.write(' $operator ');
 
-        final String value = isValueNull? NULL_VALUE : _buildWhereValueString(options);
+        final String value = isValueNull? nullValue : _buildWhereValueString(options);
         sb.write(value);
       } else if(node is WhereFieldsNode) {
           final String operator = _operatorTypeToString(node.operator);
@@ -458,7 +458,7 @@ class SQLQueryBuilder {
           sb.write('$field $operator $otherField');
       }
 
-      if(node.divider == DividerType.END) {
+      if(node.divider == DividerType.end) {
         sb.write(' ) ');
       }
     }
@@ -488,80 +488,80 @@ class SQLQueryBuilder {
 
   static String _joinTypeToString(JoinType type) {
     switch (type) {
-      case JoinType.INNER:
+      case JoinType.inner:
         return 'INNER';
-      case JoinType.LEFT:
+      case JoinType.left:
         return 'LEFT';
-      case JoinType.RIGHT:
+      case JoinType.right:
         return 'RIGHT';
-      case JoinType.FULL:
+      case JoinType.full:
         return 'FULL';
-      case JoinType.CROSS:
+      case JoinType.cross:
         return 'CROSS';
     }
   }
 
   static String _unionTypeToString(UnionType type) {
     switch (type) {
-      case UnionType.UNION:
+      case UnionType.union:
         return 'UNION';
-      case UnionType.UNION_ALL:
+      case UnionType.unionAll:
         return 'UNION ALL';
     }
   }
 
   static String _operatorTypeToString(OperatorType type, {bool isValueNull = false}) {
     switch(type) {
-      case OperatorType.EQ:
+      case OperatorType.eq:
         return isValueNull? 'IS' : '=';
-      case OperatorType.NOT_EQ:
+      case OperatorType.notEq:
         return isValueNull? 'IS NOT' : '!=';
-      case OperatorType.LIKE:
+      case OperatorType.like:
         return 'ILIKE';
-      case OperatorType.GREATER_THAN:
+      case OperatorType.greaterThan:
         return '>';
-      case OperatorType.GREATER_THAN_EQUAL:
+      case OperatorType.greaterThanEqual:
         return '>=';
-      case OperatorType.LESS_THAN:
+      case OperatorType.lessThan:
         return '<';
-      case OperatorType.LESS_THAN_EQUAL:
+      case OperatorType.lessThanEqual:
         return '<=';
     }
   }
 
   static String _combinerTypeToString(CombinerType type) {
     switch(type){
-      case CombinerType.AND:
+      case CombinerType.and:
         return 'AND';
-      case CombinerType.OR:
+      case CombinerType.or:
         return 'OR';
     }
   }
 
   static String _datePartToString(DatePart datePart, String field) {
     switch(datePart) {
-      case DatePart.DAY:
+      case DatePart.day:
         return 'date_part(\'day\', $field)';
-      case DatePart.MONTH:
+      case DatePart.month:
         return 'date_part(\'month\', $field)';
-      case DatePart.YEAR:
+      case DatePart.year:
         return 'date_part(\'year\', $field)';
     }
   }
 
   static String _functionTypeToString(FunctionType type) {
     switch(type) {
-      case FunctionType.NONE:
+      case FunctionType.none:
         return '';
-      case FunctionType.COUNT:
+      case FunctionType.count:
         return 'COUNT';
-      case FunctionType.SUM:
+      case FunctionType.sum:
         return 'SUM';
-      case FunctionType.MIN:
+      case FunctionType.min:
         return 'MIN';
-      case FunctionType.MAX:
+      case FunctionType.max:
         return 'MAX';
-      case FunctionType.AVERAGE:
+      case FunctionType.average:
         return 'AVG';
     }
   }
@@ -644,7 +644,7 @@ class SQLQueryBuilder {
         if(!isValueNull) {
           Object value = Validator.formatValue(node.value!, options);
 
-          if(node.operator == OperatorType.LIKE) {
+          if(node.operator == OperatorType.like) {
             value = '%$value%';
           }
 

@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields
+
 import 'package:postgres/postgres.dart';
 import 'package:query/query.dart';
 
@@ -6,8 +8,8 @@ import '../item_connector.dart';
 
 class PostgresConnector extends ItemConnector {
   PostgresConnector.fromConnectionString(String connectionString)
-    : this._instance = PostgresInstance.fromString(connectionString),
-      this._builderOptions = SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false) {
+    : _instance = PostgresInstance.fromString(connectionString),
+      _builderOptions = SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false) {
 
     createConnection();
 
@@ -19,7 +21,7 @@ class PostgresConnector extends ItemConnector {
 
   void createConnection() {
 
-    this._connection = PostgreSQLConnection(
+    _connection = PostgreSQLConnection(
       _instance.host,
       _instance.port,
       _instance.database,
@@ -54,7 +56,7 @@ class PostgresConnector extends ItemConnector {
   @override
   bool isOpen() {
 
-    return !this.isClosed();
+    return !isClosed();
 
   }
 
@@ -76,14 +78,14 @@ class PostgresConnector extends ItemConnector {
   Future<List<Map<String, Map<String, Object?>>>> execute(Query query) {
 
     return _connection.mappedResultsQuery(
-      SQLQueryBuilder.buildString(query, this._builderOptions),
-      substitutionValues: SQLQueryBuilder.buildSubstitutionValues(query, this._builderOptions),
+      SQLQueryBuilder.buildString(query, _builderOptions),
+      substitutionValues: SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions),
     );
 
   }
 }
 
-const String _postgresURIPattern = '^postgres:\\\/\\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\\/]*)\\\/(?<db>[^\/]*)\$';
+const String _postgresURIPattern = '^postgres:\\/\\/(?<user>[^:]*):(?<pass>[^@]*)@(?<host>[^:]*):(?<port>[^\\/]*)\\/(?<db>[^/]*)\$';
 
 class PostgresInstance extends ProviderInstance {
   const PostgresInstance(this.host, this.port, this.database, this.user, this.password);
@@ -123,7 +125,7 @@ class PostgresInstance extends ProviderInstance {
 }
 
 class PostgresCredentials extends PostgresInstance {
-  PostgresCredentials() : this.host = '', this.port = -1, this.database = '', this.user = '', this.password = '', super('', -1, '', '', '');
+  PostgresCredentials() : host = '', port = -1, database = '', user = '', password = '', super('', -1, '', '', '');
 
   @override
   String host;

@@ -4,6 +4,6 @@ extension DurationExtension on Duration {
   }
 
   int extractNormalisedMinutes() {
-    return this.inMinutes - (this.inHours * 60);
+    return inMinutes - (inHours * 60);
   }
 }

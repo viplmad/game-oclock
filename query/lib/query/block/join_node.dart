@@ -24,7 +24,7 @@ class JoinSubqueryNode extends JoinNode {
 
 class JoinCondition {
   JoinCondition(this.field, this.joinField) :
-    this.operator = OperatorType.EQ;
+    operator = OperatorType.eq;
 
   final FieldStringNode field;
   final FieldStringNode joinField;

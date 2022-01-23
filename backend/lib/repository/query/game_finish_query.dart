@@ -12,7 +12,7 @@ class GameFinishQuery {
       .into(GameFinishEntityData.table)
       .sets(entity.createMap())
       .returningField(GameFinishEntityData.gameField)
-      .returningField(GameFinishEntityData.dateField);;
+      .returningField(GameFinishEntityData.dateField);
 
     return query;
   }

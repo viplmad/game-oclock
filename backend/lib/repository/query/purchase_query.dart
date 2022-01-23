@@ -75,7 +75,7 @@ class PurchaseQuery {
     final Query query = FluentQuery
       .select()
       .from(PurchaseEntityData.table)
-      .where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.LIKE)
+      .where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -134,43 +134,43 @@ class PurchaseQuery {
 
   static void _completeView(Query query, PurchaseView view, int? limit, [int? year]) {
     switch(view) {
-      case PurchaseView.Main:
-        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.DESC);
+      case PurchaseView.main:
+        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.desc);
         query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         query.limit(limit);
         break;
-      case PurchaseView.LastCreated:
-        query.order(PurchaseEntityData.idField, PurchaseEntityData.table, direction: SortOrder.DESC);
+      case PurchaseView.lastCreated:
+        query.order(PurchaseEntityData.idField, PurchaseEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
-      case PurchaseView.Pending:
+      case PurchaseView.pending:
         query.where(PurchaseEntityData.dateField, null, type: DateTime, table: PurchaseEntityData.table);
 
         final Query countGamePurchase = FluentQuery
           .select()
-          .field(GamePurchaseRelationData.gameField, table: GamePurchaseRelationData.table, function: FunctionType.COUNT)
+          .field(GamePurchaseRelationData.gameField, table: GamePurchaseRelationData.table, function: FunctionType.count)
           .from(GamePurchaseRelationData.table)
           .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
-        query.orWhereSubquery(countGamePurchase, 0, divider: DividerType.START);
+        query.orWhereSubquery(countGamePurchase, 0, divider: DividerType.start);
 
         final Query countDLCPurchase = FluentQuery
           .select()
-          .field(DLCPurchaseRelationData.dlcField, table: DLCPurchaseRelationData.table, function: FunctionType.COUNT)
+          .field(DLCPurchaseRelationData.dlcField, table: DLCPurchaseRelationData.table, function: FunctionType.count)
           .from(DLCPurchaseRelationData.table)
           .whereFields(DLCPurchaseRelationData.table, DLCPurchaseRelationData.purchaseField, PurchaseEntityData.table, PurchaseEntityData.idField);
-        query.whereSubquery(countDLCPurchase, 0, divider: DividerType.END);
+        query.whereSubquery(countDLCPurchase, 0, divider: DividerType.end);
 
         query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         break;
-      case PurchaseView.LastPurchased:
-        query.where(PurchaseEntityData.dateField, null, type: DateTime, table: PurchaseEntityData.table, operator: OperatorType.NOT_EQ);
-        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.DESC, nullsLast: true);
+      case PurchaseView.lastPurchased:
+        query.where(PurchaseEntityData.dateField, null, type: DateTime, table: PurchaseEntityData.table, operator: OperatorType.notEq);
+        query.order(PurchaseEntityData.dateField, PurchaseEntityData.table, direction: SortOrder.desc, nullsLast: true);
         query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         query.limit(limit?? 100);
         break;
-      case PurchaseView.Review:
+      case PurchaseView.review:
         year = year?? DateTime.now().year;
-        query.whereDatePart(PurchaseEntityData.dateField, year, DatePart.YEAR, table: PurchaseEntityData.table);
+        query.whereDatePart(PurchaseEntityData.dateField, year, DatePart.year, table: PurchaseEntityData.table);
         query.order(PurchaseEntityData.dateField, PurchaseEntityData.table);
         query.order(PurchaseEntityData.descriptionField, PurchaseEntityData.table);
         break;

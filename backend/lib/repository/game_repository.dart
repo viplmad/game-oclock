@@ -79,13 +79,13 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   Future<List<GameEntity>> findAllOwned() {
 
-    return findAllOwnedWithView(GameView.Main);
+    return findAllOwnedWithView(GameView.main);
 
   }
 
   Future<List<GameEntity>> findAllRom() {
 
-    return findAllRomWithView(GameView.Main);
+    return findAllRomWithView(GameView.main);
 
   }
 

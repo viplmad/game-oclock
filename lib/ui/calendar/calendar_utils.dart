@@ -16,16 +16,16 @@ class CalendarUtils {
   static String titleString(BuildContext context, DateTime date, CalendarRange range) {
     String rangeDateString;
     switch(range) {
-      case CalendarRange.Day:
+      case CalendarRange.day:
         rangeDateString = GameCollectionLocalisations.of(context).dateString(date);
         break;
-      case CalendarRange.Week:
+      case CalendarRange.week:
         rangeDateString = GameCollectionLocalisations.of(context).dateString(date.getMondayOfWeek()) + ' -> ' + GameCollectionLocalisations.of(context).dateString(date.getSundayOfWeek());
         break;
-      case CalendarRange.Month:
+      case CalendarRange.month:
         rangeDateString = GameCollectionLocalisations.of(context).monthYearString(date);
         break;
-      case CalendarRange.Year:
+      case CalendarRange.year:
         rangeDateString = GameCollectionLocalisations.of(context).yearString(date.year);
         break;
     }
@@ -36,7 +36,7 @@ class CalendarUtils {
     List<int> values = <int>[];
     List<String> labels = <String>[];
 
-    if(range == CalendarRange.Day) {
+    if(range == CalendarRange.day) {
       // Create list where each entry is the time in an hour
       values = List<int>.filled(24, 0, growable: false);
       for (final GameTimeLog log in timeLogs) {
@@ -80,16 +80,16 @@ class CalendarUtils {
         return log.time.inMinutes;
       }).toList(growable: false);
 
-      if(range == CalendarRange.Week) {
+      if(range == CalendarRange.week) {
         labels = GameCollectionLocalisations.of(context).shortDaysOfWeek;
-      } else if(range == CalendarRange.Month) {
+      } else if(range == CalendarRange.month) {
         labels = List<String>.generate(values.length, (int index) => (index + 1).toString());
-      } else if(range == CalendarRange.Year) {
+      } else if(range == CalendarRange.year) {
         labels = GameCollectionLocalisations.of(context).shortMonths;
       }
     }
 
-    if(range == CalendarRange.Day || range == CalendarRange.Month) {
+    if(range == CalendarRange.day || range == CalendarRange.month) {
 
       return ListView(
         shrinkWrap: true,

@@ -6,7 +6,7 @@ import 'union_node.dart';
 /// UNION
 class UnionBlock extends Block {
   UnionBlock() :
-    this.unions = <UnionNode>[],
+    unions = <UnionNode>[],
     super();
 
   final List<UnionNode> unions;
@@ -14,12 +14,12 @@ class UnionBlock extends Block {
   /// Add a UNION with the given table/query.
   /// @param table Name of the table or query to union with.
   /// @param unionType Type of the union.
-  void setUnion(String table, {UnionType unionType = UnionType.UNION}) {
+  void setUnion(String table, {UnionType unionType = UnionType.union}) {
     final UnionNode node = UnionTableNode(table, unionType);
     unions.add(node);
   }
 
-  void setUnionSubquery(Query query, {UnionType unionType = UnionType.UNION}) {
+  void setUnionSubquery(Query query, {UnionType unionType = UnionType.union}) {
     final UnionNode node = UnionSubqueryNode(query, unionType);
     unions.add(node);
   }

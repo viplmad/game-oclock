@@ -73,7 +73,7 @@ class PlatformQuery {
     final Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table)
-      .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.LIKE)
+      .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -105,13 +105,13 @@ class PlatformQuery {
 
   static void _completeView(Query query, PlatformView view, int? limit) {
     switch(view) {
-      case PlatformView.Main:
+      case PlatformView.main:
         query.order(PlatformEntityData.typeField, PlatformEntityData.table);
         query.order(PlatformEntityData.nameField, PlatformEntityData.table);
         query.limit(limit);
         break;
-      case PlatformView.LastCreated:
-        query.order(PlatformEntityData.idField, PlatformEntityData.table, direction: SortOrder.DESC);
+      case PlatformView.lastCreated:
+        query.order(PlatformEntityData.idField, PlatformEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

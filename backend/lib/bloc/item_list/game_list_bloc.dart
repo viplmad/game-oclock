@@ -16,7 +16,7 @@ class AllListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllWithView(GameView.main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -49,7 +49,7 @@ class OwnedListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -82,7 +82,7 @@ class RomListBloc extends GameListBloc {
   @override
   Future<List<Game>> getReadAllStream() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllRomWithView(GameView.Main);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllRomWithView(GameView.main);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

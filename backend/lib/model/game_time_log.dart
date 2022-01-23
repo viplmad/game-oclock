@@ -25,7 +25,7 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
 
     return GameTimeLog(
       dateTime: dateTime?? this.dateTime,
-      time: totalTime?? this.time,
+      time: totalTime?? time,
     );
 
   }
@@ -47,5 +47,5 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   }
 
   @override
-  int compareTo(GameTimeLog other) => this.dateTime.compareTo(other.dateTime); // Earlier dates first
+  int compareTo(GameTimeLog other) => dateTime.compareTo(other.dateTime); // Earlier dates first
 }

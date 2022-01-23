@@ -13,7 +13,7 @@ abstract class RepositorySettingsManagerState extends Equatable {
 class Initialised extends RepositorySettingsManagerState {}
 
 class ItemConnectionSettingsUpdated extends RepositorySettingsManagerState {
-  ItemConnectionSettingsUpdated(this.type);
+  const ItemConnectionSettingsUpdated(this.type);
 
   final ItemConnectorType type;
 
@@ -27,7 +27,7 @@ class ItemConnectionSettingsUpdated extends RepositorySettingsManagerState {
 }
 
 class ImageConnectionSettingsUpdated extends RepositorySettingsManagerState {
-  ImageConnectionSettingsUpdated(this.type);
+  const ImageConnectionSettingsUpdated(this.type);
 
   final ImageConnectorType type;
 

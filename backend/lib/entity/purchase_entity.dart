@@ -2,11 +2,11 @@ import 'entity.dart' show ItemEntity;
 
 
 enum PurchaseView {
-  Main,
-  LastCreated,
-  Pending,
-  LastPurchased,
-  Review,
+  main,
+  lastCreated,
+  pending,
+  lastPurchased,
+  review,
 }
 
 class PurchaseEntityData {

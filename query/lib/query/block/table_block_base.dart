@@ -6,7 +6,7 @@ import 'table_node.dart';
 /// Table base class
 abstract class TableBlockBase extends Block {
   TableBlockBase() :
-    this.tables = <TableNode>[];
+    tables = <TableNode>[];
 
   final List<TableNode> tables;
 

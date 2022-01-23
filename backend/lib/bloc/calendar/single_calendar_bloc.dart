@@ -26,9 +26,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required this.timeLogManagerBloc,
     required this.finishDateManagerBloc,
   }) :
-    this.id = GameID(itemId),
-    this.gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
-    this.gameFinishRepository = collectionRepository.gameFinishRepository,
+    id = GameID(itemId),
+    gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
+    gameFinishRepository = collectionRepository.gameFinishRepository,
     super(CalendarLoading()) {
 
       on<LoadSingleCalendar>(_mapLoadToState);
@@ -80,7 +80,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         selectedDate = logDates.last;
       }
 
-      final CalendarRange range = CalendarRange.Day;
+      const CalendarRange range = CalendarRange.day;
       final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(timeLogs, selectedDate, range);
 
       final Duration selectedTotalTime = RangeListUtils.getTotalTime(selectedTimeLogs);
@@ -340,24 +340,24 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final Set<DateTime> updatedLogDates = SplayTreeSet<DateTime>.from(logDates)..add(addedGameLog.dateTime);
 
       Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
-      if(range == CalendarRange.Day && addedGameLog.dateTime.isSameDay(selectedDate)) {
+      if(range == CalendarRange.day && addedGameLog.dateTime.isSameDay(selectedDate)) {
         selectedTimeLogs = List<GameTimeLog>.from(selectedTimeLogs)..add(addedGameLog);
-        selectedTimeLogs..sort();
+        selectedTimeLogs.sort();
 
         selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if(range == CalendarRange.Week && addedGameLog.dateTime.isInWeekOf(selectedDate)) {
+      } else if(range == CalendarRange.week && addedGameLog.dateTime.isInWeekOf(selectedDate)) {
         final int weekIndex = addedGameLog.dateTime.weekday - 1;
         final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(weekIndex);
         selectedTimeLogs[weekIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time + addedGameLog.time);
 
         selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if(range == CalendarRange.Month && addedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
+      } else if(range == CalendarRange.month && addedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
         final int monthIndex = addedGameLog.dateTime.day - 1;
         final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(monthIndex);
         selectedTimeLogs[monthIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time + addedGameLog.time);
 
         selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if(range == CalendarRange.Year && addedGameLog.dateTime.isInYearOf(selectedDate)) {
+      } else if(range == CalendarRange.year && addedGameLog.dateTime.isInYearOf(selectedDate)) {
         final int yearIndex = addedGameLog.dateTime.month - 1;
         final GameTimeLog monthTimeLog = selectedTimeLogs.elementAt(yearIndex);
         selectedTimeLogs[yearIndex] = GameTimeLog(dateTime: monthTimeLog.dateTime, time: monthTimeLog.time + addedGameLog.time);
@@ -407,25 +407,25 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       }
 
       Duration selectedTotalTime = (state as SingleCalendarLoaded).selectedTotalTime;
-      if(range == CalendarRange.Day && deletedGameLog.dateTime.isSameDay(selectedDate)) {
+      if(range == CalendarRange.day && deletedGameLog.dateTime.isSameDay(selectedDate)) {
         selectedTimeLogs = selectedTimeLogs
             .where((GameTimeLog log) => !log.dateTime.isSameDay(deletedGameLog.dateTime))
             .toList(growable: false);
 
         selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if(range == CalendarRange.Week && deletedGameLog.dateTime.isInWeekOf(selectedDate)) {
+      } else if(range == CalendarRange.week && deletedGameLog.dateTime.isInWeekOf(selectedDate)) {
         final int weekIndex = deletedGameLog.dateTime.weekday - 1;
         final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(weekIndex);
         selectedTimeLogs[weekIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time - deletedGameLog.time);
 
         selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if(range == CalendarRange.Month && deletedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
+      } else if(range == CalendarRange.month && deletedGameLog.dateTime.isInMonthAndYearOf(selectedDate)) {
         final int monthIndex = deletedGameLog.dateTime.day - 1;
         final GameTimeLog dayTimeLog = selectedTimeLogs.elementAt(monthIndex);
         selectedTimeLogs[monthIndex] = GameTimeLog(dateTime: dayTimeLog.dateTime, time: dayTimeLog.time - deletedGameLog.time);
 
         selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if(range == CalendarRange.Year && deletedGameLog.dateTime.isInYearOf(selectedDate)) {
+      } else if(range == CalendarRange.year && deletedGameLog.dateTime.isInYearOf(selectedDate)) {
         final int yearIndex = deletedGameLog.dateTime.month - 1;
         final GameTimeLog monthTimeLog = selectedTimeLogs.elementAt(yearIndex);
         selectedTimeLogs[yearIndex] = GameTimeLog(dateTime: monthTimeLog.dateTime, time: monthTimeLog.time - deletedGameLog.time);

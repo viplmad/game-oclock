@@ -36,10 +36,10 @@ class RepositoryPreferences {
 
     String value;
     switch(itemType) {
-      case ItemConnectorType.Postgres:
+      case ItemConnectorType.postgres:
         value = _postgresItemConnectorValue;
         break;
-      case ItemConnectorType.Local:
+      case ItemConnectorType.local:
         value = _localItemConnectorValue;
         break;
     }
@@ -57,10 +57,10 @@ class RepositoryPreferences {
 
     String value;
     switch(imageType) {
-      case ImageConnectorType.Cloudinary:
+      case ImageConnectorType.cloudinary:
         value = _cloudinaryImageConnectorValue;
         break;
-      case ImageConnectorType.Local:
+      case ImageConnectorType.local:
         value = _localImageConnectorValue;
         break;
     }
@@ -108,9 +108,9 @@ class RepositoryPreferences {
 
       switch(value) {
         case _postgresItemConnectorValue:
-          return ItemConnectorType.Postgres;
+          return ItemConnectorType.postgres;
         case _localItemConnectorValue:
-          return ItemConnectorType.Local;
+          return ItemConnectorType.local;
         default:
           return null;
       }
@@ -127,9 +127,9 @@ class RepositoryPreferences {
 
       switch(value) {
         case _cloudinaryImageConnectorValue:
-          return ImageConnectorType.Cloudinary;
+          return ImageConnectorType.cloudinary;
         case _localImageConnectorValue:
-          return ImageConnectorType.Local;
+          return ImageConnectorType.local;
         default:
           return null;
       }
@@ -147,9 +147,9 @@ class RepositoryPreferences {
     return sharedPreferences.getString(_itemConnectionStringKey).then<ProviderInstance>((String value) {
 
       switch(itemType!) {
-        case ItemConnectorType.Postgres:
+        case ItemConnectorType.postgres:
           return PostgresInstance.fromString(value);
-        case ItemConnectorType.Local:
+        case ItemConnectorType.local:
           throw Exception('Local type not supported');
       }
 
@@ -166,9 +166,9 @@ class RepositoryPreferences {
     return sharedPreferences.getString(_imageConnectionStringKey).then<ProviderInstance>((String value) {
 
       switch(imageType!) {
-        case ImageConnectorType.Cloudinary:
+        case ImageConnectorType.cloudinary:
           return CloudinaryInstance.fromString(value);
-        case ImageConnectorType.Local:
+        case ImageConnectorType.local:
           throw Exception('Local type not supported');
       }
 
@@ -185,9 +185,9 @@ class RepositoryPreferences {
     return sharedPreferences.getString(_itemConnectionStringKey).then<ItemConnector>((String value) {
 
       switch(itemType!) {
-        case ItemConnectorType.Postgres:
+        case ItemConnectorType.postgres:
           return PostgresConnector.fromConnectionString(value);
-        case ItemConnectorType.Local:
+        case ItemConnectorType.local:
           throw Exception('Local type not supported');
       }
 
@@ -204,9 +204,9 @@ class RepositoryPreferences {
     return sharedPreferences.getString(_imageConnectionStringKey).then<ImageConnector>((String value) {
 
       switch(imageType!) {
-        case ImageConnectorType.Cloudinary:
+        case ImageConnectorType.cloudinary:
           return CloudinaryConnector.fromConnectionString(value);
-        case ImageConnectorType.Local:
+        case ImageConnectorType.local:
           throw Exception('Local type not supported');
       }
 

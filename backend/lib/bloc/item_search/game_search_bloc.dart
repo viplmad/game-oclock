@@ -14,7 +14,7 @@ class GameSearchBloc extends ItemRemoteSearchBloc<Game, GameEntity, GameID, Game
   @override
   Future<List<Game>> getInitialItems() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.LastCreated, super.maxSuggestions);
+    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.lastCreated, super.maxSuggestions);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

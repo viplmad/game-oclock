@@ -16,7 +16,7 @@ class StoreListBloc extends ItemListBloc<Store, StoreEntity, StoreID, StoreRepos
   @override
   Future<List<Store>> getReadAllStream() {
 
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.Main);
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.main);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

@@ -6,7 +6,7 @@ import 'model.dart' show Game, GameTimeLog;
 
 
 class GameWithLogs extends Equatable implements Comparable<GameWithLogs> {
-  GameWithLogs({
+  const GameWithLogs({
     required this.game,
     required this.timeLogs,
   });
@@ -35,5 +35,5 @@ class GameWithLogs extends Equatable implements Comparable<GameWithLogs> {
   }
 
   @override
-  int compareTo(GameWithLogs other) => other.totalTime.compareTo(this.totalTime); // Longer total time first
+  int compareTo(GameWithLogs other) => other.totalTime.compareTo(totalTime); // Longer total time first
 }

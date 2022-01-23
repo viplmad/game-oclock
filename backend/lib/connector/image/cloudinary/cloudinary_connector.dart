@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields
+
 import 'package:cloudinary_client/cloudinary_client.dart';
 
 import '../image_connector.dart';
@@ -9,7 +11,7 @@ const String _baseRESURL = 'https://res.cloudinary.com/';
 class CloudinaryConnector extends ImageConnector {
   CloudinaryConnector.fromConnectionString(String connectionString) {
 
-    this._instance = CloudinaryInstance.fromString(connectionString);
+    _instance = CloudinaryInstance.fromString(connectionString);
     createConnection();
 
   }
@@ -19,7 +21,7 @@ class CloudinaryConnector extends ImageConnector {
 
   void createConnection() {
 
-    this._connection = Image(
+    _connection = Image(
       Credentials(
         _instance.apiKey.toString(),
         _instance.apiSecret,
@@ -115,7 +117,7 @@ class CloudinaryConnector extends ImageConnector {
   //#endregion Helpers
 }
 
-const String _cloudinaryURIPattern = 'cloudinary:\\\/\\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$';
+const String _cloudinaryURIPattern = 'cloudinary:\\/\\/(?<key>[^:]*):(?<secret>[^@]*)@(?<name>[^:]*)\$';
 
 class CloudinaryInstance extends ProviderInstance {
   const CloudinaryInstance(this.cloudName, this.apiKey, this.apiSecret);
@@ -151,7 +153,7 @@ class CloudinaryInstance extends ProviderInstance {
 }
 
 class CloudinaryCredentials extends CloudinaryInstance {
-  CloudinaryCredentials() : this.cloudName = '', this.apiKey = -1, this.apiSecret = '', super('', -1, '');
+  CloudinaryCredentials() : cloudName = '', apiKey = -1, apiSecret = '', super('', -1, '');
 
   @override
   String cloudName;

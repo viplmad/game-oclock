@@ -1,6 +1,6 @@
 enum CalendarRange {
-  Day,
-  Week,
-  Month,
-  Year,
+  day,
+  week,
+  month,
+  year,
 }

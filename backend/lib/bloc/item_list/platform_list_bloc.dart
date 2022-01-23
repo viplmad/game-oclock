@@ -16,7 +16,7 @@ class PlatformListBloc extends ItemListBloc<Platform, PlatformEntity, PlatformID
   @override
   Future<List<Platform>> getReadAllStream() {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.Main);
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.main);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

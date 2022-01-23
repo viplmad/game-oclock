@@ -73,7 +73,7 @@ class SystemQuery {
     final Query query = FluentQuery
       .select()
       .from(SystemEntityData.table)
-      .where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.LIKE)
+      .where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -106,14 +106,14 @@ class SystemQuery {
 
   static void _completeView(Query query, SystemView view, int? limit) {
     switch(view) {
-      case SystemView.Main:
+      case SystemView.main:
         query.order(SystemEntityData.generationField, SystemEntityData.table);
         query.order(SystemEntityData.manufacturerField, SystemEntityData.table);
         query.order(SystemEntityData.nameField, SystemEntityData.table);
         query.limit(limit);
         break;
-      case SystemView.LastCreated:
-        query.order(SystemEntityData.idField, SystemEntityData.table, direction: SortOrder.DESC);
+      case SystemView.lastCreated:
+        query.order(SystemEntityData.idField, SystemEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

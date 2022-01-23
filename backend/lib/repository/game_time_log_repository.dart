@@ -93,7 +93,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
   List<GameWithLogsEntity> _listMapToListGamesWithLogs(List<Map<String, Map<String, Object?>>> results) {
     final List<GameWithLogsEntity> entities = <GameWithLogsEntity>[];
 
-    results.forEach( (Map<String, Map<String, Object?>> manyMap) {
+    for (final Map<String, Map<String, Object?>> manyMap in results) {
 
       final Map<String, Object?> gameMap = manyMap[GameEntityData.table]!;
       final GameEntity gameEntity = GameEntity.fromMap(gameMap);
@@ -104,14 +104,14 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
       GameWithLogsEntity entity;
       try {
         entity = entities.singleWhere((GameWithLogsEntity tempGameWithLogs) => tempGameWithLogs.game == gameEntity);
-      } catch(IterableElementError) {
+      } catch(iterableElementError) {
         entity = GameWithLogsEntity(game: gameEntity);
         entities.add(entity);
       }
 
       entity.addTimeLog(timeLogEntity);
 
-    });
+    }
 
     return entities;
   }

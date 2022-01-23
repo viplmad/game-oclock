@@ -2,8 +2,8 @@ import 'entity.dart' show ItemEntity;
 
 
 enum DLCView {
-  Main,
-  LastCreated,
+  main,
+  lastCreated,
 }
 
 class DLCEntityData {

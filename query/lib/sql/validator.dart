@@ -68,7 +68,7 @@ class Validator {
 
   static String formatString(String value, SQLBuilderOptions options) {
     final String result = options.dontQuote
-        ? '${escapeValue(value, options)}'
+        ? escapeValue(value, options)
         : '${options.valueQuoteCharacter}${escapeValue(value, options)}${options.valueQuoteCharacter}';
 
     return result;

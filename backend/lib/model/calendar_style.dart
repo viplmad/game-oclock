@@ -1,4 +1,4 @@
 enum CalendarStyle {
-  List,
-  Graph,
+  list,
+  graph,
 }

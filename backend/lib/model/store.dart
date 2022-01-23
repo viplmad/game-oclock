@@ -19,7 +19,7 @@ class Store extends Item {
   final String? iconFilename;
 
   @override
-  ItemImage get image => ItemImage(this.iconURL, this.iconFilename);
+  ItemImage get image => ItemImage(iconURL, iconFilename);
 
   @override
   Store copyWith({

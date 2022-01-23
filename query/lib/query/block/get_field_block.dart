@@ -1,14 +1,13 @@
 import '../query.dart';
 
 import 'block.dart';
-import 'field_node.dart';
 
 
 /// (SELECT) field
 class GetFieldBlock extends Block {
   GetFieldBlock() :
-    this.fields = <FieldNode>[],
-    this.fieldAliases = <String?>[],
+    fields = <FieldNode>[],
+    fieldAliases = <String?>[],
     super();
 
   final List<FieldNode> fields;
@@ -25,14 +24,14 @@ class GetFieldBlock extends Block {
   /// Add the given field to the final result.
   /// @param field Field to add
   /// @param alias Field's alias
-  void setField(String name, Type? type, String? table, String? alias, {FunctionType function = FunctionType.NONE}) {
+  void setField(String name, Type? type, String? table, String? alias, {FunctionType function = FunctionType.none}) {
     _chackAlias(alias);
 
     final FieldNode node = FieldStringNode(name, type, table, function, alias);
     fields.add(node);
   }
 
-  void setFieldFromSubquery(Query query, String? alias, {FunctionType function = FunctionType.NONE}) {
+  void setFieldFromSubquery(Query query, String? alias, {FunctionType function = FunctionType.none}) {
     _chackAlias(alias);
 
     final FieldNode node = FieldSubqueryNode(query, function, alias);

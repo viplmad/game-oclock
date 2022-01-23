@@ -16,7 +16,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity, PurchaseID
   @override
   Future<List<Purchase>> getReadAllStream() {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(PurchaseView.Main);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(PurchaseView.main);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }

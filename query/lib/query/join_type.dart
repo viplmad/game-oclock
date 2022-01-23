@@ -1,8 +1,8 @@
 /// JOIN type.
 enum JoinType {
-  INNER,
-  LEFT,
-  RIGHT,
-  FULL,
-  CROSS,
+  inner,
+  left,
+  right,
+  full,
+  cross,
 }

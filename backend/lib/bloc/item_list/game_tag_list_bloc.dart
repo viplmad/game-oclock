@@ -16,7 +16,7 @@ class GameTagListBloc extends ItemListBloc<GameTag, GameTagEntity, GameTagID, Ga
   @override
   Future<List<GameTag>> getReadAllStream() {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.Main);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.main);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }

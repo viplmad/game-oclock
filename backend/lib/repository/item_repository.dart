@@ -156,12 +156,12 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   List<T> _listMapToList(List<Map<String, Map<String, Object?>>> results) {
     final List<T> entities = <T>[];
 
-    results.forEach( (Map<String, Map<String, Object?>> manyMap) {
+    for (final Map<String, Map<String, Object?>> manyMap in results) {
       final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(manyMap, recordName);
       final T entity = entityFromMap(map);
 
       entities.add(entity);
-    });
+    }
 
     return entities;
   }
@@ -198,7 +198,7 @@ class ItemRepositoryUtils {
   ItemRepositoryUtils._();
 
   static Map<String, Object?> combineMaps(Map<String, Map<String, Object?>> manyMap, String primaryTableName) {
-    final Map<String, Object?> combinedMaps = Map<String, Object?>();
+    final Map<String, Object?> combinedMaps = <String, Object?>{};
 
     manyMap.forEach((String table, Map<String, Object?> map) {
 

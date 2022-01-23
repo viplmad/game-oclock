@@ -14,7 +14,7 @@ class DLCSearchBloc extends ItemRemoteSearchBloc<DLC, DLCEntity, DLCID, DLCRepos
   @override
   Future<List<DLC>> getInitialItems() {
 
-    final Future<List<DLCEntity>> entityListFuture = repository.findAllWithView(DLCView.LastCreated, super.maxSuggestions);
+    final Future<List<DLCEntity>> entityListFuture = repository.findAllWithView(DLCView.lastCreated, super.maxSuggestions);
     return DLCMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

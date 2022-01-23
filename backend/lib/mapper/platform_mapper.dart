@@ -6,13 +6,13 @@ class PlatformMapper {
   PlatformMapper._();
 
   static const Map<PlatformType, String> typeToStringMap = <PlatformType, String> {
-    PlatformType.Physical: PlatformEntityData.physicalValue,
-    PlatformType.Digital: PlatformEntityData.digitalValue,
+    PlatformType.physical: PlatformEntityData.physicalValue,
+    PlatformType.digital: PlatformEntityData.digitalValue,
   };
 
   static const Map<String, PlatformType> stringToTypeMap = <String, PlatformType> {
-    PlatformEntityData.physicalValue: PlatformType.Physical,
-    PlatformEntityData.digitalValue: PlatformType.Digital,
+    PlatformEntityData.physicalValue: PlatformType.physical,
+    PlatformEntityData.digitalValue: PlatformType.digital,
   };
 
   static PlatformEntity modelToEntity(Platform model) {

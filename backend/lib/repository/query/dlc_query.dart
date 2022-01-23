@@ -86,7 +86,7 @@ class DLCQuery {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table)
-      .where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.LIKE)
+      .where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.like)
       .limit(limit);
 
     addFields(query);
@@ -137,7 +137,7 @@ class DLCQuery {
 
     final Query firstFinishQuery = FluentQuery
       .select()
-      .field(DLCFinishEntityData.dateField, type: DateTime, table: DLCFinishEntityData.table, function: FunctionType.MIN)
+      .field(DLCFinishEntityData.dateField, type: DateTime, table: DLCFinishEntityData.table, function: FunctionType.min)
       .from(DLCFinishEntityData.table)
       .whereFields(DLCFinishEntityData.table, DLCFinishEntityData.dlcField, DLCEntityData.table, DLCEntityData.idField);
     query.fieldSubquery(firstFinishQuery, alias: DLCEntityData.firstfinishDateField);
@@ -149,14 +149,14 @@ class DLCQuery {
 
   static void _completeView(Query query, DLCView view, int? limit) {
     switch(view) {
-      case DLCView.Main:
+      case DLCView.main:
         query.order(DLCEntityData.baseGameField, DLCEntityData.table);
         query.order(DLCEntityData.releaseYearField, DLCEntityData.table);
         query.order(DLCEntityData.nameField, DLCEntityData.table);
         query.limit(limit);
         break;
-      case DLCView.LastCreated:
-        query.order(DLCEntityData.idField, DLCEntityData.table, direction: SortOrder.DESC);
+      case DLCView.lastCreated:
+        query.order(DLCEntityData.idField, DLCEntityData.table, direction: SortOrder.desc);
         query.limit(limit?? 50);
         break;
     }

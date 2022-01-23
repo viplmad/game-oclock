@@ -13,10 +13,10 @@ class PurchaseRelationBloc<W extends Item> extends ItemRelationBloc<Purchase, Pu
     required GameCollectionRepository collectionRepository,
     required PurchaseRelationManagerBloc<W> managerBloc,
   }) :
-    this.gameRepository = collectionRepository.gameRepository,
-    this.dlcRepository = collectionRepository.dlcRepository,
-    this.storeRepository = collectionRepository.storeRepository,
-    this.purchaseTypeRepository = collectionRepository.purchaseTypeRepository,
+    gameRepository = collectionRepository.gameRepository,
+    dlcRepository = collectionRepository.dlcRepository,
+    storeRepository = collectionRepository.storeRepository,
+    purchaseTypeRepository = collectionRepository.purchaseTypeRepository,
     super(id: PurchaseID(itemId), collectionRepository: collectionRepository, managerBloc: managerBloc);
 
   final GameRepository gameRepository;

@@ -217,13 +217,13 @@ abstract class GameCollectionLocalisations {
 
   static String manufacturerString(Manufacturer? manufacturer) {
     switch(manufacturer){
-      case Manufacturer.Nintendo:
+      case Manufacturer.nintendo:
         return 'Nintendo';
-      case Manufacturer.Sony:
+      case Manufacturer.sony:
         return 'Sony';
-      case Manufacturer.Microsoft:
+      case Manufacturer.microsoft:
         return 'Microsoft';
-      case Manufacturer.Sega:
+      case Manufacturer.sega:
         return 'Sega';
       default:
         return '';

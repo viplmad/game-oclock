@@ -11,9 +11,9 @@ class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC
     required int itemId,
     required GameCollectionRepository collectionRepository,
   }) :
-    this.dlcFinishRepository = collectionRepository.dlcFinishRepository,
-    this.gameRepository = collectionRepository.gameRepository,
-    this.dlcRepository = collectionRepository.dlcRepository,
+    dlcFinishRepository = collectionRepository.dlcFinishRepository,
+    gameRepository = collectionRepository.gameRepository,
+    dlcRepository = collectionRepository.dlcRepository,
     super(id: DLCID(itemId), collectionRepository: collectionRepository);
 
   final DLCFinishRepository dlcFinishRepository;

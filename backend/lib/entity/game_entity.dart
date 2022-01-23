@@ -2,13 +2,13 @@ import 'entity.dart' show ItemEntity;
 
 
 enum GameView {
-  Main,
-  LastCreated,
-  Playing,
-  NextUp,
-  LastPlayed,
-  LastFinished,
-  Review,
+  main,
+  lastCreated,
+  playing,
+  nextUp,
+  lastPlayed,
+  lastFinished,
+  review,
 }
 
 class GameEntityData {

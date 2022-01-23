@@ -2,8 +2,8 @@ import 'entity.dart' show ItemEntity;
 
 
 enum PlatformView {
-  Main,
-  LastCreated,
+  main,
+  lastCreated,
 }
 
 class PlatformEntityData {

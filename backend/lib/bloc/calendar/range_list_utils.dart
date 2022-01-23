@@ -8,10 +8,10 @@ class RangeListUtils {
   RangeListUtils._();
 
   static bool doesNewDateNeedRecalculation(DateTime date, DateTime previousDate, CalendarRange range) {
-    return (range == CalendarRange.Day && !date.isSameDay(previousDate))
-      || (range == CalendarRange.Week && !date.isInWeekOf(previousDate))
-      || (range == CalendarRange.Month && !date.isInMonthAndYearOf(previousDate))
-      || (range == CalendarRange.Year && !date.isInYearOf(previousDate));
+    return (range == CalendarRange.day && !date.isSameDay(previousDate))
+      || (range == CalendarRange.week && !date.isInWeekOf(previousDate))
+      || (range == CalendarRange.month && !date.isInMonthAndYearOf(previousDate))
+      || (range == CalendarRange.year && !date.isInYearOf(previousDate));
   }
 
   static Duration getTotalTime(List<GameTimeLog> timeLogs) {
@@ -22,12 +22,12 @@ class RangeListUtils {
     List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
 
     switch(range) {
-      case CalendarRange.Day:
+      case CalendarRange.day:
         selectedTimeLogs = timeLogs
           .where((GameTimeLog log) => log.dateTime.isSameDay(date))
           .toList(growable: false);
         break;
-      case CalendarRange.Week: // Create a List of 7 timelogs -> sum of each day of week
+      case CalendarRange.week: // Create a List of 7 timelogs -> sum of each day of week
         final DateTime mondayOfSelectedDate = date.getMondayOfWeek();
 
         DateTime dateOfWeek = mondayOfSelectedDate;
@@ -49,7 +49,7 @@ class RangeListUtils {
           dateOfWeek = dateOfWeek.addDays(1);
         }
         break;
-      case CalendarRange.Month: // Create a List of 31* timelogs -> sum of each day of month
+      case CalendarRange.month: // Create a List of 31* timelogs -> sum of each day of month
         final DateTime firstDayOfSelectedMonth = date.getFirstDayOfMonth();
 
         DateTime dateOfMonth = firstDayOfSelectedMonth;
@@ -71,7 +71,7 @@ class RangeListUtils {
           dateOfMonth = dateOfMonth.addDays(1);
         }
         break;
-      case CalendarRange.Year: // Create a List of 12 timelogs -> sum of each month of year
+      case CalendarRange.year: // Create a List of 12 timelogs -> sum of each month of year
         for(int monthIndex = 1; monthIndex <= 12; monthIndex++) {
           final DateTime firstDayOfMonth = DateTime(date.year, monthIndex, 1);
 
@@ -107,13 +107,13 @@ class RangeListUtils {
         final DateTime date = listLogDates.elementAt(index);
 
         if(date.isBefore(selectedDate)) { // Find previous day with logs
-          if(range == CalendarRange.Day
+          if(range == CalendarRange.day
             // Week range -> Need to be previous week
-            || (range == CalendarRange.Week && !date.isInWeekOf(selectedDate))
+            || (range == CalendarRange.week && !date.isInWeekOf(selectedDate))
             // Month range -> Need to be previous month
-            || (range == CalendarRange.Month && !date.isInMonthAndYearOf(selectedDate))
+            || (range == CalendarRange.month && !date.isInMonthAndYearOf(selectedDate))
             // Year range -> Need to be previous year
-            || (range == CalendarRange.Year && !date.isInYearOf(selectedDate))) {
+            || (range == CalendarRange.year && !date.isInYearOf(selectedDate))) {
             previousDate = date;
           }
         }
@@ -135,13 +135,13 @@ class RangeListUtils {
         final DateTime date = listLogDates.elementAt(index);
 
         if(date.isAfter(selectedDate)) { // Find next day with logs
-          if(range == CalendarRange.Day
+          if(range == CalendarRange.day
             // Week range -> Need to be next week
-            || (range == CalendarRange.Week && !date.isInWeekOf(selectedDate))
+            || (range == CalendarRange.week && !date.isInWeekOf(selectedDate))
             // Month range -> Need to be next month
-            || (range == CalendarRange.Month && !date.isInMonthAndYearOf(selectedDate))
+            || (range == CalendarRange.month && !date.isInMonthAndYearOf(selectedDate))
             // Year range -> Need to be next year
-            || (range == CalendarRange.Year && !date.isInYearOf(selectedDate))) {
+            || (range == CalendarRange.year && !date.isInYearOf(selectedDate))) {
             nextDate = date;
           }
         }

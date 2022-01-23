@@ -25,7 +25,7 @@ class DLC extends Item {
   final DateTime? firstFinishDate;
 
   @override
-  ItemImage get image => ItemImage(this.coverURL, this.coverFilename);
+  ItemImage get image => ItemImage(coverURL, coverFilename);
 
   @override
   DLC copyWith({

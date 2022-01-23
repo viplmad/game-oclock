@@ -4,7 +4,7 @@ import 'block.dart' show Block;
 // RETURNING FIELD
 class ReturningFieldBlock extends Block {
   ReturningFieldBlock() :
-    this.fields = <String>[],
+    fields = <String>[],
     super();
 
   final List<String> fields;

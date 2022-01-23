@@ -14,7 +14,7 @@ abstract class SingleCalendarState extends CalendarState {
 
 class SingleCalendarLoaded extends SingleCalendarState {
   // ignore: avoid_positional_boolean_parameters
-  const SingleCalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, this.range, [this.style = CalendarStyle.List]);
+  const SingleCalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, this.range, [this.style = CalendarStyle.list]);
 
   final List<GameTimeLog> timeLogs;
   final Set<DateTime> logDates;

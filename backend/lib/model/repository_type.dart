@@ -1,9 +1,9 @@
 enum ItemConnectorType {
-  Postgres,
-  Local,
+  postgres,
+  local,
 }
 
 enum ImageConnectorType {
-  Cloudinary,
-  Local,
+  cloudinary,
+  local,
 }

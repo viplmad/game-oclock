@@ -14,7 +14,7 @@ class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, Gam
   @override
   Future<List<GameTag>> getInitialItems() {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.LastCreated, super.maxSuggestions);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.lastCreated, super.maxSuggestions);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }

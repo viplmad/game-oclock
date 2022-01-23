@@ -19,8 +19,8 @@ abstract class WhereValueNode extends WhereNode {
 }
 
 enum CombinerType {
-  AND,
-  OR,
+  and,
+  or,
 }
 
 class WhereFieldValueNode extends WhereValueNode {
