@@ -46,27 +46,36 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
   }
 
   @override
-  Future<List<PurchaseEntity>> findAll() {
+  Future<List<PurchaseEntity>> findAll([int? page]) {
 
-    final Query query = PurchaseQuery.selectAll();
+    final Query query = PurchaseQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<PurchaseEntity>> findAllWithView(PurchaseView purchaseView, [int? limit]) {
+  Future<List<PurchaseEntity>> findAllWithView(PurchaseView purchaseView, [int? page]) {
 
-    final Query query = PurchaseQuery.selectAllInView(purchaseView, limit);
+    final Query query = PurchaseQuery.selectAllInView(purchaseView, null, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<PurchaseEntity>> findAllWithYearView(PurchaseView purchaseView, int year, [int? limit]) {
+  Future<List<PurchaseEntity>> findFirstWithView(PurchaseView purchaseView, int limit) {
 
-    final Query query = PurchaseQuery.selectAllInView(purchaseView, limit, year);
+    final Query query = PurchaseQuery.selectFirstInView(purchaseView, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<PurchaseEntity>> findAllWithYearView(PurchaseView purchaseView, int year, [int? page]) {
+
+    final Query query = PurchaseQuery.selectAllInView(purchaseView, year, page);
     return readItemList(
       query: query,
     );
@@ -142,9 +151,9 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PurchaseEntity>> findAllByDescription(String description, int limit) {
+  Future<List<PurchaseEntity>> findFirstByDescription(String description, int limit) {
 
-    final Query query = PurchaseQuery.selectAllByDescriptionLike(description, limit);
+    final Query query = PurchaseQuery.selectFirstByDescriptionLike(description, limit);
     return readItemList(
       query: query,
     );

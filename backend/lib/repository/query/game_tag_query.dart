@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show GameTagEntity, GameTagEntityData, GameTagID, GameTagView;
 
+import 'query_utils.dart';
+
 
 class GameTagQuery {
   GameTagQuery._();
@@ -48,17 +50,18 @@ class GameTagQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table)
@@ -70,13 +73,26 @@ class GameTagQuery {
     return query;
   }
 
-  static Query selectAllInView(GameTagView view, [int? limit]) {
+  static Query selectAllInView(GameTagView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(GameTagEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(GameTagView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTagEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -90,15 +106,13 @@ class GameTagQuery {
     query.where(GameTagEntityData.idField, id.id, type: int, table: GameTagEntityData.table);
   }
 
-  static void _completeView(Query query, GameTagView view, int? limit) {
+  static void _completeView(Query query, GameTagView view) {
     switch(view) {
       case GameTagView.main:
         query.order(GameTagEntityData.nameField, GameTagEntityData.table);
-        query.limit(limit);
         break;
       case GameTagView.lastCreated:
         query.order(GameTagEntityData.idField, GameTagEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

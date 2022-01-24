@@ -55,7 +55,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
 
   @override
-  _StoreListBody itemListBodyBuilder({required List<Store> items, required int viewIndex, required int viewYear, required void Function(Store) onDelete, required ListStyle style}) {
+  _StoreListBody itemListBodyBuilder({required List<Store> items, required int viewIndex, required int viewYear, required void Function(Store) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _StoreListBody(
       items: items,
@@ -63,6 +63,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
       viewYear: viewYear,
       onDelete: onDelete,
       style: style,
+      scrollController: scrollController,
     );
 
   }
@@ -76,6 +77,7 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
     required int viewYear,
     required void Function(Store) onDelete,
     required ListStyle style,
+    required ScrollController scrollController,
   }) : super(
     key: key,
     items: items,
@@ -83,6 +85,7 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    scrollController: scrollController,
     detailRouteName: storeDetailRoute,
     localSearchRouteName: storeLocalSearchRoute,
   );

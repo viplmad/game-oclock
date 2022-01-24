@@ -87,7 +87,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).purchaseString;
 
   @override
-  _PurchaseListBody itemListBodyBuilder({required List<Purchase> items, required int viewIndex, required int viewYear, required void Function(Purchase) onDelete, required ListStyle style}) {
+  _PurchaseListBody itemListBodyBuilder({required List<Purchase> items, required int viewIndex, required int viewYear, required void Function(Purchase) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _PurchaseListBody(
       items: items,
@@ -95,6 +95,7 @@ class PurchaseList extends ItemList<Purchase, PurchaseListBloc, PurchaseListMana
       viewYear: viewYear,
       onDelete: onDelete,
       style: style,
+      scrollController: scrollController,
     );
 
   }
@@ -108,6 +109,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
     required int viewYear,
     required void Function(Purchase) onDelete,
     required ListStyle style,
+    required ScrollController scrollController,
   }) : super(
     key: key,
     items: items,
@@ -115,6 +117,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    scrollController: scrollController,
     detailRouteName: purchaseDetailRoute,
     localSearchRouteName: purchaseLocalSearchRoute,
     statisticsRouteName: purchaseStatisticsRoute,

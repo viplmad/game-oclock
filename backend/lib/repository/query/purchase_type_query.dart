@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show PurchaseTypeEntity, PurchaseTypeEntityData, PurchaseTypeID, PurchaseTypeView;
 
+import 'query_utils.dart';
+
 
 class PurchaseTypeQuery {
   PurchaseTypeQuery._();
@@ -48,17 +50,18 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table)
@@ -70,13 +73,26 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query selectAllInView(PurchaseTypeView view, [int? limit]) {
+  static Query selectAllInView(PurchaseTypeView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(PurchaseTypeEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(PurchaseTypeView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseTypeEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -90,15 +106,13 @@ class PurchaseTypeQuery {
     query.where(PurchaseTypeEntityData.idField, id.id, type: int, table: PurchaseTypeEntityData.table);
   }
 
-  static void _completeView(Query query, PurchaseTypeView view, int? limit) {
+  static void _completeView(Query query, PurchaseTypeView view) {
     switch(view) {
       case PurchaseTypeView.main:
         query.order(PurchaseTypeEntityData.nameField, PurchaseTypeEntityData.table);
-        query.limit(limit);
         break;
       case PurchaseTypeView.lastCreated:
         query.order(PurchaseTypeEntityData.idField, PurchaseTypeEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

@@ -101,7 +101,7 @@ class _GameTagList extends ItemList<GameTag, GameTagListBloc, GameTagListManager
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagString;
 
   @override
-  _GameTagListBody itemListBodyBuilder({required List<GameTag> items, required int viewIndex, required int viewYear, required void Function(GameTag) onDelete, required ListStyle style}) {
+  _GameTagListBody itemListBodyBuilder({required List<GameTag> items, required int viewIndex, required int viewYear, required void Function(GameTag) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _GameTagListBody(
       items: items,
@@ -109,6 +109,7 @@ class _GameTagList extends ItemList<GameTag, GameTagListBloc, GameTagListManager
       viewYear: viewYear,
       onDelete: onDelete,
       style: style,
+      scrollController: scrollController,
     );
 
   }
@@ -122,6 +123,7 @@ class _GameTagListBody extends ItemListBody<GameTag, GameTagListBloc> {
     required int viewYear,
     required void Function(GameTag) onDelete,
     required ListStyle style,
+    required ScrollController scrollController,
   }) : super(
     key: key,
     items: items,
@@ -129,6 +131,7 @@ class _GameTagListBody extends ItemListBody<GameTag, GameTagListBloc> {
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    scrollController: scrollController,
     detailRouteName: gameTagDetailRoute,
     localSearchRouteName: gameTagLocalSearchRoute,
   );

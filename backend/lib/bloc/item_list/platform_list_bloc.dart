@@ -14,18 +14,18 @@ class PlatformListBloc extends ItemListBloc<Platform, PlatformEntity, PlatformID
   }) : super(repository: collectionRepository.platformRepository, managerBloc: managerBloc);
 
   @override
-  Future<List<Platform>> getReadAllStream() {
+  Future<List<Platform>> getReadAllStream([int? page]) {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.main);
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(PlatformView.main, page);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
 
   @override
-  Future<List<Platform>> getReadViewStream(UpdateView event) {
+  Future<List<Platform>> getReadViewStream(int viewIndex, [int? page]) {
 
-    final PlatformView view = PlatformView.values[event.viewIndex];
-    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(view);
+    final PlatformView view = PlatformView.values[viewIndex];
+    final Future<List<PlatformEntity>> entityListFuture = repository.findAllWithView(view, page);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

@@ -48,18 +48,27 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
   }
 
   @override
-  Future<List<DLCEntity>> findAll() {
+  Future<List<DLCEntity>> findAll([int? page]) {
 
-    final Query query = DLCQuery.selectAll();
+    final Query query = DLCQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<DLCEntity>> findAllWithView(DLCView dlcView, [int? limit]) {
+  Future<List<DLCEntity>> findAllWithView(DLCView dlcView, [int? page]) {
 
-    final Query query = DLCQuery.selectAllInView(dlcView, limit);
+    final Query query = DLCQuery.selectAllInView(dlcView, page);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<DLCEntity>> findFirstWithView(DLCView dlcView, int limit) {
+
+    final Query query = DLCQuery.selectFirstInView(dlcView, limit);
     return readItemList(
       query: query,
     );
@@ -117,9 +126,9 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<DLCEntity>> findAllByName(String name, int limit) {
+  Future<List<DLCEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = DLCQuery.selectAllByNameLike(name, limit);
+    final Query query = DLCQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

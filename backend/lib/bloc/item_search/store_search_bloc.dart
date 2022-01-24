@@ -14,7 +14,7 @@ class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreEntity, StoreID, 
   @override
   Future<List<Store>> getInitialItems() {
 
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.lastCreated, super.maxSuggestions);
+    final Future<List<StoreEntity>> entityListFuture = repository.findFirstWithView(StoreView.lastCreated, super.maxSuggestions);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,7 +22,7 @@ class StoreSearchBloc extends ItemRemoteSearchBloc<Store, StoreEntity, StoreID, 
   @override
   Future<List<Store>> getSearchItems(String query) {
 
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
+    final Future<List<StoreEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

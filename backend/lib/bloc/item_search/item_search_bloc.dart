@@ -15,11 +15,11 @@ abstract class ItemSearchBloc<T extends Item> extends Bloc<ItemSearchEvent, Item
 
   }
 
-  final int maxResults = 10;
-  final int maxSuggestions = 6;
+  final int maxSuggestions = 10;
+  final int maxResults = 20;
 
   @protected
-  void mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
+  Future<void> mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
 
     emit(
       ItemSearchLoading(),

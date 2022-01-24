@@ -14,7 +14,7 @@ class SystemSearchBloc extends ItemRemoteSearchBloc<System, SystemEntity, System
   @override
   Future<List<System>> getInitialItems() {
 
-    final Future<List<SystemEntity>> entityListFuture = repository.findAllWithView(SystemView.lastCreated, super.maxSuggestions);
+    final Future<List<SystemEntity>> entityListFuture = repository.findFirstWithView(SystemView.lastCreated, super.maxSuggestions);
     return SystemMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,7 +22,7 @@ class SystemSearchBloc extends ItemRemoteSearchBloc<System, SystemEntity, System
   @override
   Future<List<System>> getSearchItems(String query) {
 
-    final Future<List<SystemEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
+    final Future<List<SystemEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
     return SystemMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

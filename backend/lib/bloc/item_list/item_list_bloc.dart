@@ -24,6 +24,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     on<UpdateListItem<T>>(_mapUpdateItemToState);
     on<UpdateView>(_mapUpdateViewToState);
     on<UpdateYearView>(_mapUpdateYearViewToState);
+    on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateSortOrder>(_mapUpdateSortOrderToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
@@ -50,7 +51,8 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
     try {
 
-      final List<T> items = await getReadAllStream();
+      const int page = 0;
+      final List<T> items = await getReadAllStream(page);
       emit(
         ItemListLoaded<T>(items),
       );
@@ -72,6 +74,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
         event.items,
         event.viewIndex,
         event.year,
+        event.page,
         event.style,
       ),
     );
@@ -91,6 +94,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
         final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
         final int year = (state as ItemListLoaded<T>).year;
+        final int page = (state as ItemListLoaded<T>).page;
         final ListStyle style = (state as ItemListLoaded<T>).style;
 
         emit(
@@ -98,6 +102,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
             items,
             viewIndex,
             year,
+            page,
             style,
           ),
         );
@@ -122,12 +127,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
     try {
 
-      final List<T> items = await getReadViewStream(event);
+      const int page = 0;
+      final List<T> items = await _getReadViewStream(event, page);
       emit(
         ItemListLoaded<T>(
           items,
           event.viewIndex,
           null,
+          page,
           style,
         ),
       );
@@ -157,12 +164,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
     try {
 
-      final List<T> items = await getReadYearViewStream(event);
+      const int page = 0;
+      final List<T> items = await _getReadYearViewStream(event, page);
       emit(
         ItemListLoaded<T>(
           items,
           event.viewIndex,
           event.year,
+          page,
           style,
         ),
       );
@@ -177,6 +186,36 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   }
 
+  void _mapUpdatePageToState(UpdatePage event, Emitter<ItemListState> emit) async {
+
+    if(state is ItemListLoaded<T>) {
+      final List<T> items = (state as ItemListLoaded<T>).items;
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final int year = (state as ItemListLoaded<T>).year;
+      final ListStyle style = (state as ItemListLoaded<T>).style;
+
+      final int page = (state as ItemListLoaded<T>).page + 1;
+      List<T> pageItems;
+      if(year > 0) {
+        pageItems = await getReadYearViewStream(viewIndex, year, page);
+      } else {
+        pageItems = await getReadViewStream(viewIndex, page);
+      }
+
+      final List<T> updatedItems = List<T>.from(items)..addAll(pageItems);
+
+      emit(
+        ItemListLoaded<T>(
+          updatedItems,
+          viewIndex,
+          year,
+          page,
+          style,
+        ),
+      );
+    }
+  }
+
   void _mapUpdateSortOrderToState(UpdateSortOrder event, Emitter<ItemListState> emit) {
 
     if(state is ItemListLoaded<T>) {
@@ -184,6 +223,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
+      final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       emit(
@@ -191,6 +231,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
           reversedItems,
           viewIndex,
           year,
+          page,
           style,
         ),
       );
@@ -207,12 +248,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
+      final int page = (state as ItemListLoaded<T>).page;
 
       emit(
         ItemListLoaded<T>(
           items,
           viewIndex,
           year,
+          page,
           updatedStyle,
         ),
       );
@@ -240,6 +283,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
+      final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = List<T>.from(items)..add(managerState.item);
@@ -248,6 +292,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
         updatedItems,
         viewIndex,
         year,
+        page,
         style,
       ));
     }
@@ -260,6 +305,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final int year = (state as ItemListLoaded<T>).year;
+      final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = items
@@ -270,6 +316,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
         updatedItems,
         viewIndex,
         year,
+        page,
         style,
       ));
     }
@@ -284,10 +331,13 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
   }
 
+  Future<List<T>> _getReadViewStream(UpdateView event, int page) => getReadViewStream(event.viewIndex, page);
+  Future<List<T>> _getReadYearViewStream(UpdateYearView event, int page) => getReadYearViewStream(event.viewIndex, event.year, page);
+
   @protected
-  Future<List<T>> getReadAllStream();
+  Future<List<T>> getReadAllStream([int? page]);
   @protected
-  Future<List<T>> getReadViewStream(UpdateView event);
+  Future<List<T>> getReadViewStream(int viewIndex, [int? page]);
   @protected
-  external Future<List<T>> getReadYearViewStream(UpdateYearView event);
+  external Future<List<T>> getReadYearViewStream(int viewIndex, int year, [int? page]);
 }

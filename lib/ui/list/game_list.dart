@@ -231,7 +231,7 @@ abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>, S extends
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
   @override
-  _GameListBody<K> itemListBodyBuilder({required List<Game> items, required int viewIndex, required int viewYear, required void Function(Game) onDelete, required ListStyle style}) {
+  _GameListBody<K> itemListBodyBuilder({required List<Game> items, required int viewIndex, required int viewYear, required void Function(Game) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _GameListBody<K>(
       items: items,
@@ -240,6 +240,7 @@ abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>, S extends
       onDelete: onDelete,
       style: style,
       tabTitle: tabTitle,
+      scrollController: scrollController,
     );
 
   }
@@ -254,6 +255,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
     required void Function(Game) onDelete,
     required ListStyle style,
     required this.tabTitle,
+    required ScrollController scrollController,
   }) : super(
     key: key,
     items: items,
@@ -261,6 +263,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
     viewYear: viewYear,
     onDelete: onDelete,
     style: style,
+    scrollController: scrollController,
     detailRouteName: gameDetailRoute,
     localSearchRouteName: gameLocalSearchRoute,
     statisticsRouteName: gameStatisticsRoute,

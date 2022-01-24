@@ -48,17 +48,17 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapLoadToState(LoadMultiCalendar event, Emitter<CalendarState> emit) {
+  void _mapLoadToState(LoadMultiCalendar event, Emitter<CalendarState> emit) async {
 
     if(event.year <= DateTime.now().year && yearsLoaded.add(event.year)) {
 
       if(state is MultiCalendarLoaded) {
 
-        _mapLoadAdditionalCalendar(event.year, emit);
+        await _mapLoadAdditionalCalendar(event.year, emit);
 
       } else {
 
-        _mapLoadInitialCalendar(event.year, emit);
+        await _mapLoadInitialCalendar(event.year, emit);
 
       }
 
@@ -66,7 +66,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapLoadInitialCalendar(int year, Emitter<CalendarState> emit) async {
+  Future<void> _mapLoadInitialCalendar(int year, Emitter<CalendarState> emit) async {
 
     await _checkConnection(emit);
 
@@ -112,7 +112,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   }
 
-  void _mapLoadAdditionalCalendar(int year, Emitter<CalendarState> emit) async {
+  Future<void> _mapLoadAdditionalCalendar(int year, Emitter<CalendarState> emit) async {
 
     await _checkConnection(emit);
 

@@ -29,7 +29,7 @@ void main() {
     printQuery(DLCQuery.deleteById(id));
     printQuery(DLCQuery.selectAll());
     printQuery(DLCQuery.selectAllByBaseGame(gameId));
-    printQuery(DLCQuery.selectAllByNameLike('name', 50));
+    printQuery(DLCQuery.selectFirstByNameLike('name', 50));
     printQuery(DLCQuery.selectById(id));
     printQuery(DLCQuery.selectGameByDLC(id));
     printQuery(DLCQuery.updateBaseGameById(id, gameId));
@@ -48,7 +48,7 @@ void main() {
     printQuery(GameQuery.deleteById(id));
     printQuery(GameQuery.selectById(id));
     printQuery(GameQuery.selectAll());
-    printQuery(GameQuery.selectAllByNameLike('name', 50));
+    printQuery(GameQuery.selectFirstByNameLike('name', 50));
     //printQuery(GameQuery.updateById(id, entity, updatedEntity));
     printQuery(GameQuery.updateCoverById(id, 'newCoverName'));
 
@@ -85,7 +85,7 @@ void main() {
     printQuery(PlatformQuery.create(entity));
     printQuery(PlatformQuery.deleteById(id));
     printQuery(PlatformQuery.selectAll());
-    printQuery(PlatformQuery.selectAllByNameLike('name', 50));
+    printQuery(PlatformQuery.selectFirstByNameLike('name', 50));
     printQuery(PlatformQuery.selectById(id));
     //printQuery(PlatformQuery.updateById(id, entity, updatedEntity));
     printQuery(PlatformQuery.updateIconById(id, 'newIconName'));
@@ -102,7 +102,7 @@ void main() {
     printQuery(PurchaseQuery.create(entity));
     printQuery(PurchaseQuery.deleteById(id));
     printQuery(PurchaseQuery.selectAll());
-    printQuery(PurchaseQuery.selectAllByDescriptionLike('description', 50));
+    printQuery(PurchaseQuery.selectFirstByDescriptionLike('description', 50));
     printQuery(PurchaseQuery.selectAllByStore(storeId));
     printQuery(PurchaseQuery.selectById(id));
     printQuery(PurchaseQuery.selectStoreByPurchase(id));
@@ -123,7 +123,7 @@ void main() {
     printQuery(StoreQuery.create(entity));
     printQuery(StoreQuery.deleteById(id));
     printQuery(StoreQuery.selectAll());
-    printQuery(StoreQuery.selectAllByNameLike('name', 50));
+    printQuery(StoreQuery.selectFirstByNameLike('name', 50));
     printQuery(StoreQuery.selectById(id));
     //printQuery(StoreQuery.updateById(id, entity, updatedEntity));
     printQuery(StoreQuery.updateIconById(id, 'newIconName'));
@@ -139,7 +139,7 @@ void main() {
     printQuery(SystemQuery.create(entity));
     printQuery(SystemQuery.deleteById(id));
     printQuery(SystemQuery.selectAll());
-    printQuery(SystemQuery.selectAllByNameLike('name', 50));
+    printQuery(SystemQuery.selectFirstByNameLike('name', 50));
     printQuery(SystemQuery.selectById(id));
     //printQuery(SystemQuery.updateById(id, entity, updatedEntity));
     printQuery(SystemQuery.updateIconById(id, 'newIconName'));
@@ -155,7 +155,7 @@ void main() {
     printQuery(GameTagQuery.create(entity));
     printQuery(GameTagQuery.deleteById(id));
     printQuery(GameTagQuery.selectAll());
-    printQuery(GameTagQuery.selectAllByNameLike('name', 50));
+    printQuery(GameTagQuery.selectFirstByNameLike('name', 50));
     printQuery(GameTagQuery.selectById(id));
     //printQuery(GameTagQuery.updateById(id, entity, updatedEntity));
 
@@ -170,7 +170,7 @@ void main() {
     printQuery(PurchaseTypeQuery.create(entity));
     printQuery(PurchaseTypeQuery.deleteById(id));
     printQuery(PurchaseTypeQuery.selectAll());
-    printQuery(PurchaseTypeQuery.selectAllByNameLike('name', 50));
+    printQuery(PurchaseTypeQuery.selectFirstByNameLike('name', 50));
     printQuery(PurchaseTypeQuery.selectById(id));
     //printQuery(PurchaseTypeQuery.updateById(id, entity, updatedEntity));
 

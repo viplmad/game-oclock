@@ -14,18 +14,18 @@ class GameTagListBloc extends ItemListBloc<GameTag, GameTagEntity, GameTagID, Ga
   }) : super(repository: collectionRepository.gameTagRepository, managerBloc: managerBloc);
 
   @override
-  Future<List<GameTag>> getReadAllStream() {
+  Future<List<GameTag>> getReadAllStream([int? page]) {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.main);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.main, page);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }
 
   @override
-  Future<List<GameTag>> getReadViewStream(UpdateView event) {
+  Future<List<GameTag>> getReadViewStream(int viewIndex, [int? page]) {
 
-    final GameTagView view = GameTagView.values[event.viewIndex];
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(view);
+    final GameTagView view = GameTagView.values[viewIndex];
+    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(view, page);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }

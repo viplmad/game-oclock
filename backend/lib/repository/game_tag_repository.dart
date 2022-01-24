@@ -39,18 +39,27 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
   }
 
   @override
-  Future<List<GameTagEntity>> findAll() {
+  Future<List<GameTagEntity>> findAll([int? page]) {
 
-    final Query query = GameTagQuery.selectAll();
+    final Query query = GameTagQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameTagEntity>> findAllWithView(GameTagView tagView, [int? limit]) {
+  Future<List<GameTagEntity>> findAllWithView(GameTagView tagView, [int? page]) {
 
-    final Query query = GameTagQuery.selectAllInView(tagView, limit);
+    final Query query = GameTagQuery.selectAllInView(tagView, page);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<GameTagEntity>> findFirstWithView(GameTagView tagView, int limit) {
+
+    final Query query = GameTagQuery.selectFirstInView(tagView, limit);
     return readItemList(
       query: query,
     );
@@ -92,9 +101,9 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<GameTagEntity>> findAllByName(String name, int limit) {
+  Future<List<GameTagEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = GameTagQuery.selectAllByNameLike(name, limit);
+    final Query query = GameTagQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

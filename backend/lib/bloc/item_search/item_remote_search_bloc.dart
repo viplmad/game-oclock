@@ -22,11 +22,11 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
   }
 
   @override
-  void mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
+  Future<void> mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
 
     await _checkConnection(emit);
 
-    super.mapTextChangedToState(event, emit);
+    await super.mapTextChangedToState(event, emit);
 
   }
 }

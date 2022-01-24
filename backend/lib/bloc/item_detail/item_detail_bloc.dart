@@ -38,23 +38,23 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
 
   }
 
-  void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) {
+  void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) async {
 
     emit(
       ItemLoading(),
     );
 
-    _mapAnyLoadToState(emit);
+    await _mapAnyLoadToState(emit);
 
   }
 
-  void _mapReloadToState(ReloadItem event, Emitter<ItemDetailState> emit) {
+  void _mapReloadToState(ReloadItem event, Emitter<ItemDetailState> emit) async {
 
-    _mapAnyLoadToState(emit);
+    await _mapAnyLoadToState(emit);
 
   }
 
-  void _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
+  Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
 
     await _checkConnection(emit);
 

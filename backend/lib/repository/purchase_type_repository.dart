@@ -39,18 +39,27 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
   }
 
   @override
-  Future<List<PurchaseTypeEntity>> findAll() {
+  Future<List<PurchaseTypeEntity>> findAll([int? page]) {
 
-    final Query query = PurchaseTypeQuery.selectAll();
+    final Query query = PurchaseTypeQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<PurchaseTypeEntity>> findAllWithView(PurchaseTypeView typeView, [int? limit]) {
+  Future<List<PurchaseTypeEntity>> findAllWithView(PurchaseTypeView typeView, [int? page]) {
 
-    final Query query = PurchaseTypeQuery.selectAllInView(typeView, limit);
+    final Query query = PurchaseTypeQuery.selectAllInView(typeView, page);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<PurchaseTypeEntity>> findFirstWithView(PurchaseTypeView typeView, int limit) {
+
+    final Query query = PurchaseTypeQuery.selectFirstInView(typeView, limit);
     return readItemList(
       query: query,
     );
@@ -92,9 +101,9 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PurchaseTypeEntity>> findAllByName(String name, int limit) {
+  Future<List<PurchaseTypeEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = PurchaseTypeQuery.selectAllByNameLike(name, limit);
+    final Query query = PurchaseTypeQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

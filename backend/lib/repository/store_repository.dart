@@ -48,18 +48,27 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   }
 
   @override
-  Future<List<StoreEntity>> findAll() {
+  Future<List<StoreEntity>> findAll([int? page]) {
 
-    final Query query = StoreQuery.selectAll();
+    final Query query = StoreQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<StoreEntity>> findAllWithView(StoreView storeView, [int? limit]) {
+  Future<List<StoreEntity>> findAllWithView(StoreView storeView, [int? page]) {
 
-    final Query query = StoreQuery.selectAllInView(storeView, limit);
+    final Query query = StoreQuery.selectAllInView(storeView, page);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<StoreEntity>> findFirstWithView(StoreView storeView, int limit) {
+
+    final Query query = StoreQuery.selectFirstInView(storeView, limit);
     return readItemList(
       query: query,
     );
@@ -108,9 +117,9 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<StoreEntity>> findAllByName(String name, int limit) {
+  Future<List<StoreEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = StoreQuery.selectAllByNameLike(name, limit);
+    final Query query = StoreQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

@@ -3,6 +3,7 @@ import 'package:query/query.dart';
 import 'package:backend/entity/entity.dart' show DLCEntity, DLCEntityData, DLCFinishEntityData, DLCID, DLCView, GameEntityData, GameID;
 
 import 'query.dart' show GameQuery;
+import 'query_utils.dart';
 
 
 class DLCQuery {
@@ -72,17 +73,18 @@ class DLCQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table)
@@ -94,13 +96,26 @@ class DLCQuery {
     return query;
   }
 
-  static Query selectAllInView(DLCView view, [int? limit]) {
+  static Query selectAllInView(DLCView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(DLCEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(DLCView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(DLCEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -147,17 +162,15 @@ class DLCQuery {
     query.where(DLCEntityData.idField, id.id, type: int, table: DLCEntityData.table);
   }
 
-  static void _completeView(Query query, DLCView view, int? limit) {
+  static void _completeView(Query query, DLCView view) {
     switch(view) {
       case DLCView.main:
         query.order(DLCEntityData.baseGameField, DLCEntityData.table);
         query.order(DLCEntityData.releaseYearField, DLCEntityData.table);
         query.order(DLCEntityData.nameField, DLCEntityData.table);
-        query.limit(limit);
         break;
       case DLCView.lastCreated:
         query.order(DLCEntityData.idField, DLCEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

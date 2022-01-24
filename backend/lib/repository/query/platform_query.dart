@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformEntityData, PlatformID, PlatformView;
 
+import 'query_utils.dart';
+
 
 class PlatformQuery {
   PlatformQuery._();
@@ -59,17 +61,18 @@ class PlatformQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table)
@@ -81,13 +84,26 @@ class PlatformQuery {
     return query;
   }
 
-  static Query selectAllInView(PlatformView view, [int? limit]) {
+  static Query selectAllInView(PlatformView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(PlatformEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(PlatformView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PlatformEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -103,16 +119,14 @@ class PlatformQuery {
     query.where(PlatformEntityData.idField, id.id, type: int, table: PlatformEntityData.table);
   }
 
-  static void _completeView(Query query, PlatformView view, int? limit) {
+  static void _completeView(Query query, PlatformView view) {
     switch(view) {
       case PlatformView.main:
         query.order(PlatformEntityData.typeField, PlatformEntityData.table);
         query.order(PlatformEntityData.nameField, PlatformEntityData.table);
-        query.limit(limit);
         break;
       case PlatformView.lastCreated:
         query.order(PlatformEntityData.idField, PlatformEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

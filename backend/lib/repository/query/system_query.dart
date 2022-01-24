@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show SystemEntity, SystemID, SystemEntityData, SystemView;
 
+import 'query_utils.dart';
+
 
 class SystemQuery {
   SystemQuery._();
@@ -59,17 +61,18 @@ class SystemQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(SystemEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(SystemEntityData.table)
@@ -81,13 +84,26 @@ class SystemQuery {
     return query;
   }
 
-  static Query selectAllInView(SystemView view, [int? limit]) {
+  static Query selectAllInView(SystemView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(SystemEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(SystemView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(SystemEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -104,17 +120,15 @@ class SystemQuery {
     query.where(SystemEntityData.idField, id.id, type: int, table: SystemEntityData.table);
   }
 
-  static void _completeView(Query query, SystemView view, int? limit) {
+  static void _completeView(Query query, SystemView view) {
     switch(view) {
       case SystemView.main:
         query.order(SystemEntityData.generationField, SystemEntityData.table);
         query.order(SystemEntityData.manufacturerField, SystemEntityData.table);
         query.order(SystemEntityData.nameField, SystemEntityData.table);
-        query.limit(limit);
         break;
       case SystemView.lastCreated:
         query.order(SystemEntityData.idField, SystemEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

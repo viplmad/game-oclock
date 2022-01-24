@@ -14,7 +14,7 @@ class PurchaseSearchBloc extends ItemRemoteSearchBloc<Purchase, PurchaseEntity, 
   @override
   Future<List<Purchase>> getInitialItems() {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(PurchaseView.lastCreated, super.maxSuggestions);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstWithView(PurchaseView.lastCreated, super.maxSuggestions);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -22,7 +22,7 @@ class PurchaseSearchBloc extends ItemRemoteSearchBloc<Purchase, PurchaseEntity, 
   @override
   Future<List<Purchase>> getSearchItems(String query) {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllByDescription(query, super.maxResults);
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstByDescription(query, super.maxResults);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }

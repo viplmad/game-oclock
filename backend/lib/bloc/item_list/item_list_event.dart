@@ -14,21 +14,23 @@ abstract class ItemListEvent extends Equatable {
 class LoadItemList extends ItemListEvent {}
 
 class UpdateItemList<T extends Item> extends ItemListEvent {
-  const UpdateItemList(this.items, this.viewIndex, this.year, this.style);
+  const UpdateItemList(this.items, this.viewIndex, this.year, this.page, this.style);
 
   final List<T> items;
   final int viewIndex;
   final int year;
+  final int page;
   final ListStyle style;
 
   @override
-  List<Object> get props => <Object>[items, viewIndex, year, style];
+  List<Object> get props => <Object>[items, viewIndex, year, page, style];
 
   @override
   String toString() => 'UpdateItemList { '
       'items: $items, '
       'viewIndex: $viewIndex, '
       'year: $year, '
+      'page: $page, '
       'style: $style'
       ' }';
 }
@@ -76,6 +78,8 @@ class UpdateYearView extends ItemListEvent {
       'year: $year'
       ' }';
 }
+
+class UpdatePage extends ItemListEvent {}
 
 class UpdateSortOrder extends ItemListEvent {}
 

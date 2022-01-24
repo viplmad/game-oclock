@@ -48,18 +48,27 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
   }
 
   @override
-  Future<List<PlatformEntity>> findAll() {
+  Future<List<PlatformEntity>> findAll([int? page]) {
 
-    final Query query = PlatformQuery.selectAll();
+    final Query query = PlatformQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<PlatformEntity>> findAllWithView(PlatformView platformView, [int? limit]) {
+  Future<List<PlatformEntity>> findAllWithView(PlatformView platformView, [int? page]) {
 
-    final Query query = PlatformQuery.selectAllInView(platformView, limit);
+    final Query query = PlatformQuery.selectAllInView(platformView, page);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<PlatformEntity>> findFirstWithView(PlatformView platformView, int limit) {
+
+    final Query query = PlatformQuery.selectFirstInView(platformView, limit);
     return readItemList(
       query: query,
     );
@@ -117,9 +126,9 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<PlatformEntity>> findAllByName(String name, int limit) {
+  Future<List<PlatformEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = PlatformQuery.selectAllByNameLike(name, limit);
+    final Query query = PlatformQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

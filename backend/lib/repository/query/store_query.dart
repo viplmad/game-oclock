@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show StoreEntity, StoreEntityData, StoreID, StoreView;
 
+import 'query_utils.dart';
+
 
 class StoreQuery {
   StoreQuery._();
@@ -59,17 +61,18 @@ class StoreQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table)
@@ -81,13 +84,26 @@ class StoreQuery {
     return query;
   }
 
-  static Query selectAllInView(StoreView view, [int? limit]) {
+  static Query selectAllInView(StoreView view, [int? page]) {
     final Query query = FluentQuery
       .select()
       .from(StoreEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit);
+    _completeView(query, view);
+    QueryUtils.paginate(query, page);
+
+    return query;
+  }
+
+  static Query selectFirstInView(StoreView view, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(StoreEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
 
     return query;
   }
@@ -102,15 +118,13 @@ class StoreQuery {
     query.where(StoreEntityData.idField, id.id, type: int, table: StoreEntityData.table);
   }
 
-  static void _completeView(Query query, StoreView view, int? limit) {
+  static void _completeView(Query query, StoreView view) {
     switch(view) {
       case StoreView.main:
         query.order(StoreEntityData.nameField, StoreEntityData.table);
-        query.limit(limit);
         break;
       case StoreView.lastCreated:
         query.order(StoreEntityData.idField, StoreEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
     }
   }

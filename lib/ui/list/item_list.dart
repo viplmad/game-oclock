@@ -135,6 +135,9 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
   Widget build(BuildContext context) {
     final String currentTypeString = typeName(context);
 
+    final ScrollController scrollController = ScrollController();
+    scrollController.addListener(paginateListener(context, scrollController));
+
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if(state is ItemAdded<T>) {
@@ -209,6 +212,7 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
                 BlocProvider.of<S>(context).add(DeleteItem<T>(item));
               },
               style: state.style,
+              scrollController: scrollController,
             );
 
           }
@@ -228,9 +232,19 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
 
   }
 
+  void Function() paginateListener(BuildContext context, ScrollController scrollController) {
+
+    return () {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+        BlocProvider.of<K>(context).add(UpdatePage());
+      }
+    };
+
+  }
+
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style});
+  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style, required ScrollController scrollController});
 }
 
 abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
@@ -241,6 +255,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
     required this.viewYear,
     required this.onDelete,
     required this.style,
+    required this.scrollController,
     this.detailRouteName = '',
     this.localSearchRouteName = '',
     this.statisticsRouteName = '',
@@ -252,6 +267,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
   final int viewYear;
   final void Function(T) onDelete;
   final ListStyle style;
+  final ScrollController scrollController;
 
   final String detailRouteName;
   final String localSearchRouteName;
@@ -293,7 +309,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         ),
         Expanded(
           child: Scrollbar(
-            child: _listBuilder(context),
+            child: _listBuilder(context, scrollController),
           ),
         ),
       ],
@@ -330,7 +346,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
 
   }
 
-  Widget _listBuilder(BuildContext context) {
+  Widget _listBuilder(BuildContext context, ScrollController scrollController) {
 
     switch(style) {
       case ListStyle.card:
@@ -339,6 +355,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
           itemBuilder: cardBuilder,
           onDismiss: onDelete,
           confirmDelete: _confirmDelete,
+          scrollController: scrollController,
         );
       case ListStyle.grid:
         return ItemGridView<T>(
@@ -424,12 +441,14 @@ class ItemCardView<T extends Item> extends StatelessWidget {
     required this.itemBuilder,
     required this.onDismiss,
     required this.confirmDelete,
+    required this.scrollController,
   }) : super(key: key);
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
   final void Function(T item) onDismiss;
   final Widget Function(BuildContext, T) confirmDelete;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -437,6 +456,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: items.length,
+      controller: scrollController,
       itemBuilder: (BuildContext context, int index) {
         final T item = items.elementAt(index);
 

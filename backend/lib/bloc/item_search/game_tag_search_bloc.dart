@@ -14,7 +14,7 @@ class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, Gam
   @override
   Future<List<GameTag>> getInitialItems() {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllWithView(GameTagView.lastCreated, super.maxSuggestions);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findFirstWithView(GameTagView.lastCreated, super.maxSuggestions);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -22,7 +22,7 @@ class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, Gam
   @override
   Future<List<GameTag>> getSearchItems(String query) {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
+    final Future<List<GameTagEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }

@@ -41,18 +41,26 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
   }
 
   @override
-  Future<List<SystemEntity>> findAll() {
+  Future<List<SystemEntity>> findAll([int? page]) {
 
-    final Query query = SystemQuery.selectAll();
+    final Query query = SystemQuery.selectAll(page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<SystemEntity>> findAllWithView(SystemView systemView, [int? limit]) {
+  Future<List<SystemEntity>> findAllWithView(SystemView systemView, [int? page]) {
 
-    final Query query = SystemQuery.selectAllInView(systemView, limit);
+    final Query query = SystemQuery.selectAllInView(systemView, page);
+    return readItemList(
+      query: query,
+    );
+  }
+
+  Future<List<SystemEntity>> findFirstWithView(SystemView systemView, int limit) {
+
+    final Query query = SystemQuery.selectFirstInView(systemView, limit);
     return readItemList(
       query: query,
     );
@@ -93,9 +101,9 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
   //#endregion DELETE
 
   //#region SEARCH
-  Future<List<SystemEntity>> findAllByName(String name, int limit) {
+  Future<List<SystemEntity>> findFirstByName(String name, int limit) {
 
-    final Query query = SystemQuery.selectAllByNameLike(name, limit);
+    final Query query = SystemQuery.selectFirstByNameLike(name, limit);
     return readItemList(
       query: query,
     );

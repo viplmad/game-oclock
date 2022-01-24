@@ -14,18 +14,18 @@ class StoreListBloc extends ItemListBloc<Store, StoreEntity, StoreID, StoreRepos
   }) : super(repository: collectionRepository.storeRepository, managerBloc: managerBloc);
 
   @override
-  Future<List<Store>> getReadAllStream() {
+  Future<List<Store>> getReadAllStream([int? page]) {
 
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.main);
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(StoreView.main, page);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
 
   @override
-  Future<List<Store>> getReadViewStream(UpdateView event) {
+  Future<List<Store>> getReadViewStream(int viewIndex, [int? page]) {
 
-    final StoreView view = StoreView.values[event.viewIndex];
-    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(view);
+    final StoreView view = StoreView.values[viewIndex];
+    final Future<List<StoreEntity>> entityListFuture = repository.findAllWithView(view, page);
     return StoreMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

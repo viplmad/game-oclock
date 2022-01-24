@@ -14,7 +14,7 @@ class GameSearchBloc extends ItemRemoteSearchBloc<Game, GameEntity, GameID, Game
   @override
   Future<List<Game>> getInitialItems() {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllOwnedWithView(GameView.lastCreated, super.maxSuggestions);
+    final Future<List<GameEntity>> entityListFuture = repository.findFirstWithView(GameView.lastCreated, super.maxSuggestions);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,7 +22,7 @@ class GameSearchBloc extends ItemRemoteSearchBloc<Game, GameEntity, GameID, Game
   @override
   Future<List<Game>> getSearchItems(String query) {
 
-    final Future<List<GameEntity>> entityListFuture = repository.findAllByName(query, super.maxResults);
+    final Future<List<GameEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
     return GameMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }

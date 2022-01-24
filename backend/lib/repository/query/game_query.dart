@@ -2,6 +2,8 @@ import 'package:query/query.dart';
 
 import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, GameFinishEntityData, GameID, GamePurchaseRelationData, GameTimeLogEntityData, GameView;
 
+import 'query_utils.dart';
+
 
 class GameQuery {
   GameQuery._();
@@ -59,17 +61,18 @@ class GameQuery {
     return query;
   }
 
-  static Query selectAll() {
+  static Query selectAll([int? page]) {
     final Query query = FluentQuery
       .select()
       .from(GameEntityData.table);
 
     addFields(query);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllByNameLike(String name, int limit) {
+  static Query selectFirstByNameLike(String name, int limit) {
     final Query query = FluentQuery
       .select()
       .from(GameEntityData.table)
@@ -81,19 +84,32 @@ class GameQuery {
     return query;
   }
 
-  static Query selectAllInView(GameView view, [int? limit, int? year]) {
+  static Query selectAllInView(GameView view, [int? year, int? page]) {
     final Query query = FluentQuery
       .select()
       .from(GameEntityData.table);
 
     addFields(query);
-    _completeView(query, view, limit, year);
+    _completeView(query, view, year);
+    QueryUtils.paginate(query, page);
 
     return query;
   }
 
-  static Query selectAllOwnedInView(GameView view, [int? limit, int? year]) {
-    final Query query = selectAllInView(view, limit, year);
+  static Query selectFirstInView(GameView view, int limit, [int? year]) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view, year);
+
+    return query;
+  }
+
+  static Query selectAllOwnedInView(GameView view, [int? year, int? page]) {
+    final Query query = selectAllInView(view, year, page);
 
     final Query countGamePurchaseQuery = FluentQuery
       .select()
@@ -105,8 +121,8 @@ class GameQuery {
     return query;
   }
 
-  static Query selectAllRomInView(GameView view, [int? limit, int? year]) {
-    final Query query = selectAllInView(view, limit, year);
+  static Query selectAllRomInView(GameView view, [int? year, int? page]) {
+    final Query query = selectAllInView(view, year, page);
 
     final Query countGamePurchaseQuery = FluentQuery
       .select()
@@ -150,16 +166,14 @@ class GameQuery {
     query.where(GameEntityData.idField, id.id, type: int, table: GameEntityData.table);
   }
 
-  static void _completeView(Query query, GameView view, int? limit, int? year) {
+  static void _completeView(Query query, GameView view, int? year) {
     switch(view) {
       case GameView.main:
         query.order(GameEntityData.releaseYearField, GameEntityData.table);
         query.order(GameEntityData.nameField, GameEntityData.table);
-        query.limit(limit);
         break;
       case GameView.lastCreated:
         query.order(GameEntityData.idField, GameEntityData.table, direction: SortOrder.desc);
-        query.limit(limit?? 50);
         break;
       case GameView.playing:
         query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table);
@@ -183,7 +197,6 @@ class GameQuery {
         query.orderSubquery(lastTimeLogQuery, direction: SortOrder.desc, nullsLast: true);
 
         query.order(GameEntityData.nameField, GameEntityData.table);
-        query.limit(limit?? 100);
         break;
       case GameView.lastFinished:
         query.where(GameEntityData.statusField, GameEntityData.playingValue, table: GameEntityData.table, divider: DividerType.start);
@@ -197,7 +210,6 @@ class GameQuery {
         query.orderSubquery(lastFinishQuery, direction: SortOrder.desc, nullsLast: true);
 
         query.order(GameEntityData.nameField, GameEntityData.table);
-        query.limit(limit?? 100);
         break;
       case GameView.review:
         year = year?? DateTime.now().year;
