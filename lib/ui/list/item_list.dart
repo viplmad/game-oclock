@@ -361,6 +361,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         return ItemGridView<T>(
           items: items,
           itemBuilder: gridBuilder,
+          scrollController: scrollController,
         );
     }
 
@@ -490,10 +491,12 @@ class ItemGridView<T extends Item> extends StatelessWidget {
     Key? key,
     required this.items,
     required this.itemBuilder,
+    required this.scrollController,
   }) : super(key: key);
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -501,6 +504,7 @@ class ItemGridView<T extends Item> extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       itemCount: items.length,
+      controller: scrollController,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
       ),
