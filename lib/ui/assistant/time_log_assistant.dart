@@ -7,6 +7,7 @@ import 'package:backend/bloc/time_log_assistant/time_log_assistant.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/shape_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
 
@@ -32,9 +33,8 @@ class TimeLogAssistant extends StatelessWidget {
 
             return FloatingActionButton.extended(
               label: Text(GameCollectionLocalisations.of(context).saveString),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16.0)),
-              ),
+              icon: const Icon(Icons.cloud_upload),
+              shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).saveString,
               onPressed: state.isValid ? () {
                 final DateTime date = state.date;

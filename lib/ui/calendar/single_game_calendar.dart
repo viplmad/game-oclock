@@ -24,6 +24,7 @@ import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 import '../common/item_view.dart';
+import '../common/shape_utils.dart';
 import 'calendar_utils.dart';
 
 
@@ -166,9 +167,7 @@ class SingleGameCalendar extends StatelessWidget {
     return SpeedDial(
       icon: Icons.add,
       activeIcon: Icons.remove,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-      ),
+      shape: ShapeUtils.shapeBorder,
       tooltip: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).gameCalendarEventsString),
       overlayColor: Colors.black87,
       backgroundColor: GameTheme.primaryColour,
@@ -178,9 +177,7 @@ class SingleGameCalendar extends StatelessWidget {
       children: <SpeedDialChild>[
         SpeedDialChild(
           child: const Icon(Icons.add_alarm, color: Colors.white),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
+          shape: ShapeUtils.shapeBorder,
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
@@ -204,9 +201,7 @@ class SingleGameCalendar extends StatelessWidget {
         ),
         SpeedDialChild(
           child: const Icon(Icons.event_available, color: Colors.white),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
+          shape: ShapeUtils.shapeBorder,
           label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).finishDateFieldString),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],

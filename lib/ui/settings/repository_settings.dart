@@ -12,9 +12,10 @@ import 'package:backend/bloc/repository_settings_detail/repository_settings_deta
 import 'package:backend/bloc/repository_settings_manager/repository_settings_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
-import 'package:game_collection/ui/common/tabs_delegate.dart';
 
 import '../common/show_snackbar.dart';
+import '../common/shape_utils.dart';
+import '../common/tabs_delegate.dart';
 import '../route_constants.dart';
 
 
@@ -59,9 +60,7 @@ class RepositorySettings extends StatelessWidget {
             return FloatingActionButton.extended(
               label: Text(GameCollectionLocalisations.of(context).connectString),
               icon: const Icon(Icons.send),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16.0)),
-              ),
+              shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).connectString,
               onPressed: active? () {
                 Navigator.pushReplacementNamed(

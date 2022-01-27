@@ -13,6 +13,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/item_view.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
+import '../common/shape_utils.dart';
 import '../detail/detail.dart';
 import '../statistics/statistics.dart';
 
@@ -105,9 +106,7 @@ abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, Item
 
     return FloatingActionButton(
       child: const Icon(Icons.add),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-      ),
+      shape: ShapeUtils.shapeBorder,
       tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
       backgroundColor: themeColor,
       onPressed: () {
