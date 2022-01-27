@@ -118,7 +118,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "277996ee92be1b1cb3185264ab4de5bc021b77db"
+      resolved-ref: f2e6ca287813c84fcc6e521e05acf08a51c44f38
       url: "https://github.com/viplmad/cloudinary_client.git"
     source: git
     version: "0.1.0"
@@ -600,7 +600,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "68cde6dbb69a0f45fbe244a0b2d94694eec31e39"
+      resolved-ref: c0c483c124487437a69b6e32a86fa67ed475395f
       url: "https://github.com/viplmad/smoothratingbar.git"
     source: git
     version: "1.1.1"
