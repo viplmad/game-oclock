@@ -17,16 +17,16 @@ class CalendarUtils {
     String rangeDateString;
     switch(range) {
       case CalendarRange.day:
-        rangeDateString = GameCollectionLocalisations.of(context).dateString(date);
+        rangeDateString = GameCollectionLocalisations.of(context).formatDate(date);
         break;
       case CalendarRange.week:
-        rangeDateString = GameCollectionLocalisations.of(context).dateString(date.getMondayOfWeek()) + ' -> ' + GameCollectionLocalisations.of(context).dateString(date.getSundayOfWeek());
+        rangeDateString = GameCollectionLocalisations.of(context).formatDate(date.getMondayOfWeek()) + ' -> ' + GameCollectionLocalisations.of(context).formatDate(date.getSundayOfWeek());
         break;
       case CalendarRange.month:
-        rangeDateString = GameCollectionLocalisations.of(context).monthYearString(date);
+        rangeDateString = GameCollectionLocalisations.of(context).formatMonthYear(date);
         break;
       case CalendarRange.year:
-        rangeDateString = GameCollectionLocalisations.of(context).yearString(date.year);
+        rangeDateString = GameCollectionLocalisations.of(context).formatYear(date.year);
         break;
     }
     return GameCollectionLocalisations.of(context).timeLogsFieldString + ' - ' + rangeDateString + ' (' + GameCollectionLocalisations.of(context).rangeString(range) + ')';
@@ -103,7 +103,7 @@ class CalendarUtils {
               values: values,
               vertical: true,
               hideDomainLabels: false,
-              valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+              valueFormatter: (int value) => GameCollectionLocalisations.of(context).formatDuration(Duration(minutes: value)),
             ),
           ),
         ],
@@ -117,7 +117,7 @@ class CalendarUtils {
         values: values,
         vertical: true,
         hideDomainLabels: false,
-        valueFormatter: (int value) => GameCollectionLocalisations.of(context).durationString(Duration(minutes: value)),
+        valueFormatter: (int value) => GameCollectionLocalisations.of(context).formatDuration(Duration(minutes: value)),
       );
 
     }

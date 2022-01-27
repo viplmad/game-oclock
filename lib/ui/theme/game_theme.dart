@@ -82,7 +82,7 @@ class GameTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
-      trailing: GameCollectionLocalisations.of(context).durationString(totalTime),
+      trailing: GameCollectionLocalisations.of(context).formatDuration(totalTime),
       hasImage: item.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
@@ -114,7 +114,7 @@ class GameTheme {
 
   static String _itemSubtitle(BuildContext context, Game item) {
 
-    return GameCollectionLocalisations.of(context).gameStatusString(item.status) + ' · ' + (item.releaseYear != null? GameCollectionLocalisations.of(context).yearString(item.releaseYear!) : '');
+    return GameCollectionLocalisations.of(context).gameStatusString(item.status) + ' · ' + (item.releaseYear != null? GameCollectionLocalisations.of(context).formatYear(item.releaseYear!) : '');
 
   }
 }

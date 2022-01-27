@@ -127,7 +127,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).yearString(viewYear) + ')' : '');
+  String viewTitle(BuildContext context) => PurchaseTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).formatYear(viewYear) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);

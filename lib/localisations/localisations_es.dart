@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:backend/model/model.dart' show GameStatus, PlatformType;
 import 'package:backend/model/calendar_range.dart';
 
@@ -287,6 +289,23 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   }
 
   @override
+  final String dateString = 'Fecha';
+  @override
+  final String startTimeString = 'Hora de inicio';
+  @override
+  final String endTimeString = 'Hora de fin';
+  @override
+  final String durationString = 'Tiempo';
+  @override
+  final String recalculationModeTitle = 'Modo de recálculo';
+  @override
+  final String recalculationModeSubtitle = 'Afecta al valor que se recalculará si otros valores cambian';
+  @override
+  final String recalculationModeDurationString = 'Recalcular tiempo';
+  @override
+  final String recalculationModeTimeString = 'Recalcular horas';
+
+  @override
   final String playingViewString = 'Jugando';
   @override
   final String nextUpViewString = 'Siguientes';
@@ -297,7 +316,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
 
   @override
   String gamesFromYearString(int year) {
-    return 'Terminado el ' + yearString(year);
+    return 'Terminado el ' + formatYear(year);
   }
   @override
   String get totalGamesString => '$gamesString totales';
@@ -372,7 +391,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
 
   @override
   String purchasesFromYearString(int year) {
-    return 'De ' + yearString(year);
+    return 'De ' + formatYear(year);
   }
   @override
   String get totalPurchasesString => '$purchasesString totales';
@@ -472,34 +491,41 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   //#endregion PurchaseType
 
   @override
-  String euroString(double amount) {
+  String formatEuro(double amount) {
     final String amountString = amount.toStringAsFixed(2);
     return '$amountString €';
   }
   @override
-  String percentageString(double amount) {
+  String formatPercentage(double amount) {
     final String amountString = amount.toStringAsFixed(2);
     return '$amountString %';
   }
   @override
-  String timeString(DateTime date) {
-    final String hourString = LocalisationsUtils.padTwoLeadingZeros(date.hour);
-    final String minuteString = LocalisationsUtils.padTwoLeadingZeros(date.minute);
+  String formatTimeOfDay(TimeOfDay time) {
+    return _timeString(time.hour, time.minute);
+  }
+  @override
+  String formatTime(DateTime date) {
+    return _timeString(date.hour, date.minute);
+  }
+  String _timeString(int hour, int minute) {
+    final String hourString = LocalisationsUtils.padTwoLeadingZeros(hour);
+    final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minute);
     return '$hourString:$minuteString';
   }
   @override
-  String dateString(DateTime date) {
+  String formatDate(DateTime date) {
     final String dayString = date.day.toString();
     final String monthString = date.month.toString();
     final String yearString = date.year.toString();
     return '$dayString/$monthString/$yearString';
   }
   @override
-  String dateTimeString(DateTime date) {
-    return dateString(date) + ' ' + timeString(date);
+  String formatDateTime(DateTime date) {
+    return formatDate(date) + ' ' + formatTime(date);
   }
   @override
-  String durationString(Duration duration) {
+  String formatDuration(Duration duration) {
     if(duration.isZero()) {
       return '0';
     }
@@ -507,8 +533,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
     final int hours = duration.inHours;
     final int minutes = duration.extractNormalisedMinutes();
 
-    final String hourString = hoursString(hours);
-    final String minuteString = minutesString(minutes);
+    final String hourString = formatHours(hours);
+    final String minuteString = formatMinutes(minutes);
 
     if(hours == 0) {
       return minuteString;
@@ -519,25 +545,25 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
     return '$hourString $minuteString';
   }
   @override
-  String monthYearString(DateTime date) {
+  String formatMonthYear(DateTime date) {
     final String month = months.elementAt(date.month - 1);
-    final String year = yearString(date.year);
+    final String year = formatYear(date.year);
     return '$month $year';
   }
   @override
-  String yearString(int year) {
+  String formatYear(int year) {
     return year.toString();
   }
   @override
-  String shortYearString(int year) {
+  String formatShortYear(int year) {
     return '\'' + year.toString().substring(2);
   }
   @override
-  String hoursString(int hours) {
+  String formatHours(int hours) {
     return '$hours h.';
   }
   @override
-  String minutesString(int minutes) {
+  String formatMinutes(int minutes) {
     final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minutes);
     return '$minuteString min.';
   }

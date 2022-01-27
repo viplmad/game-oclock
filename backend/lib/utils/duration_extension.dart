@@ -1,6 +1,6 @@
 extension DurationExtension on Duration {
   bool isZero() {
-    return this == const Duration();
+    return this == Duration.zero;
   }
 
   int extractNormalisedMinutes() {

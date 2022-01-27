@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart';
+import 'package:game_collection/ui/assistant/time_log_assistant.dart';
 import 'package:game_collection/ui/list/game_tag_list.dart';
 
 import 'route_constants.dart';
@@ -241,6 +242,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         PurchaseTypeLocalSearch(
           items: settings.arguments as List<PurchaseType>,
         ),
+      );
+
+    case timeLogAssistantRoute:
+      return _pageRoute<GameTimeLog>(
+        const TimeLogAssistant(),
+        themeDataBuilder: GameTheme.themeData,
       );
   }
 

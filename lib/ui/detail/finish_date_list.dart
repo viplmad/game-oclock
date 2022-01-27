@@ -34,7 +34,7 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext outerContext) {
 
-    final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).dateString(value!) : '';
+    final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).formatDate(value!) : '';
 
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
@@ -134,7 +134,7 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final F finish = values.elementAt(index);
-                                final String dateString = GameCollectionLocalisations.of(context).dateString(finish.dateTime);
+                                final String dateString = GameCollectionLocalisations.of(context).formatDate(finish.dateTime);
 
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),

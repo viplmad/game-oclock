@@ -125,6 +125,15 @@ abstract class GameCollectionLocalisations {
   String rangeString(CalendarRange range);
   String totalGames(int total);
 
+  String get dateString;
+  String get startTimeString;
+  String get endTimeString;
+  String get durationString;
+  String get recalculationModeTitle;
+  String get recalculationModeSubtitle;
+  String get recalculationModeDurationString;
+  String get recalculationModeTimeString;
+
   String get playingViewString;
   String get nextUpViewString;
   String get lastPlayedString;
@@ -241,17 +250,18 @@ abstract class GameCollectionLocalisations {
   String get purchaseTypesString;
   //#endregion PurchaseType
 
-  String euroString(double amount);
-  String percentageString(double amount);
-  String timeString(DateTime date);
-  String dateString(DateTime date);
-  String dateTimeString(DateTime date);
-  String durationString(Duration duration);
-  String monthYearString(DateTime date);
-  String yearString(int year);
-  String shortYearString(int year);
-  String hoursString(int hours);
-  String minutesString(int minutes);
+  String formatEuro(double amount);
+  String formatPercentage(double amount);
+  String formatTimeOfDay(TimeOfDay time);
+  String formatTime(DateTime date);
+  String formatDate(DateTime date);
+  String formatDateTime(DateTime date);
+  String formatDuration(Duration duration);
+  String formatMonthYear(DateTime date);
+  String formatYear(int year);
+  String formatShortYear(int year);
+  String formatHours(int hours);
+  String formatMinutes(int minutes);
 
   String editString(String fieldString);
   String addString(String fieldString);

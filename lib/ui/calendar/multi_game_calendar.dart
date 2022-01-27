@@ -144,7 +144,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
               const Divider(height: 4.0),
               ListTile(
                 title: Text(CalendarUtils.titleString(context, state.selectedDate, state.range)),
-                trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames) + ' / ' + GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)) : null,
+                trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames) + ' / ' + GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)) : null,
               ),
               Expanded(child: timeLogsWidget),
             ],

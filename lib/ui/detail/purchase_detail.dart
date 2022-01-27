@@ -157,7 +157,7 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc, P
         item: purchase,
         itemUpdater: (double newValue) => purchase.copyWith(externalCredit: newValue),
       ),
-      itemDateTimeField(
+      itemDateField(
         context,
         fieldName: GameCollectionLocalisations.of(context).purchaseDateFieldString,
         value: purchase.date,

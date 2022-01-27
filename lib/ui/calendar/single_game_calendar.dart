@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:duration_picker/duration_picker.dart';
 
 import 'package:backend/model/model.dart' show GameTimeLog, GameFinish;
 import 'package:backend/model/calendar_range.dart';
@@ -19,6 +18,7 @@ import 'package:backend/utils/duration_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
@@ -187,44 +187,16 @@ class SingleGameCalendar extends StatelessWidget {
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
 
-            showGameDatePicker(
-              context: context,
-            ).then((DateTime? date) {
-              if(date != null) {
-
-                showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                ).then((TimeOfDay? time) {
-                  if(time != null) {
-
-                    showDurationPicker(
-                      context: context,
-                      snapToMins: 5.0,
-                      initialTime: Duration.zero,
-                    ).then((Duration? duration) {
-                      if(duration != null) {
-
-                        final DateTime dateTime = DateTime(
-                          date.year,
-                          date.month,
-                          date.day,
-                          time.hour,
-                          time.minute,
-                        );
-
-                        timeLogManagerBloc.add(
-                          AddItemRelation<GameTimeLog>(
-                            GameTimeLog(dateTime: dateTime, time: duration),
-                          ),
-                        );
-
-                      }
-                    });
-
-                  }
-                });
-
+            Navigator.pushNamed<GameTimeLog?>(
+              context,
+              timeLogAssistantRoute,
+            ).then( (GameTimeLog? result) {
+              if (result != null) {
+                timeLogManagerBloc.add(
+                  AddItemRelation<GameTimeLog>(
+                    result,
+                  ),
+                );
               }
             });
 
@@ -421,7 +393,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
                   ListTile(
                     title: Text(CalendarUtils.titleString(context, state.selectedDate, state.range)),
-                    trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).durationString(state.selectedTotalTime)) : null,
+                    trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)) : null,
                   ),
                   Expanded(child: timeLogsWidget),
                 ],
@@ -549,14 +521,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
       itemCount: timeLogs.length,
       itemBuilder: (BuildContext context, int index) {
         final GameTimeLog timeLog = timeLogs.elementAt(index);
-        final String durationString = GameCollectionLocalisations.of(context).durationString(timeLog.time);
+        final String durationString = GameCollectionLocalisations.of(context).formatDuration(timeLog.time);
 
         if(timeLog.time.isZero()) {
           return Container();
         }
 
         if(range == CalendarRange.day) {
-         final String timeLogString = GameCollectionLocalisations.of(context).timeString(timeLog.dateTime) + ' - ' + durationString;
+         final String timeLogString = GameCollectionLocalisations.of(context).formatTime(timeLog.dateTime) + ' - ' + durationString;
 
           return DismissibleItem(
             dismissibleKey: timeLog.uniqueId,

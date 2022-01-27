@@ -44,7 +44,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(GameCollectionLocalisations.of(context).yearString(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
+                  child: Text(GameCollectionLocalisations.of(context).formatYear(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
                 )
               ],
             ),

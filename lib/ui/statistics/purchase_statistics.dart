@@ -255,7 +255,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     final List<int> years = data.years;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return years.isNotEmpty?
@@ -273,7 +273,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     final List<int> years = data.years;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return years.isNotEmpty?
@@ -282,7 +282,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         histogramName: GameCollectionLocalisations.of(context).sumPriceByYearString,
         domainLabels: domainLabels,
         values: data.yearlyPriceSum(years),
-        labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
+        labelAccessor: (double value) => GameCollectionLocalisations.of(context).formatEuro(value),
       ) : Container();
   }
 
@@ -291,7 +291,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     final List<int> years = data.years;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       years,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return years.isNotEmpty?
@@ -300,7 +300,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
         histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByYearString,
         domainLabels: domainLabels,
         values: data.yearlyOriginalPriceSum(years),
-        labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
+        labelAccessor: (double value) => GameCollectionLocalisations.of(context).formatEuro(value),
       ) : Container();
   }
   //#endregion General
@@ -324,7 +324,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumPriceByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyPriceSum().values,
-      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).formatEuro(value),
     );
   }
 
@@ -335,7 +335,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumOriginalPriceByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyOriginalPriceSum().values,
-      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).formatEuro(value),
     );
   }
 
@@ -346,7 +346,7 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
       histogramName: GameCollectionLocalisations.of(context).sumSavedByMonthString,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlySavedSum().values,
-      labelAccessor: (double value) => GameCollectionLocalisations.of(context).euroString(value),
+      labelAccessor: (double value) => GameCollectionLocalisations.of(context).formatEuro(value),
     );
   }
   //#endregion Year

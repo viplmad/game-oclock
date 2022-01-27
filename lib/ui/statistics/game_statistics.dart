@@ -181,7 +181,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     final List<int> intervals = <int>[1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020];
     final List<String> domainLabels = formatIntervalLabels<int>(
       intervals,
-      (int element) => GameCollectionLocalisations.of(context).shortYearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatShortYear(element),
     );
 
     return statisticsHistogram<int>(
@@ -238,7 +238,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     final List<int> finishYears = data.finishYears;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return finishYears.isNotEmpty?
@@ -257,7 +257,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     final List<int> finishYears = data.finishYears;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return finishYears.isNotEmpty?
@@ -266,7 +266,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
         histogramName: GameCollectionLocalisations.of(context).sumTimeByFinishDateString,
         domainLabels: domainLabels,
         values: data.yearlyHoursSum(finishYears),
-        labelAccessor: (int value) => GameCollectionLocalisations.of(context).hoursString(value),
+        labelAccessor: (int value) => GameCollectionLocalisations.of(context).formatHours(value),
       ) : Container();
 
   }
@@ -276,7 +276,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
     final List<int> finishYears = data.finishYears;
     final List<String> domainLabels = formatIntervalLabelsEqual<int>(
       finishYears,
-      (int element) => GameCollectionLocalisations.of(context).yearString(element),
+      (int element) => GameCollectionLocalisations.of(context).formatYear(element),
     );
 
     return finishYears.isNotEmpty?
@@ -299,7 +299,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<Game, GamesData, GameStatis
       histogramName: GameCollectionLocalisations.of(context).sumTimeByMonth,
       domainLabels: GameCollectionLocalisations.of(context).shortMonths,
       values: data.monthlyHoursSum().values,
-      labelAccessor: (int value) => GameCollectionLocalisations.of(context).hoursString(value),
+      labelAccessor: (int value) => GameCollectionLocalisations.of(context).formatHours(value),
     );
 
   }

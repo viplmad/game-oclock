@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:numberpicker/numberpicker.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,10 +14,9 @@ import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/field/field.dart';
 import '../common/show_snackbar.dart';
-import '../common/show_date_picker.dart';
 import '../common/item_view.dart';
-import '../common/year_picker_dialog.dart';
 
 
 class DetailArguments<T> {
@@ -389,9 +386,10 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
-    return _ItemTextField(
+    return CustomTextField(
       fieldName: fieldName,
       value: value,
+      shownValue: null,
       update: _updateFunction<String>(
         context,
         item: item,
@@ -403,9 +401,10 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemURLField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
-    return _ItemTextField(
+    return CustomTextField(
       fieldName: fieldName,
       value: value,
+      shownValue: null,
       update: _updateFunction<String>(
         context,
         item: item,
@@ -428,9 +427,10 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemLongTextField(BuildContext context, {required String fieldName, required String value, required T item, required T Function(String newValue) itemUpdater}) {
 
-    return _ItemTextField(
+    return CustomTextField(
       fieldName: fieldName,
       value: value,
+      shownValue: null,
       update: _updateFunction<String>(
         context,
         item: item,
@@ -443,11 +443,11 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemMoneyField(BuildContext context, {required String fieldName, required double? value, required T item, required T Function(double newValue) itemUpdater}) {
 
-    return _ItemDoubleField(
+    return DoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).euroString(value)
+        GameCollectionLocalisations.of(context).formatEuro(value)
         :
         null,
       update: _updateFunction<double>(
@@ -461,13 +461,9 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemDurationField(BuildContext context, {required String fieldName, required Duration? value}) {
 
-    return _ItemGenericField<Duration>(
+    return DurationField(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).durationString(value)
-        :
-        null,
       editable: false,
     );
 
@@ -475,11 +471,11 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemMoneySumField(BuildContext context, {required String fieldName, required double? value}) {
 
-    return _ItemDoubleField(
+    return DoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).euroString(value)
+        GameCollectionLocalisations.of(context).formatEuro(value)
         :
         null,
       editable: false,
@@ -489,11 +485,11 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemPercentageField(BuildContext context, {required String fieldName, required double? value}) {
 
-    return _ItemDoubleField(
+    return DoubleField(
       fieldName: fieldName,
       value: value,
       shownValue: value != null?
-        GameCollectionLocalisations.of(context).percentageString(value * 100)
+        GameCollectionLocalisations.of(context).formatPercentage(value * 100)
         :
         null,
       editable: false,
@@ -503,7 +499,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemYearField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
-    return _ItemYearField(
+    return YearField(
       fieldName: fieldName,
       value: value,
       update: _updateFunction<int>(
@@ -515,9 +511,9 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   }
 
-  Widget itemDateTimeField(BuildContext context, {required String fieldName, required DateTime? value, required T item, required T Function(DateTime newValue) itemUpdater}) {
+  Widget itemDateField(BuildContext context, {required String fieldName, required DateTime? value, required T item, required T Function(DateTime newValue) itemUpdater}) {
 
-    return _ItemDateTimeField(
+    return DateField(
       fieldName: fieldName,
       value: value,
       update: _updateFunction<DateTime>(
@@ -531,7 +527,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemRatingField(BuildContext context, {required String fieldName, required int? value, required T item, required T Function(int newValue) itemUpdater}) {
 
-    return _RatingField(
+    return RatingField(
       fieldName: fieldName,
       value: value?? 0,
       update: _updateFunction<int>(
@@ -545,7 +541,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemBoolField(BuildContext context, {required String fieldName, required bool value, required T item, required T Function(bool newValue) itemUpdater}) {
 
-    return _BoolField(
+    return BoolField(
       fieldName: fieldName,
       value: value,
       update: _updateFunction<bool>(
@@ -559,7 +555,7 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   Widget itemChipField(BuildContext context, {required String fieldName, required int? value, required List<String> possibleValues, required List<Color> possibleValuesColours, required T item, required T Function(int newValue) itemUpdater}) {
 
-    return _EnumField(
+    return EnumField(
       fieldName: fieldName,
       value: value,
       enumValues: possibleValues,
@@ -577,456 +573,4 @@ abstract class ItemDetailBody<T extends Item, K extends Bloc<ItemDetailEvent, It
 
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
   List<Widget> itemRelationsBuilder(BuildContext context);
-}
-
-class _ItemGenericField<K> extends StatelessWidget {
-  const _ItemGenericField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.shownValue,
-    this.editable = true,
-    this.onTap,
-    this.onLongPress,
-    this.update,
-    this.extended = false,
-  }) : super(key: key);
-
-  final String fieldName;
-  final K? value;
-  final String? shownValue;
-  final bool editable;
-  final Future<K?> Function()? onTap;
-  final void Function()? onLongPress;
-  final void Function(K)? update;
-
-  final bool extended;
-
-  @override
-  Widget build(BuildContext context) {
-
-    final void Function()? onTapWrapped = editable?
-      () {
-        onTap!().then( (K? newValue) {
-          if (newValue != null) {
-            update!(newValue);
-          }
-        });
-      } : null;
-
-    return extended?
-      InkWell(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-              child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
-              child: Text(shownValue?? ''),
-            ),
-          ],
-        ),
-        onTap: onTapWrapped,
-        onLongPress: onLongPress,
-      )
-      :
-      ListTileTheme.merge(
-        child: ListTile(
-          title: Text(fieldName),
-          trailing: Text(shownValue?? ''),
-          onTap: onTapWrapped,
-          onLongPress: onLongPress,
-        ),
-      );
-
-  }
-}
-
-class _ItemTextField extends StatelessWidget {
-  const _ItemTextField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    this.shownValue,
-    this.onLongPress,
-    required this.update,
-    this.isLongText = false,
-  }) : super(key: key);
-
-  final String fieldName;
-  final String? value;
-  final String? shownValue;
-  final void Function()? onLongPress;
-  final void Function(String) update;
-  final bool isLongText;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<String>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: shownValue?? value,
-      extended: isLongText,
-      update: update,
-      onTap: () {
-        final TextEditingController fieldController = TextEditingController();
-        fieldController.text = value?? '';
-
-        return showDialog<String>(
-          context: context,
-          builder: (BuildContext context) {
-
-            return AlertDialog(
-              title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
-              content: TextField(
-                controller: fieldController,
-                keyboardType: isLongText? TextInputType.multiline : TextInputType.text,
-                autofocus: true,
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: fieldName,
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<String>(context);
-                  },
-                ),
-                TextButton(
-                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                  onPressed: () {
-                    Navigator.maybePop<String>(context, fieldController.text.trim());
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-      onLongPress: onLongPress,
-    );
-
-  }
-}
-
-class _ItemDoubleField extends StatelessWidget {
-  const _ItemDoubleField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.shownValue,
-    this.editable = true,
-    this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final double? value;
-  final String? shownValue;
-  final bool editable;
-  final void Function(double)? update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<double>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: shownValue,
-      editable: editable,
-      update: update,
-      onTap: () {
-        return showDialog<double>(
-          context: context,
-          builder: (BuildContext context) {
-
-            return _DecimalPickerDialog(
-              fieldName: fieldName,
-              number: value?? 0,
-            );
-
-          },
-        );
-      },
-    );
-
-  }
-}
-
-class _ItemYearField extends StatelessWidget {
-  const _ItemYearField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final int? value;
-  final void Function(int) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<int>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null? GameCollectionLocalisations.of(context).yearString(value!) : '',
-      update: update,
-      onTap: () {
-        return showDialog<int>(
-          context: context,
-          builder: (BuildContext context) {
-            return YearPickerDialog(
-              year: value,
-            );
-          },
-        );
-      },
-    );
-
-  }
-}
-
-class _ItemDateTimeField extends StatelessWidget {
-  const _ItemDateTimeField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final DateTime? value;
-  final void Function(DateTime) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return _ItemGenericField<DateTime>(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).dateString(value!)
-        :
-        null,
-      update: update,
-      onTap: () {
-        return showGameDatePicker(
-          context: context,
-          initialDate: value?? DateTime.now(),
-        );
-      },
-    );
-
-  }
-}
-
-class _RatingField extends StatelessWidget {
-  const _RatingField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final int value;
-  final Function(int) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-              child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-            ),
-          ],
-        ),
-        SmoothStarRating(
-          allowHalfRating: false,
-          starCount: 10,
-          rating: value.roundToDouble(),
-          color: Colors.yellow,
-          borderColor: Colors.orangeAccent,
-          size: 35.0,
-          onRated: (double? newRating) {
-            if (newRating != null) {
-              final int updatedRating = newRating.toInt();
-
-              update(updatedRating);
-            }
-          },
-        ),
-      ],
-    );
-
-  }
-}
-
-class _BoolField extends StatelessWidget {
-  const _BoolField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final bool value;
-  final Function(bool)? update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return SwitchListTile(
-      title: Text(fieldName),
-      value: value,
-      onChanged: update,
-    );
-
-  }
-}
-
-class _EnumField extends StatelessWidget {
-  const _EnumField({
-    Key? key,
-    required this.fieldName,
-    required this.value,
-    required this.enumValues,
-    required this.enumColours,
-    required this.update,
-  }) : super(key: key);
-
-  final String fieldName;
-  final int? value;
-  final List<String> enumValues;
-  final List<Color> enumColours;
-  final Function(int) update;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-          child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-        ),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          alignment: WrapAlignment.spaceEvenly,
-          children: List<Widget>.generate(
-            enumValues.length,
-            (int index) {
-              final String option = enumValues[index];
-              final Color optionColour = enumColours.elementAt(index);
-
-              return ChoiceChip(
-                label: Text(option),
-                labelStyle: const TextStyle(color: Colors.black87),
-                selected: value == index,
-                selectedColor: optionColour.withOpacity(0.5),
-                pressElevation: 2.0,
-                onSelected: (bool newChoice) {
-                  if(newChoice) {
-                    update(index);
-                  }
-                },
-              );
-
-            },
-          ).toList(growable: false),
-        ),
-      ],
-    );
-
-  }
-}
-
-class _DecimalPickerDialog extends StatefulWidget {
-  const _DecimalPickerDialog({
-    Key? key,
-    required this.fieldName,
-    required this.number,
-  }) : super(key: key);
-
-  final String fieldName;
-  final double number;
-
-  @override
-  State<_DecimalPickerDialog> createState() => _DecimalPickerDialogState();
-}
-class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
-  int _integerPart = 0;
-  int _decimalPart = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _integerPart = widget.number.truncate();
-    _decimalPart = ((widget.number - _integerPart) * 100).round();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return AlertDialog(
-      title: Text(GameCollectionLocalisations.of(context).editString(widget.fieldName)),
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          NumberPicker(
-              value: _integerPart,
-              minValue: 0,
-              maxValue: 1000,
-              onChanged: (num newInteger) {
-                setState(() {
-                  _integerPart = newInteger.toInt();
-                });
-              }
-          ),
-          Text('.', style: Theme.of(context).textTheme.headline6,),
-          NumberPicker(
-              value: _decimalPart,
-              minValue: 0,
-              maxValue: 99,
-              infiniteLoop: true,
-              onChanged: (num newDecimal) {
-                setState(() {
-                  _decimalPart = newDecimal.toInt();
-                });
-              }
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<double>(context);
-          },
-        ),
-        TextButton(
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () {
-            Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + '.' + _decimalPart.toString().padLeft(2, '0')));
-          },
-        ),
-      ],
-    );
-  }
 }

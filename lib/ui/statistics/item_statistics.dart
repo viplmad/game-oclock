@@ -171,7 +171,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
       fieldName: fieldName,
       shownValue: value.toString(),
       shownPercentage: (total != null && total > 0)?
-        GameCollectionLocalisations.of(context).percentageString(((value / total) * 100))
+        GameCollectionLocalisations.of(context).formatPercentage(((value / total) * 100))
         :
         null,
     );
@@ -191,7 +191,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
 
     return StatisticsField(
       fieldName: fieldName,
-      shownValue: GameCollectionLocalisations.of(context).durationString(value),
+      shownValue: GameCollectionLocalisations.of(context).formatDuration(value),
     );
 
   }
@@ -200,9 +200,9 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
 
     return StatisticsField(
       fieldName: fieldName,
-      shownValue: GameCollectionLocalisations.of(context).euroString(value),
+      shownValue: GameCollectionLocalisations.of(context).formatEuro(value),
       shownPercentage: (total != null && total > 0)?
-        GameCollectionLocalisations.of(context).percentageString(((value / total) * 100))
+        GameCollectionLocalisations.of(context).formatPercentage(((value / total) * 100))
         :
         null,
     );
@@ -213,7 +213,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
 
     return StatisticsField(
       fieldName: fieldName,
-      shownValue: GameCollectionLocalisations.of(context).percentageString(value * 100),
+      shownValue: GameCollectionLocalisations.of(context).formatPercentage(value * 100),
     );
 
   }
