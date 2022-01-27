@@ -21,7 +21,7 @@ jobs:
     - uses: actions/setup-java@v2.5.0
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '11'
 
     - run: echo $SIGNING_KEY | base64 -d > android/app/key.jks
       env:
