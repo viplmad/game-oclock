@@ -15,13 +15,20 @@ import 'search.dart';
 class GameTagSearch extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListManagerBloc> {
   const GameTagSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+  );
 
   @override
   GameTagSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameTagSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -36,7 +43,7 @@ class GameTagSearch extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListMa
   }
 
   @override
-  _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
+  _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
 
     return _GameTagSearchBody<GameTagSearchBloc>(
       onTap: onTap,
@@ -53,9 +60,6 @@ class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc
   }) : super(key: key, items: items);
 
   @override
-  void Function() onTap(BuildContext context, GameTag item) => () {};
-
-  @override
   GameTagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameTagListManagerBloc(
@@ -65,7 +69,7 @@ class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc
   }
 
   @override
-  _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({required void Function() Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
+  _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
 
     return _GameTagSearchBody<ItemLocalSearchBloc<GameTag>>(
       onTap: onTap,
@@ -78,7 +82,7 @@ class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc
 class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBody<GameTag, K, GameTagListManagerBloc> {
   const _GameTagSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, GameTag) onTap,
+    required void Function()? Function(BuildContext, GameTag) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

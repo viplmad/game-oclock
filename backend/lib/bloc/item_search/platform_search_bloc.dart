@@ -9,12 +9,14 @@ import 'item_search.dart';
 class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity, PlatformID, PlatformRepository> {
   PlatformSearchBloc({
     required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.platformRepository);
+    required int? viewIndex,
+  }) : super(repository: collectionRepository.platformRepository, viewIndex: viewIndex);
 
   @override
   Future<List<Platform>> getInitialItems() {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findFirstWithView(PlatformView.lastCreated, super.maxSuggestions);
+    final PlatformView view = viewIndex != null? PlatformView.values[viewIndex!] : PlatformView.lastCreated;
+    final Future<List<PlatformEntity>> entityListFuture = repository.findFirstWithView(view, super.maxSuggestions);
     return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,8 +24,14 @@ class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity, 
   @override
   Future<List<Platform>> getSearchItems(String query) {
 
-    final Future<List<PlatformEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
-    return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    if(viewIndex != null) {
+      final PlatformView view = PlatformView.values[viewIndex!];
+      final Future<List<PlatformEntity>> entityListFuture = repository.findFirstWithViewByName(view, query, super.maxResults);
+      return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    } else {
+      final Future<List<PlatformEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
+      return PlatformMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    }
 
   }
 }

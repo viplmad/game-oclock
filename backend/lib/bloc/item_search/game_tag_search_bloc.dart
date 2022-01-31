@@ -9,12 +9,14 @@ import 'item_search.dart';
 class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, GameTagID, GameTagRepository> {
   GameTagSearchBloc({
     required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.gameTagRepository);
+    required int? viewIndex,
+  }) : super(repository: collectionRepository.gameTagRepository, viewIndex: viewIndex);
 
   @override
   Future<List<GameTag>> getInitialItems() {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findFirstWithView(GameTagView.lastCreated, super.maxSuggestions);
+    final GameTagView view = viewIndex != null? GameTagView.values[viewIndex!] : GameTagView.lastCreated;
+    final Future<List<GameTagEntity>> entityListFuture = repository.findFirstWithView(view, super.maxSuggestions);
     return GameTagMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -22,8 +24,14 @@ class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity, Gam
   @override
   Future<List<GameTag>> getSearchItems(String query) {
 
-    final Future<List<GameTagEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
-    return GameTagMapper.futureEntityListToModelList(entityListFuture);
+    if(viewIndex != null) {
+      final GameTagView view = GameTagView.values[viewIndex!];
+      final Future<List<GameTagEntity>> entityListFuture = repository.findFirstWithViewByName(view, query, super.maxResults);
+      return GameTagMapper.futureEntityListToModelList(entityListFuture);
+    } else {
+      final Future<List<GameTagEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
+      return GameTagMapper.futureEntityListToModelList(entityListFuture);
+    }
 
   }
 }

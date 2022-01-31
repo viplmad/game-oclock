@@ -109,6 +109,15 @@ class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
     );
 
   }
+
+  Future<List<SystemEntity>> findFirstWithViewByName(SystemView systemView, String name, int limit) {
+
+    final Query query = SystemQuery.selectFirstByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#endregion SEARCH
 
   //#region IMAGE

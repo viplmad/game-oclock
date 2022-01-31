@@ -98,9 +98,9 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findFirstWithView(GameView gameView, int limit) {
+  Future<List<GameEntity>> findFirstWithView(GameView gameView, int limit, int? year) {
 
-    final Query query = GameQuery.selectFirstInView(gameView, limit);
+    final Query query = GameQuery.selectFirstInView(gameView, limit, year);
     return readItemList(
       query: query,
     );
@@ -245,6 +245,15 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
   Future<List<GameEntity>> findFirstByName(String name, int limit) {
 
     final Query query = GameQuery.selectFirstByNameLike(name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<GameEntity>> findFirstWithViewByName(GameView gameView, String name, int limit, int? year) {
+
+    final Query query = GameQuery.selectFirstInViewByNameLike(gameView, name, limit, year);
     return readItemList(
       query: query,
     );

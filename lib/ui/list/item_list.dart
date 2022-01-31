@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,9 @@ import '../common/item_view.dart';
 import '../common/loading_icon.dart';
 import '../common/show_snackbar.dart';
 import '../common/shape_utils.dart';
-import '../detail/detail.dart';
-import '../statistics/statistics.dart';
+import '../detail/detail_arguments.dart';
+import '../search/search_arguments.dart';
+import '../statistics/statistics_arguments.dart';
 
 
 abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget with PreferredSizeWidget {
@@ -23,10 +25,14 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
     Key? key,
     required this.themeColor,
     this.gridAllowed = true,
+    this.searchRouteName = '',
+    this.calendarRouteName = '',
   }) : super(key: key);
 
   final Color themeColor;
   final bool gridAllowed;
+  final String searchRouteName;
+  final String calendarRouteName;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
@@ -39,17 +45,33 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
       backgroundColor: themeColor,
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.sort_by_alpha),
-          tooltip: GameCollectionLocalisations.of(context).changeOrderString,
-          onPressed: () {
-            BlocProvider.of<K>(context).add(UpdateSortOrder());
-          },
+          icon: const Icon(Icons.search),
+          tooltip: GameCollectionLocalisations.of(context).searchAllString,
+          onPressed: searchRouteName.isNotEmpty? () {
+
+            Navigator.pushNamed(
+              context,
+              searchRouteName,
+              arguments: const SearchArguments(
+                onTapReturn: false,
+              )
+            );
+
+          } : null,
         ),
+        calendarRouteName.isNotEmpty?
+          IconButton(
+            icon: const Icon(Icons.date_range),
+            tooltip: GameCollectionLocalisations.of(context).calendarView,
+            onPressed: _onCalendarTap(context),
+          ) : Container(),
         gridAllowed? IconButton(
           icon: const Icon(Icons.grid_on),
           tooltip: GameCollectionLocalisations.of(context).changeStyleString,
           onPressed: () {
-            BlocProvider.of<K>(context).add(UpdateStyle());
+            BlocProvider.of<K>(context).add(
+              UpdateStyle(),
+            );
           },
         ) : Container(),
         _viewActionBuilder(
@@ -85,6 +107,17 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
 
     return (int selectedViewIndex) {
       BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
+    };
+
+  }
+
+  void Function() _onCalendarTap(BuildContext context) {
+
+    return () {
+      Navigator.pushNamed(
+        context,
+        calendarRouteName,
+      );
     };
 
   }
@@ -243,7 +276,7 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int viewYear, required void Function(T) onDelete, required ListStyle style, required ScrollController scrollController});
+  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int? viewYear, required void Function(T) onDelete, required ListStyle style, required ScrollController scrollController});
 }
 
 abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
@@ -255,23 +288,21 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
     required this.onDelete,
     required this.style,
     required this.scrollController,
-    this.detailRouteName = '',
-    this.localSearchRouteName = '',
+    required this.detailRouteName,
+    required this.searchRouteName,
     this.statisticsRouteName = '',
-    this.calendarRouteName = '',
   }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
-  final int viewYear;
+  final int? viewYear;
   final void Function(T) onDelete;
   final ListStyle style;
   final ScrollController scrollController;
 
   final String detailRouteName;
-  final String localSearchRouteName;
+  final String searchRouteName;
   final String statisticsRouteName;
-  final String calendarRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -285,21 +316,15 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(Icons.manage_search),
                   tooltip: GameCollectionLocalisations.of(context).searchInViewString,
-                  onPressed: items.isNotEmpty? _onSearchTap(context) : null,
+                  onPressed: _onSearchTap(context),
                 ),
                 statisticsRouteName.isNotEmpty?
                   IconButton(
                     icon: const Icon(Icons.insert_chart),
                     tooltip: GameCollectionLocalisations.of(context).statsInViewString,
                     onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
-                  ) : Container(),
-                calendarRouteName.isNotEmpty?
-                  IconButton(
-                    icon: const Icon(Icons.date_range),
-                    tooltip: GameCollectionLocalisations.of(context).calendarView,
-                    onPressed: _onCalendarTap(context),
                   ) : Container(),
               ],
             ),
@@ -366,6 +391,7 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
 
   }
 
+  @nonVirtual
   void Function()? onTap(BuildContext context, T item) {
 
     return () {
@@ -394,8 +420,12 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
     return () {
       Navigator.pushNamed(
         context,
-        localSearchRouteName,
-        arguments: items,
+        searchRouteName,
+        arguments: SearchArguments(
+          onTapReturn: false,
+          viewIndex: viewIndex,
+          viewYear: viewYear,
+        ),
       );
     };
 
@@ -411,17 +441,6 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
           items: items,
           viewTitle: viewTitle(context),
         ),
-      );
-    };
-
-  }
-
-  void Function() _onCalendarTap(BuildContext context) {
-
-    return () {
-      Navigator.pushNamed(
-        context,
-        calendarRouteName,
       );
     };
 

@@ -16,13 +16,21 @@ import 'search.dart';
 class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+    detailRouteName: platformDetailRoute,
+  );
 
   @override
   PlatformSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PlatformSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -37,7 +45,7 @@ class PlatformSearch extends ItemSearch<Platform, PlatformSearchBloc, PlatformLi
   }
 
   @override
-  _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
+  _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
 
     return _PlatformSearchBody<PlatformSearchBloc>(
       onTap: onTap,
@@ -67,7 +75,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
   }
 
   @override
-  _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
+  _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Platform) onTap, required bool allowNewButton}) {
 
     return _PlatformSearchBody<ItemLocalSearchBloc<Platform>>(
       onTap: onTap,
@@ -80,7 +88,7 @@ class PlatformLocalSearch extends ItemLocalSearch<Platform, PlatformListManagerB
 class _PlatformSearchBody<K extends ItemSearchBloc<Platform>> extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
   const _PlatformSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, Platform) onTap,
+    required void Function()? Function(BuildContext, Platform) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

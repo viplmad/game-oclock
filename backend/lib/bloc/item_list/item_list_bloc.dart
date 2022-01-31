@@ -25,7 +25,6 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     on<UpdateView>(_mapUpdateViewToState);
     on<UpdateYearView>(_mapUpdateYearViewToState);
     on<UpdatePage>(_mapUpdatePageToState);
-    on<UpdateSortOrder>(_mapUpdateSortOrderToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
     managerSubscription = managerBloc.stream.listen(mapListManagerStateToEvent);
@@ -93,7 +92,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
         items[listItemIndex] = event.item;
 
         final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-        final int year = (state as ItemListLoaded<T>).year;
+        final int? year = (state as ItemListLoaded<T>).year;
         final int page = (state as ItemListLoaded<T>).page;
         final ListStyle style = (state as ItemListLoaded<T>).style;
 
@@ -191,12 +190,12 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     if(state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int year = (state as ItemListLoaded<T>).year;
+      final int? year = (state as ItemListLoaded<T>).year;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final int page = (state as ItemListLoaded<T>).page + 1;
       List<T> pageItems;
-      if(year > 0) {
+      if(year != null) {
         pageItems = await getReadYearViewStream(viewIndex, year, page);
       } else {
         pageItems = await getReadViewStream(viewIndex, page);
@@ -216,29 +215,6 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     }
   }
 
-  void _mapUpdateSortOrderToState(UpdateSortOrder event, Emitter<ItemListState> emit) {
-
-    if(state is ItemListLoaded<T>) {
-      final List<T> reversedItems = (state as ItemListLoaded<T>).items.reversed.toList(growable: false);
-
-      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int year = (state as ItemListLoaded<T>).year;
-      final int page = (state as ItemListLoaded<T>).page;
-      final ListStyle style = (state as ItemListLoaded<T>).style;
-
-      emit(
-        ItemListLoaded<T>(
-          reversedItems,
-          viewIndex,
-          year,
-          page,
-          style,
-        ),
-      );
-    }
-
-  }
-
   void _mapUpdateStyleToState(UpdateStyle event, Emitter<ItemListState> emit) {
 
     if(state is ItemListLoaded<T>) {
@@ -247,7 +223,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
 
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int year = (state as ItemListLoaded<T>).year;
+      final int? year = (state as ItemListLoaded<T>).year;
       final int page = (state as ItemListLoaded<T>).page;
 
       emit(
@@ -282,7 +258,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     if(state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int year = (state as ItemListLoaded<T>).year;
+      final int? year = (state as ItemListLoaded<T>).year;
       final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
@@ -304,7 +280,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity, ID extends Obj
     if(state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int year = (state as ItemListLoaded<T>).year;
+      final int? year = (state as ItemListLoaded<T>).year;
       final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 

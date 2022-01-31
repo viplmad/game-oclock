@@ -18,12 +18,12 @@ class UpdateItemList<T extends Item> extends ItemListEvent {
 
   final List<T> items;
   final int viewIndex;
-  final int year;
+  final int? year;
   final int page;
   final ListStyle style;
 
   @override
-  List<Object> get props => <Object>[items, viewIndex, year, page, style];
+  List<Object> get props => <Object>[items, viewIndex, year?? -1, page, style];
 
   @override
   String toString() => 'UpdateItemList { '
@@ -80,7 +80,5 @@ class UpdateYearView extends ItemListEvent {
 }
 
 class UpdatePage extends ItemListEvent {}
-
-class UpdateSortOrder extends ItemListEvent {}
 
 class UpdateStyle extends ItemListEvent {}

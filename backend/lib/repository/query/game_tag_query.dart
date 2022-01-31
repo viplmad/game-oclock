@@ -61,18 +61,6 @@ class GameTagQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameTagEntityData.table)
-      .where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(GameTagView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -93,6 +81,31 @@ class GameTagQuery {
 
     addFields(query);
     _completeView(query, view);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTagEntityData.table)
+      .where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(GameTagView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameTagEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(GameTagEntityData.nameField, name, type: String, table: GameTagEntityData.table, operator: OperatorType.like);
 
     return query;
   }

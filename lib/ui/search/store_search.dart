@@ -16,13 +16,21 @@ import 'search.dart';
 class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
   const StoreSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+    detailRouteName: storeDetailRoute,
+  );
 
   @override
   StoreSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return StoreSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -37,7 +45,7 @@ class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBlo
   }
 
   @override
-  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Store) onTap, required bool allowNewButton}) {
+  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Store) onTap, required bool allowNewButton}) {
 
     return _StoreSearchBody<StoreSearchBloc>(
       onTap: onTap,
@@ -67,7 +75,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   }
 
   @override
-  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Store) onTap, required bool allowNewButton}) {
+  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Store) onTap, required bool allowNewButton}) {
 
     return _StoreSearchBody<ItemLocalSearchBloc<Store>>(
       onTap: onTap,
@@ -80,7 +88,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
 class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, K, StoreListManagerBloc> {
   const _StoreSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, Store) onTap,
+    required void Function()? Function(BuildContext, Store) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

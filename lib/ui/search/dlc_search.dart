@@ -16,13 +16,21 @@ import 'search.dart';
 class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+    detailRouteName: dlcDetailRoute,
+  );
 
   @override
   DLCSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return DLCSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -37,7 +45,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   }
 
   @override
-  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
+  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
 
     return _DLCSearchBody<DLCSearchBloc>(
       onTap: onTap,
@@ -66,7 +74,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   }
 
   @override
-  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({required void Function() Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
+  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, DLC) onTap, required bool allowNewButton}) {
 
     return _DLCSearchBody<ItemLocalSearchBloc<DLC>>(
       onTap: onTap,
@@ -79,7 +87,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
 class _DLCSearchBody<K extends ItemSearchBloc<DLC>> extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
   const _DLCSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, DLC) onTap,
+    required void Function()? Function(BuildContext, DLC) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

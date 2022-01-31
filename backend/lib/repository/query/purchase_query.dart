@@ -73,18 +73,6 @@ class PurchaseQuery {
     return query;
   }
 
-  static Query selectFirstByDescriptionLike(String description, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseEntityData.table)
-      .where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(PurchaseView view, [int? year, int? page]) {
     final Query query = FluentQuery
       .select()
@@ -116,6 +104,31 @@ class PurchaseQuery {
       .where(PurchaseEntityData.storeField, id.id, type: int, table: PurchaseEntityData.table);
 
     addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstByDescriptionLike(String description, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseEntityData.table)
+      .where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByDescriptionLike(PurchaseView view, String description, int limit, [int? year]) {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view, year);
+    query.where(PurchaseEntityData.descriptionField, description, type: String, table: PurchaseEntityData.table, operator: OperatorType.like);
 
     return query;
   }

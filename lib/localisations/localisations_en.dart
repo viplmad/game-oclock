@@ -59,7 +59,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String localString = 'Local';
 
   @override
-  final String changeOrderString = 'Change Order';
+  final String searchAllString = 'Global Search';
   @override
   final String changeStyleString = 'Change Style';
   @override
@@ -297,11 +297,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String durationString = 'Duration';
   @override
-  final String recalculationModeTitle = 'Recalcultion Mode';
+  final String recalculationModeTitle = 'Recalculation Mode';
   @override
   final String recalculationModeSubtitle = 'Affects the value to be recalculated if other values change';
   @override
-  final String recalculationModeDurationString = 'Recalcute duration';
+  final String recalculationModeDurationString = 'Recalculate duration';
   @override
   final String recalculationModeTimeString = 'Recalculate time';
 

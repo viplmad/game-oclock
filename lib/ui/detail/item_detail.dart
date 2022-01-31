@@ -19,16 +19,6 @@ import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 
 
-class DetailArguments<T> {
-  const DetailArguments({
-    required this.item,
-    this.onUpdate,
-  });
-
-  final T item;
-  final void Function(T? item)? onUpdate;
-}
-
 abstract class ItemDetail<T extends Item, K extends Bloc<ItemDetailEvent, ItemDetailState>, S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>> extends StatelessWidget {
   const ItemDetail({
     Key? key,

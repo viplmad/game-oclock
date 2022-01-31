@@ -72,18 +72,6 @@ class SystemQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(SystemEntityData.table)
-      .where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(SystemView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -104,6 +92,31 @@ class SystemQuery {
 
     addFields(query);
     _completeView(query, view);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(SystemEntityData.table)
+      .where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(SystemView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(SystemEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(SystemEntityData.nameField, name, type: String, table: SystemEntityData.table, operator: OperatorType.like);
 
     return query;
   }

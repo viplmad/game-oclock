@@ -43,7 +43,7 @@ abstract class GameCollectionLocalisations {
 
   String get localString;
 
-  String get changeOrderString;
+  String get searchAllString;
   String get changeStyleString;
   String get changeViewString;
   String get changeRangeString;

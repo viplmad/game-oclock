@@ -65,6 +65,7 @@ class _GameTagAppBar extends ItemAppBar<GameTag, GameTagListBloc> {
     key: key,
     themeColor: GameTagTheme.primaryColour,
     gridAllowed: false,
+    searchRouteName: gameTagSearchRoute,
   );
 
   @override
@@ -101,7 +102,7 @@ class _GameTagList extends ItemList<GameTag, GameTagListBloc, GameTagListManager
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagString;
 
   @override
-  _GameTagListBody itemListBodyBuilder({required List<GameTag> items, required int viewIndex, required int viewYear, required void Function(GameTag) onDelete, required ListStyle style, required ScrollController scrollController}) {
+  _GameTagListBody itemListBodyBuilder({required List<GameTag> items, required int viewIndex, required int? viewYear, required void Function(GameTag) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _GameTagListBody(
       items: items,
@@ -120,7 +121,7 @@ class _GameTagListBody extends ItemListBody<GameTag, GameTagListBloc> {
     Key? key,
     required List<GameTag> items,
     required int viewIndex,
-    required int viewYear,
+    required int? viewYear,
     required void Function(GameTag) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -133,7 +134,7 @@ class _GameTagListBody extends ItemListBody<GameTag, GameTagListBloc> {
     style: style,
     scrollController: scrollController,
     detailRouteName: gameTagDetailRoute,
-    localSearchRouteName: gameTagLocalSearchRoute,
+    searchRouteName: gameTagSearchRoute,
   );
 
   @override

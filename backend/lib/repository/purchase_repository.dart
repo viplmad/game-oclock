@@ -64,9 +64,9 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
 
   }
 
-  Future<List<PurchaseEntity>> findFirstWithView(PurchaseView purchaseView, int limit) {
+  Future<List<PurchaseEntity>> findFirstWithView(PurchaseView purchaseView, int limit, int? year) {
 
-    final Query query = PurchaseQuery.selectFirstInView(purchaseView, limit);
+    final Query query = PurchaseQuery.selectFirstInView(purchaseView, limit, year);
     return readItemList(
       query: query,
     );
@@ -154,6 +154,15 @@ class PurchaseRepository extends ItemRepository<PurchaseEntity, PurchaseID> {
   Future<List<PurchaseEntity>> findFirstByDescription(String description, int limit) {
 
     final Query query = PurchaseQuery.selectFirstByDescriptionLike(description, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
+
+  Future<List<PurchaseEntity>> findFirstWithViewByDescription(PurchaseView view, String description, int limit, int? year) {
+
+    final Query query = PurchaseQuery.selectFirstInViewByDescriptionLike(view, description, limit, year);
     return readItemList(
       query: query,
     );

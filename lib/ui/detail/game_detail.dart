@@ -15,7 +15,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../relation/relation.dart';
 import '../theme/theme.dart' show GameTheme;
-import '../calendar/calendar.dart';
+import '../calendar/calendar_arguments.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 

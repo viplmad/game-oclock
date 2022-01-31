@@ -84,18 +84,6 @@ class DLCQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(DLCEntityData.table)
-      .where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(DLCView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -127,6 +115,31 @@ class DLCQuery {
       .where(DLCEntityData.baseGameField, id.id, type: int, table: DLCEntityData.table);
 
     addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(DLCEntityData.table)
+      .where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(DLCView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(DLCEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(DLCEntityData.nameField, name, type: String, table: DLCEntityData.table, operator: OperatorType.like);
 
     return query;
   }

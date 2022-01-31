@@ -61,18 +61,6 @@ class PurchaseTypeQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(PurchaseTypeEntityData.table)
-      .where(PurchaseTypeEntityData.nameField, name, type: String, table: PurchaseTypeEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(PurchaseTypeView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -93,6 +81,31 @@ class PurchaseTypeQuery {
 
     addFields(query);
     _completeView(query, view);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseTypeEntityData.table)
+      .where(PurchaseTypeEntityData.nameField, name, type: String, table: PurchaseTypeEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(PurchaseTypeView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PurchaseTypeEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(PurchaseTypeEntityData.nameField, name, type: String, table: PurchaseTypeEntityData.table, operator: OperatorType.like);
 
     return query;
   }

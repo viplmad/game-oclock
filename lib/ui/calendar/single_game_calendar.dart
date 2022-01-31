@@ -28,16 +28,6 @@ import '../common/shape_utils.dart';
 import 'calendar_utils.dart';
 
 
-class SingleGameCalendarArguments {
-  const SingleGameCalendarArguments({
-    required this.itemId,
-    this.onUpdate,
-  });
-
-  final int itemId;
-  final void Function()? onUpdate;
-}
-
 class SingleGameCalendar extends StatelessWidget {
   const SingleGameCalendar({
     Key? key,

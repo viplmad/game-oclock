@@ -19,6 +19,7 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   }) : super(
     key: key,
     themeColor: PlatformTheme.primaryColour,
+    searchRouteName: platformSearchRoute,
   );
 
   @override
@@ -55,7 +56,7 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
 
   @override
-  _PlatformListBody itemListBodyBuilder({required List<Platform> items, required int viewIndex, required int viewYear, required void Function(Platform) onDelete, required ListStyle style, required ScrollController scrollController}) {
+  _PlatformListBody itemListBodyBuilder({required List<Platform> items, required int viewIndex, required int? viewYear, required void Function(Platform) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _PlatformListBody(
       items: items,
@@ -74,7 +75,7 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
     Key? key,
     required List<Platform> items,
     required int viewIndex,
-    required int viewYear,
+    required int? viewYear,
     required void Function(Platform) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -87,7 +88,7 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
     style: style,
     scrollController: scrollController,
     detailRouteName: platformDetailRoute,
-    localSearchRouteName: platformLocalSearchRoute,
+    searchRouteName: platformSearchRoute,
   );
 
   @override

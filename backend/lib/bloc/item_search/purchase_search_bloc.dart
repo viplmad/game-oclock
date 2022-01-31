@@ -9,12 +9,17 @@ import 'item_search.dart';
 class PurchaseSearchBloc extends ItemRemoteSearchBloc<Purchase, PurchaseEntity, PurchaseID, PurchaseRepository> {
   PurchaseSearchBloc({
     required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.purchaseRepository);
+    required int? viewIndex,
+    this.viewYear,
+  }) : super(repository: collectionRepository.purchaseRepository, viewIndex: viewIndex);
+
+  final int? viewYear;
 
   @override
   Future<List<Purchase>> getInitialItems() {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstWithView(PurchaseView.lastCreated, super.maxSuggestions);
+    final PurchaseView view = viewIndex != null? PurchaseView.values[viewIndex!] : PurchaseView.lastCreated;
+    final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstWithView(view, super.maxSuggestions, viewYear);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
 
   }
@@ -22,8 +27,14 @@ class PurchaseSearchBloc extends ItemRemoteSearchBloc<Purchase, PurchaseEntity, 
   @override
   Future<List<Purchase>> getSearchItems(String query) {
 
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstByDescription(query, super.maxResults);
-    return PurchaseMapper.futureEntityListToModelList(entityListFuture);
+    if(viewIndex != null) {
+      final PurchaseView view = PurchaseView.values[viewIndex!];
+      final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstWithViewByDescription(view, query, super.maxResults, viewYear);
+      return PurchaseMapper.futureEntityListToModelList(entityListFuture);
+    } else {
+      final Future<List<PurchaseEntity>> entityListFuture = repository.findFirstByDescription(query, super.maxResults);
+      return PurchaseMapper.futureEntityListToModelList(entityListFuture);
+    }
 
   }
 }

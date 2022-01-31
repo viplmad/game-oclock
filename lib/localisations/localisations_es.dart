@@ -59,7 +59,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String localString = 'Local';
 
   @override
-  final String changeOrderString = 'Cambio de orden';
+  final String searchAllString = 'Busqueda global';
   @override
   final String changeStyleString = 'Cambio de estilo';
   @override

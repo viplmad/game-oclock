@@ -9,12 +9,14 @@ import 'item_search.dart';
 class DLCSearchBloc extends ItemRemoteSearchBloc<DLC, DLCEntity, DLCID, DLCRepository> {
   DLCSearchBloc({
     required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.dlcRepository);
+    required int? viewIndex,
+  }) : super(repository: collectionRepository.dlcRepository, viewIndex: viewIndex);
 
   @override
   Future<List<DLC>> getInitialItems() {
 
-    final Future<List<DLCEntity>> entityListFuture = repository.findFirstWithView(DLCView.lastCreated, super.maxSuggestions);
+    final DLCView view = viewIndex != null? DLCView.values[viewIndex!] : DLCView.lastCreated;
+    final Future<List<DLCEntity>> entityListFuture = repository.findFirstWithView(view, super.maxSuggestions);
     return DLCMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
 
   }
@@ -22,8 +24,14 @@ class DLCSearchBloc extends ItemRemoteSearchBloc<DLC, DLCEntity, DLCID, DLCRepos
   @override
   Future<List<DLC>> getSearchItems(String query) {
 
-    final Future<List<DLCEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
-    return DLCMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    if(viewIndex != null) {
+      final DLCView view = DLCView.values[viewIndex!];
+      final Future<List<DLCEntity>> entityListFuture = repository.findFirstWithViewByName(view, query, super.maxResults);
+      return DLCMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    } else {
+      final Future<List<DLCEntity>> entityListFuture = repository.findFirstByName(query, super.maxResults);
+      return DLCMapper.futureEntityListToModelList(entityListFuture, repository.getImageURI);
+    }
 
   }
 }

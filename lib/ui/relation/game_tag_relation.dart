@@ -40,8 +40,8 @@ abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<Gam
     bool limitHeight = true,
     bool isSingleList = false,
     String detailRouteName = '',
-    String searchRouteName = '',
-    String localSearchRouteName = '',
+    required String searchRouteName,
+    required String localSearchRouteName,
   }) : super(
     key: key,
     relationName: relationName,

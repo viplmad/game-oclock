@@ -15,13 +15,20 @@ import 'search.dart';
 class PurchaseTypeSearch extends ItemSearch<PurchaseType, PurchaseTypeSearchBloc, PurchaseTypeListManagerBloc> {
   const PurchaseTypeSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+  );
 
   @override
   PurchaseTypeSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseTypeSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -36,7 +43,7 @@ class PurchaseTypeSearch extends ItemSearch<PurchaseType, PurchaseTypeSearchBloc
   }
 
   @override
-  _PurchaseTypeSearchBody<PurchaseTypeSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
+  _PurchaseTypeSearchBody<PurchaseTypeSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
     return _PurchaseTypeSearchBody<PurchaseTypeSearchBloc>(
       onTap: onTap,
@@ -53,9 +60,6 @@ class PurchaseTypeLocalSearch extends ItemLocalSearch<PurchaseType, PurchaseType
   }) : super(key: key, items: items);
 
   @override
-  void Function() onTap(BuildContext context, PurchaseType item) => () {};
-
-  @override
   PurchaseTypeListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseTypeListManagerBloc(
@@ -65,7 +69,7 @@ class PurchaseTypeLocalSearch extends ItemLocalSearch<PurchaseType, PurchaseType
   }
 
   @override
-  _PurchaseTypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({required void Function() Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
+  _PurchaseTypeSearchBody<ItemLocalSearchBloc<PurchaseType>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, PurchaseType) onTap, required bool allowNewButton}) {
 
     return _PurchaseTypeSearchBody<ItemLocalSearchBloc<PurchaseType>>(
       onTap: onTap,
@@ -78,7 +82,7 @@ class PurchaseTypeLocalSearch extends ItemLocalSearch<PurchaseType, PurchaseType
 class _PurchaseTypeSearchBody<K extends ItemSearchBloc<PurchaseType>> extends ItemSearchBody<PurchaseType, K, PurchaseTypeListManagerBloc> {
   const _PurchaseTypeSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, PurchaseType) onTap,
+    required void Function()? Function(BuildContext, PurchaseType) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

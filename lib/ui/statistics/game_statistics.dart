@@ -9,16 +9,6 @@ import 'package:game_collection/localisations/localisations.dart';
 import 'statistics.dart';
 
 
-class GameStatisticsArguments extends StatisticsArguments<Game> {
-  const GameStatisticsArguments({
-    required List<Game> items,
-    required String viewTitle,
-    required this.tabTitle,
-  }) : super(items: items, viewTitle: viewTitle);
-
-  final String tabTitle;
-}
-
 class GameStatistics extends ItemStatistics<Game, GamesData, GameStatisticsBloc> {
   const GameStatistics({
     Key? key,

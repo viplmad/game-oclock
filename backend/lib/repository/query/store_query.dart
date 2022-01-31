@@ -72,18 +72,6 @@ class StoreQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(StoreEntityData.table)
-      .where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(StoreView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -104,6 +92,31 @@ class StoreQuery {
 
     addFields(query);
     _completeView(query, view);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(StoreEntityData.table)
+      .where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(StoreView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(StoreEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(StoreEntityData.nameField, name, type: String, table: StoreEntityData.table, operator: OperatorType.like);
 
     return query;
   }

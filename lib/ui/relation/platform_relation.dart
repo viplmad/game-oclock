@@ -46,9 +46,6 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
   );
 
   @override
-  void Function()? onTap(BuildContext context, System item) => null;
-
-  @override
   Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
 }
 
@@ -61,8 +58,8 @@ abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<Pl
     bool limitHeight = true,
     bool isSingleList = false,
     String detailRouteName = '',
-    String searchRouteName = '',
-    String localSearchRouteName = '',
+    required String searchRouteName,
+    required String localSearchRouteName,
   }) : super(
     key: key,
     relationName: relationName,

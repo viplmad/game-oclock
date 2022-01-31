@@ -18,7 +18,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../common/loading_icon.dart';
-import '../detail/detail.dart';
+import '../detail/detail_arguments.dart';
 import 'calendar_utils.dart';
 
 

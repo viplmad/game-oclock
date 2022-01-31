@@ -12,16 +12,6 @@ import '../common/statistics_histogram.dart';
 import '../common/year_picker_dialog.dart';
 
 
-class StatisticsArguments<T> {
-  const StatisticsArguments({
-    required this.items,
-    required this.viewTitle,
-  });
-
-  final List<T> items;
-  final String viewTitle;
-}
-
 abstract class ItemStatistics<T extends Item, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
   const ItemStatistics({
     Key? key,

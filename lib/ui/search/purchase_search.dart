@@ -16,13 +16,25 @@ import 'search.dart';
 class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
   const PurchaseSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+    this.viewYear,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+    detailRouteName: purchaseDetailRoute,
+  );
+
+  final int? viewYear;
 
   @override
   PurchaseSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return PurchaseSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
+      viewYear: viewYear,
     );
 
   }
@@ -37,7 +49,7 @@ class PurchaseSearch extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseLi
   }
 
   @override
-  _PurchaseSearchBody<PurchaseSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
+  _PurchaseSearchBody<PurchaseSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
 
     return _PurchaseSearchBody<PurchaseSearchBloc>(
       onTap: onTap,
@@ -66,7 +78,7 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
   }
 
   @override
-  _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
+  _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Purchase) onTap, required bool allowNewButton}) {
 
     return _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>>(
       onTap: onTap,
@@ -79,7 +91,7 @@ class PurchaseLocalSearch extends ItemLocalSearch<Purchase, PurchaseListManagerB
 class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>> extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
   const _PurchaseSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, Purchase) onTap,
+    required void Function()? Function(BuildContext, Purchase) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

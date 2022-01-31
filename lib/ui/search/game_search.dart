@@ -16,13 +16,25 @@ import 'search.dart';
 class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   const GameSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+    this.viewYear,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+    detailRouteName: gameDetailRoute,
+  );
+
+  final int? viewYear;
 
   @override
   GameSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return GameSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
+      viewYear: viewYear,
     );
 
   }
@@ -37,7 +49,7 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   }
 
   @override
-  _GameSearchBody<GameSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, Game) onTap, required bool allowNewButton}) {
+  _GameSearchBody<GameSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Game) onTap, required bool allowNewButton}) {
 
     return _GameSearchBody<GameSearchBloc>(
       onTap: onTap,
@@ -67,7 +79,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   }
 
   @override
-  _GameSearchBody<ItemLocalSearchBloc<Game>> itemSearchBodyBuilder({required void Function() Function(BuildContext, Game) onTap, required bool allowNewButton}) {
+  _GameSearchBody<ItemLocalSearchBloc<Game>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Game) onTap, required bool allowNewButton}) {
 
     return _GameSearchBody<ItemLocalSearchBloc<Game>>(
       onTap: onTap,
@@ -80,7 +92,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
 class _GameSearchBody<K extends ItemSearchBloc<Game>> extends ItemSearchBody<Game, K, GameListManagerBloc> {
   const _GameSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, Game) onTap,
+    required void Function()? Function(BuildContext, Game) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

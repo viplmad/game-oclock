@@ -87,9 +87,6 @@ class PurchaseTypeRelationList extends _PurchaseRelationList<PurchaseType> {
   );
 
   @override
-  void Function()? onTap(BuildContext context, PurchaseType item) => null;
-
-  @override
   Widget cardBuilder(BuildContext context, PurchaseType item) => PurchaseTypeTheme.itemCard(context, item, onTap);
 }
 
@@ -102,8 +99,8 @@ abstract class _PurchaseRelationList<W extends Item> extends ItemRelationList<Pu
     bool limitHeight = true,
     bool isSingleList = false,
     String detailRouteName = '',
-    String searchRouteName = '',
-    String localSearchRouteName = '',
+    required String searchRouteName,
+    required String localSearchRouteName,
   }) : super(
     key: key,
     relationName: relationName,

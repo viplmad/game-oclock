@@ -72,18 +72,6 @@ class GameQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(GameEntityData.table)
-      .where(GameEntityData.nameField, name, type: String, table: GameEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(GameView view, [int? year, int? page]) {
     final Query query = FluentQuery
       .select()
@@ -130,6 +118,31 @@ class GameQuery {
       .from(GamePurchaseRelationData.table)
       .whereFields(GamePurchaseRelationData.table, GamePurchaseRelationData.gameField, GameEntityData.table, GameEntityData.idField);
     query.whereSubquery(countGamePurchaseQuery, 0);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameEntityData.table)
+      .where(GameEntityData.nameField, name, type: String, table: GameEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(GameView view, String name, int limit, [int? year]) {
+    final Query query = FluentQuery
+      .select()
+      .from(GameEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view, year);
+    query.where(GameEntityData.nameField, name, type: String, table: GameEntityData.table, operator: OperatorType.like);
 
     return query;
   }

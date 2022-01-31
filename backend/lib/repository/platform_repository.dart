@@ -134,6 +134,15 @@ class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
     );
 
   }
+
+  Future<List<PlatformEntity>> findFirstWithViewByName(PlatformView view, String name, int limit) {
+
+    final Query query = PlatformQuery.selectFirstInViewByNameLike(view, name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#endregion SEARCH
 
   //#region IMAGE

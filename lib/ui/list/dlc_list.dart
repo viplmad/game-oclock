@@ -19,6 +19,7 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   }) : super(
     key: key,
     themeColor: DLCTheme.primaryColour,
+    searchRouteName: dlcSearchRoute,
   );
 
   @override
@@ -55,7 +56,7 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
 
   @override
-  _DLCListBody itemListBodyBuilder({required List<DLC> items, required int viewIndex, required int viewYear, required void Function(DLC) onDelete, required ListStyle style, required ScrollController scrollController}) {
+  _DLCListBody itemListBodyBuilder({required List<DLC> items, required int viewIndex, required int? viewYear, required void Function(DLC) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _DLCListBody(
       items: items,
@@ -74,7 +75,7 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
     Key? key,
     required List<DLC> items,
     required int viewIndex,
-    required int viewYear,
+    required int? viewYear,
     required void Function(DLC) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -87,7 +88,7 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
     style: style,
     scrollController: scrollController,
     detailRouteName: dlcDetailRoute,
-    localSearchRouteName: dlcLocalSearchRoute,
+    searchRouteName: dlcSearchRoute,
   );
 
   @override

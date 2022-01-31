@@ -11,9 +11,11 @@ import 'item_search.dart';
 abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends ItemSearchBloc<T> {
   ItemRemoteSearchBloc({
     required this.repository,
+    required this.viewIndex,
   }) : super();
 
   final R repository;
+  final int? viewIndex;
 
   Future<void> _checkConnection(Emitter<ItemSearchState> emit) async {
 

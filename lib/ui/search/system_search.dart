@@ -15,13 +15,20 @@ import 'search.dart';
 class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManagerBloc> {
   const SystemSearch({
     Key? key,
-  }) : super(key: key);
+    required bool onTapReturn,
+    required int? viewIndex,
+  }) : super(
+    key: key,
+    onTapReturn: onTapReturn,
+    viewIndex: viewIndex,
+  );
 
   @override
   SystemSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return SystemSearchBloc(
       collectionRepository: collectionRepository,
+      viewIndex: viewIndex,
     );
 
   }
@@ -36,7 +43,7 @@ class SystemSearch extends ItemSearch<System, SystemSearchBloc, SystemListManage
   }
 
   @override
-  _SystemSearchBody<SystemSearchBloc> itemSearchBodyBuilder({required void Function() Function(BuildContext, System) onTap, required bool allowNewButton}) {
+  _SystemSearchBody<SystemSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, System) onTap, required bool allowNewButton}) {
 
     return _SystemSearchBody<SystemSearchBloc>(
       onTap: onTap,
@@ -53,9 +60,6 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   }) : super(key: key, items: items);
 
   @override
-  void Function() onTap(BuildContext context, System item) => () {};
-
-  @override
   SystemListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
 
     return SystemListManagerBloc(
@@ -65,7 +69,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   }
 
   @override
-  _SystemSearchBody<ItemLocalSearchBloc<System>> itemSearchBodyBuilder({required void Function() Function(BuildContext, System) onTap, required bool allowNewButton}) {
+  _SystemSearchBody<ItemLocalSearchBloc<System>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, System) onTap, required bool allowNewButton}) {
 
     return _SystemSearchBody<ItemLocalSearchBloc<System>>(
       onTap: onTap,
@@ -78,7 +82,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
 class _SystemSearchBody<K extends ItemSearchBloc<System>> extends ItemSearchBody<System, K, SystemListManagerBloc> {
   const _SystemSearchBody({
     Key? key,
-    required void Function() Function(BuildContext, System) onTap,
+    required void Function()? Function(BuildContext, System) onTap,
     bool allowNewButton = false,
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 

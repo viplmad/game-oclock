@@ -16,7 +16,7 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
 import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
-import '../statistics/statistics.dart';
+import '../statistics/statistics_arguments.dart';
 import 'list.dart';
 
 
@@ -53,6 +53,8 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>> extends
   }) : super(
     key: key,
     themeColor: GameTheme.primaryColour,
+    searchRouteName: gameSearchRoute,
+    calendarRouteName: gameMultiCalendarRoute,
   );
 
   @override
@@ -231,7 +233,7 @@ abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>, S extends
   String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameString;
 
   @override
-  _GameListBody<K> itemListBodyBuilder({required List<Game> items, required int viewIndex, required int viewYear, required void Function(Game) onDelete, required ListStyle style, required ScrollController scrollController}) {
+  _GameListBody<K> itemListBodyBuilder({required List<Game> items, required int viewIndex, required int? viewYear, required void Function(Game) onDelete, required ListStyle style, required ScrollController scrollController}) {
 
     return _GameListBody<K>(
       items: items,
@@ -251,7 +253,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
     Key? key,
     required List<Game> items,
     required int viewIndex,
-    required int viewYear,
+    required int? viewYear,
     required void Function(Game) onDelete,
     required ListStyle style,
     required this.tabTitle,
@@ -265,9 +267,8 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
     style: style,
     scrollController: scrollController,
     detailRouteName: gameDetailRoute,
-    localSearchRouteName: gameLocalSearchRoute,
+    searchRouteName: gameSearchRoute,
     statisticsRouteName: gameStatisticsRoute,
-    calendarRouteName: gameMultiCalendarRoute,
   );
 
   final String tabTitle;
@@ -293,7 +294,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
   String itemTitle(Game item) => GameTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((!viewYear.isNegative)? ' (' + GameCollectionLocalisations.of(context).formatYear(viewYear) + ')' : '');
+  String viewTitle(BuildContext context) => GameTheme.views(context).elementAt(viewIndex) + ((viewYear != null)? ' (' + GameCollectionLocalisations.of(context).formatYear(viewYear!) + ')' : '');
 
   @override
   Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);

@@ -109,5 +109,14 @@ class PurchaseTypeRepository extends ItemRepository<PurchaseTypeEntity, Purchase
     );
 
   }
+
+  Future<List<PurchaseTypeEntity>> findFirstWithViewByName(PurchaseTypeView view, String name, int limit) {
+
+    final Query query = PurchaseTypeQuery.selectFirstInViewByNameLike(view, name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#endregion SEARCH
 }

@@ -72,18 +72,6 @@ class PlatformQuery {
     return query;
   }
 
-  static Query selectFirstByNameLike(String name, int limit) {
-    final Query query = FluentQuery
-      .select()
-      .from(PlatformEntityData.table)
-      .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.like)
-      .limit(limit);
-
-    addFields(query);
-
-    return query;
-  }
-
   static Query selectAllInView(PlatformView view, [int? page]) {
     final Query query = FluentQuery
       .select()
@@ -104,6 +92,31 @@ class PlatformQuery {
 
     addFields(query);
     _completeView(query, view);
+
+    return query;
+  }
+
+  static Query selectFirstByNameLike(String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PlatformEntityData.table)
+      .where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.like)
+      .limit(limit);
+
+    addFields(query);
+
+    return query;
+  }
+
+  static Query selectFirstInViewByNameLike(PlatformView view, String name, int limit) {
+    final Query query = FluentQuery
+      .select()
+      .from(PlatformEntityData.table)
+      .limit(limit);
+
+    addFields(query);
+    _completeView(query, view);
+    query.where(PlatformEntityData.nameField, name, type: String, table: PlatformEntityData.table, operator: OperatorType.like);
 
     return query;
   }

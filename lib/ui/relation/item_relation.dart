@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,8 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
-import '../detail/detail.dart';
+import '../detail/detail_arguments.dart';
+import '../search/search_arguments.dart';
 
 
 abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
@@ -23,8 +25,8 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
     this.limitHeight = true,
     this.isSingleList = false,
     this.detailRouteName = '',
-    this.searchRouteName = '',
-    this.localSearchRouteName = '',
+    required this.searchRouteName,
+    required this.localSearchRouteName,
   }) : super(key: key);
 
   final String relationName;
@@ -188,6 +190,9 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
       return Navigator.pushNamed<W>(
         context,
         searchRouteName,
+        arguments: const SearchArguments(
+          onTapReturn: true,
+        )
       );
     };
 
@@ -205,9 +210,10 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
 
   }
 
+  @nonVirtual
   void Function()? onTap(BuildContext context, W item) {
 
-    return () {
+    return detailRouteName.isNotEmpty? () {
       Navigator.pushNamed(
         context,
         detailRouteName,
@@ -224,7 +230,7 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
           },
         ),
       );
-    };
+    } : null;
 
   }
 

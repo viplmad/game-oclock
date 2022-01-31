@@ -39,8 +39,8 @@ abstract class _StoreRelationList<W extends Item> extends ItemRelationList<Store
     bool limitHeight = true,
     bool isSingleList = false,
     String detailRouteName = '',
-    String searchRouteName = '',
-    String localSearchRouteName = '',
+    required String searchRouteName,
+    required String localSearchRouteName,
   }) : super(
     key: key,
     relationName: relationName,

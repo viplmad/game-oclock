@@ -134,6 +134,15 @@ class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
     );
 
   }
+
+  Future<List<DLCEntity>> findFirstWithViewByName(DLCView dlcView, String name, int limit) {
+
+    final Query query = DLCQuery.selectFirstInViewByNameLike(dlcView, name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#endregion SEARCH
 
   //#region IMAGE

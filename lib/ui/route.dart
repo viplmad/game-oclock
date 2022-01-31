@@ -10,9 +10,14 @@ import 'homepage.dart';
 import 'settings/settings.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
-import 'statistics/statistics.dart';
 import 'calendar/calendar.dart';
+import 'statistics/statistics.dart';
 import 'theme/theme.dart';
+
+import 'detail/detail_arguments.dart';
+import 'search/search_arguments.dart';
+import 'calendar/calendar_arguments.dart';
+import 'statistics/statistics_arguments.dart';
 
 export 'route_constants.dart';
 
@@ -139,48 +144,82 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<Game>(
-        const GameSearch(),
+        GameSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+          viewYear: searchArguments.viewYear,
+        ),
         themeDataBuilder: GameTheme.themeData,
       );
 
     case dlcSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<DLC>(
-        const DLCSearch(),
+        DLCSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
         themeDataBuilder: DLCTheme.themeData,
       );
 
     case purchaseSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<Purchase>(
-        const PurchaseSearch(),
+        PurchaseSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+          viewYear: searchArguments.viewYear,
+        ),
         themeDataBuilder: PurchaseTheme.themeData,
       );
 
     case storeSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<Store>(
-        const StoreSearch(),
+        StoreSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
         themeDataBuilder: StoreTheme.themeData,
       );
 
     case platformSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<Platform>(
-        const PlatformSearch(),
+        PlatformSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
         themeDataBuilder: PlatformTheme.themeData,
       );
 
     case systemSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<System>(
-        const SystemSearch(),
+        SystemSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
       );
 
     case gameTagSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<GameTag>(
-        const GameTagSearch(),
+        GameTagSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
       );
 
     case purchaseTypeSearchRoute:
+      final SearchArguments searchArguments = settings.arguments as SearchArguments;
       return _pageRoute<PurchaseType>(
-        const PurchaseTypeSearch(),
+        PurchaseTypeSearch(
+          onTapReturn: searchArguments.onTapReturn,
+          viewIndex: searchArguments.viewIndex,
+        ),
       );
 
     case gameLocalSearchRoute:

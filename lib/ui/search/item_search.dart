@@ -11,13 +11,20 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
-import '../detail/detail.dart';
+import '../detail/detail_arguments.dart';
 
 
 abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
   const ItemSearch({
     Key? key,
+    required this.onTapReturn,
+    required this.viewIndex,
+    this.detailRouteName = '',
   }) : super(key: key);
+
+  final bool onTapReturn;
+  final int? viewIndex;
+  final String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +54,29 @@ abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSe
 
   }
 
-  void Function() _onTap(BuildContext context, T item) {
+  void Function()? _onTap(BuildContext context, T item) {
 
-    return () {
+    return onTapReturn? () {
       Navigator.maybePop<T>(context, item);
-    };
+    }
+    :
+    detailRouteName.isNotEmpty?
+      () {
+        Navigator.pushNamed(
+          context,
+          detailRouteName,
+          arguments: DetailArguments<T>(
+            item: item,
+          ),
+        );
+      } : null;
 
   }
 
   K searchBlocBuilder(GameCollectionRepository collectionRepository);
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, K, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, K, S> itemSearchBodyBuilder({required void Function()? Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
 abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
@@ -94,16 +112,16 @@ abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEve
 
       ],
       child: itemSearchBodyBuilder(
-        onTap: onTap,
+        onTap: _onTap,
         allowNewButton: false,
       ),
     );
 
   }
 
-  void Function() onTap(BuildContext context, T item) {
+  void Function()? _onTap(BuildContext context, T item) {
 
-    return () {
+    return detailRouteName.isNotEmpty? () {
       Navigator.pushNamed(
         context,
         detailRouteName,
@@ -111,13 +129,13 @@ abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEve
           item: item,
         ),
       );
-    };
+    } : null;
 
   }
 
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function() Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function()? Function(BuildContext, T) onTap, required bool allowNewButton});
 }
 
 abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatefulWidget {
@@ -127,7 +145,7 @@ abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, It
     this.allowNewButton = false,
   }) : super(key: key);
 
-  final void Function() Function(BuildContext, T) onTap;
+  final void Function()? Function(BuildContext, T) onTap;
   final bool allowNewButton;
 
   String typeName(BuildContext context);

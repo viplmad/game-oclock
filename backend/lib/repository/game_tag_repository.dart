@@ -109,5 +109,14 @@ class GameTagRepository extends ItemRepository<GameTagEntity, GameTagID> {
     );
 
   }
+
+  Future<List<GameTagEntity>> findFirstWithViewByName(GameTagView view, String name, int limit) {
+
+    final Query query = GameTagQuery.selectFirstInViewByNameLike(view, name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#region SEARCH
 }

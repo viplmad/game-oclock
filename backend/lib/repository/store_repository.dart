@@ -125,6 +125,15 @@ class StoreRepository extends ItemRepository<StoreEntity, StoreID> {
     );
 
   }
+
+  Future<List<StoreEntity>> findFirstWithViewByName(StoreView storeView, String name, int limit) {
+
+    final Query query = StoreQuery.selectFirstInViewByNameLike(storeView, name, limit);
+    return readItemList(
+      query: query,
+    );
+
+  }
   //#endregion SEARCH
 
   //#region IMAGE
