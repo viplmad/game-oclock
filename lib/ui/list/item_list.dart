@@ -437,8 +437,9 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
       Navigator.pushNamed(
         context,
         statisticsRouteName,
-        arguments: StatisticsArguments<T>(
-          items: items,
+        arguments: StatisticsArguments(
+          viewIndex: viewIndex,
+          viewYear: viewYear,
           viewTitle: viewTitle(context),
         ),
       );

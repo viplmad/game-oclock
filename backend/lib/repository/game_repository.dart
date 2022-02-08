@@ -89,63 +89,63 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findAllWithView(GameView gameView, [int? page]) {
+  Future<List<GameEntity>> findAllWithView(GameView view, [int? page]) {
 
-    final Query query = GameQuery.selectAllInView(gameView, null, page);
+    final Query query = GameQuery.selectAllInView(view, null, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findFirstWithView(GameView gameView, int limit, int? year) {
+  Future<List<GameEntity>> findFirstWithView(GameView view, int limit, int? year) {
 
-    final Query query = GameQuery.selectFirstInView(gameView, limit, year);
+    final Query query = GameQuery.selectFirstInView(view, limit, year);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllWithYearView(GameView gameView, int year, [int? page]) {
+  Future<List<GameEntity>> findAllWithYearView(GameView view, int year, [int? page]) {
 
-    final Query query = GameQuery.selectAllInView(gameView, year, page);
+    final Query query = GameQuery.selectAllInView(view, year, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllOwnedWithView(GameView gameView, [int? page]) {
+  Future<List<GameEntity>> findAllOwnedWithView(GameView view, [int? page]) {
 
-    final Query query = GameQuery.selectAllOwnedInView(gameView, null, page);
+    final Query query = GameQuery.selectAllOwnedInView(view, null, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllOwnedWithYearView(GameView gameView, int year, [int? page]) {
+  Future<List<GameEntity>> findAllOwnedWithYearView(GameView view, int year, [int? page]) {
 
-    final Query query = GameQuery.selectAllOwnedInView(gameView, year, page);
+    final Query query = GameQuery.selectAllOwnedInView(view, year, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllRomWithView(GameView gameView, [int? page]) {
+  Future<List<GameEntity>> findAllRomWithView(GameView view, [int? page]) {
 
-    final Query query = GameQuery.selectAllRomInView(gameView, null, page);
+    final Query query = GameQuery.selectAllRomInView(view, null, page);
     return readItemList(
       query: query,
     );
 
   }
 
-  Future<List<GameEntity>> findAllRomWithYearView(GameView gameView, int year, [int? page]) {
+  Future<List<GameEntity>> findAllRomWithYearView(GameView view, int year, [int? page]) {
 
-    final Query query = GameQuery.selectAllRomInView(gameView, year, page);
+    final Query query = GameQuery.selectAllRomInView(view, year, page);
     return readItemList(
       query: query,
     );
@@ -251,9 +251,9 @@ class GameRepository extends ItemRepository<GameEntity, GameID> {
 
   }
 
-  Future<List<GameEntity>> findFirstWithViewByName(GameView gameView, String name, int limit, int? year) {
+  Future<List<GameEntity>> findFirstWithViewByName(GameView view, String name, int limit, int? year) {
 
-    final Query query = GameQuery.selectFirstInViewByNameLike(gameView, name, limit, year);
+    final Query query = GameQuery.selectFirstInViewByNameLike(view, name, limit, year);
     return readItemList(
       query: query,
     );

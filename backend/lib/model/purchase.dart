@@ -1,4 +1,4 @@
-import 'model.dart' show Item, ItemImage, ItemData, YearData;
+import 'model.dart' show Item, ItemImage;
 
 
 class Purchase extends Item {
@@ -80,7 +80,7 @@ class Purchase extends Item {
   }
 }
 
-class PurchasesData extends ItemData<Purchase> {
+/* class PurchasesData extends ItemData<Purchase> {
   PurchasesData(List<Purchase> items)
       : itemsWithoutPromotion = items.where((Purchase item) => item.price > 0).toList(growable: false),
         years = (items.map<int>((Purchase item) => item.date?.year?? -1).toSet()..removeWhere((int year) => year == -1)).toList(growable: false)..sort(),
@@ -199,4 +199,4 @@ class PurchasesData extends ItemData<Purchase> {
     );
 
   }
-}
+} */

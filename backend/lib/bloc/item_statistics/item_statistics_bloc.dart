@@ -3,14 +3,18 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show ItemStatistics;
+import 'package:backend/repository/repository.dart' show StatisticsRepository;
 
+import '../bloc_utils.dart';
 import 'item_statistics.dart';
 
 
-abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
+abstract class ItemStatisticsBloc<GS extends ItemStatistics, YS extends ItemStatistics, R extends StatisticsRepository> extends Bloc<ItemStatisticsEvent, ItemStatisticsState> {
   ItemStatisticsBloc({
-    required this.items,
+    required this.viewIndex,
+    required this.viewYear,
+    required this.repository,
   }) : super(ItemStatisticsLoading()) {
 
     on<LoadGeneralItemStatistics>(_mapLoadGeneralToState);
@@ -18,9 +22,19 @@ abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends
 
   }
 
-  final List<T> items;
+  final int viewIndex;
+  final int? viewYear;
+  final R repository;
+
+  Future<void> _checkConnection(Emitter<ItemStatisticsState> emit) async {
+
+    await BlocUtils.checkConnection<ItemStatisticsState, ItemStatisticsNotLoaded>(repository, emit, (final String error) => ItemStatisticsNotLoaded(error));
+
+  }
 
   void _mapLoadGeneralToState(LoadGeneralItemStatistics event, Emitter<ItemStatisticsState> emit) async {
+
+    await _checkConnection(emit);
 
     emit(
       ItemStatisticsLoading(),
@@ -28,9 +42,9 @@ abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends
 
     try {
 
-      final D itemData = await getGeneralItemData();
+      final GS itemData = await getGeneralItemData();
       emit(
-        ItemGeneralStatisticsLoaded<T, D>(itemData),
+        ItemGeneralStatisticsLoaded<GS>(itemData),
       );
 
     } catch (e) {
@@ -45,15 +59,17 @@ abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends
 
   void _mapLoadYearToState(LoadYearItemStatistics event, Emitter<ItemStatisticsState> emit) async {
 
+    await _checkConnection(emit);
+
     emit(
       ItemStatisticsLoading(),
     );
 
     try {
 
-      final D itemData = await getItemData(event);
+      final YS itemData = await getYearItemData(event);
       emit(
-        ItemYearStatisticsLoaded<T, D>(
+        ItemYearStatisticsLoaded<YS>(
           itemData,
           event.year,
         ),
@@ -70,7 +86,7 @@ abstract class ItemStatisticsBloc<T extends Item, D extends ItemData<T>> extends
   }
 
   @protected
-  Future<D> getGeneralItemData();
+  Future<GS> getGeneralItemData();
   @protected
-  Future<D> getItemData(LoadYearItemStatistics event);
+  Future<YS> getYearItemData(LoadYearItemStatistics event);
 }

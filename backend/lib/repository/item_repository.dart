@@ -6,23 +6,16 @@ import 'package:backend/connector/connector.dart' show ItemConnector, ImageConne
 
 import 'package:backend/utils/empty_result_set_exception.dart';
 
+import 'repository_utils.dart';
+import 'base_repository.dart';
 
-abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
-  const ItemRepository(this.itemConnector, this.imageConnector, {
-    required this.recordName,
-  });
 
-  final ItemConnector itemConnector;
+abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends BaseRepository {
+  const ItemRepository(ItemConnector itemConnector, this.imageConnector, {
+    required String recordName,
+  }) : super(itemConnector, recordName: recordName);
+
   final ImageConnector imageConnector;
-  final String recordName;
-
-  Future<Object?> open() => itemConnector.open();
-  Future<Object?> close() => itemConnector.close();
-
-  bool isOpen() => itemConnector.isOpen();
-  bool isClosed() => itemConnector.isClosed();
-
-  void reconnect() => itemConnector.reconnect();
 
   T entityFromMap(Map<String, Object?> map);
   ID idFromMap(Map<String, Object?> map);
@@ -45,7 +38,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
   }
 
   // Utils
-  @protected
+  @nonVirtual
   Future<T> createItem({required Query query}) async {
 
     final ID? id = await itemConnector.execute(query)
@@ -60,7 +53,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T> readItem({required Query query}) {
 
     return itemConnector.execute(query)
@@ -68,7 +61,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T?> readItemNullable({required Query query}) {
 
     return itemConnector.execute(query)
@@ -76,7 +69,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<List<T>> readItemList({required Query query}) {
 
     return itemConnector.execute(query)
@@ -84,7 +77,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T> updateItem({required Query query, required ID id}) async {
 
     await itemConnector.execute(query);
@@ -92,7 +85,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T> setItemImage({required String uploadImagePath, required String initialImageName, required String? oldImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     if(oldImageName != null) {
@@ -115,7 +108,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T> renameItemImage({required String oldImageName, required String newImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     final String imageName = await imageConnector.rename(
@@ -131,7 +124,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
 
   }
 
-  @protected
+  @nonVirtual
   Future<T> deleteItemImage({required String imageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
     await imageConnector.delete(
@@ -157,7 +150,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
     final List<T> entities = <T>[];
 
     for (final Map<String, Map<String, Object?>> manyMap in results) {
-      final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(manyMap, recordName);
+      final Map<String, Object?> map = RepositoryUtils.combineMaps(manyMap, recordName);
       final T entity = entityFromMap(map);
 
       entities.add(entity);
@@ -186,28 +179,10 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> {
     ID? id;
 
     if(results.isNotEmpty) {
-      final Map<String, Object?> map = ItemRepositoryUtils.combineMaps(results.first, recordName);
+      final Map<String, Object?> map = RepositoryUtils.combineMaps(results.first, recordName);
       id = idFromMap(map);
     }
 
     return id;
-  }
-}
-
-class ItemRepositoryUtils {
-  ItemRepositoryUtils._();
-
-  static Map<String, Object?> combineMaps(Map<String, Map<String, Object?>> manyMap, String primaryTableName) {
-    final Map<String, Object?> combinedMaps = <String, Object?>{};
-
-    manyMap.forEach((String table, Map<String, Object?> map) {
-
-      if(table.isEmpty || table == primaryTableName) {
-        combinedMaps.addAll( map );
-      }
-
-    });
-
-    return combinedMaps;
   }
 }

@@ -107,17 +107,17 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameStatisticsRoute:
-      final GameStatisticsArguments statisticsArguments = settings.arguments as GameStatisticsArguments;
+      final StatisticsArguments statisticsArguments = settings.arguments as StatisticsArguments;
       return _pageRoute(
-        GameStatistics(
-          items: statisticsArguments.items,
+        GameStatisticsView(
+          viewIndex: statisticsArguments.viewIndex,
+          viewYear: statisticsArguments.viewYear,
           viewTitle: statisticsArguments.viewTitle,
-          tabTitle: statisticsArguments.tabTitle,
         ),
         themeDataBuilder: GameTheme.themeData,
       );
 
-    case purchaseStatisticsRoute:
+    /* case purchaseStatisticsRoute:
       final StatisticsArguments<Purchase> statisticsArguments = settings.arguments as StatisticsArguments<Purchase>;
       return _pageRoute(
         PurchaseStatistics(
@@ -125,7 +125,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           viewTitle: statisticsArguments.viewTitle,
         ),
         themeDataBuilder: PurchaseTheme.themeData,
-      );
+      ); */
 
     case gameSingleCalendarRoute:
       final SingleGameCalendarArguments gameCalendarArguments = settings.arguments as SingleGameCalendarArguments;

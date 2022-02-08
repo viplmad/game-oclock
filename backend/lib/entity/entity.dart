@@ -21,3 +21,5 @@ export 'game_tag_entity.dart';
 export 'purchase_type_entity.dart';
 
 export 'game_with_logs_entity.dart';
+
+export 'game_statistics_entity.dart';

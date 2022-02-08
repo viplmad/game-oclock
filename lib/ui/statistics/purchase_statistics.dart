@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart';
 
@@ -350,4 +350,4 @@ class _PurchaseStatisticsBody extends ItemStatisticsBody<Purchase, PurchasesData
     );
   }
   //#endregion Year
-}
+} */

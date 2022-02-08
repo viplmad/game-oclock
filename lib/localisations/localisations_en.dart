@@ -323,7 +323,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get totalGamesPlayedString => 'Total played $gamesString';
   @override
-  String get sumTimeString => 'Total $timeLogsFieldString';
+  String get totalTimeString => 'Total $timeLogsFieldString';
   @override
   String get avgTimeString => 'Average $timeLogsFieldString';
   @override

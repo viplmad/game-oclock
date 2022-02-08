@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show ItemStatistics;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameStatisticsRepository;
 
 import 'package:backend/bloc/item_statistics/item_statistics.dart';
 
@@ -12,39 +13,45 @@ import '../common/statistics_histogram.dart';
 import '../common/year_picker_dialog.dart';
 
 
-abstract class ItemStatistics<T extends Item, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
-  const ItemStatistics({
+abstract class ItemStatisticsView<GS extends ItemStatistics, YS extends ItemStatistics, K extends ItemStatisticsBloc<GS, YS, GameStatisticsRepository>> extends StatelessWidget {
+  const ItemStatisticsView({
     Key? key,
-    required this.items,
+    required this.viewIndex,
+    required this.viewYear,
     required this.viewTitle,
   }) : super(key: key);
 
-  final List<T> items;
+  final int viewIndex;
+  final int? viewYear;
   final String viewTitle;
 
   @override
   Widget build(BuildContext context) {
 
+    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+
     return BlocProvider<K>(
       create: (BuildContext context) {
-        return statisticsBlocBuilder()..add(LoadGeneralItemStatistics());
+        return statisticsBlocBuilder(_collectionRepository)..add(LoadGeneralItemStatistics());
       },
       child: statisticsBodyBuilder(),
     );
 
   }
 
-  K statisticsBlocBuilder();
+  K statisticsBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemStatisticsBody<T, D, K> statisticsBodyBuilder();
+  ItemStatisticsBody<GS, YS, K> statisticsBodyBuilder();
 }
 
-abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K extends ItemStatisticsBloc<T, D>> extends StatelessWidget {
+abstract class ItemStatisticsBody<GS extends ItemStatistics, YS extends ItemStatistics, K extends ItemStatisticsBloc<GS, YS, GameStatisticsRepository>> extends StatelessWidget {
   const ItemStatisticsBody({
     Key? key,
+    required this.viewIndex,
     required this.viewTitle,
   }) : super(key: key);
 
+  final int viewIndex;
   final String viewTitle;
 
   @override
@@ -64,7 +71,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
           BlocBuilder<K, ItemStatisticsState>(
             builder: (BuildContext context, ItemStatisticsState state) {
               int? selectedYear;
-              if(state is ItemYearStatisticsLoaded<T, D>) {
+              if(state is ItemYearStatisticsLoaded<YS>) {
                 selectedYear = state.year;
               }
 
@@ -94,7 +101,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
       body: BlocBuilder<K, ItemStatisticsState>(
         builder: (BuildContext context, ItemStatisticsState state) {
 
-          if(state is ItemGeneralStatisticsLoaded<T, D>) {
+          if(state is ItemGeneralStatisticsLoaded<GS>) {
 
             return Column(
               children: <Widget>[
@@ -120,7 +127,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
             );
 
           }
-          if(state is ItemYearStatisticsLoaded<T, D>) {
+          if(state is ItemYearStatisticsLoaded<YS>) {
 
             return Column(
               children: <Widget>[
@@ -143,6 +150,13 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
                   ),
                 ),
               ],
+            );
+
+          }
+          if(state is ItemStatisticsNotLoaded) {
+
+            return Center(
+              child: Text(state.error),
             );
 
           }
@@ -236,7 +250,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
 
   }
 
-  List<String> formatIntervalLabels<N extends num>(List<N> intervals, String Function(N) formatValue) {
+  List<String> formatIntervalLabels<N extends num>(Iterable<N> intervals, String Function(N) formatValue) {
     final List<String> labels = List<String>.filled(intervals.length - 1, '');
     int index = 0;
 
@@ -252,7 +266,7 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
     return labels;
   }
 
-  List<String> formatIntervalLabelsEqual<N extends num>(List<N> intervals, String Function(N) formatValue) {
+  List<String> formatIntervalLabelsEqual<N extends num>(Iterable<N> intervals, String Function(N) formatValue) {
 
     return intervals.map<String>(formatValue).toList(growable: false);
 
@@ -339,8 +353,8 @@ abstract class ItemStatisticsBody<T extends Item, D extends ItemData<T>, K exten
   String typesName(BuildContext context);
   String fromYearTitle(BuildContext context, int year);
 
-  List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, D data);
-  List<Widget> statisticsYearFieldsBuilder(BuildContext context, D data);
+  List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, GS data);
+  List<Widget> statisticsYearFieldsBuilder(BuildContext context, YS data);
 }
 
 class StatisticsField extends StatelessWidget {

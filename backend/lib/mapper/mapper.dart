@@ -9,3 +9,5 @@ export 'store_mapper.dart';
 export 'system_mapper.dart';
 export 'game_tag_mapper.dart';
 export 'purchase_type_mapper.dart';
+
+export 'game_statistics_mapper.dart';

@@ -5,6 +5,7 @@ import 'package:backend/entity/entity.dart' show GameEntity, GameEntityData, Gam
 
 import './query/query.dart' show GameTimeLogQuery;
 import 'item_repository.dart';
+import 'repository_utils.dart';
 
 
 class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLogID> {
@@ -98,7 +99,7 @@ class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLo
       final Map<String, Object?> gameMap = manyMap[GameEntityData.table]!;
       final GameEntity gameEntity = GameEntity.fromMap(gameMap);
 
-      final Map<String, Object?> timeLogMap = ItemRepositoryUtils.combineMaps(manyMap, GameTimeLogEntityData.table);
+      final Map<String, Object?> timeLogMap = RepositoryUtils.combineMaps(manyMap, GameTimeLogEntityData.table);
       final GameTimeLogEntity timeLogEntity = GameTimeLogEntity.fromMap(timeLogMap);
 
       GameWithLogsEntity entity;

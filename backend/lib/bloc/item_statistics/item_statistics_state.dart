@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show ItemStatistics;
 
 
 abstract class ItemStatisticsState extends Equatable {
@@ -12,10 +12,10 @@ abstract class ItemStatisticsState extends Equatable {
 
 class ItemStatisticsLoading extends ItemStatisticsState {}
 
-class ItemGeneralStatisticsLoaded<T extends Item, D extends ItemData<T>> extends ItemStatisticsState {
+class ItemGeneralStatisticsLoaded<GS extends ItemStatistics> extends ItemStatisticsState {
   const ItemGeneralStatisticsLoaded(this.itemData);
 
-  final D itemData;
+  final GS itemData;
 
   @override
   List<Object> get props => <Object>[itemData];
@@ -26,10 +26,10 @@ class ItemGeneralStatisticsLoaded<T extends Item, D extends ItemData<T>> extends
       ' }';
 }
 
-class ItemYearStatisticsLoaded<T extends Item, D extends ItemData<T>> extends ItemStatisticsState {
+class ItemYearStatisticsLoaded<YS extends ItemStatistics> extends ItemStatisticsState {
   const ItemYearStatisticsLoaded(this.itemData, this.year);
 
-  final D itemData;
+  final YS itemData;
   final int year;
 
   @override

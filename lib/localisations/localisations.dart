@@ -142,7 +142,7 @@ abstract class GameCollectionLocalisations {
   String gamesFromYearString(int year);
   String get totalGamesString;
   String get totalGamesPlayedString;
-  String get sumTimeString;
+  String get totalTimeString;
   String get avgTimeString;
   String get avgRatingString;
   String get countByStatusString;

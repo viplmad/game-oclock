@@ -280,10 +280,10 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>> extends ItemLi
       Navigator.pushNamed(
         context,
         statisticsRouteName,
-        arguments: GameStatisticsArguments(
-          items: items,
+        arguments: StatisticsArguments(
+          viewIndex: viewIndex,
+          viewYear: viewYear,
           viewTitle: viewTitle(context),
-          tabTitle: tabTitle,
         ),
       );
     };

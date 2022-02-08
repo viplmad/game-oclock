@@ -15,3 +15,4 @@ export 'game_tag.dart';
 export 'purchase_type.dart';
 
 export 'game_with_logs.dart';
+export 'game_statistics.dart';

@@ -18,6 +18,8 @@ class GameCollectionRepository {
   late final GameTagRepository gameTagRepository;
   late final PurchaseTypeRepository purchaseTypeRepository;
 
+  late final GameStatisticsRepository gameStatisticsRepository;
+
   void connect(ItemConnector itemConnector, ImageConnector imageConnector) {
     gameRepository = GameRepository(itemConnector, imageConnector);
     gameFinishRepository = GameFinishRepository(itemConnector, imageConnector);
@@ -30,6 +32,8 @@ class GameCollectionRepository {
     systemRepository = SystemRepository(itemConnector, imageConnector);
     gameTagRepository = GameTagRepository(itemConnector, imageConnector);
     purchaseTypeRepository = PurchaseTypeRepository(itemConnector, imageConnector);
+
+    gameStatisticsRepository = GameStatisticsRepository(itemConnector);
   }
 
   Future<Object?> open() => gameRepository.open();

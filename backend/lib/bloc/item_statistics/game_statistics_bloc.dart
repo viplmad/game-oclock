@@ -1,25 +1,33 @@
-import 'package:backend/model/model.dart';
+import 'package:backend/entity/entity.dart' show GameGeneralStatisticsEntity, GameView, GameYearStatisticsEntity;
+import 'package:backend/model/model.dart' show GameGeneralStatistics, GameYearStatistics;
+import 'package:backend/mapper/mapper.dart' show GameStatisticsMapper;
+import 'package:backend/repository/repository.dart' show GameCollectionRepository, GameStatisticsRepository;
 
 import 'item_statistics.dart';
 
 
-class GameStatisticsBloc extends ItemStatisticsBloc<Game, GamesData> {
+class GameStatisticsBloc extends ItemStatisticsBloc<GameGeneralStatistics, GameYearStatistics, GameStatisticsRepository> {
   GameStatisticsBloc({
-    required List<Game> items,
-  }) : super(items: items);
+    required int viewIndex,
+    required int? viewYear,
+    required GameCollectionRepository collectionRepository,
+  }) : super(viewIndex: viewIndex, viewYear: viewYear, repository: collectionRepository.gameStatisticsRepository);
 
   @override
-  Future<GamesData> getGeneralItemData() {
+  Future<GameGeneralStatistics> getGeneralItemData() {
 
-    return Future<GamesData>.value(GamesData(items));
+    final GameView view = GameView.values[viewIndex];
+    final Future<GameGeneralStatisticsEntity> entityFuture = repository.findGameStatistics(view, viewYear);
+    return GameStatisticsMapper.futureGeneralEntityToModel(entityFuture);
 
   }
 
   @override
-  Future<GamesData> getItemData(LoadYearItemStatistics event) {
+  Future<GameYearStatistics> getYearItemData(LoadYearItemStatistics event) {
 
-    final List<Game> yearItems = items.where((Game item) => item.firstFinishDate?.year == event.year).toList(growable: false);
-    return Future<GamesData>.value(GamesData(yearItems));
+    final GameView view = GameView.values[viewIndex];
+    final Future<GameYearStatisticsEntity> entityFuture = repository.findGameStatisticsFinishYear(view, event.year, viewYear);
+    return GameStatisticsMapper.futureYearEntityToModel(entityFuture);
 
   }
 }
