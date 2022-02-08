@@ -117,16 +117,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         themeDataBuilder: GameTheme.themeData,
       );
 
-    /* case purchaseStatisticsRoute:
-      final StatisticsArguments<Purchase> statisticsArguments = settings.arguments as StatisticsArguments<Purchase>;
-      return _pageRoute(
-        PurchaseStatistics(
-          items: statisticsArguments.items,
-          viewTitle: statisticsArguments.viewTitle,
-        ),
-        themeDataBuilder: PurchaseTheme.themeData,
-      ); */
-
     case gameSingleCalendarRoute:
       final SingleGameCalendarArguments gameCalendarArguments = settings.arguments as SingleGameCalendarArguments;
       return _pageRoute(

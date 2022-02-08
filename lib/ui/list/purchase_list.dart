@@ -121,7 +121,6 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
     scrollController: scrollController,
     detailRouteName: purchaseDetailRoute,
     searchRouteName: purchaseSearchRoute,
-    statisticsRouteName: purchaseStatisticsRoute,
   );
 
   @override
