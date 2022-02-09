@@ -25,6 +25,9 @@ abstract class GameCollectionLocalisations {
   String get updatedItemConnectionString;
   String get updatedImageConnectionString;
   String get unableToUpdateConnectionString;
+  String get deletedItemConnectionString;
+  String get deletedImageConnectionString;
+  String get unableToDeleteConnectionString;
   String get saveString;
   String get itemConnectionString;
   String get imageConnectionString;
@@ -180,29 +183,6 @@ abstract class GameCollectionLocalisations {
   String get totalMoneySavedString;
   String get realValueString;
   String get percentageSavedString;
-
-  String purchasesFromYearString(int year);
-  String get totalPurchasesString;
-  String get totalPurchasesWithoutPromotionString;
-  String get sumPriceString;
-  String get avgPriceString;
-  String get avgPriceWithoutPromotionString;
-  String get sumExternalCreditString;
-  String get avgExternalCreditString;
-  String get sumOriginalPriceString;
-  String get avgOriginalPriceString;
-  String get avgDiscountString;
-  String get avgDiscountWithoutPromotionString;
-  String get sumSavedString;
-  String get avgSavedString;
-  String get countByYearString;
-  String get sumPriceByYearString;
-  String get sumOriginalPriceByYearString;
-  String get countByMonthString;
-  String get countByPriceString;
-  String get sumPriceByMonthString;
-  String get sumOriginalPriceByMonthString;
-  String get sumSavedByMonthString;
   //#endregion Purchase
 
   //#region Store

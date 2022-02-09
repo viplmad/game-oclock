@@ -53,3 +53,21 @@ class RepositorySettingsNotUpdated extends RepositorySettingsManagerState {
       'error: $error'
       ' }';
 }
+
+class ItemConnectionSettingsDeleted extends RepositorySettingsManagerState {}
+
+class ImageConnectionSettingsDeleted extends RepositorySettingsManagerState {}
+
+class RepositorySettingsNotDeleted extends RepositorySettingsManagerState {
+  const RepositorySettingsNotDeleted(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'RepositorySettingsNotDeleted { '
+      'error: $error'
+      ' }';
+}

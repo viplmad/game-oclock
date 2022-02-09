@@ -287,7 +287,7 @@ class _HomepageDrawer extends StatelessWidget {
             leading: const Icon(Icons.settings),
             title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
             onTap: () {
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 repositorySettingsRoute,
               );

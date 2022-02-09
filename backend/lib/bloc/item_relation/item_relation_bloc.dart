@@ -26,6 +26,8 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
 
   }
 
+  static const String _errorRelationNotFound = 'Relation does not exist';
+
   final ID id;
   final GameCollectionRepository collectionRepository;
   final ItemRelationManagerBloc<T, ID, W> managerBloc;
@@ -142,7 +144,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object, W extends Ite
   @protected
   Future<List<W>> getRelationStream() {
 
-    return Future<List<W>>.error('Relation does not exist');
+    return Future<List<W>>.error(_errorRelationNotFound);
 
   }
 }

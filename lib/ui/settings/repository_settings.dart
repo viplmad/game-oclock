@@ -114,6 +114,33 @@ class _RepositorySettingsBody extends StatelessWidget {
             ),
           );
         }
+        if(state is ItemConnectionSettingsDeleted) {
+          final String message = GameCollectionLocalisations.of(context).deletedItemConnectionString;
+          showSnackBar(
+            context,
+            message: message
+          );
+        }
+        if(state is ImageConnectionSettingsDeleted) {
+          final String message = GameCollectionLocalisations.of(context).deletedImageConnectionString;
+          showSnackBar(
+            context,
+            message: message
+          );
+        }
+        if(state is RepositorySettingsNotDeleted) {
+          final String message = GameCollectionLocalisations.of(context).unableToDeleteConnectionString;
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
       },
       child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
         builder: (BuildContext context, RepositorySettingsState state) {
@@ -202,34 +229,63 @@ class _RepositorySettingsBody extends StatelessWidget {
       value: ItemConnectorType.postgres,
       onChanged: (_) {
 
-        showDialog<PostgresInstance>(
-          context: context,
-          builder: (BuildContext context) {
-            final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
-
-            return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-              bloc: detailBloc..add(const LoadItemSettingsDetail(ItemConnectorType.postgres)),
-              builder: (BuildContext context, RepositorySettingsDetailState state) {
-                if(state is RepositorySettingsDetailLoaded) {
-                  return PostgresTextDialog(
-                    instance: state.instance as PostgresInstance?,
-                  );
-                }
-
-                return const Dialog(child: CircularProgressIndicator());
-              },
-            );
-          },
-        ).then((PostgresInstance? instance) {
-          if(instance != null) {
-            BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-              UpdateItemConnectionSettings(ItemConnectorType.postgres, instance),
-            );
-          }
-        });
+        _showPostgresDialog(context);
 
       },
+      secondary: radioGroup == ItemConnectorType.postgres? Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <IconButton>[
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+
+              _showPostgresDialog(context);
+
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+
+              BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+                DeleteItemConnectionSettings(),
+              );
+
+            },
+          ),
+        ],
+      ) : null,
     );
+  }
+
+  void _showPostgresDialog(BuildContext context) {
+
+    showDialog<PostgresInstance>(
+      context: context,
+      builder: (BuildContext context) {
+        final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
+
+        return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
+          bloc: detailBloc..add(const LoadItemSettingsDetail(ItemConnectorType.postgres)),
+          builder: (BuildContext context, RepositorySettingsDetailState state) {
+            if(state is RepositorySettingsDetailLoaded) {
+              return PostgresTextDialog(
+                instance: state.instance as PostgresInstance?,
+              );
+            }
+
+            return const Dialog(child: CircularProgressIndicator());
+          },
+        );
+      },
+    ).then((PostgresInstance? instance) {
+      if(instance != null) {
+        BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+          UpdateItemConnectionSettings(ItemConnectorType.postgres, instance),
+        );
+      }
+    });
+
   }
 
   RadioListTile<ItemConnectorType> _localItemRadio(BuildContext context, ItemConnectorType? radioGroup) {
@@ -248,34 +304,63 @@ class _RepositorySettingsBody extends StatelessWidget {
       value: ImageConnectorType.cloudinary,
       onChanged: (_) {
 
-        showDialog<CloudinaryInstance>(
-          context: context,
-          builder: (BuildContext context) {
-            final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
-
-            return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-              bloc: detailBloc..add(const LoadImageSettingsDetail(ImageConnectorType.cloudinary)),
-              builder: (BuildContext context, RepositorySettingsDetailState state) {
-                if(state is RepositorySettingsDetailLoaded) {
-                  return CloudinaryTextDialog(
-                    instance: state.instance as CloudinaryInstance?,
-                  );
-                }
-
-                return const Dialog(child: CircularProgressIndicator());
-              },
-            );
-          },
-        ).then((CloudinaryInstance? instance) {
-          if(instance != null) {
-            BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-              UpdateImageConnectionSettings(ImageConnectorType.cloudinary, instance),
-            );
-          }
-        });
+        _showCloudinaryDialog(context);
 
       },
+      secondary: radioGroup == ImageConnectorType.cloudinary? Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <IconButton>[
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+
+              _showCloudinaryDialog(context);
+
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+
+              BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+                DeleteImageConnectionSettings(),
+              );
+
+            },
+          ),
+        ],
+      ) : null,
     );
+  }
+
+  void _showCloudinaryDialog(BuildContext context) {
+
+    showDialog<CloudinaryInstance>(
+      context: context,
+      builder: (BuildContext context) {
+        final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
+
+        return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
+          bloc: detailBloc..add(const LoadImageSettingsDetail(ImageConnectorType.cloudinary)),
+          builder: (BuildContext context, RepositorySettingsDetailState state) {
+            if(state is RepositorySettingsDetailLoaded) {
+              return CloudinaryTextDialog(
+                instance: state.instance as CloudinaryInstance?,
+              );
+            }
+
+            return const Dialog(child: CircularProgressIndicator());
+          },
+        );
+      },
+    ).then((CloudinaryInstance? instance) {
+      if(instance != null) {
+        BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+          UpdateImageConnectionSettings(ImageConnectorType.cloudinary, instance),
+        );
+      }
+    });
+
   }
 
   RadioListTile<ImageConnectorType> _localImageRadio(BuildContext context, ImageConnectorType? radioGroup) {

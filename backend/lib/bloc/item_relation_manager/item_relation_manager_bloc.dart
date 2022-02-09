@@ -19,6 +19,8 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
 
   }
 
+  static const String _errorRelationNotFound = 'Relation does not exist';
+
   final ID id;
   final GameCollectionRepository collectionRepository;
 
@@ -82,7 +84,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
   @protected
   Future<Object?> addRelationFuture(AddItemRelation<W> event) {
 
-    return Future<Object?>.error('Relation does not exist');
+    return Future<Object?>.error(_errorRelationNotFound);
 
   }
 
@@ -90,7 +92,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object, W exte
   @protected
   Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
 
-    return Future<Object?>.error('Relation does not exist');
+    return Future<Object?>.error(_errorRelationNotFound);
 
   }
 }

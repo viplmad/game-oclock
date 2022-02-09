@@ -31,6 +31,12 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String unableToUpdateConnectionString = 'No ha sido posible actualizar la conexión';
   @override
+  final String deletedItemConnectionString = 'Conexión de ítem eliminada';
+  @override
+  final String deletedImageConnectionString = 'Conexión de imagen eliminada';
+  @override
+  final String unableToDeleteConnectionString = 'No ha sido posible eliminar la conexión';
+  @override
   final String saveString = 'Guardar';
   @override
   final String itemConnectionString = 'Conexión de ítem';
@@ -84,7 +90,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String openString = 'Abrir';
   @override
   String addedString(String typeString) {
-    return 'Añadido $typeString';
+    return '$typeString añadido';
   }
   @override
   String unableToAddString(String typeString) {
@@ -92,20 +98,20 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   }
   @override
   String deletedString(String typeString) {
-    return 'Borrado $typeString';
+    return '$typeString eliminado';
   }
   @override
   String unableToDeleteString(String typeString) {
-    return 'No ha sido posible borrar $typeString';
+    return 'No ha sido posible eliminar $typeString';
   }
 
   @override
-  final String deleteString = 'Borrar';
+  final String deleteString = 'Eliminar';
   @override
-  final String deleteButtonLabel = 'BORRAR';
+  final String deleteButtonLabel = 'ELIMINAR';
   @override
   String deleteDialogTitle(String itemString) {
-    return 'Estás seguro que quieres borrar $itemString?';
+    return 'Estás seguro que quieres eliminar $itemString?';
   }
   @override
   final String deleteDialogSubtitle = 'Esta acción es irreversible';
@@ -388,53 +394,6 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String realValueString = 'Valor real';
   @override
   final String percentageSavedString = 'Porcentaje ahorrado';
-
-  @override
-  String purchasesFromYearString(int year) {
-    return 'De ' + formatYear(year);
-  }
-  @override
-  String get totalPurchasesString => '$purchasesString totales';
-  @override
-  String get totalPurchasesWithoutPromotionString => '$totalPurchasesString (sin promociones)';
-  @override
-  final String sumPriceString = 'Total gastado';
-  @override
-  final String avgPriceString = 'Media gastado';
-  @override
-  String get avgPriceWithoutPromotionString => '$avgPriceString (sin promociones)';
-  @override
-  String get sumExternalCreditString => '$externalCreditsFieldString total gastado';
-  @override
-  String get avgExternalCreditString => '$externalCreditsFieldString medio gastado';
-  @override
-  String get sumOriginalPriceString => '$originalPriceFieldString total';
-  @override
-  String get avgOriginalPriceString => '$originalPriceFieldString medio';
-  @override
-  String get avgDiscountString => '$discountFieldString medio';
-  @override
-  String get avgDiscountWithoutPromotionString => '$avgDiscountString (sin promociones)';
-  @override
-  final String sumSavedString = 'Total ahorrado';
-  @override
-  final String avgSavedString = 'Media ahorrado';
-  @override
-  String get countByYearString => 'Número de $purchasesString por año';
-  @override
-  final String sumPriceByYearString = 'Total gastado por año';
-  @override
-  String get sumOriginalPriceByYearString => '$originalPriceFieldString total por año';
-  @override
-  String get countByMonthString => 'Número de $purchasesString por mes';
-  @override
-  String get countByPriceString => 'Número de $purchasesString por $priceFieldString';
-  @override
-  final String sumPriceByMonthString = 'Total gastado por mes';
-  @override
-  String get sumOriginalPriceByMonthString => '$originalPriceFieldString total por mes';
-  @override
-  String get sumSavedByMonthString => 'Total ahorrado por mes';
   //#endregion Purchase
 
   //#region Store

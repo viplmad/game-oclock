@@ -25,11 +25,17 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String repositorySettingsString = 'Connection settings';
   @override
-  final String updatedItemConnectionString = 'Updated item connection';
+  final String updatedItemConnectionString = 'Item connection updated';
   @override
-  final String updatedImageConnectionString = 'Updated image connection';
+  final String updatedImageConnectionString = 'Image connection updated';
   @override
   final String unableToUpdateConnectionString = 'Unable to update connection';
+  @override
+  final String deletedItemConnectionString = 'Item connection deleted';
+  @override
+  final String deletedImageConnectionString = 'Image connection deleted';
+  @override
+  final String unableToDeleteConnectionString = 'Unable to delete connection';
   @override
   final String saveString = 'Save';
   @override
@@ -84,7 +90,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String openString = 'Open';
   @override
   String addedString(String typeString) {
-    return 'Added $typeString';
+    return '$typeString added';
   }
   @override
   String unableToAddString(String typeString) {
@@ -92,7 +98,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String deletedString(String typeString) {
-    return 'Deleted $typeString';
+    return '$typeString deleted';
   }
   @override
   String unableToDeleteString(String typeString) {
@@ -388,53 +394,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String realValueString = 'Real Value';
   @override
   final String percentageSavedString = 'Percentage Saved';
-
-  @override
-  String purchasesFromYearString(int year) {
-    return 'From ' + formatYear(year);
-  }
-  @override
-  String get totalPurchasesString => 'Total $purchasesString';
-  @override
-  String get totalPurchasesWithoutPromotionString => '$totalPurchasesString (without Promotions)';
-  @override
-  final String sumPriceString = 'Total spent';
-  @override
-  final String avgPriceString = 'Average spent';
-  @override
-  String get avgPriceWithoutPromotionString => '$avgPriceString (without Promotions)';
-  @override
-  String get sumExternalCreditString => 'Total $externalCreditsFieldString spent';
-  @override
-  String get avgExternalCreditString => 'Average $externalCreditsFieldString spent';
-  @override
-  String get sumOriginalPriceString => 'Total $originalPriceFieldString';
-  @override
-  String get avgOriginalPriceString => 'Average $originalPriceFieldString';
-  @override
-  String get avgDiscountString => 'Average $discountFieldString';
-  @override
-  String get avgDiscountWithoutPromotionString => '$avgDiscountString (without Promotions)';
-  @override
-  final String sumSavedString = 'Total saved';
-  @override
-  final String avgSavedString = 'Average saved';
-  @override
-  String get countByYearString => 'Number of $purchasesString by year';
-  @override
-  final String sumPriceByYearString = 'Total spent by year';
-  @override
-  String get sumOriginalPriceByYearString => 'Total $originalPriceFieldString by year';
-  @override
-  String get countByMonthString => 'Number of $purchasesString by month';
-  @override
-  String get countByPriceString => 'Number of $purchasesString by $priceFieldString';
-  @override
-  final String sumPriceByMonthString = 'Total spent by month';
-  @override
-  String get sumOriginalPriceByMonthString => 'Total $originalPriceFieldString by month';
-  @override
-  String get sumSavedByMonthString => 'Total saved by month';
   //#endregion Purchase
 
   //#region Store
@@ -609,7 +568,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String searchInListString = 'Search in list';
   @override
   String linkedString(String typeString) {
-    return 'Linked $typeString';
+    return '$typeString linked';
   }
   @override
   String unableToLinkString(String typeString) {
@@ -617,7 +576,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   }
   @override
   String unlinkedString(String typeString) {
-    return 'Unlinked $typeString';
+    return '$typeString linked';
   }
   @override
   String unableToUnlinkString(String typeString) {

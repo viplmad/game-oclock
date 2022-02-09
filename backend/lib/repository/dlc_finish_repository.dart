@@ -8,7 +8,7 @@ import 'item_repository.dart';
 
 
 class DLCFinishRepository extends ItemRepository<DLCFinishEntity, DLCFinishID> {
-  const DLCFinishRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: DLCFinishEntityData.table);
+  const DLCFinishRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: DLCFinishEntityData.table);
 
   @override
   DLCFinishEntity entityFromMap(Map<String, Object?> map) => DLCFinishEntity.fromMap(map);

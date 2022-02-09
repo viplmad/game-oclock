@@ -9,7 +9,7 @@ import 'repository_utils.dart';
 
 
 class GameTimeLogRepository extends ItemRepository<GameTimeLogEntity, GameTimeLogID> {
-  const GameTimeLogRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameTimeLogEntityData.table);
+  const GameTimeLogRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: GameTimeLogEntityData.table);
 
   @override
   GameTimeLogEntity entityFromMap(Map<String, Object?> map) => GameTimeLogEntity.fromMap(map);

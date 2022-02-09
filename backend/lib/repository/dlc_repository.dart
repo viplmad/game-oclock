@@ -8,7 +8,7 @@ import 'item_repository.dart';
 
 
 class DLCRepository extends ItemRepository<DLCEntity, DLCID> {
-  const DLCRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: DLCEntityData.table);
+  const DLCRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: DLCEntityData.table);
 
   static const String _imagePrefix = 'header';
 

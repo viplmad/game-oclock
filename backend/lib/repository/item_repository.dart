@@ -15,7 +15,10 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
     required String recordName,
   }) : super(itemConnector, recordName: recordName);
 
-  final ImageConnector imageConnector;
+  static const String _errorCreation = 'Error during creation';
+  static const String _errorImageConnectorNotSet = 'Image connection not set';
+
+  final ImageConnector? imageConnector;
 
   T entityFromMap(Map<String, Object?> map);
   ID idFromMap(Map<String, Object?> map);
@@ -26,10 +29,11 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
   Future<T> update(T entity, T updatedEntity);
   Future<Object?> deleteById(ID id);
 
+  @nonVirtual
   String? getImageURI(String? imageName) {
 
-    return imageName != null?
-        imageConnector.getURI(
+    return imageName != null && imageConnector != null?
+        imageConnector!.getURI(
           tableName: recordName,
           imageFilename: imageName,
         )
@@ -48,7 +52,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
     if(id != null) {
       return findById(id);
     } else {
-      return Future<T>.error('Error during creation');
+      return Future<T>.error(_errorCreation);
     }
 
   }
@@ -88,14 +92,18 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
   @nonVirtual
   Future<T> setItemImage({required String uploadImagePath, required String initialImageName, required String? oldImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
+    if(imageConnector == null) {
+      return Future<T>.error(_errorImageConnectorNotSet);
+    }
+
     if(oldImageName != null) {
-      await imageConnector.delete(
+      await imageConnector!.delete(
         tableName: recordName,
         imageName: oldImageName,
       );
     }
 
-    final String imageName = await imageConnector.set(
+    final String imageName = await imageConnector!.set(
       imagePath: uploadImagePath,
       tableName: recordName,
       imageName: _getImageName(id, initialImageName),
@@ -111,7 +119,11 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
   @nonVirtual
   Future<T> renameItemImage({required String oldImageName, required String newImageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
-    final String imageName = await imageConnector.rename(
+    if(imageConnector == null) {
+      return Future<T>.error(_errorImageConnectorNotSet);
+    }
+
+    final String imageName = await imageConnector!.rename(
       tableName: recordName,
       oldImageName: oldImageName,
       newImageName: _getImageName(id, newImageName),
@@ -127,7 +139,11 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object> extends B
   @nonVirtual
   Future<T> deleteItemImage({required String imageName, required Query Function(ID, String?) queryBuilder, required ID id}) async {
 
-    await imageConnector.delete(
+    if(imageConnector == null) {
+      return Future<T>.error(_errorImageConnectorNotSet);
+    }
+
+    await imageConnector!.delete(
       tableName: recordName,
       imageName: imageName,
     );

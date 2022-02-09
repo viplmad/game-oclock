@@ -29,7 +29,7 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
       RepositorySettingsLoading(),
     );
 
-    final bool existsConnection = await RepositoryPreferences.existsConnection();
+    final bool existsConnection = await RepositoryPreferences.existsItemConnection();
     if(!existsConnection) {
 
       emit(
@@ -80,6 +80,14 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
 
       _mapUpdatedImageToEvent(managerState);
 
+    } else if(managerState is ItemConnectionSettingsDeleted) {
+
+      _mapDeletedItemToEvent();
+
+    } else if(managerState is ImageConnectionSettingsDeleted) {
+
+      _mapDeletedImageToEvent();
+
     }
 
   }
@@ -104,6 +112,31 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
       add(UpdateRepositorySettings(
         itemType,
         managerState.type,
+      ));
+    }
+
+  }
+
+  void _mapDeletedItemToEvent() {
+
+    if(state is RepositorySettingsLoaded) {
+      final ImageConnectorType? imageType = (state as RepositorySettingsLoaded).activeImageConnection;
+
+      add(UpdateRepositorySettings(
+        null,
+        imageType,
+      ));
+    }
+  }
+
+  void _mapDeletedImageToEvent() {
+
+    if(state is RepositorySettingsLoaded) {
+      final ItemConnectorType? itemType = (state as RepositorySettingsLoaded).activeItemConnection;
+
+      add(UpdateRepositorySettings(
+        itemType,
+        null,
       ));
     }
 

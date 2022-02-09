@@ -8,7 +8,7 @@ import 'item_repository.dart';
 
 
 class PlatformRepository extends ItemRepository<PlatformEntity, PlatformID> {
-  const PlatformRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: PlatformEntityData.table);
+  const PlatformRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: PlatformEntityData.table);
 
   static const String _imagePrefix = 'icon';
 

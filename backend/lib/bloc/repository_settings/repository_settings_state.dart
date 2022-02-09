@@ -14,7 +14,7 @@ class RepositorySettingsLoading extends RepositorySettingsState {}
 
 class RepositorySettingsLoaded extends RepositorySettingsState {
   const RepositorySettingsLoaded([this.activeItemConnection, this.activeImageConnection])
-    : ready = activeItemConnection != null && activeImageConnection != null;
+    : ready = activeItemConnection != null;
 
   final ItemConnectorType? activeItemConnection;
   final ImageConnectorType? activeImageConnection;

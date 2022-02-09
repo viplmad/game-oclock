@@ -20,7 +20,7 @@ class GameCollectionRepository {
 
   late final GameStatisticsRepository gameStatisticsRepository;
 
-  void connect(ItemConnector itemConnector, ImageConnector imageConnector) {
+  void connect(ItemConnector itemConnector, ImageConnector? imageConnector) {
     gameRepository = GameRepository(itemConnector, imageConnector);
     gameFinishRepository = GameFinishRepository(itemConnector, imageConnector);
     gameTimeLogRepository = GameTimeLogRepository(itemConnector, imageConnector);

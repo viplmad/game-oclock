@@ -8,7 +8,7 @@ import 'item_repository.dart';
 
 
 class GameRepository extends ItemRepository<GameEntity, GameID> {
-  const GameRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: GameEntityData.table);
+  const GameRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: GameEntityData.table);
 
   static const String _imagePrefix = 'header';
 

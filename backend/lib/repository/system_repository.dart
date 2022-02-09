@@ -8,7 +8,7 @@ import 'item_repository.dart';
 
 
 class SystemRepository extends ItemRepository<SystemEntity, SystemID> {
-  const SystemRepository(ItemConnector itemConnector, ImageConnector imageConnector) : super(itemConnector, imageConnector, recordName: SystemEntityData.table);
+  const SystemRepository(ItemConnector itemConnector, ImageConnector? imageConnector) : super(itemConnector, imageConnector, recordName: SystemEntityData.table);
 
   static const String _imagePrefix = 'icon';
 

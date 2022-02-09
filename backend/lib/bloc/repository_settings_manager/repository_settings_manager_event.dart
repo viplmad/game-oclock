@@ -41,3 +41,7 @@ class UpdateImageConnectionSettings extends RepositorySettingsManagerEvent {
       'instance: $instance'
       ' }';
 }
+
+class DeleteItemConnectionSettings extends RepositorySettingsManagerEvent {}
+
+class DeleteImageConnectionSettings extends RepositorySettingsManagerEvent {}

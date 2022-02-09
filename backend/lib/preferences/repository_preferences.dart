@@ -8,6 +8,8 @@ import 'package:backend/model/repository_type.dart';
 class RepositoryPreferences {
   const RepositoryPreferences._();
 
+  static const String _errorLocalTypeNotSupported = 'Local type not supported';
+
   static const String _typeItemConnectorKey = 'itemConnectorType';
   static const String _typeImageConnectorKey = 'imageConnectorType';
 
@@ -20,17 +22,16 @@ class RepositoryPreferences {
   static const String _cloudinaryImageConnectorValue = 'cloudinary';
   static const String _localImageConnectorValue = 'local';
 
-  static Future<bool> existsConnection() async {
+  static const String _emptyValue = 'empty';
 
-    final bool existsItem = await retrieveActiveItemConnectorType() != null;
-    final bool existsImage = await retrieveActiveImageConnectorType() != null;
+  static Future<bool> existsItemConnection() async {
 
-    return Future<bool>.value(existsItem && existsImage);
+    return await retrieveActiveItemConnectorType() != null;
 
   }
 
   //#region SET
-  static Future<bool> setActiveItemConnectorType(ItemConnectorType itemType) {
+  static Future<bool> setActiveItemConnectorType(ItemConnectorType? itemType) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -42,6 +43,8 @@ class RepositoryPreferences {
       case ItemConnectorType.local:
         value = _localItemConnectorValue;
         break;
+      default:
+        value = _emptyValue;
     }
 
     return sharedPreferences.setString(
@@ -51,7 +54,7 @@ class RepositoryPreferences {
 
   }
 
-  static Future<bool> setActiveImageConnectorType(ImageConnectorType imageType) {
+  static Future<bool> setActiveImageConnectorType(ImageConnectorType? imageType) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
@@ -63,6 +66,8 @@ class RepositoryPreferences {
       case ImageConnectorType.local:
         value = _localImageConnectorValue;
         break;
+      default:
+        value = _emptyValue;
     }
 
     return sharedPreferences.setString(
@@ -72,11 +77,14 @@ class RepositoryPreferences {
 
   }
 
-  static Future<bool> setItemInstance(ProviderInstance itemInstance) {
+  static Future<bool> setActiveItemInstance(ProviderInstance? itemInstance) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    final String connectionString = itemInstance.connectionString();
+    String connectionString = _emptyValue;
+    if(itemInstance != null) {
+      connectionString = itemInstance.connectionString();
+    }
 
     return sharedPreferences.setString(
       _itemConnectionStringKey,
@@ -85,11 +93,14 @@ class RepositoryPreferences {
 
   }
 
-  static Future<bool> setImageInstance(ProviderInstance imageInstance) {
+  static Future<bool> setActiveImageInstance(ProviderInstance? imageInstance) {
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    final String connectionString = imageInstance.connectionString();
+    String connectionString = _emptyValue;
+    if(imageInstance != null) {
+      connectionString = imageInstance.connectionString();
+    }
 
     return sharedPreferences.setString(
       _imageConnectionStringKey,
@@ -138,76 +149,84 @@ class RepositoryPreferences {
 
   }
 
-  static Future<ProviderInstance> retrieveActiveItemInstance() async {
+  static Future<ProviderInstance?> retrieveActiveItemInstance() async {
 
     final ItemConnectorType? itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_itemConnectionStringKey).then<ProviderInstance>((String value) {
+    return sharedPreferences.getString(_itemConnectionStringKey).then<ProviderInstance?>((String value) {
 
       switch(itemType!) {
         case ItemConnectorType.postgres:
           return PostgresInstance.fromString(value);
         case ItemConnectorType.local:
-          throw Exception('Local type not supported');
+          throw Exception(_errorLocalTypeNotSupported);
+        default:
+          return null;
       }
 
     }, onError: (Object error) => null);
 
   }
 
-  static Future<ProviderInstance> retrieveActiveImageInstance() async {
+  static Future<ProviderInstance?> retrieveActiveImageInstance() async {
 
     final ImageConnectorType? imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_imageConnectionStringKey).then<ProviderInstance>((String value) {
+    return sharedPreferences.getString(_imageConnectionStringKey).then<ProviderInstance?>((String value) {
 
       switch(imageType!) {
         case ImageConnectorType.cloudinary:
           return CloudinaryInstance.fromString(value);
         case ImageConnectorType.local:
-          throw Exception('Local type not supported');
+          throw Exception(_errorLocalTypeNotSupported);
+        default:
+          return null;
       }
 
     }, onError: (Object error) => null);
 
   }
 
-  static Future<ItemConnector> retrieveActiveItemConnector() async {
+  static Future<ItemConnector?> retrieveActiveItemConnector() async {
 
     final ItemConnectorType? itemType = await retrieveActiveItemConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_itemConnectionStringKey).then<ItemConnector>((String value) {
+    return sharedPreferences.getString(_itemConnectionStringKey).then<ItemConnector?>((String value) {
 
       switch(itemType!) {
         case ItemConnectorType.postgres:
           return PostgresConnector.fromConnectionString(value);
         case ItemConnectorType.local:
-          throw Exception('Local type not supported');
+          throw Exception(_errorLocalTypeNotSupported);
+        default:
+        return null;
       }
 
     }, onError: (Object error) => null);
 
   }
 
-  static Future<ImageConnector> retrieveActiveImageConnector() async {
+  static Future<ImageConnector?> retrieveActiveImageConnector() async {
 
     final ImageConnectorType? imageType = await retrieveActiveImageConnectorType();
 
     final EncryptedSharedPreferences sharedPreferences = EncryptedSharedPreferences();
 
-    return sharedPreferences.getString(_imageConnectionStringKey).then<ImageConnector>((String value) {
+    return sharedPreferences.getString(_imageConnectionStringKey).then<ImageConnector?>((String value) {
 
-      switch(imageType!) {
+      switch(imageType) {
         case ImageConnectorType.cloudinary:
           return CloudinaryConnector.fromConnectionString(value);
         case ImageConnectorType.local:
-          throw Exception('Local type not supported');
+          throw Exception(_errorLocalTypeNotSupported);
+        default:
+          return null;
       }
 
     }, onError: (Object error) => null);
