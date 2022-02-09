@@ -36,7 +36,7 @@ class TimeLogAssistant extends StatelessWidget {
               icon: const Icon(Icons.cloud_upload),
               shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).saveString,
-              onPressed: state.isValid ? () {
+              onPressed: state.isValid? () {
                 final DateTime date = state.date;
                 final TimeOfDay startTime = state.startTime!;
 
@@ -56,6 +56,7 @@ class TimeLogAssistant extends StatelessWidget {
                   ),
                 );
               } : null,
+              backgroundColor: state.isValid? null : Colors.grey,
             );
 
           },

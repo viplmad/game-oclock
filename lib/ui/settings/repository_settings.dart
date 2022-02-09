@@ -68,6 +68,7 @@ class RepositorySettings extends StatelessWidget {
                   connectRoute,
                 );
               } : null,
+              backgroundColor: active? null : Colors.grey,
             );
           },
         ),
