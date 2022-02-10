@@ -6,19 +6,19 @@ import 'repository.dart';
 class GameCollectionRepository {
   GameCollectionRepository();
 
-  late final GameRepository gameRepository;
-  late final GameFinishRepository gameFinishRepository;
-  late final GameTimeLogRepository gameTimeLogRepository;
-  late final DLCRepository dlcRepository;
-  late final DLCFinishRepository dlcFinishRepository;
-  late final PlatformRepository platformRepository;
-  late final PurchaseRepository purchaseRepository;
-  late final StoreRepository storeRepository;
-  late final SystemRepository systemRepository;
-  late final GameTagRepository gameTagRepository;
-  late final PurchaseTypeRepository purchaseTypeRepository;
+  late GameRepository gameRepository;
+  late GameFinishRepository gameFinishRepository;
+  late GameTimeLogRepository gameTimeLogRepository;
+  late DLCRepository dlcRepository;
+  late DLCFinishRepository dlcFinishRepository;
+  late PlatformRepository platformRepository;
+  late PurchaseRepository purchaseRepository;
+  late StoreRepository storeRepository;
+  late SystemRepository systemRepository;
+  late GameTagRepository gameTagRepository;
+  late PurchaseTypeRepository purchaseTypeRepository;
 
-  late final GameStatisticsRepository gameStatisticsRepository;
+  late GameStatisticsRepository gameStatisticsRepository;
 
   void connect(ItemConnector itemConnector, ImageConnector? imageConnector) {
     gameRepository = GameRepository(itemConnector, imageConnector);
