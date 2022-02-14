@@ -1,6 +1,5 @@
 import 'entity.dart';
 
-
 class PlatformSystemRelationData {
   PlatformSystemRelationData._();
 

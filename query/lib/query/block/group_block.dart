@@ -2,12 +2,11 @@ import '../query.dart' show Query;
 import 'block.dart' show Block;
 import 'group_node.dart';
 
-
 /// GROUP BY
 class GroupBlock extends Block {
-  GroupBlock() :
-    groups = <GroupNode>[],
-    super();
+  GroupBlock()
+      : groups = <GroupNode>[],
+        super();
 
   final List<GroupNode> groups;
 

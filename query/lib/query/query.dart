@@ -18,7 +18,6 @@ import 'sort_order.dart';
 import 'union_type.dart';
 import 'exception.dart';
 
-
 abstract class Query {
   Query(List<Block>? blocks) {
     this.blocks = blocks ?? <Block>[];
@@ -120,12 +119,22 @@ abstract class Query {
   //
   // GET FIELDS
   //
-  Query field(String field, {Type? type, String? table, String? alias, FunctionType function = FunctionType.none}) {
+  Query field(
+    String field, {
+    Type? type,
+    String? table,
+    String? alias,
+    FunctionType function = FunctionType.none,
+  }) {
     getFieldBlock().setField(field, type, table, alias, function: function);
     return this;
   }
 
-  Query fieldSubquery(Query query, {String? alias, FunctionType function = FunctionType.none}) {
+  Query fieldSubquery(
+    Query query, {
+    String? alias,
+    FunctionType function = FunctionType.none,
+  }) {
     getFieldBlock().setFieldFromSubquery(query, alias, function: function);
     return this;
   }
@@ -164,56 +173,209 @@ abstract class Query {
   //
   // JOIN
   //
-  Query join(String table, String? alias, String field, String joinTable, String joinField, {JoinType type = JoinType.inner, FunctionType function = FunctionType.none}) {
-    joinBlock().setJoin(table, alias, field, joinTable, joinField, type: type, function: function);
+  Query join(
+    String table,
+    String? alias,
+    String field,
+    String joinTable,
+    String joinField, {
+    JoinType type = JoinType.inner,
+    FunctionType function = FunctionType.none,
+  }) {
+    joinBlock().setJoin(
+      table,
+      alias,
+      field,
+      joinTable,
+      joinField,
+      type: type,
+      function: function,
+    );
     return this;
   }
 
-  Query joinSubquery(Query query, String alias, String field, String joinTable, String joinField, {JoinType type = JoinType.inner, FunctionType function = FunctionType.none}) {
-    joinBlock().setJoinSubquery(query, alias, field, joinTable, joinField, type: type, function: function);
+  Query joinSubquery(
+    Query query,
+    String alias,
+    String field,
+    String joinTable,
+    String joinField, {
+    JoinType type = JoinType.inner,
+    FunctionType function = FunctionType.none,
+  }) {
+    joinBlock().setJoinSubquery(
+      query,
+      alias,
+      field,
+      joinTable,
+      joinField,
+      type: type,
+      function: function,
+    );
     return this;
   }
 
   //
   // WHERE
   //
-  Query where(String field, Object? value, {Type? type, String? table, OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setWhere(field, type, table, value, operator: operator, function: function, divider: divider);
+  Query where(
+    String field,
+    Object? value, {
+    Type? type,
+    String? table,
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setWhere(
+      field,
+      type,
+      table,
+      value,
+      operator: operator,
+      function: function,
+      divider: divider,
+    );
     return this;
   }
 
-  Query orWhere(String field, Object? value, {Type? type, String? table, OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setOrWhere(field, type, table, value, operator: operator, function: function,  divider: divider);
+  Query orWhere(
+    String field,
+    Object? value, {
+    Type? type,
+    String? table,
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setOrWhere(
+      field,
+      type,
+      table,
+      value,
+      operator: operator,
+      function: function,
+      divider: divider,
+    );
     return this;
   }
 
-  Query whereDatePart(String field, int value, DatePart datePart, {String? table, OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setWhereDatePart(field, table, value, datePart, operator: operator, function: function,  divider: divider);
+  Query whereDatePart(
+    String field,
+    int value,
+    DatePart datePart, {
+    String? table,
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setWhereDatePart(
+      field,
+      table,
+      value,
+      datePart,
+      operator: operator,
+      function: function,
+      divider: divider,
+    );
     return this;
   }
 
-  Query orWhereDatePart(String field, int value, DatePart datePart, {String? table, OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setOrWhereDatePart(field, table, value, datePart, operator: operator, function: function,  divider: divider);
+  Query orWhereDatePart(
+    String field,
+    int value,
+    DatePart datePart, {
+    String? table,
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setOrWhereDatePart(
+      field,
+      table,
+      value,
+      datePart,
+      operator: operator,
+      function: function,
+      divider: divider,
+    );
     return this;
   }
 
-  Query whereFields(String table, String field, String otherTable, String otherField, {OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, FunctionType otherFunction = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setWhereFields(table, field, otherTable, otherField, operator: operator, function: function, otherFunction: otherFunction, divider: divider);
+  Query whereFields(
+    String table,
+    String field,
+    String otherTable,
+    String otherField, {
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    FunctionType otherFunction = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setWhereFields(
+      table,
+      field,
+      otherTable,
+      otherField,
+      operator: operator,
+      function: function,
+      otherFunction: otherFunction,
+      divider: divider,
+    );
     return this;
   }
 
-  Query orWhereFields(String table, String field, String otherTable, String otherField, {Type? otherType, OperatorType operator = OperatorType.eq, FunctionType function = FunctionType.none, FunctionType otherFunction = FunctionType.none, DividerType divider = DividerType.none}) {
-    whereBlock().setOrWhereFields(table, field, otherTable, otherField, operator: operator, function: function, otherFunction: otherFunction, divider: divider);
+  Query orWhereFields(
+    String table,
+    String field,
+    String otherTable,
+    String otherField, {
+    Type? otherType,
+    OperatorType operator = OperatorType.eq,
+    FunctionType function = FunctionType.none,
+    FunctionType otherFunction = FunctionType.none,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setOrWhereFields(
+      table,
+      field,
+      otherTable,
+      otherField,
+      operator: operator,
+      function: function,
+      otherFunction: otherFunction,
+      divider: divider,
+    );
     return this;
   }
 
-  Query whereSubquery(Query query, Object? value, {OperatorType operator = OperatorType.eq, DividerType divider = DividerType.none}) {
-    whereBlock().setWhereFromSubquery(query, value, operator: operator, divider: divider);
+  Query whereSubquery(
+    Query query,
+    Object? value, {
+    OperatorType operator = OperatorType.eq,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setWhereFromSubquery(
+      query,
+      value,
+      operator: operator,
+      divider: divider,
+    );
     return this;
   }
 
-  Query orWhereSubquery(Query query, Object? value, {OperatorType operator = OperatorType.eq, DividerType divider = DividerType.none}) {
-    whereBlock().setOrWhereFromSubquery(query, value, operator: operator, divider: divider);
+  Query orWhereSubquery(
+    Query query,
+    Object? value, {
+    OperatorType operator = OperatorType.eq,
+    DividerType divider = DividerType.none,
+  }) {
+    whereBlock().setOrWhereFromSubquery(
+      query,
+      value,
+      operator: operator,
+      divider: divider,
+    );
     return this;
   }
 
@@ -221,7 +383,7 @@ abstract class Query {
   // LIMIT
   //
   Query limit(int? value) {
-    if(value != null) {
+    if (value != null) {
       limitBlock().setLimit(value);
     }
     return this;
@@ -230,13 +392,33 @@ abstract class Query {
   //
   // ORDER BY
   //
-  Query order(String field, String? table, {SortOrder direction = SortOrder.asc, FunctionType function = FunctionType.none, bool nullsLast = false}) {
-    orderBlock().setOrder(field, table, direction: direction, function: function, nullsLast: nullsLast);
+  Query order(
+    String field,
+    String? table, {
+    SortOrder direction = SortOrder.asc,
+    FunctionType function = FunctionType.none,
+    bool nullsLast = false,
+  }) {
+    orderBlock().setOrder(
+      field,
+      table,
+      direction: direction,
+      function: function,
+      nullsLast: nullsLast,
+    );
     return this;
   }
 
-  Query orderSubquery(Query query, {SortOrder direction = SortOrder.asc, bool nullsLast = false}) {
-    orderBlock().setOrderFromSubquery(query, direction: direction, nullsLast: nullsLast);
+  Query orderSubquery(
+    Query query, {
+    SortOrder direction = SortOrder.asc,
+    bool nullsLast = false,
+  }) {
+    orderBlock().setOrderFromSubquery(
+      query,
+      direction: direction,
+      nullsLast: nullsLast,
+    );
     return this;
   }
 

@@ -1,6 +1,5 @@
 import 'block.dart' show Block;
 
-
 class DistinctBlock extends Block {
   DistinctBlock() : super();
 

@@ -53,6 +53,7 @@ const String gameTagLocalSearchRoute = _localSearchRoute + _gameTagIdentifier;
 
 //const String purchaseTypeDetailRoute = _detailRoute + purchaseTypeIdentifier;
 const String purchaseTypeSearchRoute = _searchRoute + _purchaseTypeIdentifier;
-const String purchaseTypeLocalSearchRoute = _localSearchRoute + _purchaseTypeIdentifier;
+const String purchaseTypeLocalSearchRoute =
+    _localSearchRoute + _purchaseTypeIdentifier;
 
 const String timeLogAssistantRoute = '/timeLogAssistant';

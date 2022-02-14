@@ -1,41 +1,47 @@
-import 'package:backend/entity/entity.dart' show PurchaseEntity, PurchaseID, PurchaseView;
+import 'package:backend/entity/entity.dart'
+    show PurchaseEntity, PurchaseID, PurchaseView;
 import 'package:backend/model/model.dart' show Purchase;
 import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, PurchaseRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository, PurchaseRepository;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
-
-class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity, PurchaseID, PurchaseRepository> {
+class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity,
+    PurchaseID, PurchaseRepository> {
   PurchaseListBloc({
     required GameCollectionRepository collectionRepository,
     required PurchaseListManagerBloc managerBloc,
-  }) : super(repository: collectionRepository.purchaseRepository, managerBloc: managerBloc);
+  }) : super(
+          repository: collectionRepository.purchaseRepository,
+          managerBloc: managerBloc,
+        );
 
   @override
   Future<List<Purchase>> getReadAllStream([int? page]) {
-
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(PurchaseView.main, page);
+    final Future<List<PurchaseEntity>> entityListFuture =
+        repository.findAllWithView(PurchaseView.main, page);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
-
   }
 
   @override
   Future<List<Purchase>> getReadViewStream(int viewIndex, [int? page]) {
-
     final PurchaseView view = PurchaseView.values[viewIndex];
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithView(view, page);
+    final Future<List<PurchaseEntity>> entityListFuture =
+        repository.findAllWithView(view, page);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
-
   }
 
   @override
-  Future<List<Purchase>> getReadYearViewStream(int viewIndex, int year, [int? page]) {
-
+  Future<List<Purchase>> getReadYearViewStream(
+    int viewIndex,
+    int year, [
+    int? page,
+  ]) {
     final PurchaseView view = PurchaseView.values[viewIndex];
-    final Future<List<PurchaseEntity>> entityListFuture = repository.findAllWithYearView(view, year, page);
+    final Future<List<PurchaseEntity>> entityListFuture =
+        repository.findAllWithYearView(view, year, page);
     return PurchaseMapper.futureEntityListToModelList(entityListFuture);
-
   }
 }

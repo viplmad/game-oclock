@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/model.dart' show ItemStatistics;
 
-
 abstract class ItemStatisticsState extends Equatable {
   const ItemStatisticsState();
 
@@ -12,7 +11,8 @@ abstract class ItemStatisticsState extends Equatable {
 
 class ItemStatisticsLoading extends ItemStatisticsState {}
 
-class ItemGeneralStatisticsLoaded<GS extends ItemStatistics> extends ItemStatisticsState {
+class ItemGeneralStatisticsLoaded<GS extends ItemStatistics>
+    extends ItemStatisticsState {
   const ItemGeneralStatisticsLoaded(this.itemData);
 
   final GS itemData;
@@ -26,7 +26,8 @@ class ItemGeneralStatisticsLoaded<GS extends ItemStatistics> extends ItemStatist
       ' }';
 }
 
-class ItemYearStatisticsLoaded<YS extends ItemStatistics> extends ItemStatisticsState {
+class ItemYearStatisticsLoaded<YS extends ItemStatistics>
+    extends ItemStatisticsState {
   const ItemYearStatisticsLoaded(this.itemData, this.year);
 
   final YS itemData;

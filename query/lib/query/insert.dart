@@ -1,19 +1,26 @@
-import 'block/block.dart' show Block, InsertBlock, InsertFieldValueBlock, InsertFieldsFromQueryBlock, IntoTableBlock, ReturningFieldBlock;
+import 'block/block.dart'
+    show
+        Block,
+        InsertBlock,
+        InsertFieldValueBlock,
+        InsertFieldsFromQueryBlock,
+        IntoTableBlock,
+        ReturningFieldBlock;
 
 import 'query.dart' show Query;
 
-
 /// An INSERT query builder.
 class Insert extends Query {
-  Insert() : super(
-    <Block>[
-      InsertBlock(),
-      IntoTableBlock(), // 1
-      InsertFieldValueBlock(), // 2
-      InsertFieldsFromQueryBlock(), // 3
-      ReturningFieldBlock(), // 4
-    ],
-  );
+  Insert()
+      : super(
+          <Block>[
+            InsertBlock(),
+            IntoTableBlock(), // 1
+            InsertFieldValueBlock(), // 2
+            InsertFieldsFromQueryBlock(), // 3
+            ReturningFieldBlock(), // 4
+          ],
+        );
 
   @override
   IntoTableBlock intoTableBlock() {

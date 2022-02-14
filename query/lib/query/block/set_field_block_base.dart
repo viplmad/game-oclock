@@ -1,11 +1,9 @@
 import 'block.dart' show Block;
 import 'set_node.dart';
 
-
 /// Base class for setting fields to values (used for INSERT and UPDATE queries)
 abstract class SetFieldBlockBase extends Block {
-  SetFieldBlockBase() :
-    sets = <SetNode>[];
+  SetFieldBlockBase() : sets = <SetNode>[];
 
   final List<SetNode> sets;
 

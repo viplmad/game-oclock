@@ -5,7 +5,6 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../show_date_picker.dart';
 import 'generic_field.dart';
 
-
 class DateField extends StatelessWidget {
   const DateField({
     Key? key,
@@ -22,13 +21,12 @@ class DateField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GenericField<DateTime>(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).formatDate(value!)
-        : null,
+      shownValue: value != null
+          ? GameCollectionLocalisations.of(context).formatDate(value!)
+          : null,
       update: update,
       editable: editable,
       onTap: () {
@@ -38,6 +36,5 @@ class DateField extends StatelessWidget {
         );
       },
     );
-
   }
 }

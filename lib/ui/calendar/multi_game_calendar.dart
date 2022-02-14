@@ -6,7 +6,8 @@ import 'package:table_calendar/table_calendar.dart' as table_calendar;
 import 'package:backend/model/model.dart' show Game, GameWithLogs;
 import 'package:backend/model/calendar_range.dart';
 
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/calendar/multi_calendar.dart';
 
@@ -21,7 +22,6 @@ import '../common/loading_icon.dart';
 import '../detail/detail_arguments.dart';
 import 'calendar_utils.dart';
 
-
 class MultiGameCalendar extends StatelessWidget {
   const MultiGameCalendar({
     Key? key,
@@ -29,9 +29,9 @@ class MultiGameCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final MultiCalendarBloc _bloc = MultiCalendarBloc(
-      collectionRepository: RepositoryProvider.of<GameCollectionRepository>(context),
+      collectionRepository:
+          RepositoryProvider.of<GameCollectionRepository>(context),
     );
 
     return BlocProvider<MultiCalendarBloc>(
@@ -40,7 +40,9 @@ class MultiGameCalendar extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).multiCalendarViewString),
+          title: Text(
+            GameCollectionLocalisations.of(context).multiCalendarViewString,
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),
@@ -72,26 +74,30 @@ class MultiGameCalendar extends StatelessWidget {
             ),
             PopupMenuButton<CalendarRange>(
               icon: const Icon(Icons.date_range),
-              tooltip: GameCollectionLocalisations.of(context).changeRangeString,
+              tooltip:
+                  GameCollectionLocalisations.of(context).changeRangeString,
               itemBuilder: (BuildContext context) {
-                return CalendarRange.values.map<PopupMenuItem<CalendarRange>>( (CalendarRange range) {
+                return CalendarRange.values
+                    .map<PopupMenuItem<CalendarRange>>((CalendarRange range) {
                   return PopupMenuItem<CalendarRange>(
                     child: ListTile(
-                      title: Text(GameCollectionLocalisations.of(context).rangeString(range)),
+                      title: Text(
+                        GameCollectionLocalisations.of(context)
+                            .rangeString(range),
+                      ),
                     ),
                     value: range,
                   );
                 }).toList(growable: false);
               },
               onSelected: (CalendarRange range) {
-                _bloc.add(
-                  UpdateCalendarRange(range)
-                );
+                _bloc.add(UpdateCalendarRange(range));
               },
             ),
             IconButton(
               icon: const Icon(Icons.insert_chart),
-              tooltip: GameCollectionLocalisations.of(context).changeStyleString,
+              tooltip:
+                  GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
                 _bloc.add(UpdateCalendarStyle());
               },
@@ -101,15 +107,11 @@ class MultiGameCalendar extends StatelessWidget {
         body: bodyBuilder(),
       ),
     );
-
   }
 
   _MultiGameCalendarBody bodyBuilder() {
-
     return const _MultiGameCalendarBody();
-
   }
-
 }
 
 class _MultiGameCalendarBody extends StatelessWidget {
@@ -119,56 +121,80 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<MultiCalendarBloc, CalendarState>(
       builder: (BuildContext context, CalendarState state) {
-
-        if(state is MultiCalendarLoaded) {
+        if (state is MultiCalendarLoaded) {
           Widget timeLogsWidget;
-          if(state.selectedTotalTime.isZero()) {
+          if (state.selectedTotalTime.isZero()) {
             timeLogsWidget = Center(
-              child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
+              child: Text(
+                GameCollectionLocalisations.of(context).emptyTimeLogsString,
+              ),
             );
           } else {
-            if(state is MultiCalendarGraphLoaded) {
-              timeLogsWidget = CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range);
+            if (state is MultiCalendarGraphLoaded) {
+              timeLogsWidget = CalendarUtils.buildTimeLogsGraph(
+                context,
+                state.selectedTimeLogs,
+                state.range,
+              );
             } else {
-              timeLogsWidget = _buildTimeLogsList(context, state.selectedGamesWithLogs);
+              timeLogsWidget =
+                  _buildTimeLogsList(context, state.selectedGamesWithLogs);
             }
           }
 
           return Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              _buildTableCalendar(context, state.logDates, state.focusedDate, state.selectedDate),
+              _buildTableCalendar(
+                context,
+                state.logDates,
+                state.focusedDate,
+                state.selectedDate,
+              ),
               const Divider(height: 4.0),
               ListTile(
-                title: Text(CalendarUtils.titleString(context, state.selectedDate, state.range)),
-                trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames) + ' / ' + GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)) : null,
+                title: Text(
+                  CalendarUtils.titleString(
+                    context,
+                    state.selectedDate,
+                    state.range,
+                  ),
+                ),
+                trailing: !state.selectedTotalTime.isZero()
+                    ? Text(
+                        GameCollectionLocalisations.of(context)
+                                .totalGames(state.selectedTotalGames) +
+                            ' / ' +
+                            GameCollectionLocalisations.of(context)
+                                .formatDuration(state.selectedTotalTime),
+                      )
+                    : null,
               ),
               Expanded(child: timeLogsWidget),
             ],
           );
-
         }
-        if(state is CalendarNotLoaded) {
-
+        if (state is CalendarNotLoaded) {
           return Center(
             child: Text(state.error),
           );
-
         }
 
         return const LoadingIcon();
-
       },
     );
-
   }
 
-  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, DateTime focusedDate, DateTime selectedDate) {
+  Widget _buildTableCalendar(
+    BuildContext context,
+    Set<DateTime> logDates,
+    DateTime focusedDate,
+    DateTime selectedDate,
+  ) {
     DateTime lastDate = DateTime.now();
-    if(logDates.isNotEmpty) {
+    if (logDates.isNotEmpty) {
       lastDate = logDates.last;
     }
 
@@ -187,13 +213,12 @@ class _MultiGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return logDates.where((DateTime logDate) => date.isSameDay(logDate)).toList(growable: false);
+        return logDates
+            .where((DateTime logDate) => date.isSameDay(logDate))
+            .toList(growable: false);
       },
       startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
-      weekendDays: const <int>[
-        DateTime.saturday,
-        DateTime.sunday
-      ],
+      weekendDays: const <int>[DateTime.saturday, DateTime.sunday],
       pageJumpingEnabled: true,
       availableGestures: table_calendar.AvailableGestures.horizontalSwipe,
       availableCalendarFormats: const <table_calendar.CalendarFormat, String>{
@@ -222,6 +247,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
           color: CalendarTheme.selectedColour,
           shape: CalendarTheme.shape,
         ),
+
         ///EVENTS
         markersMaxCount: 1,
         markersAlignment: Alignment.bottomRight,
@@ -230,12 +256,14 @@ class _MultiGameCalendarBody extends StatelessWidget {
           color: CalendarTheme.playedColour,
           shape: CalendarTheme.shape,
         ),
+
         ///HOLIDAY
         holidayDecoration: const BoxDecoration(
           color: CalendarTheme.finishedColour,
           shape: CalendarTheme.shape,
         ),
         holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
+
         ///WEEKEND
         weekendDecoration: BoxDecoration(
           color: CalendarTheme.weekendColour,
@@ -246,8 +274,10 @@ class _MultiGameCalendarBody extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeLogsList(BuildContext context, List<GameWithLogs> gamesWithLogs) {
-
+  Widget _buildTimeLogsList(
+    BuildContext context,
+    List<GameWithLogs> gamesWithLogs,
+  ) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: gamesWithLogs.length,
@@ -255,16 +285,24 @@ class _MultiGameCalendarBody extends StatelessWidget {
         final GameWithLogs gameWithLogs = gamesWithLogs.elementAt(index);
 
         return Padding(
-          padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
-          child: GameTheme.itemCardWithTime(context, gameWithLogs.game, gameWithLogs.totalTime, onTap),
+          padding: const EdgeInsets.only(
+            right: 4.0,
+            left: 4.0,
+            bottom: 4.0,
+            top: 4.0,
+          ),
+          child: GameTheme.itemCardWithTime(
+            context,
+            gameWithLogs.game,
+            gameWithLogs.totalTime,
+            onTap,
+          ),
         );
       },
     );
-
   }
 
   void Function()? onTap(BuildContext context, Game item) {
-
     return () {
       Navigator.pushNamed(
         context,
@@ -272,22 +310,16 @@ class _MultiGameCalendarBody extends StatelessWidget {
         arguments: DetailArguments<Game>(
           item: item,
           onUpdate: (Game? updatedItem) {
-
-            if(updatedItem != null) {
-
+            if (updatedItem != null) {
               BlocProvider.of<MultiCalendarBloc>(context).add(
                 UpdateCalendarListItem(
                   updatedItem,
                 ),
               );
-
             }
-
           },
         ),
       );
     };
-
   }
-
 }

@@ -2,7 +2,6 @@ import 'package:backend/model/model.dart';
 
 import 'calendar_event.dart';
 
-
 abstract class MultiCalendarEvent extends CalendarEvent {
   const MultiCalendarEvent();
 

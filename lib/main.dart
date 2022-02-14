@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:backend/game_collection_backend.dart' show GameCollectionRepository;
+import 'package:backend/game_collection_backend.dart'
+    show GameCollectionRepository;
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'package:game_collection/ui/route.dart';
-
 
 void main() => runApp(const GameCollection());
 
@@ -29,7 +29,8 @@ class GameCollection extends StatelessWidget {
         return GameCollectionRepository();
       },
       child: MaterialApp(
-        onGenerateTitle: (BuildContext context) => GameCollectionLocalisations.appTitle,
+        onGenerateTitle: (BuildContext context) =>
+            GameCollectionLocalisations.appTitle,
         theme: ThemeData(
           brightness: Brightness.light,
           primarySwatch: Colors.blue,

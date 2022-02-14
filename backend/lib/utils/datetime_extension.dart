@@ -6,7 +6,7 @@ extension DateExtension on DateTime {
   DateTime getMondayOfWeek() {
     DateTime mondayOfDate;
 
-    if(weekday == DateTime.monday) {
+    if (weekday == DateTime.monday) {
       mondayOfDate = this;
     } else {
       final int daysToRemove = weekday - DateTime.monday;
@@ -19,7 +19,7 @@ extension DateExtension on DateTime {
   DateTime getSundayOfWeek() {
     DateTime sundayOfDate;
 
-    if(weekday == DateTime.sunday) {
+    if (weekday == DateTime.sunday) {
       sundayOfDate = this;
     } else {
       final int daysToAdd = DateTime.sunday - weekday;
@@ -33,7 +33,7 @@ extension DateExtension on DateTime {
     bool resultFound = false;
 
     DateTime dateInWeek = other.getMondayOfWeek();
-    for(int index = 0; index < 7 && !resultFound; index++) {
+    for (int index = 0; index < 7 && !resultFound; index++) {
       resultFound = isSameDay(dateInWeek);
 
       dateInWeek = dateInWeek.addDays(1);

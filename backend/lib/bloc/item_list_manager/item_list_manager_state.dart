@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/model.dart';
 
-
 abstract class ItemListManagerState extends Equatable {
   const ItemListManagerState();
 

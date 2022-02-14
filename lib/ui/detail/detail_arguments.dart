@@ -1,6 +1,5 @@
 import 'package:backend/model/model.dart' show Item;
 
-
 class DetailArguments<T extends Item> {
   const DetailArguments({
     required this.item,

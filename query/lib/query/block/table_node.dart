@@ -1,6 +1,5 @@
 import '../query.dart' show Query;
 
-
 abstract class TableNode {
   TableNode(this.alias);
 

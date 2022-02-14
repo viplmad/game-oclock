@@ -11,20 +11,20 @@ import '../bloc_utils.dart';
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
-
-abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
+        ID extends Object, R extends ItemRepository<E, ID>>
+    extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
     required this.id,
     required this.repository,
     required this.managerBloc,
   }) : super(ItemLoading()) {
-
     on<LoadItem>(_mapLoadToState);
     on<ReloadItem>(_mapReloadToState);
     on<UpdateItem<T>>(_mapUpdateToState);
 
-    managerSubscription = managerBloc.stream.listen(_mapDetailManagerStateToEvent);
-
+    managerSubscription =
+        managerBloc.stream.listen(_mapDetailManagerStateToEvent);
   }
 
   final ID id;
@@ -33,88 +33,69 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity, ID extends O
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
 
   Future<void> _checkConnection(Emitter<ItemDetailState> emit) async {
-
-    await BlocUtils.checkConnection<ItemDetailState, ItemNotLoaded>(repository, emit, (final String error) => ItemNotLoaded(error));
-
+    await BlocUtils.checkConnection<ItemDetailState, ItemNotLoaded>(
+      repository,
+      emit,
+      (final String error) => ItemNotLoaded(error),
+    );
   }
 
   void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) async {
-
     emit(
       ItemLoading(),
     );
 
     await _mapAnyLoadToState(emit);
-
   }
 
-  void _mapReloadToState(ReloadItem event, Emitter<ItemDetailState> emit) async {
-
+  void _mapReloadToState(
+    ReloadItem event,
+    Emitter<ItemDetailState> emit,
+  ) async {
     await _mapAnyLoadToState(emit);
-
   }
 
   Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
-
     await _checkConnection(emit);
 
     try {
-
       final T item = await getReadFuture();
       emit(
         ItemLoaded<T>(item),
       );
-
     } catch (e) {
-
       emit(
         ItemNotLoaded(e.toString()),
       );
-
     }
-
   }
 
-  void _mapUpdateToState(UpdateItem<T> event,Emitter<ItemDetailState> emit) {
-
+  void _mapUpdateToState(UpdateItem<T> event, Emitter<ItemDetailState> emit) {
     emit(
       ItemLoaded<T>(event.item),
     );
-
   }
 
   void _mapDetailManagerStateToEvent(ItemDetailManagerState managerState) {
-
-    if(managerState is ItemFieldUpdated<T>) {
-
+    if (managerState is ItemFieldUpdated<T>) {
       _mapFieldUpdatedToEvent(managerState);
-
-    } else if(managerState is ItemImageUpdated<T>) {
-
+    } else if (managerState is ItemImageUpdated<T>) {
       _mapImageUpdatedToEvent(managerState);
-
     }
-
   }
 
   void _mapFieldUpdatedToEvent(ItemFieldUpdated<T> event) {
-
     add(UpdateItem<T>(event.item));
-
   }
 
   void _mapImageUpdatedToEvent(ItemImageUpdated<T> event) {
-
     add(UpdateItem<T>(event.item));
-
   }
 
   @override
   Future<void> close() {
-
     managerSubscription.cancel();
     return super.close();
-
   }
 
   @protected

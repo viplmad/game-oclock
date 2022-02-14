@@ -5,7 +5,6 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../year_picker_dialog.dart';
 import 'generic_field.dart';
 
-
 class YearField extends StatelessWidget {
   const YearField({
     Key? key,
@@ -22,13 +21,12 @@ class YearField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GenericField<int>(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).formatYear(value!)
-        : null,
+      shownValue: value != null
+          ? GameCollectionLocalisations.of(context).formatYear(value!)
+          : null,
       editable: editable,
       update: update,
       onTap: () {
@@ -42,6 +40,5 @@ class YearField extends StatelessWidget {
         );
       },
     );
-
   }
 }

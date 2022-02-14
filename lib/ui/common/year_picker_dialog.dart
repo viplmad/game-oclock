@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({
     Key? key,
@@ -17,6 +16,7 @@ class YearPickerDialog extends StatefulWidget {
   @override
   State<YearPickerDialog> createState() => _YearPickerDialogState();
 }
+
 class _YearPickerDialogState extends State<YearPickerDialog> {
   DateTime _selectedDate = DateTime.now();
 
@@ -24,12 +24,12 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
   void initState() {
     super.initState();
 
-    _selectedDate = widget.year != null? DateTime(widget.year!) : DateTime.now();
+    _selectedDate =
+        widget.year != null ? DateTime(widget.year!) : DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -44,7 +44,14 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(GameCollectionLocalisations.of(context).formatYear(_selectedDate.year), style: Theme.of(context).primaryTextTheme.subtitle1!.copyWith(color: Colors.white),),
+                  child: Text(
+                    GameCollectionLocalisations.of(context)
+                        .formatYear(_selectedDate.year),
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .subtitle1!
+                        .copyWith(color: Colors.white),
+                  ),
                 )
               ],
             ),
@@ -65,7 +72,8 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
           ButtonBar(
             children: <Widget>[
               TextButton(
-                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                child:
+                    Text(MaterialLocalizations.of(context).cancelButtonLabel),
                 onPressed: () {
                   Navigator.maybePop<int>(context);
                 },
@@ -81,7 +89,6 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
         ],
       ),
     );
-
   }
 }
 
@@ -102,7 +109,7 @@ class _YearPicker extends StatefulWidget {
     required this.initialDate,
     required this.selectedDate,
     required this.onChanged,
-  }) :  assert(!firstDate.isAfter(lastDate)),
+  })  : assert(!firstDate.isAfter(lastDate)),
         super(key: key);
 
   /// The earliest date the user is permitted to pick.
@@ -125,6 +132,7 @@ class _YearPicker extends StatefulWidget {
   @override
   _YearPickerState createState() => _YearPickerState();
 }
+
 class _YearPickerState extends State<_YearPicker> {
   ScrollController scrollController = ScrollController();
 
@@ -136,11 +144,13 @@ class _YearPickerState extends State<_YearPicker> {
     super.initState();
 
     // Set the scroll position to approximately center the initial year.
-    final int initialYearIndex = widget.selectedDate.year - widget.firstDate.year;
+    final int initialYearIndex =
+        widget.selectedDate.year - widget.firstDate.year;
     final int initialYearRow = initialYearIndex ~/ _yearPickerColumnCount;
     // Move the offset down by 2 rows to approximately center it.
     final int centeredYearRow = initialYearRow - 2;
-    final double scrollOffset = _itemCount < minYears ? 0 : centeredYearRow * _yearPickerRowHeight;
+    final double scrollOffset =
+        _itemCount < minYears ? 0 : centeredYearRow * _yearPickerRowHeight;
     scrollController = ScrollController(initialScrollOffset: scrollOffset);
   }
 
@@ -232,8 +242,9 @@ class _YearPickerGridDelegate extends SliverGridDelegate {
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
-    final double tileWidth =
-        (constraints.crossAxisExtent - (_yearPickerColumnCount - 1) * _yearPickerRowSpacing) / _yearPickerColumnCount;
+    final double tileWidth = (constraints.crossAxisExtent -
+            (_yearPickerColumnCount - 1) * _yearPickerRowSpacing) /
+        _yearPickerColumnCount;
     return SliverGridRegularTileLayout(
       childCrossAxisExtent: tileWidth,
       childMainAxisExtent: _yearPickerRowHeight,
@@ -248,4 +259,5 @@ class _YearPickerGridDelegate extends SliverGridDelegate {
   bool shouldRelayout(_YearPickerGridDelegate oldDelegate) => false;
 }
 
-const _YearPickerGridDelegate _yearPickerGridDelegate = _YearPickerGridDelegate();
+const _YearPickerGridDelegate _yearPickerGridDelegate =
+    _YearPickerGridDelegate();

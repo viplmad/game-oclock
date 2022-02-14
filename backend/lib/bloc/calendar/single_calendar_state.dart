@@ -4,7 +4,6 @@ import 'package:backend/model/calendar_style.dart';
 
 import 'calendar_state.dart';
 
-
 abstract class SingleCalendarState extends CalendarState {
   const SingleCalendarState();
 
@@ -13,8 +12,18 @@ abstract class SingleCalendarState extends CalendarState {
 }
 
 class SingleCalendarLoaded extends SingleCalendarState {
-  // ignore: avoid_positional_boolean_parameters
-  const SingleCalendarLoaded(this.timeLogs, this.logDates, this.finishDates, this.selectedDate, this.selectedTimeLogs, this.isSelectedDateFinish, this.selectedTotalTime, this.range, [this.style = CalendarStyle.list]);
+  const SingleCalendarLoaded(
+    this.timeLogs,
+    this.logDates,
+    this.finishDates,
+    this.selectedDate,
+    this.selectedTimeLogs,
+    // ignore: avoid_positional_boolean_parameters
+    this.isSelectedDateFinish,
+    this.selectedTotalTime,
+    this.range, [
+    this.style = CalendarStyle.list,
+  ]);
 
   final List<GameTimeLog> timeLogs;
   final Set<DateTime> logDates;
@@ -27,7 +36,8 @@ class SingleCalendarLoaded extends SingleCalendarState {
   final CalendarStyle style;
 
   @override
-  List<Object> get props => <Object>[timeLogs, logDates, finishDates, selectedDate, range, style];
+  List<Object> get props =>
+      <Object>[timeLogs, logDates, finishDates, selectedDate, range, style];
 
   @override
   String toString() => 'SingleCalendarLoaded { '

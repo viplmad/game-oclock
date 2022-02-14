@@ -19,8 +19,9 @@ import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
 import '../statistics/statistics_arguments.dart';
 
-
-abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget with PreferredSizeWidget {
+abstract class ItemAppBar<T extends Item,
+        K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget
+    with PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
     required this.themeColor,
@@ -39,7 +40,6 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
 
   @override
   Widget build(BuildContext context) {
-
     return AppBar(
       title: Text(typesName(context)),
       backgroundColor: themeColor,
@@ -47,49 +47,54 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
         IconButton(
           icon: const Icon(Icons.search),
           tooltip: GameCollectionLocalisations.of(context).searchAllString,
-          onPressed: searchRouteName.isNotEmpty? () {
-
-            Navigator.pushNamed(
-              context,
-              searchRouteName,
-              arguments: const SearchArguments(
-                onTapReturn: false,
-              )
-            );
-
-          } : null,
+          onPressed: searchRouteName.isNotEmpty
+              ? () {
+                  Navigator.pushNamed(
+                    context,
+                    searchRouteName,
+                    arguments: const SearchArguments(
+                      onTapReturn: false,
+                    ),
+                  );
+                }
+              : null,
         ),
-        calendarRouteName.isNotEmpty?
-          IconButton(
-            icon: const Icon(Icons.date_range),
-            tooltip: GameCollectionLocalisations.of(context).calendarView,
-            onPressed: _onCalendarTap(context),
-          ) : Container(),
-        gridAllowed? IconButton(
-          icon: const Icon(Icons.grid_on),
-          tooltip: GameCollectionLocalisations.of(context).changeStyleString,
-          onPressed: () {
-            BlocProvider.of<K>(context).add(
-              UpdateStyle(),
-            );
-          },
-        ) : Container(),
+        calendarRouteName.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.date_range),
+                tooltip: GameCollectionLocalisations.of(context).calendarView,
+                onPressed: _onCalendarTap(context),
+              )
+            : Container(),
+        gridAllowed
+            ? IconButton(
+                icon: const Icon(Icons.grid_on),
+                tooltip:
+                    GameCollectionLocalisations.of(context).changeStyleString,
+                onPressed: () {
+                  BlocProvider.of<K>(context).add(
+                    UpdateStyle(),
+                  );
+                },
+              )
+            : Container(),
         _viewActionBuilder(
           context,
           views: views(context),
         ),
       ],
     );
-
   }
 
-  Widget _viewActionBuilder(BuildContext context, {required List<String> views}) {
-
+  Widget _viewActionBuilder(
+    BuildContext context, {
+    required List<String> views,
+  }) {
     return PopupMenuButton<int>(
       icon: const Icon(Icons.view_carousel),
       tooltip: GameCollectionLocalisations.of(context).changeViewString,
       itemBuilder: (BuildContext context) {
-        return views.map<PopupMenuItem<int>>( (String view) {
+        return views.map<PopupMenuItem<int>>((String view) {
           return PopupMenuItem<int>(
             child: ListTile(
               title: Text(view),
@@ -100,33 +105,30 @@ abstract class ItemAppBar<T extends Item, K extends Bloc<ItemListEvent, ItemList
       },
       onSelected: onSelected(context, views),
     );
-
   }
 
   void Function(int) onSelected(BuildContext context, List<String> views) {
-
     return (int selectedViewIndex) {
       BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
     };
-
   }
 
   void Function() _onCalendarTap(BuildContext context) {
-
     return () {
       Navigator.pushNamed(
         context,
         calendarRouteName,
       );
     };
-
   }
 
   String typesName(BuildContext context);
   List<String> views(BuildContext context);
 }
 
-abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
+abstract class ItemFAB<T extends Item,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends StatelessWidget {
   const ItemFAB({
     Key? key,
     required this.themeColor,
@@ -136,11 +138,11 @@ abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, Item
 
   @override
   Widget build(BuildContext context) {
-
     return FloatingActionButton(
       child: const Icon(Icons.add),
       shape: ShapeUtils.shapeBorder,
-      tooltip: GameCollectionLocalisations.of(context).newString(typeName(context)),
+      tooltip:
+          GameCollectionLocalisations.of(context).newString(typeName(context)),
       backgroundColor: themeColor,
       onPressed: () {
         BlocProvider.of<S>(context).add(
@@ -148,14 +150,17 @@ abstract class ItemFAB<T extends Item, S extends Bloc<ItemListManagerEvent, Item
         );
       },
     );
-
   }
 
   T createItem();
   String typeName(BuildContext context);
 }
 
-abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
+abstract class ItemList<
+        T extends Item,
+        K extends Bloc<ItemListEvent, ItemListState>,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends StatelessWidget {
   const ItemList({
     Key? key,
     this.detailRouteName = '',
@@ -172,8 +177,9 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
 
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
-        if(state is ItemAdded<T>) {
-          final String message = GameCollectionLocalisations.of(context).addedString(currentTypeString);
+        if (state is ItemAdded<T>) {
+          final String message = GameCollectionLocalisations.of(context)
+              .addedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -181,21 +187,20 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
             snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).openString,
               onPressed: () {
-
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
                   arguments: DetailArguments<T>(
                     item: state.item,
-                  )
+                  ),
                 );
-
               },
             ),
           );
         }
-        if(state is ItemNotAdded) {
-          final String message = GameCollectionLocalisations.of(context).unableToAddString(currentTypeString);
+        if (state is ItemNotAdded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToAddString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -208,16 +213,18 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
             ),
           );
         }
-        if(state is ItemDeleted<T>) {
-          final String message = GameCollectionLocalisations.of(context).deletedString(currentTypeString);
+        if (state is ItemDeleted<T>) {
+          final String message = GameCollectionLocalisations.of(context)
+              .deletedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
             seconds: 2,
           );
         }
-        if(state is ItemNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context).unableToDeleteString(currentTypeString);
+        if (state is ItemNotDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToDeleteString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -233,9 +240,7 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
       },
       child: BlocBuilder<K, ItemListState>(
         builder: (BuildContext context, ItemListState state) {
-
-          if(state is ItemListLoaded<T>) {
-
+          if (state is ItemListLoaded<T>) {
             return itemListBodyBuilder(
               items: state.items,
               viewIndex: state.viewIndex,
@@ -246,40 +251,45 @@ abstract class ItemList<T extends Item, K extends Bloc<ItemListEvent, ItemListSt
               style: state.style,
               scrollController: scrollController,
             );
-
           }
-          if(state is ItemListNotLoaded) {
-
+          if (state is ItemListNotLoaded) {
             return Center(
               child: Text(state.error),
             );
-
           }
 
           return const LoadingIcon();
-
         },
       ),
     );
-
   }
 
-  void Function() paginateListener(BuildContext context, ScrollController scrollController) {
-
+  void Function() paginateListener(
+    BuildContext context,
+    ScrollController scrollController,
+  ) {
     return () {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         BlocProvider.of<K>(context).add(UpdatePage());
       }
     };
-
   }
 
   String typeName(BuildContext context);
 
-  ItemListBody<T, K> itemListBodyBuilder({required List<T> items, required int viewIndex, required int? viewYear, required void Function(T) onDelete, required ListStyle style, required ScrollController scrollController});
+  ItemListBody<T, K> itemListBodyBuilder({
+    required List<T> items,
+    required int viewIndex,
+    required int? viewYear,
+    required void Function(T) onDelete,
+    required ListStyle style,
+    required ScrollController scrollController,
+  });
 }
 
-abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
+abstract class ItemListBody<T extends Item,
+    K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
   const ItemListBody({
     Key? key,
     required this.items,
@@ -306,7 +316,6 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         Container(
@@ -317,15 +326,19 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
               children: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.manage_search),
-                  tooltip: GameCollectionLocalisations.of(context).searchInViewString,
+                  tooltip: GameCollectionLocalisations.of(context)
+                      .searchInViewString,
                   onPressed: _onSearchTap(context),
                 ),
-                statisticsRouteName.isNotEmpty?
-                  IconButton(
-                    icon: const Icon(Icons.insert_chart),
-                    tooltip: GameCollectionLocalisations.of(context).statsInViewString,
-                    onPressed: items.isNotEmpty? onStatisticsTap(context) : null,
-                  ) : Container(),
+                statisticsRouteName.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.insert_chart),
+                        tooltip: GameCollectionLocalisations.of(context)
+                            .statsInViewString,
+                        onPressed:
+                            items.isNotEmpty ? onStatisticsTap(context) : null,
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -338,16 +351,18 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         ),
       ],
     );
-
   }
 
   Widget _confirmDelete(BuildContext context, T item) {
-
     return AlertDialog(
       title: Text(GameCollectionLocalisations.of(context).deleteString),
       content: ListTile(
-        title: Text(GameCollectionLocalisations.of(context).deleteDialogTitle(itemTitle(item))),
-        subtitle: Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
+        title: Text(
+          GameCollectionLocalisations.of(context)
+              .deleteDialogTitle(itemTitle(item)),
+        ),
+        subtitle:
+            Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
       ),
       actions: <Widget>[
         TextButton(
@@ -357,7 +372,8 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
           },
         ),
         TextButton(
-          child: Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
+          child:
+              Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
           onPressed: () {
             Navigator.maybePop<bool>(context, true);
           },
@@ -367,12 +383,10 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         )
       ],
     );
-
   }
 
   Widget _listBuilder(BuildContext context, ScrollController scrollController) {
-
-    switch(style) {
+    switch (style) {
       case ListStyle.card:
         return ItemCardView<T>(
           items: items,
@@ -388,12 +402,10 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
           scrollController: scrollController,
         );
     }
-
   }
 
   @nonVirtual
   void Function()? onTap(BuildContext context, T item) {
-
     return () {
       Navigator.pushNamed(
         context,
@@ -401,22 +413,16 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         arguments: DetailArguments<T>(
           item: item,
           onUpdate: (T? updatedItem) {
-
-            if(updatedItem != null) {
-
+            if (updatedItem != null) {
               BlocProvider.of<K>(context).add(UpdateListItem<T>(updatedItem));
-
             }
-
           },
         ),
       );
     };
-
   }
 
   void Function() _onSearchTap(BuildContext context) {
-
     return () {
       Navigator.pushNamed(
         context,
@@ -428,11 +434,9 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         ),
       );
     };
-
   }
 
   void Function() onStatisticsTap(BuildContext context) {
-
     return () {
       Navigator.pushNamed(
         context,
@@ -444,7 +448,6 @@ abstract class ItemListBody<T extends Item, K extends Bloc<ItemListEvent, ItemLi
         ),
       );
     };
-
   }
 
   String itemTitle(T item);
@@ -472,7 +475,6 @@ class ItemCardView<T extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       shrinkWrap: true,
       itemCount: items.length,
@@ -487,21 +489,17 @@ class ItemCardView<T extends Item> extends StatelessWidget {
             onDismiss(item);
           },
           confirmDismiss: (DismissDirection direction) {
-
             return showDialog<bool>(
               context: context,
               builder: (BuildContext context) {
                 return confirmDelete(context, item);
               },
-            ).then((bool? value) => value?? false);
-
+            ).then((bool? value) => value ?? false);
           },
           dismissIcon: Icons.delete,
         );
-
       },
     );
-
   }
 }
 
@@ -519,7 +517,6 @@ class ItemGridView<T extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GridView.builder(
       shrinkWrap: true,
       itemCount: items.length,
@@ -531,9 +528,7 @@ class ItemGridView<T extends Item> extends StatelessWidget {
         final T item = items[index];
 
         return itemBuilder(context, item);
-
       },
     );
-
   }
 }

@@ -2,11 +2,9 @@ import '../query.dart' show Query;
 import 'block.dart' show Block;
 import 'table_node.dart';
 
-
 /// Table base class
 abstract class TableBlockBase extends Block {
-  TableBlockBase() :
-    tables = <TableNode>[];
+  TableBlockBase() : tables = <TableNode>[];
 
   final List<TableNode> tables;
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show Store;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -12,46 +13,47 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show StoreTheme;
 import 'search.dart';
 
-
-class StoreSearch extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
+class StoreSearch
+    extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
   const StoreSearch({
     Key? key,
     required bool onTapReturn,
     required int? viewIndex,
   }) : super(
-    key: key,
-    onTapReturn: onTapReturn,
-    viewIndex: viewIndex,
-    detailRouteName: storeDetailRoute,
-  );
+          key: key,
+          onTapReturn: onTapReturn,
+          viewIndex: viewIndex,
+          detailRouteName: storeDetailRoute,
+        );
 
   @override
-  StoreSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  StoreSearchBloc searchBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return StoreSearchBloc(
       collectionRepository: collectionRepository,
       viewIndex: viewIndex,
     );
-
   }
 
   @override
-  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  StoreListManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return StoreListManagerBloc(
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Store) onTap, required bool allowNewButton}) {
-
+  _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, Store) onTap,
+    required bool allowNewButton,
+  }) {
     return _StoreSearchBody<StoreSearchBloc>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
-
   }
 }
 
@@ -60,32 +62,34 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
     Key? key,
     required List<Store> items,
   }) : super(
-    key: key,
-    items: items,
-    detailRouteName: storeDetailRoute,
-  );
+          key: key,
+          items: items,
+          detailRouteName: storeDetailRoute,
+        );
 
   @override
-  StoreListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  StoreListManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return StoreListManagerBloc(
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, Store) onTap, required bool allowNewButton}) {
-
+  _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, Store) onTap,
+    required bool allowNewButton,
+  }) {
     return _StoreSearchBody<ItemLocalSearchBloc<Store>>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
-
   }
 }
 
-class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<Store, K, StoreListManagerBloc> {
+class _StoreSearchBody<K extends ItemSearchBloc<Store>>
+    extends ItemSearchBody<Store, K, StoreListManagerBloc> {
   const _StoreSearchBody({
     Key? key,
     required void Function()? Function(BuildContext, Store) onTap,
@@ -93,14 +97,18 @@ class _StoreSearchBody<K extends ItemSearchBloc<Store>> extends ItemSearchBody<S
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storeString;
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
+  String typesName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storesString;
 
   @override
-  Store createItem(String query) => Store(id: -1, name: query, iconURL: null, iconFilename: null);
+  Store createItem(String query) =>
+      Store(id: -1, name: query, iconURL: null, iconFilename: null);
 
   @override
-  Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Store item) =>
+      StoreTheme.itemCard(context, item, onTap);
 }

@@ -12,18 +12,18 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme;
 import 'list.dart';
 
-
 class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   const DLCAppBar({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: DLCTheme.primaryColour,
-    searchRouteName: dlcSearchRoute,
-  );
+          key: key,
+          themeColor: DLCTheme.primaryColour,
+          searchRouteName: dlcSearchRoute,
+        );
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).dlcsString;
+  String typesName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).dlcsString;
 
   @override
   List<String> views(BuildContext context) => DLCTheme.views(context);
@@ -33,31 +33,47 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
   const DLCFAB({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: DLCTheme.primaryColour,
-  );
+          key: key,
+          themeColor: DLCTheme.primaryColour,
+        );
 
   @override
-  DLC createItem() => const DLC(id: -1, name: '', releaseYear: null, coverURL: null, coverFilename: null, baseGame: null, firstFinishDate: null);
+  DLC createItem() => const DLC(
+        id: -1,
+        name: '',
+        releaseYear: null,
+        coverURL: null,
+        coverFilename: null,
+        baseGame: null,
+        firstFinishDate: null,
+      );
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).dlcString;
 }
 
 class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
     Key? key,
   }) : super(
-    key: key,
-    detailRouteName: dlcDetailRoute,
-  );
+          key: key,
+          detailRouteName: dlcDetailRoute,
+        );
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).dlcString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).dlcString;
 
   @override
-  _DLCListBody itemListBodyBuilder({required List<DLC> items, required int viewIndex, required int? viewYear, required void Function(DLC) onDelete, required ListStyle style, required ScrollController scrollController}) {
-
+  _DLCListBody itemListBodyBuilder({
+    required List<DLC> items,
+    required int viewIndex,
+    required int? viewYear,
+    required void Function(DLC) onDelete,
+    required ListStyle style,
+    required ScrollController scrollController,
+  }) {
     return _DLCListBody(
       items: items,
       viewIndex: viewIndex,
@@ -66,7 +82,6 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
       style: style,
       scrollController: scrollController,
     );
-
   }
 }
 
@@ -80,26 +95,29 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
     required ListStyle style,
     required ScrollController scrollController,
   }) : super(
-    key: key,
-    items: items,
-    viewIndex: viewIndex,
-    viewYear: viewYear,
-    onDelete: onDelete,
-    style: style,
-    scrollController: scrollController,
-    detailRouteName: dlcDetailRoute,
-    searchRouteName: dlcSearchRoute,
-  );
+          key: key,
+          items: items,
+          viewIndex: viewIndex,
+          viewYear: viewYear,
+          onDelete: onDelete,
+          style: style,
+          scrollController: scrollController,
+          detailRouteName: dlcDetailRoute,
+          searchRouteName: dlcSearchRoute,
+        );
 
   @override
   String itemTitle(DLC item) => DLCTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => DLCTheme.views(context).elementAt(viewIndex);
+  String viewTitle(BuildContext context) =>
+      DLCTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, DLC item) => DLCTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, DLC item) =>
+      DLCTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, DLC item) => DLCTheme.itemGrid(context, item, onTap);
+  Widget gridBuilder(BuildContext context, DLC item) =>
+      DLCTheme.itemGrid(context, item, onTap);
 }

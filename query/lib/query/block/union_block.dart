@@ -2,12 +2,11 @@ import '../query.dart' show Query, UnionType;
 import 'block.dart' show Block;
 import 'union_node.dart';
 
-
 /// UNION
 class UnionBlock extends Block {
-  UnionBlock() :
-    unions = <UnionNode>[],
-    super();
+  UnionBlock()
+      : unions = <UnionNode>[],
+        super();
 
   final List<UnionNode> unions;
 

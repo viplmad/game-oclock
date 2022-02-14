@@ -4,7 +4,6 @@ import 'package:backend/connector/connector.dart' show ProviderInstance;
 
 import 'package:backend/model/repository_type.dart';
 
-
 abstract class RepositorySettingsManagerEvent extends Equatable {
   const RepositorySettingsManagerEvent();
 

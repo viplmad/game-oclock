@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-
 abstract class ConnectState extends Equatable {
   const ConnectState();
 

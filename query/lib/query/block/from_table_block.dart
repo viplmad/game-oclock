@@ -1,7 +1,6 @@
 import '../query.dart' show Query;
 import 'block.dart' show TableBlockBase;
 
-
 /// FROM table
 class FromTableBlock extends TableBlockBase {
   FromTableBlock() : super();

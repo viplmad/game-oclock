@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity, GameEntityData, GameID;
 
-
 class GameFinishEntityData {
   GameFinishEntityData._();
 
@@ -30,59 +29,55 @@ class GameFinishEntity extends ItemEntity {
   final DateTime dateTime;
 
   static GameFinishEntity fromMap(Map<String, Object?> map) {
-
     return GameFinishEntity(
       gameId: map[GameFinishEntityData.gameField] as int,
       dateTime: map[GameFinishEntityData.dateField] as DateTime,
     );
-
   }
 
   static GameFinishID idFromMap(Map<String, Object?> map) {
-
-    return GameFinishID(GameID(map[GameFinishEntityData.gameField] as int), map[GameFinishEntityData.dateField] as DateTime);
-
+    return GameFinishID(
+      GameID(map[GameFinishEntityData.gameField] as int),
+      map[GameFinishEntityData.dateField] as DateTime,
+    );
   }
 
   GameFinishID createId() {
-
     return GameFinishID(GameID(gameId), dateTime);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      GameFinishEntityData.gameField : gameId,
-      GameFinishEntityData.dateField : dateTime,
+      GameFinishEntityData.gameField: gameId,
+      GameFinishEntityData.dateField: dateTime,
     };
 
     return createMap;
-
   }
 
   Map<String, Object?> updateMap(GameFinishEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, GameFinishEntityData.dateField, dateTime, updatedEntity.dateTime);
+    putUpdateMapValue(
+      updateMap,
+      GameFinishEntityData.dateField,
+      dateTime,
+      updatedEntity.dateTime,
+    );
 
     return updateMap;
-
   }
 
   @override
   List<Object> get props => <Object>[
-    dateTime,
-  ];
+        dateTime,
+      ];
 
   @override
   String toString() {
-
     return '${GameFinishEntityData.table}Entity { '
         '${GameFinishEntityData.gameField}: $gameId, '
         '${GameFinishEntityData.dateField}: $dateTime'
         ' }';
-
   }
 }

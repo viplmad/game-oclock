@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 extension TimeOfDayExtension on TimeOfDay {
   bool isAfter(TimeOfDay other) {
     return hour > other.hour || (hour == other.hour && minute > other.minute);

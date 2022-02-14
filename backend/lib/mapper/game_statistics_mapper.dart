@@ -1,12 +1,14 @@
-import 'package:backend/entity/entity.dart' show GameGeneralStatisticsEntity, GameYearStatisticsEntity;
-import 'package:backend/model/model.dart' show GameGeneralStatistics, GameYearStatistics;
-
+import 'package:backend/entity/entity.dart'
+    show GameGeneralStatisticsEntity, GameYearStatisticsEntity;
+import 'package:backend/model/model.dart'
+    show GameGeneralStatistics, GameYearStatistics;
 
 class GameStatisticsMapper {
   GameStatisticsMapper._();
 
-  static GameGeneralStatistics generalEntityToModel(GameGeneralStatisticsEntity entity) {
-
+  static GameGeneralStatistics generalEntityToModel(
+    GameGeneralStatisticsEntity entity,
+  ) {
     return GameGeneralStatistics(
       total: entity.count,
       ratingSum: entity.ratingSum,
@@ -26,11 +28,9 @@ class GameStatisticsMapper {
       countByFinishYear: entity.countByFinishYear,
       totalTimeByFinishYear: entity.timeLogSumByFinishYear,
     );
-
   }
 
   static GameYearStatistics yearEntityToModel(GameYearStatisticsEntity entity) {
-
     return GameYearStatistics(
       total: entity.count,
       ratingSum: entity.ratingSum,
@@ -48,18 +48,17 @@ class GameStatisticsMapper {
       countByRating: entity.countByRating,
       totalTimeByMonth: entity.timeLogSumByMonth,
     );
-
   }
 
-  static Future<GameGeneralStatistics> futureGeneralEntityToModel(Future<GameGeneralStatisticsEntity> entityFuture) {
-
-    return entityFuture.asStream().map( generalEntityToModel ).first;
-
+  static Future<GameGeneralStatistics> futureGeneralEntityToModel(
+    Future<GameGeneralStatisticsEntity> entityFuture,
+  ) {
+    return entityFuture.asStream().map(generalEntityToModel).first;
   }
 
-  static Future<GameYearStatistics> futureYearEntityToModel(Future<GameYearStatisticsEntity> entityFuture) {
-
-    return entityFuture.asStream().map( yearEntityToModel ).first;
-
+  static Future<GameYearStatistics> futureYearEntityToModel(
+    Future<GameYearStatisticsEntity> entityFuture,
+  ) {
+    return entityFuture.asStream().map(yearEntityToModel).first;
   }
 }

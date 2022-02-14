@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 enum GameStatus {
   lowPriority,
   nextUp,
@@ -25,10 +24,10 @@ class Game extends Item {
     required this.firstFinishDate,
     required this.totalTime,
   }) : super(
-    uniqueId: 'G$id',
-    hasImage: true,
-    queryableTerms: name + edition,
-  );
+          uniqueId: 'G$id',
+          hasImage: true,
+          queryableTerms: name + edition,
+        );
 
   final int id;
   final String name;
@@ -64,46 +63,43 @@ class Game extends Item {
     DateTime? firstFinishDate,
     Duration? totalTime,
   }) {
-
     return Game(
       id: id,
-      name: name?? this.name,
-      edition: edition?? this.edition,
-      releaseYear: releaseYear?? this.releaseYear,
-      coverURL: coverURL?? this.coverURL,
-      coverFilename: coverFilename?? this.coverFilename,
-      status: status?? this.status,
-      rating: rating?? this.rating,
-      thoughts: thoughts?? this.thoughts,
-      saveFolder: saveFolder?? this.saveFolder,
-      screenshotFolder: screenshotFolder?? this.screenshotFolder,
-      isBackup: isBackup?? this.isBackup,
-      firstFinishDate: firstFinishDate?? this.firstFinishDate,
-      totalTime: totalTime?? this.totalTime,
+      name: name ?? this.name,
+      edition: edition ?? this.edition,
+      releaseYear: releaseYear ?? this.releaseYear,
+      coverURL: coverURL ?? this.coverURL,
+      coverFilename: coverFilename ?? this.coverFilename,
+      status: status ?? this.status,
+      rating: rating ?? this.rating,
+      thoughts: thoughts ?? this.thoughts,
+      saveFolder: saveFolder ?? this.saveFolder,
+      screenshotFolder: screenshotFolder ?? this.screenshotFolder,
+      isBackup: isBackup ?? this.isBackup,
+      firstFinishDate: firstFinishDate ?? this.firstFinishDate,
+      totalTime: totalTime ?? this.totalTime,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    edition,
-    releaseYear?? -1,
-    coverURL?? '',
-    status,
-    rating,
-    thoughts,
-    saveFolder,
-    screenshotFolder,
-    isBackup,
-    firstFinishDate?? DateTime(1970),
-    totalTime,
-  ];
+        id,
+        name,
+        edition,
+        releaseYear ?? -1,
+        coverURL ?? '',
+        status,
+        rating,
+        thoughts,
+        saveFolder,
+        screenshotFolder,
+        isBackup,
+        firstFinishDate ?? DateTime(1970),
+        totalTime,
+      ];
 
   @override
   String toString() {
-
     return 'Game { '
         'Id: $id, '
         'Name: $name, '
@@ -119,6 +115,5 @@ class Game extends Item {
         'Total Time: $totalTime, '
         'First Finish Date: $firstFinishDate'
         ' }';
-
   }
 }

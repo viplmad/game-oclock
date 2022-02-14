@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/model.dart';
 
-
 abstract class ItemDetailManagerEvent extends Equatable {
   const ItemDetailManagerEvent();
 
@@ -33,7 +32,7 @@ class AddItemImage<T extends Item> extends ItemDetailManagerEvent {
   final String? oldImageName;
 
   @override
-  List<Object> get props => <Object>[imagePath, oldImageName?? ''];
+  List<Object> get props => <Object>[imagePath, oldImageName ?? ''];
 
   @override
   String toString() => 'AddItemImage { '

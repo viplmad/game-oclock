@@ -3,7 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/connector/connector.dart' show CloudinaryCredentials, CloudinaryInstance, PostgresCredentials, PostgresInstance;
+import 'package:backend/connector/connector.dart'
+    show
+        CloudinaryCredentials,
+        CloudinaryInstance,
+        PostgresCredentials,
+        PostgresInstance;
 
 import 'package:backend/model/repository_type.dart';
 
@@ -18,7 +23,6 @@ import '../common/shape_utils.dart';
 import '../common/tabs_delegate.dart';
 import '../route_constants.dart';
 
-
 class RepositorySettings extends StatelessWidget {
   const RepositorySettings({
     Key? key,
@@ -26,8 +30,8 @@ class RepositorySettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final RepositorySettingsManagerBloc _managerBloc = RepositorySettingsManagerBloc();
+    final RepositorySettingsManagerBloc _managerBloc =
+        RepositorySettingsManagerBloc();
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -38,7 +42,6 @@ class RepositorySettings extends StatelessWidget {
             )..add(LoadRepositorySettings());
           },
         ),
-
         BlocProvider<RepositorySettingsManagerBloc>(
           create: (BuildContext context) {
             return _managerBloc;
@@ -47,34 +50,39 @@ class RepositorySettings extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
+          title: Text(
+            GameCollectionLocalisations.of(context).repositorySettingsString,
+          ),
         ),
         body: const _RepositorySettingsBody(),
-        floatingActionButton: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
+        floatingActionButton:
+            BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
           builder: (BuildContext context, RepositorySettingsState state) {
             bool active = false;
-            if(state is RepositorySettingsLoaded) {
+            if (state is RepositorySettingsLoaded) {
               active = state.ready;
             }
 
             return FloatingActionButton.extended(
-              label: Text(GameCollectionLocalisations.of(context).connectString),
+              label:
+                  Text(GameCollectionLocalisations.of(context).connectString),
               icon: const Icon(Icons.send),
               shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).connectString,
-              onPressed: active? () {
-                Navigator.pushReplacementNamed(
-                  context,
-                  connectRoute,
-                );
-              } : null,
-              backgroundColor: active? null : Colors.grey,
+              onPressed: active
+                  ? () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        connectRoute,
+                      );
+                    }
+                  : null,
+              backgroundColor: active ? null : Colors.grey,
             );
           },
         ),
       ),
     );
-
   }
 }
 
@@ -85,25 +93,22 @@ class _RepositorySettingsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return BlocListener<RepositorySettingsManagerBloc, RepositorySettingsManagerState>(
+    return BlocListener<RepositorySettingsManagerBloc,
+        RepositorySettingsManagerState>(
       listener: (BuildContext context, RepositorySettingsManagerState state) {
-        if(state is ItemConnectionSettingsUpdated) {
-          final String message = GameCollectionLocalisations.of(context).updatedItemConnectionString;
-          showSnackBar(
-            context,
-            message: message
-          );
+        if (state is ItemConnectionSettingsUpdated) {
+          final String message = GameCollectionLocalisations.of(context)
+              .updatedItemConnectionString;
+          showSnackBar(context, message: message);
         }
-        if(state is ImageConnectionSettingsUpdated) {
-          final String message = GameCollectionLocalisations.of(context).updatedImageConnectionString;
-          showSnackBar(
-            context,
-            message: message
-          );
+        if (state is ImageConnectionSettingsUpdated) {
+          final String message = GameCollectionLocalisations.of(context)
+              .updatedImageConnectionString;
+          showSnackBar(context, message: message);
         }
-        if(state is RepositorySettingsNotUpdated) {
-          final String message = GameCollectionLocalisations.of(context).unableToUpdateConnectionString;
+        if (state is RepositorySettingsNotUpdated) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToUpdateConnectionString;
           showSnackBar(
             context,
             message: message,
@@ -115,22 +120,19 @@ class _RepositorySettingsBody extends StatelessWidget {
             ),
           );
         }
-        if(state is ItemConnectionSettingsDeleted) {
-          final String message = GameCollectionLocalisations.of(context).deletedItemConnectionString;
-          showSnackBar(
-            context,
-            message: message
-          );
+        if (state is ItemConnectionSettingsDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .deletedItemConnectionString;
+          showSnackBar(context, message: message);
         }
-        if(state is ImageConnectionSettingsDeleted) {
-          final String message = GameCollectionLocalisations.of(context).deletedImageConnectionString;
-          showSnackBar(
-            context,
-            message: message
-          );
+        if (state is ImageConnectionSettingsDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .deletedImageConnectionString;
+          showSnackBar(context, message: message);
         }
-        if(state is RepositorySettingsNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context).unableToDeleteConnectionString;
+        if (state is RepositorySettingsNotDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToDeleteConnectionString;
           showSnackBar(
             context,
             message: message,
@@ -145,10 +147,11 @@ class _RepositorySettingsBody extends StatelessWidget {
       },
       child: BlocBuilder<RepositorySettingsBloc, RepositorySettingsState>(
         builder: (BuildContext context, RepositorySettingsState state) {
-
-          if(state is RepositorySettingsLoaded) {
-            final ItemConnectorType? itemRadioGroup = state.activeItemConnection;
-            final ImageConnectorType? imageRadioGroup = state.activeImageConnection;
+          if (state is RepositorySettingsLoaded) {
+            final ItemConnectorType? itemRadioGroup =
+                state.activeItemConnection;
+            final ImageConnectorType? imageRadioGroup =
+                state.activeImageConnection;
 
             final List<String> tabTitles = <String>[
               GameCollectionLocalisations.of(context).itemConnectionString,
@@ -160,14 +163,15 @@ class _RepositorySettingsBody extends StatelessWidget {
               child: Builder(
                 builder: (BuildContext context) {
                   return NestedScrollView(
-                    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverPersistentHeader(
                           pinned: true,
                           floating: true,
                           delegate: TabsDelegate(
                             tabBar: TabBar(
-                              tabs: tabTitles.map<Tab>( (String title) {
+                              tabs: tabTitles.map<Tab>((String title) {
                                 return Tab(
                                   text: title,
                                 );
@@ -187,22 +191,17 @@ class _RepositorySettingsBody extends StatelessWidget {
                 },
               ),
             );
-
           }
-          if(state is RepositorySettingsNotLoaded) {
-
+          if (state is RepositorySettingsNotLoaded) {
             return Center(
               child: Text(state.error),
             );
-
           }
 
           return const LinearProgressIndicator();
-
         },
       ),
     );
-
   }
 
   Widget _itemRadioList(BuildContext context, ItemConnectorType? radioGroup) {
@@ -223,53 +222,54 @@ class _RepositorySettingsBody extends StatelessWidget {
     );
   }
 
-  RadioListTile<ItemConnectorType> _postgresRadio(BuildContext context, ItemConnectorType? radioGroup) {
+  RadioListTile<ItemConnectorType> _postgresRadio(
+    BuildContext context,
+    ItemConnectorType? radioGroup,
+  ) {
     return RadioListTile<ItemConnectorType>(
       title: const Text(GameCollectionLocalisations.postgresString),
       groupValue: radioGroup,
       value: ItemConnectorType.postgres,
       onChanged: (_) {
-
         _showPostgresDialog(context);
-
       },
-      secondary: radioGroup == ItemConnectorType.postgres? Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <IconButton>[
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-
-              _showPostgresDialog(context);
-
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-
-              BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-                DeleteItemConnectionSettings(),
-              );
-
-            },
-          ),
-        ],
-      ) : null,
+      secondary: radioGroup == ItemConnectorType.postgres
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <IconButton>[
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    _showPostgresDialog(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+                      DeleteItemConnectionSettings(),
+                    );
+                  },
+                ),
+              ],
+            )
+          : null,
     );
   }
 
   void _showPostgresDialog(BuildContext context) {
-
     showDialog<PostgresInstance>(
       context: context,
       builder: (BuildContext context) {
-        final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
+        final RepositorySettingsDetailBloc detailBloc =
+            RepositorySettingsDetailBloc();
 
-        return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-          bloc: detailBloc..add(const LoadItemSettingsDetail(ItemConnectorType.postgres)),
+        return BlocBuilder<RepositorySettingsDetailBloc,
+            RepositorySettingsDetailState>(
+          bloc: detailBloc
+            ..add(const LoadItemSettingsDetail(ItemConnectorType.postgres)),
           builder: (BuildContext context, RepositorySettingsDetailState state) {
-            if(state is RepositorySettingsDetailLoaded) {
+            if (state is RepositorySettingsDetailLoaded) {
               return PostgresTextDialog(
                 instance: state.instance as PostgresInstance?,
               );
@@ -280,16 +280,18 @@ class _RepositorySettingsBody extends StatelessWidget {
         );
       },
     ).then((PostgresInstance? instance) {
-      if(instance != null) {
+      if (instance != null) {
         BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
           UpdateItemConnectionSettings(ItemConnectorType.postgres, instance),
         );
       }
     });
-
   }
 
-  RadioListTile<ItemConnectorType> _localItemRadio(BuildContext context, ItemConnectorType? radioGroup) {
+  RadioListTile<ItemConnectorType> _localItemRadio(
+    BuildContext context,
+    ItemConnectorType? radioGroup,
+  ) {
     return RadioListTile<ItemConnectorType>(
       title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
@@ -298,53 +300,54 @@ class _RepositorySettingsBody extends StatelessWidget {
     );
   }
 
-  RadioListTile<ImageConnectorType> _cloudinaryRadio(BuildContext context, ImageConnectorType? radioGroup) {
+  RadioListTile<ImageConnectorType> _cloudinaryRadio(
+    BuildContext context,
+    ImageConnectorType? radioGroup,
+  ) {
     return RadioListTile<ImageConnectorType>(
       title: const Text(GameCollectionLocalisations.cloudinaryString),
       groupValue: radioGroup,
       value: ImageConnectorType.cloudinary,
       onChanged: (_) {
-
         _showCloudinaryDialog(context);
-
       },
-      secondary: radioGroup == ImageConnectorType.cloudinary? Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <IconButton>[
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-
-              _showCloudinaryDialog(context);
-
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-
-              BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-                DeleteImageConnectionSettings(),
-              );
-
-            },
-          ),
-        ],
-      ) : null,
+      secondary: radioGroup == ImageConnectorType.cloudinary
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <IconButton>[
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    _showCloudinaryDialog(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
+                      DeleteImageConnectionSettings(),
+                    );
+                  },
+                ),
+              ],
+            )
+          : null,
     );
   }
 
   void _showCloudinaryDialog(BuildContext context) {
-
     showDialog<CloudinaryInstance>(
       context: context,
       builder: (BuildContext context) {
-        final RepositorySettingsDetailBloc detailBloc = RepositorySettingsDetailBloc();
+        final RepositorySettingsDetailBloc detailBloc =
+            RepositorySettingsDetailBloc();
 
-        return BlocBuilder<RepositorySettingsDetailBloc, RepositorySettingsDetailState>(
-          bloc: detailBloc..add(const LoadImageSettingsDetail(ImageConnectorType.cloudinary)),
+        return BlocBuilder<RepositorySettingsDetailBloc,
+            RepositorySettingsDetailState>(
+          bloc: detailBloc
+            ..add(const LoadImageSettingsDetail(ImageConnectorType.cloudinary)),
           builder: (BuildContext context, RepositorySettingsDetailState state) {
-            if(state is RepositorySettingsDetailLoaded) {
+            if (state is RepositorySettingsDetailLoaded) {
               return CloudinaryTextDialog(
                 instance: state.instance as CloudinaryInstance?,
               );
@@ -355,16 +358,21 @@ class _RepositorySettingsBody extends StatelessWidget {
         );
       },
     ).then((CloudinaryInstance? instance) {
-      if(instance != null) {
+      if (instance != null) {
         BlocProvider.of<RepositorySettingsManagerBloc>(context).add(
-          UpdateImageConnectionSettings(ImageConnectorType.cloudinary, instance),
+          UpdateImageConnectionSettings(
+            ImageConnectorType.cloudinary,
+            instance,
+          ),
         );
       }
     });
-
   }
 
-  RadioListTile<ImageConnectorType> _localImageRadio(BuildContext context, ImageConnectorType? radioGroup) {
+  RadioListTile<ImageConnectorType> _localImageRadio(
+    BuildContext context,
+    ImageConnectorType? radioGroup,
+  ) {
     return RadioListTile<ImageConnectorType>(
       title: Text(GameCollectionLocalisations.of(context).localString),
       groupValue: radioGroup,
@@ -375,16 +383,13 @@ class _RepositorySettingsBody extends StatelessWidget {
 }
 
 class PostgresTextDialog extends TextDialog {
-  const PostgresTextDialog({
-    Key? key,
-    required this.instance
-  }) : super(key: key);
+  const PostgresTextDialog({Key? key, required this.instance})
+      : super(key: key);
 
   final PostgresInstance? instance;
 
   @override
   Widget build(BuildContext context) {
-
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final PostgresCredentials _instance = PostgresCredentials();
 
@@ -401,36 +406,39 @@ class PostgresTextDialog extends TextDialog {
                   labelText: GameCollectionLocalisations.of(context).hostString,
                   initialValue: instance?.host,
                   onSaved: (String? value) {
-                    _instance.host = value?? _instance.host;
+                    _instance.host = value ?? _instance.host;
                   },
                 ),
                 numberFormField(
                   labelText: GameCollectionLocalisations.of(context).portString,
                   initialValue: instance?.port,
                   onSaved: (String? value) {
-                    _instance.port = int.parse(value?? _instance.port.toString());
+                    _instance.port =
+                        int.parse(value ?? _instance.port.toString());
                   },
                 ),
                 textFormField(
-                  labelText: GameCollectionLocalisations.of(context).databaseString,
+                  labelText:
+                      GameCollectionLocalisations.of(context).databaseString,
                   initialValue: instance?.database,
                   onSaved: (String? value) {
-                    _instance.database = value?? _instance.database;
+                    _instance.database = value ?? _instance.database;
                   },
                 ),
                 textFormField(
                   labelText: GameCollectionLocalisations.of(context).userString,
                   initialValue: instance?.user,
                   onSaved: (String? value) {
-                    _instance.user = value?? _instance.user;
+                    _instance.user = value ?? _instance.user;
                   },
                 ),
                 textFormField(
-                  labelText: GameCollectionLocalisations.of(context).passwordString,
+                  labelText:
+                      GameCollectionLocalisations.of(context).passwordString,
                   initialValue: instance?.password,
                   obscureText: true,
                   onSaved: (String? value) {
-                    _instance.password = value?? _instance.password;
+                    _instance.password = value ?? _instance.password;
                   },
                 ),
               ],
@@ -448,7 +456,8 @@ class PostgresTextDialog extends TextDialog {
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
           onPressed: () {
-            if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+            if (_formKey.currentState != null &&
+                _formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               Navigator.maybePop<PostgresInstance>(context, _instance);
             }
@@ -456,21 +465,17 @@ class PostgresTextDialog extends TextDialog {
         ),
       ],
     );
-
   }
 }
 
 class CloudinaryTextDialog extends TextDialog {
-  const CloudinaryTextDialog({
-    Key? key,
-    required this.instance
-  }) : super(key: key);
+  const CloudinaryTextDialog({Key? key, required this.instance})
+      : super(key: key);
 
   final CloudinaryInstance? instance;
 
   @override
   Widget build(BuildContext context) {
-
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final CloudinaryCredentials _instance = CloudinaryCredentials();
 
@@ -484,25 +489,29 @@ class CloudinaryTextDialog extends TextDialog {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 textFormField(
-                  labelText: GameCollectionLocalisations.of(context).cloudNameString,
+                  labelText:
+                      GameCollectionLocalisations.of(context).cloudNameString,
                   initialValue: instance?.cloudName,
                   onSaved: (String? value) {
-                    _instance.cloudName = value?? _instance.cloudName;
+                    _instance.cloudName = value ?? _instance.cloudName;
                   },
                 ),
                 numberFormField(
-                  labelText: GameCollectionLocalisations.of(context).apiKeyString,
+                  labelText:
+                      GameCollectionLocalisations.of(context).apiKeyString,
                   initialValue: instance?.apiKey,
                   onSaved: (String? value) {
-                    _instance.apiKey = int.parse(value?? _instance.apiKey.toString());
+                    _instance.apiKey =
+                        int.parse(value ?? _instance.apiKey.toString());
                   },
                 ),
                 textFormField(
-                  labelText: GameCollectionLocalisations.of(context).apiSecretString,
+                  labelText:
+                      GameCollectionLocalisations.of(context).apiSecretString,
                   initialValue: instance?.apiSecret,
                   obscureText: true,
                   onSaved: (String? value) {
-                    _instance.apiSecret = value?? _instance.apiSecret;
+                    _instance.apiSecret = value ?? _instance.apiSecret;
                   },
                 ),
               ],
@@ -520,7 +529,8 @@ class CloudinaryTextDialog extends TextDialog {
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
           onPressed: () {
-            if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+            if (_formKey.currentState != null &&
+                _formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               Navigator.maybePop<CloudinaryCredentials>(context, _instance);
             }
@@ -528,7 +538,6 @@ class CloudinaryTextDialog extends TextDialog {
         ),
       ],
     );
-
   }
 }
 
@@ -537,23 +546,30 @@ abstract class TextDialog extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  Widget textFormField({required String labelText, required String? initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
-
+  Widget textFormField({
+    required String labelText,
+    required String? initialValue,
+    bool obscureText = false,
+    required void Function(String?) onSaved,
+  }) {
     return _ShowHideTextField(
       labelText: labelText,
-      initialValue: initialValue?? '',
+      initialValue: initialValue ?? '',
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.text,
     );
-
   }
 
-  Widget numberFormField({required String labelText, required int? initialValue, bool obscureText = false, required void Function(String?) onSaved}) {
-
+  Widget numberFormField({
+    required String labelText,
+    required int? initialValue,
+    bool obscureText = false,
+    required void Function(String?) onSaved,
+  }) {
     return _ShowHideTextField(
       labelText: labelText,
-      initialValue: initialValue?.toString()?? '',
+      initialValue: initialValue?.toString() ?? '',
       allowObscureText: obscureText,
       onSaved: onSaved,
       keyboardType: TextInputType.number,
@@ -561,7 +577,6 @@ abstract class TextDialog extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly,
       ],
     );
-
   }
 }
 
@@ -586,34 +601,37 @@ class _ShowHideTextField extends StatefulWidget {
   @override
   State<_ShowHideTextField> createState() => _ShowHideTextFieldState();
 }
-class _ShowHideTextFieldState extends State<_ShowHideTextField> {
 
+class _ShowHideTextFieldState extends State<_ShowHideTextField> {
   bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
+      padding:
+          const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
       child: TextFormField(
         initialValue: widget.initialValue,
-        obscureText: widget.allowObscureText? obscureText : false,
+        obscureText: widget.allowObscureText ? obscureText : false,
         maxLines: 1,
         decoration: InputDecoration(
           labelText: widget.labelText,
           border: const OutlineInputBorder(),
-          suffixIcon: widget.allowObscureText? IconButton(
-            tooltip: obscureText?
-              GameCollectionLocalisations.of(context).showString
-              :
-              GameCollectionLocalisations.of(context).hideString,
-            icon: obscureText? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
-            onPressed: () {
-              setState(() {
-                obscureText = !obscureText;
-              });
-            },
-          ) : null,
+          suffixIcon: widget.allowObscureText
+              ? IconButton(
+                  tooltip: obscureText
+                      ? GameCollectionLocalisations.of(context).showString
+                      : GameCollectionLocalisations.of(context).hideString,
+                  icon: obscureText
+                      ? const Icon(Icons.visibility_off)
+                      : const Icon(Icons.visibility),
+                  onPressed: () {
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  },
+                )
+              : null,
         ),
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,
@@ -626,6 +644,5 @@ class _ShowHideTextFieldState extends State<_ShowHideTextField> {
         onSaved: widget.onSaved,
       ),
     );
-
   }
 }

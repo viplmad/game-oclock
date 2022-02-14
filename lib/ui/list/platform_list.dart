@@ -12,18 +12,18 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show PlatformTheme;
 import 'list.dart';
 
-
 class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   const PlatformAppBar({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: PlatformTheme.primaryColour,
-    searchRouteName: platformSearchRoute,
-  );
+          key: key,
+          themeColor: PlatformTheme.primaryColour,
+          searchRouteName: platformSearchRoute,
+        );
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).platformsString;
+  String typesName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).platformsString;
 
   @override
   List<String> views(BuildContext context) => PlatformTheme.views(context);
@@ -33,31 +33,46 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
   const PlatformFAB({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: PlatformTheme.primaryColour,
-  );
+          key: key,
+          themeColor: PlatformTheme.primaryColour,
+        );
 
   @override
-  Platform createItem() => const Platform(id: -1, name: '', iconURL: null, iconFilename: null, type: null);
+  Platform createItem() => const Platform(
+        id: -1,
+        name: '',
+        iconURL: null,
+        iconFilename: null,
+        type: null,
+      );
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).platformString;
 }
 
-class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
+class PlatformList
+    extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
     Key? key,
   }) : super(
-    key: key,
-    detailRouteName: platformDetailRoute,
-  );
+          key: key,
+          detailRouteName: platformDetailRoute,
+        );
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).platformString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).platformString;
 
   @override
-  _PlatformListBody itemListBodyBuilder({required List<Platform> items, required int viewIndex, required int? viewYear, required void Function(Platform) onDelete, required ListStyle style, required ScrollController scrollController}) {
-
+  _PlatformListBody itemListBodyBuilder({
+    required List<Platform> items,
+    required int viewIndex,
+    required int? viewYear,
+    required void Function(Platform) onDelete,
+    required ListStyle style,
+    required ScrollController scrollController,
+  }) {
     return _PlatformListBody(
       items: items,
       viewIndex: viewIndex,
@@ -66,7 +81,6 @@ class PlatformList extends ItemList<Platform, PlatformListBloc, PlatformListMana
       style: style,
       scrollController: scrollController,
     );
-
   }
 }
 
@@ -80,26 +94,29 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
     required ListStyle style,
     required ScrollController scrollController,
   }) : super(
-    key: key,
-    items: items,
-    viewIndex: viewIndex,
-    viewYear: viewYear,
-    onDelete: onDelete,
-    style: style,
-    scrollController: scrollController,
-    detailRouteName: platformDetailRoute,
-    searchRouteName: platformSearchRoute,
-  );
+          key: key,
+          items: items,
+          viewIndex: viewIndex,
+          viewYear: viewYear,
+          onDelete: onDelete,
+          style: style,
+          scrollController: scrollController,
+          detailRouteName: platformDetailRoute,
+          searchRouteName: platformSearchRoute,
+        );
 
   @override
   String itemTitle(Platform item) => PlatformTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => PlatformTheme.views(context).elementAt(viewIndex);
+  String viewTitle(BuildContext context) =>
+      PlatformTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, Platform item) => PlatformTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Platform item) =>
+      PlatformTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, Platform item) => PlatformTheme.itemGrid(context, item, onTap);
+  Widget gridBuilder(BuildContext context, Platform item) =>
+      PlatformTheme.itemGrid(context, item, onTap);
 }

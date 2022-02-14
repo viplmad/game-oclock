@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/connector/provider_instance.dart';
 
-
 abstract class RepositorySettingsDetailState extends Equatable {
   const RepositorySettingsDetailState();
 
@@ -31,4 +30,3 @@ class RepositorySettingsDetailNotLoaded extends RepositorySettingsDetailState {
       'error: $error'
       ' }';
 }
-

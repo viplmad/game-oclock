@@ -12,18 +12,18 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show StoreTheme;
 import 'list.dart';
 
-
 class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   const StoreAppBar({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: StoreTheme.primaryColour,
-    searchRouteName: storeSearchRoute,
-  );
+          key: key,
+          themeColor: StoreTheme.primaryColour,
+          searchRouteName: storeSearchRoute,
+        );
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).storesString;
+  String typesName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storesString;
 
   @override
   List<String> views(BuildContext context) => StoreTheme.views(context);
@@ -33,31 +33,40 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
   const StoreFAB({
     Key? key,
   }) : super(
-    key: key,
-    themeColor: StoreTheme.primaryColour,
-  );
+          key: key,
+          themeColor: StoreTheme.primaryColour,
+        );
 
   @override
-  Store createItem() => const Store(id: -1, name: '', iconURL: null, iconFilename: null);
+  Store createItem() =>
+      const Store(id: -1, name: '', iconURL: null, iconFilename: null);
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storeString;
 }
 
 class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
   const StoreList({
     Key? key,
   }) : super(
-    key: key,
-    detailRouteName: storeDetailRoute,
-  );
+          key: key,
+          detailRouteName: storeDetailRoute,
+        );
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).storeString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storeString;
 
   @override
-  _StoreListBody itemListBodyBuilder({required List<Store> items, required int viewIndex, required int? viewYear, required void Function(Store) onDelete, required ListStyle style, required ScrollController scrollController}) {
-
+  _StoreListBody itemListBodyBuilder({
+    required List<Store> items,
+    required int viewIndex,
+    required int? viewYear,
+    required void Function(Store) onDelete,
+    required ListStyle style,
+    required ScrollController scrollController,
+  }) {
     return _StoreListBody(
       items: items,
       viewIndex: viewIndex,
@@ -66,7 +75,6 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
       style: style,
       scrollController: scrollController,
     );
-
   }
 }
 
@@ -80,26 +88,29 @@ class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
     required ListStyle style,
     required ScrollController scrollController,
   }) : super(
-    key: key,
-    items: items,
-    viewIndex: viewIndex,
-    viewYear: viewYear,
-    onDelete: onDelete,
-    style: style,
-    scrollController: scrollController,
-    detailRouteName: storeDetailRoute,
-    searchRouteName: storeSearchRoute,
-  );
+          key: key,
+          items: items,
+          viewIndex: viewIndex,
+          viewYear: viewYear,
+          onDelete: onDelete,
+          style: style,
+          scrollController: scrollController,
+          detailRouteName: storeDetailRoute,
+          searchRouteName: storeSearchRoute,
+        );
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);
 
   @override
-  String viewTitle(BuildContext context) => StoreTheme.views(context).elementAt(viewIndex);
+  String viewTitle(BuildContext context) =>
+      StoreTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, Store item) => StoreTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Store item) =>
+      StoreTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, Store item) => StoreTheme.itemGrid(context, item, onTap);
+  Widget gridBuilder(BuildContext context, Store item) =>
+      StoreTheme.itemGrid(context, item, onTap);
 }

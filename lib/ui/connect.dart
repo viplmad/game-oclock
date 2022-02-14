@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/bloc/connection/connection.dart';
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
 import 'common/loading_icon.dart';
-
 
 class Connectpage extends StatelessWidget {
   const Connectpage({
@@ -18,16 +18,15 @@ class Connectpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
         return ConnectionBloc(
-          collectionRepository: RepositoryProvider.of<GameCollectionRepository>(context),
+          collectionRepository:
+              RepositoryProvider.of<GameCollectionRepository>(context),
         )..add(Connect());
       },
       child: const _ConnectpageBody(),
     );
-
   }
 }
 
@@ -38,20 +37,19 @@ class _ConnectpageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(GameCollectionLocalisations.appTitle),
       ),
       body: BlocListener<ConnectionBloc, ConnectState>(
         listener: (BuildContext context, ConnectState state) {
-          if(state is Connected) {
+          if (state is Connected) {
             Navigator.pushReplacementNamed(
               context,
               homeRoute,
             );
           }
-          if(state is NonexistentConnection) {
+          if (state is NonexistentConnection) {
             Navigator.pushReplacementNamed(
               context,
               repositorySettingsRoute,
@@ -61,9 +59,7 @@ class _ConnectpageBody extends StatelessWidget {
         child: Center(
           child: BlocBuilder<ConnectionBloc, ConnectState>(
             builder: (BuildContext context, ConnectState state) {
-
-              if(state is Connecting) {
-
+              if (state is Connecting) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,26 +68,35 @@ class _ConnectpageBody extends StatelessWidget {
                       padding: EdgeInsets.all(12.0),
                       child: LoadingIcon(),
                     ),
-                    Text(GameCollectionLocalisations.of(context).connectingString),
+                    Text(
+                      GameCollectionLocalisations.of(context).connectingString,
+                    ),
                   ],
                 );
-
               }
-              if(state is FailedConnection) {
-
+              if (state is FailedConnection) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(GameCollectionLocalisations.of(context).failedConnectionString),
+                    Text(
+                      GameCollectionLocalisations.of(context)
+                          .failedConnectionString,
+                    ),
                     ElevatedButton(
-                      child: Text(GameCollectionLocalisations.of(context).retryString),
+                      child: Text(
+                        GameCollectionLocalisations.of(context).retryString,
+                      ),
                       onPressed: () {
-                        BlocProvider.of<ConnectionBloc>(context).add(Reconnect());
+                        BlocProvider.of<ConnectionBloc>(context)
+                            .add(Reconnect());
                       },
                     ),
                     ElevatedButton(
-                      child: Text(GameCollectionLocalisations.of(context).changeRepositoryString),
+                      child: Text(
+                        GameCollectionLocalisations.of(context)
+                            .changeRepositoryString,
+                      ),
                       onPressed: () {
                         Navigator.pushReplacementNamed(
                           context,
@@ -101,16 +106,13 @@ class _ConnectpageBody extends StatelessWidget {
                     ),
                   ],
                 );
-
               }
 
               return Container();
-
             },
           ),
         ),
       ),
     );
-
   }
 }

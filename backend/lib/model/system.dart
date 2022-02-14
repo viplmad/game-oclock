@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 enum Manufacturer {
   nintendo,
   sony,
@@ -17,10 +16,10 @@ class System extends Item {
     required this.generation,
     required this.manufacturer,
   }) : super(
-    uniqueId: 'Sy$id',
-    hasImage: true,
-    queryableTerms: name,
-  );
+          uniqueId: 'Sy$id',
+          hasImage: true,
+          queryableTerms: name,
+        );
 
   final int id;
   final String name;
@@ -40,30 +39,27 @@ class System extends Item {
     int? generation,
     Manufacturer? manufacturer,
   }) {
-
     return System(
       id: id,
-      name: name?? this.name,
-      iconURL: iconURL?? this.iconURL,
-      iconFilename: iconFilename?? this.iconFilename,
-      generation: generation?? this.generation,
-      manufacturer: manufacturer?? this.manufacturer,
+      name: name ?? this.name,
+      iconURL: iconURL ?? this.iconURL,
+      iconFilename: iconFilename ?? this.iconFilename,
+      generation: generation ?? this.generation,
+      manufacturer: manufacturer ?? this.manufacturer,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    iconURL?? '',
-    generation,
-    manufacturer?? '',
-  ];
+        id,
+        name,
+        iconURL ?? '',
+        generation,
+        manufacturer ?? '',
+      ];
 
   @override
   String toString() {
-
     return 'System { '
         'Id: $id, '
         'Name: $name, '
@@ -71,6 +67,5 @@ class System extends Item {
         'Generation: $generation, '
         'Manufacturer: $manufacturer'
         ' }';
-
   }
 }

@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 class DLC extends Item {
   const DLC({
     required this.id,
@@ -11,10 +10,10 @@ class DLC extends Item {
     required this.baseGame,
     required this.firstFinishDate,
   }) : super(
-    uniqueId: 'D$id',
-    hasImage: true,
-    queryableTerms: name,
-  );
+          uniqueId: 'D$id',
+          hasImage: true,
+          queryableTerms: name,
+        );
 
   final int id;
   final String name;
@@ -36,31 +35,28 @@ class DLC extends Item {
     int? baseGame,
     DateTime? firstFinishDate,
   }) {
-
     return DLC(
       id: id,
-      name: name?? this.name,
-      releaseYear: releaseYear?? this.releaseYear,
-      coverURL: coverURL?? this.coverURL,
-      coverFilename: coverFilename?? this.coverFilename,
-      baseGame: baseGame?? this.baseGame,
-      firstFinishDate: firstFinishDate?? this.firstFinishDate,
+      name: name ?? this.name,
+      releaseYear: releaseYear ?? this.releaseYear,
+      coverURL: coverURL ?? this.coverURL,
+      coverFilename: coverFilename ?? this.coverFilename,
+      baseGame: baseGame ?? this.baseGame,
+      firstFinishDate: firstFinishDate ?? this.firstFinishDate,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    releaseYear?? -1,
-    coverURL?? '',
-    firstFinishDate?? DateTime(1970),
-  ];
+        id,
+        name,
+        releaseYear ?? -1,
+        coverURL ?? '',
+        firstFinishDate ?? DateTime(1970),
+      ];
 
   @override
   String toString() {
-
     return 'DLC { '
         'Id: $id, '
         'Name: $name, '
@@ -68,6 +64,5 @@ class DLC extends Item {
         'Cover URL: $coverURL, '
         'First Finish Date: $firstFinishDate'
         ' }';
-
   }
 }

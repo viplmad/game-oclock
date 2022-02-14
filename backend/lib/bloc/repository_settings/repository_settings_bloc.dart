@@ -8,146 +8,133 @@ import 'package:backend/preferences/repository_preferences.dart';
 import '../repository_settings_manager/repository_settings_manager.dart';
 import 'repository_settings.dart';
 
-
-class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySettingsState> {
+class RepositorySettingsBloc
+    extends Bloc<RepositorySettingsEvent, RepositorySettingsState> {
   RepositorySettingsBloc({
     required RepositorySettingsManagerBloc managerBloc,
   }) : super(RepositorySettingsLoading()) {
-
     on<LoadRepositorySettings>(_mapLoadToState);
     on<UpdateRepositorySettings>(_mapUpdateToState);
 
     managerSubscription = managerBloc.stream.listen(mapManagerStateToEvent);
-
   }
 
-  late final StreamSubscription<RepositorySettingsManagerState> managerSubscription;
+  late final StreamSubscription<RepositorySettingsManagerState>
+      managerSubscription;
 
-  void _mapLoadToState(LoadRepositorySettings event, Emitter<RepositorySettingsState> emit) async {
-
+  void _mapLoadToState(
+    LoadRepositorySettings event,
+    Emitter<RepositorySettingsState> emit,
+  ) async {
     emit(
       RepositorySettingsLoading(),
     );
 
-    final bool existsConnection = await RepositoryPreferences.existsItemConnection();
-    if(!existsConnection) {
-
+    final bool existsConnection =
+        await RepositoryPreferences.existsItemConnection();
+    if (!existsConnection) {
       emit(
         const RepositorySettingsLoaded(),
       );
-
     } else {
-
       try {
-
         emit(
           RepositorySettingsLoaded(
             await RepositoryPreferences.retrieveActiveItemConnectorType(),
             await RepositoryPreferences.retrieveActiveImageConnectorType(),
           ),
         );
-
-      } catch(e) {
-
+      } catch (e) {
         emit(
           RepositorySettingsNotLoaded(e.toString()),
         );
-
       }
-
     }
-
   }
 
-  void _mapUpdateToState(UpdateRepositorySettings event, Emitter<RepositorySettingsState> emit) {
-
+  void _mapUpdateToState(
+    UpdateRepositorySettings event,
+    Emitter<RepositorySettingsState> emit,
+  ) {
     emit(
       RepositorySettingsLoaded(
         event.savedItemConnection,
         event.savedImageConnection,
       ),
     );
-
   }
 
   void mapManagerStateToEvent(RepositorySettingsManagerState managerState) {
-
-    if(managerState is ItemConnectionSettingsUpdated) {
-
+    if (managerState is ItemConnectionSettingsUpdated) {
       _mapUpdatedItemToEvent(managerState);
-
-    } else if(managerState is ImageConnectionSettingsUpdated) {
-
+    } else if (managerState is ImageConnectionSettingsUpdated) {
       _mapUpdatedImageToEvent(managerState);
-
-    } else if(managerState is ItemConnectionSettingsDeleted) {
-
+    } else if (managerState is ItemConnectionSettingsDeleted) {
       _mapDeletedItemToEvent();
-
-    } else if(managerState is ImageConnectionSettingsDeleted) {
-
+    } else if (managerState is ImageConnectionSettingsDeleted) {
       _mapDeletedImageToEvent();
-
     }
-
   }
 
   void _mapUpdatedItemToEvent(ItemConnectionSettingsUpdated managerState) {
+    if (state is RepositorySettingsLoaded) {
+      final ImageConnectorType? imageType =
+          (state as RepositorySettingsLoaded).activeImageConnection;
 
-    if(state is RepositorySettingsLoaded) {
-      final ImageConnectorType? imageType = (state as RepositorySettingsLoaded).activeImageConnection;
-
-      add(UpdateRepositorySettings(
-        managerState.type,
-        imageType,
-      ));
+      add(
+        UpdateRepositorySettings(
+          managerState.type,
+          imageType,
+        ),
+      );
     }
   }
 
   void _mapUpdatedImageToEvent(ImageConnectionSettingsUpdated managerState) {
+    if (state is RepositorySettingsLoaded) {
+      final ItemConnectorType? itemType =
+          (state as RepositorySettingsLoaded).activeItemConnection;
 
-    if(state is RepositorySettingsLoaded) {
-      final ItemConnectorType? itemType = (state as RepositorySettingsLoaded).activeItemConnection;
-
-      add(UpdateRepositorySettings(
-        itemType,
-        managerState.type,
-      ));
+      add(
+        UpdateRepositorySettings(
+          itemType,
+          managerState.type,
+        ),
+      );
     }
-
   }
 
   void _mapDeletedItemToEvent() {
+    if (state is RepositorySettingsLoaded) {
+      final ImageConnectorType? imageType =
+          (state as RepositorySettingsLoaded).activeImageConnection;
 
-    if(state is RepositorySettingsLoaded) {
-      final ImageConnectorType? imageType = (state as RepositorySettingsLoaded).activeImageConnection;
-
-      add(UpdateRepositorySettings(
-        null,
-        imageType,
-      ));
+      add(
+        UpdateRepositorySettings(
+          null,
+          imageType,
+        ),
+      );
     }
   }
 
   void _mapDeletedImageToEvent() {
+    if (state is RepositorySettingsLoaded) {
+      final ItemConnectorType? itemType =
+          (state as RepositorySettingsLoaded).activeItemConnection;
 
-    if(state is RepositorySettingsLoaded) {
-      final ItemConnectorType? itemType = (state as RepositorySettingsLoaded).activeItemConnection;
-
-      add(UpdateRepositorySettings(
-        itemType,
-        null,
-      ));
+      add(
+        UpdateRepositorySettings(
+          itemType,
+          null,
+        ),
+      );
     }
-
   }
 
   @override
   Future<void> close() {
-
     managerSubscription.cancel();
     return super.close();
-
   }
-
 }

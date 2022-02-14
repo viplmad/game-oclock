@@ -1,6 +1,5 @@
 import '../query.dart' show Query, UnionType;
 
-
 abstract class UnionNode {
   UnionNode(this.type);
 

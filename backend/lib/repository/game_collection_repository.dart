@@ -1,7 +1,7 @@
-import 'package:backend/connector/connector.dart' show ItemConnector, ImageConnector;
+import 'package:backend/connector/connector.dart'
+    show ItemConnector, ImageConnector;
 
 import 'repository.dart';
-
 
 class GameCollectionRepository {
   GameCollectionRepository();
@@ -23,7 +23,8 @@ class GameCollectionRepository {
   void connect(ItemConnector itemConnector, ImageConnector? imageConnector) {
     gameRepository = GameRepository(itemConnector, imageConnector);
     gameFinishRepository = GameFinishRepository(itemConnector, imageConnector);
-    gameTimeLogRepository = GameTimeLogRepository(itemConnector, imageConnector);
+    gameTimeLogRepository =
+        GameTimeLogRepository(itemConnector, imageConnector);
     dlcRepository = DLCRepository(itemConnector, imageConnector);
     dlcFinishRepository = DLCFinishRepository(itemConnector, imageConnector);
     platformRepository = PlatformRepository(itemConnector, imageConnector);
@@ -31,7 +32,8 @@ class GameCollectionRepository {
     storeRepository = StoreRepository(itemConnector, imageConnector);
     systemRepository = SystemRepository(itemConnector, imageConnector);
     gameTagRepository = GameTagRepository(itemConnector, imageConnector);
-    purchaseTypeRepository = PurchaseTypeRepository(itemConnector, imageConnector);
+    purchaseTypeRepository =
+        PurchaseTypeRepository(itemConnector, imageConnector);
 
     gameStatisticsRepository = GameStatisticsRepository(itemConnector);
   }

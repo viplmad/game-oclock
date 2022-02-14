@@ -8,73 +8,68 @@ import 'package:backend/repository/repository.dart' show ItemRepository;
 import '../bloc_utils.dart';
 import 'item_list_manager.dart';
 
-
-abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemListManagerEvent, ItemListManagerState> {
+abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
+        ID extends Object, R extends ItemRepository<E, ID>>
+    extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
     required this.repository,
   }) : super(ItemListManagerInitialised()) {
-
     on<AddItem<T>>(_mapAddItemToState);
     on<DeleteItem<T>>(_mapDeleteItemToState);
-
   }
 
   final R repository;
 
   Future<void> _checkConnection(Emitter<ItemListManagerState> emit) async {
-
-    await BlocUtils.checkConnection<ItemListManagerState, ItemNotAdded>(repository, emit, (final String error) => ItemNotAdded(error));
-
+    await BlocUtils.checkConnection<ItemListManagerState, ItemNotAdded>(
+      repository,
+      emit,
+      (final String error) => ItemNotAdded(error),
+    );
   }
 
-  void _mapAddItemToState(AddItem<T> event, Emitter<ItemListManagerState> emit) async {
-
+  void _mapAddItemToState(
+    AddItem<T> event,
+    Emitter<ItemListManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
     try {
-
       final T item = await createFuture(event);
       emit(
         ItemAdded<T>(item),
       );
-
     } catch (e) {
-
       emit(
         ItemNotAdded(e.toString()),
       );
-
     }
 
     emit(
       ItemListManagerInitialised(),
     );
-
   }
 
-  void _mapDeleteItemToState(DeleteItem<T> event, Emitter<ItemListManagerState> emit) async {
-
+  void _mapDeleteItemToState(
+    DeleteItem<T> event,
+    Emitter<ItemListManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
-    try{
-
+    try {
       await deleteFuture(event);
       emit(
         ItemDeleted<T>(event.item),
       );
-
     } catch (e) {
-
       emit(
         ItemNotDeleted(e.toString()),
       );
-
     }
 
     emit(
       ItemListManagerInitialised(),
     );
-
   }
 
   @protected

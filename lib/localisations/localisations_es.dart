@@ -7,7 +7,6 @@ import 'package:backend/utils/duration_extension.dart';
 
 import 'localisations.dart';
 
-
 class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   const GameCollectionLocalisationsEs();
 
@@ -29,13 +28,15 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String updatedImageConnectionString = 'Conexión de imagen actualizada';
   @override
-  final String unableToUpdateConnectionString = 'No ha sido posible actualizar la conexión';
+  final String unableToUpdateConnectionString =
+      'No ha sido posible actualizar la conexión';
   @override
   final String deletedItemConnectionString = 'Conexión de ítem eliminada';
   @override
   final String deletedImageConnectionString = 'Conexión de imagen eliminada';
   @override
-  final String unableToDeleteConnectionString = 'No ha sido posible eliminar la conexión';
+  final String unableToDeleteConnectionString =
+      'No ha sido posible eliminar la conexión';
   @override
   final String saveString = 'Guardar';
   @override
@@ -86,20 +87,24 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String newString(String typeString) {
     return 'Nuevo $typeString';
   }
+
   @override
   final String openString = 'Abrir';
   @override
   String addedString(String typeString) {
     return '$typeString añadido';
   }
+
   @override
   String unableToAddString(String typeString) {
     return 'No ha sido posible añadir $typeString';
   }
+
   @override
   String deletedString(String typeString) {
     return '$typeString eliminado';
   }
+
   @override
   String unableToDeleteString(String typeString) {
     return 'No ha sido posible eliminar $typeString';
@@ -113,6 +118,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String deleteDialogTitle(String itemString) {
     return 'Estás seguro que quieres eliminar $itemString?';
   }
+
   @override
   final String deleteDialogSubtitle = 'Esta acción es irreversible';
 
@@ -224,7 +230,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String playedString = 'Jugado';
   @override
   String gameStatusString(GameStatus? status) {
-    switch(status){
+    switch (status) {
       case GameStatus.lowPriority:
         return lowPriorityString;
       case GameStatus.nextUp:
@@ -237,6 +243,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
         return '';
     }
   }
+
   @override
   final String editionFieldString = 'Edición';
   @override
@@ -257,7 +264,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String backupFieldString = 'Backup';
 
   @override
-  String get singleCalendarViewString => '$timeLogsFieldString & $finishDatesFieldString';
+  String get singleCalendarViewString =>
+      '$timeLogsFieldString & $finishDatesFieldString';
   @override
   String get multiCalendarViewString => timeLogsFieldString;
   @override
@@ -278,7 +286,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String get emptyTimeLogsString => 'No existe $timeLogsFieldString';
   @override
   String rangeString(CalendarRange range) {
-    switch(range){
+    switch (range) {
       case CalendarRange.day:
         return 'Día';
       case CalendarRange.week:
@@ -289,9 +297,10 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
         return 'Año';
     }
   }
+
   @override
   String totalGames(int total) {
-    return '$total ' + (total > 1? gamesString : gameString);
+    return '$total ' + (total > 1 ? gamesString : gameString);
   }
 
   @override
@@ -305,7 +314,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String recalculationModeTitle = 'Modo de recálculo';
   @override
-  final String recalculationModeSubtitle = 'Afecta al valor que se recalculará si otros valores cambian';
+  final String recalculationModeSubtitle =
+      'Afecta al valor que se recalculará si otros valores cambian';
   @override
   final String recalculationModeDurationString = 'Recalcular tiempo';
   @override
@@ -324,6 +334,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String gamesFromYearString(int year) {
     return 'Terminado el ' + formatYear(year);
   }
+
   @override
   String get totalGamesString => '$gamesString totales';
   @override
@@ -335,21 +346,28 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   String get avgRatingString => '$ratingFieldString medio';
   @override
-  String get countByStatusString => 'Número de $gamesString por $statusFieldString';
+  String get countByStatusString =>
+      'Número de $gamesString por $statusFieldString';
   @override
-  String get countByReleaseYearString => 'Número de $gamesString por $releaseYearFieldString';
+  String get countByReleaseYearString =>
+      'Número de $gamesString por $releaseYearFieldString';
   @override
-  String get sumTimeByFinishDateString => '$timeLogsFieldString total por $finishDateFieldString';
+  String get sumTimeByFinishDateString =>
+      '$timeLogsFieldString total por $finishDateFieldString';
   @override
   String get sumTimeByMonth => '$timeLogsFieldString total por mes';
   @override
-  String get countByRatingString => 'Número $gamesString por $ratingFieldString';
+  String get countByRatingString =>
+      'Número $gamesString por $ratingFieldString';
   @override
-  String get countByFinishDate => 'Número de $gamesString por $finishDateFieldString';
+  String get countByFinishDate =>
+      'Número de $gamesString por $finishDateFieldString';
   @override
-  String get countByTimeString => 'Número de $gamesString por $timeLogsFieldString';
+  String get countByTimeString =>
+      'Número de $gamesString por $timeLogsFieldString';
   @override
-  String get avgRatingByFinishDateString => 'Media de $ratingFieldString por $finishDateFieldString';
+  String get avgRatingByFinishDateString =>
+      'Media de $ratingFieldString por $finishDateFieldString';
   //#endregion Game
 
   //#region DLC
@@ -415,7 +433,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String digitalString = 'Digital';
   @override
   String platformTypeString(PlatformType? type) {
-    switch(type) {
+    switch (type) {
       case PlatformType.physical:
         return physicalString;
       case PlatformType.digital:
@@ -424,6 +442,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
         return '';
     }
   }
+
   @override
   final String platformTypeFieldString = 'Tipo';
   //#endregion Platform
@@ -454,24 +473,29 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
     final String amountString = amount.toStringAsFixed(2);
     return '$amountString €';
   }
+
   @override
   String formatPercentage(double amount) {
     final String amountString = amount.toStringAsFixed(2);
     return '$amountString %';
   }
+
   @override
   String formatTimeOfDay(TimeOfDay time) {
     return _timeString(time.hour, time.minute);
   }
+
   @override
   String formatTime(DateTime date) {
     return _timeString(date.hour, date.minute);
   }
+
   String _timeString(int hour, int minute) {
     final String hourString = LocalisationsUtils.padTwoLeadingZeros(hour);
     final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minute);
     return '$hourString:$minuteString';
   }
+
   @override
   String formatDate(DateTime date) {
     final String dayString = date.day.toString();
@@ -479,13 +503,15 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
     final String yearString = date.year.toString();
     return '$dayString/$monthString/$yearString';
   }
+
   @override
   String formatDateTime(DateTime date) {
     return formatDate(date) + ' ' + formatTime(date);
   }
+
   @override
   String formatDuration(Duration duration) {
-    if(duration.isZero()) {
+    if (duration.isZero()) {
       return '0';
     }
 
@@ -495,32 +521,37 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
     final String hourString = formatHours(hours);
     final String minuteString = formatMinutes(minutes);
 
-    if(hours == 0) {
+    if (hours == 0) {
       return minuteString;
-    } else if(minutes == 0) {
+    } else if (minutes == 0) {
       return hourString;
     }
 
     return '$hourString $minuteString';
   }
+
   @override
   String formatMonthYear(DateTime date) {
     final String month = months.elementAt(date.month - 1);
     final String year = formatYear(date.year);
     return '$month $year';
   }
+
   @override
   String formatYear(int year) {
     return year.toString();
   }
+
   @override
   String formatShortYear(int year) {
     return '\'' + year.toString().substring(2);
   }
+
   @override
   String formatHours(int hours) {
     return '$hours h.';
   }
+
   @override
   String formatMinutes(int minutes) {
     final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minutes);
@@ -531,14 +562,17 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String editString(String fieldString) {
     return 'Editar $fieldString';
   }
+
   @override
   String addString(String fieldString) {
     return 'Añadir $fieldString';
   }
+
   @override
   final String fieldUpdatedString = 'Campo actualizado';
   @override
-  final String unableToUpdateFieldString = 'No ha sido posible actualizar el campo';
+  final String unableToUpdateFieldString =
+      'No ha sido posible actualizar el campo';
   @override
   final String uploadImageString = 'Subir imagen';
   @override
@@ -550,7 +584,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String imageUpdatedString = 'Imagen actualizada';
   @override
-  final String unableToUpdateImageString = 'No ha sido posible actualizar la imagen';
+  final String unableToUpdateImageString =
+      'No ha sido posible actualizar la imagen';
   @override
   String unableToLaunchString(String urlString) {
     return 'No se puede abrir $urlString';
@@ -560,6 +595,7 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String linkString(String typeString) {
     return 'Vincular $typeString';
   }
+
   @override
   final String undoString = 'Deshacer';
   @override
@@ -570,14 +606,17 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String linkedString(String typeString) {
     return '$typeString vinculado';
   }
+
   @override
   String unableToLinkString(String typeString) {
     return 'No ha sido posible vincular $typeString';
   }
+
   @override
   String unlinkedString(String typeString) {
     return '$typeString desvinculado';
   }
+
   @override
   String unableToUnlinkString(String typeString) {
     return 'No ha sido posible desvincular $typeString';
@@ -587,17 +626,18 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String searchString(String typeString) {
     return 'Buscar $typeString';
   }
+
   @override
   final String clearSearchString = 'Limpiar';
   @override
   String newWithTitleString(String typeString, String titleString) {
     return '+ Nuevo $typeString con título \'$titleString\'';
   }
+
   @override
   final String noSuggestionsString = '';
   @override
   final String noResultsString = 'No se han encontrado resultados';
 
   String _plural(String string) => string + 's';
-
 }

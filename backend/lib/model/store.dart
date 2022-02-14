@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 class Store extends Item {
   const Store({
     required this.id,
@@ -8,10 +7,10 @@ class Store extends Item {
     required this.iconURL,
     required this.iconFilename,
   }) : super(
-    uniqueId: 'St$id',
-    hasImage: true,
-    queryableTerms: name,
-  );
+          uniqueId: 'St$id',
+          hasImage: true,
+          queryableTerms: name,
+        );
 
   final int id;
   final String name;
@@ -27,31 +26,27 @@ class Store extends Item {
     String? iconURL,
     String? iconFilename,
   }) {
-
     return Store(
       id: id,
-      name: name?? this.name,
-      iconURL: iconURL?? this.iconURL,
-      iconFilename: iconFilename?? this.iconFilename,
+      name: name ?? this.name,
+      iconURL: iconURL ?? this.iconURL,
+      iconFilename: iconFilename ?? this.iconFilename,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    iconURL?? '',
-  ];
+        id,
+        name,
+        iconURL ?? '',
+      ];
 
   @override
   String toString() {
-
     return 'Store { '
         'Id: $id, '
         'Name: $name, '
         'Icon URL: $iconURL'
         ' }';
-
   }
 }

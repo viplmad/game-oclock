@@ -41,6 +41,7 @@ linter:
     - no_runtimeType_toString
     - avoid_renaming_method_parameters
     - sized_box_for_whitespace
+    - require_trailing_commas
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

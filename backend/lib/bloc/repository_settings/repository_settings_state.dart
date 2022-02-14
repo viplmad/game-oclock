@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/repository_type.dart';
 
-
 abstract class RepositorySettingsState extends Equatable {
   const RepositorySettingsState();
 
@@ -13,15 +12,18 @@ abstract class RepositorySettingsState extends Equatable {
 class RepositorySettingsLoading extends RepositorySettingsState {}
 
 class RepositorySettingsLoaded extends RepositorySettingsState {
-  const RepositorySettingsLoaded([this.activeItemConnection, this.activeImageConnection])
-    : ready = activeItemConnection != null;
+  const RepositorySettingsLoaded([
+    this.activeItemConnection,
+    this.activeImageConnection,
+  ]) : ready = activeItemConnection != null;
 
   final ItemConnectorType? activeItemConnection;
   final ImageConnectorType? activeImageConnection;
   final bool ready;
 
   @override
-  List<Object> get props => <Object>[activeItemConnection?? '', activeImageConnection?? ''];
+  List<Object> get props =>
+      <Object>[activeItemConnection ?? '', activeImageConnection ?? ''];
 
   @override
   String toString() => 'RepositorySettingsLoaded { '

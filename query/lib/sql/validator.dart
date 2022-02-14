@@ -3,16 +3,17 @@ import '../query/query.dart';
 import 'sql_builder.dart';
 import 'sql_builder_options.dart';
 
-
 /// Validator & Sanitizer
 class Validator {
   Validator._();
 
   static String sanitizeFieldAlias(String? value, SQLBuilderOptions options) {
-    final String result = value != null?
-        options.autoQuoteAliasNames
-          ? options.fieldAliasQuoteCharacter + value + options.fieldAliasQuoteCharacter
-          : value
+    final String result = value != null
+        ? options.autoQuoteAliasNames
+            ? options.fieldAliasQuoteCharacter +
+                value +
+                options.fieldAliasQuoteCharacter
+            : value
         : '';
 
     return result;
@@ -45,13 +46,17 @@ class Validator {
   }
 
   static String sanitizeTable(String name, SQLBuilderOptions options) {
-    return options.autoQuoteTableNames ? options.nameQuoteCharacter + name + options.nameQuoteCharacter : name;
+    return options.autoQuoteTableNames
+        ? options.nameQuoteCharacter + name + options.nameQuoteCharacter
+        : name;
   }
 
   static String sanitizeTableAlias(String? value, SQLBuilderOptions options) {
     return value != null
         ? (options.autoQuoteAliasNames
-            ? options.tableAliasQuoteCharacter + value + options.tableAliasQuoteCharacter
+            ? options.tableAliasQuoteCharacter +
+                value +
+                options.tableAliasQuoteCharacter
             : value)
         : '';
   }
@@ -83,23 +88,33 @@ class Validator {
     if (options.dontQuote) {
       if (value.startsWith("'") && value.endsWith("'")) {
         final String v = value.substring(1, value.length - 1);
-        result = options.replaceSingleQuotes ? v.replaceAll("'", options.singleQuoteReplacement) : value;
+        result = options.replaceSingleQuotes
+            ? v.replaceAll("'", options.singleQuoteReplacement)
+            : value;
         result = "'$result'";
       } else {
-        result = options.replaceSingleQuotes ? value.replaceAll("'", options.singleQuoteReplacement) : value;
+        result = options.replaceSingleQuotes
+            ? value.replaceAll("'", options.singleQuoteReplacement)
+            : value;
       }
     } else {
-      result = options.replaceSingleQuotes ? value.replaceAll("'", options.singleQuoteReplacement) : value;
+      result = options.replaceSingleQuotes
+          ? value.replaceAll("'", options.singleQuoteReplacement)
+          : value;
     }
     return result;
   }
 
-  static String sanitizeTableDotField(String? tableName, String field, SQLBuilderOptions options) {
-
+  static String sanitizeTableDotField(
+    String? tableName,
+    String field,
+    SQLBuilderOptions options,
+  ) {
     String fieldValue = Validator.sanitizeField(field.trim(), options);
 
-    final String? tableNameValue =
-        tableName != null ? Validator.sanitizeTableAlias(tableName, options) : null;
+    final String? tableNameValue = tableName != null
+        ? Validator.sanitizeTableAlias(tableName, options)
+        : null;
 
     /// quote table and field string with dot, example:
     /// "tablename"."fieldname"
@@ -109,9 +124,10 @@ class Validator {
             .split(options.fieldsTablesSeparator)
             .map((String f) => f)
             .join(
-                '${options.fieldAliasQuoteCharacter}${options.fieldsTablesSeparator}${options.fieldAliasQuoteCharacter}');
+              '${options.fieldAliasQuoteCharacter}${options.fieldsTablesSeparator}${options.fieldAliasQuoteCharacter}',
+            );
       }
-    } else if(tableNameValue != null) {
+    } else if (tableNameValue != null) {
       fieldValue = tableNameValue + options.fieldsTablesSeparator + fieldValue;
     }
 

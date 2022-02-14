@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity, GameEntityData, GameID;
 
-
 class GameTimeLogEntityData {
   GameTimeLogEntityData._();
 
@@ -33,64 +32,65 @@ class GameTimeLogEntity extends ItemEntity {
   final Duration time;
 
   static GameTimeLogEntity fromMap(Map<String, Object?> map) {
-
     return GameTimeLogEntity(
       gameId: map[GameTimeLogEntityData.gameField] as int,
       dateTime: map[GameTimeLogEntityData.dateTimeField] as DateTime,
       time: map[GameTimeLogEntityData.timeField] as Duration,
     );
-
   }
 
   static GameTimeLogID idFromMap(Map<String, Object?> map) {
-
-    return GameTimeLogID(GameID(map[GameTimeLogEntityData.gameField] as int), map[GameTimeLogEntityData.dateTimeField] as DateTime);
-
+    return GameTimeLogID(
+      GameID(map[GameTimeLogEntityData.gameField] as int),
+      map[GameTimeLogEntityData.dateTimeField] as DateTime,
+    );
   }
 
   GameTimeLogID createId() {
-
     return GameTimeLogID(GameID(gameId), dateTime);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      GameTimeLogEntityData.gameField : gameId,
-      GameTimeLogEntityData.dateTimeField : dateTime,
-      GameTimeLogEntityData.timeField : time,
+      GameTimeLogEntityData.gameField: gameId,
+      GameTimeLogEntityData.dateTimeField: dateTime,
+      GameTimeLogEntityData.timeField: time,
     };
 
     return createMap;
-
   }
 
   Map<String, Object?> updateMap(GameTimeLogEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, GameTimeLogEntityData.dateTimeField, dateTime, updatedEntity.dateTime);
-    putUpdateMapValue(updateMap, GameTimeLogEntityData.timeField, time, updatedEntity.time);
+    putUpdateMapValue(
+      updateMap,
+      GameTimeLogEntityData.dateTimeField,
+      dateTime,
+      updatedEntity.dateTime,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameTimeLogEntityData.timeField,
+      time,
+      updatedEntity.time,
+    );
 
     return updateMap;
-
   }
 
   @override
   List<Object> get props => <Object>[
-    dateTime,
-    time,
-  ];
+        dateTime,
+        time,
+      ];
 
   @override
   String toString() {
-
     return '${GameTimeLogEntityData.table}Entity { '
         '${GameTimeLogEntityData.gameField}: $gameId, '
         '${GameTimeLogEntityData.dateTimeField}: $dateTime, '
         '${GameTimeLogEntityData.timeField}: $time'
         ' }';
-
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart' show GameTag;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -11,75 +12,79 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../theme/theme.dart' show GameTagTheme;
 import 'search.dart';
 
-
-class GameTagSearch extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListManagerBloc> {
+class GameTagSearch
+    extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListManagerBloc> {
   const GameTagSearch({
     Key? key,
     required bool onTapReturn,
     required int? viewIndex,
   }) : super(
-    key: key,
-    onTapReturn: onTapReturn,
-    viewIndex: viewIndex,
-  );
+          key: key,
+          onTapReturn: onTapReturn,
+          viewIndex: viewIndex,
+        );
 
   @override
-  GameTagSearchBloc searchBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  GameTagSearchBloc searchBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return GameTagSearchBloc(
       collectionRepository: collectionRepository,
       viewIndex: viewIndex,
     );
-
   }
 
   @override
-  GameTagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  GameTagListManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return GameTagListManagerBloc(
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({required void Function()? Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
-
+  _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, GameTag) onTap,
+    required bool allowNewButton,
+  }) {
     return _GameTagSearchBody<GameTagSearchBloc>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
-
   }
 }
 
-class GameTagLocalSearch extends ItemLocalSearch<GameTag, GameTagListManagerBloc> {
+class GameTagLocalSearch
+    extends ItemLocalSearch<GameTag, GameTagListManagerBloc> {
   const GameTagLocalSearch({
     Key? key,
     required List<GameTag> items,
   }) : super(key: key, items: items);
 
   @override
-  GameTagListManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  GameTagListManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return GameTagListManagerBloc(
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({required void Function()? Function(BuildContext, GameTag) onTap, required bool allowNewButton}) {
-
+  _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, GameTag) onTap,
+    required bool allowNewButton,
+  }) {
     return _GameTagSearchBody<ItemLocalSearchBloc<GameTag>>(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
-
   }
 }
 
-class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBody<GameTag, K, GameTagListManagerBloc> {
+class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>>
+    extends ItemSearchBody<GameTag, K, GameTagListManagerBloc> {
   const _GameTagSearchBody({
     Key? key,
     required void Function()? Function(BuildContext, GameTag) onTap,
@@ -87,14 +92,17 @@ class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>> extends ItemSearchBo
   }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
 
   @override
-  String typeName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagString;
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).gameTagString;
 
   @override
-  String typesName(BuildContext context) => GameCollectionLocalisations.of(context).gameTagsString;
+  String typesName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).gameTagsString;
 
   @override
   GameTag createItem(String query) => GameTag(id: -1, name: query);
 
   @override
-  Widget cardBuilder(BuildContext context, GameTag item) => GameTagTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameTag item) =>
+      GameTagTheme.itemCard(context, item, onTap);
 }

@@ -5,7 +5,6 @@ import 'insert.dart';
 import 'delete.dart';
 import 'raw.dart';
 
-
 /// API-functions exposed.
 class FluentQuery {
   FluentQuery._();

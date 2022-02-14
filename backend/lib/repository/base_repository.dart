@@ -5,9 +5,9 @@ import 'package:backend/connector/connector.dart' show ItemConnector;
 
 import 'repository_utils.dart';
 
-
 abstract class BaseRepository {
-  const BaseRepository(this.itemConnector, {
+  const BaseRepository(
+    this.itemConnector, {
     required this.recordName,
   });
 
@@ -31,13 +31,14 @@ abstract class BaseRepository {
 
   @nonVirtual
   Future<Map<String, Object?>> readItemRaw({required Query query}) {
+    return itemConnector
+        .execute(query)
+        .asStream()
+        .map((List<Map<String, Map<String, Object?>>> results) {
+      final Map<String, Object?> map =
+          RepositoryUtils.combineMaps(results.first, recordName);
 
-    return itemConnector.execute(query)
-      .asStream().map( (List<Map<String, Map<String, Object?>>> results) {
-        final Map<String, Object?> map = RepositoryUtils.combineMaps(results.first, recordName);
-
-        return map;
-      }).first;
-
+      return map;
+    }).first;
   }
 }

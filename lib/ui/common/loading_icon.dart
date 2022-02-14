@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class LoadingIcon extends StatelessWidget {
   const LoadingIcon({
     Key? key,

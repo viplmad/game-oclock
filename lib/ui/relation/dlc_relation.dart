@@ -9,7 +9,6 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, PurchaseTheme;
 import 'relation.dart';
 
-
 class DLCGameRelationList extends _DLCRelationList<Game> {
   const DLCGameRelationList({
     Key? key,
@@ -17,18 +16,19 @@ class DLCGameRelationList extends _DLCRelationList<Game> {
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    isSingleList: true,
-    detailRouteName: gameDetailRoute,
-    searchRouteName: gameSearchRoute,
-    localSearchRouteName: gameLocalSearchRoute,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          isSingleList: true,
+          detailRouteName: gameDetailRoute,
+          searchRouteName: gameSearchRoute,
+          localSearchRouteName: gameLocalSearchRoute,
+        );
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Game item) =>
+      GameTheme.itemCard(context, item, onTap);
 }
 
 class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
@@ -38,20 +38,22 @@ class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
     required String relationTypeName,
     List<Widget> Function(List<Purchase>)? trailingBuilder,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    detailRouteName: purchaseDetailRoute,
-    searchRouteName: purchaseSearchRoute,
-    localSearchRouteName: purchaseLocalSearchRoute,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          detailRouteName: purchaseDetailRoute,
+          searchRouteName: purchaseSearchRoute,
+          localSearchRouteName: purchaseLocalSearchRoute,
+        );
 
   @override
-  Widget cardBuilder(BuildContext context, Purchase item) => PurchaseTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Purchase item) =>
+      PurchaseTheme.itemCard(context, item, onTap);
 }
 
-abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W, DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
+abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W,
+    DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
   const _DLCRelationList({
     Key? key,
     required String relationName,
@@ -63,14 +65,14 @@ abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W,
     required String searchRouteName,
     required String localSearchRouteName,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    limitHeight: limitHeight,
-    isSingleList: isSingleList,
-    detailRouteName: detailRouteName,
-    searchRouteName: searchRouteName,
-    localSearchRouteName: localSearchRouteName,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          limitHeight: limitHeight,
+          isSingleList: isSingleList,
+          detailRouteName: detailRouteName,
+          searchRouteName: searchRouteName,
+          localSearchRouteName: localSearchRouteName,
+        );
 }

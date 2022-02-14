@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/tab/tab.dart';
 import 'package:backend/bloc/item_list/item_list.dart';
@@ -24,8 +25,8 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionRepository _collectionRepository =
+        RepositoryProvider.of<GameCollectionRepository>(context);
 
     final AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
       collectionRepository: _collectionRepository,
@@ -43,7 +44,8 @@ class Homepage extends StatelessWidget {
       collectionRepository: _collectionRepository,
     );
 
-    final PurchaseListManagerBloc _purchaseListManagerBloc = PurchaseListManagerBloc(
+    final PurchaseListManagerBloc _purchaseListManagerBloc =
+        PurchaseListManagerBloc(
       collectionRepository: _collectionRepository,
     );
 
@@ -51,7 +53,8 @@ class Homepage extends StatelessWidget {
       collectionRepository: _collectionRepository,
     );
 
-    final PlatformListManagerBloc _platformListManagerBloc = PlatformListManagerBloc(
+    final PlatformListManagerBloc _platformListManagerBloc =
+        PlatformListManagerBloc(
       collectionRepository: _collectionRepository,
     );
 
@@ -62,7 +65,6 @@ class Homepage extends StatelessWidget {
             return TabBloc();
           },
         ),
-
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
@@ -119,7 +121,6 @@ class Homepage extends StatelessWidget {
             )..add(LoadItemList());
           },
         ),
-
         BlocProvider<AllListManagerBloc>(
           create: (BuildContext context) {
             return _allListManagerBloc;
@@ -158,7 +159,6 @@ class Homepage extends StatelessWidget {
       ],
       child: const _HomepageBar(),
     );
-
   }
 }
 
@@ -169,7 +169,6 @@ class _HomepageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final List<BarData> barDatum = <BarData>[
       GameTheme.barData(context),
       DLCTheme.barData(context),
@@ -178,9 +177,8 @@ class _HomepageBar extends StatelessWidget {
       PlatformTheme.barData(context),
     ];
 
-    return BlocBuilder<TabBloc, TabState> (
+    return BlocBuilder<TabBloc, TabState>(
       builder: (BuildContext context, TabState state) {
-
         return Scaffold(
           appBar: _HomepageAppBar(
             state: state,
@@ -197,7 +195,7 @@ class _HomepageBar extends StatelessWidget {
 
               BlocProvider.of<TabBloc>(context).add(UpdateMainTab(newMainTab));
             },
-            items: barDatum.map<BottomNavigationBarItem>( (BarData barItem) {
+            items: barDatum.map<BottomNavigationBarItem>((BarData barItem) {
               return BottomNavigationBarItem(
                 label: barItem.title,
                 icon: Icon(barItem.icon),
@@ -209,10 +207,8 @@ class _HomepageBar extends StatelessWidget {
             state: state,
           ),
         );
-
       },
     );
-
   }
 }
 
@@ -229,8 +225,7 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    switch(state.mainTab) {
+    switch (state.mainTab) {
       case MainTab.game:
         return GameAppBar(
           gameTab: state.gameTab,
@@ -244,7 +239,6 @@ class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
       case MainTab.platform:
         return const PlatformAppBar();
     }
-
   }
 }
 
@@ -255,7 +249,6 @@ class _HomepageDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -264,7 +257,6 @@ class _HomepageDrawer extends StatelessWidget {
             child: const Text(
               GameCollectionLocalisations.appTitle,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 24,
               ),
             ),
@@ -274,7 +266,8 @@ class _HomepageDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.list),
-            title: Text(GameCollectionLocalisations.of(context).gameListsString),
+            title:
+                Text(GameCollectionLocalisations.of(context).gameListsString),
             onTap: () {
               Navigator.pushNamed(
                 context,
@@ -285,7 +278,9 @@ class _HomepageDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: Text(GameCollectionLocalisations.of(context).repositorySettingsString),
+            title: Text(
+              GameCollectionLocalisations.of(context).repositorySettingsString,
+            ),
             onTap: () {
               Navigator.pushReplacementNamed(
                 context,
@@ -296,7 +291,6 @@ class _HomepageDrawer extends StatelessWidget {
         ],
       ),
     );
-
   }
 }
 
@@ -310,8 +304,7 @@ class _HomepageFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    switch(state.mainTab) {
+    switch (state.mainTab) {
       case MainTab.game:
         return GameFAB(
           gameTab: state.gameTab,
@@ -325,7 +318,6 @@ class _HomepageFAB extends StatelessWidget {
       case MainTab.platform:
         return const PlatformFAB();
     }
-
   }
 }
 
@@ -339,8 +331,7 @@ class _HomepageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    switch(state.mainTab) {
+    switch (state.mainTab) {
       case MainTab.game:
         return GameTabs(
           gameTab: state.gameTab,
@@ -354,6 +345,5 @@ class _HomepageBody extends StatelessWidget {
       case MainTab.platform:
         return const PlatformList();
     }
-
   }
 }

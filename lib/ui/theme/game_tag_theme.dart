@@ -6,7 +6,6 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 
-
 class GameTagTheme {
   GameTagTheme._();
 
@@ -14,7 +13,6 @@ class GameTagTheme {
   static const Color secondaryColour = Colors.black12;
 
   static ThemeData themeData(BuildContext context) {
-
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData platformTheme = contextTheme.copyWith(
       primaryColor: primaryColour,
@@ -25,40 +23,39 @@ class GameTagTheme {
     );
 
     return platformTheme;
-
   }
 
   static List<String> views(BuildContext context) {
-
     return <String>[
       GameCollectionLocalisations.of(context).mainViewString,
       GameCollectionLocalisations.of(context).lastCreatedViewString,
     ];
-
   }
 
-  static Widget itemCard(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap) {
-
+  static Widget itemCard(
+    BuildContext context,
+    GameTag item,
+    void Function()? Function(BuildContext, GameTag) onTap,
+  ) {
     return ItemCard(
       title: itemTitle(item),
       hasImage: item.hasImage,
       onTap: onTap(context, item),
     );
-
   }
 
-  static Widget itemTile(BuildContext context, GameTag item, void Function()? Function(BuildContext, GameTag) onTap) {
-
+  static Widget itemTile(
+    BuildContext context,
+    GameTag item,
+    void Function()? Function(BuildContext, GameTag) onTap,
+  ) {
     return ListTile(
       title: Text(itemTitle(item)),
       onTap: onTap(context, item),
     );
-
   }
 
   static String itemTitle(GameTag item) {
-
     return item.name;
-
   }
 }

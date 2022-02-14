@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class EnumField extends StatelessWidget {
   const EnumField({
     Key? key,
@@ -19,7 +18,6 @@ class EnumField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -43,17 +41,15 @@ class EnumField extends StatelessWidget {
                 selectedColor: optionColour.withOpacity(0.5),
                 pressElevation: 2.0,
                 onSelected: (bool newChoice) {
-                  if(newChoice) {
+                  if (newChoice) {
                     update(index);
                   }
                 },
               );
-
             },
           ).toList(growable: false),
         ),
       ],
     );
-
   }
 }

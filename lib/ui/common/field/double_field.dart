@@ -6,7 +6,6 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import 'generic_field.dart';
 
-
 class DoubleField extends StatelessWidget {
   const DoubleField({
     Key? key,
@@ -25,7 +24,6 @@ class DoubleField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GenericField<double>(
       fieldName: fieldName,
       value: value,
@@ -36,17 +34,14 @@ class DoubleField extends StatelessWidget {
         return showDialog<double>(
           context: context,
           builder: (BuildContext context) {
-
             return _DecimalPickerDialog(
               fieldName: fieldName,
-              number: value?? 0,
+              number: value ?? 0,
             );
-
           },
         );
       },
     );
-
   }
 }
 
@@ -63,6 +58,7 @@ class _DecimalPickerDialog extends StatefulWidget {
   @override
   State<_DecimalPickerDialog> createState() => _DecimalPickerDialogState();
 }
+
 class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
   int _integerPart = 0;
   int _decimalPart = 0;
@@ -77,34 +73,38 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-
     return AlertDialog(
-      title: Text(GameCollectionLocalisations.of(context).editString(widget.fieldName)),
+      title: Text(
+        GameCollectionLocalisations.of(context).editString(widget.fieldName),
+      ),
       content: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           NumberPicker(
-              value: _integerPart,
-              minValue: 0,
-              maxValue: 1000,
-              onChanged: (num newInteger) {
-                setState(() {
-                  _integerPart = newInteger.toInt();
-                });
-              }
+            value: _integerPart,
+            minValue: 0,
+            maxValue: 1000,
+            onChanged: (num newInteger) {
+              setState(() {
+                _integerPart = newInteger.toInt();
+              });
+            },
           ),
-          Text('.', style: Theme.of(context).textTheme.headline6,),
+          Text(
+            '.',
+            style: Theme.of(context).textTheme.headline6,
+          ),
           NumberPicker(
-              value: _decimalPart,
-              minValue: 0,
-              maxValue: 99,
-              infiniteLoop: true,
-              onChanged: (num newDecimal) {
-                setState(() {
-                  _decimalPart = newDecimal.toInt();
-                });
-              }
+            value: _decimalPart,
+            minValue: 0,
+            maxValue: 99,
+            infiniteLoop: true,
+            onChanged: (num newDecimal) {
+              setState(() {
+                _decimalPart = newDecimal.toInt();
+              });
+            },
           ),
         ],
       ),
@@ -118,7 +118,14 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
         TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () {
-            Navigator.maybePop<double>(context, double.tryParse(_integerPart.toString() + '.' + _decimalPart.toString().padLeft(2, '0')));
+            Navigator.maybePop<double>(
+              context,
+              double.tryParse(
+                _integerPart.toString() +
+                    '.' +
+                    _decimalPart.toString().padLeft(2, '0'),
+              ),
+            );
           },
         ),
       ],

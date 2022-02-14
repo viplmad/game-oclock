@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, GameTag, Game;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -16,8 +17,8 @@ import '../relation/relation.dart';
 import '../theme/theme.dart' show GameTagTheme;
 import 'item_detail.dart';
 
-
-class GameTagDetail extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetailManagerBloc> {
+class GameTagDetail
+    extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetailManagerBloc> {
   const GameTagDetail({
     Key? key,
     required GameTag item,
@@ -25,58 +26,63 @@ class GameTagDetail extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetail
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  GameTagDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, GameTagDetailManagerBloc managerBloc) {
-
+  GameTagDetailBloc detailBlocBuilder(
+    GameCollectionRepository collectionRepository,
+    GameTagDetailManagerBloc managerBloc,
+  ) {
     return GameTagDetailBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
-
   }
 
   @override
-  GameTagDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  GameTagDetailManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return GameTagDetailManagerBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
-
-    final GameTagRelationManagerBloc<Game> _gameTagRelationManagerBloc = GameTagRelationManagerBloc<Game>(
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
+    final GameTagRelationManagerBloc<Game> _gameTagRelationManagerBloc =
+        GameTagRelationManagerBloc<Game>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Game>(collectionRepository, _gameTagRelationManagerBloc),
-
+      blocProviderRelationBuilder<Game>(
+        collectionRepository,
+        _gameTagRelationManagerBloc,
+      ),
       BlocProvider<GameTagRelationManagerBloc<Game>>(
         create: (BuildContext context) {
           return _gameTagRelationManagerBloc;
         },
       ),
     ];
-
   }
 
   @override
   _GameTagDetailBody detailBodyBuilder() {
-
     return _GameTagDetailBody(
       itemId: item.id,
       onUpdate: onUpdate,
     );
-
   }
 
-  BlocProvider<GameTagRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, GameTagRelationManagerBloc<W> managerBloc) {
-
+  BlocProvider<GameTagRelationBloc<W>>
+      blocProviderRelationBuilder<W extends Item>(
+    GameCollectionRepository collectionRepository,
+    GameTagRelationManagerBloc<W> managerBloc,
+  ) {
     return BlocProvider<GameTagRelationBloc<W>>(
       create: (BuildContext context) {
         return GameTagRelationBloc<W>(
@@ -86,12 +92,12 @@ class GameTagDetail extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetail
         )..add(LoadItemRelation());
       },
     );
-
   }
 }
 
 // ignore: must_be_immutable
-class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc, GameTagDetailManagerBloc> {
+class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc,
+    GameTagDetailManagerBloc> {
   _GameTagDetailBody({
     Key? key,
     required this.itemId,
@@ -105,7 +111,6 @@ class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc, Game
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, GameTag gameTag) {
-
     return <Widget>[
       itemTextField(
         context,
@@ -115,18 +120,15 @@ class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc, Game
         itemUpdater: (String newValue) => gameTag.copyWith(name: newValue),
       ),
     ];
-
   }
 
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
-
     return <Widget>[
       GameTagGameRelationList(
         relationName: GameCollectionLocalisations.of(context).gamesString,
         relationTypeName: GameCollectionLocalisations.of(context).gameString,
       )
     ];
-
   }
 }

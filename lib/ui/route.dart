@@ -21,10 +21,8 @@ import 'statistics/statistics_arguments.dart';
 
 export 'route_constants.dart';
 
-
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
-
-  switch(settings.name) {
+  switch (settings.name) {
     case connectRoute:
       return _pageRoute(
         const Connectpage(),
@@ -41,7 +39,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameDetailRoute:
-      final DetailArguments<Game> detailArguments = settings.arguments as DetailArguments<Game>;
+      final DetailArguments<Game> detailArguments =
+          settings.arguments as DetailArguments<Game>;
       return _pageRoute(
         GameDetail(
           item: detailArguments.item,
@@ -51,7 +50,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case dlcDetailRoute:
-      final DetailArguments<DLC> detailArguments = settings.arguments as DetailArguments<DLC>;
+      final DetailArguments<DLC> detailArguments =
+          settings.arguments as DetailArguments<DLC>;
       return _pageRoute(
         DLCDetail(
           item: detailArguments.item,
@@ -61,7 +61,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case purchaseDetailRoute:
-      final DetailArguments<Purchase> detailArguments = settings.arguments as DetailArguments<Purchase>;
+      final DetailArguments<Purchase> detailArguments =
+          settings.arguments as DetailArguments<Purchase>;
       return _pageRoute(
         PurchaseDetail(
           item: detailArguments.item,
@@ -71,7 +72,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case storeDetailRoute:
-      final DetailArguments<Store> detailArguments = settings.arguments as DetailArguments<Store>;
+      final DetailArguments<Store> detailArguments =
+          settings.arguments as DetailArguments<Store>;
       return _pageRoute(
         StoreDetail(
           item: detailArguments.item,
@@ -81,7 +83,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case platformDetailRoute:
-      final DetailArguments<Platform> detailArguments = settings.arguments as DetailArguments<Platform>;
+      final DetailArguments<Platform> detailArguments =
+          settings.arguments as DetailArguments<Platform>;
       return _pageRoute(
         PlatformDetail(
           item: detailArguments.item,
@@ -91,7 +94,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameTagDetailRoute:
-      final DetailArguments<GameTag> detailArguments = settings.arguments as DetailArguments<GameTag>;
+      final DetailArguments<GameTag> detailArguments =
+          settings.arguments as DetailArguments<GameTag>;
       return _pageRoute(
         GameTagDetail(
           item: detailArguments.item,
@@ -107,7 +111,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameStatisticsRoute:
-      final StatisticsArguments statisticsArguments = settings.arguments as StatisticsArguments;
+      final StatisticsArguments statisticsArguments =
+          settings.arguments as StatisticsArguments;
       return _pageRoute(
         GameStatisticsView(
           viewIndex: statisticsArguments.viewIndex,
@@ -118,7 +123,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameSingleCalendarRoute:
-      final SingleGameCalendarArguments gameCalendarArguments = settings.arguments as SingleGameCalendarArguments;
+      final SingleGameCalendarArguments gameCalendarArguments =
+          settings.arguments as SingleGameCalendarArguments;
       return _pageRoute(
         SingleGameCalendar(
           itemId: gameCalendarArguments.itemId,
@@ -134,7 +140,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<Game>(
         GameSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -145,7 +152,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case dlcSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<DLC>(
         DLCSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -155,7 +163,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case purchaseSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<Purchase>(
         PurchaseSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -166,7 +175,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case storeSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<Store>(
         StoreSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -176,7 +186,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case platformSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<Platform>(
         PlatformSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -186,7 +197,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case systemSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<System>(
         SystemSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -195,7 +207,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameTagSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<GameTag>(
         GameTagSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -204,7 +217,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case purchaseTypeSearchRoute:
-      final SearchArguments searchArguments = settings.arguments as SearchArguments;
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
       return _pageRoute<PurchaseType>(
         PurchaseTypeSearch(
           onTapReturn: searchArguments.onTapReturn,
@@ -283,21 +297,20 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   return _pageRoute(
     Container(),
   );
-
 }
 
-MaterialPageRoute<T> _pageRoute<T>(Widget child, {ThemeData Function(BuildContext)? themeDataBuilder}) {
-
+MaterialPageRoute<T> _pageRoute<T>(
+  Widget child, {
+  ThemeData Function(BuildContext)? themeDataBuilder,
+}) {
   return MaterialPageRoute<T>(
     builder: (BuildContext context) {
-      return themeDataBuilder == null?
-        child
-        :
-        Theme(
-          data: themeDataBuilder(context),
-          child: child,
-        );
+      return themeDataBuilder == null
+          ? child
+          : Theme(
+              data: themeDataBuilder(context),
+              child: child,
+            );
     },
   );
-
 }

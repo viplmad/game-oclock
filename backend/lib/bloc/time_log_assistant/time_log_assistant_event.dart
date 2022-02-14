@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 
 import 'time_log_recalculation_mode.dart';
 
-
 abstract class TimeLogAssistantEvent extends Equatable {
   const TimeLogAssistantEvent();
 

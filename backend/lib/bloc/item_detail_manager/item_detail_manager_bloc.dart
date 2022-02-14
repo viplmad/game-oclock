@@ -8,133 +8,123 @@ import 'package:backend/repository/repository.dart' show ItemRepository;
 import '../bloc_utils.dart';
 import 'item_detail_manager.dart';
 
-
-abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
+abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
+        ID extends Object, R extends ItemRepository<E, ID>>
+    extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
   ItemDetailManagerBloc({
     required this.id,
     required this.repository,
   }) : super(ItemDetailManagerInitialised()) {
-
     on<UpdateItemField<T>>(_mapUpdateFieldToState);
     on<AddItemImage<T>>(_mapAddImageToState);
     on<UpdateItemImageName<T>>(_mapUpdateImageNameToState);
     on<DeleteItemImage<T>>(_mapDeleteImageToState);
-
   }
 
   final ID id;
   final R repository;
 
   Future<void> _checkConnection(Emitter<ItemDetailManagerState> emit) async {
-
-    await BlocUtils.checkConnection<ItemDetailManagerState, ItemFieldNotUpdated>(repository, emit, (final String error) => ItemFieldNotUpdated(error));
-
+    await BlocUtils.checkConnection<ItemDetailManagerState,
+        ItemFieldNotUpdated>(
+      repository,
+      emit,
+      (final String error) => ItemFieldNotUpdated(error),
+    );
   }
 
-  void _mapUpdateFieldToState(UpdateItemField<T> event, Emitter<ItemDetailManagerState> emit) async {
-
+  void _mapUpdateFieldToState(
+    UpdateItemField<T> event,
+    Emitter<ItemDetailManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
     try {
-
-      if(event.item != event.updatedItem) {
+      if (event.item != event.updatedItem) {
         final T updatedItem = await updateFuture(event);
         emit(
           ItemFieldUpdated<T>(updatedItem),
         );
       }
-
-    } catch(e) {
-
+    } catch (e) {
       emit(
         ItemFieldNotUpdated(e.toString()),
       );
-
     }
 
     emit(
       ItemDetailManagerInitialised(),
     );
-
   }
 
-  void _mapAddImageToState(AddItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
-
+  void _mapAddImageToState(
+    AddItemImage<T> event,
+    Emitter<ItemDetailManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
     try {
-
       final T updatedItem = await addImage(event);
       emit(
         ItemImageUpdated<T>(updatedItem),
       );
-
-    } catch(e) {
-
+    } catch (e) {
       emit(
         ItemImageNotUpdated(e.toString()),
       );
-
     }
 
     emit(
       ItemDetailManagerInitialised(),
     );
-
   }
 
-  void _mapUpdateImageNameToState(UpdateItemImageName<T> event, Emitter<ItemDetailManagerState> emit) async {
-
+  void _mapUpdateImageNameToState(
+    UpdateItemImageName<T> event,
+    Emitter<ItemDetailManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
     try {
-
       final T updatedItem = await updateImageName(event);
       emit(
-        ItemImageUpdated<T>(updatedItem),)
-      ;
-
-    } catch(e) {
-
+        ItemImageUpdated<T>(updatedItem),
+      );
+    } catch (e) {
       emit(
         ItemImageNotUpdated(e.toString()),
       );
-
     }
 
     emit(
       ItemDetailManagerInitialised(),
     );
-
   }
 
-  void _mapDeleteImageToState(DeleteItemImage<T> event, Emitter<ItemDetailManagerState> emit) async {
-
+  void _mapDeleteImageToState(
+    DeleteItemImage<T> event,
+    Emitter<ItemDetailManagerState> emit,
+  ) async {
     await _checkConnection(emit);
 
     try {
-
       final T updatedItem = await deleteImage(event);
       emit(
         ItemImageUpdated<T>(updatedItem),
       );
-
-    } catch(e) {
-
+    } catch (e) {
       emit(
         ItemImageNotUpdated(e.toString()),
       );
-
     }
 
     emit(
       ItemDetailManagerInitialised(),
     );
-
   }
 
   @protected
-  Future<T> updateFuture(UpdateItemField<T> event) ;
+  Future<T> updateFuture(UpdateItemField<T> event);
   @protected
   external Future<T> addImage(AddItemImage<T> event);
   @protected

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/app_tab.dart';
 
-
 class TabState extends Equatable {
   const TabState([this.mainTab = MainTab.game, this.gameTab = GameTab.all]);
 

@@ -7,8 +7,11 @@ import 'package:backend/repository/repository.dart' show ItemRepository;
 import '../bloc_utils.dart';
 import 'item_search.dart';
 
-
-abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID extends Object, R extends ItemRepository<E, ID>> extends ItemSearchBloc<T> {
+abstract class ItemRemoteSearchBloc<
+    T extends Item,
+    E extends ItemEntity,
+    ID extends Object,
+    R extends ItemRepository<E, ID>> extends ItemSearchBloc<T> {
   ItemRemoteSearchBloc({
     required this.repository,
     required this.viewIndex,
@@ -18,17 +21,20 @@ abstract class ItemRemoteSearchBloc<T extends Item, E extends ItemEntity, ID ext
   final int? viewIndex;
 
   Future<void> _checkConnection(Emitter<ItemSearchState> emit) async {
-
-    await BlocUtils.checkConnection<ItemSearchState, ItemSearchError>(repository, emit, (final String error) => ItemSearchError(error));
-
+    await BlocUtils.checkConnection<ItemSearchState, ItemSearchError>(
+      repository,
+      emit,
+      (final String error) => ItemSearchError(error),
+    );
   }
 
   @override
-  Future<void> mapTextChangedToState(SearchTextChanged event, Emitter<ItemSearchState> emit) async {
-
+  Future<void> mapTextChangedToState(
+    SearchTextChanged event,
+    Emitter<ItemSearchState> emit,
+  ) async {
     await _checkConnection(emit);
 
     await super.mapTextChangedToState(event, emit);
-
   }
 }

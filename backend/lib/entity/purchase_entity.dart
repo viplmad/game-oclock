@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity;
 
-
 enum PurchaseView {
   main,
   lastCreated,
@@ -43,7 +42,6 @@ class PurchaseEntity extends ItemEntity {
     required this.externalCredit,
     required this.date,
     required this.originalPrice,
-
     required this.store,
   });
 
@@ -57,7 +55,6 @@ class PurchaseEntity extends ItemEntity {
   final int? store;
 
   static PurchaseEntity fromMap(Map<String, Object?> map) {
-
     return PurchaseEntity(
       id: map[PurchaseEntityData.idField] as int,
       description: map[PurchaseEntityData.descriptionField] as String,
@@ -65,31 +62,24 @@ class PurchaseEntity extends ItemEntity {
       externalCredit: map[PurchaseEntityData.externalCreditField] as double,
       date: map[PurchaseEntityData.dateField] as DateTime?,
       originalPrice: map[PurchaseEntityData.originalPriceField] as double,
-
       store: map[PurchaseEntityData.storeField] as int?,
     );
-
   }
 
   static PurchaseID idFromMap(Map<String, Object?> map) {
-
     return PurchaseID(map[PurchaseEntityData.idField] as int);
-
   }
 
   PurchaseID createId() {
-
     return PurchaseID(id);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      PurchaseEntityData.descriptionField : description,
-      PurchaseEntityData.priceField : price,
-      PurchaseEntityData.externalCreditField : externalCredit,
-      PurchaseEntityData.originalPriceField : originalPrice,
+      PurchaseEntityData.descriptionField: description,
+      PurchaseEntityData.priceField: price,
+      PurchaseEntityData.externalCreditField: externalCredit,
+      PurchaseEntityData.originalPriceField: originalPrice,
     };
 
     putCreateMapValueNullable(createMap, PurchaseEntityData.dateField, date);
@@ -99,28 +89,50 @@ class PurchaseEntity extends ItemEntity {
   }
 
   Map<String, Object?> updateMap(PurchaseEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, PurchaseEntityData.descriptionField, description, updatedEntity.description);
-    putUpdateMapValue(updateMap, PurchaseEntityData.priceField, price, updatedEntity.price);
-    putUpdateMapValue(updateMap, PurchaseEntityData.externalCreditField, externalCredit, updatedEntity.externalCredit);
-    putUpdateMapValueNullable(updateMap, PurchaseEntityData.dateField, date, updatedEntity.date);
-    putUpdateMapValue(updateMap, PurchaseEntityData.originalPriceField, originalPrice, updatedEntity.originalPrice);
+    putUpdateMapValue(
+      updateMap,
+      PurchaseEntityData.descriptionField,
+      description,
+      updatedEntity.description,
+    );
+    putUpdateMapValue(
+      updateMap,
+      PurchaseEntityData.priceField,
+      price,
+      updatedEntity.price,
+    );
+    putUpdateMapValue(
+      updateMap,
+      PurchaseEntityData.externalCreditField,
+      externalCredit,
+      updatedEntity.externalCredit,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      PurchaseEntityData.dateField,
+      date,
+      updatedEntity.date,
+    );
+    putUpdateMapValue(
+      updateMap,
+      PurchaseEntityData.originalPriceField,
+      originalPrice,
+      updatedEntity.originalPrice,
+    );
 
     return updateMap;
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    description,
-  ];
+        id,
+        description,
+      ];
 
   @override
   String toString() {
-
     return '${PurchaseEntityData.table}Entity { '
         '${PurchaseEntityData.idField}: $id, '
         '${PurchaseEntityData.descriptionField}: $description, '
@@ -129,6 +141,5 @@ class PurchaseEntity extends ItemEntity {
         '${PurchaseEntityData.dateField}: $date, '
         '${PurchaseEntityData.originalPriceField}: $originalPrice'
         ' }';
-
   }
 }

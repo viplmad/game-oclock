@@ -1,6 +1,5 @@
 import 'entity.dart';
 
-
 class PurchaseTypeRelationData {
   PurchaseTypeRelationData._();
 

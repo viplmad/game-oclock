@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity;
 
-
 enum GameView {
   main,
   lastCreated,
@@ -81,7 +80,6 @@ class GameEntity extends ItemEntity {
   final Duration totalTime;
 
   static GameEntity fromMap(Map<String, Object?> map) {
-
     return GameEntity(
       id: map[GameEntityData.idField] as int,
       name: map[GameEntityData.nameField] as String,
@@ -95,71 +93,121 @@ class GameEntity extends ItemEntity {
       screenshotFolder: map[GameEntityData.screenshotFolderField] as String,
       isBackup: map[GameEntityData.backupField] as bool,
       firstFinishDate: map[GameEntityData.firstFinishDateField] as DateTime?,
-      totalTime: (map[GameEntityData.totalTimeField] as Duration?)?? const Duration(),
+      totalTime:
+          (map[GameEntityData.totalTimeField] as Duration?) ?? const Duration(),
     );
-
   }
 
   static GameID idFromMap(Map<String, Object?> map) {
-
     return GameID(map[GameEntityData.idField] as int);
-
   }
 
   GameID createId() {
-
     return GameID(id);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      GameEntityData.nameField : name,
-      GameEntityData.editionField : edition,
-      GameEntityData.statusField : status,
-      GameEntityData.ratingField : rating,
-      GameEntityData.thoughtsField : thoughts,
-      GameEntityData.saveFolderField : saveFolder,
-      GameEntityData.screenshotFolderField : screenshotFolder,
-      GameEntityData.backupField : isBackup,
+      GameEntityData.nameField: name,
+      GameEntityData.editionField: edition,
+      GameEntityData.statusField: status,
+      GameEntityData.ratingField: rating,
+      GameEntityData.thoughtsField: thoughts,
+      GameEntityData.saveFolderField: saveFolder,
+      GameEntityData.screenshotFolderField: screenshotFolder,
+      GameEntityData.backupField: isBackup,
     };
 
-    putCreateMapValueNullable(createMap, GameEntityData.releaseYearField, releaseYear);
-    putCreateMapValueNullable(createMap, GameEntityData.coverField, coverFilename);
+    putCreateMapValueNullable(
+      createMap,
+      GameEntityData.releaseYearField,
+      releaseYear,
+    );
+    putCreateMapValueNullable(
+      createMap,
+      GameEntityData.coverField,
+      coverFilename,
+    );
 
     return createMap;
-
   }
 
   Map<String, Object?> updateMap(GameEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, GameEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValue(updateMap, GameEntityData.editionField, edition, updatedEntity.edition);
-    putUpdateMapValueNullable(updateMap, GameEntityData.releaseYearField, releaseYear, updatedEntity.releaseYear);
-    putUpdateMapValueNullable(updateMap, GameEntityData.coverField, coverFilename, updatedEntity.coverFilename);
-    putUpdateMapValue(updateMap, GameEntityData.statusField, status, updatedEntity.status);
-    putUpdateMapValue(updateMap, GameEntityData.ratingField, rating, updatedEntity.rating);
-    putUpdateMapValue(updateMap, GameEntityData.thoughtsField, thoughts, updatedEntity.thoughts);
-    putUpdateMapValue(updateMap, GameEntityData.saveFolderField, saveFolder, updatedEntity.saveFolder);
-    putUpdateMapValue(updateMap, GameEntityData.screenshotFolderField, screenshotFolder, updatedEntity.screenshotFolder);
-    putUpdateMapValue(updateMap, GameEntityData.backupField, isBackup, updatedEntity.isBackup);
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.nameField,
+      name,
+      updatedEntity.name,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.editionField,
+      edition,
+      updatedEntity.edition,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      GameEntityData.releaseYearField,
+      releaseYear,
+      updatedEntity.releaseYear,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      GameEntityData.coverField,
+      coverFilename,
+      updatedEntity.coverFilename,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.statusField,
+      status,
+      updatedEntity.status,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.ratingField,
+      rating,
+      updatedEntity.rating,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.thoughtsField,
+      thoughts,
+      updatedEntity.thoughts,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.saveFolderField,
+      saveFolder,
+      updatedEntity.saveFolder,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.screenshotFolderField,
+      screenshotFolder,
+      updatedEntity.screenshotFolder,
+    );
+    putUpdateMapValue(
+      updateMap,
+      GameEntityData.backupField,
+      isBackup,
+      updatedEntity.isBackup,
+    );
 
     return updateMap;
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    edition,
-  ];
+        id,
+        name,
+        edition,
+      ];
 
   @override
   String toString() {
-
     return '${GameEntityData.table}Entity { '
         '${GameEntityData.idField}: $id, '
         '${GameEntityData.nameField}: $name, '
@@ -175,6 +223,5 @@ class GameEntity extends ItemEntity {
         '${GameEntityData.firstFinishDateField}: $firstFinishDate, '
         '${GameEntityData.totalTimeField}: $totalTime'
         ' }';
-
   }
 }

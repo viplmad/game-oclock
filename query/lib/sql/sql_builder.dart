@@ -4,7 +4,6 @@ import 'package:query/query.dart';
 import '../util.dart';
 import 'validator.dart';
 
-
 class SQLQueryBuilder {
   SQLQueryBuilder._();
 
@@ -29,13 +28,19 @@ class SQLQueryBuilder {
     return Util.joinNonEmpty(options.separator, results);
   }
 
-  static Map<String, Object> buildSubstitutionValues(Query query, SQLBuilderOptions options) {
+  static Map<String, Object> buildSubstitutionValues(
+    Query query,
+    SQLBuilderOptions options,
+  ) {
     options.resetIndexes();
 
     return _buildSubstitutionValues(query, options);
   }
 
-  static Map<String, Object> _buildSubstitutionValues(Query query, SQLBuilderOptions options) {
+  static Map<String, Object> _buildSubstitutionValues(
+    Query query,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     for (final Block block in query.blocks) {
       result.addAll(_buildBlockSubstitutionValues(block, options));
@@ -46,64 +51,76 @@ class SQLQueryBuilder {
 
   // Build String
   static String _buildBlockString(Block block, SQLBuilderOptions options) {
-    if(block is SelectBlock) {
+    if (block is SelectBlock) {
       return 'SELECT';
-    } else if(block is DeleteBlock) {
+    } else if (block is DeleteBlock) {
       return 'DELETE';
-    } else if(block is UpdateBlock) {
+    } else if (block is UpdateBlock) {
       return 'UPDATE';
-    } else if(block is InsertBlock) {
+    } else if (block is InsertBlock) {
       return 'INSERT';
-    } else if(block is DistinctBlock) {
+    } else if (block is DistinctBlock) {
       return _buildDistinctString(block, options);
-    } else if(block is FromTableBlock) {
+    } else if (block is FromTableBlock) {
       return _buildFromTableString(block, options);
-    } else if(block is GetFieldBlock) {
+    } else if (block is GetFieldBlock) {
       return _buildGetFieldString(block, options);
-    } else if(block is GroupBlock) {
+    } else if (block is GroupBlock) {
       return _buildGroupString(block, options);
-    } else if(block is InsertFieldValueBlock) {
+    } else if (block is InsertFieldValueBlock) {
       return _buildInsertFieldValueString(block, options);
-    } else if(block is InsertFieldsFromQueryBlock) {
+    } else if (block is InsertFieldsFromQueryBlock) {
       return _buildInsertFieldsFromQueryString(block, options);
-    } else if(block is IntoTableBlock) {
+    } else if (block is IntoTableBlock) {
       return _buildIntoTableString(block, options);
-    } else if(block is JoinBlock) {
+    } else if (block is JoinBlock) {
       return _buildJoinString(block, options);
-    } else if(block is LimitBlock) {
+    } else if (block is LimitBlock) {
       return _buildLimitString(block, options);
-    } else if(block is OffsetBlock) {
+    } else if (block is OffsetBlock) {
       return _buildOffsetString(block, options);
-    } else if(block is OrderBlock) {
+    } else if (block is OrderBlock) {
       return _buildOrderString(block, options);
-    } else if(block is SetFieldBlock) {
+    } else if (block is SetFieldBlock) {
       return _buildSetFieldString(block, options);
-    } else if(block is UnionBlock) {
+    } else if (block is UnionBlock) {
       return _buildUnionString(block, options);
-    } else if(block is UpdateTableBlock) {
+    } else if (block is UpdateTableBlock) {
       return _buildUpdateTableString(block, options);
-    } else if(block is WhereBlock) {
+    } else if (block is WhereBlock) {
       return _buildWhereString(block, options);
-    } else if(block is ReturningFieldBlock) {
+    } else if (block is ReturningFieldBlock) {
       return _buildReturningFieldString(block, options);
     }
 
     return '';
   }
 
-  static String _buildDistinctString(DistinctBlock block, SQLBuilderOptions options) {
-    return block.isDistinct? 'DISTINCT' : '';
+  static String _buildDistinctString(
+    DistinctBlock block,
+    SQLBuilderOptions options,
+  ) {
+    return block.isDistinct ? 'DISTINCT' : '';
   }
 
-  static String _buildFromTableString(FromTableBlock block, SQLBuilderOptions options) {
+  static String _buildFromTableString(
+    FromTableBlock block,
+    SQLBuilderOptions options,
+  ) {
     return 'FROM ' + _tableToString(block, options);
   }
 
-  static String _buildUpdateTableString(UpdateTableBlock block, SQLBuilderOptions options) {
+  static String _buildUpdateTableString(
+    UpdateTableBlock block,
+    SQLBuilderOptions options,
+  ) {
     return _tableToString(block, options);
   }
 
-  static String _tableToString(TableBlockBase block, SQLBuilderOptions options) {
+  static String _tableToString(
+    TableBlockBase block,
+    SQLBuilderOptions options,
+  ) {
     assert(block.tables.isNotEmpty);
 
     final List<String> tablesString = block.tables.map((TableNode node) {
@@ -113,13 +130,16 @@ class SQLQueryBuilder {
     return tablesString.join(', ');
   }
 
-  static String _buildTableNodeString(TableNode node, SQLBuilderOptions options) {
+  static String _buildTableNodeString(
+    TableNode node,
+    SQLBuilderOptions options,
+  ) {
     final StringBuffer sb = StringBuffer();
 
-    if(node is TableStringNode) {
+    if (node is TableStringNode) {
       final String table = Validator.sanitizeTable(node.table, options);
       sb.write(table);
-    } else if(node is TableSubqueryNode) {
+    } else if (node is TableSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
       sb.write(')');
@@ -134,7 +154,10 @@ class SQLQueryBuilder {
     return sb.toString();
   }
 
-  static String _buildGetFieldString(GetFieldBlock block, SQLBuilderOptions options) {
+  static String _buildGetFieldString(
+    GetFieldBlock block,
+    SQLBuilderOptions options,
+  ) {
     if (block.fields.isEmpty) {
       return '*';
     }
@@ -146,29 +169,33 @@ class SQLQueryBuilder {
     return fieldsString.join(', ');
   }
 
-  static String _buildFieldNodeString(FieldNode node, SQLBuilderOptions options) {
+  static String _buildFieldNodeString(
+    FieldNode node,
+    SQLBuilderOptions options,
+  ) {
     final StringBuffer sb = StringBuffer();
 
-    if(node.function != FunctionType.none) {
+    if (node.function != FunctionType.none) {
       final String function = _functionTypeToString(node.function);
       sb.write('$function(');
     }
 
-    if(node is FieldStringNode) {
-      final String field = Validator.sanitizeTableDotField(node.table, node.name, options);
+    if (node is FieldStringNode) {
+      final String field =
+          Validator.sanitizeTableDotField(node.table, node.name, options);
 
-      if(node.type == double) {
+      if (node.type == double) {
         sb.write(field + '::float');
       } else {
         sb.write(field);
       }
-    } else if(node is FieldSubqueryNode) {
+    } else if (node is FieldSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
       sb.write(')');
     }
 
-    if(node.function != FunctionType.none) {
+    if (node.function != FunctionType.none) {
       sb.write(')');
     }
 
@@ -193,12 +220,16 @@ class SQLQueryBuilder {
     return 'GROUP BY ${groupsString.join(', ')}';
   }
 
-  static String _buildGroupNodeString(GroupNode node, SQLBuilderOptions options) {
+  static String _buildGroupNodeString(
+    GroupNode node,
+    SQLBuilderOptions options,
+  ) {
     final StringBuffer sb = StringBuffer();
 
     if (node is GroupStringNode) {
-        final String field = Validator.sanitizeTableDotField(node.table, node.field, options);
-        sb.write(field);
+      final String field =
+          Validator.sanitizeTableDotField(node.table, node.field, options);
+      sb.write(field);
     } else if (node is GroupSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
@@ -208,7 +239,10 @@ class SQLQueryBuilder {
     return sb.toString();
   }
 
-  static String _buildInsertFieldValueString(InsertFieldValueBlock block, SQLBuilderOptions options) {
+  static String _buildInsertFieldValueString(
+    InsertFieldValueBlock block,
+    SQLBuilderOptions options,
+  ) {
     if (block.sets.isEmpty) {
       return '';
     }
@@ -221,14 +255,18 @@ class SQLQueryBuilder {
       names.add(name);
 
       final bool isValueNull = node.value == null;
-      final String value = isValueNull? nullValue : _buildInsertValueString(options);
+      final String value =
+          isValueNull ? nullValue : _buildInsertValueString(options);
       values.add(value);
     }
 
     return '(${names.join(', ')}) VALUES (${values.join(', ')})';
   }
 
-  static String _buildSetNodeNameString(SetNode node, SQLBuilderOptions options) {
+  static String _buildSetNodeNameString(
+    SetNode node,
+    SQLBuilderOptions options,
+  ) {
     return Validator.sanitizeField(node.field, options);
   }
 
@@ -262,7 +300,10 @@ class SQLQueryBuilder {
     return '$whereParam${options.whereParamIndex}';
   }
 
-  static String _buildInsertFieldsFromQueryString(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
+  static String _buildInsertFieldsFromQueryString(
+    InsertFieldsFromQueryBlock block,
+    SQLBuilderOptions options,
+  ) {
     if (block.fields.isEmpty || block.query == null) {
       return '';
     }
@@ -270,7 +311,10 @@ class SQLQueryBuilder {
     return "(${block.fields.join(', ')}) (${_buildString(block.query!, options)})";
   }
 
-  static String _buildIntoTableString(IntoTableBlock block, SQLBuilderOptions options) {
+  static String _buildIntoTableString(
+    IntoTableBlock block,
+    SQLBuilderOptions options,
+  ) {
     assert(block.table != null && block.table!.isNotEmpty);
 
     final String table = Validator.sanitizeTable(block.table!, options);
@@ -279,11 +323,18 @@ class SQLQueryBuilder {
   }
 
   static String _buildLimitString(LimitBlock block, SQLBuilderOptions options) {
-    return block.limit != null && block.limit! >= 0 ? 'LIMIT ${block.limit}' : '';
+    return block.limit != null && block.limit! >= 0
+        ? 'LIMIT ${block.limit}'
+        : '';
   }
 
-  static String _buildOffsetString(OffsetBlock block, SQLBuilderOptions options) {
-    return block.offset != null && block.offset! >= 0 ? 'OFFSET ${block.offset}' : '';
+  static String _buildOffsetString(
+    OffsetBlock block,
+    SQLBuilderOptions options,
+  ) {
+    return block.offset != null && block.offset! >= 0
+        ? 'OFFSET ${block.offset}'
+        : '';
   }
 
   static String _buildOrderString(OrderBlock block, SQLBuilderOptions options) {
@@ -298,14 +349,17 @@ class SQLQueryBuilder {
     return 'ORDER BY ${ordersString.join(', ')}';
   }
 
-  static String _buildOrderNodeString(OrderNode node, SQLBuilderOptions options) {
+  static String _buildOrderNodeString(
+    OrderNode node,
+    SQLBuilderOptions options,
+  ) {
     final StringBuffer sb = StringBuffer();
 
-    if(node is OrderFieldNode) {
+    if (node is OrderFieldNode) {
       final String field = _buildFieldNodeString(node.field, options);
 
       sb.write(field);
-    } else if(node is OrderSubqueryNode) {
+    } else if (node is OrderSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
       sb.write(')');
@@ -317,12 +371,15 @@ class SQLQueryBuilder {
     return sb.toString();
   }
 
-  static String _buildSetFieldString(SetFieldBlock block, SQLBuilderOptions options) {
+  static String _buildSetFieldString(
+    SetFieldBlock block,
+    SQLBuilderOptions options,
+  ) {
     assert(block.sets.isNotEmpty);
 
     final List<String> setsString = <String>[];
 
-    for(final SetNode node in block.sets) {
+    for (final SetNode node in block.sets) {
       final String field = _buildSetNodeString(node, options);
 
       setsString.add(field);
@@ -335,7 +392,8 @@ class SQLQueryBuilder {
     final String name = _buildSetNodeNameString(node, options);
 
     final bool isValueNull = node.value == null;
-    final String value = isValueNull? nullValue : _buildSetValueString(options);
+    final String value =
+        isValueNull ? nullValue : _buildSetValueString(options);
 
     return '$name = $value';
   }
@@ -358,10 +416,10 @@ class SQLQueryBuilder {
     sb.write(_joinTypeToString(node.type));
     sb.write(' JOIN ');
 
-    if(node is JoinTableNode) {
+    if (node is JoinTableNode) {
       final String table = _buildTableNodeString(node.table, options);
       sb.write(table);
-    } else if(node is JoinSubqueryNode) {
+    } else if (node is JoinSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
       sb.write(')');
@@ -394,16 +452,19 @@ class SQLQueryBuilder {
     return unionsString.join(' ');
   }
 
-  static String _buildUnionNodeString(UnionNode node, SQLBuilderOptions options) {
+  static String _buildUnionNodeString(
+    UnionNode node,
+    SQLBuilderOptions options,
+  ) {
     final StringBuffer sb = StringBuffer();
 
     sb.write(_unionTypeToString(node.type));
     sb.write(' ');
 
-    if(node is UnionTableNode) {
+    if (node is UnionTableNode) {
       final String table = Validator.sanitizeTable(node.table, options);
       sb.write(table);
-    } else if(node is UnionSubqueryNode) {
+    } else if (node is UnionSubqueryNode) {
       sb.write('(');
       sb.write(_buildString(node.query, options));
       sb.write(')');
@@ -420,45 +481,49 @@ class SQLQueryBuilder {
     final StringBuffer sb = StringBuffer();
 
     for (final WhereNode node in block.wheres) {
-      final String combiner = sb.length == 0? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
+      final String combiner =
+          sb.length == 0 ? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
 
-      if(node.divider == DividerType.start) {
+      if (node.divider == DividerType.start) {
         sb.write('$combiner ( ');
       } else {
         sb.write('$combiner ');
       }
 
-      if(node is WhereValueNode) {
+      if (node is WhereValueNode) {
         final bool isValueNull = node.value == null;
-        final String operator = _operatorTypeToString(node.operator, isValueNull: isValueNull);
+        final String operator =
+            _operatorTypeToString(node.operator, isValueNull: isValueNull);
 
-        if(node is WhereFieldValueNode) {
+        if (node is WhereFieldValueNode) {
           String field = _buildFieldNodeString(node.field, options);
 
-          if(node is WhereFieldDatePartNode) {
+          if (node is WhereFieldDatePartNode) {
             field = _datePartToString(node.datePart, field);
           }
 
           sb.write(field);
-        } else if(node is WhereSubqueryNode) {
+        } else if (node is WhereSubqueryNode) {
           sb.write('(');
           sb.write(_buildString(node.query, options));
           sb.write(')');
         }
         sb.write(' $operator ');
 
-        final String value = isValueNull? nullValue : _buildWhereValueString(options);
+        final String value =
+            isValueNull ? nullValue : _buildWhereValueString(options);
         sb.write(value);
-      } else if(node is WhereFieldsNode) {
-          final String operator = _operatorTypeToString(node.operator);
+      } else if (node is WhereFieldsNode) {
+        final String operator = _operatorTypeToString(node.operator);
 
-          final String field = _buildFieldNodeString(node.field, options);
-          final String otherField = _buildFieldNodeString(node.otherField, options);
+        final String field = _buildFieldNodeString(node.field, options);
+        final String otherField =
+            _buildFieldNodeString(node.otherField, options);
 
-          sb.write('$field $operator $otherField');
+        sb.write('$field $operator $otherField');
       }
 
-      if(node.divider == DividerType.end) {
+      if (node.divider == DividerType.end) {
         sb.write(' ) ');
       }
     }
@@ -466,7 +531,10 @@ class SQLQueryBuilder {
     return sb.toString();
   }
 
-  static String _buildReturningFieldString(ReturningFieldBlock block, SQLBuilderOptions options) {
+  static String _buildReturningFieldString(
+    ReturningFieldBlock block,
+    SQLBuilderOptions options,
+  ) {
     if (block.fields.isEmpty) {
       return '';
     }
@@ -510,12 +578,15 @@ class SQLQueryBuilder {
     }
   }
 
-  static String _operatorTypeToString(OperatorType type, {bool isValueNull = false}) {
-    switch(type) {
+  static String _operatorTypeToString(
+    OperatorType type, {
+    bool isValueNull = false,
+  }) {
+    switch (type) {
       case OperatorType.eq:
-        return isValueNull? 'IS' : '=';
+        return isValueNull ? 'IS' : '=';
       case OperatorType.notEq:
-        return isValueNull? 'IS NOT' : '!=';
+        return isValueNull ? 'IS NOT' : '!=';
       case OperatorType.like:
         return 'ILIKE';
       case OperatorType.greaterThan:
@@ -530,7 +601,7 @@ class SQLQueryBuilder {
   }
 
   static String _combinerTypeToString(CombinerType type) {
-    switch(type){
+    switch (type) {
       case CombinerType.and:
         return 'AND';
       case CombinerType.or:
@@ -539,7 +610,7 @@ class SQLQueryBuilder {
   }
 
   static String _datePartToString(DatePart datePart, String field) {
-    switch(datePart) {
+    switch (datePart) {
       case DatePart.day:
         return 'date_part(\'day\', $field)';
       case DatePart.month:
@@ -550,7 +621,7 @@ class SQLQueryBuilder {
   }
 
   static String _functionTypeToString(FunctionType type) {
-    switch(type) {
+    switch (type) {
       case FunctionType.none:
         return '';
       case FunctionType.count:
@@ -567,88 +638,107 @@ class SQLQueryBuilder {
   }
 
   // Build Substitution Values
-  static Map<String, Object> _buildBlockSubstitutionValues(Block block, SQLBuilderOptions options) {
-    if(block is InsertFieldValueBlock) {
+  static Map<String, Object> _buildBlockSubstitutionValues(
+    Block block,
+    SQLBuilderOptions options,
+  ) {
+    if (block is InsertFieldValueBlock) {
       return _buildInsertFieldSubstitutionValues(block, options);
-    } else if(block is SetFieldBlock) {
+    } else if (block is SetFieldBlock) {
       return _buildSetFieldSubstitutionValues(block, options);
-    } else if(block is WhereBlock) {
+    } else if (block is WhereBlock) {
       return _buildWhereSubstitutionValues(block, options);
-    } else if(block is TableBlockBase) {
+    } else if (block is TableBlockBase) {
       return _buildTableSubstitutionValues(block, options);
-    } else if(block is GetFieldBlock) {
+    } else if (block is GetFieldBlock) {
       return _buildGetFieldSubstitutionValues(block, options);
-    } else if(block is GroupBlock) {
+    } else if (block is GroupBlock) {
       return _buildGroupSubstitutionValues(block, options);
-    } else if(block is OrderBlock) {
+    } else if (block is OrderBlock) {
       return _buildOrderSubstitutionValues(block, options);
-    } else if(block is InsertFieldsFromQueryBlock) {
+    } else if (block is InsertFieldsFromQueryBlock) {
       return _buildInsertFieldsFromQuerySubstitutionValues(block, options);
-    } else if(block is JoinBlock) {
+    } else if (block is JoinBlock) {
       return _buildJoinSubstitutionValues(block, options);
-    } else if(block is UnionBlock) {
+    } else if (block is UnionBlock) {
       return _buildUnionSubstitutionValues(block, options);
     }
 
     return <String, Object>{};
   }
-  static Map<String, Object> _buildInsertFieldSubstitutionValues(InsertFieldValueBlock block, SQLBuilderOptions options) {
+
+  static Map<String, Object> _buildInsertFieldSubstitutionValues(
+    InsertFieldValueBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.sets.isEmpty) {
       return result;
     }
 
-    for(final SetNode node in block.sets) {
+    for (final SetNode node in block.sets) {
       final bool isValueNull = node.value == null;
-      if(!isValueNull) {
+      if (!isValueNull) {
         final Object value = Validator.formatValue(node.value!, options);
 
-        result.addAll(<String, Object>{_buildInsertSubstitutionValueString(options): value});
+        result.addAll(<String, Object>{
+          _buildInsertSubstitutionValueString(options): value
+        });
       }
     }
 
     return result;
   }
 
-  static Map<String, Object> _buildSetFieldSubstitutionValues(SetFieldBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildSetFieldSubstitutionValues(
+    SetFieldBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.sets.isEmpty) {
       return result;
     }
 
-    for(final SetNode node in block.sets) {
+    for (final SetNode node in block.sets) {
       final bool isValueNull = node.value == null;
-      if(!isValueNull) {
+      if (!isValueNull) {
         final Object value = Validator.formatValue(node.value!, options);
 
-        result.addAll(<String, Object>{_buildSetSubstitutionValueString(options): value});
+        result.addAll(
+          <String, Object>{_buildSetSubstitutionValueString(options): value},
+        );
       }
     }
 
     return result;
   }
 
-  static Map<String, Object> _buildWhereSubstitutionValues(WhereBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildWhereSubstitutionValues(
+    WhereBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.wheres.isEmpty) {
       return result;
     }
 
-    for(final WhereNode node in block.wheres) {
-      if(node is WhereValueNode) {
-        if(node is WhereSubqueryNode) {
+    for (final WhereNode node in block.wheres) {
+      if (node is WhereValueNode) {
+        if (node is WhereSubqueryNode) {
           result.addAll(_buildSubstitutionValues(node.query, options));
         }
 
         final bool isValueNull = node.value == null;
-        if(!isValueNull) {
+        if (!isValueNull) {
           Object value = Validator.formatValue(node.value!, options);
 
-          if(node.operator == OperatorType.like) {
+          if (node.operator == OperatorType.like) {
             value = '%$value%';
           }
 
-          result.addAll(<String, Object>{_buildWhereSubstitutionValueString(options): value});
+          result.addAll(<String, Object>{
+            _buildWhereSubstitutionValueString(options): value
+          });
         }
       }
     }
@@ -656,14 +746,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildTableSubstitutionValues(TableBlockBase block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildTableSubstitutionValues(
+    TableBlockBase block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.tables.isEmpty) {
       return result;
     }
 
     for (final TableNode node in block.tables) {
-      if(node is TableSubqueryNode) {
+      if (node is TableSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }
@@ -671,14 +764,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildGetFieldSubstitutionValues(GetFieldBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildGetFieldSubstitutionValues(
+    GetFieldBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.fields.isEmpty) {
       return result;
     }
 
     for (final FieldNode node in block.fields) {
-      if(node is FieldSubqueryNode) {
+      if (node is FieldSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }
@@ -686,14 +782,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildGroupSubstitutionValues(GroupBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildGroupSubstitutionValues(
+    GroupBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.groups.isEmpty) {
       return result;
     }
 
     for (final GroupNode node in block.groups) {
-      if(node is GroupSubqueryNode) {
+      if (node is GroupSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }
@@ -701,14 +800,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildOrderSubstitutionValues(OrderBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildOrderSubstitutionValues(
+    OrderBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.orders.isEmpty) {
       return result;
     }
 
     for (final OrderNode node in block.orders) {
-      if(node is OrderSubqueryNode) {
+      if (node is OrderSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }
@@ -716,7 +818,10 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildInsertFieldsFromQuerySubstitutionValues(InsertFieldsFromQueryBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildInsertFieldsFromQuerySubstitutionValues(
+    InsertFieldsFromQueryBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.query == null) {
       return result;
@@ -727,14 +832,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildJoinSubstitutionValues(JoinBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildJoinSubstitutionValues(
+    JoinBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.joins.isEmpty) {
       return result;
     }
 
     for (final JoinNode node in block.joins) {
-      if(node is JoinSubqueryNode) {
+      if (node is JoinSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }
@@ -742,14 +850,17 @@ class SQLQueryBuilder {
     return result;
   }
 
-  static Map<String, Object> _buildUnionSubstitutionValues(UnionBlock block, SQLBuilderOptions options) {
+  static Map<String, Object> _buildUnionSubstitutionValues(
+    UnionBlock block,
+    SQLBuilderOptions options,
+  ) {
     final Map<String, Object> result = <String, Object>{};
     if (block.unions.isEmpty) {
       return result;
     }
 
     for (final UnionNode node in block.unions) {
-      if(node is UnionSubqueryNode) {
+      if (node is UnionSubqueryNode) {
         result.addAll(_buildSubstitutionValues(node.query, options));
       }
     }

@@ -9,7 +9,6 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, SystemTheme;
 import 'relation.dart';
 
-
 class PlatformGameRelationList extends _PlatformRelationList<Game> {
   const PlatformGameRelationList({
     Key? key,
@@ -17,17 +16,18 @@ class PlatformGameRelationList extends _PlatformRelationList<Game> {
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    detailRouteName: gameDetailRoute,
-    searchRouteName: gameSearchRoute,
-    localSearchRouteName: gameLocalSearchRoute,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          detailRouteName: gameDetailRoute,
+          searchRouteName: gameSearchRoute,
+          localSearchRouteName: gameLocalSearchRoute,
+        );
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Game item) =>
+      GameTheme.itemCard(context, item, onTap);
 }
 
 class PlatformSystemRelationList extends _PlatformRelationList<System> {
@@ -37,19 +37,21 @@ class PlatformSystemRelationList extends _PlatformRelationList<System> {
     required String relationTypeName,
     List<Widget> Function(List<System>)? trailingBuilder,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    searchRouteName: systemSearchRoute,
-    localSearchRouteName: systemLocalSearchRoute,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          searchRouteName: systemSearchRoute,
+          localSearchRouteName: systemLocalSearchRoute,
+        );
 
   @override
-  Widget cardBuilder(BuildContext context, System item) => SystemTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, System item) =>
+      SystemTheme.itemCard(context, item, onTap);
 }
 
-abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
+abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<
+    Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   const _PlatformRelationList({
     Key? key,
     required String relationName,
@@ -61,14 +63,14 @@ abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<Pl
     required String searchRouteName,
     required String localSearchRouteName,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    limitHeight: limitHeight,
-    isSingleList: isSingleList,
-    detailRouteName: detailRouteName,
-    searchRouteName: searchRouteName,
-    localSearchRouteName: localSearchRouteName,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          limitHeight: limitHeight,
+          isSingleList: isSingleList,
+          detailRouteName: detailRouteName,
+          searchRouteName: searchRouteName,
+          localSearchRouteName: localSearchRouteName,
+        );
 }

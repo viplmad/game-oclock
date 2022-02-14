@@ -9,7 +9,6 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
 import 'relation.dart';
 
-
 class GameTagGameRelationList extends _GameTagRelationList<Game> {
   const GameTagGameRelationList({
     Key? key,
@@ -17,21 +16,23 @@ class GameTagGameRelationList extends _GameTagRelationList<Game> {
     required String relationTypeName,
     List<Widget> Function(List<Game>)? trailingBuilder,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    limitHeight: false,
-    detailRouteName: gameDetailRoute,
-    searchRouteName: gameSearchRoute,
-    localSearchRouteName: gameLocalSearchRoute,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          limitHeight: false,
+          detailRouteName: gameDetailRoute,
+          searchRouteName: gameSearchRoute,
+          localSearchRouteName: gameLocalSearchRoute,
+        );
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) => GameTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, Game item) =>
+      GameTheme.itemCard(context, item, onTap);
 }
 
-abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<Game, W, GameTagRelationBloc<W>, GameTagRelationManagerBloc<W>> {
+abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<
+    Game, W, GameTagRelationBloc<W>, GameTagRelationManagerBloc<W>> {
   const _GameTagRelationList({
     Key? key,
     required String relationName,
@@ -43,14 +44,14 @@ abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<Gam
     required String searchRouteName,
     required String localSearchRouteName,
   }) : super(
-    key: key,
-    relationName: relationName,
-    relationTypeName: relationTypeName,
-    trailingBuilder: trailingBuilder,
-    limitHeight: limitHeight,
-    isSingleList: isSingleList,
-    detailRouteName: detailRouteName,
-    searchRouteName: searchRouteName,
-    localSearchRouteName: localSearchRouteName,
-  );
+          key: key,
+          relationName: relationName,
+          relationTypeName: relationTypeName,
+          trailingBuilder: trailingBuilder,
+          limitHeight: limitHeight,
+          isSingleList: isSingleList,
+          detailRouteName: detailRouteName,
+          searchRouteName: searchRouteName,
+          localSearchRouteName: localSearchRouteName,
+        );
 }

@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:backend/model/model.dart';
 import 'package:backend/model/list_style.dart';
 
-
 abstract class ItemListState extends Equatable {
   const ItemListState();
 
@@ -14,8 +13,13 @@ abstract class ItemListState extends Equatable {
 class ItemListLoading extends ItemListState {}
 
 class ItemListLoaded<T extends Item> extends ItemListState {
-  const ItemListLoaded(this.items, [this.viewIndex = 0, this.year, this.page = 0, ListStyle? style])
-      : style = style?? ListStyle.card;
+  const ItemListLoaded(
+    this.items, [
+    this.viewIndex = 0,
+    this.year,
+    this.page = 0,
+    ListStyle? style,
+  ]) : style = style ?? ListStyle.card;
 
   final List<T> items;
   final int viewIndex;
@@ -24,7 +28,7 @@ class ItemListLoaded<T extends Item> extends ItemListState {
   final ListStyle style;
 
   @override
-  List<Object> get props => <Object>[items, viewIndex, year?? -1, page, style];
+  List<Object> get props => <Object>[items, viewIndex, year ?? -1, page, style];
 
   @override
   String toString() => 'ItemListLoaded { '

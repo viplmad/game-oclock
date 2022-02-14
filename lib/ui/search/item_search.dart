@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
@@ -13,8 +14,11 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
 
-
-abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
+abstract class ItemSearch<
+        T extends Item,
+        K extends Bloc<ItemSearchEvent, ItemSearchState>,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends StatelessWidget {
   const ItemSearch({
     Key? key,
     required this.onTapReturn,
@@ -28,58 +32,60 @@ abstract class ItemSearch<T extends Item, K extends Bloc<ItemSearchEvent, ItemSe
 
   @override
   Widget build(BuildContext context) {
-
-    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionRepository _collectionRepository =
+        RepositoryProvider.of<GameCollectionRepository>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return searchBlocBuilder(_collectionRepository)..add(const SearchTextChanged());
+            return searchBlocBuilder(_collectionRepository)
+              ..add(const SearchTextChanged());
           },
         ),
-
         BlocProvider<S>(
           create: (BuildContext context) {
             return managerBlocBuilder(_collectionRepository);
           },
         ),
-
       ],
       child: itemSearchBodyBuilder(
         onTap: _onTap,
         allowNewButton: true,
       ),
     );
-
   }
 
   void Function()? _onTap(BuildContext context, T item) {
-
-    return onTapReturn? () {
-      Navigator.maybePop<T>(context, item);
-    }
-    :
-    detailRouteName.isNotEmpty?
-      () {
-        Navigator.pushNamed(
-          context,
-          detailRouteName,
-          arguments: DetailArguments<T>(
-            item: item,
-          ),
-        );
-      } : null;
-
+    return onTapReturn
+        ? () {
+            Navigator.maybePop<T>(context, item);
+          }
+        : detailRouteName.isNotEmpty
+            ? () {
+                Navigator.pushNamed(
+                  context,
+                  detailRouteName,
+                  arguments: DetailArguments<T>(
+                    item: item,
+                  ),
+                );
+              }
+            : null;
   }
 
   K searchBlocBuilder(GameCollectionRepository collectionRepository);
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, K, S> itemSearchBodyBuilder({required void Function()? Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, K, S> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, T) onTap,
+    required bool allowNewButton,
+  });
 }
 
-abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatelessWidget {
+abstract class ItemLocalSearch<T extends Item,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends StatelessWidget {
   const ItemLocalSearch({
     Key? key,
     required this.items,
@@ -91,8 +97,8 @@ abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEve
 
   @override
   Widget build(BuildContext context) {
-
-    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionRepository _collectionRepository =
+        RepositoryProvider.of<GameCollectionRepository>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -103,42 +109,46 @@ abstract class ItemLocalSearch<T extends Item, S extends Bloc<ItemListManagerEve
             )..add(const SearchTextChanged());
           },
         ),
-
         BlocProvider<S>(
           create: (BuildContext context) {
             return managerBlocBuilder(_collectionRepository);
           },
         ),
-
       ],
       child: itemSearchBodyBuilder(
         onTap: _onTap,
         allowNewButton: false,
       ),
     );
-
   }
 
   void Function()? _onTap(BuildContext context, T item) {
-
-    return detailRouteName.isNotEmpty? () {
-      Navigator.pushNamed(
-        context,
-        detailRouteName,
-        arguments: DetailArguments<T>(
-          item: item,
-        ),
-      );
-    } : null;
-
+    return detailRouteName.isNotEmpty
+        ? () {
+            Navigator.pushNamed(
+              context,
+              detailRouteName,
+              arguments: DetailArguments<T>(
+                item: item,
+              ),
+            );
+          }
+        : null;
   }
 
   S managerBlocBuilder(GameCollectionRepository collectionRepository);
 
-  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({required void Function()? Function(BuildContext, T) onTap, required bool allowNewButton});
+  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, T) onTap,
+    required bool allowNewButton,
+  });
 }
 
-abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends StatefulWidget {
+abstract class ItemSearchBody<
+        T extends Item,
+        K extends Bloc<ItemSearchEvent, ItemSearchState>,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends StatefulWidget {
   const ItemSearchBody({
     Key? key,
     required this.onTap,
@@ -155,9 +165,15 @@ abstract class ItemSearchBody<T extends Item, K extends Bloc<ItemSearchEvent, It
   Widget cardBuilder(BuildContext context, T item);
 
   @override
-  State<ItemSearchBody<T, K, S>> createState() => _ItemSearchBodyState<T, K, S>();
+  State<ItemSearchBody<T, K, S>> createState() =>
+      _ItemSearchBodyState<T, K, S>();
 }
-class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemSearchState>, S extends Bloc<ItemListManagerEvent, ItemListManagerState>> extends State<ItemSearchBody<T, K, S>> {
+
+class _ItemSearchBodyState<
+        T extends Item,
+        K extends Bloc<ItemSearchEvent, ItemSearchState>,
+        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
+    extends State<ItemSearchBody<T, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -166,7 +182,6 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         actions: _buildActions(),
@@ -185,19 +200,19 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
           decoration: InputDecoration(
             border: const UnderlineInputBorder(),
             prefixIcon: const Icon(Icons.search),
-            hintText: GameCollectionLocalisations.of(context).searchString(widget.typesName(context)),
+            hintText: GameCollectionLocalisations.of(context)
+                .searchString(widget.typesName(context)),
           ),
         ),
       ),
       body: BlocListener<S, ItemListManagerState>(
         listener: (BuildContext context, ItemListManagerState state) {
-          if(state is ItemAdded<T>) {
-
+          if (state is ItemAdded<T>) {
             Navigator.maybePop<T>(context, state.item);
-
           }
-          if(state is ItemNotAdded) {
-            final String message = GameCollectionLocalisations.of(context).unableToAddString(widget.typeName(context));
+          if (state is ItemNotAdded) {
+            final String message = GameCollectionLocalisations.of(context)
+                .unableToAddString(widget.typeName(context));
             showSnackBar(
               context,
               message: message,
@@ -213,49 +228,44 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
         },
         child: Column(
           children: <Widget>[
-            widget.allowNewButton?
-              Container(
-                child: _newButton(),
-                color: Colors.grey,
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              )
-              :
-              Container(),
+            widget.allowNewButton
+                ? Container(
+                    child: _newButton(),
+                    color: Colors.grey,
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  )
+                : Container(),
             BlocBuilder<K, ItemSearchState>(
               builder: (BuildContext context, ItemSearchState state) {
-
-                if(state is ItemSearchEmpty<T>) {
-
-                  return listItems(state.suggestions, GameCollectionLocalisations.of(context).noSuggestionsString);
-
+                if (state is ItemSearchEmpty<T>) {
+                  return listItems(
+                    state.suggestions,
+                    GameCollectionLocalisations.of(context).noSuggestionsString,
+                  );
                 }
-                if(state is ItemSearchSuccess<T>) {
-
-                  return listItems(state.results, GameCollectionLocalisations.of(context).noResultsString);
-
+                if (state is ItemSearchSuccess<T>) {
+                  return listItems(
+                    state.results,
+                    GameCollectionLocalisations.of(context).noResultsString,
+                  );
                 }
-                if(state is ItemSearchError) {
-
+                if (state is ItemSearchError) {
                   return Center(
                     child: Text(state.error),
                   );
-
                 }
 
                 return const LinearProgressIndicator();
-
               },
             ),
           ],
         ),
       ),
     );
-
   }
 
   List<Widget> _buildActions() {
-
-    return <Widget> [
+    return <Widget>[
       IconButton(
         icon: const Icon(Icons.clear),
         tooltip: GameCollectionLocalisations.of(context).clearSearchString,
@@ -267,21 +277,20 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
         },
       ),
     ];
-
   }
 
   Widget _newButton() {
-
     return SizedBox(
       width: double.maxFinite,
       child: TextButton(
-        child: Text(GameCollectionLocalisations.of(context).newWithTitleString(widget.typeName(context), query)),
+        child: Text(
+          GameCollectionLocalisations.of(context)
+              .newWithTitleString(widget.typeName(context), query),
+        ),
         onPressed: () {
-
           BlocProvider.of<S>(context).add(
             AddItem<T>(widget.createItem(query)),
           );
-
         },
         style: TextButton.styleFrom(
           primary: Colors.black87,
@@ -289,12 +298,10 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
         ),
       ),
     );
-
   }
 
   Widget listItems(List<T> results, String emptyMessage) {
-
-    if(results.isEmpty) {
+    if (results.isEmpty) {
       return Center(
         child: Text(emptyMessage),
       );
@@ -310,14 +317,17 @@ class _ItemSearchBodyState<T extends Item, K extends Bloc<ItemSearchEvent, ItemS
             final T result = results[index];
 
             return Padding(
-              padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+              padding: const EdgeInsets.only(
+                right: 4.0,
+                left: 4.0,
+                bottom: 4.0,
+                top: 4.0,
+              ),
               child: widget.cardBuilder(context, result),
             );
-
           },
         ),
       ),
     );
-
   }
 }

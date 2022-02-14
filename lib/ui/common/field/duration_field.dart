@@ -6,7 +6,6 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import 'generic_field.dart';
 
-
 class DurationField extends StatelessWidget {
   const DurationField({
     Key? key,
@@ -23,23 +22,21 @@ class DurationField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GenericField<Duration>(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null?
-        GameCollectionLocalisations.of(context).formatDuration(value!)
-        : null,
+      shownValue: value != null
+          ? GameCollectionLocalisations.of(context).formatDuration(value!)
+          : null,
       editable: editable,
       update: update,
       onTap: () {
         return showDurationPicker(
           context: context,
           snapToMins: 5.0,
-          initialTime: value?? Duration.zero,
+          initialTime: value ?? Duration.zero,
         );
       },
     );
-
   }
 }

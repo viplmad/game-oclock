@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class BarData {
   const BarData({
     required this.title,

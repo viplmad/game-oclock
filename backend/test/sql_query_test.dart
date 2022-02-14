@@ -1,27 +1,39 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:query/query.dart' show Query, SQLQueryBuilder, SQLBuilderOptions;
+import 'package:query/query.dart'
+    show Query, SQLQueryBuilder, SQLBuilderOptions;
 
 import 'package:backend/repository/query/query.dart';
 import 'package:backend/entity/entity.dart';
 
-
 void main() {
-  final SQLBuilderOptions _builderOptions = SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false);
+  final SQLBuilderOptions _builderOptions =
+      SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false);
 
   void printQuery(Query query) {
-    final String sqlString = SQLQueryBuilder.buildString(query, _builderOptions);
+    final String sqlString =
+        SQLQueryBuilder.buildString(query, _builderOptions);
     print('SQL: $sqlString');
 
-    final Map<String, Object?> sqlSubstitutionValues = SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
+    final Map<String, Object?> sqlSubstitutionValues =
+        SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
     print('Substitution values: $sqlSubstitutionValues');
 
-    print('------------------------------------------------------------------------------------------------');
+    print(
+      '------------------------------------------------------------------------------------------------',
+    );
   }
 
   test('DLC Query test', () {
-    final DLCEntity entity = DLCEntity(id: 1, name: 'name', releaseYear: 1994, coverFilename: 'coverFilename', baseGame: 2, firstFinishDate: DateTime.now());
+    final DLCEntity entity = DLCEntity(
+      id: 1,
+      name: 'name',
+      releaseYear: 1994,
+      coverFilename: 'coverFilename',
+      baseGame: 2,
+      firstFinishDate: DateTime.now(),
+    );
     final DLCID id = entity.createId();
     final GameID gameId = GameID(99);
 
@@ -41,7 +53,21 @@ void main() {
   });
 
   test('Game Query test', () {
-    final GameEntity entity = GameEntity(id: 1, name: 'name', edition: 'edition', releaseYear: 1999, coverFilename: 'coverFilename', status: 'status', rating: 8, thoughts: 'thoughts', saveFolder: 'saveFolder', screenshotFolder: 'screenshotFolder', isBackup: false, firstFinishDate: DateTime.now(), totalTime: const Duration(minutes: 156));
+    final GameEntity entity = GameEntity(
+      id: 1,
+      name: 'name',
+      edition: 'edition',
+      releaseYear: 1999,
+      coverFilename: 'coverFilename',
+      status: 'status',
+      rating: 8,
+      thoughts: 'thoughts',
+      saveFolder: 'saveFolder',
+      screenshotFolder: 'screenshotFolder',
+      isBackup: false,
+      firstFinishDate: DateTime.now(),
+      totalTime: const Duration(minutes: 156),
+    );
     final GameID id = entity.createId();
 
     printQuery(GameQuery.create(entity));
@@ -59,7 +85,6 @@ void main() {
     printQuery(GameQuery.selectAllInView(GameView.nextUp));
     printQuery(GameQuery.selectAllInView(GameView.playing));
     printQuery(GameQuery.selectAllInView(GameView.review));
-
 
     printQuery(GameQuery.selectAllOwnedInView(GameView.lastCreated));
     printQuery(GameQuery.selectAllOwnedInView(GameView.lastFinished));
@@ -79,7 +104,12 @@ void main() {
   });
 
   test('Platform Query test', () {
-    const PlatformEntity entity = PlatformEntity(id: 1, name: 'name', iconFilename: 'iconFilename', type: 'type');
+    const PlatformEntity entity = PlatformEntity(
+      id: 1,
+      name: 'name',
+      iconFilename: 'iconFilename',
+      type: 'type',
+    );
     final PlatformID id = entity.createId();
 
     printQuery(PlatformQuery.create(entity));
@@ -95,7 +125,15 @@ void main() {
   });
 
   test('Purchase Query test', () {
-    final PurchaseEntity entity = PurchaseEntity(id: 1, description: 'description', price: 4.82, externalCredit: 1.00, date: DateTime.now(), originalPrice: 10.35, store: 2);
+    final PurchaseEntity entity = PurchaseEntity(
+      id: 1,
+      description: 'description',
+      price: 4.82,
+      externalCredit: 1.00,
+      date: DateTime.now(),
+      originalPrice: 10.35,
+      store: 2,
+    );
     final PurchaseID id = entity.createId();
     final StoreID storeId = StoreID(99);
 
@@ -117,7 +155,8 @@ void main() {
   });
 
   test('Store Query test', () {
-    const StoreEntity entity = StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
+    const StoreEntity entity =
+        StoreEntity(id: 1, name: 'name', iconFilename: 'iconFilename');
     final StoreID id = entity.createId();
 
     printQuery(StoreQuery.create(entity));
@@ -133,7 +172,13 @@ void main() {
   });
 
   test('System Query test', () {
-    const SystemEntity entity = SystemEntity(id: 1, name: 'name', iconFilename: 'iconFilename', generation: 6, manufacturer: 'manufacturer');
+    const SystemEntity entity = SystemEntity(
+      id: 1,
+      name: 'name',
+      iconFilename: 'iconFilename',
+      generation: 6,
+      manufacturer: 'manufacturer',
+    );
     final SystemID id = entity.createId();
 
     printQuery(SystemQuery.create(entity));
@@ -179,7 +224,8 @@ void main() {
   });
 
   test('DLC Finish Query test', () {
-    final DLCFinishEntity entity = DLCFinishEntity(dlcId: 1, dateTime: DateTime.now());
+    final DLCFinishEntity entity =
+        DLCFinishEntity(dlcId: 1, dateTime: DateTime.now());
     final DLCFinishID id = entity.createId();
 
     printQuery(DLCFinishQuery.create(entity));
@@ -191,7 +237,8 @@ void main() {
   });
 
   test('Game Finish Query test', () {
-    final GameFinishEntity entity = GameFinishEntity(gameId: 1, dateTime: DateTime.now());
+    final GameFinishEntity entity =
+        GameFinishEntity(gameId: 1, dateTime: DateTime.now());
     final GameFinishID id = entity.createId();
 
     printQuery(GameFinishQuery.create(entity));
@@ -203,7 +250,11 @@ void main() {
   });
 
   test('Game Time Log Query test', () {
-    final GameTimeLogEntity entity = GameTimeLogEntity(gameId: 1, dateTime: DateTime.now(), time: const Duration(minutes: 29));
+    final GameTimeLogEntity entity = GameTimeLogEntity(
+      gameId: 1,
+      dateTime: DateTime.now(),
+      time: const Duration(minutes: 29),
+    );
     final GameTimeLogID id = entity.createId();
 
     printQuery(GameTimeLogQuery.create(entity));
@@ -231,17 +282,19 @@ void main() {
 
     printQuery(GamePlatformRelationQuery.create(gameId, platformId));
     printQuery(GamePlatformRelationQuery.deleteById(gameId, platformId));
-    printQuery(GamePlatformRelationQuery.selectAllGamesByPlatformId(platformId));
+    printQuery(
+      GamePlatformRelationQuery.selectAllGamesByPlatformId(platformId),
+    );
     printQuery(GamePlatformRelationQuery.selectAllPlatformsByGameId(gameId));
-
 
     final PurchaseID purchaseId = PurchaseID(9);
 
     printQuery(GamePurchaseRelationQuery.create(gameId, purchaseId));
     printQuery(GamePurchaseRelationQuery.deleteById(gameId, purchaseId));
-    printQuery(GamePurchaseRelationQuery.selectAllGamesByPurchaseId(purchaseId));
+    printQuery(
+      GamePurchaseRelationQuery.selectAllGamesByPurchaseId(purchaseId),
+    );
     printQuery(GamePurchaseRelationQuery.selectAllPurchasesByGameId(gameId));
-
 
     final GameTagID tagId = GameTagID(9);
 
@@ -257,8 +310,12 @@ void main() {
 
     printQuery(PlatformSystemRelationQuery.create(platformId, systemId));
     printQuery(PlatformSystemRelationQuery.deleteById(platformId, systemId));
-    printQuery(PlatformSystemRelationQuery.selectAllPlatformsBySystemId(systemId));
-    printQuery(PlatformSystemRelationQuery.selectAllSystemsByPlatformId(platformId));
+    printQuery(
+      PlatformSystemRelationQuery.selectAllPlatformsBySystemId(systemId),
+    );
+    printQuery(
+      PlatformSystemRelationQuery.selectAllSystemsByPlatformId(platformId),
+    );
   });
 
   test('Purchase Relation Query test', () {
@@ -268,6 +325,8 @@ void main() {
     printQuery(PurchaseTypeRelationQuery.create(purchaseId, typeId));
     printQuery(PurchaseTypeRelationQuery.deleteById(purchaseId, typeId));
     printQuery(PurchaseTypeRelationQuery.selectAllPurchasesByTypeId(typeId));
-    printQuery(PurchaseTypeRelationQuery.selectAllTypesByPurchaseId(purchaseId));
+    printQuery(
+      PurchaseTypeRelationQuery.selectAllTypesByPurchaseId(purchaseId),
+    );
   });
 }

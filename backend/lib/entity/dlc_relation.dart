@@ -1,6 +1,5 @@
 import 'entity.dart';
 
-
 class DLCPurchaseRelationData {
   DLCPurchaseRelationData._();
 

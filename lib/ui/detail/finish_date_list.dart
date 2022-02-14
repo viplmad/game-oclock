@@ -12,9 +12,13 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 
-
 // ignore: must_be_immutable
-abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
+abstract class FinishList<
+        T extends Item,
+        F extends ItemFinish,
+        K extends Bloc<ItemRelationEvent, ItemRelationState>,
+        S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
+    extends StatelessWidget {
   FinishList({
     Key? key,
     required this.fieldName,
@@ -33,22 +37,25 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
   @override
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext outerContext) {
-
-    final String shownValue = value != null? GameCollectionLocalisations.of(outerContext).formatDate(value!) : '';
+    final String shownValue = value != null
+        ? GameCollectionLocalisations.of(outerContext).formatDate(value!)
+        : '';
 
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
-        if(state is ItemRelationAdded<F>) {
+        if (state is ItemRelationAdded<F>) {
           _hasUpdated = true;
 
-          final String message = GameCollectionLocalisations.of(context).addedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context)
+              .addedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
-        if(state is ItemRelationNotAdded) {
-          final String message = GameCollectionLocalisations.of(context).unableToAddString(relationTypeName);
+        if (state is ItemRelationNotAdded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToAddString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -60,17 +67,19 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
             ),
           );
         }
-        if(state is ItemRelationDeleted<F>) {
+        if (state is ItemRelationDeleted<F>) {
           _hasUpdated = true;
 
-          final String message = GameCollectionLocalisations.of(context).deletedString(relationTypeName);
+          final String message = GameCollectionLocalisations.of(context)
+              .deletedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
-        if(state is ItemRelationNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context).unableToDeleteString(relationTypeName);
+        if (state is ItemRelationNotDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToDeleteString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -89,29 +98,23 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
           trailing: BlocBuilder<K, ItemRelationState>(
             builder: (BuildContext context, ItemRelationState state) {
               String extra = '';
-              if(state is ItemRelationLoaded<F>) {
-
-                extra = state.otherItems.length > 1? '(+)' : '';
-
+              if (state is ItemRelationLoaded<F>) {
+                extra = state.otherItems.length > 1 ? '(+)' : '';
               }
 
               return Text(shownValue + ' ' + extra);
             },
           ),
           onTap: () {
-
             showDialog(
               context: outerContext,
               builder: (BuildContext context) {
-
                 return WillPopScope(
                   onWillPop: () async {
-
-                    if(_hasUpdated) {
+                    if (_hasUpdated) {
                       onUpdate();
                     }
                     return true;
-
                   },
                   child: AlertDialog(
                     title: Text(fieldName),
@@ -119,14 +122,16 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                       width: double.maxFinite,
                       child: BlocBuilder<K, ItemRelationState>(
                         bloc: BlocProvider.of<K>(outerContext),
-                        builder: (BuildContext context, ItemRelationState state) {
-
-                          if(state is ItemRelationLoaded<F>) {
-
+                        builder:
+                            (BuildContext context, ItemRelationState state) {
+                          if (state is ItemRelationLoaded<F>) {
                             final List<F> values = state.otherItems;
 
-                            if(values.isEmpty) {
-                              return Text(GameCollectionLocalisations.of(context).emptyFinishDatesString);
+                            if (values.isEmpty) {
+                              return Text(
+                                GameCollectionLocalisations.of(context)
+                                    .emptyFinishDatesString,
+                              );
                             }
 
                             return ListView.builder(
@@ -134,10 +139,17 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                               itemCount: values.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final F finish = values.elementAt(index);
-                                final String dateString = GameCollectionLocalisations.of(context).formatDate(finish.dateTime);
+                                final String dateString =
+                                    GameCollectionLocalisations.of(context)
+                                        .formatDate(finish.dateTime);
 
                                 return Padding(
-                                  padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+                                  padding: const EdgeInsets.only(
+                                    right: 4.0,
+                                    left: 4.0,
+                                    bottom: 4.0,
+                                    top: 4.0,
+                                  ),
                                   child: ListTile(
                                     title: Text(dateString),
                                     trailing: IconButton(
@@ -154,7 +166,7 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                             );
                           }
 
-                          if(state is ItemRelationNotLoaded) {
+                          if (state is ItemRelationNotLoaded) {
                             return Center(
                               child: Text(state.error),
                             );
@@ -167,28 +179,30 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                             ],
                           );
                         },
-
                       ),
                     ),
                     actions: <Widget>[
                       TextButton(
-                        child: Text(GameCollectionLocalisations.of(context).addString(relationTypeName)),
+                        child: Text(
+                          GameCollectionLocalisations.of(context)
+                              .addString(relationTypeName),
+                        ),
                         onPressed: () {
-
                           showGameDatePicker(
                             context: context,
                           ).then((DateTime? value) {
-                            if(value != null) {
+                            if (value != null) {
                               BlocProvider.of<S>(outerContext).add(
                                 AddItemRelation<F>(createFinish(value)),
                               );
                             }
                           });
-
                         },
                       ),
                       TextButton(
-                        child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                        child: Text(
+                          MaterialLocalizations.of(context).okButtonLabel,
+                        ),
                         onPressed: () {
                           Navigator.maybePop(context);
                         },
@@ -196,15 +210,12 @@ abstract class FinishList<T extends Item, F extends ItemFinish, K extends Bloc<I
                     ],
                   ),
                 );
-
               },
             );
-
           },
         ),
       ),
     );
-
   }
 
   F createFinish(DateTime dateTime);

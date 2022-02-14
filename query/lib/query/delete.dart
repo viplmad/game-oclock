@@ -1,19 +1,26 @@
-import 'block/block.dart' show Block, DeleteBlock, FromTableBlock, JoinBlock, ReturningFieldBlock, WhereBlock;
+import 'block/block.dart'
+    show
+        Block,
+        DeleteBlock,
+        FromTableBlock,
+        JoinBlock,
+        ReturningFieldBlock,
+        WhereBlock;
 
 import 'query.dart' show Query;
 
-
 /// DELETE query builder.
 class Delete extends Query {
-  Delete() : super(
-    <Block>[
-      DeleteBlock(),
-      FromTableBlock(), // 1
-      JoinBlock(), // 2
-      WhereBlock(), // 3
-      ReturningFieldBlock(), // 4
-    ],
-  );
+  Delete()
+      : super(
+          <Block>[
+            DeleteBlock(),
+            FromTableBlock(), // 1
+            JoinBlock(), // 2
+            WhereBlock(), // 3
+            ReturningFieldBlock(), // 4
+          ],
+        );
 
   @override
   FromTableBlock fromTableBlock() {

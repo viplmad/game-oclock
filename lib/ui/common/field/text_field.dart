@@ -4,7 +4,6 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import 'generic_field.dart';
 
-
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     Key? key,
@@ -27,27 +26,28 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GenericField<String>(
       fieldName: fieldName,
       value: value,
-      shownValue: shownValue?? value,
+      shownValue: shownValue ?? value,
       editable: editable,
       extended: isLongText,
       update: update,
       onTap: () {
         final TextEditingController fieldController = TextEditingController();
-        fieldController.text = value?? '';
+        fieldController.text = value ?? '';
 
         return showDialog<String>(
           context: context,
           builder: (BuildContext context) {
-
             return AlertDialog(
-              title: Text(GameCollectionLocalisations.of(context).editString(fieldName)),
+              title: Text(
+                GameCollectionLocalisations.of(context).editString(fieldName),
+              ),
               content: TextField(
                 controller: fieldController,
-                keyboardType: isLongText? TextInputType.multiline : TextInputType.text,
+                keyboardType:
+                    isLongText ? TextInputType.multiline : TextInputType.text,
                 autofocus: true,
                 maxLines: null,
                 decoration: InputDecoration(
@@ -56,7 +56,8 @@ class CustomTextField extends StatelessWidget {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                  child:
+                      Text(MaterialLocalizations.of(context).cancelButtonLabel),
                   onPressed: () {
                     Navigator.maybePop<String>(context);
                   },
@@ -64,7 +65,10 @@ class CustomTextField extends StatelessWidget {
                 TextButton(
                   child: Text(MaterialLocalizations.of(context).okButtonLabel),
                   onPressed: () {
-                    Navigator.maybePop<String>(context, fieldController.text.trim());
+                    Navigator.maybePop<String>(
+                      context,
+                      fieldController.text.trim(),
+                    );
                   },
                 ),
               ],
@@ -74,6 +78,5 @@ class CustomTextField extends StatelessWidget {
       },
       onLongPress: onLongPress,
     );
-
   }
 }

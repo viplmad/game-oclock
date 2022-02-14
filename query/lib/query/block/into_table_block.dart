@@ -1,6 +1,5 @@
 import 'block.dart' show Block;
 
-
 /// INTO table
 class IntoTableBlock extends Block {
   IntoTableBlock() : super();

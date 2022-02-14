@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-
 abstract class Item extends Equatable {
   const Item({
     required this.uniqueId,
@@ -22,10 +21,10 @@ abstract class ItemFinish extends Item {
     required this.dateTime,
     required String uniqueId,
   }) : super(
-    uniqueId: uniqueId,
-    hasImage: false,
-    queryableTerms: '',
-  );
+          uniqueId: uniqueId,
+          hasImage: false,
+          queryableTerms: '',
+        );
 
   final DateTime dateTime;
 
@@ -35,8 +34,8 @@ abstract class ItemFinish extends Item {
 
 class ItemImage {
   const ItemImage(String? url, String? filename)
-      : url = url?? '',
-        filename = filename?? '';
+      : url = url ?? '',
+        filename = filename ?? '';
 
   final String url;
   final String filename;

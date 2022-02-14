@@ -31,7 +31,6 @@ export 'table_node.dart';
 export 'union_node.dart';
 export 'where_node.dart';
 
-
 abstract class Block {
   Block();
 }

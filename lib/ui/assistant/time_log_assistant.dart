@@ -10,60 +10,57 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/shape_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
-
 class TimeLogAssistant extends StatelessWidget {
-  const TimeLogAssistant({
-    Key? key
-  }) : super(key: key);
+  const TimeLogAssistant({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider<TimeLogAssistantBloc>(
       create: (BuildContext context) {
         return TimeLogAssistantBloc();
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).timeLogFieldString),
+          title:
+              Text(GameCollectionLocalisations.of(context).timeLogFieldString),
         ),
         body: const _TimeLogAssistantBody(),
-        floatingActionButton: BlocBuilder<TimeLogAssistantBloc, TimeLogAssistantState>(
+        floatingActionButton:
+            BlocBuilder<TimeLogAssistantBloc, TimeLogAssistantState>(
           builder: (BuildContext context, TimeLogAssistantState state) {
-
             return FloatingActionButton.extended(
               label: Text(GameCollectionLocalisations.of(context).saveString),
               icon: const Icon(Icons.cloud_upload),
               shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).saveString,
-              onPressed: state.isValid? () {
-                final DateTime date = state.date;
-                final TimeOfDay startTime = state.startTime!;
+              onPressed: state.isValid
+                  ? () {
+                      final DateTime date = state.date;
+                      final TimeOfDay startTime = state.startTime!;
 
-                final DateTime dateTime = DateTime(
-                  date.year,
-                  date.month,
-                  date.day,
-                  startTime.hour,
-                  startTime.minute,
-                );
+                      final DateTime dateTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        startTime.hour,
+                        startTime.minute,
+                      );
 
-                Navigator.maybePop(
-                  context,
-                  GameTimeLog(
-                    dateTime: dateTime,
-                    time: state.duration!,
-                  ),
-                );
-              } : null,
-              backgroundColor: state.isValid? null : Colors.grey,
+                      Navigator.maybePop(
+                        context,
+                        GameTimeLog(
+                          dateTime: dateTime,
+                          time: state.duration!,
+                        ),
+                      );
+                    }
+                  : null,
+              backgroundColor: state.isValid ? null : Colors.grey,
             );
-
           },
         ),
       ),
     );
-
   }
 }
 
@@ -74,10 +71,8 @@ class _TimeLogAssistantBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<TimeLogAssistantBloc, TimeLogAssistantState>(
       builder: (BuildContext context, TimeLogAssistantState state) {
-
         return Column(
           children: <Widget>[
             DateField(
@@ -92,7 +87,8 @@ class _TimeLogAssistantBody extends StatelessWidget {
               },
             ),
             TimeField(
-              fieldName: GameCollectionLocalisations.of(context).startTimeString,
+              fieldName:
+                  GameCollectionLocalisations.of(context).startTimeString,
               value: state.startTime,
               update: (TimeOfDay time) {
                 BlocProvider.of<TimeLogAssistantBloc>(context).add(
@@ -126,11 +122,19 @@ class _TimeLogAssistantBody extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              title: Text(GameCollectionLocalisations.of(context).recalculationModeTitle),
-              subtitle: Text(GameCollectionLocalisations.of(context).recalculationModeSubtitle),
+              title: Text(
+                GameCollectionLocalisations.of(context).recalculationModeTitle,
+              ),
+              subtitle: Text(
+                GameCollectionLocalisations.of(context)
+                    .recalculationModeSubtitle,
+              ),
             ),
             RadioListTile<TimeLogRecalculationMode>(
-              title: Text(GameCollectionLocalisations.of(context).recalculationModeDurationString),
+              title: Text(
+                GameCollectionLocalisations.of(context)
+                    .recalculationModeDurationString,
+              ),
               groupValue: state.recalculationMode,
               value: TimeLogRecalculationMode.duration,
               onChanged: (_) {
@@ -142,7 +146,10 @@ class _TimeLogAssistantBody extends StatelessWidget {
               },
             ),
             RadioListTile<TimeLogRecalculationMode>(
-              title: Text(GameCollectionLocalisations.of(context).recalculationModeTimeString),
+              title: Text(
+                GameCollectionLocalisations.of(context)
+                    .recalculationModeTimeString,
+              ),
               groupValue: state.recalculationMode,
               value: TimeLogRecalculationMode.time,
               onChanged: (_) {
@@ -155,9 +162,7 @@ class _TimeLogAssistantBody extends StatelessWidget {
             ),
           ],
         );
-
       },
     );
-
   }
 }

@@ -1,6 +1,5 @@
 import 'block.dart' show Block;
 
-
 /// OFFSET x
 class OffsetBlock extends Block {
   OffsetBlock() : super();

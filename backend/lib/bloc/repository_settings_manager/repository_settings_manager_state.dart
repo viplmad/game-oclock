@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 import 'package:backend/model/repository_type.dart';
 
-
 abstract class RepositorySettingsManagerState extends Equatable {
   const RepositorySettingsManagerState();
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-
 class RatingField extends StatelessWidget {
   const RatingField({
     Key? key,
@@ -19,35 +18,37 @@ class RatingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-              child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
+              padding:
+                  const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+              child:
+                  Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
             ),
           ],
         ),
         SmoothStarRating(
           allowHalfRating: false,
           starCount: 10,
-          rating: (value?? 0).roundToDouble(),
+          rating: (value ?? 0).roundToDouble(),
           color: Colors.yellow,
           borderColor: Colors.orangeAccent,
           size: 35.0,
-          onRated: editable? (double? newRating) {
-            if (newRating != null) {
-              final int updatedRating = newRating.toInt();
+          onRated: editable
+              ? (double? newRating) {
+                  if (newRating != null) {
+                    final int updatedRating = newRating.toInt();
 
-              update!(updatedRating);
-            }
-          } : null,
+                    update!(updatedRating);
+                  }
+                }
+              : null,
         ),
       ],
     );
-
   }
 }

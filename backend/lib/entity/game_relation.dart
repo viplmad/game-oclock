@@ -1,6 +1,5 @@
 import 'entity.dart';
 
-
 class GamePlatformRelationData {
   GamePlatformRelationData._();
 

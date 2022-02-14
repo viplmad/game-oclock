@@ -1,25 +1,38 @@
-import 'block/block.dart' show Block, DistinctBlock, FromTableBlock, GetFieldBlock, GroupBlock, JoinBlock, LimitBlock, OffsetBlock, OrderBlock, SelectBlock, UnionBlock, WhereBlock;
+import 'block/block.dart'
+    show
+        Block,
+        DistinctBlock,
+        FromTableBlock,
+        GetFieldBlock,
+        GroupBlock,
+        JoinBlock,
+        LimitBlock,
+        OffsetBlock,
+        OrderBlock,
+        SelectBlock,
+        UnionBlock,
+        WhereBlock;
 
 import 'query.dart' show Query;
 
-
 /// SELECT query builder.
 class Select extends Query {
-  Select() : super(
-    <Block>[
-      SelectBlock(),
-      DistinctBlock(), // 1
-      GetFieldBlock(), // 2
-      FromTableBlock(), // 3
-      JoinBlock(), // 4
-      WhereBlock(), // 5
-      GroupBlock(), // 6
-      OrderBlock(), // 7
-      LimitBlock(), // 8
-      OffsetBlock(), // 9
-      UnionBlock(), // 10
-    ],
-  );
+  Select()
+      : super(
+          <Block>[
+            SelectBlock(),
+            DistinctBlock(), // 1
+            GetFieldBlock(), // 2
+            FromTableBlock(), // 3
+            JoinBlock(), // 4
+            WhereBlock(), // 5
+            GroupBlock(), // 6
+            OrderBlock(), // 7
+            LimitBlock(), // 8
+            OffsetBlock(), // 9
+            UnionBlock(), // 10
+          ],
+        );
 
   @override
   DistinctBlock distinctBlock() {

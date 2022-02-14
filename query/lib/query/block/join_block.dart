@@ -4,12 +4,11 @@ import 'join_node.dart';
 import 'field_node.dart';
 import 'table_node.dart';
 
-
 /// JOIN
 class JoinBlock extends Block {
-  JoinBlock() :
-    joins = <JoinNode>[],
-    super();
+  JoinBlock()
+      : joins = <JoinNode>[],
+        super();
 
   final List<JoinNode> joins;
 
@@ -18,18 +17,38 @@ class JoinBlock extends Block {
   /// @param alias Optional alias for the table name.
   /// @param condition Optional condition (containing an SQL expression) for the JOIN.
   /// @param type Join Type.
-  void setJoin(String table, String? alias, String field, String joinTable, String joinField, {JoinType type = JoinType.inner, FunctionType function = FunctionType.none}) {
+  void setJoin(
+    String table,
+    String? alias,
+    String field,
+    String joinTable,
+    String joinField, {
+    JoinType type = JoinType.inner,
+    FunctionType function = FunctionType.none,
+  }) {
     final TableNode tableNode = TableStringNode(table, alias);
-    final FieldStringNode fieldNode = FieldStringNode(field, null, alias?? table, function, null);
-    final FieldStringNode joinFieldNode = FieldStringNode(joinField, null, joinTable, function, null);
+    final FieldStringNode fieldNode =
+        FieldStringNode(field, null, alias ?? table, function, null);
+    final FieldStringNode joinFieldNode =
+        FieldStringNode(joinField, null, joinTable, function, null);
     final JoinCondition condition = JoinCondition(fieldNode, joinFieldNode);
     final JoinNode node = JoinTableNode(tableNode, condition, type);
     joins.add(node);
   }
 
-  void setJoinSubquery(Query query, String alias, String field, String joinTable, String joinField, {JoinType type = JoinType.inner, FunctionType function = FunctionType.none}) {
-    final FieldStringNode fieldNode = FieldStringNode(field, null, alias, function, null);
-    final FieldStringNode joinFieldNode = FieldStringNode(joinField, null, joinTable, function, null);
+  void setJoinSubquery(
+    Query query,
+    String alias,
+    String field,
+    String joinTable,
+    String joinField, {
+    JoinType type = JoinType.inner,
+    FunctionType function = FunctionType.none,
+  }) {
+    final FieldStringNode fieldNode =
+        FieldStringNode(field, null, alias, function, null);
+    final FieldStringNode joinFieldNode =
+        FieldStringNode(joinField, null, joinTable, function, null);
     final JoinCondition condition = JoinCondition(fieldNode, joinFieldNode);
     final JoinNode node = JoinSubqueryNode(query, condition, type);
     joins.add(node);

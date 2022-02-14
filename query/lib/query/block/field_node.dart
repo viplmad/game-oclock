@@ -1,6 +1,5 @@
 import '../query.dart' show Query, FunctionType;
 
-
 abstract class FieldNode {
   FieldNode(this.function, this.alias);
 
@@ -9,7 +8,13 @@ abstract class FieldNode {
 }
 
 class FieldStringNode extends FieldNode {
-  FieldStringNode(this.name, this.type, this.table, FunctionType function, String? alias) : super(function, alias);
+  FieldStringNode(
+    this.name,
+    this.type,
+    this.table,
+    FunctionType function,
+    String? alias,
+  ) : super(function, alias);
 
   final String name;
   final Type? type;
@@ -17,7 +22,8 @@ class FieldStringNode extends FieldNode {
 }
 
 class FieldSubqueryNode extends FieldNode {
-  FieldSubqueryNode(this.query, FunctionType function, String? alias) : super(function, alias);
+  FieldSubqueryNode(this.query, FunctionType function, String? alias)
+      : super(function, alias);
 
   final Query query;
 }

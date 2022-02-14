@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 class Purchase extends Item {
   const Purchase({
     required this.id,
@@ -9,14 +8,15 @@ class Purchase extends Item {
     required this.externalCredit,
     required this.date,
     required this.originalPrice,
-
     required this.store,
-  }) : discount = originalPrice > 0? (1 - (price + externalCredit) / originalPrice) : 0,
-  super(
-    uniqueId: 'Pu$id',
-    hasImage: false,
-    queryableTerms: description,
-  );
+  })  : discount = originalPrice > 0
+            ? (1 - (price + externalCredit) / originalPrice)
+            : 0,
+        super(
+          uniqueId: 'Pu$id',
+          hasImage: false,
+          queryableTerms: description,
+        );
 
   final int id;
   final String description;
@@ -38,36 +38,31 @@ class Purchase extends Item {
     double? externalCredit,
     DateTime? date,
     double? originalPrice,
-
     int? store,
   }) {
-
     return Purchase(
       id: id,
-      description: description?? this.description,
-      price: price?? this.price,
-      externalCredit: externalCredit?? this.externalCredit,
-      date: date?? this.date,
-      originalPrice: originalPrice?? this.originalPrice,
-
-      store: store?? this.store,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      externalCredit: externalCredit ?? this.externalCredit,
+      date: date ?? this.date,
+      originalPrice: originalPrice ?? this.originalPrice,
+      store: store ?? this.store,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    description,
-    price,
-    externalCredit,
-    date?? DateTime(1970),
-    originalPrice,
-  ];
+        id,
+        description,
+        price,
+        externalCredit,
+        date ?? DateTime(1970),
+        originalPrice,
+      ];
 
   @override
   String toString() {
-
     return 'Purchase { '
         'Id: $id, '
         'Description: $description, '
@@ -76,6 +71,5 @@ class Purchase extends Item {
         'Date: $date, '
         'Original Price: $originalPrice'
         ' }';
-
   }
 }

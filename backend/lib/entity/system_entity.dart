@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity;
 
-
 enum SystemView {
   main,
   lastCreated,
@@ -51,7 +50,6 @@ class SystemEntity extends ItemEntity {
   final String? manufacturer;
 
   static SystemEntity fromMap(Map<String, Object?> map) {
-
     return SystemEntity(
       id: map[SystemEntityData.idField] as int,
       name: map[SystemEntityData.nameField] as String,
@@ -59,57 +57,75 @@ class SystemEntity extends ItemEntity {
       generation: map[SystemEntityData.generationField] as int,
       manufacturer: map[SystemEntityData.manufacturerField] as String?,
     );
-
   }
 
   static SystemID idFromMap(Map<String, Object?> map) {
-
     return SystemID(map[SystemEntityData.idField] as int);
-
   }
 
   SystemID createId() {
-
     return SystemID(id);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      SystemEntityData.nameField : name,
-      SystemEntityData.generationField : generation,
+      SystemEntityData.nameField: name,
+      SystemEntityData.generationField: generation,
     };
 
-    putCreateMapValueNullable(createMap, SystemEntityData.iconField, iconFilename);
-    putCreateMapValueNullable(createMap, SystemEntityData.manufacturerField, manufacturer);
+    putCreateMapValueNullable(
+      createMap,
+      SystemEntityData.iconField,
+      iconFilename,
+    );
+    putCreateMapValueNullable(
+      createMap,
+      SystemEntityData.manufacturerField,
+      manufacturer,
+    );
 
     return createMap;
-
   }
 
   Map<String, Object?> updateMap(SystemEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, SystemEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, SystemEntityData.iconField, iconFilename, updatedEntity.iconFilename);
-    putUpdateMapValue(updateMap, SystemEntityData.generationField, generation, updatedEntity.generation);
-    putUpdateMapValueNullable(updateMap, SystemEntityData.manufacturerField, manufacturer, updatedEntity.manufacturer);
+    putUpdateMapValue(
+      updateMap,
+      SystemEntityData.nameField,
+      name,
+      updatedEntity.name,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      SystemEntityData.iconField,
+      iconFilename,
+      updatedEntity.iconFilename,
+    );
+    putUpdateMapValue(
+      updateMap,
+      SystemEntityData.generationField,
+      generation,
+      updatedEntity.generation,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      SystemEntityData.manufacturerField,
+      manufacturer,
+      updatedEntity.manufacturer,
+    );
 
     return updateMap;
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-  ];
+        id,
+        name,
+      ];
 
   @override
   String toString() {
-
     return '${SystemEntityData.table}Entity { '
         '${SystemEntityData.idField}: $id, '
         '${SystemEntityData.nameField}: $name, '
@@ -117,6 +133,5 @@ class SystemEntity extends ItemEntity {
         '${SystemEntityData.generationField}: $generation, '
         '${SystemEntityData.manufacturerField}: $manufacturer'
         ' }';
-
   }
 }

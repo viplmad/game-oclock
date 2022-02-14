@@ -1,6 +1,5 @@
 import 'entity.dart' show ItemEntity;
 
-
 enum StoreView {
   main,
   lastCreated,
@@ -39,64 +38,66 @@ class StoreEntity extends ItemEntity {
   final String? iconFilename;
 
   static StoreEntity fromMap(Map<String, Object?> map) {
-
     return StoreEntity(
       id: map[StoreEntityData.idField] as int,
       name: map[StoreEntityData.nameField] as String,
       iconFilename: map[StoreEntityData.iconField] as String?,
     );
-
   }
 
   static StoreID idFromMap(Map<String, Object?> map) {
-
     return StoreID(map[StoreEntityData.idField] as int);
-
   }
 
   StoreID createId() {
-
     return StoreID(id);
-
   }
 
   Map<String, Object?> createMap() {
-
     final Map<String, Object?> createMap = <String, Object?>{
-      StoreEntityData.nameField : name,
+      StoreEntityData.nameField: name,
     };
 
-    putCreateMapValueNullable(createMap, StoreEntityData.iconField, iconFilename);
+    putCreateMapValueNullable(
+      createMap,
+      StoreEntityData.iconField,
+      iconFilename,
+    );
 
     return createMap;
-
   }
 
   Map<String, Object?> updateMap(StoreEntity updatedEntity) {
-
     final Map<String, Object?> updateMap = <String, Object?>{};
 
-    putUpdateMapValue(updateMap, StoreEntityData.nameField, name, updatedEntity.name);
-    putUpdateMapValueNullable(updateMap, StoreEntityData.iconField, iconFilename, updatedEntity.iconFilename);
+    putUpdateMapValue(
+      updateMap,
+      StoreEntityData.nameField,
+      name,
+      updatedEntity.name,
+    );
+    putUpdateMapValueNullable(
+      updateMap,
+      StoreEntityData.iconField,
+      iconFilename,
+      updatedEntity.iconFilename,
+    );
 
     return updateMap;
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-  ];
+        id,
+        name,
+      ];
 
   @override
   String toString() {
-
     return '${StoreEntityData.table}Entity { '
         '${StoreEntityData.idField}: $id, '
         '${StoreEntityData.nameField}: $name, '
         '${StoreEntityData.iconField}: $iconFilename'
         ' }';
-
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-
-void showSnackBar(BuildContext context, {required String message, int seconds = 3, SnackBarAction? snackBarAction}) {
-
+void showSnackBar(
+  BuildContext context, {
+  required String message,
+  int seconds = 3,
+  SnackBarAction? snackBarAction,
+}) {
   final SnackBar snackBar = SnackBar(
     behavior: SnackBarBehavior.floating,
     content: Text(message),
@@ -14,16 +17,18 @@ void showSnackBar(BuildContext context, {required String message, int seconds = 
 
   messengerState.hideCurrentSnackBar();
   messengerState.showSnackBar(snackBar);
-
 }
 
-SnackBarAction dialogSnackBarAction(BuildContext context, {required String label, required String title, required String content}) {
-
+SnackBarAction dialogSnackBarAction(
+  BuildContext context, {
+  required String label,
+  required String title,
+  required String content,
+}) {
   return SnackBarAction(
     label: label,
     textColor: Colors.white,
     onPressed: () {
-
       showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
@@ -47,18 +52,17 @@ SnackBarAction dialogSnackBarAction(BuildContext context, {required String label
           );
         },
       );
-
     },
   );
-
 }
 
-SnackBarAction backgroundSnackBarAction({required String label, required void Function() onPressed}) {
-
+SnackBarAction backgroundSnackBarAction({
+  required String label,
+  required void Function() onPressed,
+}) {
   return SnackBarAction(
     label: label,
     textColor: Colors.white,
     onPressed: onPressed,
   );
-
 }

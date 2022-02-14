@@ -1,6 +1,5 @@
 import 'model.dart' show Item, ItemImage;
 
-
 enum PlatformType {
   physical,
   digital,
@@ -14,10 +13,10 @@ class Platform extends Item {
     required this.iconFilename,
     required this.type,
   }) : super(
-    uniqueId: 'Pl$id',
-    hasImage: true,
-    queryableTerms: name,
-  );
+          uniqueId: 'Pl$id',
+          hasImage: true,
+          queryableTerms: name,
+        );
 
   final int id;
   final String name;
@@ -35,34 +34,30 @@ class Platform extends Item {
     String? iconName,
     PlatformType? type,
   }) {
-
     return Platform(
       id: id,
-      name: name?? this.name,
-      iconURL: iconURL?? this.iconURL,
-      iconFilename: iconName?? iconFilename,
-      type: type?? this.type,
+      name: name ?? this.name,
+      iconURL: iconURL ?? this.iconURL,
+      iconFilename: iconName ?? iconFilename,
+      type: type ?? this.type,
     );
-
   }
 
   @override
   List<Object> get props => <Object>[
-    id,
-    name,
-    iconURL?? '',
-    type?? '',
-  ];
+        id,
+        name,
+        iconURL ?? '',
+        type ?? '',
+      ];
 
   @override
   String toString() {
-
     return 'Platform { '
         'Id: $id, '
         'Name: $name, '
         'Icon URL: $iconURL, '
         'Type: $type'
         ' }';
-
   }
 }

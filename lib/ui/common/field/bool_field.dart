@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class BoolField extends StatelessWidget {
   const BoolField({
     Key? key,
@@ -17,12 +16,10 @@ class BoolField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SwitchListTile(
       title: Text(fieldName),
-      value: value?? false,
-      onChanged: editable? update : null,
+      value: value ?? false,
+      onChanged: editable ? update : null,
     );
-
   }
 }

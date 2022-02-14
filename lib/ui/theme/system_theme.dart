@@ -5,12 +5,14 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 
-
 class SystemTheme {
   SystemTheme._();
 
-  static Widget itemCard(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
-
+  static Widget itemCard(
+    BuildContext context,
+    System item,
+    void Function()? Function(BuildContext, System) onTap,
+  ) {
     return ItemCard(
       title: _itemTitle(item),
       subtitle: _itemSubtitle(item),
@@ -18,28 +20,25 @@ class SystemTheme {
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
-
   }
 
-  static Widget itemGrid(BuildContext context, System item, void Function()? Function(BuildContext, System) onTap) {
-
+  static Widget itemGrid(
+    BuildContext context,
+    System item,
+    void Function()? Function(BuildContext, System) onTap,
+  ) {
     return ItemGrid(
       title: _itemTitle(item),
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
-
   }
 
   static String _itemTitle(System item) {
-
     return item.name;
-
   }
 
   static String _itemSubtitle(System item) {
-
     return GameCollectionLocalisations.manufacturerString(item.manufacturer);
-
   }
 }

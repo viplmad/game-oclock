@@ -15,8 +15,12 @@ import '../common/item_view.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
 
-
-abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<ItemRelationEvent, ItemRelationState>, S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>> extends StatelessWidget {
+abstract class ItemRelationList<
+        T extends Item,
+        W extends Item,
+        K extends Bloc<ItemRelationEvent, ItemRelationState>,
+        S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
+    extends StatelessWidget {
   const ItemRelationList({
     Key? key,
     required this.relationName,
@@ -41,30 +45,29 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
 
   @override
   Widget build(BuildContext context) {
-
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
-        if(state is ItemRelationAdded<W>) {
-          final String message = GameCollectionLocalisations.of(context).linkedString(relationTypeName);
+        if (state is ItemRelationAdded<W>) {
+          final String message = GameCollectionLocalisations.of(context)
+              .linkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
-
                 BlocProvider.of<S>(context).add(
                   DeleteItemRelation<W>(
                     state.otherItem,
                   ),
                 );
-
               },
             ),
           );
         }
-        if(state is ItemRelationNotAdded) {
-          final String message = GameCollectionLocalisations.of(context).unableToLinkString(relationTypeName);
+        if (state is ItemRelationNotAdded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToLinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -76,27 +79,27 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
             ),
           );
         }
-        if(state is ItemRelationDeleted<W>) {
-          final String message = GameCollectionLocalisations.of(context).unlinkedString(relationTypeName);
+        if (state is ItemRelationDeleted<W>) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unlinkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
-
                 BlocProvider.of<S>(context).add(
                   AddItemRelation<W>(
                     state.otherItem,
                   ),
                 );
-
               },
             ),
           );
         }
-        if(state is ItemRelationNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context).unableToUnlinkString(relationTypeName);
+        if (state is ItemRelationNotDeleted) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToUnlinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -111,36 +114,34 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
       },
       child: BlocBuilder<K, ItemRelationState>(
         builder: (BuildContext context, ItemRelationState state) {
-
-          if(state is ItemRelationLoaded<W>) {
-
-            return (isSingleList)?
-              _ResultsListSingle<W>(
-                items: state.otherItems,
-                relationName: relationName,
-                relationTypeName: relationTypeName,
-                itemBuilder: cardBuilder,
-                onSearch: _onRepositorySearchTap(context),
-                updateAdd: _addRelationFunction(context),
-                updateDelete: _deleteRelationFunction(context),
-              )
-              :
-              _ResultsListMany<W>(
-                items: state.otherItems,
-                relationName: relationName,
-                relationTypeName: relationTypeName,
-                itemBuilder: cardBuilder,
-                onSearch: _onRepositorySearchTap(context),
-                updateAdd: _addRelationFunction(context),
-                updateDelete: _deleteRelationFunction(context),
-                trailingBuilder: trailingBuilder,
-                onListSearch: state.otherItems.isNotEmpty? _onLocalSearchTap(context, state.otherItems) : null,
-                limitHeight: limitHeight,
-              );
-
+          if (state is ItemRelationLoaded<W>) {
+            return (isSingleList)
+                ? _ResultsListSingle<W>(
+                    items: state.otherItems,
+                    relationName: relationName,
+                    relationTypeName: relationTypeName,
+                    itemBuilder: cardBuilder,
+                    onSearch: _onRepositorySearchTap(context),
+                    updateAdd: _addRelationFunction(context),
+                    updateDelete: _deleteRelationFunction(context),
+                  )
+                : _ResultsListMany<W>(
+                    items: state.otherItems,
+                    relationName: relationName,
+                    relationTypeName: relationTypeName,
+                    itemBuilder: cardBuilder,
+                    onSearch: _onRepositorySearchTap(context),
+                    updateAdd: _addRelationFunction(context),
+                    updateDelete: _deleteRelationFunction(context),
+                    trailingBuilder: trailingBuilder,
+                    onListSearch: state.otherItems.isNotEmpty
+                        ? _onLocalSearchTap(context, state.otherItems)
+                        : null,
+                    limitHeight: limitHeight,
+                  );
           }
 
-          if(state is ItemRelationNotLoaded) {
+          if (state is ItemRelationNotLoaded) {
             return Center(
               child: Text(state.error),
             );
@@ -153,15 +154,12 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
               LinearProgressIndicator(),
             ],
           );
-
         },
       ),
     );
-
   }
 
   void Function(W) _addRelationFunction(BuildContext context) {
-
     return (W addedItem) {
       BlocProvider.of<S>(context).add(
         AddItemRelation<W>(
@@ -169,11 +167,9 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
         ),
       );
     };
-
   }
 
   void Function(W) _deleteRelationFunction(BuildContext context) {
-
     return (W deletedItem) {
       BlocProvider.of<S>(context).add(
         DeleteItemRelation<W>(
@@ -181,25 +177,24 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
         ),
       );
     };
-
   }
 
   Future<W?> Function() _onRepositorySearchTap(BuildContext context) {
-
     return () {
       return Navigator.pushNamed<W>(
         context,
         searchRouteName,
         arguments: const SearchArguments(
           onTapReturn: true,
-        )
+        ),
       );
     };
-
   }
 
-  Future<dynamic> Function() _onLocalSearchTap(BuildContext context, List<W> items) {
-
+  Future<dynamic> Function() _onLocalSearchTap(
+    BuildContext context,
+    List<W> items,
+  ) {
     return () {
       return Navigator.pushNamed(
         context,
@@ -207,31 +202,27 @@ abstract class ItemRelationList<T extends Item, W extends Item, K extends Bloc<I
         arguments: items,
       );
     };
-
   }
 
   @nonVirtual
   void Function()? onTap(BuildContext context, W item) {
-
-    return detailRouteName.isNotEmpty? () {
-      Navigator.pushNamed(
-        context,
-        detailRouteName,
-        arguments: DetailArguments<W>(
-          item: item,
-          onUpdate: (W? updatedItem) {
-
-            if(updatedItem != null) {
-
-              BlocProvider.of<K>(context).add(UpdateRelationItem<W>(updatedItem));
-
-            }
-
-          },
-        ),
-      );
-    } : null;
-
+    return detailRouteName.isNotEmpty
+        ? () {
+            Navigator.pushNamed(
+              context,
+              detailRouteName,
+              arguments: DetailArguments<W>(
+                item: item,
+                onUpdate: (W? updatedItem) {
+                  if (updatedItem != null) {
+                    BlocProvider.of<K>(context)
+                        .add(UpdateRelationItem<W>(updatedItem));
+                  }
+                },
+              ),
+            );
+          }
+        : null;
   }
 
   Widget cardBuilder(BuildContext context, W item);
@@ -249,15 +240,13 @@ class _HeaderText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(text, style: Theme.of(context).textTheme.subtitle1),
-        trailingWidget?? Container(),
+        trailingWidget ?? Container(),
       ],
     );
-
   }
 }
 
@@ -279,25 +268,31 @@ class _ResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const Divider(),
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 16.0),
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+            top: 16.0,
+            bottom: 16.0,
+          ),
           child: Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: _HeaderText(
                   text: headerText,
-                  trailingWidget: onListSearch != null?
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      tooltip: GameCollectionLocalisations.of(context).searchInListString,
-                      onPressed: onListSearch,
-                    ) : Container(),
+                  trailingWidget: onListSearch != null
+                      ? IconButton(
+                          icon: const Icon(Icons.search),
+                          tooltip: GameCollectionLocalisations.of(context)
+                              .searchInListString,
+                          onPressed: onListSearch,
+                        )
+                      : Container(),
                 ),
               ),
               resultList,
@@ -305,13 +300,12 @@ class _ResultsList extends StatelessWidget {
                 width: double.maxFinite,
                 child: linkWidget,
               ),
-              trailingWidget?? Container(),
+              trailingWidget ?? Container(),
             ],
           ),
         ),
       ],
     );
-
   }
 }
 
@@ -329,26 +323,25 @@ class _LinkButton<W extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: ElevatedButton.icon(
-        label: Text(GameCollectionLocalisations.of(context).linkString(typeName)),
+        label:
+            Text(GameCollectionLocalisations.of(context).linkString(typeName)),
         icon: const Icon(Icons.link),
         onPressed: () {
-
-          onSearch().then( (W? result) {
+          onSearch().then((W? result) {
             if (result != null) {
               updateAdd(result);
             }
           });
-
         },
         style: ElevatedButton.styleFrom(
           onPrimary: Colors.black87,
           primary: Colors.grey[300],
         ).copyWith(
-          elevation: MaterialStateProperty.resolveWith<double?>( (Set<MaterialState> states) {
+          elevation: MaterialStateProperty.resolveWith<double?>(
+              (Set<MaterialState> states) {
             if (states.contains(MaterialState.pressed)) {
               return 2.0;
             }
@@ -358,7 +351,6 @@ class _LinkButton<W extends Item> extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
 
@@ -384,7 +376,6 @@ class _ResultsListSingle<W extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return _ResultsList(
       headerText: relationName,
       resultList: ListView.builder(
@@ -402,17 +393,16 @@ class _ResultsListSingle<W extends Item> extends StatelessWidget {
             },
             dismissIcon: Icons.link_off,
           );
-
         },
       ),
-      linkWidget: items.isEmpty?
-        _LinkButton<W>(
-          typeName: relationTypeName,
-          onSearch: onSearch,
-          updateAdd: updateAdd,
-        ) : Container(),
+      linkWidget: items.isEmpty
+          ? _LinkButton<W>(
+              typeName: relationTypeName,
+              onSearch: onSearch,
+              updateAdd: updateAdd,
+            )
+          : Container(),
     );
-
   }
 }
 
@@ -444,13 +434,16 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return _ResultsList(
       headerText: relationName + ' (' + items.length.toString() + ')',
       resultList: Container(
-        constraints: limitHeight? BoxConstraints.loose(
-          Size.fromHeight( (MediaQuery.of(context).size.height / 3), ),
-        ) : null,
+        constraints: limitHeight
+            ? BoxConstraints.loose(
+                Size.fromHeight(
+                  (MediaQuery.of(context).size.height / 3),
+                ),
+              )
+            : null,
         child: ListView.builder(
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
@@ -466,7 +459,6 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
               },
               dismissIcon: Icons.link_off,
             );
-
           },
         ),
       ),
@@ -475,12 +467,12 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
         onSearch: onSearch,
         updateAdd: updateAdd,
       ),
-      trailingWidget: trailingBuilder != null?
-        Column(
-          children: trailingBuilder!(items),
-        ) : Container(),
+      trailingWidget: trailingBuilder != null
+          ? Column(
+              children: trailingBuilder!(items),
+            )
+          : Container(),
       onListSearch: onListSearch,
     );
-
   }
 }

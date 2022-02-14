@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show Item, Store, Purchase;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -16,8 +17,8 @@ import '../relation/relation.dart';
 import '../theme/theme.dart' show StoreTheme;
 import 'item_detail.dart';
 
-
-class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
+class StoreDetail
+    extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
     Key? key,
     required Store item,
@@ -25,57 +26,62 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  StoreDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, StoreDetailManagerBloc managerBloc) {
-
+  StoreDetailBloc detailBlocBuilder(
+    GameCollectionRepository collectionRepository,
+    StoreDetailManagerBloc managerBloc,
+  ) {
     return StoreDetailBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
-
   }
 
   @override
-  StoreDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  StoreDetailManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return StoreDetailManagerBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
-
-    final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = StoreRelationManagerBloc<Purchase>(
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
+    final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc =
+        StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
-
+      blocProviderRelationBuilder<Purchase>(
+        collectionRepository,
+        _purchaseRelationManagerBloc,
+      ),
       BlocProvider<StoreRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
           return _purchaseRelationManagerBloc;
         },
       ),
     ];
-
   }
 
   @override
   _StoreDetailBody detailBodyBuilder() {
-
     return _StoreDetailBody(
       onUpdate: onUpdate,
     );
-
   }
 
-  BlocProvider<StoreRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, StoreRelationManagerBloc<W> managerBloc) {
-
+  BlocProvider<StoreRelationBloc<W>>
+      blocProviderRelationBuilder<W extends Item>(
+    GameCollectionRepository collectionRepository,
+    StoreRelationManagerBloc<W> managerBloc,
+  ) {
     return BlocProvider<StoreRelationBloc<W>>(
       create: (BuildContext context) {
         return StoreRelationBloc<W>(
@@ -85,12 +91,12 @@ class StoreDetail extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerB
         )..add(LoadItemRelation());
       },
     );
-
   }
 }
 
 // ignore: must_be_immutable
-class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
+class _StoreDetailBody
+    extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key? key,
     void Function(Store? item)? onUpdate,
@@ -101,7 +107,6 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Store store) {
-
     return <Widget>[
       itemTextField(
         context,
@@ -111,53 +116,55 @@ class _StoreDetailBody extends ItemDetailBody<Store, StoreDetailBloc, StoreDetai
         itemUpdater: (String newValue) => store.copyWith(name: newValue),
       ),
     ];
-
   }
 
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
-
     return <Widget>[
       StorePurchaseRelationList(
         relationName: GameCollectionLocalisations.of(context).purchasesString,
-        relationTypeName: GameCollectionLocalisations.of(context).purchaseString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).purchaseString,
         trailingBuilder: (List<Purchase> purchases) {
-
           double totalSpent = 0.0;
           double totalValue = 0.0;
-          for(final Purchase purchase in purchases) {
+          for (final Purchase purchase in purchases) {
             totalSpent += purchase.price;
             totalValue += purchase.originalPrice;
           }
 
           final double totalSaved = totalValue - totalSpent;
-          final double totalPercentageSaved = totalValue > 0? (1 - totalSpent / totalValue) : 0;
+          final double totalPercentageSaved =
+              totalValue > 0 ? (1 - totalSpent / totalValue) : 0;
 
           return <Widget>[
             itemMoneySumField(
               context,
-              fieldName: GameCollectionLocalisations.of(context).totalMoneySpentString,
+              fieldName:
+                  GameCollectionLocalisations.of(context).totalMoneySpentString,
               value: totalSpent,
             ),
             itemMoneySumField(
               context,
-              fieldName: GameCollectionLocalisations.of(context).totalMoneySavedString,
+              fieldName:
+                  GameCollectionLocalisations.of(context).totalMoneySavedString,
               value: totalSaved,
             ),
             itemMoneySumField(
               context,
-              fieldName: GameCollectionLocalisations.of(context).realValueString,
+              fieldName:
+                  GameCollectionLocalisations.of(context).realValueString,
               value: totalValue,
             ),
             itemPercentageField(
               context,
-              fieldName: GameCollectionLocalisations.of(context).percentageSavedString,
+              fieldName:
+                  GameCollectionLocalisations.of(context).percentageSavedString,
               value: totalPercentageSaved,
             ),
           ];
         },
       ),
     ];
-
   }
 }

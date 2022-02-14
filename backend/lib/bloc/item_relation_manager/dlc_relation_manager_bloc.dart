@@ -1,20 +1,27 @@
-import 'package:backend/entity/entity.dart' show DLCFinishEntity, GameEntity, PurchaseEntity, DLCID;
-import 'package:backend/model/model.dart' show Item, DLC, DLCFinish, Game, Purchase;
-import 'package:backend/mapper/mapper.dart' show DLCFinishMapper, GameMapper, PurchaseMapper;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository, DLCRepository, DLCFinishRepository, GameRepository;
+import 'package:backend/entity/entity.dart'
+    show DLCFinishEntity, GameEntity, PurchaseEntity, DLCID;
+import 'package:backend/model/model.dart'
+    show Item, DLC, DLCFinish, Game, Purchase;
+import 'package:backend/mapper/mapper.dart'
+    show DLCFinishMapper, GameMapper, PurchaseMapper;
+import 'package:backend/repository/repository.dart'
+    show
+        GameCollectionRepository,
+        DLCRepository,
+        DLCFinishRepository,
+        GameRepository;
 
 import 'item_relation_manager.dart';
 
-
-class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC, DLCID, W> {
+class DLCRelationManagerBloc<W extends Item>
+    extends ItemRelationManagerBloc<DLC, DLCID, W> {
   DLCRelationManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-  }) :
-    dlcFinishRepository = collectionRepository.dlcFinishRepository,
-    gameRepository = collectionRepository.gameRepository,
-    dlcRepository = collectionRepository.dlcRepository,
-    super(id: DLCID(itemId), collectionRepository: collectionRepository);
+  })  : dlcFinishRepository = collectionRepository.dlcFinishRepository,
+        gameRepository = collectionRepository.gameRepository,
+        dlcRepository = collectionRepository.dlcRepository,
+        super(id: DLCID(itemId), collectionRepository: collectionRepository);
 
   final DLCFinishRepository dlcFinishRepository;
   final GameRepository gameRepository;
@@ -22,42 +29,43 @@ class DLCRelationManagerBloc<W extends Item> extends ItemRelationManagerBloc<DLC
 
   @override
   Future<Object?> addRelationFuture(AddItemRelation<W> event) {
-
     final W otherItem = event.otherItem;
 
-    switch(W) {
+    switch (W) {
       case DLCFinish:
-        final DLCFinishEntity otherEntity = DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
+        final DLCFinishEntity otherEntity =
+            DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
         return dlcFinishRepository.create(otherEntity);
       case Game:
-        final GameEntity otherEntity = GameMapper.modelToEntity(otherItem as Game);
+        final GameEntity otherEntity =
+            GameMapper.modelToEntity(otherItem as Game);
         return gameRepository.relateGameDLC(otherEntity.createId(), id);
       case Purchase:
-        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        final PurchaseEntity otherEntity =
+            PurchaseMapper.modelToEntity(otherItem as Purchase);
         return dlcRepository.relateDLCPurchase(id, otherEntity.createId());
     }
 
     return super.addRelationFuture(event);
-
   }
 
   @override
   Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
-
     final W otherItem = event.otherItem;
 
-    switch(W) {
+    switch (W) {
       case DLCFinish:
-        final DLCFinishEntity otherEntity = DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
+        final DLCFinishEntity otherEntity =
+            DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
         return dlcFinishRepository.deleteById(otherEntity.createId());
       case Game:
         return gameRepository.unrelateGameDLC(id);
       case Purchase:
-        final PurchaseEntity otherEntity = PurchaseMapper.modelToEntity(otherItem as Purchase);
+        final PurchaseEntity otherEntity =
+            PurchaseMapper.modelToEntity(otherItem as Purchase);
         return dlcRepository.unrelateDLCPurchase(id, otherEntity.createId());
     }
 
     return super.deleteRelationFuture(event);
-
   }
 }

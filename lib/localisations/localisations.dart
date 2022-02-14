@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show GameStatus, Manufacturer, PlatformType;
+import 'package:backend/model/model.dart'
+    show GameStatus, Manufacturer, PlatformType;
 import 'package:backend/model/calendar_range.dart';
 
 import 'localisations_en.dart';
 import 'localisations_es.dart';
-
 
 abstract class GameCollectionLocalisations {
   const GameCollectionLocalisations._();
@@ -205,7 +205,7 @@ abstract class GameCollectionLocalisations {
   String get systemsString;
 
   static String manufacturerString(Manufacturer? manufacturer) {
-    switch(manufacturer){
+    switch (manufacturer) {
       case Manufacturer.nintendo:
         return 'Nintendo';
       case Manufacturer.sony:
@@ -271,8 +271,12 @@ abstract class GameCollectionLocalisations {
   String get noResultsString;
 
   static GameCollectionLocalisations of(BuildContext context) {
-    final GameCollectionLocalisations? localisations = Localizations.of<GameCollectionLocalisations>(context, GameCollectionLocalisations);
-    if(localisations == null) {
+    final GameCollectionLocalisations? localisations =
+        Localizations.of<GameCollectionLocalisations>(
+      context,
+      GameCollectionLocalisations,
+    );
+    if (localisations == null) {
       throw Exception();
     }
 
@@ -288,24 +292,30 @@ class LocalisationsUtils {
   }
 }
 
-class GameCollectionLocalisationsDelegate extends LocalizationsDelegate<GameCollectionLocalisations> {
+class GameCollectionLocalisationsDelegate
+    extends LocalizationsDelegate<GameCollectionLocalisations> {
   const GameCollectionLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   Future<GameCollectionLocalisations> load(Locale locale) {
-
     switch (locale.languageCode) {
       case 'en':
-        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
+        return SynchronousFuture<GameCollectionLocalisations>(
+          const GameCollectionLocalisationsEn(),
+        );
       case 'es':
-        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEs());
+        return SynchronousFuture<GameCollectionLocalisations>(
+          const GameCollectionLocalisationsEs(),
+        );
       default:
-        return SynchronousFuture<GameCollectionLocalisations>(const GameCollectionLocalisationsEn());
+        return SynchronousFuture<GameCollectionLocalisations>(
+          const GameCollectionLocalisationsEn(),
+        );
     }
-
   }
 
   @override

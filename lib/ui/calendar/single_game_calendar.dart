@@ -27,7 +27,6 @@ import '../common/item_view.dart';
 import '../common/shape_utils.dart';
 import 'calendar_utils.dart';
 
-
 class SingleGameCalendar extends StatelessWidget {
   const SingleGameCalendar({
     Key? key,
@@ -40,20 +39,26 @@ class SingleGameCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GameCollectionRepository _collectionRepository =
+        RepositoryProvider.of<GameCollectionRepository>(context);
 
-    final GameCollectionRepository _collectionRepository = RepositoryProvider.of<GameCollectionRepository>(context);
-
-    final GameRelationManagerBloc<GameTimeLog> _timeLogRelationManagerBloc = GameRelationManagerBloc<GameTimeLog>(
+    final GameRelationManagerBloc<GameTimeLog> _timeLogRelationManagerBloc =
+        GameRelationManagerBloc<GameTimeLog>(
       itemId: itemId,
       collectionRepository: _collectionRepository,
     );
 
-    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc = GameRelationManagerBloc<GameFinish>(
+    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc =
+        GameRelationManagerBloc<GameFinish>(
       itemId: itemId,
       collectionRepository: _collectionRepository,
     );
 
-    final SingleCalendarBloc _bloc = blocBuilder(_collectionRepository, _timeLogRelationManagerBloc, _finishRelationManagerBloc);
+    final SingleCalendarBloc _bloc = blocBuilder(
+      _collectionRepository,
+      _timeLogRelationManagerBloc,
+      _finishRelationManagerBloc,
+    );
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -62,7 +67,6 @@ class SingleGameCalendar extends StatelessWidget {
             return _bloc..add(LoadSingleCalendar());
           },
         ),
-
         BlocProvider<GameRelationManagerBloc<GameTimeLog>>(
           create: (BuildContext context) {
             return _timeLogRelationManagerBloc;
@@ -76,7 +80,9 @@ class SingleGameCalendar extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
+          title: Text(
+            GameCollectionLocalisations.of(context).singleCalendarViewString,
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),
@@ -108,26 +114,30 @@ class SingleGameCalendar extends StatelessWidget {
             ),
             PopupMenuButton<CalendarRange>(
               icon: const Icon(Icons.date_range),
-              tooltip: GameCollectionLocalisations.of(context).changeRangeString,
+              tooltip:
+                  GameCollectionLocalisations.of(context).changeRangeString,
               itemBuilder: (BuildContext context) {
-                return CalendarRange.values.map<PopupMenuItem<CalendarRange>>( (CalendarRange range) {
+                return CalendarRange.values
+                    .map<PopupMenuItem<CalendarRange>>((CalendarRange range) {
                   return PopupMenuItem<CalendarRange>(
                     child: ListTile(
-                      title: Text(GameCollectionLocalisations.of(context).rangeString(range)),
+                      title: Text(
+                        GameCollectionLocalisations.of(context)
+                            .rangeString(range),
+                      ),
                     ),
                     value: range,
                   );
                 }).toList(growable: false);
               },
               onSelected: (CalendarRange range) {
-                _bloc.add(
-                  UpdateCalendarRange(range)
-                );
+                _bloc.add(UpdateCalendarRange(range));
               },
             ),
             IconButton(
               icon: const Icon(Icons.insert_chart),
-              tooltip: GameCollectionLocalisations.of(context).changeStyleString,
+              tooltip:
+                  GameCollectionLocalisations.of(context).changeStyleString,
               onPressed: () {
                 _bloc.add(UpdateCalendarStyle());
               },
@@ -135,30 +145,40 @@ class SingleGameCalendar extends StatelessWidget {
           ],
         ),
         body: bodyBuilder(),
-        floatingActionButton: _buildSpeedDial(context, _timeLogRelationManagerBloc, _finishRelationManagerBloc),
+        floatingActionButton: _buildSpeedDial(
+          context,
+          _timeLogRelationManagerBloc,
+          _finishRelationManagerBloc,
+        ),
       ),
     );
-
   }
 
-  SingleCalendarBloc blocBuilder(GameCollectionRepository collectionRepository, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
-
+  SingleCalendarBloc blocBuilder(
+    GameCollectionRepository collectionRepository,
+    GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc,
+    GameRelationManagerBloc<GameFinish> finishDateManagerBloc,
+  ) {
     return SingleCalendarBloc(
       itemId: itemId,
       collectionRepository: collectionRepository,
       timeLogManagerBloc: timeLogManagerBloc,
       finishDateManagerBloc: finishDateManagerBloc,
     );
-
   }
 
-  SpeedDial _buildSpeedDial(BuildContext context, GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc, GameRelationManagerBloc<GameFinish> finishDateManagerBloc) {
-
+  SpeedDial _buildSpeedDial(
+    BuildContext context,
+    GameRelationManagerBloc<GameTimeLog> timeLogManagerBloc,
+    GameRelationManagerBloc<GameFinish> finishDateManagerBloc,
+  ) {
     return SpeedDial(
       icon: Icons.add,
       activeIcon: Icons.remove,
       shape: ShapeUtils.shapeBorder,
-      tooltip: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).gameCalendarEventsString),
+      tooltip: GameCollectionLocalisations.of(context).addString(
+        GameCollectionLocalisations.of(context).gameCalendarEventsString,
+      ),
       overlayColor: Colors.black87,
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
@@ -168,16 +188,17 @@ class SingleGameCalendar extends StatelessWidget {
         SpeedDialChild(
           child: const Icon(Icons.add_alarm, color: Colors.white),
           shape: ShapeUtils.shapeBorder,
-          label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).timeLogFieldString),
+          label: GameCollectionLocalisations.of(context).addString(
+            GameCollectionLocalisations.of(context).timeLogFieldString,
+          ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
-
             Navigator.pushNamed<GameTimeLog?>(
               context,
               timeLogAssistantRoute,
-            ).then( (GameTimeLog? result) {
+            ).then((GameTimeLog? result) {
               if (result != null) {
                 timeLogManagerBloc.add(
                   AddItemRelation<GameTimeLog>(
@@ -186,22 +207,22 @@ class SingleGameCalendar extends StatelessWidget {
                 );
               }
             });
-
           },
         ),
         SpeedDialChild(
           child: const Icon(Icons.event_available, color: Colors.white),
           shape: ShapeUtils.shapeBorder,
-          label: GameCollectionLocalisations.of(context).addString(GameCollectionLocalisations.of(context).finishDateFieldString),
+          label: GameCollectionLocalisations.of(context).addString(
+            GameCollectionLocalisations.of(context).finishDateFieldString,
+          ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
           backgroundColor: GameTheme.primaryColour,
           onTap: () {
-
             showGameDatePicker(
               context: context,
             ).then((DateTime? value) {
-              if(value != null) {
+              if (value != null) {
                 finishDateManagerBloc.add(
                   AddItemRelation<GameFinish>(
                     GameFinish(dateTime: value),
@@ -209,22 +230,17 @@ class SingleGameCalendar extends StatelessWidget {
                 );
               }
             });
-
           },
         ),
       ],
     );
-
   }
 
   _SingleGameCalendarBody bodyBuilder() {
-
     return _SingleGameCalendarBody(
       onUpdate: onUpdate,
     );
-
   }
-
 }
 
 // ignore: must_be_immutable
@@ -240,31 +256,35 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () async {
-
-        if(_isUpdated && onUpdate != null) {
+        if (_isUpdated && onUpdate != null) {
           onUpdate!();
         }
         return true;
-
       },
       child: MultiBlocListener(
         listeners: <BlocListener<dynamic, dynamic>>[
-          BlocListener<GameRelationManagerBloc<GameTimeLog>, ItemRelationManagerState>(
+          BlocListener<GameRelationManagerBloc<GameTimeLog>,
+              ItemRelationManagerState>(
             listener: (BuildContext context, ItemRelationManagerState state) {
-              if(state is ItemRelationAdded<GameTimeLog>) {
+              if (state is ItemRelationAdded<GameTimeLog>) {
                 _isUpdated = true;
 
-                final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message =
+                    GameCollectionLocalisations.of(context).addedString(
+                  GameCollectionLocalisations.of(context).timeLogFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
-              if(state is ItemRelationNotAdded) {
-                final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).timeLogFieldString);
+              if (state is ItemRelationNotAdded) {
+                final String message =
+                    GameCollectionLocalisations.of(context).unableToAddString(
+                  GameCollectionLocalisations.of(context).timeLogFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
@@ -276,17 +296,23 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   ),
                 );
               }
-              if(state is ItemRelationDeleted) {
+              if (state is ItemRelationDeleted) {
                 _isUpdated = true;
 
-                final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).timeLogFieldString);
+                final String message =
+                    GameCollectionLocalisations.of(context).deletedString(
+                  GameCollectionLocalisations.of(context).timeLogFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
-              if(state is ItemRelationNotDeleted) {
-                final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).timeLogFieldString);
+              if (state is ItemRelationNotDeleted) {
+                final String message = GameCollectionLocalisations.of(context)
+                    .unableToDeleteString(
+                  GameCollectionLocalisations.of(context).timeLogFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
@@ -300,19 +326,26 @@ class _SingleGameCalendarBody extends StatelessWidget {
               }
             },
           ),
-          BlocListener<GameRelationManagerBloc<GameFinish>, ItemRelationManagerState>(
+          BlocListener<GameRelationManagerBloc<GameFinish>,
+              ItemRelationManagerState>(
             listener: (BuildContext context, ItemRelationManagerState state) {
-              if(state is ItemRelationAdded<GameFinish>) {
+              if (state is ItemRelationAdded<GameFinish>) {
                 _isUpdated = true;
 
-                final String message = GameCollectionLocalisations.of(context).addedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message =
+                    GameCollectionLocalisations.of(context).addedString(
+                  GameCollectionLocalisations.of(context).finishDateFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
-              if(state is ItemRelationNotAdded) {
-                final String message = GameCollectionLocalisations.of(context).unableToAddString(GameCollectionLocalisations.of(context).finishDateFieldString);
+              if (state is ItemRelationNotAdded) {
+                final String message =
+                    GameCollectionLocalisations.of(context).unableToAddString(
+                  GameCollectionLocalisations.of(context).finishDateFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
@@ -324,17 +357,23 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   ),
                 );
               }
-              if(state is ItemRelationDeleted) {
+              if (state is ItemRelationDeleted) {
                 _isUpdated = true;
 
-                final String message = GameCollectionLocalisations.of(context).deletedString(GameCollectionLocalisations.of(context).finishDateFieldString);
+                final String message =
+                    GameCollectionLocalisations.of(context).deletedString(
+                  GameCollectionLocalisations.of(context).finishDateFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
                 );
               }
-              if(state is ItemRelationNotDeleted) {
-                final String message = GameCollectionLocalisations.of(context).unableToDeleteString(GameCollectionLocalisations.of(context).finishDateFieldString);
+              if (state is ItemRelationNotDeleted) {
+                final String message = GameCollectionLocalisations.of(context)
+                    .unableToDeleteString(
+                  GameCollectionLocalisations.of(context).finishDateFieldString,
+                );
                 showSnackBar(
                   context,
                   message: message,
@@ -351,20 +390,29 @@ class _SingleGameCalendarBody extends StatelessWidget {
         ],
         child: BlocBuilder<SingleCalendarBloc, CalendarState>(
           builder: (BuildContext context, CalendarState state) {
-
-            if(state is SingleCalendarLoaded) {
+            if (state is SingleCalendarLoaded) {
               Widget timeLogsWidget;
-              if(state.selectedTotalTime.isZero()) {
+              if (state.selectedTotalTime.isZero()) {
                 timeLogsWidget = Center(
-                  child: Text(GameCollectionLocalisations.of(context).emptyTimeLogsString),
+                  child: Text(
+                    GameCollectionLocalisations.of(context).emptyTimeLogsString,
+                  ),
                 );
               } else {
-                switch(state.style) {
+                switch (state.style) {
                   case CalendarStyle.list:
-                    timeLogsWidget = _buildTimeLogsList(context, state.selectedTimeLogs, state.range);
+                    timeLogsWidget = _buildTimeLogsList(
+                      context,
+                      state.selectedTimeLogs,
+                      state.range,
+                    );
                     break;
                   case CalendarStyle.graph:
-                    timeLogsWidget = CalendarUtils.buildTimeLogsGraph(context, state.selectedTimeLogs, state.range);
+                    timeLogsWidget = CalendarUtils.buildTimeLogsGraph(
+                      context,
+                      state.selectedTimeLogs,
+                      state.range,
+                    );
                     break;
                 }
               }
@@ -372,40 +420,60 @@ class _SingleGameCalendarBody extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  _buildTableCalendar(context, state.logDates, state.finishDates, state.selectedDate),
+                  _buildTableCalendar(
+                    context,
+                    state.logDates,
+                    state.finishDates,
+                    state.selectedDate,
+                  ),
                   const Divider(height: 4.0),
-                  state.isSelectedDateFinish? _buildFinishDate(context, state.selectedDate) : Container(),
-                  state.isSelectedDateFinish? const Divider(height: 4.0) : Container(),
+                  state.isSelectedDateFinish
+                      ? _buildFinishDate(context, state.selectedDate)
+                      : Container(),
+                  state.isSelectedDateFinish
+                      ? const Divider(height: 4.0)
+                      : Container(),
                   ListTile(
-                    title: Text(CalendarUtils.titleString(context, state.selectedDate, state.range)),
-                    trailing: !state.selectedTotalTime.isZero()? Text(GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)) : null,
+                    title: Text(
+                      CalendarUtils.titleString(
+                        context,
+                        state.selectedDate,
+                        state.range,
+                      ),
+                    ),
+                    trailing: !state.selectedTotalTime.isZero()
+                        ? Text(
+                            GameCollectionLocalisations.of(context)
+                                .formatDuration(state.selectedTotalTime),
+                          )
+                        : null,
                   ),
                   Expanded(child: timeLogsWidget),
                 ],
               );
-
             }
-            if(state is CalendarNotLoaded) {
-
+            if (state is CalendarNotLoaded) {
               return Center(
                 child: Text(state.error),
               );
-
             }
 
             return const LoadingIcon();
-
           },
         ),
       ),
     );
-
   }
 
-  Widget _buildTableCalendar(BuildContext context, Set<DateTime> logDates, List<GameFinish> finishDates, DateTime selectedDate) {
+  Widget _buildTableCalendar(
+    BuildContext context,
+    Set<DateTime> logDates,
+    List<GameFinish> finishDates,
+    DateTime selectedDate,
+  ) {
     DateTime firstDate = DateTime.now();
     DateTime lastDate = firstDate;
-    if(logDates.isNotEmpty) {
+    if (logDates.isNotEmpty) {
       firstDate = logDates.first;
       lastDate = logDates.last;
     }
@@ -425,16 +493,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
         );
       },
       eventLoader: (DateTime date) {
-        return logDates.where((DateTime logDate) => date.isSameDay(logDate)).toList(growable: false);
+        return logDates
+            .where((DateTime logDate) => date.isSameDay(logDate))
+            .toList(growable: false);
       },
       holidayPredicate: (DateTime date) {
-        return finishDates.any((GameFinish finish) => date.isSameDay(finish.dateTime));
+        return finishDates
+            .any((GameFinish finish) => date.isSameDay(finish.dateTime));
       },
       startingDayOfWeek: table_calendar.StartingDayOfWeek.monday,
-      weekendDays: const <int>[
-        DateTime.saturday,
-        DateTime.sunday
-      ],
+      weekendDays: const <int>[DateTime.saturday, DateTime.sunday],
       pageJumpingEnabled: true,
       availableGestures: table_calendar.AvailableGestures.horizontalSwipe,
       availableCalendarFormats: const <table_calendar.CalendarFormat, String>{
@@ -456,6 +524,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           color: CalendarTheme.selectedColour,
           shape: CalendarTheme.shape,
         ),
+
         ///EVENTS
         markersMaxCount: 1,
         markersAlignment: Alignment.bottomRight,
@@ -464,12 +533,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
           color: CalendarTheme.playedColour,
           shape: CalendarTheme.shape,
         ),
+
         ///HOLIDAY
         holidayDecoration: const BoxDecoration(
           color: CalendarTheme.finishedColour,
           shape: CalendarTheme.shape,
         ),
         holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
+
         ///WEEKEND
         weekendDecoration: BoxDecoration(
           color: CalendarTheme.weekendColour,
@@ -481,9 +552,10 @@ class _SingleGameCalendarBody extends StatelessWidget {
   }
 
   Widget _buildFinishDate(BuildContext context, DateTime selectedDate) {
-
     return ListTile(
-      title: Text(GameCollectionLocalisations.of(context).selectedDateIsFinishDateString),
+      title: Text(
+        GameCollectionLocalisations.of(context).selectedDateIsFinishDateString,
+      ),
       trailing: IconButton(
         icon: const Icon(Icons.link_off),
         onPressed: () {
@@ -496,24 +568,30 @@ class _SingleGameCalendarBody extends StatelessWidget {
       ),
       tileColor: CalendarTheme.finishedColour,
     );
-
   }
 
-  Widget _buildTimeLogsList(BuildContext context, List<GameTimeLog> timeLogs, CalendarRange range) {
-
+  Widget _buildTimeLogsList(
+    BuildContext context,
+    List<GameTimeLog> timeLogs,
+    CalendarRange range,
+  ) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: timeLogs.length,
       itemBuilder: (BuildContext context, int index) {
         final GameTimeLog timeLog = timeLogs.elementAt(index);
-        final String durationString = GameCollectionLocalisations.of(context).formatDuration(timeLog.time);
+        final String durationString = GameCollectionLocalisations.of(context)
+            .formatDuration(timeLog.time);
 
-        if(timeLog.time.isZero()) {
+        if (timeLog.time.isZero()) {
           return Container();
         }
 
-        if(range == CalendarRange.day) {
-         final String timeLogString = GameCollectionLocalisations.of(context).formatTime(timeLog.dateTime) + ' - ' + durationString;
+        if (range == CalendarRange.day) {
+          final String timeLogString = GameCollectionLocalisations.of(context)
+                  .formatTime(timeLog.dateTime) +
+              ' - ' +
+              durationString;
 
           return DismissibleItem(
             dismissibleKey: timeLog.uniqueId,
@@ -522,7 +600,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
               trailing: IconButton(
                 icon: const Icon(Icons.link_off),
                 onPressed: () {
-                  BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+                  BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context)
+                      .add(
                     DeleteItemRelation<GameTimeLog>(
                       timeLog,
                     ),
@@ -531,7 +610,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
               ),
             ),
             onDismissed: (DismissDirection direction) {
-              BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context).add(
+              BlocProvider.of<GameRelationManagerBloc<GameTimeLog>>(context)
+                  .add(
                 DeleteItemRelation<GameTimeLog>(
                   timeLog,
                 ),
@@ -541,17 +621,25 @@ class _SingleGameCalendarBody extends StatelessWidget {
           );
         } else {
           String rangeString = '';
-          if(range == CalendarRange.week) {
-            rangeString = GameCollectionLocalisations.of(context).daysOfWeek.elementAt(index);
-          } else if(range == CalendarRange.month) {
+          if (range == CalendarRange.week) {
+            rangeString = GameCollectionLocalisations.of(context)
+                .daysOfWeek
+                .elementAt(index);
+          } else if (range == CalendarRange.month) {
             rangeString = index.toString();
-          } else if(range == CalendarRange.year) {
-            rangeString = GameCollectionLocalisations.of(context).months.elementAt(index);
+          } else if (range == CalendarRange.year) {
+            rangeString =
+                GameCollectionLocalisations.of(context).months.elementAt(index);
           }
           final String timeLogString = rangeString + ' - ' + durationString;
 
           return Padding(
-            padding: const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
+            padding: const EdgeInsets.only(
+              right: 4.0,
+              left: 4.0,
+              bottom: 4.0,
+              top: 4.0,
+            ),
             child: ListTile(
               title: Text(timeLogString),
             ),
@@ -559,7 +647,5 @@ class _SingleGameCalendarBody extends StatelessWidget {
         }
       },
     );
-
   }
-
 }

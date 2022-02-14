@@ -1,19 +1,26 @@
-import 'block/block.dart' show Block, ReturningFieldBlock, SetFieldBlock, UpdateBlock, UpdateTableBlock, WhereBlock;
+import 'block/block.dart'
+    show
+        Block,
+        ReturningFieldBlock,
+        SetFieldBlock,
+        UpdateBlock,
+        UpdateTableBlock,
+        WhereBlock;
 
 import 'query.dart' show Query;
 
-
 /// UPDATE query builder.
 class Update extends Query {
-  Update() : super(
-    <Block>[
-      UpdateBlock(),
-      UpdateTableBlock(), // 1
-      SetFieldBlock(), // 2
-      WhereBlock(), // 3
-      ReturningFieldBlock(), // 4
-    ],
-  );
+  Update()
+      : super(
+          <Block>[
+            UpdateBlock(),
+            UpdateTableBlock(), // 1
+            SetFieldBlock(), // 2
+            WhereBlock(), // 3
+            ReturningFieldBlock(), // 4
+          ],
+        );
 
   @override
   UpdateTableBlock updateTableBlock() {

@@ -1,6 +1,5 @@
 import 'model.dart';
 
-
 abstract class _GameStatistics extends ItemStatistics {
   const _GameStatistics({
     required this.total,
@@ -51,19 +50,19 @@ class GameGeneralStatistics extends _GameStatistics {
     required this.countByFinishYear,
     required this.totalTimeByFinishYear,
   }) : super(
-    total: total,
-    ratingSum: ratingSum,
-    minReleaseYear: minReleaseYear,
-    maxReleaseYear: maxReleaseYear,
-    lowPriorityCount: lowPriorityCount,
-    nextUpCount: nextUpCount,
-    playingCount: playingCount,
-    playedCount: playedCount,
-    finishCount: finishCount,
-    minFinishDate: minFinishDate,
-    maxFinishDate: maxFinishDate,
-    totalTime: timeLogSum,
-  );
+          total: total,
+          ratingSum: ratingSum,
+          minReleaseYear: minReleaseYear,
+          maxReleaseYear: maxReleaseYear,
+          lowPriorityCount: lowPriorityCount,
+          nextUpCount: nextUpCount,
+          playingCount: playingCount,
+          playedCount: playedCount,
+          finishCount: finishCount,
+          minFinishDate: minFinishDate,
+          maxFinishDate: maxFinishDate,
+          totalTime: timeLogSum,
+        );
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;
@@ -73,24 +72,23 @@ class GameGeneralStatistics extends _GameStatistics {
 
   @override
   List<Object> get props => <Object>[
-    total,
-    ratingSum,
-    lowPriorityCount,
-    nextUpCount,
-    playingCount,
-    playedCount,
-    finishCount,
-    totalTime,
-    countByReleaseYear,
-    countByRating,
-    avgRatingByFinishYear,
-    countByFinishYear,
-    totalTimeByFinishYear,
-  ];
+        total,
+        ratingSum,
+        lowPriorityCount,
+        nextUpCount,
+        playingCount,
+        playedCount,
+        finishCount,
+        totalTime,
+        countByReleaseYear,
+        countByRating,
+        avgRatingByFinishYear,
+        countByFinishYear,
+        totalTimeByFinishYear,
+      ];
 
   @override
   String toString() {
-
     return 'GameGeneralStatistics { '
         'Total: $total, '
         'Rating sum: $ratingSum, '
@@ -106,7 +104,6 @@ class GameGeneralStatistics extends _GameStatistics {
         'Count By Finish Year: $countByFinishYear, '
         'Total Time By Finish Year: $totalTimeByFinishYear'
         ' }';
-
   }
 }
 
@@ -128,19 +125,19 @@ class GameYearStatistics extends _GameStatistics {
     required this.countByRating,
     required this.totalTimeByMonth,
   }) : super(
-    total: total,
-    ratingSum: ratingSum,
-    minReleaseYear: minReleaseYear,
-    maxReleaseYear: maxReleaseYear,
-    lowPriorityCount: lowPriorityCount,
-    nextUpCount: nextUpCount,
-    playingCount: playingCount,
-    playedCount: playedCount,
-    finishCount: finishCount,
-    minFinishDate: minFinishDate,
-    maxFinishDate: maxFinishDate,
-    totalTime: timeLogSum,
-  );
+          total: total,
+          ratingSum: ratingSum,
+          minReleaseYear: minReleaseYear,
+          maxReleaseYear: maxReleaseYear,
+          lowPriorityCount: lowPriorityCount,
+          nextUpCount: nextUpCount,
+          playingCount: playingCount,
+          playedCount: playedCount,
+          finishCount: finishCount,
+          minFinishDate: minFinishDate,
+          maxFinishDate: maxFinishDate,
+          totalTime: timeLogSum,
+        );
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;
@@ -148,22 +145,21 @@ class GameYearStatistics extends _GameStatistics {
 
   @override
   List<Object> get props => <Object>[
-    total,
-    ratingSum,
-    lowPriorityCount,
-    nextUpCount,
-    playingCount,
-    playedCount,
-    finishCount,
-    totalTime,
-    countByReleaseYear,
-    countByRating,
-    totalTimeByMonth,
-  ];
+        total,
+        ratingSum,
+        lowPriorityCount,
+        nextUpCount,
+        playingCount,
+        playedCount,
+        finishCount,
+        totalTime,
+        countByReleaseYear,
+        countByRating,
+        totalTimeByMonth,
+      ];
 
   @override
   String toString() {
-
     return 'GameGeneralStatistics { '
         'Total: $total, '
         'Rating sum: $ratingSum, '
@@ -177,6 +173,5 @@ class GameYearStatistics extends _GameStatistics {
         'Count By Rating: $countByRating, '
         'Total Time By Month: $totalTimeByMonth'
         ' }';
-
   }
 }

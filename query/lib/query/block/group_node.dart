@@ -1,6 +1,5 @@
 import '../query.dart' show Query;
 
-
 abstract class GroupNode {}
 
 class GroupStringNode extends GroupNode {

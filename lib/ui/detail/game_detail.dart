@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item, Game, GameStatus, GameFinish, DLC, Purchase, Platform, GameTag;
-import 'package:backend/repository/repository.dart' show GameCollectionRepository;
+import 'package:backend/model/model.dart'
+    show Item, Game, GameStatus, GameFinish, DLC, Purchase, Platform, GameTag;
+import 'package:backend/repository/repository.dart'
+    show GameCollectionRepository;
 
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -19,8 +21,8 @@ import '../calendar/calendar_arguments.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-
-class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
+class GameDetail
+    extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
     required Game item,
@@ -28,61 +30,82 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
   }) : super(key: key, item: item, onUpdate: onUpdate);
 
   @override
-  GameDetailBloc detailBlocBuilder(GameCollectionRepository collectionRepository, GameDetailManagerBloc managerBloc) {
-
+  GameDetailBloc detailBlocBuilder(
+    GameCollectionRepository collectionRepository,
+    GameDetailManagerBloc managerBloc,
+  ) {
     return GameDetailBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
       managerBloc: managerBloc,
     );
-
   }
 
   @override
-  GameDetailManagerBloc managerBlocBuilder(GameCollectionRepository collectionRepository) {
-
+  GameDetailManagerBloc managerBlocBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
     return GameDetailManagerBloc(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
-
   }
 
   @override
-  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(GameCollectionRepository collectionRepository) {
-
-    final GameRelationManagerBloc<Platform> _platformRelationManagerBloc = GameRelationManagerBloc<Platform>(
+  List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
+    GameCollectionRepository collectionRepository,
+  ) {
+    final GameRelationManagerBloc<Platform> _platformRelationManagerBloc =
+        GameRelationManagerBloc<Platform>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc = GameRelationManagerBloc<Purchase>(
+    final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc =
+        GameRelationManagerBloc<Purchase>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc = GameRelationManagerBloc<DLC>(
+    final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc =
+        GameRelationManagerBloc<DLC>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<GameTag> _tagRelationManagerBloc = GameRelationManagerBloc<GameTag>(
+    final GameRelationManagerBloc<GameTag> _tagRelationManagerBloc =
+        GameRelationManagerBloc<GameTag>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc = GameRelationManagerBloc<GameFinish>(
+    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc =
+        GameRelationManagerBloc<GameFinish>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Platform>(collectionRepository, _platformRelationManagerBloc),
-      blocProviderRelationBuilder<Purchase>(collectionRepository, _purchaseRelationManagerBloc),
-      blocProviderRelationBuilder<DLC>(collectionRepository, _dlcRelationManagerBloc),
-      blocProviderRelationBuilder<GameTag>(collectionRepository, _tagRelationManagerBloc),
-      blocProviderRelationBuilder<GameFinish>(collectionRepository, _finishRelationManagerBloc),
-
+      blocProviderRelationBuilder<Platform>(
+        collectionRepository,
+        _platformRelationManagerBloc,
+      ),
+      blocProviderRelationBuilder<Purchase>(
+        collectionRepository,
+        _purchaseRelationManagerBloc,
+      ),
+      blocProviderRelationBuilder<DLC>(
+        collectionRepository,
+        _dlcRelationManagerBloc,
+      ),
+      blocProviderRelationBuilder<GameTag>(
+        collectionRepository,
+        _tagRelationManagerBloc,
+      ),
+      blocProviderRelationBuilder<GameFinish>(
+        collectionRepository,
+        _finishRelationManagerBloc,
+      ),
       BlocProvider<GameRelationManagerBloc<Platform>>(
         create: (BuildContext context) {
           return _platformRelationManagerBloc;
@@ -109,21 +132,20 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
         },
       ),
     ];
-
   }
 
   @override
   _GameDetailBody detailBodyBuilder() {
-
     return _GameDetailBody(
       itemId: item.id,
       onUpdate: onUpdate,
     );
-
   }
 
-  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(GameCollectionRepository collectionRepository, GameRelationManagerBloc<W> managerBloc) {
-
+  BlocProvider<GameRelationBloc<W>> blocProviderRelationBuilder<W extends Item>(
+    GameCollectionRepository collectionRepository,
+    GameRelationManagerBloc<W> managerBloc,
+  ) {
     return BlocProvider<GameRelationBloc<W>>(
       create: (BuildContext context) {
         return GameRelationBloc<W>(
@@ -133,12 +155,12 @@ class GameDetail extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc>
         )..add(LoadItemRelation());
       },
     );
-
   }
 }
 
 // ignore: must_be_immutable
-class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
+class _GameDetailBody
+    extends ItemDetailBody<Game, GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key? key,
     required this.itemId,
@@ -152,7 +174,6 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, Game game) {
-
     return <Widget>[
       itemTextField(
         context,
@@ -170,7 +191,8 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ),
       itemYearField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).releaseYearFieldString,
+        fieldName:
+            GameCollectionLocalisations.of(context).releaseYearFieldString,
         value: game.releaseYear,
         item: game,
         itemUpdater: (int newValue) => game.copyWith(releaseYear: newValue),
@@ -187,7 +209,8 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         ],
         possibleValuesColours: GameTheme.statusColours,
         item: game,
-        itemUpdater: (int newValue) => game.copyWith(status: GameStatus.values.elementAt(newValue)),
+        itemUpdater: (int newValue) =>
+            game.copyWith(status: GameStatus.values.elementAt(newValue)),
       ),
       itemRatingField(
         context,
@@ -205,17 +228,20 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ),
       itemURLField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).saveFolderFieldString,
+        fieldName:
+            GameCollectionLocalisations.of(context).saveFolderFieldString,
         value: game.saveFolder,
         item: game,
         itemUpdater: (String newValue) => game.copyWith(saveFolder: newValue),
       ),
       itemURLField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).screenshotFolderFieldString,
+        fieldName:
+            GameCollectionLocalisations.of(context).screenshotFolderFieldString,
         value: game.screenshotFolder,
         item: game,
-        itemUpdater: (String newValue) => game.copyWith(screenshotFolder: newValue),
+        itemUpdater: (String newValue) =>
+            game.copyWith(screenshotFolder: newValue),
       ),
       itemBoolField(
         context,
@@ -226,7 +252,9 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
       ),
       ListTileTheme.merge(
         child: ListTile(
-          title: Text(GameCollectionLocalisations.of(context).singleCalendarViewString),
+          title: Text(
+            GameCollectionLocalisations.of(context).singleCalendarViewString,
+          ),
           trailing: const Icon(Icons.arrow_forward),
           onTap: () {
             Navigator.pushNamed(
@@ -235,9 +263,7 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
               arguments: SingleGameCalendarArguments(
                 itemId: itemId,
                 onUpdate: () {
-
                   BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
-
                 },
               ),
             );
@@ -250,28 +276,30 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         value: game.totalTime,
       ),
       GameFinishDateList(
-        fieldName: GameCollectionLocalisations.of(context).finishDatesFieldString,
+        fieldName:
+            GameCollectionLocalisations.of(context).finishDatesFieldString,
         value: game.firstFinishDate,
-        relationTypeName: GameCollectionLocalisations.of(context).finishDateFieldString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).finishDateFieldString,
         onUpdate: () {
           BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
         },
       ),
     ];
-
   }
 
   @override
   List<Widget> itemRelationsBuilder(BuildContext context) {
-
     return <Widget>[
       GamePlatformRelationList(
         relationName: GameCollectionLocalisations.of(context).platformsString,
-        relationTypeName: GameCollectionLocalisations.of(context).platformString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).platformString,
       ),
       GamePurchaseRelationList(
         relationName: GameCollectionLocalisations.of(context).purchasesString,
-        relationTypeName: GameCollectionLocalisations.of(context).purchaseString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).purchaseString,
       ),
       GameDLCRelationList(
         relationName: GameCollectionLocalisations.of(context).dlcsString,
@@ -282,19 +310,25 @@ class _GameDetailBody extends ItemDetailBody<Game, GameDetailBloc, GameDetailMan
         relationTypeName: GameCollectionLocalisations.of(context).gameTagString,
       ),
     ];
-
   }
 }
 
 // ignore: must_be_immutable
-class GameFinishDateList extends FinishList<Game, GameFinish, GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
+class GameFinishDateList extends FinishList<Game, GameFinish,
+    GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
   GameFinishDateList({
     Key? key,
     required String fieldName,
     required DateTime? value,
     required String relationTypeName,
     required void Function() onUpdate,
-  }) : super(key: key, fieldName: fieldName, value: value, relationTypeName: relationTypeName, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          fieldName: fieldName,
+          value: value,
+          relationTypeName: relationTypeName,
+          onUpdate: onUpdate,
+        );
 
   @override
   GameFinish createFinish(DateTime dateTime) => GameFinish(dateTime: dateTime);

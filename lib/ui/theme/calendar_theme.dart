@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'game_theme.dart';
 
-
 class CalendarTheme {
   CalendarTheme._();
 
