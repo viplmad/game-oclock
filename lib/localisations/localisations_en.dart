@@ -610,7 +610,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String unlinkedString(String typeString) {
-    return '$typeString linked';
+    return '$typeString unlinked';
   }
 
   @override
