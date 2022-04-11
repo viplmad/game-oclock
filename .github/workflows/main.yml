@@ -70,5 +70,5 @@ jobs:
 
     # Analyse backend
     - run: |
-        cd /backend
+        cd ./backend
         flutter analyze
