@@ -65,8 +65,10 @@ jobs:
     # Get flutter dependencies.
     - run: flutter pub get
 
+    # Analyse lib
     - run: flutter analyze
 
+    # Analyse backend
     - run: |
-      cd /backend
-      flutter analyze
+        cd /backend
+        flutter analyze
