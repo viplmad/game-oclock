@@ -65,4 +65,7 @@ jobs:
     # Get flutter dependencies.
     - run: flutter pub get
 
-    - uses: zgosalvez/github-actions-analyze-dart@v1.6.1
+    - run: flutter analyze
+
+    - run: cd /backend
+    - run: flutter analyze
