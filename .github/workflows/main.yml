@@ -49,3 +49,14 @@ jobs:
         name: release-apk
         path: build/app/outputs/apk/release/app-release.apk
         retention-days: 5
+
+  sonarscan:
+    name: SonarScan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: SonarSource/sonarcloud-github-action@v1.6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
