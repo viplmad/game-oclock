@@ -293,8 +293,12 @@ class _ItemSearchBodyState<
           );
         },
         style: TextButton.styleFrom(
-          primary: Colors.black87,
-          backgroundColor: Colors.white,
+          primary: Theme.of(context).brightness == Brightness.light
+              ? Colors.black87
+              : Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.white
+              : Colors.black54,
         ),
       ),
     );

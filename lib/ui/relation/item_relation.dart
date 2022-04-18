@@ -54,6 +54,7 @@ abstract class ItemRelationList<
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
+              context,
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
                 BlocProvider.of<S>(context).add(
@@ -86,6 +87,7 @@ abstract class ItemRelationList<
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
+              context,
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
                 BlocProvider.of<S>(context).add(
@@ -337,8 +339,12 @@ class _LinkButton<W extends Item> extends StatelessWidget {
           });
         },
         style: ElevatedButton.styleFrom(
-          onPrimary: Colors.black87,
-          primary: Colors.grey[300],
+          onPrimary: Theme.of(context).brightness == Brightness.light
+              ? Colors.black87
+              : Colors.white,
+          primary: Theme.of(context).brightness == Brightness.light
+              ? Colors.grey[300]
+              : Colors.grey[700],
         ).copyWith(
           elevation: MaterialStateProperty.resolveWith<double?>(
               (Set<MaterialState> states) {

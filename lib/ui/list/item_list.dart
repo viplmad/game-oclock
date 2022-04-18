@@ -185,6 +185,7 @@ abstract class ItemList<
             message: message,
             seconds: 2,
             snackBarAction: backgroundSnackBarAction(
+              context,
               label: GameCollectionLocalisations.of(context).openString,
               onPressed: () {
                 Navigator.pushNamed(

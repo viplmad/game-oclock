@@ -25,9 +25,9 @@ SnackBarAction dialogSnackBarAction(
   required String title,
   required String content,
 }) {
-  return SnackBarAction(
+  return backgroundSnackBarAction(
+    context,
     label: label,
-    textColor: Colors.white,
     onPressed: () {
       showDialog<bool>(
         context: context,
@@ -56,13 +56,16 @@ SnackBarAction dialogSnackBarAction(
   );
 }
 
-SnackBarAction backgroundSnackBarAction({
+SnackBarAction backgroundSnackBarAction(
+  BuildContext context, {
   required String label,
   required void Function() onPressed,
 }) {
   return SnackBarAction(
     label: label,
-    textColor: Colors.white,
+    textColor: Theme.of(context).brightness == Brightness.light
+        ? Colors.white
+        : Colors.black,
     onPressed: onPressed,
   );
 }

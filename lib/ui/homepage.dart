@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository;
@@ -8,6 +9,7 @@ import 'package:backend/repository/repository.dart'
 import 'package:backend/bloc/tab/tab.dart';
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
+import 'package:backend/bloc/about/about.dart';
 
 import 'package:backend/model/app_tab.dart';
 
@@ -288,9 +290,50 @@ class _HomepageDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
+          BlocBuilder<AboutBloc, AboutState>(
+            bloc: AboutBloc(),
+            builder: (BuildContext context, AboutState state) {
+              String version = '';
+              if (state is AboutLoaded) {
+                version = _createVersionString(state.packageInfo);
+              }
+
+              return ListTile(
+                leading: const Icon(Icons.info),
+                title: Text(
+                  GameCollectionLocalisations.of(context).aboutString,
+                ),
+                onTap: () {
+                  showLicensePage(
+                    context: context,
+                    applicationName: GameCollectionLocalisations.appTitle,
+                    applicationVersion: version,
+                    applicationIcon: Container(
+                      margin: const EdgeInsets.all(12.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(48.0),
+                        child: Image.asset(
+                          'assets/images/icon.png',
+                          height: 48.0,
+                          width: 48.0,
+                        ),
+                      ),
+                    ),
+                    applicationLegalese: GameCollectionLocalisations.of(context)
+                        .licenseInfoString,
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
     );
+  }
+
+  static String _createVersionString(PackageInfo packageInfo) {
+    return 'v${packageInfo.version}+${packageInfo.buildNumber}';
   }
 }
 

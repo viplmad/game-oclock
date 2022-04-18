@@ -33,11 +33,11 @@ class GameCollection extends StatelessWidget {
             GameCollectionLocalisations.appTitle,
         theme: ThemeData(
           brightness: Brightness.light,
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
         ),
         initialRoute: connectRoute,
         onGenerateRoute: onGenerateRoute,

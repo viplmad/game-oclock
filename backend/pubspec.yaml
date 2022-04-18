@@ -12,6 +12,9 @@ dependencies:
   bloc: ^8.0.2
   equatable: ^2.0.0
 
+  # Package Info
+  package_info_plus: ^1.4.2
+
   # Encrypted shared preferences
   encrypted_shared_preferences: ^3.0.0
 

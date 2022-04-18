@@ -36,7 +36,6 @@ class EnumField extends StatelessWidget {
 
               return ChoiceChip(
                 label: Text(option),
-                labelStyle: const TextStyle(color: Colors.black87),
                 selected: value == index,
                 selectedColor: optionColour.withOpacity(0.5),
                 pressElevation: 2.0,

@@ -22,6 +22,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String changeRepositoryString = 'Change connection settings';
 
   @override
+  final String aboutString = 'About';
+  @override
+  final String licenseInfoString = 'Released under the MIT License';
+
+  @override
   final String repositorySettingsString = 'Connection settings';
   @override
   final String updatedItemConnectionString = 'Item connection updated';
@@ -552,8 +557,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String formatMinutes(int minutes) {
-    final String minuteString = LocalisationsUtils.padTwoLeadingZeros(minutes);
-    return '$minuteString min.';
+    return '$minutes min.';
   }
 
   @override

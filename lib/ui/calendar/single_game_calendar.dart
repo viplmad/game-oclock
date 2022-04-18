@@ -187,13 +187,13 @@ class SingleGameCalendar extends StatelessWidget {
       children: <SpeedDialChild>[
         SpeedDialChild(
           child: const Icon(Icons.add_alarm, color: Colors.white),
+          backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.shapeBorder,
           label: GameCollectionLocalisations.of(context).addString(
             GameCollectionLocalisations.of(context).timeLogFieldString,
           ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
-          backgroundColor: GameTheme.primaryColour,
           onTap: () {
             Navigator.pushNamed<GameTimeLog?>(
               context,
@@ -211,13 +211,13 @@ class SingleGameCalendar extends StatelessWidget {
         ),
         SpeedDialChild(
           child: const Icon(Icons.event_available, color: Colors.white),
+          backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.shapeBorder,
           label: GameCollectionLocalisations.of(context).addString(
             GameCollectionLocalisations.of(context).finishDateFieldString,
           ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
-          backgroundColor: GameTheme.primaryColour,
           onTap: () {
             showGameDatePicker(
               context: context,
