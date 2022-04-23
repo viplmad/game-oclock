@@ -200,7 +200,10 @@ class _HomepageBar extends StatelessWidget {
             items: barDatum.map<BottomNavigationBarItem>((BarData barItem) {
               return BottomNavigationBarItem(
                 label: barItem.title,
-                icon: Icon(barItem.icon, color: Colors.white,),
+                icon: Icon(
+                  barItem.icon,
+                  color: Colors.white,
+                ),
                 backgroundColor: barItem.color,
               );
             }).toList(growable: false),
