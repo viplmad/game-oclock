@@ -144,6 +144,7 @@ abstract class ItemFAB<T extends Item,
       tooltip:
           GameCollectionLocalisations.of(context).newString(typeName(context)),
       backgroundColor: themeColor,
+      foregroundColor: Colors.white,
       onPressed: () {
         BlocProvider.of<S>(context).add(
           AddItem<T>(createItem()),

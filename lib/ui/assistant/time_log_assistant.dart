@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show GameTimeLog;
 import 'package:backend/bloc/time_log_assistant/time_log_assistant.dart';
+import 'package:backend/utils/time_of_day_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/fab_utils.dart';
 import '../common/shape_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
@@ -55,7 +57,9 @@ class TimeLogAssistant extends StatelessWidget {
                       );
                     }
                   : null,
-              backgroundColor: state.isValid ? null : Colors.grey,
+              foregroundColor: Colors.white,
+              backgroundColor:
+                  FABUtils.backgroundIfActive(enabled: state.isValid),
             );
           },
         ),
@@ -97,6 +101,13 @@ class _TimeLogAssistantBody extends StatelessWidget {
                   ),
                 );
               },
+              onLongPress: () {
+                BlocProvider.of<TimeLogAssistantBloc>(context).add(
+                  const UpdateTimeLogStartTime(
+                    TimeOfDayExtension.startOfDay,
+                  ),
+                );
+              },
             ),
             TimeField(
               fieldName: GameCollectionLocalisations.of(context).endTimeString,
@@ -105,6 +116,13 @@ class _TimeLogAssistantBody extends StatelessWidget {
                 BlocProvider.of<TimeLogAssistantBloc>(context).add(
                   UpdateTimeLogEndTime(
                     time,
+                  ),
+                );
+              },
+              onLongPress: () {
+                BlocProvider.of<TimeLogAssistantBloc>(context).add(
+                  const UpdateTimeLogEndTime(
+                    TimeOfDayExtension.startOfDay,
                   ),
                 );
               },
@@ -120,49 +138,58 @@ class _TimeLogAssistantBody extends StatelessWidget {
                 );
               },
             ),
-            const Divider(),
-            ListTile(
-              title: Text(
-                GameCollectionLocalisations.of(context).recalculationModeTitle,
-              ),
-              subtitle: Text(
-                GameCollectionLocalisations.of(context)
-                    .recalculationModeSubtitle,
-              ),
-            ),
-            RadioListTile<TimeLogRecalculationMode>(
-              title: Text(
-                GameCollectionLocalisations.of(context)
-                    .recalculationModeDurationString,
-              ),
-              groupValue: state.recalculationMode,
-              value: TimeLogRecalculationMode.duration,
-              onChanged: (_) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  const UpdateTimeLogRecalculationMode(
-                    TimeLogRecalculationMode.duration,
-                  ),
-                );
-              },
-            ),
-            RadioListTile<TimeLogRecalculationMode>(
-              title: Text(
-                GameCollectionLocalisations.of(context)
-                    .recalculationModeTimeString,
-              ),
-              groupValue: state.recalculationMode,
-              value: TimeLogRecalculationMode.time,
-              onChanged: (_) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  const UpdateTimeLogRecalculationMode(
-                    TimeLogRecalculationMode.time,
-                  ),
-                );
-              },
-            ),
+            ...(state.canRecalculate
+                ? _recalculateOptions(context, state.recalculationMode)
+                : <Widget>[]),
           ],
         );
       },
     );
+  }
+
+  List<Widget> _recalculateOptions(
+    BuildContext context,
+    TimeLogRecalculationMode recalculationMode,
+  ) {
+    return <Widget>[
+      const Divider(),
+      ListTile(
+        title: Text(
+          GameCollectionLocalisations.of(context).recalculationModeTitle,
+        ),
+        subtitle: Text(
+          GameCollectionLocalisations.of(context).recalculationModeSubtitle,
+        ),
+      ),
+      RadioListTile<TimeLogRecalculationMode>(
+        title: Text(
+          GameCollectionLocalisations.of(context)
+              .recalculationModeDurationString,
+        ),
+        groupValue: recalculationMode,
+        value: TimeLogRecalculationMode.duration,
+        onChanged: (_) {
+          BlocProvider.of<TimeLogAssistantBloc>(context).add(
+            const UpdateTimeLogRecalculationMode(
+              TimeLogRecalculationMode.duration,
+            ),
+          );
+        },
+      ),
+      RadioListTile<TimeLogRecalculationMode>(
+        title: Text(
+          GameCollectionLocalisations.of(context).recalculationModeTimeString,
+        ),
+        groupValue: recalculationMode,
+        value: TimeLogRecalculationMode.time,
+        onChanged: (_) {
+          BlocProvider.of<TimeLogAssistantBloc>(context).add(
+            const UpdateTimeLogRecalculationMode(
+              TimeLogRecalculationMode.time,
+            ),
+          );
+        },
+      ),
+    ];
   }
 }

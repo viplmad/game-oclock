@@ -475,8 +475,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           deletedGameLog.dateTime.isSameDay(selectedDate)) {
         selectedTimeLogs = selectedTimeLogs
             .where(
-              (GameTimeLog log) =>
-                  !log.dateTime.isSameDay(deletedGameLog.dateTime),
+              (GameTimeLog log) => log.dateTime != deletedGameLog.dateTime,
             )
             .toList(growable: false);
 

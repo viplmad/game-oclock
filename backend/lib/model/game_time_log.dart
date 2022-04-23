@@ -13,6 +13,8 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
   final DateTime dateTime;
   final Duration time;
 
+  DateTime get endDateTime => dateTime.add(time);
+
   @override
   final ItemImage image = const ItemImage(null, null);
 

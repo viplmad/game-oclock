@@ -5,6 +5,7 @@ import 'package:backend/model/model.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
+import 'theme_utils.dart';
 
 class GameTagTheme {
   GameTagTheme._();
@@ -13,16 +14,7 @@ class GameTagTheme {
   static const Color secondaryColour = Colors.black12;
 
   static ThemeData themeData(BuildContext context) {
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData platformTheme = contextTheme.copyWith(
-      primaryColor: primaryColour,
-      colorScheme: contextTheme.colorScheme.copyWith(
-        primary: primaryColour,
-        secondary: secondaryColour,
-      ),
-    );
-
-    return platformTheme;
+    return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
 
   static List<String> views(BuildContext context) {

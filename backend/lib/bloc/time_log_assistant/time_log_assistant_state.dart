@@ -23,6 +23,9 @@ class TimeLogAssistantState extends Equatable {
   bool get isValid =>
       startTime != null && duration != null && !duration!.isNegative;
 
+  bool get canRecalculate =>
+      startTime != null && endTime != null && duration != null;
+
   @override
   List<Object> get props => <Object>[
         date,

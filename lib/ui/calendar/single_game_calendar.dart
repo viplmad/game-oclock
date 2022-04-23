@@ -180,6 +180,7 @@ class SingleGameCalendar extends StatelessWidget {
         GameCollectionLocalisations.of(context).gameCalendarEventsString,
       ),
       overlayColor: Colors.black87,
+      foregroundColor: Colors.white,
       backgroundColor: GameTheme.primaryColour,
       curve: Curves.bounceIn,
       overlayOpacity: 0.5,
@@ -427,12 +428,12 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     state.selectedDate,
                   ),
                   const Divider(height: 4.0),
-                  state.isSelectedDateFinish
-                      ? _buildFinishDate(context, state.selectedDate)
-                      : Container(),
-                  state.isSelectedDateFinish
-                      ? const Divider(height: 4.0)
-                      : Container(),
+                  ...(state.isSelectedDateFinish
+                      ? <Widget>[
+                          _buildFinishDate(context, state.selectedDate),
+                          const Divider(height: 4.0),
+                        ]
+                      : <Widget>[]),
                   ListTile(
                     title: Text(
                       CalendarUtils.titleString(
@@ -588,10 +589,13 @@ class _SingleGameCalendarBody extends StatelessWidget {
         }
 
         if (range == CalendarRange.day) {
-          final String timeLogString = GameCollectionLocalisations.of(context)
-                  .formatTime(timeLog.dateTime) +
+          final String timeLogString = durationString +
               ' - ' +
-              durationString;
+              GameCollectionLocalisations.of(context)
+                  .formatTime(timeLog.dateTime) +
+              ' ⮕ ' +
+              GameCollectionLocalisations.of(context)
+                  .formatTime(timeLog.endDateTime);
 
           return DismissibleItem(
             dismissibleKey: timeLog.uniqueId,

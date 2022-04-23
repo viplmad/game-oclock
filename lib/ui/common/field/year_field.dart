@@ -11,12 +11,14 @@ class YearField extends StatelessWidget {
     required this.fieldName,
     required this.value,
     this.editable = true,
+    this.onLongPress,
     this.update,
   }) : super(key: key);
 
   final String fieldName;
   final int? value;
   final bool editable;
+  final void Function()? onLongPress;
   final void Function(int)? update;
 
   @override
@@ -39,6 +41,7 @@ class YearField extends StatelessWidget {
           },
         );
       },
+      onLongPress: onLongPress,
     );
   }
 }

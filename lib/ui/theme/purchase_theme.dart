@@ -6,6 +6,7 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 import '../common/bar_data.dart';
+import 'theme_utils.dart';
 
 class PurchaseTheme {
   PurchaseTheme._();
@@ -14,16 +15,7 @@ class PurchaseTheme {
   static const Color secondaryColour = Colors.lightBlueAccent;
 
   static ThemeData themeData(BuildContext context) {
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData purchaseTheme = contextTheme.copyWith(
-      primaryColor: primaryColour,
-      colorScheme: contextTheme.colorScheme.copyWith(
-        primary: primaryColour,
-        secondary: secondaryColour,
-      ),
-    );
-
-    return purchaseTheme;
+    return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
 
   static BarData barData(BuildContext context) {

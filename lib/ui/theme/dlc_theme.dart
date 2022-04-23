@@ -6,6 +6,7 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 import '../common/bar_data.dart';
+import 'theme_utils.dart';
 
 class DLCTheme {
   DLCTheme._();
@@ -14,16 +15,7 @@ class DLCTheme {
   static const Color secondaryColour = Colors.deepPurpleAccent;
 
   static ThemeData themeData(BuildContext context) {
-    final ThemeData contextTheme = Theme.of(context);
-    final ThemeData dlcTheme = contextTheme.copyWith(
-      primaryColor: primaryColour,
-      colorScheme: contextTheme.colorScheme.copyWith(
-        primary: primaryColour,
-        secondary: secondaryColour,
-      ),
-    );
-
-    return dlcTheme;
+    return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
 
   static BarData barData(BuildContext context) {
