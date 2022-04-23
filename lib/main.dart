@@ -9,6 +9,7 @@ import 'package:backend/game_collection_backend.dart'
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'package:game_collection/ui/route.dart';
+import 'package:game_collection/ui/theme/app_theme.dart';
 
 void main() => runApp(const GameCollection());
 
@@ -31,14 +32,8 @@ class GameCollection extends StatelessWidget {
       child: MaterialApp(
         onGenerateTitle: (BuildContext context) =>
             GameCollectionLocalisations.appTitle,
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.red,
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.red,
-        ),
+        theme: AppTheme.themeData(Brightness.light),
+        darkTheme: AppTheme.themeData(Brightness.dark),
         initialRoute: connectRoute,
         onGenerateRoute: onGenerateRoute,
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[

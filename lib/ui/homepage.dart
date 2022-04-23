@@ -15,10 +15,11 @@ import 'package:backend/model/app_tab.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import 'route_constants.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
 import 'common/bar_data.dart';
+import 'common/navigation_destination_background.dart' as nav_bar_background;
+import 'route_constants.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({
@@ -189,22 +190,21 @@ class _HomepageBar extends StatelessWidget {
           body: _HomepageBody(
             state: state,
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
-            currentIndex: state.mainTab.index,
-            onTap: (int index) {
-              final MainTab newMainTab = MainTab.values.elementAt(index);
+          bottomNavigationBar: nav_bar_background.NavigationBar(
+            selectedIndex: state.mainTab.index,
+            onDestinationSelected: (int destinationSelectedIndex) {
+              final MainTab selectedMainTab = MainTab.values.elementAt(destinationSelectedIndex);
 
-              BlocProvider.of<TabBloc>(context).add(UpdateMainTab(newMainTab));
+              BlocProvider.of<TabBloc>(context).add(UpdateMainTab(selectedMainTab));
             },
-            items: barDatum.map<BottomNavigationBarItem>((BarData barItem) {
-              return BottomNavigationBarItem(
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+            destinations: barDatum.map<nav_bar_background.NavigationDestination>((BarData barItem) {
+              return nav_bar_background.NavigationDestination(
                 label: barItem.title,
                 icon: Icon(
                   barItem.icon,
-                  color: Colors.white,
                 ),
-                backgroundColor: barItem.color,
+                indicatorColor: barItem.color,
               );
             }).toList(growable: false),
           ),
@@ -315,7 +315,7 @@ class _HomepageDrawer extends StatelessWidget {
                     applicationIcon: Container(
                       margin: const EdgeInsets.all(12.0),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(48.0),
+                        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                         child: Image.asset(
                           'assets/images/icon.png',
                           height: 48.0,
