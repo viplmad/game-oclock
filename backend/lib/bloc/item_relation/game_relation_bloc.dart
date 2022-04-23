@@ -51,7 +51,7 @@ class GameRelationBloc<W extends Item>
   final GameTagRepository gameTagRepository;
 
   @override
-  Future<List<W>> getRelationStream() {
+  Future<List<W>> getRelationItems() {
     switch (W) {
       case GameFinish:
         final Future<List<GameFinishEntity>> entityListFuture =
@@ -84,6 +84,6 @@ class GameRelationBloc<W extends Item>
             as Future<List<W>>;
     }
 
-    return super.getRelationStream();
+    return super.getRelationItems();
   }
 }

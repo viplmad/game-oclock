@@ -20,7 +20,7 @@ class PurchaseDetailBloc extends ItemDetailBloc<Purchase, PurchaseEntity,
         );
 
   @override
-  Future<Purchase> getReadFuture() {
+  Future<Purchase> get() {
     final Future<PurchaseEntity> entityFuture = repository.findById(id);
     return PurchaseMapper.futureEntityToModel(entityFuture);
   }

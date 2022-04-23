@@ -14,7 +14,7 @@ class PurchaseTypeListManagerBloc extends ItemListManagerBloc<PurchaseType,
   }) : super(repository: collectionRepository.purchaseTypeRepository);
 
   @override
-  Future<PurchaseType> createFuture(AddItem<PurchaseType> event) {
+  Future<PurchaseType> create(AddItem<PurchaseType> event) {
     final PurchaseTypeEntity entity =
         PurchaseTypeMapper.modelToEntity(event.item);
     final Future<PurchaseTypeEntity> entityFuture = repository.create(entity);
@@ -22,7 +22,7 @@ class PurchaseTypeListManagerBloc extends ItemListManagerBloc<PurchaseType,
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<PurchaseType> event) {
+  Future<Object?> delete(DeleteItem<PurchaseType> event) {
     final PurchaseTypeEntity entity =
         PurchaseTypeMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());

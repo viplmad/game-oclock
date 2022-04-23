@@ -72,7 +72,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     try {
       final List<GameWithLogs> gamesWithLogs =
-          await getReadAllGameWithTimeLogsInYearStream(year);
+          await getAllGameWithTimeLogsInYear(year);
 
       final Set<DateTime> logDates = gamesWithLogs.fold(
         SplayTreeSet<DateTime>(),
@@ -136,7 +136,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final DateTime focusedDate = DateTime(year, DateTime.december, 1);
 
       final List<GameWithLogs> yearGamesWithLogs =
-          await getReadAllGameWithTimeLogsInYearStream(year);
+          await getAllGameWithTimeLogsInYear(year);
 
       for (final GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
         try {
@@ -599,7 +599,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   @protected
-  Future<List<GameWithLogs>> getReadAllGameWithTimeLogsInYearStream(int year) {
+  Future<List<GameWithLogs>> getAllGameWithTimeLogsInYear(int year) {
     final Future<List<GameWithLogsEntity>> entityListFuture =
         gameTimeLogRepository.findAllWithGameByYear(year);
     return GameTimeLogMapper.futureGameWithLogEntityListToModelList(

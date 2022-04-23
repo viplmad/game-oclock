@@ -20,7 +20,7 @@ class StoreDetailBloc
         );
 
   @override
-  Future<Store> getReadFuture() {
+  Future<Store> get() {
     final Future<StoreEntity> entityFuture = repository.findById(id);
     return StoreMapper.futureEntityToModel(
       entityFuture,

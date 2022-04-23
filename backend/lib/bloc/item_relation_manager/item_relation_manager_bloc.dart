@@ -40,7 +40,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
     await _checkConnection(emit);
 
     try {
-      await addRelationFuture(event);
+      await addRelation(event);
       emit(
         ItemRelationAdded<W>(event.otherItem),
       );
@@ -62,7 +62,7 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
     await _checkConnection(emit);
 
     try {
-      await deleteRelationFuture(event);
+      await deleteRelation(event);
       emit(
         ItemRelationDeleted<W>(event.otherItem),
       );
@@ -79,13 +79,13 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
 
   @mustCallSuper
   @protected
-  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelation(AddItemRelation<W> event) {
     return Future<Object?>.error(_errorRelationNotFound);
   }
 
   @mustCallSuper
   @protected
-  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
     return Future<Object?>.error(_errorRelationNotFound);
   }
 }

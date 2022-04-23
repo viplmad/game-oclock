@@ -19,14 +19,14 @@ class GameTagListBloc
         );
 
   @override
-  Future<List<GameTag>> getReadAllStream([int? page]) {
-    final Future<List<GameTagEntity>> entityListFuture =
-        repository.findAllWithView(GameTagView.main, page);
-    return GameTagMapper.futureEntityListToModelList(entityListFuture);
+  Future<ViewParameters> getStartViewIndex() {
+    return Future<ViewParameters>.value(
+      ViewParameters(GameTagView.main.index),
+    );
   }
 
   @override
-  Future<List<GameTag>> getReadViewStream(int viewIndex, [int? page]) {
+  Future<List<GameTag>> getAllWithView(int viewIndex, [int? page]) {
     final GameTagView view = GameTagView.values[viewIndex];
     final Future<List<GameTagEntity>> entityListFuture =
         repository.findAllWithView(view, page);

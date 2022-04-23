@@ -17,7 +17,7 @@ class PurchaseDetailManagerBloc extends ItemDetailManagerBloc<Purchase,
         );
 
   @override
-  Future<Purchase> updateFuture(UpdateItemField<Purchase> event) {
+  Future<Purchase> update(UpdateItemField<Purchase> event) {
     final PurchaseEntity entity = PurchaseMapper.modelToEntity(event.item);
     final PurchaseEntity updatedEntity =
         PurchaseMapper.modelToEntity(event.updatedItem);

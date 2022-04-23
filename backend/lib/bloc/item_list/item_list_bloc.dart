@@ -12,6 +12,13 @@ import '../bloc_utils.dart';
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
+class ViewParameters {
+  ViewParameters(this.viewIndex, [this.viewYear]);
+
+  final int viewIndex;
+  final int? viewYear;
+}
+
 abstract class ItemListBloc<T extends Item, E extends ItemEntity,
         ID extends Object, R extends ItemRepository<E, ID>>
     extends Bloc<ItemListEvent, ItemListState> {
@@ -50,9 +57,24 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
 
     try {
       const int page = 0;
-      final List<T> items = await getReadAllStream(page);
+
+      final ViewParameters startViewParameters = await getStartViewIndex();
+      final int startViewIndex = startViewParameters.viewIndex;
+      final int? year = startViewParameters.viewYear;
+
+      final List<T> items;
+      if (year != null) {
+        items = await getAllWithYearView(startViewIndex, year, page);
+      } else {
+        items = await getAllWithView(startViewIndex, page);
+      }
+
       emit(
-        ItemListLoaded<T>(items),
+        ItemListLoaded<T>(
+          items,
+          startViewIndex,
+          year,
+        ),
       );
     } catch (e) {
       emit(
@@ -125,7 +147,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
 
     try {
       const int page = 0;
-      final List<T> items = await _getReadViewStream(event, page);
+      final List<T> items = await _getAllWithView(event, page);
       emit(
         ItemListLoaded<T>(
           items,
@@ -159,7 +181,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
 
     try {
       const int page = 0;
-      final List<T> items = await _getReadYearViewStream(event, page);
+      final List<T> items = await _getAllWithYearView(event, page);
       emit(
         ItemListLoaded<T>(
           items,
@@ -189,9 +211,9 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
       final int page = (state as ItemListLoaded<T>).page + 1;
       List<T> pageItems;
       if (year != null) {
-        pageItems = await getReadYearViewStream(viewIndex, year, page);
+        pageItems = await getAllWithYearView(viewIndex, year, page);
       } else {
-        pageItems = await getReadViewStream(viewIndex, page);
+        pageItems = await getAllWithView(viewIndex, page);
       }
 
       final List<T> updatedItems = List<T>.from(items)..addAll(pageItems);
@@ -291,17 +313,17 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     return super.close();
   }
 
-  Future<List<T>> _getReadViewStream(UpdateView event, int page) =>
-      getReadViewStream(event.viewIndex, page);
-  Future<List<T>> _getReadYearViewStream(UpdateYearView event, int page) =>
-      getReadYearViewStream(event.viewIndex, event.year, page);
+  Future<List<T>> _getAllWithView(UpdateView event, int page) =>
+      getAllWithView(event.viewIndex, page);
+  Future<List<T>> _getAllWithYearView(UpdateYearView event, int page) =>
+      getAllWithYearView(event.viewIndex, event.year, page);
 
   @protected
-  Future<List<T>> getReadAllStream([int? page]);
+  Future<ViewParameters> getStartViewIndex();
   @protected
-  Future<List<T>> getReadViewStream(int viewIndex, [int? page]);
+  Future<List<T>> getAllWithView(int viewIndex, [int? page]);
   @protected
-  external Future<List<T>> getReadYearViewStream(
+  external Future<List<T>> getAllWithYearView(
     int viewIndex,
     int year, [
     int? page,

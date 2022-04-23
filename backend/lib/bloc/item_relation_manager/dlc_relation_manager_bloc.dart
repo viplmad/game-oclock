@@ -28,7 +28,7 @@ class DLCRelationManagerBloc<W extends Item>
   final DLCRepository dlcRepository;
 
   @override
-  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelation(AddItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -46,11 +46,11 @@ class DLCRelationManagerBloc<W extends Item>
         return dlcRepository.relateDLCPurchase(id, otherEntity.createId());
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelation(event);
   }
 
   @override
-  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -66,6 +66,6 @@ class DLCRelationManagerBloc<W extends Item>
         return dlcRepository.unrelateDLCPurchase(id, otherEntity.createId());
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelation(event);
   }
 }

@@ -13,7 +13,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System, SystemEntity,
   }) : super(repository: collectionRepository.systemRepository);
 
   @override
-  Future<System> createFuture(AddItem<System> event) {
+  Future<System> create(AddItem<System> event) {
     final SystemEntity entity = SystemMapper.modelToEntity(event.item);
     final Future<SystemEntity> entityFuture = repository.create(entity);
     return SystemMapper.futureEntityToModel(
@@ -23,7 +23,7 @@ class SystemListManagerBloc extends ItemListManagerBloc<System, SystemEntity,
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<System> event) {
+  Future<Object?> delete(DeleteItem<System> event) {
     final SystemEntity entity = SystemMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

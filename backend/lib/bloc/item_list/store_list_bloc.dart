@@ -19,17 +19,14 @@ class StoreListBloc
         );
 
   @override
-  Future<List<Store>> getReadAllStream([int? page]) {
-    final Future<List<StoreEntity>> entityListFuture =
-        repository.findAllWithView(StoreView.main, page);
-    return StoreMapper.futureEntityListToModelList(
-      entityListFuture,
-      repository.getImageURI,
+  Future<ViewParameters> getStartViewIndex() {
+    return Future<ViewParameters>.value(
+      ViewParameters(StoreView.main.index),
     );
   }
 
   @override
-  Future<List<Store>> getReadViewStream(int viewIndex, [int? page]) {
+  Future<List<Store>> getAllWithView(int viewIndex, [int? page]) {
     final StoreView view = StoreView.values[viewIndex];
     final Future<List<StoreEntity>> entityListFuture =
         repository.findAllWithView(view, page);

@@ -59,7 +59,7 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
     await _checkConnection(emit);
 
     try {
-      final T item = await getReadFuture();
+      final T item = await get();
       emit(
         ItemLoaded<T>(item),
       );
@@ -99,5 +99,5 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
   }
 
   @protected
-  Future<T> getReadFuture();
+  Future<T> get();
 }

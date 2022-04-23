@@ -20,7 +20,7 @@ class DLCDetailBloc
         );
 
   @override
-  Future<DLC> getReadFuture() {
+  Future<DLC> get() {
     final Future<DLCEntity> entityFuture = repository.findById(id);
     return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
   }

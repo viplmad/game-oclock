@@ -13,14 +13,14 @@ class GameTagListManagerBloc extends ItemListManagerBloc<GameTag, GameTagEntity,
   }) : super(repository: collectionRepository.gameTagRepository);
 
   @override
-  Future<GameTag> createFuture(AddItem<GameTag> event) {
+  Future<GameTag> create(AddItem<GameTag> event) {
     final GameTagEntity entity = GameTagMapper.modelToEntity(event.item);
     final Future<GameTagEntity> entityFuture = repository.create(entity);
     return GameTagMapper.futureEntityToModel(entityFuture);
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<GameTag> event) {
+  Future<Object?> delete(DeleteItem<GameTag> event) {
     final GameTagEntity entity = GameTagMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

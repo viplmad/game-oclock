@@ -23,7 +23,7 @@ class StoreRelationBloc<W extends Item>
   final PurchaseRepository purchaseRepository;
 
   @override
-  Future<List<W>> getRelationStream() {
+  Future<List<W>> getRelationItems() {
     switch (W) {
       case Purchase:
         final Future<List<PurchaseEntity>> entityListFuture =
@@ -32,6 +32,6 @@ class StoreRelationBloc<W extends Item>
             as Future<List<W>>;
     }
 
-    return super.getRelationStream();
+    return super.getRelationItems();
   }
 }

@@ -13,14 +13,14 @@ class DLCListManagerBloc
   }) : super(repository: collectionRepository.dlcRepository);
 
   @override
-  Future<DLC> createFuture(AddItem<DLC> event) {
+  Future<DLC> create(AddItem<DLC> event) {
     final DLCEntity entity = DLCMapper.modelToEntity(event.item);
     final Future<DLCEntity> entityFuture = repository.create(entity);
     return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<DLC> event) {
+  Future<Object?> delete(DeleteItem<DLC> event) {
     final DLCEntity entity = DLCMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

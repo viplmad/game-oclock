@@ -17,17 +17,14 @@ class DLCListBloc extends ItemListBloc<DLC, DLCEntity, DLCID, DLCRepository> {
         );
 
   @override
-  Future<List<DLC>> getReadAllStream([int? page]) {
-    final Future<List<DLCEntity>> entityListFuture =
-        repository.findAllWithView(DLCView.main, page);
-    return DLCMapper.futureEntityListToModelList(
-      entityListFuture,
-      repository.getImageURI,
+  Future<ViewParameters> getStartViewIndex() {
+    return Future<ViewParameters>.value(
+      ViewParameters(DLCView.main.index),
     );
   }
 
   @override
-  Future<List<DLC>> getReadViewStream(int viewIndex, [int? page]) {
+  Future<List<DLC>> getAllWithView(int viewIndex, [int? page]) {
     final DLCView view = DLCView.values[viewIndex];
     final Future<List<DLCEntity>> entityListFuture =
         repository.findAllWithView(view, page);

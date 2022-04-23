@@ -22,6 +22,11 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String changeRepositoryString = 'Change connection settings';
 
   @override
+  final String changeStartGameViewString = 'Change start Game View';
+  @override
+  final String startGameViewString = 'Start Game View';
+
+  @override
   final String aboutString = 'About';
   @override
   final String licenseInfoString = 'Released under the MIT License';

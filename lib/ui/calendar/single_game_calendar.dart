@@ -589,13 +589,13 @@ class _SingleGameCalendarBody extends StatelessWidget {
         }
 
         if (range == CalendarRange.day) {
-          final String timeLogString = durationString +
-              ' - ' +
-              GameCollectionLocalisations.of(context)
+          final String timeLogString = GameCollectionLocalisations.of(context)
                   .formatTime(timeLog.dateTime) +
               ' ⮕ ' +
               GameCollectionLocalisations.of(context)
-                  .formatTime(timeLog.endDateTime);
+                  .formatTime(timeLog.endDateTime) +
+              ' - ' +
+              durationString;
 
           return DismissibleItem(
             dismissibleKey: timeLog.uniqueId,

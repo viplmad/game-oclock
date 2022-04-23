@@ -17,17 +17,20 @@ class RepositoryPreferences {
 
   static const String _errorLocalTypeNotSupported = 'Local type not supported';
 
+  // Item connector
   static const String _typeItemConnectorKey = 'itemConnectorType';
-  static const String _typeImageConnectorKey = 'imageConnectorType';
-
   static const String _itemConnectionStringKey = 'itemConnectionString';
-  static const String _imageConnectionStringKey = 'imageConnectionString';
-
   static const String _postgresItemConnectorValue = 'postgres';
   static const String _localItemConnectorValue = 'local';
 
+  // Image connector
+  static const String _typeImageConnectorKey = 'imageConnectorType';
+  static const String _imageConnectionStringKey = 'imageConnectionString';
   static const String _cloudinaryImageConnectorValue = 'cloudinary';
   static const String _localImageConnectorValue = 'local';
+
+  // Initial game view
+  static const String _startGameViewIndexKey = 'startGameViewIndex';
 
   static const String _emptyValue = 'empty';
 
@@ -36,7 +39,9 @@ class RepositoryPreferences {
   }
 
   //#region SET
-  static Future<bool> setActiveItemConnectorType(ItemConnectorType? itemType) {
+  static Future<bool> setActiveItemConnectorType(
+    ItemConnectorType? itemType,
+  ) {
     final EncryptedSharedPreferences sharedPreferences =
         EncryptedSharedPreferences();
 
@@ -82,7 +87,9 @@ class RepositoryPreferences {
     );
   }
 
-  static Future<bool> setActiveItemInstance(ProviderInstance? itemInstance) {
+  static Future<bool> setActiveItemInstance(
+    ProviderInstance? itemInstance,
+  ) {
     final EncryptedSharedPreferences sharedPreferences =
         EncryptedSharedPreferences();
 
@@ -97,7 +104,9 @@ class RepositoryPreferences {
     );
   }
 
-  static Future<bool> setActiveImageInstance(ProviderInstance? imageInstance) {
+  static Future<bool> setActiveImageInstance(
+    ProviderInstance? imageInstance,
+  ) {
     final EncryptedSharedPreferences sharedPreferences =
         EncryptedSharedPreferences();
 
@@ -109,6 +118,23 @@ class RepositoryPreferences {
     return sharedPreferences.setString(
       _imageConnectionStringKey,
       connectionString,
+    );
+  }
+
+  static Future<bool> setStartGameViewIndex(
+    int? gameViewIndex,
+  ) {
+    final EncryptedSharedPreferences sharedPreferences =
+        EncryptedSharedPreferences();
+
+    String viewIndexString = _emptyValue;
+    if (gameViewIndex != null && gameViewIndex >= 0) {
+      viewIndexString = gameViewIndex.toString();
+    }
+
+    return sharedPreferences.setString(
+      _startGameViewIndexKey,
+      viewIndexString,
     );
   }
   //#endregion SET
@@ -249,4 +275,17 @@ class RepositoryPreferences {
       onError: (Object error) => null,
     );
   }
+
+  static Future<int?> retrieveInitialGameViewIndex() async {
+    final EncryptedSharedPreferences sharedPreferences =
+        EncryptedSharedPreferences();
+
+    return sharedPreferences.getString(_startGameViewIndexKey).then<int?>(
+      (String value) {
+        return int.tryParse(value);
+      },
+      onError: (Object error) => null,
+    );
+  }
+  //#endregion RETRIEVE
 }

@@ -17,7 +17,7 @@ class PlatformDetailManagerBloc extends ItemDetailManagerBloc<Platform,
         );
 
   @override
-  Future<Platform> updateFuture(UpdateItemField<Platform> event) {
+  Future<Platform> update(UpdateItemField<Platform> event) {
     final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
     final PlatformEntity updatedEntity =
         PlatformMapper.modelToEntity(event.updatedItem);

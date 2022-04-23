@@ -20,7 +20,7 @@ class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformEntity,
         );
 
   @override
-  Future<Platform> getReadFuture() {
+  Future<Platform> get() {
     final Future<PlatformEntity> entityFuture = repository.findById(id);
     return PlatformMapper.futureEntityToModel(
       entityFuture,

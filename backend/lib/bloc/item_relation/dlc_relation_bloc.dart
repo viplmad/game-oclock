@@ -33,7 +33,7 @@ class DLCRelationBloc<W extends Item> extends ItemRelationBloc<DLC, DLCID, W> {
   final PurchaseRepository purchaseRepository;
 
   @override
-  Future<List<W>> getRelationStream() {
+  Future<List<W>> getRelationItems() {
     switch (W) {
       case DLCFinish:
         final Future<List<DLCFinishEntity>> entityListFuture =
@@ -63,6 +63,6 @@ class DLCRelationBloc<W extends Item> extends ItemRelationBloc<DLC, DLCID, W> {
             as Future<List<W>>;
     }
 
-    return super.getRelationStream();
+    return super.getRelationItems();
   }
 }

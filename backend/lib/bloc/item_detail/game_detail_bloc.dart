@@ -20,7 +20,7 @@ class GameDetailBloc
         );
 
   @override
-  Future<Game> getReadFuture() {
+  Future<Game> get() {
     final Future<GameEntity> entityFuture = repository.findById(id);
     return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
   }

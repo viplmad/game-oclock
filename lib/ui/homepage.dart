@@ -10,6 +10,7 @@ import 'package:backend/bloc/tab/tab.dart';
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:backend/bloc/about/about.dart';
+import 'package:backend/bloc/start_game_view/start_game_view.dart';
 
 import 'package:backend/model/app_tab.dart';
 
@@ -193,12 +194,16 @@ class _HomepageBar extends StatelessWidget {
           bottomNavigationBar: nav_bar_background.NavigationBar(
             selectedIndex: state.mainTab.index,
             onDestinationSelected: (int destinationSelectedIndex) {
-              final MainTab selectedMainTab = MainTab.values.elementAt(destinationSelectedIndex);
+              final MainTab selectedMainTab =
+                  MainTab.values.elementAt(destinationSelectedIndex);
 
-              BlocProvider.of<TabBloc>(context).add(UpdateMainTab(selectedMainTab));
+              BlocProvider.of<TabBloc>(context)
+                  .add(UpdateMainTab(selectedMainTab));
             },
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            destinations: barDatum.map<nav_bar_background.NavigationDestination>((BarData barItem) {
+            destinations: barDatum
+                .map<nav_bar_background.NavigationDestination>(
+                    (BarData barItem) {
               return nav_bar_background.NavigationDestination(
                 label: barItem.title,
                 icon: Icon(
@@ -284,7 +289,7 @@ class _HomepageDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings),
             title: Text(
-              GameCollectionLocalisations.of(context).repositorySettingsString,
+              GameCollectionLocalisations.of(context).changeRepositoryString,
             ),
             onTap: () {
               Navigator.pushReplacementNamed(
@@ -293,9 +298,21 @@ class _HomepageDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.view_carousel),
+            title: Text(
+              GameCollectionLocalisations.of(context).changeStartGameViewString,
+            ),
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: _changeStartGameViewDialog,
+              );
+            },
+          ),
           const Divider(),
           BlocBuilder<AboutBloc, AboutState>(
-            bloc: AboutBloc(),
+            bloc: AboutBloc()..add(LoadAbout()),
             builder: (BuildContext context, AboutState state) {
               String version = '';
               if (state is AboutLoaded) {
@@ -305,7 +322,9 @@ class _HomepageDrawer extends StatelessWidget {
               return ListTile(
                 leading: const Icon(Icons.info),
                 title: Text(
-                  GameCollectionLocalisations.of(context).aboutString,
+                  GameCollectionLocalisations.of(context).aboutString +
+                      ' - ' +
+                      version,
                 ),
                 onTap: () {
                   showLicensePage(
@@ -315,7 +334,8 @@ class _HomepageDrawer extends StatelessWidget {
                     applicationIcon: Container(
                       margin: const EdgeInsets.all(12.0),
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(16.0)),
                         child: Image.asset(
                           'assets/images/icon.png',
                           height: 48.0,
@@ -331,6 +351,50 @@ class _HomepageDrawer extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _changeStartGameViewDialog(BuildContext context) {
+    final List<String> gameViews = GameTheme.views(context);
+
+    return BlocProvider<StartGameViewBloc>(
+      create: (BuildContext context) {
+        return StartGameViewBloc()..add(LoadStartGameView());
+      },
+      child: AlertDialog(
+        title: Text(
+          GameCollectionLocalisations.of(context).startGameViewString,
+        ),
+        content: BlocBuilder<StartGameViewBloc, int?>(
+          builder: (BuildContext context, int? startViewIndex) {
+            return SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: gameViews.length,
+                itemBuilder: (BuildContext context, int viewIndex) {
+                  final String view = gameViews.elementAt(viewIndex);
+
+                  return RadioListTile<int>(
+                    title: Text(view),
+                    groupValue: startViewIndex,
+                    value: viewIndex,
+                    onChanged: (_) {
+                      BlocProvider.of<StartGameViewBloc>(context).add(
+                        UpdateStartGameView(
+                          viewIndex,
+                        ),
+                      );
+
+                      Navigator.maybePop<void>(context);
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

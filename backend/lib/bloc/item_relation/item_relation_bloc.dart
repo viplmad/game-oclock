@@ -52,7 +52,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object,
     );
 
     try {
-      final List<W> items = await getRelationStream();
+      final List<W> items = await getRelationItems();
       emit(
         ItemRelationLoaded<W>(items),
       );
@@ -133,7 +133,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object,
 
   @mustCallSuper
   @protected
-  Future<List<W>> getRelationStream() {
+  Future<List<W>> getRelationItems() {
     return Future<List<W>>.error(_errorRelationNotFound);
   }
 }

@@ -17,7 +17,7 @@ class GameDetailManagerBloc
         );
 
   @override
-  Future<Game> updateFuture(UpdateItemField<Game> event) {
+  Future<Game> update(UpdateItemField<Game> event) {
     final GameEntity entity = GameMapper.modelToEntity(event.item);
     final GameEntity updatedEntity =
         GameMapper.modelToEntity(event.updatedItem);

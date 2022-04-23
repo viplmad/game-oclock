@@ -20,7 +20,7 @@ class GameTagDetailBloc extends ItemDetailBloc<GameTag, GameTagEntity,
         );
 
   @override
-  Future<GameTag> getReadFuture() {
+  Future<GameTag> get() {
     final Future<GameTagEntity> entityFuture = repository.findById(id);
     return GameTagMapper.futureEntityToModel(entityFuture);
   }

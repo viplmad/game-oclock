@@ -31,14 +31,14 @@ class GameListManagerBloc
   }) : super(repository: collectionRepository.gameRepository);
 
   @override
-  Future<Game> createFuture(AddItem<Game> event) {
+  Future<Game> create(AddItem<Game> event) {
     final GameEntity entity = GameMapper.modelToEntity(event.item);
     final Future<GameEntity> entityFuture = repository.create(entity);
     return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<Game> event) {
+  Future<Object?> delete(DeleteItem<Game> event) {
     final GameEntity entity = GameMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

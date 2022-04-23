@@ -14,8 +14,8 @@ class ItemListLoading extends ItemListState {}
 
 class ItemListLoaded<T extends Item> extends ItemListState {
   const ItemListLoaded(
-    this.items, [
-    this.viewIndex = 0,
+    this.items,
+    this.viewIndex, [
     this.year,
     this.page = 0,
     ListStyle? style,

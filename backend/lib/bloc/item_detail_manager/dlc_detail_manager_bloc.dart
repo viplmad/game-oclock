@@ -14,7 +14,7 @@ class DLCDetailManagerBloc
   }) : super(id: DLCID(itemId), repository: collectionRepository.dlcRepository);
 
   @override
-  Future<DLC> updateFuture(UpdateItemField<DLC> event) {
+  Future<DLC> update(UpdateItemField<DLC> event) {
     final DLCEntity entity = DLCMapper.modelToEntity(event.item);
     final DLCEntity updatedEntity = DLCMapper.modelToEntity(event.updatedItem);
     final Future<DLCEntity> entityFuture =

@@ -17,7 +17,7 @@ class StoreDetailManagerBloc extends ItemDetailManagerBloc<Store, StoreEntity,
         );
 
   @override
-  Future<Store> updateFuture(UpdateItemField<Store> event) {
+  Future<Store> update(UpdateItemField<Store> event) {
     final StoreEntity entity = StoreMapper.modelToEntity(event.item);
     final StoreEntity updatedEntity =
         StoreMapper.modelToEntity(event.updatedItem);

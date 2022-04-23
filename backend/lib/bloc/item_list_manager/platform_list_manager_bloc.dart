@@ -13,7 +13,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform,
   }) : super(repository: collectionRepository.platformRepository);
 
   @override
-  Future<Platform> createFuture(AddItem<Platform> event) {
+  Future<Platform> create(AddItem<Platform> event) {
     final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
     final Future<PlatformEntity> entityFuture = repository.create(entity);
     return PlatformMapper.futureEntityToModel(
@@ -23,7 +23,7 @@ class PlatformListManagerBloc extends ItemListManagerBloc<Platform,
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<Platform> event) {
+  Future<Object?> delete(DeleteItem<Platform> event) {
     final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

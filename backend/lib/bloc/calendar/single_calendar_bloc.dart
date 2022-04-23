@@ -76,8 +76,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     );
 
     try {
-      final List<GameTimeLog> timeLogs = await getReadAllTimeLogsStream();
-      final List<GameFinish> finishDates = await getReadAllFinishDatesStream();
+      final List<GameTimeLog> timeLogs = await getAllTimeLogs();
+      final List<GameFinish> finishDates = await getAllFinishDates();
 
       final Set<DateTime> logDates = timeLogs.fold(
         SplayTreeSet<DateTime>(),
@@ -640,14 +640,14 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   @protected
-  Future<List<GameTimeLog>> getReadAllTimeLogsStream() {
+  Future<List<GameTimeLog>> getAllTimeLogs() {
     final Future<List<GameTimeLogEntity>> entityListFuture =
         gameTimeLogRepository.findAllFromGame(id);
     return GameTimeLogMapper.futureEntityListToModelList(entityListFuture);
   }
 
   @protected
-  Future<List<GameFinish>> getReadAllFinishDatesStream() {
+  Future<List<GameFinish>> getAllFinishDates() {
     final Future<List<GameFinishEntity>> entityListFuture =
         gameFinishRepository.findAllFromGame(id);
     return GameFinishMapper.futureEntityListToModelList(entityListFuture);

@@ -21,6 +21,9 @@ abstract class GameCollectionLocalisations {
   String get retryString;
   String get changeRepositoryString;
 
+  String get changeStartGameViewString;
+  String get startGameViewString;
+
   String get aboutString;
   String get licenseInfoString;
 

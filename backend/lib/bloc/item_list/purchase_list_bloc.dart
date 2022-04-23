@@ -19,14 +19,14 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity,
         );
 
   @override
-  Future<List<Purchase>> getReadAllStream([int? page]) {
-    final Future<List<PurchaseEntity>> entityListFuture =
-        repository.findAllWithView(PurchaseView.main, page);
-    return PurchaseMapper.futureEntityListToModelList(entityListFuture);
+  Future<ViewParameters> getStartViewIndex() {
+    return Future<ViewParameters>.value(
+      ViewParameters(PurchaseView.main.index),
+    );
   }
 
   @override
-  Future<List<Purchase>> getReadViewStream(int viewIndex, [int? page]) {
+  Future<List<Purchase>> getAllWithView(int viewIndex, [int? page]) {
     final PurchaseView view = PurchaseView.values[viewIndex];
     final Future<List<PurchaseEntity>> entityListFuture =
         repository.findAllWithView(view, page);
@@ -34,7 +34,7 @@ class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity,
   }
 
   @override
-  Future<List<Purchase>> getReadYearViewStream(
+  Future<List<Purchase>> getAllWithYearView(
     int viewIndex,
     int year, [
     int? page,

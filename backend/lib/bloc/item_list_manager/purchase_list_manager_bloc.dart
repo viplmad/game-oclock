@@ -13,14 +13,14 @@ class PurchaseListManagerBloc extends ItemListManagerBloc<Purchase,
   }) : super(repository: collectionRepository.purchaseRepository);
 
   @override
-  Future<Purchase> createFuture(AddItem<Purchase> event) {
+  Future<Purchase> create(AddItem<Purchase> event) {
     final PurchaseEntity entity = PurchaseMapper.modelToEntity(event.item);
     final Future<PurchaseEntity> entityFuture = repository.create(entity);
     return PurchaseMapper.futureEntityToModel(entityFuture);
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<Purchase> event) {
+  Future<Object?> delete(DeleteItem<Purchase> event) {
     final PurchaseEntity entity = PurchaseMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

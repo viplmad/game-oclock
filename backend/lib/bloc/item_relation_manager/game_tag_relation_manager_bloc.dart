@@ -20,7 +20,7 @@ class GameTagRelationManagerBloc<W extends Item>
   final GameRepository gameRepository;
 
   @override
-  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelation(AddItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -30,11 +30,11 @@ class GameTagRelationManagerBloc<W extends Item>
         return gameRepository.relateGameTag(otherEntity.createId(), id);
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelation(event);
   }
 
   @override
-  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -44,6 +44,6 @@ class GameTagRelationManagerBloc<W extends Item>
         return gameRepository.unrelateGameTag(otherEntity.createId(), id);
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelation(event);
   }
 }

@@ -35,7 +35,7 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
     await _checkConnection(emit);
 
     try {
-      final T item = await createFuture(event);
+      final T item = await create(event);
       emit(
         ItemAdded<T>(item),
       );
@@ -57,7 +57,7 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
     await _checkConnection(emit);
 
     try {
-      await deleteFuture(event);
+      await delete(event);
       emit(
         ItemDeleted<T>(event.item),
       );
@@ -73,7 +73,7 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
   }
 
   @protected
-  Future<T> createFuture(AddItem<T> event);
+  Future<T> create(AddItem<T> event);
   @protected
-  Future<Object?> deleteFuture(DeleteItem<T> event);
+  Future<Object?> delete(DeleteItem<T> event);
 }

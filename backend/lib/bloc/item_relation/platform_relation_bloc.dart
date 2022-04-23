@@ -25,7 +25,7 @@ class PlatformRelationBloc<W extends Item>
   final SystemRepository systemRepository;
 
   @override
-  Future<List<W>> getRelationStream() {
+  Future<List<W>> getRelationItems() {
     switch (W) {
       case Game:
         final Future<List<GameEntity>> entityListFuture =
@@ -43,6 +43,6 @@ class PlatformRelationBloc<W extends Item>
         ) as Future<List<W>>;
     }
 
-    return super.getRelationStream();
+    return super.getRelationItems();
   }
 }

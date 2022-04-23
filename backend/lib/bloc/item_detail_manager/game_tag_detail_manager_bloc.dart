@@ -17,7 +17,7 @@ class GameTagDetailManagerBloc extends ItemDetailManagerBloc<GameTag,
         );
 
   @override
-  Future<GameTag> updateFuture(UpdateItemField<GameTag> event) {
+  Future<GameTag> update(UpdateItemField<GameTag> event) {
     final GameTagEntity entity = GameTagMapper.modelToEntity(event.item);
     final GameTagEntity updatedEntity =
         GameTagMapper.modelToEntity(event.updatedItem);

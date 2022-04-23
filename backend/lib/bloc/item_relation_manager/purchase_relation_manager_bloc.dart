@@ -34,7 +34,7 @@ class PurchaseRelationManagerBloc<W extends Item>
   final StoreRepository storeRepository;
 
   @override
-  Future<Object?> addRelationFuture(AddItemRelation<W> event) {
+  Future<Object?> addRelation(AddItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -58,11 +58,11 @@ class PurchaseRelationManagerBloc<W extends Item>
         );
     }
 
-    return super.addRelationFuture(event);
+    return super.addRelation(event);
   }
 
   @override
-  Future<Object?> deleteRelationFuture(DeleteItemRelation<W> event) {
+  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
     final W otherItem = event.otherItem;
 
     switch (W) {
@@ -84,6 +84,6 @@ class PurchaseRelationManagerBloc<W extends Item>
         );
     }
 
-    return super.deleteRelationFuture(event);
+    return super.deleteRelation(event);
   }
 }

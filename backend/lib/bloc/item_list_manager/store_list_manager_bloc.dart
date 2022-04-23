@@ -13,7 +13,7 @@ class StoreListManagerBloc
   }) : super(repository: collectionRepository.storeRepository);
 
   @override
-  Future<Store> createFuture(AddItem<Store> event) {
+  Future<Store> create(AddItem<Store> event) {
     final StoreEntity entity = StoreMapper.modelToEntity(event.item);
     final Future<StoreEntity> entityFuture = repository.create(entity);
     return StoreMapper.futureEntityToModel(
@@ -23,7 +23,7 @@ class StoreListManagerBloc
   }
 
   @override
-  Future<Object?> deleteFuture(DeleteItem<Store> event) {
+  Future<Object?> delete(DeleteItem<Store> event) {
     final StoreEntity entity = StoreMapper.modelToEntity(event.item);
     return repository.deleteById(entity.createId());
   }

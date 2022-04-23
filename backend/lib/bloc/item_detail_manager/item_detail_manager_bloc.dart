@@ -41,7 +41,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
 
     try {
       if (event.item != event.updatedItem) {
-        final T updatedItem = await updateFuture(event);
+        final T updatedItem = await update(event);
         emit(
           ItemFieldUpdated<T>(updatedItem),
         );
@@ -124,7 +124,7 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
   }
 
   @protected
-  Future<T> updateFuture(UpdateItemField<T> event);
+  Future<T> update(UpdateItemField<T> event);
   @protected
   external Future<T> addImage(AddItemImage<T> event);
   @protected
