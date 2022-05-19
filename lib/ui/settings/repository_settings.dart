@@ -20,7 +20,6 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
 import '../common/fab_utils.dart';
-import '../common/shape_utils.dart';
 import '../common/tabs_delegate.dart';
 import '../route_constants.dart';
 
@@ -31,7 +30,7 @@ class RepositorySettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RepositorySettingsManagerBloc _managerBloc =
+    final RepositorySettingsManagerBloc managerBloc =
         RepositorySettingsManagerBloc();
 
     return MultiBlocProvider(
@@ -39,13 +38,13 @@ class RepositorySettings extends StatelessWidget {
         BlocProvider<RepositorySettingsBloc>(
           create: (BuildContext context) {
             return RepositorySettingsBloc(
-              managerBloc: _managerBloc,
+              managerBloc: managerBloc,
             )..add(LoadRepositorySettings());
           },
         ),
         BlocProvider<RepositorySettingsManagerBloc>(
           create: (BuildContext context) {
-            return _managerBloc;
+            return managerBloc;
           },
         ),
       ],
@@ -68,7 +67,6 @@ class RepositorySettings extends StatelessWidget {
               label:
                   Text(GameCollectionLocalisations.of(context).connectString),
               icon: const Icon(Icons.send),
-              shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).connectString,
               onPressed: active
                   ? () {
@@ -392,17 +390,18 @@ class PostgresTextDialog extends TextDialog {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final PostgresCredentials _instance = PostgresCredentials();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final PostgresCredentials defaultInstance = PostgresCredentials();
 
     return AlertDialog(
       title: const Text(GameCollectionLocalisations.postgresString),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -411,7 +410,7 @@ class PostgresTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).hostString,
                     initialValue: instance?.host,
                     onSaved: (String? value) {
-                      _instance.host = value ?? _instance.host;
+                      defaultInstance.host = value ?? defaultInstance.host;
                     },
                   ),
                   numberFormField(
@@ -419,8 +418,8 @@ class PostgresTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).portString,
                     initialValue: instance?.port,
                     onSaved: (String? value) {
-                      _instance.port =
-                          int.parse(value ?? _instance.port.toString());
+                      defaultInstance.port =
+                          int.parse(value ?? defaultInstance.port.toString());
                     },
                   ),
                   textFormField(
@@ -428,7 +427,8 @@ class PostgresTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).databaseString,
                     initialValue: instance?.database,
                     onSaved: (String? value) {
-                      _instance.database = value ?? _instance.database;
+                      defaultInstance.database =
+                          value ?? defaultInstance.database;
                     },
                   ),
                   textFormField(
@@ -436,7 +436,7 @@ class PostgresTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).userString,
                     initialValue: instance?.user,
                     onSaved: (String? value) {
-                      _instance.user = value ?? _instance.user;
+                      defaultInstance.user = value ?? defaultInstance.user;
                     },
                   ),
                   textFormField(
@@ -445,7 +445,8 @@ class PostgresTextDialog extends TextDialog {
                     initialValue: instance?.password,
                     obscureText: true,
                     onSaved: (String? value) {
-                      _instance.password = value ?? _instance.password;
+                      defaultInstance.password =
+                          value ?? defaultInstance.password;
                     },
                   ),
                 ],
@@ -464,10 +465,10 @@ class PostgresTextDialog extends TextDialog {
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
           onPressed: () {
-            if (_formKey.currentState != null &&
-                _formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              Navigator.maybePop<PostgresInstance>(context, _instance);
+            if (formKey.currentState != null &&
+                formKey.currentState!.validate()) {
+              formKey.currentState!.save();
+              Navigator.maybePop<PostgresInstance>(context, defaultInstance);
             }
           },
         ),
@@ -484,17 +485,18 @@ class CloudinaryTextDialog extends TextDialog {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final CloudinaryCredentials _instance = CloudinaryCredentials();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final CloudinaryCredentials defaultInstance = CloudinaryCredentials();
 
     return AlertDialog(
       title: const Text(GameCollectionLocalisations.cloudinaryString),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -503,7 +505,8 @@ class CloudinaryTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).cloudNameString,
                     initialValue: instance?.cloudName,
                     onSaved: (String? value) {
-                      _instance.cloudName = value ?? _instance.cloudName;
+                      defaultInstance.cloudName =
+                          value ?? defaultInstance.cloudName;
                     },
                   ),
                   numberFormField(
@@ -511,8 +514,8 @@ class CloudinaryTextDialog extends TextDialog {
                         GameCollectionLocalisations.of(context).apiKeyString,
                     initialValue: instance?.apiKey,
                     onSaved: (String? value) {
-                      _instance.apiKey =
-                          int.parse(value ?? _instance.apiKey.toString());
+                      defaultInstance.apiKey =
+                          int.parse(value ?? defaultInstance.apiKey.toString());
                     },
                   ),
                   textFormField(
@@ -521,7 +524,8 @@ class CloudinaryTextDialog extends TextDialog {
                     initialValue: instance?.apiSecret,
                     obscureText: true,
                     onSaved: (String? value) {
-                      _instance.apiSecret = value ?? _instance.apiSecret;
+                      defaultInstance.apiSecret =
+                          value ?? defaultInstance.apiSecret;
                     },
                   ),
                 ],
@@ -540,10 +544,13 @@ class CloudinaryTextDialog extends TextDialog {
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
           onPressed: () {
-            if (_formKey.currentState != null &&
-                _formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              Navigator.maybePop<CloudinaryCredentials>(context, _instance);
+            if (formKey.currentState != null &&
+                formKey.currentState!.validate()) {
+              formKey.currentState!.save();
+              Navigator.maybePop<CloudinaryCredentials>(
+                context,
+                defaultInstance,
+              );
             }
           },
         ),

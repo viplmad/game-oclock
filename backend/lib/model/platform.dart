@@ -14,9 +14,10 @@ class Platform extends Item {
     required this.type,
   }) : super(
           uniqueId: 'Pl$id',
-          hasImage: true,
           queryableTerms: name,
         );
+
+  static const bool hasImage = true;
 
   final int id;
   final String name;

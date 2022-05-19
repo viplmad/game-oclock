@@ -50,6 +50,7 @@ class PurchaseSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PurchaseSearchBody<PurchaseSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Purchase) onTap,
     required bool allowNewButton,
@@ -78,6 +79,7 @@ class PurchaseLocalSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PurchaseSearchBody<ItemLocalSearchBloc<Purchase>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Purchase) onTap,
     required bool allowNewButton,

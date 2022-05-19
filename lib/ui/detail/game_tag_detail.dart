@@ -51,7 +51,7 @@ class GameTagDetail
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final GameTagRelationManagerBloc<Game> _gameTagRelationManagerBloc =
+    final GameTagRelationManagerBloc<Game> gameTagRelationManagerBloc =
         GameTagRelationManagerBloc<Game>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -60,17 +60,18 @@ class GameTagDetail
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Game>(
         collectionRepository,
-        _gameTagRelationManagerBloc,
+        gameTagRelationManagerBloc,
       ),
       BlocProvider<GameTagRelationManagerBloc<Game>>(
         create: (BuildContext context) {
-          return _gameTagRelationManagerBloc;
+          return gameTagRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameTagDetailBody detailBodyBuilder() {
     return _GameTagDetailBody(
       itemId: item.id,
@@ -102,7 +103,11 @@ class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc,
     Key? key,
     required this.itemId,
     void Function(GameTag? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: GameTag.hasImage,
+        );
 
   final int itemId;
 
@@ -129,6 +134,18 @@ class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc,
         relationName: GameCollectionLocalisations.of(context).gamesString,
         relationTypeName: GameCollectionLocalisations.of(context).gameString,
       )
+    ];
+  }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        order: order++,
+      ),
     ];
   }
 }

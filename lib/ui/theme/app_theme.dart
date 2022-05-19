@@ -8,6 +8,7 @@ class AppTheme {
 
   static ThemeData themeData(Brightness brightness) {
     return ThemeData(
+      useMaterial3: true,
       brightness: brightness,
       primarySwatch: _primarySwatch,
       indicatorColor: Colors.white,

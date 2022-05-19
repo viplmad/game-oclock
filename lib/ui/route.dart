@@ -295,7 +295,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   }
 
   return _pageRoute(
-    Container(),
+    const SizedBox(),
   );
 }
 

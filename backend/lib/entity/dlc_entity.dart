@@ -10,7 +10,7 @@ class DLCEntityData {
 
   static const String table = 'DLC';
 
-  static const String relationField = table + '_ID';
+  static const String relationField = '${table}_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';

@@ -44,6 +44,7 @@ class GameTagSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameTagSearchBody<GameTagSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, GameTag) onTap,
     required bool allowNewButton,
@@ -72,6 +73,7 @@ class GameTagLocalSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameTagSearchBody<ItemLocalSearchBloc<GameTag>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, GameTag) onTap,
     required bool allowNewButton,

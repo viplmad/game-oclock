@@ -55,31 +55,31 @@ class GameDetail
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final GameRelationManagerBloc<Platform> _platformRelationManagerBloc =
+    final GameRelationManagerBloc<Platform> platformRelationManagerBloc =
         GameRelationManagerBloc<Platform>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<Purchase> _purchaseRelationManagerBloc =
+    final GameRelationManagerBloc<Purchase> purchaseRelationManagerBloc =
         GameRelationManagerBloc<Purchase>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<DLC> _dlcRelationManagerBloc =
+    final GameRelationManagerBloc<DLC> dlcRelationManagerBloc =
         GameRelationManagerBloc<DLC>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<GameTag> _tagRelationManagerBloc =
+    final GameRelationManagerBloc<GameTag> tagRelationManagerBloc =
         GameRelationManagerBloc<GameTag>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final GameRelationManagerBloc<GameFinish> _finishRelationManagerBloc =
+    final GameRelationManagerBloc<GameFinish> finishRelationManagerBloc =
         GameRelationManagerBloc<GameFinish>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -88,53 +88,54 @@ class GameDetail
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Platform>(
         collectionRepository,
-        _platformRelationManagerBloc,
+        platformRelationManagerBloc,
       ),
       blocProviderRelationBuilder<Purchase>(
         collectionRepository,
-        _purchaseRelationManagerBloc,
+        purchaseRelationManagerBloc,
       ),
       blocProviderRelationBuilder<DLC>(
         collectionRepository,
-        _dlcRelationManagerBloc,
+        dlcRelationManagerBloc,
       ),
       blocProviderRelationBuilder<GameTag>(
         collectionRepository,
-        _tagRelationManagerBloc,
+        tagRelationManagerBloc,
       ),
       blocProviderRelationBuilder<GameFinish>(
         collectionRepository,
-        _finishRelationManagerBloc,
+        finishRelationManagerBloc,
       ),
       BlocProvider<GameRelationManagerBloc<Platform>>(
         create: (BuildContext context) {
-          return _platformRelationManagerBloc;
+          return platformRelationManagerBloc;
         },
       ),
       BlocProvider<GameRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
-          return _purchaseRelationManagerBloc;
+          return purchaseRelationManagerBloc;
         },
       ),
       BlocProvider<GameRelationManagerBloc<DLC>>(
         create: (BuildContext context) {
-          return _dlcRelationManagerBloc;
+          return dlcRelationManagerBloc;
         },
       ),
       BlocProvider<GameRelationManagerBloc<GameTag>>(
         create: (BuildContext context) {
-          return _tagRelationManagerBloc;
+          return tagRelationManagerBloc;
         },
       ),
       BlocProvider<GameRelationManagerBloc<GameFinish>>(
         create: (BuildContext context) {
-          return _finishRelationManagerBloc;
+          return finishRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameDetailBody detailBodyBuilder() {
     return _GameDetailBody(
       itemId: item.id,
@@ -165,7 +166,11 @@ class _GameDetailBody
     Key? key,
     required this.itemId,
     void Function(Game? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: Game.hasImage,
+        );
 
   final int itemId;
 
@@ -311,6 +316,87 @@ class _GameDetailBody
       ),
     ];
   }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).editionFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).releaseYearFieldString,
+        order: order++,
+      ),
+      itemSkeletonChipField(
+        fieldName: GameCollectionLocalisations.of(context).statusFieldString,
+        order: order++,
+      ),
+      itemSkeletonRatingField(
+        fieldName: GameCollectionLocalisations.of(context).ratingFieldString,
+        order: order++,
+      ),
+      itemSkeletonLongTextField(
+        fieldName: GameCollectionLocalisations.of(context).thoughtsFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).saveFolderFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).screenshotFolderFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).backupFieldString,
+        order: order++,
+      ),
+      ListTileTheme.merge(
+        child: ListTile(
+          title: Text(
+            GameCollectionLocalisations.of(context).singleCalendarViewString,
+          ),
+          trailing: const Icon(Icons.arrow_forward),
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              gameSingleCalendarRoute,
+              arguments: SingleGameCalendarArguments(
+                itemId: itemId,
+                onUpdate: () {
+                  BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
+                },
+              ),
+            );
+          },
+        ),
+      ),
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).timeLogsFieldString,
+        order: order++,
+      ),
+      SkeletonGameFinishDateList(
+        fieldName:
+            GameCollectionLocalisations.of(context).finishDatesFieldString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).finishDateFieldString,
+        order: order++,
+        onUpdate: () {
+          BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
+        },
+      ),
+    ];
+  }
 }
 
 // ignore: must_be_immutable
@@ -327,6 +413,27 @@ class GameFinishDateList extends FinishList<Game, GameFinish,
           fieldName: fieldName,
           value: value,
           relationTypeName: relationTypeName,
+          onUpdate: onUpdate,
+        );
+
+  @override
+  GameFinish createFinish(DateTime dateTime) => GameFinish(dateTime: dateTime);
+}
+
+// ignore: must_be_immutable
+class SkeletonGameFinishDateList extends SkeletonFinishList<Game, GameFinish,
+    GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
+  SkeletonGameFinishDateList({
+    Key? key,
+    required String fieldName,
+    required String relationTypeName,
+    required int order,
+    required void Function() onUpdate,
+  }) : super(
+          key: key,
+          fieldName: fieldName,
+          relationTypeName: relationTypeName,
+          order: order,
           onUpdate: onUpdate,
         );
 

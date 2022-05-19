@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import 'shape_utils.dart';
+
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({
     Key? key,
@@ -36,8 +38,12 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
+            decoration: BoxDecoration(
+              border: Border.all(),
+              color: Theme.of(context).primaryColor,
+              borderRadius: ShapeUtils.dialogBorderRadius,
+            ),
             padding: const EdgeInsets.all(16.0),
-            color: Theme.of(context).primaryColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

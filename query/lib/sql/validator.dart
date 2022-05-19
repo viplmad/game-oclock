@@ -80,7 +80,7 @@ class Validator {
   }
 
   static String formatQueryBuilder(Query value, SQLBuilderOptions options) {
-    return '(' + SQLQueryBuilder.buildString(value, options) + ')';
+    return '(${SQLQueryBuilder.buildString(value, options)})';
   }
 
   static String escapeValue(String value, SQLBuilderOptions options) {

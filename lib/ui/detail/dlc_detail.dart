@@ -52,19 +52,19 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final DLCRelationManagerBloc<Game> _gameRelationManagerBloc =
+    final DLCRelationManagerBloc<Game> gameRelationManagerBloc =
         DLCRelationManagerBloc<Game>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final DLCRelationManagerBloc<Purchase> _purchaseRelationManagerBloc =
+    final DLCRelationManagerBloc<Purchase> purchaseRelationManagerBloc =
         DLCRelationManagerBloc<Purchase>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final DLCRelationManagerBloc<DLCFinish> _finishRelationManagerBloc =
+    final DLCRelationManagerBloc<DLCFinish> finishRelationManagerBloc =
         DLCRelationManagerBloc<DLCFinish>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -73,35 +73,36 @@ class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Game>(
         collectionRepository,
-        _gameRelationManagerBloc,
+        gameRelationManagerBloc,
       ),
       blocProviderRelationBuilder<Purchase>(
         collectionRepository,
-        _purchaseRelationManagerBloc,
+        purchaseRelationManagerBloc,
       ),
       blocProviderRelationBuilder<DLCFinish>(
         collectionRepository,
-        _finishRelationManagerBloc,
+        finishRelationManagerBloc,
       ),
       BlocProvider<DLCRelationManagerBloc<Game>>(
         create: (BuildContext context) {
-          return _gameRelationManagerBloc;
+          return gameRelationManagerBloc;
         },
       ),
       BlocProvider<DLCRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
-          return _purchaseRelationManagerBloc;
+          return purchaseRelationManagerBloc;
         },
       ),
       BlocProvider<DLCRelationManagerBloc<DLCFinish>>(
         create: (BuildContext context) {
-          return _finishRelationManagerBloc;
+          return finishRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _DLCDetailBody detailBodyBuilder() {
     return _DLCDetailBody(
       onUpdate: onUpdate,
@@ -130,7 +131,11 @@ class _DLCDetailBody
   _DLCDetailBody({
     Key? key,
     void Function(DLC? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: DLC.hasImage,
+        );
 
   @override
   String itemTitle(DLC item) => DLCTheme.itemTitle(item);
@@ -181,6 +186,33 @@ class _DLCDetailBody
       ),
     ];
   }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).releaseYearFieldString,
+        order: order++,
+      ),
+      SkeletonDLCFinishList(
+        fieldName:
+            GameCollectionLocalisations.of(context).finishDatesFieldString,
+        relationTypeName:
+            GameCollectionLocalisations.of(context).finishDateFieldString,
+        order: order++,
+        onUpdate: () {
+          BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
+        },
+      ),
+    ];
+  }
 }
 
 // ignore: must_be_immutable
@@ -197,6 +229,27 @@ class DLCFinishList extends FinishList<DLC, DLCFinish,
           fieldName: fieldName,
           value: value,
           relationTypeName: relationTypeName,
+          onUpdate: onUpdate,
+        );
+
+  @override
+  DLCFinish createFinish(DateTime dateTime) => DLCFinish(dateTime: dateTime);
+}
+
+// ignore: must_be_immutable
+class SkeletonDLCFinishList extends SkeletonFinishList<DLC, DLCFinish,
+    DLCRelationBloc<DLCFinish>, DLCRelationManagerBloc<DLCFinish>> {
+  SkeletonDLCFinishList({
+    Key? key,
+    required String fieldName,
+    required String relationTypeName,
+    required int order,
+    required void Function() onUpdate,
+  }) : super(
+          key: key,
+          fieldName: fieldName,
+          relationTypeName: relationTypeName,
+          order: order,
           onUpdate: onUpdate,
         );
 

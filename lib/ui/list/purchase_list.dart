@@ -40,6 +40,8 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
         );
 
         if (year != null) {
+          // Ignore because we will never get to use use unmounted context
+          // ignore: use_build_context_synchronously
           BlocProvider.of<PurchaseListBloc>(context)
               .add(UpdateYearView(selectedViewIndex, year));
         }
@@ -63,7 +65,7 @@ class PurchaseFAB extends ItemFAB<Purchase, PurchaseListManagerBloc> {
     Key? key,
   }) : super(
           key: key,
-          themeColor: PurchaseTheme.primaryColour,
+          themeColor: PurchaseTheme.secondaryColour,
         );
 
   @override
@@ -96,6 +98,7 @@ class PurchaseList
       GameCollectionLocalisations.of(context).purchaseString;
 
   @override
+  // ignore: library_private_types_in_public_api
   _PurchaseListBody itemListBodyBuilder({
     required List<Purchase> items,
     required int viewIndex,
@@ -143,9 +146,7 @@ class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   String viewTitle(BuildContext context) =>
       PurchaseTheme.views(context).elementAt(viewIndex) +
       ((viewYear != null)
-          ? ' (' +
-              GameCollectionLocalisations.of(context).formatYear(viewYear!) +
-              ')'
+          ? ' (${GameCollectionLocalisations.of(context).formatYear(viewYear!)})'
           : '');
 
   @override

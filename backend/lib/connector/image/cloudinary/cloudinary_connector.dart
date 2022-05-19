@@ -91,15 +91,14 @@ class CloudinaryConnector extends ImageConnector {
 
   //#region Helpers
   String getCompleteResURL(String folderName, String imageFilename) {
-    final String url = _baseRESURL +
-        _instance.cloudName +
-        '/image/upload/$folderName/$imageFilename';
+    final String url =
+        '$_baseRESURL${_instance.cloudName}/image/upload/$folderName/$imageFilename';
 
     return url;
   }
 
   String getCompleteAPIURL() {
-    final String url = _baseAPIURL + _instance.cloudName + '/image/upload';
+    final String url = '$_baseAPIURL${_instance.cloudName}/image/upload';
 
     return url;
   }
@@ -108,7 +107,7 @@ class CloudinaryConnector extends ImageConnector {
     String filename = '';
 
     if (response is CloudinaryResponseSuccess) {
-      filename = response.publicId!.split('/').last + '.' + response.format!;
+      filename = '${response.publicId!.split('/').last}.${response.format!}';
     } else if (response is CloudinaryResponseError) {
       throw Exception(response.error);
     }

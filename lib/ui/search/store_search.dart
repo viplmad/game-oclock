@@ -46,6 +46,7 @@ class StoreSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _StoreSearchBody<StoreSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Store) onTap,
     required bool allowNewButton,
@@ -77,6 +78,7 @@ class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _StoreSearchBody<ItemLocalSearchBloc<Store>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Store) onTap,
     required bool allowNewButton,

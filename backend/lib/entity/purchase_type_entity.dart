@@ -10,7 +10,7 @@ class PurchaseTypeEntityData {
 
   static const String table = 'Type';
 
-  static const String relationField = table + '_ID';
+  static const String relationField = '${table}_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';

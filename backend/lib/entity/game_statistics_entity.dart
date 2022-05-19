@@ -7,24 +7,24 @@ class GameStatisticsData {
   GameStatisticsData._();
 
   static const String countField = 'count';
-  static const String ratingSumField = 'avg' + GameEntityData.ratingField;
+  static const String ratingSumField = 'avg${GameEntityData.ratingField}';
   static const String minReleaseYearField =
-      'min' + GameEntityData.releaseYearField;
+      'min${GameEntityData.releaseYearField}';
   static const String maxReleaseYearField =
-      'max' + GameEntityData.releaseYearField;
+      'max${GameEntityData.releaseYearField}';
   static const String lowPriorityCountField =
-      'count' + GameEntityData.lowPriorityValue;
-  static const String nextUpCountField = 'count' + GameEntityData.nextUpValue;
-  static const String playingCountField = 'count' + GameEntityData.playingValue;
-  static const String playedCountField = 'count' + GameEntityData.playedValue;
+      'count${GameEntityData.lowPriorityValue}';
+  static const String nextUpCountField = 'count${GameEntityData.nextUpValue}';
+  static const String playingCountField = 'count${GameEntityData.playingValue}';
+  static const String playedCountField = 'count${GameEntityData.playedValue}';
 
   static const String finishCountField = GameStatisticsData.countField;
   static const String minFinishDateField =
-      'min' + GameFinishEntityData.dateField;
+      'min${GameFinishEntityData.dateField}';
   static const String maxFinishDateField =
-      'max' + GameFinishEntityData.dateField;
+      'max${GameFinishEntityData.dateField}';
 
-  static const String timeLogSumField = 'sum' + GameTimeLogEntityData.timeField;
+  static const String timeLogSumField = 'sum${GameTimeLogEntityData.timeField}';
 }
 
 class GameStatisticsEntity extends Equatable {

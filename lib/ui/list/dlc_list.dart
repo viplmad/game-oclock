@@ -34,7 +34,7 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
     Key? key,
   }) : super(
           key: key,
-          themeColor: DLCTheme.primaryColour,
+          themeColor: DLCTheme.secondaryColour,
         );
 
   @override
@@ -66,6 +66,7 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
       GameCollectionLocalisations.of(context).dlcString;
 
   @override
+  // ignore: library_private_types_in_public_api
   _DLCListBody itemListBodyBuilder({
     required List<DLC> items,
     required int viewIndex,

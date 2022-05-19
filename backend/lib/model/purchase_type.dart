@@ -6,9 +6,10 @@ class PurchaseType extends Item {
     required this.name,
   }) : super(
           uniqueId: 'Ty$id',
-          hasImage: false,
           queryableTerms: name,
         );
+
+  static const bool hasImage = false;
 
   final int id;
   final String name;

@@ -34,7 +34,7 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
     Key? key,
   }) : super(
           key: key,
-          themeColor: PlatformTheme.primaryColour,
+          themeColor: PlatformTheme.primaryColour, // Keep primary, both black
         );
 
   @override
@@ -65,6 +65,7 @@ class PlatformList
       GameCollectionLocalisations.of(context).platformString;
 
   @override
+  // ignore: library_private_types_in_public_api
   _PlatformListBody itemListBodyBuilder({
     required List<Platform> items,
     required int viewIndex,

@@ -25,9 +25,10 @@ class Game extends Item {
     required this.totalTime,
   }) : super(
           uniqueId: 'G$id',
-          hasImage: true,
           queryableTerms: name + edition,
         );
+
+  static const bool hasImage = true;
 
   final int id;
   final String name;

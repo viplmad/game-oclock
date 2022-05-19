@@ -44,6 +44,7 @@ class SystemSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _SystemSearchBody<SystemSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, System) onTap,
     required bool allowNewButton,
@@ -71,6 +72,7 @@ class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _SystemSearchBody<ItemLocalSearchBloc<System>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, System) onTap,
     required bool allowNewButton,

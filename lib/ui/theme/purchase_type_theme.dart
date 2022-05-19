@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show PurchaseType;
 
 import '../common/item_view.dart';
 
@@ -14,7 +14,7 @@ class PurchaseTypeTheme {
   ) {
     return ItemCard(
       title: _itemTitle(item),
-      hasImage: item.hasImage,
+      hasImage: PurchaseType.hasImage,
       onTap: onTap(context, item),
     );
   }

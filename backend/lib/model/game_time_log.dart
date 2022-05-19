@@ -6,7 +6,6 @@ class GameTimeLog extends Item implements Comparable<GameTimeLog> {
     required this.time,
   }) : super(
           uniqueId: 'GT$dateTime',
-          hasImage: false,
           queryableTerms: '',
         );
 

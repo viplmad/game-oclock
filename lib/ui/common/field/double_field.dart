@@ -121,9 +121,7 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
             Navigator.maybePop<double>(
               context,
               double.tryParse(
-                _integerPart.toString() +
-                    '.' +
-                    _decimalPart.toString().padLeft(2, '0'),
+                '$_integerPart.${_decimalPart.toString().padLeft(2, '0')}',
               ),
             );
           },

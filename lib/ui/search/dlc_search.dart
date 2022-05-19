@@ -45,6 +45,7 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, DLC) onTap,
     required bool allowNewButton,
@@ -76,6 +77,7 @@ class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, DLC) onTap,
     required bool allowNewButton,

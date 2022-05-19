@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:game_collection/ui/common/shape_utils.dart';
+
+import '../skeleton.dart';
 
 class EnumField extends StatelessWidget {
   const EnumField({
@@ -35,10 +38,11 @@ class EnumField extends StatelessWidget {
               final Color optionColour = enumColours.elementAt(index);
 
               return ChoiceChip(
+                shape: ShapeUtils.chipShapeBorder,
                 label: Text(option),
                 selected: value == index,
                 selectedColor: optionColour.withOpacity(0.5),
-                pressElevation: 2.0,
+                pressElevation: 2.0, // Default is very high
                 onSelected: (bool newChoice) {
                   if (newChoice) {
                     update(index);
@@ -47,6 +51,42 @@ class EnumField extends StatelessWidget {
               );
             },
           ).toList(growable: false),
+        ),
+      ],
+    );
+  }
+}
+
+class SkeletonEnumField extends StatelessWidget {
+  const SkeletonEnumField({
+    Key? key,
+    required this.fieldName,
+    this.order = 0,
+  }) : super(key: key);
+
+  final String fieldName;
+  final int order;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+          child: Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 8.0,
+            bottom: 8.0,
+          ),
+          child: Skeleton(
+            height: 16,
+            order: order,
+          ),
         ),
       ],
     );

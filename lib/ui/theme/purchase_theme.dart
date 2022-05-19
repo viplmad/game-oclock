@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Purchase;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -44,7 +44,8 @@ class PurchaseTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
-      hasImage: item.hasImage,
+      hasImage: Purchase.hasImage,
+      color: primaryColour,
       onTap: onTap(context, item),
     );
   }
@@ -54,9 +55,6 @@ class PurchaseTheme {
   }
 
   static String _itemSubtitle(BuildContext context, Purchase item) {
-    return GameCollectionLocalisations.of(context).formatEuro(item.price) +
-        ' · ' +
-        GameCollectionLocalisations.of(context)
-            .formatPercentage(item.discount * 100);
+    return '${GameCollectionLocalisations.of(context).formatEuro(item.price)} · ${GameCollectionLocalisations.of(context).formatPercentage(item.discount * 100)}';
   }
 }

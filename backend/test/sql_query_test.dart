@@ -8,16 +8,15 @@ import 'package:backend/repository/query/query.dart';
 import 'package:backend/entity/entity.dart';
 
 void main() {
-  final SQLBuilderOptions _builderOptions =
+  final SQLBuilderOptions builderOptions =
       SQLBuilderOptions(quoteStringWithFieldsTablesSeparator: false);
 
   void printQuery(Query query) {
-    final String sqlString =
-        SQLQueryBuilder.buildString(query, _builderOptions);
+    final String sqlString = SQLQueryBuilder.buildString(query, builderOptions);
     print('SQL: $sqlString');
 
     final Map<String, Object?> sqlSubstitutionValues =
-        SQLQueryBuilder.buildSubstitutionValues(query, _builderOptions);
+        SQLQueryBuilder.buildSubstitutionValues(query, builderOptions);
     print('Substitution values: $sqlSubstitutionValues');
 
     print(

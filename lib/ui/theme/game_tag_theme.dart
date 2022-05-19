@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show GameTag;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -31,7 +31,8 @@ class GameTagTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      hasImage: item.hasImage,
+      hasImage: GameTag.hasImage,
+      color: primaryColour,
       onTap: onTap(context, item),
     );
   }

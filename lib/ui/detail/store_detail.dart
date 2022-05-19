@@ -51,7 +51,7 @@ class StoreDetail
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final StoreRelationManagerBloc<Purchase> _purchaseRelationManagerBloc =
+    final StoreRelationManagerBloc<Purchase> purchaseRelationManagerBloc =
         StoreRelationManagerBloc<Purchase>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -60,17 +60,18 @@ class StoreDetail
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Purchase>(
         collectionRepository,
-        _purchaseRelationManagerBloc,
+        purchaseRelationManagerBloc,
       ),
       BlocProvider<StoreRelationManagerBloc<Purchase>>(
         create: (BuildContext context) {
-          return _purchaseRelationManagerBloc;
+          return purchaseRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _StoreDetailBody detailBodyBuilder() {
     return _StoreDetailBody(
       onUpdate: onUpdate,
@@ -100,7 +101,11 @@ class _StoreDetailBody
   _StoreDetailBody({
     Key? key,
     void Function(Store? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: Store.hasImage,
+        );
 
   @override
   String itemTitle(Store item) => StoreTheme.itemTitle(item);
@@ -164,6 +169,18 @@ class _StoreDetailBody
             ),
           ];
         },
+      ),
+    ];
+  }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        order: order++,
       ),
     ];
   }

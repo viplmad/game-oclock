@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:backend/model/model.dart' show Item, ItemImage;
 import 'package:backend/repository/repository.dart'
@@ -35,25 +35,25 @@ abstract class ItemDetail<
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
-    final S _managerBloc = managerBlocBuilder(_collectionRepository);
+    final S managerBloc = managerBlocBuilder(collectionRepository);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return detailBlocBuilder(_collectionRepository, _managerBloc)
+            return detailBlocBuilder(collectionRepository, managerBloc)
               ..add(LoadItem());
           },
         ),
         BlocProvider<S>(
           create: (BuildContext context) {
-            return _managerBloc;
+            return managerBloc;
           },
         ),
-        ...relationBlocsBuilder(_collectionRepository)
+        ...relationBlocsBuilder(collectionRepository)
       ],
       child: Scaffold(body: detailBodyBuilder()),
     );
@@ -80,9 +80,11 @@ abstract class ItemDetailBody<
   ItemDetailBody({
     Key? key,
     required this.onUpdate,
+    required this.hasImage,
   }) : super(key: key);
 
   final void Function(T? item)? onUpdate;
+  final bool hasImage;
 
   T? _updatedItem;
 
@@ -163,7 +165,9 @@ abstract class ItemDetailBody<
                     );
                   }
 
-                  return Container();
+                  return Column(
+                    children: itemSkeletonFieldsBuilder(context),
+                  );
                 },
               ),
               Column(
@@ -202,30 +206,18 @@ abstract class ItemDetailBody<
         flexibleSpace: BlocBuilder<K, ItemDetailState>(
           builder: (BuildContext context, ItemDetailState state) {
             String title = '';
-            bool hasImage = false;
+            bool useImage = false;
             ItemImage? image;
 
             if (state is ItemLoaded<T>) {
               title = itemTitle(state.item);
-              hasImage = state.item.hasImage;
+              useImage = hasImage;
               image = state.item.image;
             }
 
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
-              child: FlexibleSpaceBar(
-                title: Text(title),
-                collapseMode: CollapseMode.parallax,
-                background: hasImage
-                    ? CachedImage(
-                        imageURL: image!.url,
-                        fit: BoxFit.cover,
-                        applyGradient: true,
-                        backgroundColour: Theme.of(context).primaryColor,
-                      )
-                    : Container(),
-              ),
-              onTap: hasImage
+              onTap: useImage
                   ? () {
                       showModalBottomSheet(
                         context: context,
@@ -239,6 +231,18 @@ abstract class ItemDetailBody<
                       );
                     }
                   : null,
+              child: FlexibleSpaceBar(
+                title: Text(title),
+                collapseMode: CollapseMode.parallax,
+                background: useImage
+                    ? CachedImage(
+                        imageURL: image!.url,
+                        fit: BoxFit.cover,
+                        applyGradient: true,
+                        backgroundColour: Theme.of(context).primaryColor,
+                      )
+                    : const SizedBox(),
+              ),
             );
           },
         ),
@@ -251,7 +255,7 @@ abstract class ItemDetailBody<
     BuildContext outerContext, {
     required String imageFilename,
   }) {
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
     final bool withImage = imageFilename.isNotEmpty;
 
     return Wrap(
@@ -266,7 +270,7 @@ abstract class ItemDetailBody<
               : Text(GameCollectionLocalisations.of(context).uploadImageString),
           leading: const Icon(Icons.file_upload),
           onTap: () {
-            _picker
+            picker
                 .pickImage(
               source: ImageSource.gallery,
             )
@@ -427,8 +431,8 @@ abstract class ItemDetailBody<
         itemUpdater: itemUpdater,
       ),
       onLongPress: () async {
-        if (await canLaunch(value)) {
-          await launch(value);
+        if (await canLaunchUrlString(value)) {
+          await launchUrlString(value);
         } else {
           final String message = GameCollectionLocalisations.of(context)
               .unableToLaunchString(value);
@@ -619,8 +623,50 @@ abstract class ItemDetailBody<
     );
   }
 
+  Widget itemSkeletonField({
+    required String fieldName,
+    required int order,
+  }) {
+    return SkeletonGenericField(
+      fieldName: fieldName,
+      order: order,
+    );
+  }
+
+  Widget itemSkeletonLongTextField({
+    required String fieldName,
+    required int order,
+  }) {
+    return SkeletonGenericField(
+      fieldName: fieldName,
+      order: order,
+      extended: true,
+    );
+  }
+
+  Widget itemSkeletonChipField({
+    required String fieldName,
+    required int order,
+  }) {
+    return SkeletonEnumField(
+      fieldName: fieldName,
+      order: order,
+    );
+  }
+
+  Widget itemSkeletonRatingField({
+    required String fieldName,
+    required int order,
+  }) {
+    return SkeletonRatingField(
+      fieldName: fieldName,
+      order: order,
+    );
+  }
+
   String itemTitle(T item);
 
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context);
   List<Widget> itemRelationsBuilder(BuildContext context);
 }

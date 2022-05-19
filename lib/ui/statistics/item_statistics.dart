@@ -9,7 +9,9 @@ import 'package:backend/repository/repository.dart'
 import 'package:backend/bloc/item_statistics/item_statistics.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/skeleton.dart';
 
+import '../common/field/generic_field.dart';
 import '../common/statistics_histogram.dart';
 import '../common/year_picker_dialog.dart';
 
@@ -31,12 +33,12 @@ abstract class ItemStatisticsView<
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
     return BlocProvider<K>(
       create: (BuildContext context) {
-        return statisticsBlocBuilder(_collectionRepository)
+        return statisticsBlocBuilder(collectionRepository)
           ..add(LoadGeneralItemStatistics());
       },
       child: statisticsBodyBuilder(),
@@ -66,7 +68,7 @@ abstract class ItemStatisticsBody<
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(typesName(context) + ' - ' + viewTitle),
+        title: Text('${typesName(context)} - $viewTitle'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.all_inbox),
@@ -112,13 +114,13 @@ abstract class ItemStatisticsBody<
             return Column(
               children: <Widget>[
                 Container(
+                  color: Colors.grey,
                   child: ListTile(
                     leading: const Icon(Icons.all_inbox),
                     title: Text(
                       GameCollectionLocalisations.of(context).generalString,
                     ),
                   ),
-                  color: Colors.grey,
                 ),
                 Expanded(
                   child: Scrollbar(
@@ -141,11 +143,11 @@ abstract class ItemStatisticsBody<
             return Column(
               children: <Widget>[
                 Container(
+                  color: Colors.grey,
                   child: ListTile(
                     leading: const Icon(Icons.date_range),
                     title: Text(fromYearTitle(context, state.year)),
                   ),
-                  color: Colors.grey,
                 ),
                 Expanded(
                   child: Scrollbar(
@@ -170,7 +172,32 @@ abstract class ItemStatisticsBody<
             );
           }
 
-          return const LinearProgressIndicator();
+          return Column(
+            children: <Widget>[
+              Container(
+                color: Colors.grey,
+                child: const ListTile(
+                  title: SizedBox(
+                    height: 24,
+                    child: Skeleton(),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    children: <Widget>[
+                      Column(
+                        children: statisticsSkeletonFieldsBuilder(
+                          context,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
         },
       ),
     );
@@ -251,6 +278,14 @@ abstract class ItemStatisticsBody<
     );
   }
 
+  Widget statisticsSkeletonField({
+    required int order,
+  }) {
+    return SkeletonGenericField(
+      order: order,
+    );
+  }
+
   Widget statisticsHistogram<N extends num>({
     required double height,
     required String histogramName,
@@ -271,6 +306,27 @@ abstract class ItemStatisticsBody<
           vertical: vertical,
           hideDomainLabels: hideDomainLabels,
           valueFormatter: labelAccessor,
+        ),
+      ),
+    );
+  }
+
+  Widget statisticsSkeletonHistogram({
+    required double height,
+    required int order,
+  }) {
+    return ListTile(
+      title: SizedBox(
+        height: 24,
+        child: Skeleton(
+          order: order,
+        ),
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Skeleton(
+          height: height,
+          order: order,
         ),
       ),
     );
@@ -388,7 +444,7 @@ abstract class ItemStatisticsBody<
   }
 
   String _formatIntervalLabel<N>(N min, N max, String Function(N) formatValue) {
-    return formatValue(min) + '-' + formatValue(max);
+    return '${formatValue(min)}-${formatValue(max)}';
   }
 
   String _formatIntervalInitialLabel<N>(
@@ -399,7 +455,7 @@ abstract class ItemStatisticsBody<
   }
 
   String _formatIntervalLastLabel<N>(N last, String Function(N) formatValue) {
-    return formatValue(last) + '+';
+    return '${formatValue(last)}+';
   }
 
   String typesName(BuildContext context);
@@ -407,6 +463,7 @@ abstract class ItemStatisticsBody<
 
   List<Widget> statisticsGeneralFieldsBuilder(BuildContext context, GS data);
   List<Widget> statisticsYearFieldsBuilder(BuildContext context, YS data);
+  List<Widget> statisticsSkeletonFieldsBuilder(BuildContext context);
 }
 
 class StatisticsField extends StatelessWidget {
@@ -428,7 +485,7 @@ class StatisticsField extends StatelessWidget {
         title: Text(fieldName),
         trailing: Text(
           shownValue +
-              (shownPercentage != null ? ' - ' + shownPercentage! : ''),
+              (shownPercentage != null ? ' - ${shownPercentage!}' : ''),
         ),
       ),
     );
@@ -449,8 +506,8 @@ class StatisticsFieldGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(groupName),
-      children: fields,
       initiallyExpanded: false,
+      children: fields,
     );
   }
 }

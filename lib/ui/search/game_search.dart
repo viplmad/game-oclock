@@ -49,6 +49,7 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameSearchBody<GameSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Game) onTap,
     required bool allowNewButton,
@@ -80,6 +81,7 @@ class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameSearchBody<ItemLocalSearchBloc<Game>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Game) onTap,
     required bool allowNewButton,

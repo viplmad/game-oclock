@@ -8,9 +8,10 @@ class Store extends Item {
     required this.iconFilename,
   }) : super(
           uniqueId: 'St$id',
-          hasImage: true,
           queryableTerms: name,
         );
+
+  static const bool hasImage = true;
 
   final int id;
   final String name;

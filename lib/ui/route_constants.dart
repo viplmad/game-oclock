@@ -2,7 +2,7 @@ const String connectRoute = '/';
 const String homeRoute = '/home';
 
 const String _settingsRoute = '/settings';
-const String repositorySettingsRoute = _settingsRoute + 'repository';
+const String repositorySettingsRoute = '${_settingsRoute}repository';
 
 const String _detailRoute = '/detail';
 const String _searchRoute = '/search';
@@ -24,7 +24,7 @@ const String gameSearchRoute = _searchRoute + _gameIdentifier;
 const String gameLocalSearchRoute = _localSearchRoute + _gameIdentifier;
 const String gameStatisticsRoute = _statisticsRoute + _gameIdentifier;
 const String gameSingleCalendarRoute = _calendarRoute + _gameIdentifier;
-const String gameMultiCalendarRoute = _calendarRoute + 'all' + _gameIdentifier;
+const String gameMultiCalendarRoute = '${_calendarRoute}all$_gameIdentifier';
 
 const String dlcDetailRoute = _detailRoute + _dlcIdentifier;
 const String dlcSearchRoute = _searchRoute + _dlcIdentifier;
@@ -46,7 +46,7 @@ const String platformLocalSearchRoute = _localSearchRoute + _platformIdentifier;
 const String systemSearchRoute = _searchRoute + _systemIdentifier;
 const String systemLocalSearchRoute = _localSearchRoute + _systemIdentifier;
 
-const String gameTagListRoute = '/list' + _gameTagIdentifier;
+const String gameTagListRoute = '/list$_gameTagIdentifier';
 const String gameTagDetailRoute = _detailRoute + _gameTagIdentifier;
 const String gameTagSearchRoute = _searchRoute + _gameTagIdentifier;
 const String gameTagLocalSearchRoute = _localSearchRoute + _gameTagIdentifier;

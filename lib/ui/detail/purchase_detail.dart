@@ -52,25 +52,25 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc,
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final PurchaseRelationManagerBloc<Store> _storeRelationManagerBloc =
+    final PurchaseRelationManagerBloc<Store> storeRelationManagerBloc =
         PurchaseRelationManagerBloc<Store>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final PurchaseRelationManagerBloc<Game> _gameRelationManagerBloc =
+    final PurchaseRelationManagerBloc<Game> gameRelationManagerBloc =
         PurchaseRelationManagerBloc<Game>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final PurchaseRelationManagerBloc<DLC> _dlcRelationManagerBloc =
+    final PurchaseRelationManagerBloc<DLC> dlcRelationManagerBloc =
         PurchaseRelationManagerBloc<DLC>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final PurchaseRelationManagerBloc<PurchaseType> _typeRelationManagerBloc =
+    final PurchaseRelationManagerBloc<PurchaseType> typeRelationManagerBloc =
         PurchaseRelationManagerBloc<PurchaseType>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -79,44 +79,45 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc,
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Store>(
         collectionRepository,
-        _storeRelationManagerBloc,
+        storeRelationManagerBloc,
       ),
       blocProviderRelationBuilder<Game>(
         collectionRepository,
-        _gameRelationManagerBloc,
+        gameRelationManagerBloc,
       ),
       blocProviderRelationBuilder<DLC>(
         collectionRepository,
-        _dlcRelationManagerBloc,
+        dlcRelationManagerBloc,
       ),
       blocProviderRelationBuilder<PurchaseType>(
         collectionRepository,
-        _typeRelationManagerBloc,
+        typeRelationManagerBloc,
       ),
       BlocProvider<PurchaseRelationManagerBloc<Store>>(
         create: (BuildContext context) {
-          return _storeRelationManagerBloc;
+          return storeRelationManagerBloc;
         },
       ),
       BlocProvider<PurchaseRelationManagerBloc<Game>>(
         create: (BuildContext context) {
-          return _gameRelationManagerBloc;
+          return gameRelationManagerBloc;
         },
       ),
       BlocProvider<PurchaseRelationManagerBloc<DLC>>(
         create: (BuildContext context) {
-          return _dlcRelationManagerBloc;
+          return dlcRelationManagerBloc;
         },
       ),
       BlocProvider<PurchaseRelationManagerBloc<PurchaseType>>(
         create: (BuildContext context) {
-          return _typeRelationManagerBloc;
+          return typeRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PurchaseDetailBody detailBodyBuilder() {
     return _PurchaseDetailBody(
       onUpdate: onUpdate,
@@ -146,7 +147,11 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc,
   _PurchaseDetailBody({
     Key? key,
     void Function(Purchase? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: Purchase.hasImage,
+        );
 
   @override
   String itemTitle(Purchase item) => PurchaseTheme.itemTitle(item);
@@ -224,6 +229,42 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc,
             GameCollectionLocalisations.of(context).purchaseTypesString,
         relationTypeName:
             GameCollectionLocalisations.of(context).purchaseTypeString,
+      ),
+    ];
+  }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).descriptionFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).priceFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).externalCreditsFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).purchaseDateFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName:
+            GameCollectionLocalisations.of(context).originalPriceFieldString,
+        order: order++,
+      ),
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).discountFieldString,
+        order: order++,
       ),
     ];
   }

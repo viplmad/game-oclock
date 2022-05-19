@@ -3,12 +3,10 @@ import 'package:equatable/equatable.dart';
 abstract class Item extends Equatable {
   const Item({
     required this.uniqueId,
-    required this.hasImage,
     required this.queryableTerms,
   });
 
   final String uniqueId;
-  final bool hasImage;
   final String queryableTerms;
 
   ItemImage get image;
@@ -22,7 +20,6 @@ abstract class ItemFinish extends Item {
     required String uniqueId,
   }) : super(
           uniqueId: uniqueId,
-          hasImage: false,
           queryableTerms: '',
         );
 

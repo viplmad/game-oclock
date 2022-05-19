@@ -15,7 +15,7 @@ class GameEntityData {
 
   static const String table = 'Game';
 
-  static const String relationField = table + '_ID';
+  static const String relationField = '${table}_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';

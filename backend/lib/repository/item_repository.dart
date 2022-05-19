@@ -156,7 +156,7 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object>
   }
 
   String _getImageName(ID id, String imageName) {
-    return id.toString() + '-' + imageName;
+    return '$id-$imageName';
   }
 
   // Mapper

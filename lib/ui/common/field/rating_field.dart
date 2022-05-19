@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
+import '../skeleton.dart';
+
 class RatingField extends StatelessWidget {
   const RatingField({
     Key? key,
@@ -47,6 +49,48 @@ class RatingField extends StatelessWidget {
                   }
                 }
               : null,
+        ),
+      ],
+    );
+  }
+}
+
+class SkeletonRatingField extends StatelessWidget {
+  const SkeletonRatingField({
+    Key? key,
+    required this.fieldName,
+    this.order = 0,
+  }) : super(key: key);
+
+  final String fieldName;
+  final int order;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+              child:
+                  Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 8.0,
+            bottom: 8.0,
+          ),
+          child: Skeleton(
+            height: 16,
+            order: order,
+          ),
         ),
       ],
     );

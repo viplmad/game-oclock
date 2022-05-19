@@ -11,9 +11,10 @@ class DLC extends Item {
     required this.firstFinishDate,
   }) : super(
           uniqueId: 'D$id',
-          hasImage: true,
           queryableTerms: name,
         );
+
+  static const bool hasImage = true;
 
   final int id;
   final String name;

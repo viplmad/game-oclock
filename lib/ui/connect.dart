@@ -9,7 +9,6 @@ import 'package:backend/repository/repository.dart'
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
-import 'common/loading_icon.dart';
 
 class Connectpage extends StatelessWidget {
   const Connectpage({
@@ -64,51 +63,58 @@ class _ConnectpageBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: LoadingIcon(),
-                    ),
                     Text(
                       GameCollectionLocalisations.of(context).connectingString,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(28.0),
+                      child: Center(
+                        child: LinearProgressIndicator(),
+                      ),
                     ),
                   ],
                 );
               }
               if (state is FailedConnection) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      GameCollectionLocalisations.of(context)
-                          .failedConnectionString,
-                    ),
-                    ElevatedButton(
-                      child: Text(
-                        GameCollectionLocalisations.of(context).retryString,
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          GameCollectionLocalisations.of(context)
+                              .failedConnectionString,
+                        ),
                       ),
-                      onPressed: () {
-                        BlocProvider.of<ConnectionBloc>(context)
-                            .add(Reconnect());
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text(
-                        GameCollectionLocalisations.of(context)
-                            .changeRepositoryString,
+                      ElevatedButton(
+                        child: Text(
+                          GameCollectionLocalisations.of(context).retryString,
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<ConnectionBloc>(context)
+                              .add(Reconnect());
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          repositorySettingsRoute,
-                        );
-                      },
-                    ),
-                  ],
+                      ElevatedButton(
+                        child: Text(
+                          GameCollectionLocalisations.of(context)
+                              .changeRepositoryString,
+                        ),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            repositorySettingsRoute,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 );
               }
 
-              return Container();
+              return const SizedBox();
             },
           ),
         ),

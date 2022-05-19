@@ -12,9 +12,9 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
-import '../common/loading_icon.dart';
+import '../common/list_view.dart';
+import '../common/skeleton.dart';
 import '../common/show_snackbar.dart';
-import '../common/shape_utils.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
 import '../statistics/statistics_arguments.dart';
@@ -42,7 +42,7 @@ abstract class ItemAppBar<T extends Item,
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(typesName(context)),
-      backgroundColor: themeColor,
+      surfaceTintColor: themeColor,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.search),
@@ -65,7 +65,7 @@ abstract class ItemAppBar<T extends Item,
                 tooltip: GameCollectionLocalisations.of(context).calendarView,
                 onPressed: _onCalendarTap(context),
               )
-            : Container(),
+            : const SizedBox(),
         gridAllowed
             ? IconButton(
                 icon: const Icon(Icons.grid_on),
@@ -77,7 +77,7 @@ abstract class ItemAppBar<T extends Item,
                   );
                 },
               )
-            : Container(),
+            : const SizedBox(),
         _viewActionBuilder(
           context,
           views: views(context),
@@ -96,10 +96,10 @@ abstract class ItemAppBar<T extends Item,
       itemBuilder: (BuildContext context) {
         return views.map<PopupMenuItem<int>>((String view) {
           return PopupMenuItem<int>(
+            value: views.indexOf(view),
             child: ListTile(
               title: Text(view),
             ),
-            value: views.indexOf(view),
           );
         }).toList(growable: false);
       },
@@ -139,8 +139,6 @@ abstract class ItemFAB<T extends Item,
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: const Icon(Icons.add),
-      shape: ShapeUtils.shapeBorder,
       tooltip:
           GameCollectionLocalisations.of(context).newString(typeName(context)),
       backgroundColor: themeColor,
@@ -150,6 +148,7 @@ abstract class ItemFAB<T extends Item,
           AddItem<T>(createItem()),
         );
       },
+      child: const Icon(Icons.add),
     );
   }
 
@@ -260,7 +259,20 @@ abstract class ItemList<
             );
           }
 
-          return const LoadingIcon();
+          return Column(
+            children: <Widget>[
+              const LinearProgressIndicator(),
+              Container(
+                color: Colors.grey,
+                child: const ListTile(
+                  title: SizedBox(
+                    height: 24,
+                    child: Skeleton(),
+                  ),
+                ),
+              ),
+            ],
+          );
         },
       ),
     );
@@ -321,6 +333,7 @@ abstract class ItemListBody<T extends Item,
     return Column(
       children: <Widget>[
         Container(
+          color: Colors.grey,
           child: ListTile(
             title: Text(viewTitle(context)),
             trailing: Row(
@@ -340,11 +353,10 @@ abstract class ItemListBody<T extends Item,
                         onPressed:
                             items.isNotEmpty ? onStatisticsTap(context) : null,
                       )
-                    : Container(),
+                    : const SizedBox(),
               ],
             ),
           ),
-          color: Colors.grey,
         ),
         Expanded(
           child: Scrollbar(
@@ -374,14 +386,14 @@ abstract class ItemListBody<T extends Item,
           },
         ),
         TextButton(
-          child:
-              Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
           onPressed: () {
             Navigator.maybePop<bool>(context, true);
           },
           style: TextButton.styleFrom(
             primary: Colors.red,
           ),
+          child:
+              Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
         )
       ],
     );
@@ -477,8 +489,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
+    return ItemListBuilder(
       itemCount: items.length,
       controller: scrollController,
       itemBuilder: (BuildContext context, int index) {

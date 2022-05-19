@@ -107,7 +107,7 @@ class SQLQueryBuilder {
     FromTableBlock block,
     SQLBuilderOptions options,
   ) {
-    return 'FROM ' + _tableToString(block, options);
+    return 'FROM ${_tableToString(block, options)}';
   }
 
   static String _buildUpdateTableString(
@@ -185,7 +185,7 @@ class SQLQueryBuilder {
           Validator.sanitizeTableDotField(node.table, node.name, options);
 
       if (node.type == double) {
-        sb.write(field + '::float');
+        sb.write('$field::float');
       } else {
         sb.write(field);
       }
@@ -482,7 +482,7 @@ class SQLQueryBuilder {
 
     for (final WhereNode node in block.wheres) {
       final String combiner =
-          sb.length == 0 ? 'WHERE' : ' ' + _combinerTypeToString(node.combiner);
+          sb.length == 0 ? 'WHERE' : ' ${_combinerTypeToString(node.combiner)}';
 
       if (node.divider == DividerType.start) {
         sb.write('$combiner ( ');

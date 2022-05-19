@@ -52,13 +52,13 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameCollectionRepository collectionRepository,
   ) {
-    final PlatformRelationManagerBloc<Game> _gameRelationManagerBloc =
+    final PlatformRelationManagerBloc<Game> gameRelationManagerBloc =
         PlatformRelationManagerBloc<Game>(
       itemId: item.id,
       collectionRepository: collectionRepository,
     );
 
-    final PlatformRelationManagerBloc<System> _systemRelationManagerBloc =
+    final PlatformRelationManagerBloc<System> systemRelationManagerBloc =
         PlatformRelationManagerBloc<System>(
       itemId: item.id,
       collectionRepository: collectionRepository,
@@ -67,26 +67,27 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
     return <BlocProvider<BlocBase<Object?>>>[
       blocProviderRelationBuilder<Game>(
         collectionRepository,
-        _gameRelationManagerBloc,
+        gameRelationManagerBloc,
       ),
       blocProviderRelationBuilder<System>(
         collectionRepository,
-        _systemRelationManagerBloc,
+        systemRelationManagerBloc,
       ),
       BlocProvider<PlatformRelationManagerBloc<Game>>(
         create: (BuildContext context) {
-          return _gameRelationManagerBloc;
+          return gameRelationManagerBloc;
         },
       ),
       BlocProvider<PlatformRelationManagerBloc<System>>(
         create: (BuildContext context) {
-          return _systemRelationManagerBloc;
+          return systemRelationManagerBloc;
         },
       ),
     ];
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PlatformDetailBody detailBodyBuilder() {
     return _PlatformDetailBody(
       onUpdate: onUpdate,
@@ -116,7 +117,11 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
   _PlatformDetailBody({
     Key? key,
     void Function(Platform? item)? onUpdate,
-  }) : super(key: key, onUpdate: onUpdate);
+  }) : super(
+          key: key,
+          onUpdate: onUpdate,
+          hasImage: Platform.hasImage,
+        );
 
   @override
   String itemTitle(Platform item) => PlatformTheme.itemTitle(item);
@@ -158,6 +163,23 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
       PlatformSystemRelationList(
         relationName: GameCollectionLocalisations.of(context).systemsString,
         relationTypeName: GameCollectionLocalisations.of(context).systemString,
+      ),
+    ];
+  }
+
+  @override
+  List<Widget> itemSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      itemSkeletonField(
+        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        order: order++,
+      ),
+      itemSkeletonChipField(
+        fieldName:
+            GameCollectionLocalisations.of(context).platformTypeFieldString,
+        order: order++,
       ),
     ];
   }

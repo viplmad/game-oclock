@@ -10,7 +10,7 @@ class GameTagEntityData {
 
   static const String table = 'Tag';
 
-  static const String relationField = table + '_ID';
+  static const String relationField = '${table}_ID';
 
   static const String idField = 'ID';
   static const String nameField = 'Name';

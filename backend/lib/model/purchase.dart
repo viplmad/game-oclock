@@ -14,9 +14,10 @@ class Purchase extends Item {
             : 0,
         super(
           uniqueId: 'Pu$id',
-          hasImage: false,
           queryableTerms: description,
         );
+
+  static const bool hasImage = false;
 
   final int id;
   final String description;

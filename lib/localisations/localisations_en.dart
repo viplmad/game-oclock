@@ -308,7 +308,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String totalGames(int total) {
-    return '$total ' + (total > 1 ? gamesString : gameString);
+    return '$total ${total > 1 ? gamesString : gameString}';
   }
 
   @override
@@ -340,7 +340,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String gamesFromYearString(int year) {
-    return 'Finished in ' + formatYear(year);
+    return 'Finished in ${formatYear(year)}';
   }
 
   @override
@@ -514,7 +514,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String formatDateTime(DateTime date) {
-    return formatDate(date) + ' ' + formatTime(date);
+    return '${formatDate(date)} ${formatTime(date)}';
   }
 
   @override
@@ -552,7 +552,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String formatShortYear(int year) {
-    return '\'' + year.toString().substring(2);
+    return '\'${year.toString().substring(2)}';
   }
 
   @override
@@ -644,5 +644,5 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String noResultsString = 'No results found';
 
-  String _plural(String string) => string + 's';
+  String _plural(String string) => '${string}s';
 }

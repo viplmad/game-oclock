@@ -11,6 +11,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
 
@@ -32,20 +33,20 @@ abstract class ItemSearch<
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return searchBlocBuilder(_collectionRepository)
+            return searchBlocBuilder(collectionRepository)
               ..add(const SearchTextChanged());
           },
         ),
         BlocProvider<S>(
           create: (BuildContext context) {
-            return managerBlocBuilder(_collectionRepository);
+            return managerBlocBuilder(collectionRepository);
           },
         ),
       ],
@@ -97,7 +98,7 @@ abstract class ItemLocalSearch<T extends Item,
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
     return MultiBlocProvider(
@@ -111,7 +112,7 @@ abstract class ItemLocalSearch<T extends Item,
         ),
         BlocProvider<S>(
           create: (BuildContext context) {
-            return managerBlocBuilder(_collectionRepository);
+            return managerBlocBuilder(collectionRepository);
           },
         ),
       ],
@@ -230,11 +231,11 @@ class _ItemSearchBodyState<
           children: <Widget>[
             widget.allowNewButton
                 ? Container(
-                    child: _newButton(),
                     color: Colors.grey,
                     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: _newButton(),
                   )
-                : Container(),
+                : const SizedBox(),
             BlocBuilder<K, ItemSearchState>(
               builder: (BuildContext context, ItemSearchState state) {
                 if (state is ItemSearchEmpty<T>) {
@@ -283,10 +284,6 @@ class _ItemSearchBodyState<
     return SizedBox(
       width: double.maxFinite,
       child: TextButton(
-        child: Text(
-          GameCollectionLocalisations.of(context)
-              .newWithTitleString(widget.typeName(context), query),
-        ),
         onPressed: () {
           BlocProvider.of<S>(context).add(
             AddItem<T>(widget.createItem(query)),
@@ -299,6 +296,10 @@ class _ItemSearchBodyState<
           backgroundColor: Theme.of(context).brightness == Brightness.light
               ? Colors.white
               : Colors.black54,
+        ),
+        child: Text(
+          GameCollectionLocalisations.of(context)
+              .newWithTitleString(widget.typeName(context), query),
         ),
       ),
     );
@@ -313,22 +314,13 @@ class _ItemSearchBodyState<
 
     return Expanded(
       child: Scrollbar(
-        child: ListView.builder(
-          shrinkWrap: true,
+        child: ItemListBuilder(
           padding: const EdgeInsets.all(8.0),
           itemCount: results.length,
           itemBuilder: (BuildContext context, int index) {
             final T result = results[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(
-                right: 4.0,
-                left: 4.0,
-                bottom: 4.0,
-                top: 4.0,
-              ),
-              child: widget.cardBuilder(context, result),
-            );
+            return widget.cardBuilder(context, result);
           },
         ),
       ),

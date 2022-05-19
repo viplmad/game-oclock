@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Platform;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -48,7 +48,8 @@ class PlatformTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      hasImage: item.hasImage,
+      hasImage: Platform.hasImage,
+      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

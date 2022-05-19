@@ -46,6 +46,7 @@ class PlatformSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Platform) onTap,
     required bool allowNewButton,
@@ -78,6 +79,7 @@ class PlatformLocalSearch
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, Platform) onTap,
     required bool allowNewButton,

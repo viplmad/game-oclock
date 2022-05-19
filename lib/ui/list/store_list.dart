@@ -34,7 +34,7 @@ class StoreFAB extends ItemFAB<Store, StoreListManagerBloc> {
     Key? key,
   }) : super(
           key: key,
-          themeColor: StoreTheme.primaryColour,
+          themeColor: StoreTheme.secondaryColour,
         );
 
   @override
@@ -59,6 +59,7 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
       GameCollectionLocalisations.of(context).storeString;
 
   @override
+  // ignore: library_private_types_in_public_api
   _StoreListBody itemListBodyBuilder({
     required List<Store> items,
     required int viewIndex,

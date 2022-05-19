@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show Game;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -58,7 +58,8 @@ class GameTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
-      hasImage: item.hasImage,
+      hasImage: Game.hasImage,
+      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
@@ -75,7 +76,8 @@ class GameTheme {
       subtitle: _itemSubtitle(context, item),
       trailing:
           GameCollectionLocalisations.of(context).formatDuration(totalTime),
-      hasImage: item.hasImage,
+      hasImage: Game.hasImage,
+      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
@@ -97,19 +99,13 @@ class GameTheme {
     String title = item.name;
 
     if (item.edition.isNotEmpty) {
-      title += ' - ' + item.edition;
+      title += ' - ${item.edition}';
     }
 
     return title;
   }
 
   static String _itemSubtitle(BuildContext context, Game item) {
-    return GameCollectionLocalisations.of(context)
-            .gameStatusString(item.status) +
-        ' · ' +
-        (item.releaseYear != null
-            ? GameCollectionLocalisations.of(context)
-                .formatYear(item.releaseYear!)
-            : '');
+    return '${GameCollectionLocalisations.of(context).gameStatusString(item.status)} · ${item.releaseYear != null ? GameCollectionLocalisations.of(context).formatYear(item.releaseYear!) : ''}';
   }
 }

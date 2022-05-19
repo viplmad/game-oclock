@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'shape_utils.dart';
+import 'skeleton.dart';
+
 class DismissibleItem extends StatelessWidget {
   const DismissibleItem({
     Key? key,
@@ -9,8 +12,6 @@ class DismissibleItem extends StatelessWidget {
     required this.itemWidget,
     required this.onDismissed,
     required this.dismissIcon,
-    this.padding =
-        const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 4.0, top: 4.0),
     this.confirmDismiss,
   }) : super(key: key);
 
@@ -18,21 +19,17 @@ class DismissibleItem extends StatelessWidget {
   final Widget itemWidget;
   final void Function(DismissDirection direction) onDismissed;
   final IconData dismissIcon;
-  final EdgeInsetsGeometry padding;
   final Future<bool> Function(DismissDirection direction)? confirmDismiss;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Dismissible(
-        key: ValueKey<String>(dismissibleKey),
-        background: backgroundBuilder(Alignment.centerLeft),
-        secondaryBackground: backgroundBuilder(Alignment.centerRight),
-        child: itemWidget,
-        onDismissed: onDismissed,
-        confirmDismiss: confirmDismiss,
-      ),
+    return Dismissible(
+      key: ValueKey<String>(dismissibleKey),
+      background: backgroundBuilder(Alignment.centerLeft),
+      secondaryBackground: backgroundBuilder(Alignment.centerRight),
+      onDismissed: onDismissed,
+      confirmDismiss: confirmDismiss,
+      child: itemWidget,
     );
   }
 
@@ -40,14 +37,14 @@ class DismissibleItem extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.red,
-        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+        borderRadius: ShapeUtils.cardBorderRadius,
       ),
       child: Align(
+        alignment: alignment,
         child: Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Icon(dismissIcon, color: Colors.white),
         ),
-        alignment: alignment,
       ),
     );
   }
@@ -59,6 +56,7 @@ class ItemCard extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.color,
     required this.hasImage,
     this.imageURL,
     required this.onTap,
@@ -67,6 +65,7 @@ class ItemCard extends StatelessWidget {
   final String title;
   final String? subtitle;
   final String? trailing;
+  final Color? color;
   final bool hasImage;
   final String? imageURL;
   final void Function()? onTap;
@@ -74,8 +73,13 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // Custom color based on primary color
+      surfaceTintColor: color,
+      // No margin so dismissible background fits well
+      margin: const EdgeInsets.all(0.0),
       child: InkWell(
-        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+        borderRadius: ShapeUtils.cardBorderRadius,
+        onTap: onTap,
         child: _ItemListTile(
           title: title,
           subtitle: subtitle,
@@ -83,9 +87,7 @@ class ItemCard extends StatelessWidget {
           hasImage: hasImage,
           imageURL: imageURL,
         ),
-        onTap: onTap,
       ),
-      margin: const EdgeInsets.all(0.0),
     );
   }
 }
@@ -113,7 +115,7 @@ class _ItemListTile extends StatelessWidget {
           ? ConstrainedBox(
               constraints: const BoxConstraints(
                 minWidth: 100,
-                minHeight: 44,
+                minHeight: 56,
                 maxWidth: 100,
                 maxHeight: 80,
               ),
@@ -148,14 +150,12 @@ class ItemGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(4.0),
-        ),
+        borderRadius: ShapeUtils.cardBorderRadius,
+        onTap: onTap,
         child: _ItemGridTile(
           title: title,
           imageURL: imageURL,
         ),
-        onTap: onTap,
       ),
     );
   }
@@ -174,18 +174,18 @@ class _ItemGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridTile(
-      child: CachedImage(
-        imageURL: imageURL ?? '',
-        fit: BoxFit.cover,
-        backgroundColour: Colors.black87,
-        applyGradient: false,
-      ),
       footer: Container(
         color: Colors.black87.withOpacity(0.5),
         child: Text(
           title,
           style: const TextStyle(fontSize: 18.0, color: Colors.white),
         ),
+      ),
+      child: CachedImage(
+        imageURL: imageURL ?? '',
+        fit: BoxFit.cover,
+        backgroundColour: Colors.black87,
+        applyGradient: false,
       ),
     );
   }
@@ -211,7 +211,7 @@ class CachedImage extends StatelessWidget {
         ? applyGradient
             ? _getGradientImage()
             : _getCachedImage()
-        : Container();
+        : const SizedBox();
   }
 
   Widget _getGradientImage() {
@@ -229,17 +229,8 @@ class CachedImage extends StatelessWidget {
       imageUrl: imageURL,
       fit: fit,
       useOldImageOnUrlChange: true,
-      progressIndicatorBuilder: (
-        BuildContext context,
-        String url,
-        DownloadProgress downloadProgress,
-      ) {
-        return Center(
-          child: CircularProgressIndicator(value: downloadProgress.progress),
-        );
-      },
-      errorWidget: (BuildContext context, String url, dynamic error) =>
-          Container(color: backgroundColour),
+      progressIndicatorBuilder: (_, __, ___) => const Skeleton(),
+      errorWidget: (_, __, ___) => Container(color: backgroundColour),
     );
   }
 }

@@ -24,11 +24,8 @@ class CalendarUtils {
             GameCollectionLocalisations.of(context).formatDate(date);
         break;
       case CalendarRange.week:
-        rangeDateString = GameCollectionLocalisations.of(context)
-                .formatDate(date.getMondayOfWeek()) +
-            ' -> ' +
-            GameCollectionLocalisations.of(context)
-                .formatDate(date.getSundayOfWeek());
+        rangeDateString =
+            '${GameCollectionLocalisations.of(context).formatDate(date.getMondayOfWeek())} -> ${GameCollectionLocalisations.of(context).formatDate(date.getSundayOfWeek())}';
         break;
       case CalendarRange.month:
         rangeDateString =
@@ -39,12 +36,7 @@ class CalendarUtils {
             GameCollectionLocalisations.of(context).formatYear(date.year);
         break;
     }
-    return GameCollectionLocalisations.of(context).timeLogsFieldString +
-        ' - ' +
-        rangeDateString +
-        ' (' +
-        GameCollectionLocalisations.of(context).rangeString(range) +
-        ')';
+    return '${GameCollectionLocalisations.of(context).timeLogsFieldString} - $rangeDateString (${GameCollectionLocalisations.of(context).rangeString(range)})';
   }
 
   static Widget buildTimeLogsGraph(

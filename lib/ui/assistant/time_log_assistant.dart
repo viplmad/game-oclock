@@ -9,11 +9,12 @@ import 'package:backend/utils/time_of_day_extension.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/fab_utils.dart';
-import '../common/shape_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
 class TimeLogAssistant extends StatelessWidget {
-  const TimeLogAssistant({Key? key}) : super(key: key);
+  const TimeLogAssistant({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,6 @@ class TimeLogAssistant extends StatelessWidget {
             return FloatingActionButton.extended(
               label: Text(GameCollectionLocalisations.of(context).saveString),
               icon: const Icon(Icons.cloud_upload),
-              shape: ShapeUtils.shapeBorder,
               tooltip: GameCollectionLocalisations.of(context).saveString,
               onPressed: state.isValid
                   ? () {

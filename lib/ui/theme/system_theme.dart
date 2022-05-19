@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show System;
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
@@ -16,7 +17,7 @@ class SystemTheme {
     return ItemCard(
       title: _itemTitle(item),
       subtitle: _itemSubtitle(item),
-      hasImage: item.hasImage,
+      hasImage: System.hasImage,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

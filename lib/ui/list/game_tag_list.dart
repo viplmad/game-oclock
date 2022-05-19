@@ -24,12 +24,12 @@ class GameTagList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
-    final GameTagListManagerBloc _gameTagListManagerBloc =
+    final GameTagListManagerBloc gameTagListManagerBloc =
         GameTagListManagerBloc(
-      collectionRepository: _collectionRepository,
+      collectionRepository: collectionRepository,
     );
 
     return MultiBlocProvider(
@@ -37,14 +37,14 @@ class GameTagList extends StatelessWidget {
         BlocProvider<GameTagListBloc>(
           create: (BuildContext context) {
             return GameTagListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _gameTagListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: gameTagListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<GameTagListManagerBloc>(
           create: (BuildContext context) {
-            return _gameTagListManagerBloc;
+            return gameTagListManagerBloc;
           },
         ),
       ],
@@ -80,7 +80,7 @@ class _GameTagFAB extends ItemFAB<GameTag, GameTagListManagerBloc> {
     Key? key,
   }) : super(
           key: key,
-          themeColor: GameTagTheme.primaryColour,
+          themeColor: GameTagTheme.secondaryColour,
         );
 
   @override

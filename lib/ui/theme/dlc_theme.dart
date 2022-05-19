@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:backend/model/model.dart' show DLC;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -40,7 +40,8 @@ class DLCTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      hasImage: item.hasImage,
+      hasImage: DLC.hasImage,
+      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

@@ -72,6 +72,8 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
         );
 
         if (year != null) {
+          // Ignore because we will never get to use use unmounted context
+          // ignore: use_build_context_synchronously
           BlocProvider.of<K>(context)
               .add(UpdateYearView(selectedViewIndex, year));
         }
@@ -123,7 +125,7 @@ abstract class _GameFAB<
     Key? key,
   }) : super(
           key: key,
-          themeColor: GameTheme.primaryColour,
+          themeColor: GameTheme.secondaryColour,
         );
 
   @override
@@ -192,7 +194,6 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
-                    color: GameTheme.secondaryColour,
                   ),
                 ),
               ];
@@ -321,9 +322,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>>
   String viewTitle(BuildContext context) =>
       GameTheme.views(context).elementAt(viewIndex) +
       ((viewYear != null)
-          ? ' (' +
-              GameCollectionLocalisations.of(context).formatYear(viewYear!) +
-              ')'
+          ? ' (${GameCollectionLocalisations.of(context).formatYear(viewYear!)})'
           : '');
 
   @override

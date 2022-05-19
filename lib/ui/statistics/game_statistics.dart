@@ -38,6 +38,7 @@ class GameStatisticsView extends ItemStatisticsView<GameGeneralStatistics,
   }
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameStatisticsBody statisticsBodyBuilder() {
     return _GameStatisticsBody(
       viewIndex: viewIndex,
@@ -96,7 +97,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
       ),
       statisticsDoubleField(
         fieldName: GameCollectionLocalisations.of(context).avgRatingString,
-        value: (playingPlayedCount > 0) ? stats.ratingSum / playedCount : 0,
+        value:
+            (playingPlayedCount > 0) ? stats.ratingSum / playingPlayedCount : 0,
       ),
       statisticsGroupField(
         groupName: GameCollectionLocalisations.of(context).countByStatusString,
@@ -179,7 +181,8 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
       ),
       statisticsDoubleField(
         fieldName: GameCollectionLocalisations.of(context).avgRatingString,
-        value: (playingPlayedCount > 0) ? stats.ratingSum / playedCount : 0,
+        value:
+            (playingPlayedCount > 0) ? stats.ratingSum / playingPlayedCount : 0,
       ),
       const Divider(),
       _countByRating(context, stats.countByRating),
@@ -192,6 +195,51 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
       ),
       const Divider(),
       _sumTimeByMonth(context, stats.totalTimeByMonth),
+    ];
+  }
+
+  @override
+  List<Widget> statisticsSkeletonFieldsBuilder(BuildContext context) {
+    int order = 0;
+
+    return <Widget>[
+      statisticsSkeletonField(
+        order: order++,
+      ),
+      statisticsSkeletonField(
+        order: order++,
+      ),
+      statisticsSkeletonField(
+        order: order++,
+      ),
+      statisticsSkeletonField(
+        order: order++,
+      ),
+      const Divider(),
+      statisticsSkeletonHistogram(
+        height: MediaQuery.of(context).size.height / 2,
+        order: order++,
+      ),
+      const Divider(),
+      statisticsSkeletonHistogram(
+        height: MediaQuery.of(context).size.height / 2,
+        order: order++,
+      ),
+      const Divider(),
+      statisticsSkeletonHistogram(
+        height: MediaQuery.of(context).size.height / 2,
+        order: order++,
+      ),
+      const Divider(),
+      statisticsSkeletonHistogram(
+        height: MediaQuery.of(context).size.height / 2,
+        order: order++,
+      ),
+      const Divider(),
+      statisticsSkeletonHistogram(
+        height: MediaQuery.of(context).size.height / 2,
+        order: order++,
+      ),
     ];
   }
 
@@ -258,7 +306,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
             values: data.values.toList(growable: false),
             labelAccessor: (double value) => value.toStringAsFixed(2),
           )
-        : Container();
+        : const SizedBox();
   }
 
   Widget _sumTimeByFinishDate(BuildContext context, Map<int, Duration> data) {
@@ -281,7 +329,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
             labelAccessor: (int value) =>
                 GameCollectionLocalisations.of(context).formatHours(value),
           )
-        : Container();
+        : const SizedBox();
   }
 
   Widget _countByFinishDate(BuildContext context, Map<int, int> data) {
@@ -301,7 +349,7 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
             values: data.values.toList(growable: false),
             labelAccessor: (int value) => '$value',
           )
-        : Container();
+        : const SizedBox();
   }
   //#endregion General
 

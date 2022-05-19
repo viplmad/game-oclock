@@ -17,9 +17,10 @@ class System extends Item {
     required this.manufacturer,
   }) : super(
           uniqueId: 'Sy$id',
-          hasImage: true,
           queryableTerms: name,
         );
+
+  static const bool hasImage = true;
 
   final int id;
   final String name;

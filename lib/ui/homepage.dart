@@ -16,6 +16,7 @@ import 'package:backend/model/app_tab.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import 'common/shape_utils.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
 import 'common/bar_data.dart';
@@ -29,37 +30,37 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository _collectionRepository =
+    final GameCollectionRepository collectionRepository =
         RepositoryProvider.of<GameCollectionRepository>(context);
 
-    final AllListManagerBloc _allListManagerBloc = AllListManagerBloc(
-      collectionRepository: _collectionRepository,
+    final AllListManagerBloc allListManagerBloc = AllListManagerBloc(
+      collectionRepository: collectionRepository,
     );
 
-    final OwnedListManagerBloc _ownedListManagerBloc = OwnedListManagerBloc(
-      collectionRepository: _collectionRepository,
+    final OwnedListManagerBloc ownedListManagerBloc = OwnedListManagerBloc(
+      collectionRepository: collectionRepository,
     );
 
-    final RomListManagerBloc _romListManagerBloc = RomListManagerBloc(
-      collectionRepository: _collectionRepository,
+    final RomListManagerBloc romListManagerBloc = RomListManagerBloc(
+      collectionRepository: collectionRepository,
     );
 
-    final DLCListManagerBloc _dlcListManagerBloc = DLCListManagerBloc(
-      collectionRepository: _collectionRepository,
+    final DLCListManagerBloc dlcListManagerBloc = DLCListManagerBloc(
+      collectionRepository: collectionRepository,
     );
 
-    final PurchaseListManagerBloc _purchaseListManagerBloc =
+    final PurchaseListManagerBloc purchaseListManagerBloc =
         PurchaseListManagerBloc(
-      collectionRepository: _collectionRepository,
+      collectionRepository: collectionRepository,
     );
 
-    final StoreListManagerBloc _storeListManagerBloc = StoreListManagerBloc(
-      collectionRepository: _collectionRepository,
+    final StoreListManagerBloc storeListManagerBloc = StoreListManagerBloc(
+      collectionRepository: collectionRepository,
     );
 
-    final PlatformListManagerBloc _platformListManagerBloc =
+    final PlatformListManagerBloc platformListManagerBloc =
         PlatformListManagerBloc(
-      collectionRepository: _collectionRepository,
+      collectionRepository: collectionRepository,
     );
 
     return MultiBlocProvider(
@@ -72,92 +73,92 @@ class Homepage extends StatelessWidget {
         BlocProvider<AllListBloc>(
           create: (BuildContext context) {
             return AllListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _allListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: allListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<OwnedListBloc>(
           create: (BuildContext context) {
             return OwnedListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _ownedListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: ownedListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<RomListBloc>(
           create: (BuildContext context) {
             return RomListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _romListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: romListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _dlcListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: dlcListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<PurchaseListBloc>(
           create: (BuildContext context) {
             return PurchaseListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _purchaseListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: purchaseListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<StoreListBloc>(
           create: (BuildContext context) {
             return StoreListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _storeListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: storeListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              collectionRepository: _collectionRepository,
-              managerBloc: _platformListManagerBloc,
+              collectionRepository: collectionRepository,
+              managerBloc: platformListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<AllListManagerBloc>(
           create: (BuildContext context) {
-            return _allListManagerBloc;
+            return allListManagerBloc;
           },
         ),
         BlocProvider<OwnedListManagerBloc>(
           create: (BuildContext context) {
-            return _ownedListManagerBloc;
+            return ownedListManagerBloc;
           },
         ),
         BlocProvider<RomListManagerBloc>(
           create: (BuildContext context) {
-            return _romListManagerBloc;
+            return romListManagerBloc;
           },
         ),
         BlocProvider<DLCListManagerBloc>(
           create: (BuildContext context) {
-            return _dlcListManagerBloc;
+            return dlcListManagerBloc;
           },
         ),
         BlocProvider<PurchaseListManagerBloc>(
           create: (BuildContext context) {
-            return _purchaseListManagerBloc;
+            return purchaseListManagerBloc;
           },
         ),
         BlocProvider<StoreListManagerBloc>(
           create: (BuildContext context) {
-            return _storeListManagerBloc;
+            return storeListManagerBloc;
           },
         ),
         BlocProvider<PlatformListManagerBloc>(
           create: (BuildContext context) {
-            return _platformListManagerBloc;
+            return platformListManagerBloc;
           },
         ),
       ],
@@ -264,14 +265,14 @@ class _HomepageDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
             child: const Text(
               GameCollectionLocalisations.appTitle,
               style: TextStyle(
                 fontSize: 24,
               ),
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
             ),
           ),
           ListTile(
@@ -322,9 +323,7 @@ class _HomepageDrawer extends StatelessWidget {
               return ListTile(
                 leading: const Icon(Icons.info),
                 title: Text(
-                  GameCollectionLocalisations.of(context).aboutString +
-                      ' - ' +
-                      version,
+                  '${GameCollectionLocalisations.of(context).aboutString} - $version',
                 ),
                 onTap: () {
                   showLicensePage(
@@ -334,8 +333,7 @@ class _HomepageDrawer extends StatelessWidget {
                     applicationIcon: Container(
                       margin: const EdgeInsets.all(12.0),
                       child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(16.0)),
+                        borderRadius: ShapeUtils.fabBorderRadius,
                         child: Image.asset(
                           'assets/images/icon.png',
                           height: 48.0,
@@ -368,30 +366,26 @@ class _HomepageDrawer extends StatelessWidget {
         ),
         content: BlocBuilder<StartGameViewBloc, int?>(
           builder: (BuildContext context, int? startViewIndex) {
-            return SizedBox(
-              width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: gameViews.length,
-                itemBuilder: (BuildContext context, int viewIndex) {
-                  final String view = gameViews.elementAt(viewIndex);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: gameViews.map((String view) {
+                final int viewIndex = gameViews.indexOf(view);
 
-                  return RadioListTile<int>(
-                    title: Text(view),
-                    groupValue: startViewIndex,
-                    value: viewIndex,
-                    onChanged: (_) {
-                      BlocProvider.of<StartGameViewBloc>(context).add(
-                        UpdateStartGameView(
-                          viewIndex,
-                        ),
-                      );
+                return RadioListTile<int>(
+                  title: Text(view),
+                  groupValue: startViewIndex,
+                  value: viewIndex,
+                  onChanged: (_) {
+                    BlocProvider.of<StartGameViewBloc>(context).add(
+                      UpdateStartGameView(
+                        viewIndex,
+                      ),
+                    );
 
-                      Navigator.maybePop<void>(context);
-                    },
-                  );
-                },
-              ),
+                    Navigator.maybePop<void>(context);
+                  },
+                );
+              }).toList(growable: false),
             );
           },
         ),

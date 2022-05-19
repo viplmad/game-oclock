@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../skeleton.dart';
+
 class GenericField<K> extends StatelessWidget {
   const GenericField({
     Key? key,
@@ -37,6 +39,8 @@ class GenericField<K> extends StatelessWidget {
 
     return extended
         ? InkWell(
+            onTap: onTapWrapped,
+            onLongPress: onLongPress,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -59,8 +63,6 @@ class GenericField<K> extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: onTapWrapped,
-            onLongPress: onLongPress,
           )
         : ListTileTheme.merge(
             child: ListTile(
@@ -68,6 +70,73 @@ class GenericField<K> extends StatelessWidget {
               trailing: Text(shownValue ?? ''),
               onTap: onTapWrapped,
               onLongPress: onLongPress,
+            ),
+          );
+  }
+}
+
+class SkeletonGenericField extends StatelessWidget {
+  const SkeletonGenericField({
+    Key? key,
+    this.fieldName,
+    this.extended = false,
+    this.order = 0,
+  }) : super(key: key);
+
+  final String? fieldName;
+  final bool extended;
+  final int order;
+
+  @override
+  Widget build(BuildContext context) {
+    return extended
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: fieldName != null
+                    ? Text(
+                        fieldName!,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      )
+                    : SizedBox(
+                        height: 24,
+                        child: Skeleton(
+                          order: order,
+                        ),
+                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  top: 8.0,
+                  bottom: 8.0,
+                ),
+                child: Skeleton(
+                  height: 16,
+                  order: order,
+                ),
+              ),
+            ],
+          )
+        : ListTileTheme.merge(
+            child: ListTile(
+              title: fieldName != null
+                  ? Text(fieldName!)
+                  : SizedBox(
+                      height: 24,
+                      child: Skeleton(
+                        order: order,
+                      ),
+                    ),
+              trailing: Skeleton(
+                width: 100,
+                height: 16,
+                order: order,
+              ),
             ),
           );
   }

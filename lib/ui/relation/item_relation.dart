@@ -10,6 +10,7 @@ import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import '../detail/detail_arguments.dart';
@@ -28,6 +29,7 @@ abstract class ItemRelationList<
     this.trailingBuilder,
     this.limitHeight = true,
     this.isSingleList = false,
+    required this.hasImage,
     this.detailRouteName = '',
     required this.searchRouteName,
     required this.localSearchRouteName,
@@ -38,6 +40,7 @@ abstract class ItemRelationList<
   final List<Widget> Function(List<W>)? trailingBuilder;
   final bool limitHeight;
   final bool isSingleList;
+  final bool hasImage;
 
   final String detailRouteName;
   final String searchRouteName;
@@ -118,7 +121,7 @@ abstract class ItemRelationList<
         builder: (BuildContext context, ItemRelationState state) {
           if (state is ItemRelationLoaded<W>) {
             return (isSingleList)
-                ? _ResultsListSingle<W>(
+                ? _RelationListSingle<W>(
                     items: state.otherItems,
                     relationName: relationName,
                     relationTypeName: relationTypeName,
@@ -127,7 +130,7 @@ abstract class ItemRelationList<
                     updateAdd: _addRelationFunction(context),
                     updateDelete: _deleteRelationFunction(context),
                   )
-                : _ResultsListMany<W>(
+                : _RelationListMany<W>(
                     items: state.otherItems,
                     relationName: relationName,
                     relationTypeName: relationTypeName,
@@ -142,7 +145,6 @@ abstract class ItemRelationList<
                     limitHeight: limitHeight,
                   );
           }
-
           if (state is ItemRelationNotLoaded) {
             return Center(
               child: Text(state.error),
@@ -151,9 +153,40 @@ abstract class ItemRelationList<
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Divider(),
-              LinearProgressIndicator(),
+            children: <Widget>[
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8.0,
+                  right: 8.0,
+                  top: 16.0,
+                  bottom: 16.0,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: _HeaderText(
+                        text: relationName,
+                      ),
+                    ),
+                    Container(
+                      constraints: limitHeight
+                          ? BoxConstraints.loose(
+                              Size.fromHeight(
+                                (MediaQuery.of(context).size.height / 3),
+                              ),
+                            )
+                          : null,
+                      child: SkeletonItemList(
+                        single: isSingleList,
+                        canBeDragged: true,
+                        itemHasImage: hasImage,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           );
         },
@@ -246,24 +279,24 @@ class _HeaderText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(text, style: Theme.of(context).textTheme.subtitle1),
-        trailingWidget ?? Container(),
+        trailingWidget ?? const SizedBox(),
       ],
     );
   }
 }
 
-class _ResultsList extends StatelessWidget {
-  const _ResultsList({
+class _RelationList extends StatelessWidget {
+  const _RelationList({
     Key? key,
     required this.headerText,
-    required this.resultList,
+    required this.relationList,
     this.linkWidget,
     this.trailingWidget,
     this.onListSearch,
   }) : super(key: key);
 
   final String headerText;
-  final Widget resultList;
+  final Widget relationList;
   final Widget? linkWidget;
   final Widget? trailingWidget;
   final void Function()? onListSearch;
@@ -294,15 +327,15 @@ class _ResultsList extends StatelessWidget {
                               .searchInListString,
                           onPressed: onListSearch,
                         )
-                      : Container(),
+                      : const SizedBox(),
                 ),
               ),
-              resultList,
+              relationList,
               SizedBox(
                 width: double.maxFinite,
                 child: linkWidget,
               ),
-              trailingWidget ?? Container(),
+              trailingWidget ?? const SizedBox(),
             ],
           ),
         ),
@@ -345,23 +378,14 @@ class _LinkButton<W extends Item> extends StatelessWidget {
           primary: Theme.of(context).brightness == Brightness.light
               ? Colors.grey[300]
               : Colors.grey[700],
-        ).copyWith(
-          elevation: MaterialStateProperty.resolveWith<double?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) {
-              return 2.0;
-            }
-
-            return 1.0;
-          }),
         ),
       ),
     );
   }
 }
 
-class _ResultsListSingle<W extends Item> extends StatelessWidget {
-  const _ResultsListSingle({
+class _RelationListSingle<W extends Item> extends StatelessWidget {
+  const _RelationListSingle({
     Key? key,
     required this.items,
     required this.relationName,
@@ -382,20 +406,19 @@ class _ResultsListSingle<W extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ResultsList(
+    return _RelationList(
       headerText: relationName,
-      resultList: ListView.builder(
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
+      relationList: ItemListBuilder(
+        canBeDragged: true,
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final W result = items[index];
+          final W relation = items[index];
 
           return DismissibleItem(
-            dismissibleKey: result.uniqueId,
-            itemWidget: itemBuilder(context, result),
+            dismissibleKey: relation.uniqueId,
+            itemWidget: itemBuilder(context, relation),
             onDismissed: (DismissDirection direction) {
-              updateDelete(result);
+              updateDelete(relation);
             },
             dismissIcon: Icons.link_off,
           );
@@ -407,13 +430,13 @@ class _ResultsListSingle<W extends Item> extends StatelessWidget {
               onSearch: onSearch,
               updateAdd: updateAdd,
             )
-          : Container(),
+          : const SizedBox(),
     );
   }
 }
 
-class _ResultsListMany<W extends Item> extends StatelessWidget {
-  const _ResultsListMany({
+class _RelationListMany<W extends Item> extends StatelessWidget {
+  const _RelationListMany({
     Key? key,
     required this.items,
     required this.relationName,
@@ -440,9 +463,9 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ResultsList(
-      headerText: relationName + ' (' + items.length.toString() + ')',
-      resultList: Container(
+    return _RelationList(
+      headerText: '$relationName (${items.length})',
+      relationList: Container(
         constraints: limitHeight
             ? BoxConstraints.loose(
                 Size.fromHeight(
@@ -450,18 +473,17 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
                 ),
               )
             : null,
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const ClampingScrollPhysics(),
+        child: ItemListBuilder(
+          canBeDragged: true,
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
-            final W result = items[index];
+            final W relation = items[index];
 
             return DismissibleItem(
-              dismissibleKey: result.uniqueId,
-              itemWidget: itemBuilder(context, result),
+              dismissibleKey: relation.uniqueId,
+              itemWidget: itemBuilder(context, relation),
               onDismissed: (DismissDirection direction) {
-                updateDelete(result);
+                updateDelete(relation);
               },
               dismissIcon: Icons.link_off,
             );
@@ -477,7 +499,7 @@ class _ResultsListMany<W extends Item> extends StatelessWidget {
           ? Column(
               children: trailingBuilder!(items),
             )
-          : Container(),
+          : const SizedBox(),
       onListSearch: onListSearch,
     );
   }
