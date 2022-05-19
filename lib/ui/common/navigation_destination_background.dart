@@ -227,6 +227,7 @@ class _SelectableAnimatedBuilder extends StatefulWidget {
     Key? key,
     required this.isSelected,
     this.duration = const Duration(milliseconds: 200),
+    // ignore: unused_element
     this.alwaysDoFullAnimation = false,
     required this.builder,
   }) : super(key: key);
@@ -548,6 +549,7 @@ class _ClampTextScaleFactor extends StatelessWidget {
   /// surrounding [child].
   const _ClampTextScaleFactor({
     Key? key,
+    // ignore: unused_element
     this.lowerLimit = 0,
     this.upperLimit = double.infinity,
     required this.child,
