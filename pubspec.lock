@@ -118,7 +118,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f2e6ca287813c84fcc6e521e05acf08a51c44f38
+      resolved-ref: "9705abff6c0fe1cd683d23f31aebe05730ef8fa1"
       url: "https://github.com/viplmad/cloudinary_client.git"
     source: git
     version: "0.1.0"
@@ -323,7 +323,7 @@ packages:
       name: image_picker_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.5+4"
+    version: "0.8.5+5"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -561,7 +561,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   query:
     dependency: transitive
     description:
@@ -663,7 +663,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: c0c483c124487437a69b6e32a86fa67ed475395f
+      resolved-ref: f6c95bcd6142d58cf21c7ad30c6ef116cc292dbf
       url: "https://github.com/viplmad/smoothratingbar.git"
     source: git
     version: "1.1.1"
@@ -771,7 +771,7 @@ packages:
       name: url_launcher_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.16"
+    version: "6.0.17"
   url_launcher_linux:
     dependency: transitive
     description:
