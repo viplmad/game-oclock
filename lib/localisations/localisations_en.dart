@@ -604,6 +604,8 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String undoString = 'Undo';
   @override
+  final String unableToUndoString = 'Unable to undo action';
+  @override
   final String moreString = 'More';
   @override
   final String searchInListString = 'Search in list';

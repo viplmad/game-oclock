@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme_utils.dart';
+
 void showSnackBar(
   BuildContext context, {
   required String message,
@@ -63,9 +65,7 @@ SnackBarAction backgroundSnackBarAction(
 }) {
   return SnackBarAction(
     label: label,
-    textColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
-        : Colors.black,
+    textColor: ThemeUtils.isThemeDark(context) ? Colors.black : Colors.white,
     onPressed: onPressed,
   );
 }

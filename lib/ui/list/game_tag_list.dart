@@ -65,7 +65,12 @@ class _GameTagAppBar extends ItemAppBar<GameTag, GameTagListBloc> {
           themeColor: GameTagTheme.primaryColour,
           gridAllowed: false,
           searchRouteName: gameTagSearchRoute,
+          detailRouteName: gameTagDetailRoute,
         );
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).gameTagString;
 
   @override
   String typesName(BuildContext context) =>

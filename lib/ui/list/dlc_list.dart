@@ -18,8 +18,14 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   }) : super(
           key: key,
           themeColor: DLCTheme.primaryColour,
+          gridAllowed: DLC.hasImage,
           searchRouteName: dlcSearchRoute,
+          detailRouteName: dlcDetailRoute,
         );
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).dlcString;
 
   @override
   String typesName(BuildContext context) =>

@@ -103,6 +103,7 @@ class SkeletonGenericField extends StatelessWidget {
                       )
                     : SizedBox(
                         height: 24,
+                        width: 200,
                         child: Skeleton(
                           order: order,
                         ),

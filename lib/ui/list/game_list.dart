@@ -17,6 +17,7 @@ import '../theme/theme.dart' show GameTheme;
 import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
 import '../statistics/statistics_arguments.dart';
+import '../theme/theme_utils.dart';
 import 'list.dart';
 
 class GameAppBar extends StatelessWidget {
@@ -53,7 +54,9 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
   }) : super(
           key: key,
           themeColor: GameTheme.primaryColour,
+          gridAllowed: Game.hasImage,
           searchRouteName: gameSearchRoute,
+          detailRouteName: gameDetailRoute,
           calendarRouteName: gameMultiCalendarRoute,
         );
 
@@ -82,6 +85,10 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
       }
     };
   }
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).gameString;
 
   @override
   String typesName(BuildContext context) =>
@@ -194,6 +201,7 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
+                    color: ElevationOverlay.applySurfaceTint((ThemeUtils.isThemeDark(context) ? Colors.grey[800]! : Colors.white), GameTheme.primaryColour, 1.0),
                   ),
                 ),
               ];

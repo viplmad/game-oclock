@@ -18,8 +18,14 @@ class StoreAppBar extends ItemAppBar<Store, StoreListBloc> {
   }) : super(
           key: key,
           themeColor: StoreTheme.primaryColour,
+          gridAllowed: Store.hasImage,
           searchRouteName: storeSearchRoute,
+          detailRouteName: storeDetailRoute,
         );
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).storeString;
 
   @override
   String typesName(BuildContext context) =>

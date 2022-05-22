@@ -20,4 +20,8 @@ class ThemeUtils {
 
     return gameTheme;
   }
+
+  static bool isThemeDark(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
 }

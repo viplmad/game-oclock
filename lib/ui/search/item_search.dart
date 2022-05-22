@@ -14,6 +14,7 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
+import '../theme/theme_utils.dart';
 
 abstract class ItemSearch<
         T extends Item,
@@ -290,12 +291,10 @@ class _ItemSearchBodyState<
           );
         },
         style: TextButton.styleFrom(
-          primary: Theme.of(context).brightness == Brightness.light
-              ? Colors.black87
-              : Colors.white,
-          backgroundColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black54,
+          primary:
+              ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
+          backgroundColor:
+              ThemeUtils.isThemeDark(context) ? Colors.black54 : Colors.white,
         ),
         child: Text(
           GameCollectionLocalisations.of(context)

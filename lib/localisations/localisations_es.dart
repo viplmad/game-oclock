@@ -608,6 +608,8 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String undoString = 'Deshacer';
   @override
+  final String unableToUndoString = 'No ha sido posible deshacer la acción';
+  @override
   final String moreString = 'Más';
   @override
   final String searchInListString = 'Buscar en lista';

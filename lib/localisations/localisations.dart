@@ -263,6 +263,7 @@ abstract class GameCollectionLocalisations {
 
   String linkString(String typeString);
   String get undoString;
+  String get unableToUndoString;
   String get moreString;
   String get searchInListString;
   String linkedString(String typeString);

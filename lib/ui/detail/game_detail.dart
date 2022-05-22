@@ -255,26 +255,7 @@ class _GameDetailBody
         item: game,
         itemUpdater: (bool newValue) => game.copyWith(isBackup: newValue),
       ),
-      ListTileTheme.merge(
-        child: ListTile(
-          title: Text(
-            GameCollectionLocalisations.of(context).singleCalendarViewString,
-          ),
-          trailing: const Icon(Icons.arrow_forward),
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              gameSingleCalendarRoute,
-              arguments: SingleGameCalendarArguments(
-                itemId: itemId,
-                onUpdate: () {
-                  BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
-                },
-              ),
-            );
-          },
-        ),
-      ),
+      _gameCalendarField(context),
       itemDurationField(
         context,
         fieldName: GameCollectionLocalisations.of(context).timeLogsFieldString,
@@ -361,26 +342,7 @@ class _GameDetailBody
         fieldName: GameCollectionLocalisations.of(context).backupFieldString,
         order: order++,
       ),
-      ListTileTheme.merge(
-        child: ListTile(
-          title: Text(
-            GameCollectionLocalisations.of(context).singleCalendarViewString,
-          ),
-          trailing: const Icon(Icons.arrow_forward),
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              gameSingleCalendarRoute,
-              arguments: SingleGameCalendarArguments(
-                itemId: itemId,
-                onUpdate: () {
-                  BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
-                },
-              ),
-            );
-          },
-        ),
-      ),
+      _gameCalendarField(context),
       itemSkeletonField(
         fieldName: GameCollectionLocalisations.of(context).timeLogsFieldString,
         order: order++,
@@ -396,6 +358,29 @@ class _GameDetailBody
         },
       ),
     ];
+  }
+
+  Widget _gameCalendarField(BuildContext context) {
+    return ListTileTheme.merge(
+      child: ListTile(
+        title: Text(
+          GameCollectionLocalisations.of(context).singleCalendarViewString,
+        ),
+        trailing: const Icon(Icons.arrow_forward),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            gameSingleCalendarRoute,
+            arguments: SingleGameCalendarArguments(
+              itemId: itemId,
+              onUpdate: () {
+                BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

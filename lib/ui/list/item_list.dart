@@ -25,14 +25,16 @@ abstract class ItemAppBar<T extends Item,
   const ItemAppBar({
     Key? key,
     required this.themeColor,
-    this.gridAllowed = true,
-    this.searchRouteName = '',
+    required this.gridAllowed,
+    required this.searchRouteName,
+    required this.detailRouteName,
     this.calendarRouteName = '',
   }) : super(key: key);
 
   final Color themeColor;
   final bool gridAllowed;
   final String searchRouteName;
+  final String detailRouteName;
   final String calendarRouteName;
 
   @override
@@ -49,13 +51,39 @@ abstract class ItemAppBar<T extends Item,
           tooltip: GameCollectionLocalisations.of(context).searchAllString,
           onPressed: searchRouteName.isNotEmpty
               ? () {
-                  Navigator.pushNamed(
+                  Navigator.pushNamed<T>(
                     context,
                     searchRouteName,
                     arguments: const SearchArguments(
                       onTapReturn: false,
                     ),
-                  );
+                  ).then((T? added) {
+                    if (added != null) {
+                      final String typeString = typeName(context);
+                      final String message =
+                          GameCollectionLocalisations.of(context)
+                              .addedString(typeString);
+                      showSnackBar(
+                        context,
+                        message: message,
+                        seconds: 2,
+                        snackBarAction: backgroundSnackBarAction(
+                          context,
+                          label: GameCollectionLocalisations.of(context)
+                              .openString,
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              detailRouteName,
+                              arguments: DetailArguments<T>(
+                                item: added,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  });
                 }
               : null,
         ),
@@ -122,6 +150,7 @@ abstract class ItemAppBar<T extends Item,
     };
   }
 
+  String typeName(BuildContext context);
   String typesName(BuildContext context);
   List<String> views(BuildContext context);
 }
@@ -264,11 +293,24 @@ abstract class ItemList<
               const LinearProgressIndicator(),
               Container(
                 color: Colors.grey,
-                child: const ListTile(
-                  title: SizedBox(
-                    height: 24,
-                    child: Skeleton(),
-                  ),
+                child: Row(
+                  // TODO generic fake listitle
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 16.0,
+                        right: 16.0,
+                        top: 10.0,
+                        bottom: 10.0,
+                      ),
+                      child: SizedBox(
+                        height: 24,
+                        width: 200,
+                        child: Skeleton(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -334,28 +376,47 @@ abstract class ItemListBody<T extends Item,
       children: <Widget>[
         Container(
           color: Colors.grey,
-          child: ListTile(
-            title: Text(viewTitle(context)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.manage_search),
-                  tooltip: GameCollectionLocalisations.of(context)
-                      .searchInViewString,
-                  onPressed: _onSearchTap(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
                 ),
-                statisticsRouteName.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.insert_chart),
-                        tooltip: GameCollectionLocalisations.of(context)
-                            .statsInViewString,
-                        onPressed:
-                            items.isNotEmpty ? onStatisticsTap(context) : null,
-                      )
-                    : const SizedBox(),
-              ],
-            ),
+                child: Text(
+                  viewTitle(context),
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.manage_search),
+                      tooltip: GameCollectionLocalisations.of(context)
+                          .searchInViewString,
+                      onPressed: _onSearchTap(context),
+                    ),
+                    statisticsRouteName.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.insert_chart),
+                            tooltip: GameCollectionLocalisations.of(context)
+                                .statsInViewString,
+                            onPressed: items.isNotEmpty
+                                ? onStatisticsTap(context)
+                                : null,
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(

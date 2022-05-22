@@ -15,6 +15,7 @@ import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
+import '../theme/theme_utils.dart';
 
 abstract class ItemRelationList<
         T extends Item,
@@ -60,11 +61,22 @@ abstract class ItemRelationList<
               context,
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
-                BlocProvider.of<S>(context).add(
-                  DeleteItemRelation<W>(
-                    state.otherItem,
-                  ),
-                );
+                try {
+                  BlocProvider.of<S>(context).add(
+                    DeleteItemRelation<W>(
+                      state.otherItem,
+                    ),
+                  );
+                } on FlutterError {
+                  // Catch error when undoing if bloc is no longer in context
+                  final String unableMessage =
+                      GameCollectionLocalisations.of(context)
+                          .unableToUndoString;
+                  showSnackBar(
+                    context,
+                    message: unableMessage,
+                  );
+                }
               },
             ),
           );
@@ -93,11 +105,22 @@ abstract class ItemRelationList<
               context,
               label: GameCollectionLocalisations.of(context).undoString,
               onPressed: () {
-                BlocProvider.of<S>(context).add(
-                  AddItemRelation<W>(
-                    state.otherItem,
-                  ),
-                );
+                try {
+                  BlocProvider.of<S>(context).add(
+                    AddItemRelation<W>(
+                      state.otherItem,
+                    ),
+                  );
+                } on FlutterError {
+                  // Catch error when undoing if bloc is no longer in context
+                  final String unableMessage =
+                      GameCollectionLocalisations.of(context)
+                          .unableToUndoString;
+                  showSnackBar(
+                    context,
+                    message: unableMessage,
+                  );
+                }
               },
             ),
           );
@@ -372,12 +395,11 @@ class _LinkButton<W extends Item> extends StatelessWidget {
           });
         },
         style: ElevatedButton.styleFrom(
-          onPrimary: Theme.of(context).brightness == Brightness.light
-              ? Colors.black87
-              : Colors.white,
-          primary: Theme.of(context).brightness == Brightness.light
-              ? Colors.grey[300]
-              : Colors.grey[700],
+          onPrimary:
+              ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
+          primary: ThemeUtils.isThemeDark(context)
+              ? Colors.grey[700]
+              : Colors.grey[300],
         ),
       ),
     );

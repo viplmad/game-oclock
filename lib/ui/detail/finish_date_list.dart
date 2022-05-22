@@ -214,6 +214,7 @@ abstract class FinishList<
   F createFinish(DateTime dateTime);
 }
 
+// TODO avoid having duplicate method
 // ignore: must_be_immutable
 abstract class SkeletonFinishList<
         T extends Item,

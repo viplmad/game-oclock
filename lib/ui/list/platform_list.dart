@@ -18,8 +18,14 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   }) : super(
           key: key,
           themeColor: PlatformTheme.primaryColour,
+          gridAllowed: Platform.hasImage,
           searchRouteName: platformSearchRoute,
+          detailRouteName: platformDetailRoute,
         );
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).platformString;
 
   @override
   String typesName(BuildContext context) =>

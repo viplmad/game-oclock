@@ -21,8 +21,9 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
   }) : super(
           key: key,
           themeColor: PurchaseTheme.primaryColour,
-          gridAllowed: false,
+          gridAllowed: Purchase.hasImage,
           searchRouteName: purchaseSearchRoute,
+          detailRouteName: purchaseDetailRoute,
         );
 
   @override
@@ -51,6 +52,10 @@ class PurchaseAppBar extends ItemAppBar<Purchase, PurchaseListBloc> {
       }
     };
   }
+
+  @override
+  String typeName(BuildContext context) =>
+      GameCollectionLocalisations.of(context).purchaseString;
 
   @override
   String typesName(BuildContext context) =>
