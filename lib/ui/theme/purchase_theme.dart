@@ -45,7 +45,6 @@ class PurchaseTheme {
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
       hasImage: Purchase.hasImage,
-      color: primaryColour,
       onTap: onTap(context, item),
     );
   }

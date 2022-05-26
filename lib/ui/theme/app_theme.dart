@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'theme_utils.dart';
+
 class AppTheme {
   AppTheme._();
 
@@ -19,6 +21,18 @@ class AppTheme {
       ).copyWith(
         secondary: _secondaryColour,
       ),
+      cardTheme: CardTheme(
+        surfaceTintColor: defaultSurfaceTintColor(brightness),
+      ),
     );
+  }
+
+  static Color defaultThemeSurfaceTintColor(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+    return defaultSurfaceTintColor(brightness);
+  }
+
+  static Color defaultSurfaceTintColor(Brightness brightness) {
+    return ThemeUtils.isDark(brightness) ? Colors.grey[800]! : Colors.white;
   }
 }

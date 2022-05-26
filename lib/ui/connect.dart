@@ -9,6 +9,7 @@ import 'package:backend/repository/repository.dart'
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
+import 'theme/app_theme.dart';
 
 class Connectpage extends StatelessWidget {
   const Connectpage({
@@ -39,6 +40,9 @@ class _ConnectpageBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(GameCollectionLocalisations.appTitle),
+        // No elevation so background color is not affected by theme
+        elevation: 0.0,
+        scrolledUnderElevation: 0.0,
       ),
       body: BlocListener<ConnectionBloc, ConnectState>(
         listener: (BuildContext context, ConnectState state) {
@@ -89,25 +93,33 @@ class _ConnectpageBody extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        child: Text(
-                          GameCollectionLocalisations.of(context).retryString,
-                        ),
                         onPressed: () {
                           BlocProvider.of<ConnectionBloc>(context)
                               .add(Reconnect());
                         },
+                        style: ElevatedButton.styleFrom(
+                          surfaceTintColor:
+                              AppTheme.defaultThemeSurfaceTintColor(context),
+                        ),
+                        child: Text(
+                          GameCollectionLocalisations.of(context).retryString,
+                        ),
                       ),
                       ElevatedButton(
-                        child: Text(
-                          GameCollectionLocalisations.of(context)
-                              .changeRepositoryString,
-                        ),
                         onPressed: () {
                           Navigator.pushReplacementNamed(
                             context,
                             repositorySettingsRoute,
                           );
                         },
+                        style: ElevatedButton.styleFrom(
+                          surfaceTintColor:
+                              AppTheme.defaultThemeSurfaceTintColor(context),
+                        ),
+                        child: Text(
+                          GameCollectionLocalisations.of(context)
+                              .changeRepositoryString,
+                        ),
                       ),
                     ],
                   ),

@@ -84,6 +84,9 @@ class SingleGameCalendar extends StatelessWidget {
           title: Text(
             GameCollectionLocalisations.of(context).singleCalendarViewString,
           ),
+          // Fixed elevation so background color doesn't change on scroll
+          elevation: 1.0,
+          scrolledUnderElevation: 1.0,
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),

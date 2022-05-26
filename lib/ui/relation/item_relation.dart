@@ -15,6 +15,7 @@ import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
+import '../theme/app_theme.dart';
 import '../theme/theme_utils.dart';
 
 abstract class ItemRelationList<
@@ -400,6 +401,7 @@ class _LinkButton<W extends Item> extends StatelessWidget {
           primary: ThemeUtils.isThemeDark(context)
               ? Colors.grey[700]
               : Colors.grey[300],
+          surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
         ),
       ),
     );

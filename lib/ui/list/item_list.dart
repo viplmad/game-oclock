@@ -45,6 +45,9 @@ abstract class ItemAppBar<T extends Item,
     return AppBar(
       title: Text(typesName(context)),
       surfaceTintColor: themeColor,
+      // Fixed elevation so background color doesn't change on scroll
+      elevation: 1.0,
+      scrolledUnderElevation: 1.0,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.search),

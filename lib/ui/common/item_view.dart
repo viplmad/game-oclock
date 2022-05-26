@@ -56,7 +56,6 @@ class ItemCard extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
-    this.color,
     required this.hasImage,
     this.imageURL,
     required this.onTap,
@@ -65,7 +64,6 @@ class ItemCard extends StatelessWidget {
   final String title;
   final String? subtitle;
   final String? trailing;
-  final Color? color;
   final bool hasImage;
   final String? imageURL;
   final void Function()? onTap;
@@ -73,8 +71,6 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // Custom color based on primary color
-      surfaceTintColor: color,
       // No margin so dismissible background fits well
       margin: const EdgeInsets.all(0.0),
       child: InkWell(

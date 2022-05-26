@@ -59,7 +59,6 @@ class GameTheme {
       title: itemTitle(item),
       subtitle: _itemSubtitle(context, item),
       hasImage: Game.hasImage,
-      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
@@ -77,7 +76,6 @@ class GameTheme {
       trailing:
           GameCollectionLocalisations.of(context).formatDuration(totalTime),
       hasImage: Game.hasImage,
-      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

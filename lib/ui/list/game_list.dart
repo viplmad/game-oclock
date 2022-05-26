@@ -13,11 +13,11 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
+import '../theme/app_theme.dart';
 import '../theme/theme.dart' show GameTheme;
 import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
 import '../statistics/statistics_arguments.dart';
-import '../theme/theme_utils.dart';
 import 'list.dart';
 
 class GameAppBar extends StatelessWidget {
@@ -201,7 +201,7 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
-                    color: ElevationOverlay.applySurfaceTint((ThemeUtils.isThemeDark(context) ? Colors.grey[800]! : Colors.white), GameTheme.primaryColour, 1.0),
+                    color: ElevationOverlay.applySurfaceTint(AppTheme.defaultThemeSurfaceTintColor(context), GameTheme.primaryColour, 1.0),
                   ),
                 ),
               ];

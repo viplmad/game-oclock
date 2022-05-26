@@ -22,6 +22,10 @@ class ThemeUtils {
   }
 
   static bool isThemeDark(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark;
+    return isDark(Theme.of(context).brightness);
+  }
+
+  static bool isDark(Brightness brightness) {
+    return brightness == Brightness.dark;
   }
 }

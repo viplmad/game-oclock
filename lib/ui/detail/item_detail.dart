@@ -185,6 +185,11 @@ abstract class ItemDetailBody<
       SliverAppBar(
         expandedHeight: MediaQuery.of(context).size.height /
             3, //Third part of height of screen
+        surfaceTintColor: Theme.of(context).primaryColor,
+        // Fixed elevation so background color doesn't change on scroll
+        forceElevated: true,
+        elevation: 1.0,
+        scrolledUnderElevation: 1.0,
         floating: false,
         pinned: true,
         snap: false,

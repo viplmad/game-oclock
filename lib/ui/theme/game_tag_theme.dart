@@ -32,7 +32,6 @@ class GameTagTheme {
     return ItemCard(
       title: itemTitle(item),
       hasImage: GameTag.hasImage,
-      color: primaryColour,
       onTap: onTap(context, item),
     );
   }

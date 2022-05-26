@@ -53,6 +53,9 @@ class RepositorySettings extends StatelessWidget {
           title: Text(
             GameCollectionLocalisations.of(context).repositorySettingsString,
           ),
+          // No elevation so background color is not affected by theme
+          elevation: 0.0,
+          scrolledUnderElevation: 0.0,
         ),
         body: const _RepositorySettingsBody(),
         floatingActionButton:

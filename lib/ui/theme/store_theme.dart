@@ -41,7 +41,6 @@ class StoreTheme {
     return ItemCard(
       title: itemTitle(item),
       hasImage: Store.hasImage,
-      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

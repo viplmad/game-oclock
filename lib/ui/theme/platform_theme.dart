@@ -49,7 +49,6 @@ class PlatformTheme {
     return ItemCard(
       title: itemTitle(item),
       hasImage: Platform.hasImage,
-      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );

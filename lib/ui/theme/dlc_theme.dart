@@ -41,7 +41,6 @@ class DLCTheme {
     return ItemCard(
       title: itemTitle(item),
       hasImage: DLC.hasImage,
-      color: primaryColour,
       imageURL: item.image.url,
       onTap: onTap(context, item),
     );
