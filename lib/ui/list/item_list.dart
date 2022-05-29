@@ -11,6 +11,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/header_text.dart';
 import '../common/item_view.dart';
 import '../common/list_view.dart';
 import '../common/skeleton.dart';
@@ -296,25 +297,7 @@ abstract class ItemList<
               const LinearProgressIndicator(),
               Container(
                 color: Colors.grey,
-                child: Row(
-                  // TODO generic fake listitle
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 16.0,
-                        right: 16.0,
-                        top: 10.0,
-                        bottom: 10.0,
-                      ),
-                      child: SizedBox(
-                        height: 24,
-                        width: 200,
-                        child: Skeleton(),
-                      ),
-                    ),
-                  ],
-                ),
+                child: const HeaderSkeleton(),
               ),
             ],
           );
@@ -379,47 +362,28 @@ abstract class ItemListBody<T extends Item,
       children: <Widget>[
         Container(
           color: Colors.grey,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
+          child: HeaderText(
+            text: viewTitle(context),
+            trailingWidget: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.manage_search),
+                  tooltip: GameCollectionLocalisations.of(context)
+                      .searchInViewString,
+                  onPressed: _onSearchTap(context),
                 ),
-                child: Text(
-                  viewTitle(context),
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    IconButton(
-                      icon: const Icon(Icons.manage_search),
-                      tooltip: GameCollectionLocalisations.of(context)
-                          .searchInViewString,
-                      onPressed: _onSearchTap(context),
-                    ),
-                    statisticsRouteName.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.insert_chart),
-                            tooltip: GameCollectionLocalisations.of(context)
-                                .statsInViewString,
-                            onPressed: items.isNotEmpty
-                                ? onStatisticsTap(context)
-                                : null,
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-            ],
+                statisticsRouteName.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.insert_chart),
+                        tooltip: GameCollectionLocalisations.of(context)
+                            .statsInViewString,
+                        onPressed:
+                            items.isNotEmpty ? onStatisticsTap(context) : null,
+                      )
+                    : const SizedBox(),
+              ],
+            ),
           ),
         ),
         Expanded(

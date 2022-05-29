@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_collection/ui/common/header_text.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -21,37 +22,28 @@ class RatingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-              child:
-                  Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-            ),
-          ],
-        ),
-        SmoothStarRating(
-          allowHalfRating: false,
-          starCount: 10,
-          rating: (value ?? 0).roundToDouble(),
-          color: GameTheme.ratingColour,
-          borderColor: GameTheme.ratingBorderColour,
-          size: 35.0,
-          onRated: editable
-              ? (double? newRating) {
-                  if (newRating != null) {
-                    final int updatedRating = newRating.toInt();
+    return ColumnListTile(
+      center: true,
+      title: HeaderText(
+        text: fieldName,
+      ),
+      subtitle: SmoothStarRating(
+        allowHalfRating: false,
+        starCount: 10,
+        rating: (value ?? 0).roundToDouble(),
+        color: GameTheme.ratingColour,
+        borderColor: GameTheme.ratingBorderColour,
+        size: 35.0,
+        onRated: editable
+            ? (double? newRating) {
+                if (newRating != null) {
+                  final int updatedRating = newRating.toInt();
 
-                    update!(updatedRating);
-                  }
+                  update!(updatedRating);
                 }
-              : null,
-        ),
-      ],
+              }
+            : null,
+      ),
     );
   }
 }
@@ -68,32 +60,22 @@ class SkeletonRatingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-              child:
-                  Text(fieldName, style: Theme.of(context).textTheme.subtitle1),
-            ),
-          ],
+    return ColumnListTile(
+      title: HeaderText(
+        text: fieldName,
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          top: 8.0,
+          bottom: 8.0,
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 8.0,
-            bottom: 8.0,
-          ),
-          child: Skeleton(
-            height: 16,
-            order: order,
-          ),
+        child: Skeleton(
+          height: 16,
+          order: order,
         ),
-      ],
+      ),
     );
   }
 }

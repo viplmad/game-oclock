@@ -46,7 +46,7 @@ class TriangleBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      foregroundPainter: TriangleBannerPainter(
+      foregroundPainter: _TriangleBannerPainter(
         message: message,
         textDirection: textDirection ?? Directionality.of(context),
         location: location,
@@ -59,35 +59,8 @@ class TriangleBanner extends StatelessWidget {
   }
 }
 
-//Custom banner container shape
-class TriangleBannerClipper extends CustomClipper<Path> {
-  TriangleBannerClipper(this.location);
-
-  final TriangleBannerLocation location;
-
-  @override
-  Path getClip(Size size) {
-    final Path path = Path();
-
-    if (location == TriangleBannerLocation.start) {
-      path.lineTo(size.width, 0);
-      path.lineTo(size.width, size.height);
-    } else {
-      path.lineTo(size.width, 0);
-      path.lineTo(0, size.height);
-    }
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
-}
-
-class TriangleBannerPainter extends CustomPainter {
-  TriangleBannerPainter({
+class _TriangleBannerPainter extends CustomPainter {
+  _TriangleBannerPainter({
     required this.message,
     required this.textDirection,
     required this.location,
@@ -143,7 +116,7 @@ class TriangleBannerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(TriangleBannerPainter oldDelegate) {
+  bool shouldRepaint(_TriangleBannerPainter oldDelegate) {
     return message != oldDelegate.message ||
         location != oldDelegate.location ||
         color != oldDelegate.color ||

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../header_text.dart';
 import '../skeleton.dart';
 
 class GenericField<K> extends StatelessWidget {
@@ -38,31 +39,11 @@ class GenericField<K> extends StatelessWidget {
         : null;
 
     return extended
-        ? InkWell(
+        ? ColumnListTile(
+            title: HeaderText(text: fieldName),
+            subtitle: Text(shownValue ?? ''),
             onTap: onTapWrapped,
             onLongPress: onLongPress,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                  child: Text(
-                    fieldName,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    top: 8.0,
-                    bottom: 8.0,
-                  ),
-                  child: Text(shownValue ?? ''),
-                ),
-              ],
-            ),
           )
         : ListTileTheme.merge(
             child: ListTile(
@@ -90,38 +71,22 @@ class SkeletonGenericField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return extended
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: fieldName != null
-                    ? Text(
-                        fieldName!,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      )
-                    : SizedBox(
-                        height: 24,
-                        width: 200,
-                        child: Skeleton(
-                          order: order,
-                        ),
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: 8.0,
-                  bottom: 8.0,
-                ),
-                child: Skeleton(
-                  height: 16,
-                  order: order,
-                ),
-              ),
-            ],
+        ? ColumnListTile(
+            title: fieldName != null
+                ? HeaderText(
+                    text: fieldName!,
+                  )
+                : SizedBox(
+                    height: 24,
+                    width: 200,
+                    child: Skeleton(
+                      order: order,
+                    ),
+                  ),
+            subtitle: Skeleton(
+              height: 16,
+              order: order,
+            ),
           )
         : ListTileTheme.merge(
             child: ListTile(

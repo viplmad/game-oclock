@@ -10,6 +10,7 @@ import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/header_text.dart';
 import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
@@ -188,11 +189,8 @@ abstract class ItemRelationList<
                 ),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: _HeaderText(
-                        text: relationName,
-                      ),
+                    HeaderText(
+                      text: relationName,
                     ),
                     Container(
                       constraints: limitHeight
@@ -287,28 +285,6 @@ abstract class ItemRelationList<
   Widget cardBuilder(BuildContext context, W item);
 }
 
-class _HeaderText extends StatelessWidget {
-  const _HeaderText({
-    Key? key,
-    required this.text,
-    this.trailingWidget,
-  }) : super(key: key);
-
-  final String text;
-  final Widget? trailingWidget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(text, style: Theme.of(context).textTheme.subtitle1),
-        trailingWidget ?? const SizedBox(),
-      ],
-    );
-  }
-}
-
 class _RelationList extends StatelessWidget {
   const _RelationList({
     Key? key,
@@ -335,24 +311,20 @@ class _RelationList extends StatelessWidget {
           padding: const EdgeInsets.only(
             left: 8.0,
             right: 8.0,
-            top: 16.0,
-            bottom: 16.0,
+            bottom: 8.0,
           ),
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: _HeaderText(
-                  text: headerText,
-                  trailingWidget: onListSearch != null
-                      ? IconButton(
-                          icon: const Icon(Icons.search),
-                          tooltip: GameCollectionLocalisations.of(context)
-                              .searchInListString,
-                          onPressed: onListSearch,
-                        )
-                      : const SizedBox(),
-                ),
+              HeaderText(
+                text: headerText,
+                trailingWidget: onListSearch != null
+                    ? IconButton(
+                        icon: const Icon(Icons.search),
+                        tooltip: GameCollectionLocalisations.of(context)
+                            .searchInListString,
+                        onPressed: onListSearch,
+                      )
+                    : const SizedBox(),
               ),
               relationList,
               SizedBox(
