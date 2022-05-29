@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
+import '../../theme/theme.dart' show GameTheme;
 import '../skeleton.dart';
 
 class RatingField extends StatelessWidget {
@@ -37,8 +38,8 @@ class RatingField extends StatelessWidget {
           allowHalfRating: false,
           starCount: 10,
           rating: (value ?? 0).roundToDouble(),
-          color: Colors.yellow,
-          borderColor: Colors.orangeAccent,
+          color: GameTheme.ratingColour,
+          borderColor: GameTheme.ratingBorderColour,
           size: 35.0,
           onRated: editable
               ? (double? newRating) {

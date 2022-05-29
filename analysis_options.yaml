@@ -34,6 +34,7 @@ linter:
     - always_declare_return_types
     - annotate_overrides
     - prefer_final_fields
+    #- prefer_final_parameters
     - avoid_print
     - always_specify_types
     - avoid_positional_boolean_parameters

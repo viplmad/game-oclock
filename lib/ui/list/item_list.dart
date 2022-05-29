@@ -424,6 +424,7 @@ abstract class ItemListBody<T extends Item,
         ),
         Expanded(
           child: Scrollbar(
+            controller: scrollController,
             child: _listBuilder(context, scrollController),
           ),
         ),

@@ -6,6 +6,8 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 import '../common/bar_data.dart';
+import '../common/shape_utils.dart';
+import '../common/triangle_banner.dart';
 import 'theme_utils.dart';
 
 class GameTheme {
@@ -18,6 +20,9 @@ class GameTheme {
   static const Color nextUpStatusColour = Colors.redAccent;
   static const Color playingStatusColour = Colors.blueAccent;
   static const Color playedStatusColour = Colors.greenAccent;
+
+  static const Color ratingColour = Colors.yellow;
+  static const Color ratingBorderColour = Colors.orangeAccent;
 
   static const List<Color> statusColours = <Color>[
     lowPriorityStatusColour,
@@ -55,12 +60,15 @@ class GameTheme {
     Game item,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return ItemCard(
-      title: itemTitle(item),
-      subtitle: _itemSubtitle(context, item),
-      hasImage: Game.hasImage,
-      imageURL: item.image.url,
-      onTap: onTap(context, item),
+    return addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle: _itemSubtitle(context, item),
+        hasImage: Game.hasImage,
+        imageURL: item.image.url,
+        onTap: onTap(context, item),
+      ),
     );
   }
 
@@ -70,15 +78,35 @@ class GameTheme {
     Duration totalTime,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return ItemCard(
-      title: itemTitle(item),
-      subtitle: _itemSubtitle(context, item),
-      trailing:
-          GameCollectionLocalisations.of(context).formatDuration(totalTime),
-      hasImage: Game.hasImage,
-      imageURL: item.image.url,
-      onTap: onTap(context, item),
+    return addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle: _itemSubtitle(context, item),
+        trailing:
+            GameCollectionLocalisations.of(context).formatDuration(totalTime),
+        hasImage: Game.hasImage,
+        imageURL: item.image.url,
+        onTap: onTap(context, item),
+      ),
     );
+  }
+
+  static Widget addRatingBanner(Game item, Widget itemView) {
+    return item.rating > 0
+        ? ClipRRect(
+            borderRadius: ShapeUtils.cardBorderRadius,
+            child: TriangleBanner(
+              message: item.rating.toString(),
+              location: TriangleBannerLocation.end,
+              color: ratingBorderColour,
+              textStyle: const TextStyle(
+                fontSize: 20,
+              ),
+              child: itemView,
+            ),
+          )
+        : itemView;
   }
 
   static Widget itemGrid(
@@ -86,10 +114,13 @@ class GameTheme {
     Game item,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return ItemGrid(
-      title: itemTitle(item),
-      imageURL: item.image.url,
-      onTap: onTap(context, item),
+    return addRatingBanner(
+      item,
+      ItemGrid(
+        title: itemTitle(item),
+        imageURL: item.image.url,
+        onTap: onTap(context, item),
+      ),
     );
   }
 
