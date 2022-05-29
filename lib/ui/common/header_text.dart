@@ -82,7 +82,8 @@ class ColumnListTile extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Column(
-        crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
+        crossAxisAlignment:
+            center ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
         children: <Widget>[
           title,
           Padding(

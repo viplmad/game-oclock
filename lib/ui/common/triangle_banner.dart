@@ -110,9 +110,9 @@ class _TriangleBannerPainter extends CustomPainter {
     const double width = _kOffset * 2.0;
     _textPainter.layout(minWidth: width, maxWidth: width);
     _textPainter.paint(
-        canvas,
-        _kRect.topLeft +
-            Offset(0.0, (_kRect.height - _textPainter.height)),);
+      canvas,
+      _kRect.topLeft + Offset(0.0, (_kRect.height - _textPainter.height)),
+    );
   }
 
   @override

@@ -201,7 +201,11 @@ class GameTabs extends StatelessWidget {
                         );
                       }).toList(growable: false),
                     ),
-                    color: ElevationOverlay.applySurfaceTint(AppTheme.defaultThemeSurfaceTintColor(context), GameTheme.primaryColour, 1.0),
+                    color: ElevationOverlay.applySurfaceTint(
+                      AppTheme.defaultThemeSurfaceTintColor(context),
+                      GameTheme.primaryColour,
+                      1.0,
+                    ),
                   ),
                 ),
               ];

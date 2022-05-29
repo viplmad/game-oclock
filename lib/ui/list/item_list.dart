@@ -14,7 +14,6 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../common/header_text.dart';
 import '../common/item_view.dart';
 import '../common/list_view.dart';
-import '../common/skeleton.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
