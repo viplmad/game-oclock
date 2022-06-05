@@ -29,6 +29,7 @@ class TriangleBanner extends StatelessWidget {
     this.textDirection,
     required this.location,
     this.layoutDirection,
+    this.showShadow = true,
     this.color = _kColor,
     this.textStyle = _kTextStyle,
     this.size,
@@ -40,6 +41,7 @@ class TriangleBanner extends StatelessWidget {
   final TriangleBannerLocation location;
   final TextDirection? layoutDirection;
   final Color color;
+  final bool showShadow;
   final TextStyle textStyle;
   final double? size;
 
@@ -51,6 +53,7 @@ class TriangleBanner extends StatelessWidget {
         textDirection: textDirection ?? Directionality.of(context),
         location: location,
         layoutDirection: layoutDirection ?? Directionality.of(context),
+        showShadow: showShadow,
         color: color,
         textStyle: textStyle,
       ),
@@ -65,6 +68,7 @@ class _TriangleBannerPainter extends CustomPainter {
     required this.textDirection,
     required this.location,
     required this.layoutDirection,
+    this.showShadow = true,
     this.color = _kColor,
     this.textStyle = _kTextStyle,
   }) : super(repaint: PaintingBinding.instance.systemFonts);
@@ -73,6 +77,7 @@ class _TriangleBannerPainter extends CustomPainter {
   final TextDirection textDirection;
   final TriangleBannerLocation location;
   final TextDirection layoutDirection;
+  final bool showShadow;
   final Color color;
   final TextStyle textStyle;
 
@@ -87,7 +92,10 @@ class _TriangleBannerPainter extends CustomPainter {
   late Paint _paintBanner;
 
   void _prepare() {
-    _paintShadow = _shadow.toPaint();
+    if (showShadow) {
+      _paintShadow = _shadow.toPaint();
+    }
+
     _paintBanner = Paint()..color = color;
     _textPainter = TextPainter(
       text: TextSpan(style: textStyle, text: message),
@@ -105,8 +113,12 @@ class _TriangleBannerPainter extends CustomPainter {
     canvas
       ..translate(_translationX(size.width), 0.0)
       ..rotate(_rotation)
-      ..drawRect(_kRect, _paintShadow)
       ..drawRect(_kRect, _paintBanner);
+
+    if (showShadow) {
+      canvas.drawRect(_kRect, _paintShadow);
+    }
+
     const double width = _kOffset * 2.0;
     _textPainter.layout(minWidth: width, maxWidth: width);
     _textPainter.paint(

@@ -21,8 +21,8 @@ class GameTheme {
   static const Color playingStatusColour = Colors.blueAccent;
   static const Color playedStatusColour = Colors.greenAccent;
 
-  static const Color ratingColour = Colors.yellow;
-  static const Color ratingBorderColour = Colors.orangeAccent;
+  static const Color ratingColour = Color(0xA0B71C1C);
+  static const Color ratingBorderColour = secondaryColour;
 
   static const List<Color> statusColours = <Color>[
     lowPriorityStatusColour,
@@ -99,7 +99,8 @@ class GameTheme {
             child: TriangleBanner(
               message: item.rating.toString(),
               location: TriangleBannerLocation.end,
-              color: ratingBorderColour,
+              showShadow: false,
+              color: ratingColour,
               textStyle: const TextStyle(
                 fontSize: 20,
               ),
