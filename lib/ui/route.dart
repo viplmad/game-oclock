@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:backend/model/model.dart';
-import 'package:game_collection/ui/assistant/time_log_assistant.dart';
-import 'package:game_collection/ui/list/game_tag_list.dart';
 
+import 'assistant/time_log_assistant.dart';
+import 'list/game_tag_list.dart';
 import 'route_constants.dart';
 import 'connect.dart';
 import 'homepage.dart';

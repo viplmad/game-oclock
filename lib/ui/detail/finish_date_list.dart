@@ -13,6 +13,7 @@ import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 import '../common/skeleton.dart';
+import '../utils/field_utils.dart';
 
 // ignore: must_be_immutable
 abstract class FinishList<
@@ -68,8 +69,8 @@ abstract class SkeletonFinishList<
   @override
   Widget fieldBuilder(BuildContext context) {
     return Skeleton(
-      width: 100,
-      height: 16,
+      width: FieldUtils.subtitleTextWidth,
+      height: FieldUtils.subtitleTextHeight,
       order: order,
     );
   }

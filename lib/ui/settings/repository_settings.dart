@@ -19,7 +19,7 @@ import 'package:backend/bloc/repository_settings_manager/repository_settings_man
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
-import '../common/fab_utils.dart';
+import '../utils/fab_utils.dart';
 import '../common/tabs_delegate.dart';
 import '../route_constants.dart';
 

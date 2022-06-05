@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/field_utils.dart';
 import '../header_text.dart';
-import '../shape_utils.dart';
+import '../../utils/shape_utils.dart';
 import '../skeleton.dart';
 
 class EnumField extends StatelessWidget {
@@ -78,7 +79,7 @@ class SkeletonEnumField extends StatelessWidget {
           bottom: 8.0,
         ),
         child: Skeleton(
-          height: 16,
+          height: FieldUtils.subtitleTextHeight,
           order: order,
         ),
       ),

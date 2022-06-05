@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:game_collection/ui/common/header_text.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import '../../theme/theme.dart' show GameTheme;
+import '../../utils/field_utils.dart';
+import '../header_text.dart';
 import '../skeleton.dart';
 
 class RatingField extends StatelessWidget {
@@ -72,7 +73,7 @@ class SkeletonRatingField extends StatelessWidget {
           bottom: 8.0,
         ),
         child: Skeleton(
-          height: 16,
+          height: FieldUtils.subtitleTextHeight,
           order: order,
         ),
       ),

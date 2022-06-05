@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'shape_utils.dart';
+import '../utils/field_utils.dart';
+import '../utils/shape_utils.dart';
 import 'skeleton.dart';
 
 class DismissibleItem extends StatelessWidget {
@@ -110,9 +111,9 @@ class _ItemListTile extends StatelessWidget {
       leading: hasImage
           ? ConstrainedBox(
               constraints: const BoxConstraints(
-                minWidth: 100,
-                minHeight: 56,
-                maxWidth: 100,
+                minWidth: FieldUtils.imageWidth,
+                minHeight: FieldUtils.imageHeight,
+                maxWidth: FieldUtils.imageWidth,
                 maxHeight: 80,
               ),
               child: CachedImage(

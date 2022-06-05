@@ -25,7 +25,7 @@ import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 import '../common/item_view.dart';
-import '../common/shape_utils.dart';
+import '../utils/shape_utils.dart';
 import 'calendar_utils.dart';
 
 class SingleGameCalendar extends StatelessWidget {

@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/field_utils.dart';
+
 class SkeletonUtils {
   SkeletonUtils._();
 
@@ -79,8 +81,8 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
       child: ListTile(
         leading: widget.hasImage
             ? SizedBox(
-                width: 100,
-                height: 56,
+                width: FieldUtils.imageWidth,
+                height: FieldUtils.imageHeight,
                 child: Opacity(
                   opacity: gradientAnimation.value,
                   child: Container(
@@ -90,7 +92,7 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
               )
             : null,
         title: SizedBox(
-          height: 24,
+          height: FieldUtils.titleTextHeight,
           child: Opacity(
             opacity: gradientAnimation.value,
             child: Container(
@@ -101,7 +103,7 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
         subtitle: Opacity(
           opacity: gradientAnimation.value,
           child: Container(
-            height: 16,
+            height: FieldUtils.subtitleTextHeight,
             color: SkeletonUtils._gradientColor,
           ),
         ),

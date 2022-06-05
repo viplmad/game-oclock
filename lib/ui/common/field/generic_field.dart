@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/field_utils.dart';
 import '../header_text.dart';
 import '../skeleton.dart';
 
@@ -77,14 +78,14 @@ class SkeletonGenericField extends StatelessWidget {
                     text: fieldName!,
                   )
                 : SizedBox(
-                    height: 24,
-                    width: 200,
+                    width: FieldUtils.titleTextWidth,
+                    height: FieldUtils.titleTextHeight,
                     child: Skeleton(
                       order: order,
                     ),
                   ),
             subtitle: Skeleton(
-              height: 16,
+              height: FieldUtils.subtitleTextHeight,
               order: order,
             ),
           )
@@ -93,14 +94,14 @@ class SkeletonGenericField extends StatelessWidget {
               title: fieldName != null
                   ? Text(fieldName!)
                   : SizedBox(
-                      height: 24,
+                      height: FieldUtils.titleTextHeight,
                       child: Skeleton(
                         order: order,
                       ),
                     ),
               trailing: Skeleton(
-                width: 100,
-                height: 16,
+                width: FieldUtils.subtitleTextWidth,
+                height: FieldUtils.subtitleTextHeight,
                 order: order,
               ),
             ),

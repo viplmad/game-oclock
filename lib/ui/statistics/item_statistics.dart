@@ -9,11 +9,12 @@ import 'package:backend/repository/repository.dart'
 import 'package:backend/bloc/item_statistics/item_statistics.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
-import 'package:game_collection/ui/common/skeleton.dart';
 
 import '../common/field/generic_field.dart';
+import '../common/skeleton.dart';
 import '../common/statistics_histogram.dart';
 import '../common/year_picker_dialog.dart';
+import '../utils/field_utils.dart';
 
 abstract class ItemStatisticsView<
         GS extends ItemStatistics,
@@ -181,7 +182,7 @@ abstract class ItemStatisticsBody<
                 color: Colors.grey,
                 child: const ListTile(
                   title: SizedBox(
-                    height: 24,
+                    height: FieldUtils.titleTextHeight,
                     child: Skeleton(),
                   ),
                 ),
@@ -320,7 +321,7 @@ abstract class ItemStatisticsBody<
   }) {
     return ListTile(
       title: SizedBox(
-        height: 24,
+        height: FieldUtils.titleTextHeight,
         child: Skeleton(
           order: order,
         ),

@@ -4,13 +4,13 @@ import 'package:backend/model/model.dart'
     show GameGeneralStatistics, GameYearStatistics;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository;
-import 'package:backend/utils/statistics_utils.dart';
 
 import 'package:backend/bloc/item_statistics/item_statistics.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import 'statistics.dart';
+import 'statistics_utils.dart';
 
 class GameStatisticsView extends ItemStatisticsView<GameGeneralStatistics,
     GameYearStatistics, GameStatisticsBloc> {

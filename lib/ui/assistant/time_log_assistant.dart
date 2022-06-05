@@ -8,7 +8,7 @@ import 'package:backend/utils/time_of_day_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../common/fab_utils.dart';
+import '../utils/fab_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
 class TimeLogAssistant extends StatelessWidget {

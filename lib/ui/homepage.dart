@@ -16,7 +16,7 @@ import 'package:backend/model/app_tab.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import 'common/shape_utils.dart';
+import 'utils/shape_utils.dart';
 import 'list/list.dart';
 import 'theme/theme.dart';
 import 'common/bar_data.dart';

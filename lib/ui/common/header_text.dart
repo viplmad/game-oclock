@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/field_utils.dart';
 import 'skeleton.dart';
 
 class HeaderText extends StatelessWidget {
@@ -52,8 +53,8 @@ class HeaderSkeleton extends StatelessWidget {
         bottom: 10.0,
       ),
       child: SizedBox(
-        height: 24,
-        width: 200,
+        width: FieldUtils.titleTextWidth,
+        height: FieldUtils.titleTextHeight,
         child: Skeleton(),
       ),
     );

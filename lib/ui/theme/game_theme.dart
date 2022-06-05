@@ -6,7 +6,7 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
 import '../common/bar_data.dart';
-import '../common/shape_utils.dart';
+import '../utils/shape_utils.dart';
 import '../common/triangle_banner.dart';
 import 'theme_utils.dart';
 
