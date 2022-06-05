@@ -60,7 +60,7 @@ class GameTheme {
     Game item,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return addRatingBanner(
+    return _addRatingBanner(
       item,
       ItemCard(
         title: itemTitle(item),
@@ -78,7 +78,7 @@ class GameTheme {
     Duration totalTime,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return addRatingBanner(
+    return _addRatingBanner(
       item,
       ItemCard(
         title: itemTitle(item),
@@ -92,7 +92,7 @@ class GameTheme {
     );
   }
 
-  static Widget addRatingBanner(Game item, Widget itemView) {
+  static Widget _addRatingBanner(Game item, Widget itemView) {
     return item.rating > 0
         ? ClipRRect(
             borderRadius: ShapeUtils.cardBorderRadius,
@@ -114,7 +114,7 @@ class GameTheme {
     Game item,
     void Function()? Function(BuildContext, Game) onTap,
   ) {
-    return addRatingBanner(
+    return _addRatingBanner(
       item,
       ItemGrid(
         title: itemTitle(item),

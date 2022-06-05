@@ -216,42 +216,30 @@ class _DLCDetailBody
 }
 
 // ignore: must_be_immutable
-class DLCFinishList extends FinishList<DLC, DLCFinish,
-    DLCRelationBloc<DLCFinish>, DLCRelationManagerBloc<DLCFinish>> {
+class DLCFinishList extends FinishList<DLCFinish, DLCRelationBloc<DLCFinish>,
+    DLCRelationManagerBloc<DLCFinish>> {
   DLCFinishList({
     Key? key,
-    required String fieldName,
-    required DateTime? value,
-    required String relationTypeName,
-    required void Function() onUpdate,
-  }) : super(
-          key: key,
-          fieldName: fieldName,
-          value: value,
-          relationTypeName: relationTypeName,
-          onUpdate: onUpdate,
-        );
+    required super.fieldName,
+    required super.value,
+    required super.relationTypeName,
+    required super.onUpdate,
+  }) : super(key: key);
 
   @override
   DLCFinish createFinish(DateTime dateTime) => DLCFinish(dateTime: dateTime);
 }
 
 // ignore: must_be_immutable
-class SkeletonDLCFinishList extends SkeletonFinishList<DLC, DLCFinish,
+class SkeletonDLCFinishList extends SkeletonFinishList<DLCFinish,
     DLCRelationBloc<DLCFinish>, DLCRelationManagerBloc<DLCFinish>> {
   SkeletonDLCFinishList({
     Key? key,
-    required String fieldName,
-    required String relationTypeName,
-    required int order,
-    required void Function() onUpdate,
-  }) : super(
-          key: key,
-          fieldName: fieldName,
-          relationTypeName: relationTypeName,
-          order: order,
-          onUpdate: onUpdate,
-        );
+    required super.fieldName,
+    required super.relationTypeName,
+    required super.order,
+    required super.onUpdate,
+  }) : super(key: key);
 
   @override
   DLCFinish createFinish(DateTime dateTime) => DLCFinish(dateTime: dateTime);

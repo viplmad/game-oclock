@@ -385,42 +385,30 @@ class _GameDetailBody
 }
 
 // ignore: must_be_immutable
-class GameFinishDateList extends FinishList<Game, GameFinish,
+class GameFinishDateList extends FinishList<GameFinish,
     GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
   GameFinishDateList({
     Key? key,
-    required String fieldName,
-    required DateTime? value,
-    required String relationTypeName,
-    required void Function() onUpdate,
-  }) : super(
-          key: key,
-          fieldName: fieldName,
-          value: value,
-          relationTypeName: relationTypeName,
-          onUpdate: onUpdate,
-        );
+    required super.fieldName,
+    required super.value,
+    required super.relationTypeName,
+    required super.onUpdate,
+  }) : super(key: key);
 
   @override
   GameFinish createFinish(DateTime dateTime) => GameFinish(dateTime: dateTime);
 }
 
 // ignore: must_be_immutable
-class SkeletonGameFinishDateList extends SkeletonFinishList<Game, GameFinish,
+class SkeletonGameFinishDateList extends SkeletonFinishList<GameFinish,
     GameRelationBloc<GameFinish>, GameRelationManagerBloc<GameFinish>> {
   SkeletonGameFinishDateList({
     Key? key,
-    required String fieldName,
-    required String relationTypeName,
-    required int order,
-    required void Function() onUpdate,
-  }) : super(
-          key: key,
-          fieldName: fieldName,
-          relationTypeName: relationTypeName,
-          order: order,
-          onUpdate: onUpdate,
-        );
+    required super.fieldName,
+    required super.relationTypeName,
+    required super.order,
+    required super.onUpdate,
+  }) : super(key: key);
 
   @override
   GameFinish createFinish(DateTime dateTime) => GameFinish(dateTime: dateTime);

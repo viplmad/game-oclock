@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item, ItemFinish;
+import 'package:backend/model/model.dart' show ItemFinish;
 
 import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
@@ -16,223 +16,80 @@ import '../common/skeleton.dart';
 
 // ignore: must_be_immutable
 abstract class FinishList<
-        T extends Item,
         F extends ItemFinish,
         K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
-    extends StatelessWidget {
+    extends _FinishList<F, K, S> {
   FinishList({
     Key? key,
-    required this.fieldName,
+    required super.fieldName,
     required this.value,
-    required this.relationTypeName,
-    required this.onUpdate,
+    required super.relationTypeName,
+    required super.onUpdate,
   }) : super(key: key);
 
-  final String fieldName;
   final DateTime? value;
-  final String relationTypeName;
-  final void Function() onUpdate;
-
-  bool _hasUpdated = false;
 
   @override
-  // ignore: avoid_renaming_method_parameters
-  Widget build(BuildContext outerContext) {
+  Widget fieldBuilder(BuildContext context) {
     final String shownValue = value != null
-        ? GameCollectionLocalisations.of(outerContext).formatDate(value!)
+        ? GameCollectionLocalisations.of(context).formatDate(value!)
         : '';
 
-    return BlocListener<S, ItemRelationManagerState>(
-      listener: (BuildContext context, ItemRelationManagerState state) {
-        if (state is ItemRelationAdded<F>) {
-          _hasUpdated = true;
+    return BlocBuilder<K, ItemRelationState>(
+      builder: (BuildContext context, ItemRelationState state) {
+        String extra = '';
+        if (state is ItemRelationLoaded<F>) {
+          extra = state.otherItems.length > 1 ? '(+)' : '';
+        }
 
-          final String message = GameCollectionLocalisations.of(context)
-              .addedString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-          );
-        }
-        if (state is ItemRelationNotAdded) {
-          final String message = GameCollectionLocalisations.of(context)
-              .unableToAddString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: GameCollectionLocalisations.of(context).moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
-        }
-        if (state is ItemRelationDeleted<F>) {
-          _hasUpdated = true;
-
-          final String message = GameCollectionLocalisations.of(context)
-              .deletedString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-          );
-        }
-        if (state is ItemRelationNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context)
-              .unableToDeleteString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: GameCollectionLocalisations.of(context).moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
-        }
+        return Text('$shownValue $extra');
       },
-      child: ListTileTheme.merge(
-        child: ListTile(
-          title: Text(fieldName),
-          trailing: BlocBuilder<K, ItemRelationState>(
-            builder: (BuildContext context, ItemRelationState state) {
-              String extra = '';
-              if (state is ItemRelationLoaded<F>) {
-                extra = state.otherItems.length > 1 ? '(+)' : '';
-              }
-
-              return Text('$shownValue $extra');
-            },
-          ),
-          onTap: () {
-            showDialog(
-              context: outerContext,
-              builder: (BuildContext context) {
-                return WillPopScope(
-                  onWillPop: () async {
-                    if (_hasUpdated) {
-                      onUpdate();
-                    }
-                    return true;
-                  },
-                  child: AlertDialog(
-                    title: Text(fieldName),
-                    content: SizedBox(
-                      width: double.maxFinite,
-                      child: BlocBuilder<K, ItemRelationState>(
-                        bloc: BlocProvider.of<K>(outerContext),
-                        builder:
-                            (BuildContext context, ItemRelationState state) {
-                          if (state is ItemRelationLoaded<F>) {
-                            final List<F> values = state.otherItems;
-
-                            if (values.isEmpty) {
-                              return Text(
-                                GameCollectionLocalisations.of(context)
-                                    .emptyFinishDatesString,
-                              );
-                            }
-
-                            return ItemListBuilder(
-                              itemCount: values.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final F finish = values.elementAt(index);
-                                final String dateString =
-                                    GameCollectionLocalisations.of(context)
-                                        .formatDate(finish.dateTime);
-
-                                return ListTile(
-                                  title: Text(dateString),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.link_off),
-                                    onPressed: () {
-                                      BlocProvider.of<S>(outerContext).add(
-                                        DeleteItemRelation<F>(finish),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            );
-                          }
-
-                          if (state is ItemRelationNotLoaded) {
-                            return Center(
-                              child: Text(state.error),
-                            );
-                          }
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const <Widget>[
-                              LinearProgressIndicator(),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text(
-                          GameCollectionLocalisations.of(context)
-                              .addString(relationTypeName),
-                        ),
-                        onPressed: () {
-                          showGameDatePicker(
-                            context: context,
-                          ).then((DateTime? value) {
-                            if (value != null) {
-                              BlocProvider.of<S>(outerContext).add(
-                                AddItemRelation<F>(createFinish(value)),
-                              );
-                            }
-                          });
-                        },
-                      ),
-                      TextButton(
-                        child: Text(
-                          MaterialLocalizations.of(context).okButtonLabel,
-                        ),
-                        onPressed: () {
-                          Navigator.maybePop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
     );
   }
-
-  F createFinish(DateTime dateTime);
 }
 
-// TODO avoid having duplicate method
 // ignore: must_be_immutable
 abstract class SkeletonFinishList<
-        T extends Item,
+        F extends ItemFinish,
+        K extends Bloc<ItemRelationEvent, ItemRelationState>,
+        S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
+    extends _FinishList<F, K, S> {
+  SkeletonFinishList({
+    Key? key,
+    required super.fieldName,
+    required super.relationTypeName,
+    this.order = 0,
+    required super.onUpdate,
+  }) : super(key: key);
+
+  final int order;
+
+  @override
+  Widget fieldBuilder(BuildContext context) {
+    return Skeleton(
+      width: 100,
+      height: 16,
+      order: order,
+    );
+  }
+}
+
+// ignore: must_be_immutable
+abstract class _FinishList<
         F extends ItemFinish,
         K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
     extends StatelessWidget {
-  SkeletonFinishList({
+  _FinishList({
     Key? key,
     required this.fieldName,
     required this.relationTypeName,
-    required this.order,
     required this.onUpdate,
   }) : super(key: key);
 
   final String fieldName;
   final String relationTypeName;
-  final int order;
   final void Function() onUpdate;
 
   bool _hasUpdated = false;
@@ -294,114 +151,114 @@ abstract class SkeletonFinishList<
       child: ListTileTheme.merge(
         child: ListTile(
           title: Text(fieldName),
-          trailing: Skeleton(
-            width: 100,
-            height: 16,
-            order: order,
-          ),
-          onTap: () {
-            showDialog(
-              context: outerContext,
-              builder: (BuildContext context) {
-                return WillPopScope(
-                  onWillPop: () async {
-                    if (_hasUpdated) {
-                      onUpdate();
-                    }
-                    return true;
-                  },
-                  child: AlertDialog(
-                    title: Text(fieldName),
-                    content: SizedBox(
-                      width: double.maxFinite,
-                      child: BlocBuilder<K, ItemRelationState>(
-                        bloc: BlocProvider.of<K>(outerContext),
-                        builder:
-                            (BuildContext context, ItemRelationState state) {
-                          if (state is ItemRelationLoaded<F>) {
-                            final List<F> values = state.otherItems;
-
-                            if (values.isEmpty) {
-                              return Text(
-                                GameCollectionLocalisations.of(context)
-                                    .emptyFinishDatesString,
-                              );
-                            }
-
-                            return ItemListBuilder(
-                              itemCount: values.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final F finish = values.elementAt(index);
-                                final String dateString =
-                                    GameCollectionLocalisations.of(context)
-                                        .formatDate(finish.dateTime);
-
-                                return ListTile(
-                                  title: Text(dateString),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.link_off),
-                                    onPressed: () {
-                                      BlocProvider.of<S>(outerContext).add(
-                                        DeleteItemRelation<F>(finish),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            );
-                          }
-
-                          if (state is ItemRelationNotLoaded) {
-                            return Center(
-                              child: Text(state.error),
-                            );
-                          }
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const <Widget>[
-                              LinearProgressIndicator(),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text(
-                          GameCollectionLocalisations.of(context)
-                              .addString(relationTypeName),
-                        ),
-                        onPressed: () {
-                          showGameDatePicker(
-                            context: context,
-                          ).then((DateTime? value) {
-                            if (value != null) {
-                              BlocProvider.of<S>(outerContext).add(
-                                AddItemRelation<F>(createFinish(value)),
-                              );
-                            }
-                          });
-                        },
-                      ),
-                      TextButton(
-                        child: Text(
-                          MaterialLocalizations.of(context).okButtonLabel,
-                        ),
-                        onPressed: () {
-                          Navigator.maybePop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
+          trailing: fieldBuilder(outerContext),
+          onTap: _onTap(outerContext),
         ),
       ),
     );
   }
 
+  void Function() _onTap(BuildContext outerContext) {
+    return () {
+      showDialog(
+        context: outerContext,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async {
+              if (_hasUpdated) {
+                onUpdate();
+              }
+              return true;
+            },
+            child: AlertDialog(
+              title: Text(fieldName),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: BlocBuilder<K, ItemRelationState>(
+                  bloc: BlocProvider.of<K>(outerContext),
+                  builder: (BuildContext context, ItemRelationState state) {
+                    if (state is ItemRelationLoaded<F>) {
+                      final List<F> values = state.otherItems;
+
+                      if (values.isEmpty) {
+                        return Text(
+                          GameCollectionLocalisations.of(context)
+                              .emptyFinishDatesString,
+                        );
+                      }
+
+                      return ItemListBuilder(
+                        itemCount: values.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final F finish = values.elementAt(index);
+                          final String dateString =
+                              GameCollectionLocalisations.of(context)
+                                  .formatDate(finish.dateTime);
+
+                          return ListTile(
+                            title: Text(dateString),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.link_off),
+                              onPressed: () {
+                                BlocProvider.of<S>(outerContext).add(
+                                  DeleteItemRelation<F>(finish),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }
+
+                    if (state is ItemRelationNotLoaded) {
+                      return Center(
+                        child: Text(state.error),
+                      );
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const <Widget>[
+                        LinearProgressIndicator(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    GameCollectionLocalisations.of(context)
+                        .addString(relationTypeName),
+                  ),
+                  onPressed: () {
+                    showGameDatePicker(
+                      context: context,
+                    ).then((DateTime? value) {
+                      if (value != null) {
+                        BlocProvider.of<S>(outerContext).add(
+                          AddItemRelation<F>(createFinish(value)),
+                        );
+                      }
+                    });
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    MaterialLocalizations.of(context).okButtonLabel,
+                  ),
+                  onPressed: () {
+                    Navigator.maybePop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    };
+  }
+
+  Widget fieldBuilder(BuildContext context);
   F createFinish(DateTime dateTime);
 }
