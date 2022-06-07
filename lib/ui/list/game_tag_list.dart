@@ -132,20 +132,14 @@ class _GameTagList
 class _GameTagListBody extends ItemListBody<GameTag, GameTagListBloc> {
   const _GameTagListBody({
     Key? key,
-    required List<GameTag> items,
-    required int viewIndex,
-    required int? viewYear,
-    required void Function(GameTag) onDelete,
-    required ListStyle style,
-    required ScrollController scrollController,
+    required super.items,
+    required super.viewIndex,
+    required super.viewYear,
+    required super.onDelete,
+    required super.style,
+    required super.scrollController,
   }) : super(
           key: key,
-          items: items,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          onDelete: onDelete,
-          style: style,
-          scrollController: scrollController,
           detailRouteName: gameTagDetailRoute,
           searchRouteName: gameTagSearchRoute,
         );

@@ -3,7 +3,7 @@ import 'package:backend/entity/entity.dart'
 import 'package:backend/model/model.dart' show Item, Platform, Game, System;
 import 'package:backend/mapper/mapper.dart' show GameMapper, SystemMapper;
 import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, GameRepository, PlatformRepository;
+    show GameRepository, PlatformRepository;
 
 import 'item_relation_manager.dart';
 
@@ -11,13 +11,10 @@ class PlatformRelationManagerBloc<W extends Item>
     extends ItemRelationManagerBloc<Platform, PlatformID, W> {
   PlatformRelationManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required super.collectionRepository,
   })  : gameRepository = collectionRepository.gameRepository,
         platformRepository = collectionRepository.platformRepository,
-        super(
-          id: PlatformID(itemId),
-          collectionRepository: collectionRepository,
-        );
+        super(id: PlatformID(itemId));
 
   final GameRepository gameRepository;
   final PlatformRepository platformRepository;

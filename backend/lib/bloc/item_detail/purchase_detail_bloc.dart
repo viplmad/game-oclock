@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, PurchaseRepository;
 
-import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 class PurchaseDetailBloc extends ItemDetailBloc<Purchase, PurchaseEntity,
@@ -12,11 +11,10 @@ class PurchaseDetailBloc extends ItemDetailBloc<Purchase, PurchaseEntity,
   PurchaseDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required PurchaseDetailManagerBloc managerBloc,
+    required super.managerBloc,
   }) : super(
           id: PurchaseID(itemId),
           repository: collectionRepository.purchaseRepository,
-          managerBloc: managerBloc,
         );
 
   @override

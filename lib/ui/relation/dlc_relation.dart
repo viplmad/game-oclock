@@ -12,14 +12,11 @@ import 'relation.dart';
 class DLCGameRelationList extends _DLCRelationList<Game> {
   const DLCGameRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Game>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           isSingleList: true,
           hasImage: Game.hasImage,
           detailRouteName: gameDetailRoute,
@@ -35,14 +32,11 @@ class DLCGameRelationList extends _DLCRelationList<Game> {
 class DLCPurchaseRelationList extends _DLCRelationList<Purchase> {
   const DLCPurchaseRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Purchase>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: Purchase.hasImage,
           detailRouteName: purchaseDetailRoute,
           searchRouteName: purchaseSearchRoute,
@@ -58,25 +52,14 @@ abstract class _DLCRelationList<W extends Item> extends ItemRelationList<DLC, W,
     DLCRelationBloc<W>, DLCRelationManagerBloc<W>> {
   const _DLCRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<W>)? trailingBuilder,
-    bool limitHeight = true,
-    bool isSingleList = false,
-    required bool hasImage,
-    String detailRouteName = '',
-    required String searchRouteName,
-    required String localSearchRouteName,
-  }) : super(
-          key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
-          limitHeight: limitHeight,
-          isSingleList: isSingleList,
-          hasImage: hasImage,
-          detailRouteName: detailRouteName,
-          searchRouteName: searchRouteName,
-          localSearchRouteName: localSearchRouteName,
-        );
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
+    super.limitHeight = true,
+    super.isSingleList = false,
+    required super.hasImage,
+    super.detailRouteName = '',
+    required super.searchRouteName,
+    required super.localSearchRouteName,
+  }) : super(key: key);
 }

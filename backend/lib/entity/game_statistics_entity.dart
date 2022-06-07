@@ -123,37 +123,24 @@ class GameStatisticsEntity extends Equatable {
 
 class GameGeneralStatisticsEntity extends GameStatisticsEntity {
   const GameGeneralStatisticsEntity({
-    required int count,
-    required int ratingSum,
-    required int minReleaseYear,
-    required int maxReleaseYear,
-    required int lowPriorityCount,
-    required int nextUpCount,
-    required int playingCount,
-    required int playedCount,
-    required int finishCount,
-    required DateTime minFinishDate,
-    required DateTime maxFinishDate,
-    required Duration timeLogSum,
+    required super.count,
+    required super.ratingSum,
+    required super.minReleaseYear,
+    required super.maxReleaseYear,
+    required super.lowPriorityCount,
+    required super.nextUpCount,
+    required super.playingCount,
+    required super.playedCount,
+    required super.finishCount,
+    required super.minFinishDate,
+    required super.maxFinishDate,
+    required super.timeLogSum,
     required this.countByReleaseYear,
     required this.countByRating,
     required this.avgRatingByFinishYear,
     required this.countByFinishYear,
     required this.timeLogSumByFinishYear,
-  }) : super(
-          count: count,
-          ratingSum: ratingSum,
-          minReleaseYear: minReleaseYear,
-          maxReleaseYear: maxReleaseYear,
-          lowPriorityCount: lowPriorityCount,
-          nextUpCount: nextUpCount,
-          playingCount: playingCount,
-          playedCount: playedCount,
-          finishCount: finishCount,
-          minFinishDate: minFinishDate,
-          maxFinishDate: maxFinishDate,
-          timeLogSum: timeLogSum,
-        );
+  });
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;
@@ -238,35 +225,22 @@ class GameGeneralStatisticsEntity extends GameStatisticsEntity {
 
 class GameYearStatisticsEntity extends GameStatisticsEntity {
   const GameYearStatisticsEntity({
-    required int count,
-    required int ratingSum,
-    required int minReleaseYear,
-    required int maxReleaseYear,
-    required int lowPriorityCount,
-    required int nextUpCount,
-    required int playingCount,
-    required int playedCount,
-    required int finishCount,
-    required DateTime minFinishDate,
-    required DateTime maxFinishDate,
-    required Duration timeLogSum,
+    required super.count,
+    required super.ratingSum,
+    required super.minReleaseYear,
+    required super.maxReleaseYear,
+    required super.lowPriorityCount,
+    required super.nextUpCount,
+    required super.playingCount,
+    required super.playedCount,
+    required super.finishCount,
+    required super.minFinishDate,
+    required super.maxFinishDate,
+    required super.timeLogSum,
     required this.countByReleaseYear,
     required this.countByRating,
     required this.timeLogSumByMonth,
-  }) : super(
-          count: count,
-          ratingSum: ratingSum,
-          minReleaseYear: minReleaseYear,
-          maxReleaseYear: maxReleaseYear,
-          lowPriorityCount: lowPriorityCount,
-          nextUpCount: nextUpCount,
-          playingCount: playingCount,
-          playedCount: playedCount,
-          finishCount: finishCount,
-          minFinishDate: minFinishDate,
-          maxFinishDate: maxFinishDate,
-          timeLogSum: timeLogSum,
-        );
+  });
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;

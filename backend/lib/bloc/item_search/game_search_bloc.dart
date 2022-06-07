@@ -10,12 +10,9 @@ class GameSearchBloc
     extends ItemRemoteSearchBloc<Game, GameEntity, GameID, GameRepository> {
   GameSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
+    required super.viewIndex,
     this.viewYear,
-  }) : super(
-          repository: collectionRepository.gameRepository,
-          viewIndex: viewIndex,
-        );
+  }) : super(repository: collectionRepository.gameRepository);
 
   final int? viewYear;
 

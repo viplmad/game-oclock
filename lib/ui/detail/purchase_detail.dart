@@ -22,9 +22,9 @@ class PurchaseDetail extends ItemDetail<Purchase, PurchaseDetailBloc,
     PurchaseDetailManagerBloc> {
   const PurchaseDetail({
     Key? key,
-    required Purchase item,
-    void Function(Purchase? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   PurchaseDetailBloc detailBlocBuilder(
@@ -146,10 +146,9 @@ class _PurchaseDetailBody extends ItemDetailBody<Purchase, PurchaseDetailBloc,
     PurchaseDetailManagerBloc> {
   _PurchaseDetailBody({
     Key? key,
-    void Function(Purchase? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: Purchase.hasImage,
         );
 

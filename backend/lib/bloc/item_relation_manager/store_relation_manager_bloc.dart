@@ -2,7 +2,7 @@ import 'package:backend/entity/entity.dart' show PurchaseEntity, StoreID;
 import 'package:backend/model/model.dart' show Item, Store, Purchase;
 import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
 import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, StoreRepository;
+    show StoreRepository;
 
 import 'item_relation_manager.dart';
 
@@ -10,9 +10,9 @@ class StoreRelationManagerBloc<W extends Item>
     extends ItemRelationManagerBloc<Store, StoreID, W> {
   StoreRelationManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required super.collectionRepository,
   })  : storeRepository = collectionRepository.storeRepository,
-        super(id: StoreID(itemId), collectionRepository: collectionRepository);
+        super(id: StoreID(itemId));
 
   final StoreRepository storeRepository;
 

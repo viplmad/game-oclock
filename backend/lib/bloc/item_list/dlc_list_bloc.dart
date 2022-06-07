@@ -4,17 +4,13 @@ import 'package:backend/mapper/mapper.dart' show DLCMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, DLCRepository;
 
-import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 class DLCListBloc extends ItemListBloc<DLC, DLCEntity, DLCID, DLCRepository> {
   DLCListBloc({
     required GameCollectionRepository collectionRepository,
-    required DLCListManagerBloc managerBloc,
-  }) : super(
-          repository: collectionRepository.dlcRepository,
-          managerBloc: managerBloc,
-        );
+    required super.managerBloc,
+  }) : super(repository: collectionRepository.dlcRepository);
 
   @override
   Future<ViewParameters> getStartViewIndex() {

@@ -11,7 +11,10 @@ class DLCDetailManagerBloc
   DLCDetailManagerBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-  }) : super(id: DLCID(itemId), repository: collectionRepository.dlcRepository);
+  }) : super(
+          id: DLCID(itemId),
+          repository: collectionRepository.dlcRepository,
+        );
 
   @override
   Future<DLC> update(UpdateItemField<DLC> event) {

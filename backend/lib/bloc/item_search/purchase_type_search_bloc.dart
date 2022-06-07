@@ -11,11 +11,8 @@ class PurchaseTypeSearchBloc extends ItemRemoteSearchBloc<PurchaseType,
     PurchaseTypeEntity, PurchaseTypeID, PurchaseTypeRepository> {
   PurchaseTypeSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.purchaseTypeRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.purchaseTypeRepository);
 
   @override
   Future<List<PurchaseType>> getInitialItems() {

@@ -2,7 +2,7 @@ import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
 import 'package:backend/model/model.dart' show Item, GameTag, Game;
 import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, GameRepository;
+    show GameRepository;
 
 import 'item_relation_manager.dart';
 
@@ -10,12 +10,9 @@ class GameTagRelationManagerBloc<W extends Item>
     extends ItemRelationManagerBloc<GameTag, GameTagID, W> {
   GameTagRelationManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required super.collectionRepository,
   })  : gameRepository = collectionRepository.gameRepository,
-        super(
-          id: GameTagID(itemId),
-          collectionRepository: collectionRepository,
-        );
+        super(id: GameTagID(itemId));
 
   final GameRepository gameRepository;
 

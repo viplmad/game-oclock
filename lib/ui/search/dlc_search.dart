@@ -16,12 +16,10 @@ import 'search.dart';
 class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
+    required super.onTapReturn,
+    required super.viewIndex,
   }) : super(
           key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
           detailRouteName: dlcDetailRoute,
         );
 
@@ -60,10 +58,9 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
 class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
   const DLCLocalSearch({
     Key? key,
-    required List<DLC> items,
+    required super.items,
   }) : super(
           key: key,
-          items: items,
           detailRouteName: dlcDetailRoute,
         );
 
@@ -93,9 +90,9 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>>
     extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
   const _DLCSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, DLC) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

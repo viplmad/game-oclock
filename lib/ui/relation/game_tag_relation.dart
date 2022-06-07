@@ -12,14 +12,11 @@ import 'relation.dart';
 class GameTagGameRelationList extends _GameTagRelationList<Game> {
   const GameTagGameRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Game>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           limitHeight: false,
           hasImage: Game.hasImage,
           detailRouteName: gameDetailRoute,
@@ -36,25 +33,14 @@ abstract class _GameTagRelationList<W extends Item> extends ItemRelationList<
     Game, W, GameTagRelationBloc<W>, GameTagRelationManagerBloc<W>> {
   const _GameTagRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<W>)? trailingBuilder,
-    bool limitHeight = true,
-    bool isSingleList = false,
-    required bool hasImage,
-    String detailRouteName = '',
-    required String searchRouteName,
-    required String localSearchRouteName,
-  }) : super(
-          key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
-          limitHeight: limitHeight,
-          isSingleList: isSingleList,
-          hasImage: hasImage,
-          detailRouteName: detailRouteName,
-          searchRouteName: searchRouteName,
-          localSearchRouteName: localSearchRouteName,
-        );
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
+    super.limitHeight = true,
+    super.isSingleList = false,
+    required super.hasImage,
+    super.detailRouteName = '',
+    required super.searchRouteName,
+    required super.localSearchRouteName,
+  }) : super(key: key);
 }

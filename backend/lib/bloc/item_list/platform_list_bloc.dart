@@ -5,18 +5,14 @@ import 'package:backend/mapper/mapper.dart' show PlatformMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, PlatformRepository;
 
-import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 class PlatformListBloc extends ItemListBloc<Platform, PlatformEntity,
     PlatformID, PlatformRepository> {
   PlatformListBloc({
     required GameCollectionRepository collectionRepository,
-    required PlatformListManagerBloc managerBloc,
-  }) : super(
-          repository: collectionRepository.platformRepository,
-          managerBloc: managerBloc,
-        );
+    required super.managerBloc,
+  }) : super(repository: collectionRepository.platformRepository);
 
   @override
   Future<ViewParameters> getStartViewIndex() {

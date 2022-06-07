@@ -16,13 +16,9 @@ class PurchaseTypeSearch extends ItemSearch<PurchaseType,
     PurchaseTypeSearchBloc, PurchaseTypeListManagerBloc> {
   const PurchaseTypeSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
-  }) : super(
-          key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
-        );
+    required super.onTapReturn,
+    required super.viewIndex,
+  }) : super(key: key);
 
   @override
   PurchaseTypeSearchBloc searchBlocBuilder(
@@ -60,8 +56,8 @@ class PurchaseTypeLocalSearch
     extends ItemLocalSearch<PurchaseType, PurchaseTypeListManagerBloc> {
   const PurchaseTypeLocalSearch({
     Key? key,
-    required List<PurchaseType> items,
-  }) : super(key: key, items: items);
+    required super.items,
+  }) : super(key: key);
 
   @override
   PurchaseTypeListManagerBloc managerBlocBuilder(
@@ -90,9 +86,9 @@ class _PurchaseTypeSearchBody<K extends ItemSearchBloc<PurchaseType>>
     extends ItemSearchBody<PurchaseType, K, PurchaseTypeListManagerBloc> {
   const _PurchaseTypeSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, PurchaseType) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

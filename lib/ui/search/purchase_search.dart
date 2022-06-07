@@ -17,13 +17,11 @@ class PurchaseSearch
     extends ItemSearch<Purchase, PurchaseSearchBloc, PurchaseListManagerBloc> {
   const PurchaseSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
+    required super.onTapReturn,
+    required super.viewIndex,
     this.viewYear,
   }) : super(
           key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
           detailRouteName: purchaseDetailRoute,
         );
 
@@ -66,8 +64,11 @@ class PurchaseLocalSearch
     extends ItemLocalSearch<Purchase, PurchaseListManagerBloc> {
   const PurchaseLocalSearch({
     Key? key,
-    required List<Purchase> items,
-  }) : super(key: key, items: items, detailRouteName: purchaseDetailRoute);
+    required super.items,
+  }) : super(
+          key: key,
+          detailRouteName: purchaseDetailRoute,
+        );
 
   @override
   PurchaseListManagerBloc managerBlocBuilder(
@@ -95,9 +96,9 @@ class _PurchaseSearchBody<K extends ItemSearchBloc<Purchase>>
     extends ItemSearchBody<Purchase, K, PurchaseListManagerBloc> {
   const _PurchaseSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, Purchase) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

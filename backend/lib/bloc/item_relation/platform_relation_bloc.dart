@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart';
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, GameRepository, SystemRepository;
 
-import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 class PlatformRelationBloc<W extends Item>
@@ -12,13 +11,12 @@ class PlatformRelationBloc<W extends Item>
   PlatformRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required PlatformRelationManagerBloc<W> managerBloc,
+    required super.managerBloc,
   })  : gameRepository = collectionRepository.gameRepository,
         systemRepository = collectionRepository.systemRepository,
         super(
           id: PlatformID(itemId),
           collectionRepository: collectionRepository,
-          managerBloc: managerBloc,
         );
 
   final GameRepository gameRepository;

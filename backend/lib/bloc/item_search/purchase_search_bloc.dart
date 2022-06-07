@@ -11,12 +11,9 @@ class PurchaseSearchBloc extends ItemRemoteSearchBloc<Purchase, PurchaseEntity,
     PurchaseID, PurchaseRepository> {
   PurchaseSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
+    required super.viewIndex,
     this.viewYear,
-  }) : super(
-          repository: collectionRepository.purchaseRepository,
-          viewIndex: viewIndex,
-        );
+  }) : super(repository: collectionRepository.purchaseRepository);
 
   final int? viewYear;
 

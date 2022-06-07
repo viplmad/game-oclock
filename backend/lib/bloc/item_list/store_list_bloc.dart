@@ -5,18 +5,14 @@ import 'package:backend/mapper/mapper.dart' show StoreMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, StoreRepository;
 
-import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 class StoreListBloc
     extends ItemListBloc<Store, StoreEntity, StoreID, StoreRepository> {
   StoreListBloc({
     required GameCollectionRepository collectionRepository,
-    required StoreListManagerBloc managerBloc,
-  }) : super(
-          repository: collectionRepository.storeRepository,
-          managerBloc: managerBloc,
-        );
+    required super.managerBloc,
+  }) : super(repository: collectionRepository.storeRepository);
 
   @override
   Future<ViewParameters> getStartViewIndex() {

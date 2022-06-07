@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart' show DLCMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, DLCRepository;
 
-import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 class DLCDetailBloc
@@ -12,11 +11,10 @@ class DLCDetailBloc
   DLCDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required DLCDetailManagerBloc managerBloc,
+    required super.managerBloc,
   }) : super(
           id: DLCID(itemId),
           repository: collectionRepository.dlcRepository,
-          managerBloc: managerBloc,
         );
 
   @override

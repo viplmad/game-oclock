@@ -232,20 +232,23 @@ class GameTabs extends StatelessWidget {
 
 class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {
   const _AllGameList({
-    required String tabTitle,
-  }) : super(tabTitle: tabTitle);
+    Key? key,
+    required super.tabTitle,
+  }) : super(key: key);
 }
 
 class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {
   const _OwnedGameList({
-    required String tabTitle,
-  }) : super(tabTitle: tabTitle);
+    Key? key,
+    required super.tabTitle,
+  }) : super(key: key);
 }
 
 class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
   const _RomGameList({
-    required String tabTitle,
-  }) : super(tabTitle: tabTitle);
+    Key? key,
+    required super.tabTitle,
+  }) : super(key: key);
 }
 
 abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>,
@@ -290,21 +293,15 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>>
     extends ItemListBody<Game, K> {
   const _GameListBody({
     Key? key,
-    required List<Game> items,
-    required int viewIndex,
-    required int? viewYear,
-    required void Function(Game) onDelete,
-    required ListStyle style,
+    required super.items,
+    required super.viewIndex,
+    required super.viewYear,
+    required super.onDelete,
+    required super.style,
     required this.tabTitle,
-    required ScrollController scrollController,
+    required super.scrollController,
   }) : super(
           key: key,
-          items: items,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          onDelete: onDelete,
-          style: style,
-          scrollController: scrollController,
           detailRouteName: gameDetailRoute,
           searchRouteName: gameSearchRoute,
           statisticsRouteName: gameStatisticsRoute,

@@ -12,14 +12,11 @@ import 'relation.dart';
 class PlatformGameRelationList extends _PlatformRelationList<Game> {
   const PlatformGameRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Game>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: Game.hasImage,
           detailRouteName: gameDetailRoute,
           searchRouteName: gameSearchRoute,
@@ -34,14 +31,11 @@ class PlatformGameRelationList extends _PlatformRelationList<Game> {
 class PlatformSystemRelationList extends _PlatformRelationList<System> {
   const PlatformSystemRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<System>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: System.hasImage,
           searchRouteName: systemSearchRoute,
           localSearchRouteName: systemLocalSearchRoute,
@@ -56,25 +50,14 @@ abstract class _PlatformRelationList<W extends Item> extends ItemRelationList<
     Platform, W, PlatformRelationBloc<W>, PlatformRelationManagerBloc<W>> {
   const _PlatformRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<W>)? trailingBuilder,
-    bool limitHeight = true,
-    bool isSingleList = false,
-    required bool hasImage,
-    String detailRouteName = '',
-    required String searchRouteName,
-    required String localSearchRouteName,
-  }) : super(
-          key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
-          limitHeight: limitHeight,
-          isSingleList: isSingleList,
-          hasImage: hasImage,
-          detailRouteName: detailRouteName,
-          searchRouteName: searchRouteName,
-          localSearchRouteName: localSearchRouteName,
-        );
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
+    super.limitHeight = true,
+    super.isSingleList = false,
+    required super.hasImage,
+    super.detailRouteName = '',
+    required super.searchRouteName,
+    required super.localSearchRouteName,
+  }) : super(key: key);
 }

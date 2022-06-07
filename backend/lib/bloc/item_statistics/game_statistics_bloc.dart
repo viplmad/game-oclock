@@ -11,14 +11,10 @@ import 'item_statistics.dart';
 class GameStatisticsBloc extends ItemStatisticsBloc<GameGeneralStatistics,
     GameYearStatistics, GameStatisticsRepository> {
   GameStatisticsBloc({
-    required int viewIndex,
-    required int? viewYear,
+    required super.viewIndex,
+    required super.viewYear,
     required GameCollectionRepository collectionRepository,
-  }) : super(
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          repository: collectionRepository.gameStatisticsRepository,
-        );
+  }) : super(repository: collectionRepository.gameStatisticsRepository);
 
   @override
   Future<GameGeneralStatistics> getGeneralItemData() {

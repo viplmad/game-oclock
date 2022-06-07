@@ -95,20 +95,14 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
 class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
   const _DLCListBody({
     Key? key,
-    required List<DLC> items,
-    required int viewIndex,
-    required int? viewYear,
-    required void Function(DLC) onDelete,
-    required ListStyle style,
-    required ScrollController scrollController,
+    required super.items,
+    required super.viewIndex,
+    required super.viewYear,
+    required super.onDelete,
+    required super.style,
+    required super.scrollController,
   }) : super(
           key: key,
-          items: items,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          onDelete: onDelete,
-          style: style,
-          scrollController: scrollController,
           detailRouteName: dlcDetailRoute,
           searchRouteName: dlcSearchRoute,
         );

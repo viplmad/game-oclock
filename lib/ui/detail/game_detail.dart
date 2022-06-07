@@ -25,9 +25,9 @@ class GameDetail
     extends ItemDetail<Game, GameDetailBloc, GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
-    required Game item,
-    void Function(Game? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   GameDetailBloc detailBlocBuilder(
@@ -165,10 +165,9 @@ class _GameDetailBody
   _GameDetailBody({
     Key? key,
     required this.itemId,
-    void Function(Game? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: Game.hasImage,
         );
 

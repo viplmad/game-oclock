@@ -16,13 +16,11 @@ import 'search.dart';
 class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
   const GameSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
+    required super.onTapReturn,
+    required super.viewIndex,
     this.viewYear,
   }) : super(
           key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
           detailRouteName: gameDetailRoute,
         );
 
@@ -64,10 +62,9 @@ class GameSearch extends ItemSearch<Game, GameSearchBloc, GameListManagerBloc> {
 class GameLocalSearch extends ItemLocalSearch<Game, GameListManagerBloc> {
   const GameLocalSearch({
     Key? key,
-    required List<Game> items,
+    required super.items,
   }) : super(
           key: key,
-          items: items,
           detailRouteName: gameDetailRoute,
         );
 
@@ -97,9 +94,9 @@ class _GameSearchBody<K extends ItemSearchBloc<Game>>
     extends ItemSearchBody<Game, K, GameListManagerBloc> {
   const _GameSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, Game) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

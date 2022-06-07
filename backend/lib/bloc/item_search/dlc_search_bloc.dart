@@ -10,11 +10,8 @@ class DLCSearchBloc
     extends ItemRemoteSearchBloc<DLC, DLCEntity, DLCID, DLCRepository> {
   DLCSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.dlcRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.dlcRepository);
 
   @override
   Future<List<DLC>> getInitialItems() {

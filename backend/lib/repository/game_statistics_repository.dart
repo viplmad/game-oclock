@@ -13,8 +13,12 @@ import './query/query.dart' show GameQuery;
 import 'statistics_repository.dart';
 
 class GameStatisticsRepository extends StatisticsRepository {
-  GameStatisticsRepository(ItemConnector itemConnector)
-      : super(itemConnector, recordName: GameEntityData.table);
+  GameStatisticsRepository(
+    ItemConnector itemConnector,
+  ) : super(
+          itemConnector,
+          recordName: GameEntityData.table,
+        );
 
   Future<GameGeneralStatisticsEntity> findGameStatistics(
     GameView view,

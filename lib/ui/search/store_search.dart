@@ -17,12 +17,10 @@ class StoreSearch
     extends ItemSearch<Store, StoreSearchBloc, StoreListManagerBloc> {
   const StoreSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
+    required super.onTapReturn,
+    required super.viewIndex,
   }) : super(
           key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
           detailRouteName: storeDetailRoute,
         );
 
@@ -61,10 +59,9 @@ class StoreSearch
 class StoreLocalSearch extends ItemLocalSearch<Store, StoreListManagerBloc> {
   const StoreLocalSearch({
     Key? key,
-    required List<Store> items,
+    required super.items,
   }) : super(
           key: key,
-          items: items,
           detailRouteName: storeDetailRoute,
         );
 
@@ -94,9 +91,9 @@ class _StoreSearchBody<K extends ItemSearchBloc<Store>>
     extends ItemSearchBody<Store, K, StoreListManagerBloc> {
   const _StoreSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, Store) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

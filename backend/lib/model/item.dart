@@ -17,9 +17,8 @@ abstract class Item extends Equatable {
 abstract class ItemFinish extends Item {
   const ItemFinish({
     required this.dateTime,
-    required String uniqueId,
+    required super.uniqueId,
   }) : super(
-          uniqueId: uniqueId,
           queryableTerms: '',
         );
 

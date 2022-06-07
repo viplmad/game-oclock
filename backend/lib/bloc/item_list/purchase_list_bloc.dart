@@ -5,18 +5,14 @@ import 'package:backend/mapper/mapper.dart' show PurchaseMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, PurchaseRepository;
 
-import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 class PurchaseListBloc extends ItemListBloc<Purchase, PurchaseEntity,
     PurchaseID, PurchaseRepository> {
   PurchaseListBloc({
     required GameCollectionRepository collectionRepository,
-    required PurchaseListManagerBloc managerBloc,
-  }) : super(
-          repository: collectionRepository.purchaseRepository,
-          managerBloc: managerBloc,
-        );
+    required super.managerBloc,
+  }) : super(repository: collectionRepository.purchaseRepository);
 
   @override
   Future<ViewParameters> getStartViewIndex() {

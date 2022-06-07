@@ -15,7 +15,7 @@ abstract class ItemRemoteSearchBloc<
   ItemRemoteSearchBloc({
     required this.repository,
     required this.viewIndex,
-  }) : super();
+  });
 
   final R repository;
   final int? viewIndex;

@@ -16,7 +16,10 @@ abstract class ItemRepository<T extends ItemEntity, ID extends Object>
     ItemConnector itemConnector,
     this.imageConnector, {
     required String recordName,
-  }) : super(itemConnector, recordName: recordName);
+  }) : super(
+          itemConnector,
+          recordName: recordName,
+        );
 
   static const String _errorCreation = 'Error during creation';
   static const String _errorImageConnectorNotSet = 'Image connection not set';

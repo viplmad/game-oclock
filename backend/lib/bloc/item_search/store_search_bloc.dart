@@ -11,11 +11,8 @@ class StoreSearchBloc
     extends ItemRemoteSearchBloc<Store, StoreEntity, StoreID, StoreRepository> {
   StoreSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.storeRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.storeRepository);
 
   @override
   Future<List<Store>> getInitialItems() {

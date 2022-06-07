@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart' show GameMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, GameRepository;
 
-import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 class GameDetailBloc
@@ -12,11 +11,10 @@ class GameDetailBloc
   GameDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required GameDetailManagerBloc managerBloc,
+    required super.managerBloc,
   }) : super(
           id: GameID(itemId),
           repository: collectionRepository.gameRepository,
-          managerBloc: managerBloc,
         );
 
   @override

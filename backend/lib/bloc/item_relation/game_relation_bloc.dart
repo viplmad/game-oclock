@@ -24,7 +24,6 @@ import 'package:backend/repository/repository.dart'
         PlatformRepository,
         PurchaseRepository;
 
-import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
 class GameRelationBloc<W extends Item>
@@ -32,7 +31,7 @@ class GameRelationBloc<W extends Item>
   GameRelationBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required GameRelationManagerBloc<W> managerBloc,
+    required super.managerBloc,
   })  : gameFinishRepository = collectionRepository.gameFinishRepository,
         dlcRepository = collectionRepository.dlcRepository,
         platformRepository = collectionRepository.platformRepository,
@@ -41,7 +40,6 @@ class GameRelationBloc<W extends Item>
         super(
           id: GameID(itemId),
           collectionRepository: collectionRepository,
-          managerBloc: managerBloc,
         );
 
   final GameFinishRepository gameFinishRepository;

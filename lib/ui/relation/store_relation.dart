@@ -12,14 +12,11 @@ import 'relation.dart';
 class StorePurchaseRelationList extends _StoreRelationList<Purchase> {
   const StorePurchaseRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Purchase>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: Purchase.hasImage,
           detailRouteName: purchaseDetailRoute,
           searchRouteName: purchaseSearchRoute,
@@ -35,25 +32,14 @@ abstract class _StoreRelationList<W extends Item> extends ItemRelationList<
     Store, W, StoreRelationBloc<W>, StoreRelationManagerBloc<W>> {
   const _StoreRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<W>)? trailingBuilder,
-    bool limitHeight = true,
-    bool isSingleList = false,
-    required bool hasImage,
-    String detailRouteName = '',
-    required String searchRouteName,
-    required String localSearchRouteName,
-  }) : super(
-          key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
-          limitHeight: limitHeight,
-          isSingleList: isSingleList,
-          hasImage: hasImage,
-          detailRouteName: detailRouteName,
-          searchRouteName: searchRouteName,
-          localSearchRouteName: localSearchRouteName,
-        );
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
+    super.limitHeight = true,
+    super.isSingleList = false,
+    required super.hasImage,
+    super.detailRouteName = '',
+    required super.searchRouteName,
+    required super.localSearchRouteName,
+  }) : super(key: key);
 }

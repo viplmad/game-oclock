@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart' show GameTagMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, GameTagRepository;
 
-import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 class GameTagDetailBloc extends ItemDetailBloc<GameTag, GameTagEntity,
@@ -12,11 +11,10 @@ class GameTagDetailBloc extends ItemDetailBloc<GameTag, GameTagEntity,
   GameTagDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required GameTagDetailManagerBloc managerBloc,
+    required super.managerBloc,
   }) : super(
           id: GameTagID(itemId),
           repository: collectionRepository.gameTagRepository,
-          managerBloc: managerBloc,
         );
 
   @override

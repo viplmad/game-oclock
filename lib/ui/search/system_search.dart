@@ -16,13 +16,9 @@ class SystemSearch
     extends ItemSearch<System, SystemSearchBloc, SystemListManagerBloc> {
   const SystemSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
-  }) : super(
-          key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
-        );
+    required super.onTapReturn,
+    required super.viewIndex,
+  }) : super(key: key);
 
   @override
   SystemSearchBloc searchBlocBuilder(
@@ -59,8 +55,8 @@ class SystemSearch
 class SystemLocalSearch extends ItemLocalSearch<System, SystemListManagerBloc> {
   const SystemLocalSearch({
     Key? key,
-    required List<System> items,
-  }) : super(key: key, items: items);
+    required super.items,
+  }) : super(key: key);
 
   @override
   SystemListManagerBloc managerBlocBuilder(
@@ -88,9 +84,9 @@ class _SystemSearchBody<K extends ItemSearchBloc<System>>
     extends ItemSearchBody<System, K, SystemListManagerBloc> {
   const _SystemSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, System) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

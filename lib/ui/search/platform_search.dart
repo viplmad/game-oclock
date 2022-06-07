@@ -17,12 +17,10 @@ class PlatformSearch
     extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
+    required super.onTapReturn,
+    required super.viewIndex,
   }) : super(
           key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
           detailRouteName: platformDetailRoute,
         );
 
@@ -62,10 +60,9 @@ class PlatformLocalSearch
     extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
   const PlatformLocalSearch({
     Key? key,
-    required List<Platform> items,
+    required super.items,
   }) : super(
           key: key,
-          items: items,
           detailRouteName: platformDetailRoute,
         );
 
@@ -95,9 +92,9 @@ class _PlatformSearchBody<K extends ItemSearchBloc<Platform>>
     extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
   const _PlatformSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, Platform) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

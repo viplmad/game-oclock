@@ -21,9 +21,9 @@ class StoreDetail
     extends ItemDetail<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   const StoreDetail({
     Key? key,
-    required Store item,
-    void Function(Store? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   StoreDetailBloc detailBlocBuilder(
@@ -100,10 +100,9 @@ class _StoreDetailBody
     extends ItemDetailBody<Store, StoreDetailBloc, StoreDetailManagerBloc> {
   _StoreDetailBody({
     Key? key,
-    void Function(Store? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: Store.hasImage,
         );
 

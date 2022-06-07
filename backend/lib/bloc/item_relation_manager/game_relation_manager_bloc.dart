@@ -19,7 +19,6 @@ import 'package:backend/mapper/mapper.dart'
         PurchaseMapper;
 import 'package:backend/repository/repository.dart'
     show
-        GameCollectionRepository,
         GameFinishRepository,
         GameRepository,
         GameTimeLogRepository;
@@ -30,11 +29,11 @@ class GameRelationManagerBloc<W extends Item>
     extends ItemRelationManagerBloc<Game, GameID, W> {
   GameRelationManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required super.collectionRepository,
   })  : gameRepository = collectionRepository.gameRepository,
         gameFinishRepository = collectionRepository.gameFinishRepository,
         gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
-        super(id: GameID(itemId), collectionRepository: collectionRepository);
+        super(id: GameID(itemId));
 
   final GameRepository gameRepository;
   final GameFinishRepository gameFinishRepository;

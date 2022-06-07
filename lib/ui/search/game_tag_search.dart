@@ -16,13 +16,9 @@ class GameTagSearch
     extends ItemSearch<GameTag, GameTagSearchBloc, GameTagListManagerBloc> {
   const GameTagSearch({
     Key? key,
-    required bool onTapReturn,
-    required int? viewIndex,
-  }) : super(
-          key: key,
-          onTapReturn: onTapReturn,
-          viewIndex: viewIndex,
-        );
+    required super.onTapReturn,
+    required super.viewIndex,
+  }) : super(key: key);
 
   @override
   GameTagSearchBloc searchBlocBuilder(
@@ -60,8 +56,8 @@ class GameTagLocalSearch
     extends ItemLocalSearch<GameTag, GameTagListManagerBloc> {
   const GameTagLocalSearch({
     Key? key,
-    required List<GameTag> items,
-  }) : super(key: key, items: items);
+    required super.items,
+  }) : super(key: key);
 
   @override
   GameTagListManagerBloc managerBlocBuilder(
@@ -89,9 +85,9 @@ class _GameTagSearchBody<K extends ItemSearchBloc<GameTag>>
     extends ItemSearchBody<GameTag, K, GameTagListManagerBloc> {
   const _GameTagSearchBody({
     Key? key,
-    required void Function()? Function(BuildContext, GameTag) onTap,
-    bool allowNewButton = false,
-  }) : super(key: key, onTap: onTap, allowNewButton: allowNewButton);
+    required super.onTap,
+    super.allowNewButton = false,
+  }) : super(key: key);
 
   @override
   String typeName(BuildContext context) =>

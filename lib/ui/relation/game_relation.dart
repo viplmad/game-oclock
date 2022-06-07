@@ -13,14 +13,11 @@ import 'relation.dart';
 class GamePlatformRelationList extends _GameRelationList<Platform> {
   const GamePlatformRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Platform>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: Platform.hasImage,
           detailRouteName: platformDetailRoute,
           searchRouteName: platformSearchRoute,
@@ -35,14 +32,11 @@ class GamePlatformRelationList extends _GameRelationList<Platform> {
 class GamePurchaseRelationList extends _GameRelationList<Purchase> {
   const GamePurchaseRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<Purchase>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: Purchase.hasImage,
           detailRouteName: purchaseDetailRoute,
           searchRouteName: purchaseSearchRoute,
@@ -57,14 +51,11 @@ class GamePurchaseRelationList extends _GameRelationList<Purchase> {
 class GameDLCRelationList extends _GameRelationList<DLC> {
   const GameDLCRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<DLC>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: DLC.hasImage,
           detailRouteName: dlcDetailRoute,
           searchRouteName: dlcSearchRoute,
@@ -79,14 +70,11 @@ class GameDLCRelationList extends _GameRelationList<DLC> {
 class GameTagRelationList extends _GameRelationList<GameTag> {
   const GameTagRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<GameTag>)? trailingBuilder,
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
   }) : super(
           key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
           hasImage: GameTag.hasImage,
           detailRouteName: gameTagDetailRoute,
           searchRouteName: gameTagSearchRoute,
@@ -102,25 +90,14 @@ abstract class _GameRelationList<W extends Item> extends ItemRelationList<Game,
     W, GameRelationBloc<W>, GameRelationManagerBloc<W>> {
   const _GameRelationList({
     Key? key,
-    required String relationName,
-    required String relationTypeName,
-    List<Widget> Function(List<W>)? trailingBuilder,
-    bool limitHeight = true,
-    bool isSingleList = false,
-    required bool hasImage,
-    String detailRouteName = '',
-    required String searchRouteName,
-    required String localSearchRouteName,
-  }) : super(
-          key: key,
-          relationName: relationName,
-          relationTypeName: relationTypeName,
-          trailingBuilder: trailingBuilder,
-          limitHeight: limitHeight,
-          isSingleList: isSingleList,
-          hasImage: hasImage,
-          detailRouteName: detailRouteName,
-          searchRouteName: searchRouteName,
-          localSearchRouteName: localSearchRouteName,
-        );
+    required super.relationName,
+    required super.relationTypeName,
+    super.trailingBuilder,
+    super.limitHeight = true,
+    super.isSingleList = false,
+    required super.hasImage,
+    super.detailRouteName = '',
+    required super.searchRouteName,
+    required super.localSearchRouteName,
+  }) : super(key: key);
 }

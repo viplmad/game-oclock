@@ -14,7 +14,7 @@ abstract class _GameStatistics extends ItemStatistics {
     required this.minFinishDate,
     required this.maxFinishDate,
     required this.totalTime,
-  }) : super();
+  });
 
   final int total;
   final int ratingSum;
@@ -32,37 +32,24 @@ abstract class _GameStatistics extends ItemStatistics {
 
 class GameGeneralStatistics extends _GameStatistics {
   const GameGeneralStatistics({
-    required int total,
-    required int ratingSum,
-    required int minReleaseYear,
-    required int maxReleaseYear,
-    required int lowPriorityCount,
-    required int nextUpCount,
-    required int playingCount,
-    required int playedCount,
-    required int finishCount,
-    required DateTime minFinishDate,
-    required DateTime maxFinishDate,
-    required Duration timeLogSum,
+    required super.total,
+    required super.ratingSum,
+    required super.minReleaseYear,
+    required super.maxReleaseYear,
+    required super.lowPriorityCount,
+    required super.nextUpCount,
+    required super.playingCount,
+    required super.playedCount,
+    required super.finishCount,
+    required super.minFinishDate,
+    required super.maxFinishDate,
+    required super.totalTime,
     required this.countByReleaseYear,
     required this.countByRating,
     required this.avgRatingByFinishYear,
     required this.countByFinishYear,
     required this.totalTimeByFinishYear,
-  }) : super(
-          total: total,
-          ratingSum: ratingSum,
-          minReleaseYear: minReleaseYear,
-          maxReleaseYear: maxReleaseYear,
-          lowPriorityCount: lowPriorityCount,
-          nextUpCount: nextUpCount,
-          playingCount: playingCount,
-          playedCount: playedCount,
-          finishCount: finishCount,
-          minFinishDate: minFinishDate,
-          maxFinishDate: maxFinishDate,
-          totalTime: timeLogSum,
-        );
+  });
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;
@@ -109,35 +96,22 @@ class GameGeneralStatistics extends _GameStatistics {
 
 class GameYearStatistics extends _GameStatistics {
   const GameYearStatistics({
-    required int total,
-    required int ratingSum,
-    required int minReleaseYear,
-    required int maxReleaseYear,
-    required int lowPriorityCount,
-    required int nextUpCount,
-    required int playingCount,
-    required int playedCount,
-    required int finishCount,
-    required DateTime minFinishDate,
-    required DateTime maxFinishDate,
-    required Duration timeLogSum,
+    required super.total,
+    required super.ratingSum,
+    required super.minReleaseYear,
+    required super.maxReleaseYear,
+    required super.lowPriorityCount,
+    required super.nextUpCount,
+    required super.playingCount,
+    required super.playedCount,
+    required super.finishCount,
+    required super.minFinishDate,
+    required super.maxFinishDate,
+    required super.totalTime,
     required this.countByReleaseYear,
     required this.countByRating,
     required this.totalTimeByMonth,
-  }) : super(
-          total: total,
-          ratingSum: ratingSum,
-          minReleaseYear: minReleaseYear,
-          maxReleaseYear: maxReleaseYear,
-          lowPriorityCount: lowPriorityCount,
-          nextUpCount: nextUpCount,
-          playingCount: playingCount,
-          playedCount: playedCount,
-          finishCount: finishCount,
-          minFinishDate: minFinishDate,
-          maxFinishDate: maxFinishDate,
-          totalTime: timeLogSum,
-        );
+  });
 
   final Map<int, int> countByReleaseYear;
   final Map<int, int> countByRating;

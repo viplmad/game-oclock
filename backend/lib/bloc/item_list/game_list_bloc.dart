@@ -162,9 +162,6 @@ abstract class GameListBloc
     extends ItemListBloc<Game, GameEntity, GameID, GameRepository> {
   GameListBloc({
     required GameCollectionRepository collectionRepository,
-    required GameListManagerBloc managerBloc,
-  }) : super(
-          repository: collectionRepository.gameRepository,
-          managerBloc: managerBloc,
-        );
+    required super.managerBloc,
+  }) : super(repository: collectionRepository.gameRepository);
 }

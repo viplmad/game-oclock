@@ -21,9 +21,9 @@ class GameTagDetail
     extends ItemDetail<GameTag, GameTagDetailBloc, GameTagDetailManagerBloc> {
   const GameTagDetail({
     Key? key,
-    required GameTag item,
-    void Function(GameTag? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   GameTagDetailBloc detailBlocBuilder(
@@ -102,10 +102,9 @@ class _GameTagDetailBody extends ItemDetailBody<GameTag, GameTagDetailBloc,
   _GameTagDetailBody({
     Key? key,
     required this.itemId,
-    void Function(GameTag? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: GameTag.hasImage,
         );
 

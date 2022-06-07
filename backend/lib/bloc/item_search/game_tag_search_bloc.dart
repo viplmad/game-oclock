@@ -11,11 +11,8 @@ class GameTagSearchBloc extends ItemRemoteSearchBloc<GameTag, GameTagEntity,
     GameTagID, GameTagRepository> {
   GameTagSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.gameTagRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.gameTagRepository);
 
   @override
   Future<List<GameTag>> getInitialItems() {

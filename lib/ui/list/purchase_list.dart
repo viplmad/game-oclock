@@ -126,20 +126,14 @@ class PurchaseList
 class _PurchaseListBody extends ItemListBody<Purchase, PurchaseListBloc> {
   const _PurchaseListBody({
     Key? key,
-    required List<Purchase> items,
-    required int viewIndex,
-    required int? viewYear,
-    required void Function(Purchase) onDelete,
-    required ListStyle style,
-    required ScrollController scrollController,
+    required super.items,
+    required super.viewIndex,
+    required super.viewYear,
+    required super.onDelete,
+    required super.style,
+    required super.scrollController,
   }) : super(
           key: key,
-          items: items,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          onDelete: onDelete,
-          style: style,
-          scrollController: scrollController,
           detailRouteName: purchaseDetailRoute,
           searchRouteName: purchaseSearchRoute,
         );

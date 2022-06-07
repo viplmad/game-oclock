@@ -11,11 +11,8 @@ class SystemSearchBloc extends ItemRemoteSearchBloc<System, SystemEntity,
     SystemID, SystemRepository> {
   SystemSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.systemRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.systemRepository);
 
   @override
   Future<List<System>> getInitialItems() {

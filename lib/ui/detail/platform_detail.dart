@@ -22,9 +22,9 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
     PlatformDetailManagerBloc> {
   const PlatformDetail({
     Key? key,
-    required Platform item,
-    void Function(Platform? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   PlatformDetailBloc detailBlocBuilder(
@@ -116,10 +116,9 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
     PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
-    void Function(Platform? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: Platform.hasImage,
         );
 

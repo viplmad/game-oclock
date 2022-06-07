@@ -22,9 +22,9 @@ import 'finish_date_list.dart';
 class DLCDetail extends ItemDetail<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
     Key? key,
-    required DLC item,
-    void Function(DLC? item)? onUpdate,
-  }) : super(key: key, item: item, onUpdate: onUpdate);
+    required super.item,
+    super.onUpdate,
+  }) : super(key: key);
 
   @override
   DLCDetailBloc detailBlocBuilder(
@@ -130,10 +130,9 @@ class _DLCDetailBody
     extends ItemDetailBody<DLC, DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
-    void Function(DLC? item)? onUpdate,
+    super.onUpdate,
   }) : super(
           key: key,
-          onUpdate: onUpdate,
           hasImage: DLC.hasImage,
         );
 

@@ -8,20 +8,20 @@ import 'item_list_manager.dart';
 
 class AllListManagerBloc extends GameListManagerBloc {
   AllListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    required super.collectionRepository,
+  });
 }
 
 class OwnedListManagerBloc extends GameListManagerBloc {
   OwnedListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    required super.collectionRepository,
+  });
 }
 
 class RomListManagerBloc extends GameListManagerBloc {
   RomListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(collectionRepository: collectionRepository);
+    required super.collectionRepository,
+  });
 }
 
 class GameListManagerBloc

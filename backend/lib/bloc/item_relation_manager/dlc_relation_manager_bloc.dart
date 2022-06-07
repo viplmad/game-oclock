@@ -6,7 +6,6 @@ import 'package:backend/mapper/mapper.dart'
     show DLCFinishMapper, GameMapper, PurchaseMapper;
 import 'package:backend/repository/repository.dart'
     show
-        GameCollectionRepository,
         DLCRepository,
         DLCFinishRepository,
         GameRepository;
@@ -17,11 +16,11 @@ class DLCRelationManagerBloc<W extends Item>
     extends ItemRelationManagerBloc<DLC, DLCID, W> {
   DLCRelationManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required super.collectionRepository,
   })  : dlcFinishRepository = collectionRepository.dlcFinishRepository,
         gameRepository = collectionRepository.gameRepository,
         dlcRepository = collectionRepository.dlcRepository,
-        super(id: DLCID(itemId), collectionRepository: collectionRepository);
+        super(id: DLCID(itemId));
 
   final DLCFinishRepository dlcFinishRepository;
   final GameRepository gameRepository;

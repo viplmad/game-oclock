@@ -11,11 +11,8 @@ class PlatformSearchBloc extends ItemRemoteSearchBloc<Platform, PlatformEntity,
     PlatformID, PlatformRepository> {
   PlatformSearchBloc({
     required GameCollectionRepository collectionRepository,
-    required int? viewIndex,
-  }) : super(
-          repository: collectionRepository.platformRepository,
-          viewIndex: viewIndex,
-        );
+    required super.viewIndex,
+  }) : super(repository: collectionRepository.platformRepository);
 
   @override
   Future<List<Platform>> getInitialItems() {

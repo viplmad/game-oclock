@@ -88,20 +88,14 @@ class StoreList extends ItemList<Store, StoreListBloc, StoreListManagerBloc> {
 class _StoreListBody extends ItemListBody<Store, StoreListBloc> {
   const _StoreListBody({
     Key? key,
-    required List<Store> items,
-    required int viewIndex,
-    required int? viewYear,
-    required void Function(Store) onDelete,
-    required ListStyle style,
-    required ScrollController scrollController,
+    required super.items,
+    required super.viewIndex,
+    required super.viewYear,
+    required super.onDelete,
+    required super.style,
+    required super.scrollController,
   }) : super(
           key: key,
-          items: items,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          onDelete: onDelete,
-          style: style,
-          scrollController: scrollController,
           detailRouteName: storeDetailRoute,
           searchRouteName: storeSearchRoute,
         );

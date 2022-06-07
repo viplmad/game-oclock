@@ -16,15 +16,10 @@ class GameStatisticsView extends ItemStatisticsView<GameGeneralStatistics,
     GameYearStatistics, GameStatisticsBloc> {
   const GameStatisticsView({
     Key? key,
-    required int viewIndex,
-    required int? viewYear,
-    required String viewTitle,
-  }) : super(
-          key: key,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          viewTitle: viewTitle,
-        );
+    required super.viewIndex,
+    required super.viewYear,
+    required super.viewTitle,
+  }) : super(key: key);
 
   @override
   GameStatisticsBloc statisticsBlocBuilder(
@@ -51,9 +46,9 @@ class _GameStatisticsBody extends ItemStatisticsBody<GameGeneralStatistics,
     GameYearStatistics, GameStatisticsBloc> {
   const _GameStatisticsBody({
     Key? key,
-    required int viewIndex,
-    required String viewTitle,
-  }) : super(key: key, viewIndex: viewIndex, viewTitle: viewTitle);
+    required super.viewIndex,
+    required super.viewTitle,
+  }) : super(key: key);
 
   static const int releaseYearIntervalChunk = 5;
 

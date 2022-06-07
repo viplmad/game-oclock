@@ -4,7 +4,6 @@ import 'package:backend/mapper/mapper.dart' show PlatformMapper;
 import 'package:backend/repository/repository.dart'
     show GameCollectionRepository, PlatformRepository;
 
-import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
 class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformEntity,
@@ -12,11 +11,10 @@ class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformEntity,
   PlatformDetailBloc({
     required int itemId,
     required GameCollectionRepository collectionRepository,
-    required PlatformDetailManagerBloc managerBloc,
+    required super.managerBloc,
   }) : super(
           id: PlatformID(itemId),
           repository: collectionRepository.platformRepository,
-          managerBloc: managerBloc,
         );
 
   @override
