@@ -296,7 +296,12 @@ abstract class ItemList<
               const LinearProgressIndicator(),
               Container(
                 color: Colors.grey,
-                child: const HeaderSkeleton(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const <Widget>[
+                    HeaderSkeleton(),
+                  ],
+                ),
               ),
             ],
           );
