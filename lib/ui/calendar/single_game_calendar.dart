@@ -577,16 +577,19 @@ class _SingleGameCalendarBody extends StatelessWidget {
         } else {
           String rangeString = '';
           if (range == CalendarRange.week) {
-            final int weekdayIndex = timeLog.dateTime.weekday - 1; // Substract to use as index
+            final int weekdayIndex =
+                timeLog.dateTime.weekday - 1; // Substract to use as index
             rangeString = GameCollectionLocalisations.of(context)
                 .daysOfWeek
                 .elementAt(weekdayIndex);
           } else if (range == CalendarRange.month) {
             rangeString = (timeLog.dateTime.day).toString();
           } else if (range == CalendarRange.year) {
-            final int monthIndex = timeLog.dateTime.month - 1; // Substract to use as index
-            rangeString =
-                GameCollectionLocalisations.of(context).months.elementAt(monthIndex);
+            final int monthIndex =
+                timeLog.dateTime.month - 1; // Substract to use as index
+            rangeString = GameCollectionLocalisations.of(context)
+                .months
+                .elementAt(monthIndex);
           }
           final String timeLogString = '$rangeString - $durationString';
 

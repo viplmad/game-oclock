@@ -38,7 +38,8 @@ class CalendarUtils {
       selectedDayPredicate: (DateTime day) {
         return day.isSameDay(selectedDay);
       },
-      onDaySelected: (DateTime newSelectedDay, _) => onDaySelected(newSelectedDay),
+      onDaySelected: (DateTime newSelectedDay, _) =>
+          onDaySelected(newSelectedDay),
       eventLoader: (DateTime day) {
         return logDays
             .where((DateTime logDay) => day.isSameDay(logDay))
