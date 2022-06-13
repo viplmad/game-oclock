@@ -65,17 +65,9 @@ class SkeletonRatingField extends StatelessWidget {
       title: HeaderText(
         text: fieldName,
       ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(
-          left: 16.0,
-          right: 16.0,
-          top: 8.0,
-          bottom: 8.0,
-        ),
-        child: Skeleton(
-          height: FieldUtils.subtitleTextHeight,
-          order: order,
-        ),
+      subtitle: Skeleton(
+        height: FieldUtils.subtitleTextHeight,
+        order: order,
       ),
     );
   }

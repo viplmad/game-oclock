@@ -38,7 +38,7 @@ class CalendarUtils {
       selectedDayPredicate: (DateTime day) {
         return day.isSameDay(selectedDay);
       },
-      onDaySelected: (DateTime selectedDay, _) => onDaySelected(selectedDay),
+      onDaySelected: (DateTime newSelectedDay, _) => onDaySelected(newSelectedDay),
       eventLoader: (DateTime day) {
         return logDays
             .where((DateTime logDay) => day.isSameDay(logDay))
@@ -111,8 +111,8 @@ class CalendarUtils {
         disabledTextStyle: TextStyle(color: disabledColor),
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle: TextStyle(color: headerColor),
-        weekendStyle: TextStyle(color: headerColor),
+        weekdayStyle: TextStyle(color: headerColor, fontSize: 13.0),
+        weekendStyle: TextStyle(color: headerColor, fontSize: 13.0),
       ),
     );
   }
@@ -130,7 +130,7 @@ class CalendarUtils {
         break;
       case CalendarRange.week:
         rangeDateString =
-            '${GameCollectionLocalisations.of(context).formatDate(date.getMondayOfWeek())} -> ${GameCollectionLocalisations.of(context).formatDate(date.getSundayOfWeek())}';
+            '${GameCollectionLocalisations.of(context).formatDate(date.getMondayOfWeek())} ⮕ ${GameCollectionLocalisations.of(context).formatDate(date.getSundayOfWeek())}';
         break;
       case CalendarRange.month:
         rangeDateString =

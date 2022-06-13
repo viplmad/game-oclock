@@ -216,7 +216,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       onDaySelected: (DateTime newSelectedDay) {
         BlocProvider.of<MultiCalendarBloc>(context).add(
           UpdateSelectedDate(
-            selectedDate,
+            newSelectedDay,
           ),
         );
       },

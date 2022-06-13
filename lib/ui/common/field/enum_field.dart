@@ -33,12 +33,18 @@ class EnumField extends StatelessWidget {
         children: List<Widget>.generate(
           enumValues.length,
           (int index) {
+            final TextTheme textTheme = Theme.of(context).textTheme;
+
             final String option = enumValues[index];
             final Color optionColour = enumColours.elementAt(index);
 
             return ChoiceChip(
               shape: ShapeUtils.chipShapeBorder,
               label: Text(option),
+              labelStyle: textTheme.bodyText1?.copyWith(
+                // Reduce size of chips
+                fontSize: 14.0,
+              ),
               selected: value == index,
               selectedColor: optionColour.withOpacity(0.5),
               pressElevation: 2.0, // Default is very high
@@ -71,17 +77,9 @@ class SkeletonEnumField extends StatelessWidget {
       title: HeaderText(
         text: fieldName,
       ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(
-          left: 16.0,
-          right: 16.0,
-          top: 8.0,
-          bottom: 8.0,
-        ),
-        child: Skeleton(
-          height: FieldUtils.subtitleTextHeight,
-          order: order,
-        ),
+      subtitle: Skeleton(
+        height: FieldUtils.subtitleTextHeight,
+        order: order,
       ),
     );
   }

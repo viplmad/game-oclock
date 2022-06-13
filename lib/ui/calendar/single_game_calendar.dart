@@ -501,7 +501,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
       onDaySelected: (DateTime newSelectedDay) {
         BlocProvider.of<SingleCalendarBloc>(context).add(
           UpdateSelectedDate(
-            selectedDate,
+            newSelectedDay,
           ),
         );
       },
@@ -533,16 +533,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
     List<GameTimeLog> timeLogs,
     CalendarRange range,
   ) {
+    final List<GameTimeLog> nonZeroTimeLogs = timeLogs
+        .where((GameTimeLog timeLog) => !timeLog.time.isZero())
+        .toList(growable: false);
+
     return ItemListBuilder(
-      itemCount: timeLogs.length,
+      itemCount: nonZeroTimeLogs.length,
       itemBuilder: (BuildContext context, int index) {
-        final GameTimeLog timeLog = timeLogs.elementAt(index);
+        final GameTimeLog timeLog = nonZeroTimeLogs.elementAt(index);
         final String durationString = GameCollectionLocalisations.of(context)
             .formatDuration(timeLog.time);
-
-        if (timeLog.time.isZero()) {
-          return Container();
-        }
 
         if (range == CalendarRange.day) {
           final String timeLogString =
@@ -577,14 +577,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
         } else {
           String rangeString = '';
           if (range == CalendarRange.week) {
+            final int weekdayIndex = timeLog.dateTime.weekday - 1; // Substract to use as index
             rangeString = GameCollectionLocalisations.of(context)
                 .daysOfWeek
-                .elementAt(index);
+                .elementAt(weekdayIndex);
           } else if (range == CalendarRange.month) {
-            rangeString = index.toString();
+            rangeString = (timeLog.dateTime.day).toString();
           } else if (range == CalendarRange.year) {
+            final int monthIndex = timeLog.dateTime.month - 1; // Substract to use as index
             rangeString =
-                GameCollectionLocalisations.of(context).months.elementAt(index);
+                GameCollectionLocalisations.of(context).months.elementAt(monthIndex);
           }
           final String timeLogString = '$rangeString - $durationString';
 
