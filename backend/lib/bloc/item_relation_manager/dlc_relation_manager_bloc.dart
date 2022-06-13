@@ -5,10 +5,7 @@ import 'package:backend/model/model.dart'
 import 'package:backend/mapper/mapper.dart'
     show DLCFinishMapper, GameMapper, PurchaseMapper;
 import 'package:backend/repository/repository.dart'
-    show
-        DLCRepository,
-        DLCFinishRepository,
-        GameRepository;
+    show DLCRepository, DLCFinishRepository, GameRepository;
 
 import 'item_relation_manager.dart';
 

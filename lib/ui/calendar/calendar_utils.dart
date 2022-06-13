@@ -188,7 +188,7 @@ class CalendarUtils {
         }
       }
 
-      // TODO: Only show labels for 6, 12 and 18 hours
+      // TODO Only show labels for 6, 12 and 18 hours
       labels = List<String>.generate(24, (int index) {
         return '$index:00';
       });

@@ -18,10 +18,7 @@ import 'package:backend/mapper/mapper.dart'
         PlatformMapper,
         PurchaseMapper;
 import 'package:backend/repository/repository.dart'
-    show
-        GameFinishRepository,
-        GameRepository,
-        GameTimeLogRepository;
+    show GameFinishRepository, GameRepository, GameTimeLogRepository;
 
 import 'item_relation_manager.dart';
 

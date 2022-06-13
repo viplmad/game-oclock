@@ -1,8 +1,7 @@
 import 'package:backend/entity/entity.dart' show GameEntity, GameTagID;
 import 'package:backend/model/model.dart' show Item, GameTag, Game;
 import 'package:backend/mapper/mapper.dart' show GameMapper;
-import 'package:backend/repository/repository.dart'
-    show GameRepository;
+import 'package:backend/repository/repository.dart' show GameRepository;
 
 import 'item_relation_manager.dart';
 

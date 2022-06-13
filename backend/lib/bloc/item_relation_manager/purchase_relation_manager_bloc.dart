@@ -5,11 +5,7 @@ import 'package:backend/model/model.dart'
 import 'package:backend/mapper/mapper.dart'
     show DLCMapper, GameMapper, PurchaseTypeMapper, StoreMapper;
 import 'package:backend/repository/repository.dart'
-    show
-        GameRepository,
-        DLCRepository,
-        PurchaseRepository,
-        StoreRepository;
+    show GameRepository, DLCRepository, PurchaseRepository, StoreRepository;
 
 import 'item_relation_manager.dart';
 
