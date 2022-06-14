@@ -29,7 +29,7 @@ class EnumField extends StatelessWidget {
       ),
       subtitle: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceEvenly,
+        alignment: WrapAlignment.spaceAround,
         children: List<Widget>.generate(
           enumValues.length,
           (int index) {
