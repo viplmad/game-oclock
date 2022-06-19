@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/field_utils.dart';
-import '../header_text.dart';
 import '../../utils/shape_utils.dart';
+import '../header_text.dart';
 import '../skeleton.dart';
 
 class EnumField extends StatelessWidget {
@@ -43,7 +43,7 @@ class EnumField extends StatelessWidget {
               label: Text(option),
               labelStyle: textTheme.bodyText1?.copyWith(
                 // Reduce size of chips
-                fontSize: 14.0,
+                fontSize: 13.0,
               ),
               selected: value == index,
               selectedColor: optionColour.withOpacity(0.5),

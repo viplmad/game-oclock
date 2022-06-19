@@ -400,62 +400,56 @@ class PostgresTextDialog extends TextDialog {
       title: const Text(GameCollectionLocalisations.postgresString),
       content: SizedBox(
         width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).hostString,
-                    initialValue: instance?.host,
-                    onSaved: (String? value) {
-                      defaultInstance.host = value ?? defaultInstance.host;
-                    },
-                  ),
-                  numberFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).portString,
-                    initialValue: instance?.port,
-                    onSaved: (String? value) {
-                      defaultInstance.port =
-                          int.parse(value ?? defaultInstance.port.toString());
-                    },
-                  ),
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).databaseString,
-                    initialValue: instance?.database,
-                    onSaved: (String? value) {
-                      defaultInstance.database =
-                          value ?? defaultInstance.database;
-                    },
-                  ),
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).userString,
-                    initialValue: instance?.user,
-                    onSaved: (String? value) {
-                      defaultInstance.user = value ?? defaultInstance.user;
-                    },
-                  ),
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).passwordString,
-                    initialValue: instance?.password,
-                    obscureText: true,
-                    onSaved: (String? value) {
-                      defaultInstance.password =
-                          value ?? defaultInstance.password;
-                    },
-                  ),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                textFormField(
+                  labelText: GameCollectionLocalisations.of(context).hostString,
+                  initialValue: instance?.host,
+                  onSaved: (String? value) {
+                    defaultInstance.host = value ?? defaultInstance.host;
+                  },
+                ),
+                numberFormField(
+                  labelText: GameCollectionLocalisations.of(context).portString,
+                  initialValue: instance?.port,
+                  onSaved: (String? value) {
+                    defaultInstance.port =
+                        int.parse(value ?? defaultInstance.port.toString());
+                  },
+                ),
+                textFormField(
+                  labelText:
+                      GameCollectionLocalisations.of(context).databaseString,
+                  initialValue: instance?.database,
+                  onSaved: (String? value) {
+                    defaultInstance.database =
+                        value ?? defaultInstance.database;
+                  },
+                ),
+                textFormField(
+                  labelText: GameCollectionLocalisations.of(context).userString,
+                  initialValue: instance?.user,
+                  onSaved: (String? value) {
+                    defaultInstance.user = value ?? defaultInstance.user;
+                  },
+                ),
+                textFormField(
+                  labelText:
+                      GameCollectionLocalisations.of(context).passwordString,
+                  initialValue: instance?.password,
+                  obscureText: true,
+                  onSaved: (String? value) {
+                    defaultInstance.password =
+                        value ?? defaultInstance.password;
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -495,46 +489,43 @@ class CloudinaryTextDialog extends TextDialog {
       title: const Text(GameCollectionLocalisations.cloudinaryString),
       content: SizedBox(
         width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).cloudNameString,
-                    initialValue: instance?.cloudName,
-                    onSaved: (String? value) {
-                      defaultInstance.cloudName =
-                          value ?? defaultInstance.cloudName;
-                    },
-                  ),
-                  numberFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).apiKeyString,
-                    initialValue: instance?.apiKey,
-                    onSaved: (String? value) {
-                      defaultInstance.apiKey =
-                          int.parse(value ?? defaultInstance.apiKey.toString());
-                    },
-                  ),
-                  textFormField(
-                    labelText:
-                        GameCollectionLocalisations.of(context).apiSecretString,
-                    initialValue: instance?.apiSecret,
-                    obscureText: true,
-                    onSaved: (String? value) {
-                      defaultInstance.apiSecret =
-                          value ?? defaultInstance.apiSecret;
-                    },
-                  ),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                textFormField(
+                  labelText:
+                      GameCollectionLocalisations.of(context).cloudNameString,
+                  initialValue: instance?.cloudName,
+                  onSaved: (String? value) {
+                    defaultInstance.cloudName =
+                        value ?? defaultInstance.cloudName;
+                  },
+                ),
+                numberFormField(
+                  labelText:
+                      GameCollectionLocalisations.of(context).apiKeyString,
+                  initialValue: instance?.apiKey,
+                  onSaved: (String? value) {
+                    defaultInstance.apiKey =
+                        int.parse(value ?? defaultInstance.apiKey.toString());
+                  },
+                ),
+                textFormField(
+                  labelText:
+                      GameCollectionLocalisations.of(context).apiSecretString,
+                  initialValue: instance?.apiSecret,
+                  obscureText: true,
+                  onSaved: (String? value) {
+                    defaultInstance.apiSecret =
+                        value ?? defaultInstance.apiSecret;
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       actions: <Widget>[
