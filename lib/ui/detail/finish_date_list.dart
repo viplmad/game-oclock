@@ -160,7 +160,7 @@ abstract class _FinishList<
   }
 
   void Function() _onTap(BuildContext outerContext) {
-    return () {
+    return () async {
       showDialog(
         context: outerContext,
         builder: (BuildContext context) {

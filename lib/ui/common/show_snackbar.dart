@@ -30,7 +30,7 @@ SnackBarAction dialogSnackBarAction(
   return backgroundSnackBarAction(
     context,
     label: label,
-    onPressed: () {
+    onPressed: () async {
       showDialog<bool>(
         context: context,
         builder: (BuildContext context) {

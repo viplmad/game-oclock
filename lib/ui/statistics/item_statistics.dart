@@ -92,7 +92,7 @@ abstract class ItemStatisticsBody<
                 icon: const Icon(Icons.date_range),
                 tooltip:
                     GameCollectionLocalisations.of(context).changeYearString,
-                onPressed: () {
+                onPressed: () async {
                   showDialog<int?>(
                     context: context,
                     builder: (BuildContext context) {

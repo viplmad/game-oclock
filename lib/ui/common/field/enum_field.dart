@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/field_utils.dart';
-import '../../utils/shape_utils.dart';
 import '../header_text.dart';
 import '../skeleton.dart';
 
@@ -39,15 +38,15 @@ class EnumField extends StatelessWidget {
             final Color optionColour = enumColours.elementAt(index);
 
             return ChoiceChip(
-              shape: ShapeUtils.chipShapeBorder,
-              label: Text(option),
+              labelPadding: EdgeInsets.zero,
               labelStyle: textTheme.bodyText1?.copyWith(
                 // Reduce size of chips
-                fontSize: 13.0,
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
               ),
+              label: Text(option),
               selected: value == index,
               selectedColor: optionColour.withOpacity(0.5),
-              pressElevation: 2.0, // Default is very high
               onSelected: (bool newChoice) {
                 if (newChoice) {
                   update(index);

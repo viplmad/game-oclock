@@ -250,7 +250,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
   }
 
   void Function()? onTap(BuildContext context, Game item) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         gameDetailRoute,

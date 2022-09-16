@@ -264,7 +264,7 @@ abstract class ItemRelationList<
   @nonVirtual
   void Function()? onTap(BuildContext context, W item) {
     return detailRouteName.isNotEmpty
-        ? () {
+        ? () async {
             Navigator.pushNamed(
               context,
               detailRouteName,
@@ -360,7 +360,7 @@ class _LinkButton<W extends Item> extends StatelessWidget {
         label:
             Text(GameCollectionLocalisations.of(context).linkString(typeName)),
         icon: const Icon(Icons.link),
-        onPressed: () {
+        onPressed: () async {
           onSearch().then((W? result) {
             if (result != null) {
               updateAdd(result);
@@ -368,9 +368,9 @@ class _LinkButton<W extends Item> extends StatelessWidget {
           });
         },
         style: ElevatedButton.styleFrom(
-          onPrimary:
+          foregroundColor:
               ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
-          primary: ThemeUtils.isThemeDark(context)
+          backgroundColor: ThemeUtils.isThemeDark(context)
               ? Colors.grey[700]
               : Colors.grey[300],
           surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),

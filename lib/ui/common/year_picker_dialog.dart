@@ -80,13 +80,13 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
               TextButton(
                 child:
                     Text(MaterialLocalizations.of(context).cancelButtonLabel),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.maybePop<int>(context);
                 },
               ),
               TextButton(
                 child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.maybePop<int>(context, _selectedDate.year);
                 },
               ),

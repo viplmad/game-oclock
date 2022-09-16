@@ -39,7 +39,7 @@ class TimeLogAssistant extends StatelessWidget {
               icon: const Icon(Icons.cloud_upload),
               tooltip: GameCollectionLocalisations.of(context).saveString,
               onPressed: state.isValid
-                  ? () {
+                  ? () async {
                       final DateTime date = state.date;
                       final TimeOfDay startTime = state.startTime!;
 

@@ -31,7 +31,7 @@ class YearField extends StatelessWidget {
           : null,
       editable: editable,
       update: update,
-      onTap: () {
+      onTap: () async {
         return showDialog<int>(
           context: context,
           builder: (BuildContext context) {

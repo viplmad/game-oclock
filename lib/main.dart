@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +22,12 @@ class GameCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    unawaited(
+      SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]),
+    );
 
     return RepositoryProvider<GameCollectionRepository>(
       create: (BuildContext context) {

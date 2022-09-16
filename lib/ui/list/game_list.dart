@@ -311,7 +311,7 @@ class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>>
 
   @override
   void Function() onStatisticsTap(BuildContext context) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         statisticsRouteName,

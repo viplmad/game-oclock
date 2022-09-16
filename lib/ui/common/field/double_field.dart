@@ -30,7 +30,7 @@ class DoubleField extends StatelessWidget {
       shownValue: shownValue,
       editable: editable,
       update: update,
-      onTap: () {
+      onTap: () async {
         return showDialog<double>(
           context: context,
           builder: (BuildContext context) {
@@ -111,13 +111,13 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<double>(context);
           },
         ),
         TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<double>(
               context,
               double.tryParse(

@@ -366,7 +366,7 @@ class _GameDetailBody
           GameCollectionLocalisations.of(context).singleCalendarViewString,
         ),
         trailing: const Icon(Icons.arrow_forward),
-        onTap: () {
+        onTap: () async {
           Navigator.pushNamed(
             context,
             gameSingleCalendarRoute,

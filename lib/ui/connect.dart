@@ -45,7 +45,7 @@ class _ConnectpageBody extends StatelessWidget {
         scrolledUnderElevation: 0.0,
       ),
       body: BlocListener<ConnectionBloc, ConnectState>(
-        listener: (BuildContext context, ConnectState state) {
+        listener: (BuildContext context, ConnectState state) async {
           if (state is Connected) {
             Navigator.pushReplacementNamed(
               context,
@@ -106,7 +106,7 @@ class _ConnectpageBody extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pushReplacementNamed(
                             context,
                             repositorySettingsRoute,

@@ -33,7 +33,7 @@ class CustomTextField extends StatelessWidget {
       editable: editable,
       extended: isLongText,
       update: update,
-      onTap: () {
+      onTap: () async {
         final TextEditingController fieldController = TextEditingController();
         fieldController.text = value ?? '';
 

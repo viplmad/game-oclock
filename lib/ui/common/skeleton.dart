@@ -68,7 +68,7 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     delayFuture.cancel();
     animationController.dispose();
     super.dispose();
@@ -160,7 +160,7 @@ class _SkeletonState extends State<Skeleton>
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     delayFuture.cancel();
     animationController.dispose();
     super.dispose();

@@ -29,7 +29,7 @@ class DateField extends StatelessWidget {
           : null,
       update: update,
       editable: editable,
-      onTap: () {
+      onTap: () async {
         return showGameDatePicker(
           context: context,
           initialDate: value,

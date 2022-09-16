@@ -30,7 +30,7 @@ class GenericField<K> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final void Function()? onTapWrapped = editable
-        ? () {
+        ? () async {
             onTap!().then((K? newValue) {
               if (newValue != null) {
                 update!(newValue);

@@ -223,7 +223,7 @@ abstract class ItemDetailBody<
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: useImage
-                  ? () {
+                  ? () async {
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext innerContext) {
@@ -274,7 +274,7 @@ abstract class ItemDetailBody<
               ? Text(GameCollectionLocalisations.of(context).replaceImageString)
               : Text(GameCollectionLocalisations.of(context).uploadImageString),
           leading: const Icon(Icons.file_upload),
-          onTap: () {
+          onTap: () async {
             picker
                 .pickImage(
               source: ImageSource.gallery,
@@ -298,7 +298,7 @@ abstract class ItemDetailBody<
               Text(GameCollectionLocalisations.of(context).renameImageString),
           leading: const Icon(Icons.edit),
           enabled: withImage,
-          onTap: () {
+          onTap: () async {
             final TextEditingController fieldController =
                 TextEditingController();
             final String imageName = imageFilename.split('.').first;
@@ -367,7 +367,7 @@ abstract class ItemDetailBody<
               Text(GameCollectionLocalisations.of(context).deleteImageString),
           leading: const Icon(Icons.delete),
           enabled: withImage,
-          onTap: () {
+          onTap: () async {
             final String imageName = imageFilename.split('.').first;
 
             BlocProvider.of<S>(outerContext).add(

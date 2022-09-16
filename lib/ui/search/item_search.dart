@@ -60,11 +60,11 @@ abstract class ItemSearch<
 
   void Function()? _onTap(BuildContext context, T item) {
     return onTapReturn
-        ? () {
+        ? () async {
             Navigator.maybePop<T>(context, item);
           }
         : detailRouteName.isNotEmpty
-            ? () {
+            ? () async {
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
@@ -126,7 +126,7 @@ abstract class ItemLocalSearch<T extends Item,
 
   void Function()? _onTap(BuildContext context, T item) {
     return detailRouteName.isNotEmpty
-        ? () {
+        ? () async {
             Navigator.pushNamed(
               context,
               detailRouteName,
@@ -211,7 +211,7 @@ class _ItemSearchBodyState<
         scrolledUnderElevation: 1.0,
       ),
       body: BlocListener<S, ItemListManagerState>(
-        listener: (BuildContext context, ItemListManagerState state) {
+        listener: (BuildContext context, ItemListManagerState state) async {
           if (state is ItemAdded<T>) {
             Navigator.maybePop<T>(context, state.item);
           }
@@ -294,7 +294,7 @@ class _ItemSearchBodyState<
           );
         },
         style: TextButton.styleFrom(
-          primary:
+          foregroundColor:
               ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
           backgroundColor:
               ThemeUtils.isThemeDark(context) ? Colors.black54 : Colors.white,

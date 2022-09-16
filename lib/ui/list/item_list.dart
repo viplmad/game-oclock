@@ -53,7 +53,7 @@ abstract class ItemAppBar<T extends Item,
           icon: const Icon(Icons.search),
           tooltip: GameCollectionLocalisations.of(context).searchAllString,
           onPressed: searchRouteName.isNotEmpty
-              ? () {
+              ? () async {
                   Navigator.pushNamed<T>(
                     context,
                     searchRouteName,
@@ -145,7 +145,7 @@ abstract class ItemAppBar<T extends Item,
   }
 
   void Function() _onCalendarTap(BuildContext context) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         calendarRouteName,
@@ -219,7 +219,7 @@ abstract class ItemList<
             snackBarAction: backgroundSnackBarAction(
               context,
               label: GameCollectionLocalisations.of(context).openString,
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pushNamed(
                   context,
                   detailRouteName,
@@ -414,17 +414,14 @@ abstract class ItemListBody<T extends Item,
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<bool>(context);
           },
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<bool>(context, true);
           },
-          style: TextButton.styleFrom(
-            primary: Colors.red,
-          ),
           child:
               Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
         )
@@ -453,7 +450,7 @@ abstract class ItemListBody<T extends Item,
 
   @nonVirtual
   void Function()? onTap(BuildContext context, T item) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         detailRouteName,
@@ -470,7 +467,7 @@ abstract class ItemListBody<T extends Item,
   }
 
   void Function() _onSearchTap(BuildContext context) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         searchRouteName,
@@ -484,7 +481,7 @@ abstract class ItemListBody<T extends Item,
   }
 
   void Function() onStatisticsTap(BuildContext context) {
-    return () {
+    return () async {
       Navigator.pushNamed(
         context,
         statisticsRouteName,
@@ -534,7 +531,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
           onDismissed: (DismissDirection direction) {
             onDismiss(item);
           },
-          confirmDismiss: (DismissDirection direction) {
+          confirmDismiss: (DismissDirection direction) async {
             return showDialog<bool>(
               context: context,
               builder: (BuildContext context) {

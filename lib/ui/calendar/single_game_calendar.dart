@@ -197,7 +197,7 @@ class SingleGameCalendar extends StatelessWidget {
           ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
-          onTap: () {
+          onTap: () async {
             Navigator.pushNamed<GameTimeLog?>(
               context,
               timeLogAssistantRoute,
@@ -221,7 +221,7 @@ class SingleGameCalendar extends StatelessWidget {
           ),
           labelStyle: const TextStyle(color: Colors.white),
           labelBackgroundColor: Colors.grey[800],
-          onTap: () {
+          onTap: () async {
             showGameDatePicker(
               context: context,
             ).then((DateTime? value) {

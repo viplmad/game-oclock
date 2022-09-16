@@ -279,7 +279,7 @@ class _HomepageDrawer extends StatelessWidget {
             leading: const Icon(Icons.list),
             title:
                 Text(GameCollectionLocalisations.of(context).gameListsString),
-            onTap: () {
+            onTap: () async {
               Navigator.pushNamed(
                 context,
                 gameTagListRoute,
@@ -292,7 +292,7 @@ class _HomepageDrawer extends StatelessWidget {
             title: Text(
               GameCollectionLocalisations.of(context).changeRepositoryString,
             ),
-            onTap: () {
+            onTap: () async {
               Navigator.pushReplacementNamed(
                 context,
                 repositorySettingsRoute,
@@ -304,7 +304,7 @@ class _HomepageDrawer extends StatelessWidget {
             title: Text(
               GameCollectionLocalisations.of(context).changeStartGameViewString,
             ),
-            onTap: () {
+            onTap: () async {
               showDialog<void>(
                 context: context,
                 builder: _changeStartGameViewDialog,
@@ -375,7 +375,7 @@ class _HomepageDrawer extends StatelessWidget {
                   title: Text(view),
                   groupValue: startViewIndex,
                   value: viewIndex,
-                  onChanged: (_) {
+                  onChanged: (_) async {
                     BlocProvider.of<StartGameViewBloc>(context).add(
                       UpdateStartGameView(
                         viewIndex,

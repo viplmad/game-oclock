@@ -30,7 +30,7 @@ class TimeField extends StatelessWidget {
           : null,
       editable: editable,
       update: update,
-      onTap: () {
+      onTap: () async {
         return showTimePicker(
           context: context,
           initialTime: value ?? TimeOfDay.now(),

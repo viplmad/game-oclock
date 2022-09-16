@@ -72,7 +72,7 @@ class RepositorySettings extends StatelessWidget {
               icon: const Icon(Icons.send),
               tooltip: GameCollectionLocalisations.of(context).connectString,
               onPressed: active
-                  ? () {
+                  ? () async {
                       Navigator.pushReplacementNamed(
                         context,
                         connectRoute,
@@ -260,7 +260,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     );
   }
 
-  void _showPostgresDialog(BuildContext context) {
+  void _showPostgresDialog(BuildContext context) async {
     showDialog<PostgresInstance>(
       context: context,
       builder: (BuildContext context) {
@@ -338,7 +338,7 @@ class _RepositorySettingsBody extends StatelessWidget {
     );
   }
 
-  void _showCloudinaryDialog(BuildContext context) {
+  void _showCloudinaryDialog(BuildContext context) async {
     showDialog<CloudinaryInstance>(
       context: context,
       builder: (BuildContext context) {
@@ -455,13 +455,13 @@ class PostgresTextDialog extends TextDialog {
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<PostgresInstance>(context);
           },
         ),
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             if (formKey.currentState != null &&
                 formKey.currentState!.validate()) {
               formKey.currentState!.save();
@@ -531,13 +531,13 @@ class CloudinaryTextDialog extends TextDialog {
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             Navigator.maybePop<CloudinaryCredentials>(context);
           },
         ),
         TextButton(
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),
-          onPressed: () {
+          onPressed: () async {
             if (formKey.currentState != null &&
                 formKey.currentState!.validate()) {
               formKey.currentState!.save();

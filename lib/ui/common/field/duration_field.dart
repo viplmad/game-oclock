@@ -30,7 +30,7 @@ class DurationField extends StatelessWidget {
           : null,
       editable: editable,
       update: update,
-      onTap: () {
+      onTap: () async {
         return showDurationPicker(
           context: context,
           snapToMins: 5.0,
