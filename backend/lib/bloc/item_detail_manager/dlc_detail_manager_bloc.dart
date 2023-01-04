@@ -1,48 +1,17 @@
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCID;
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/mapper/mapper.dart' show DLCMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, DLCRepository;
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
+
+import 'package:backend/service/service.dart'
+    show GameCollectionService, DLCService;
 
 import 'item_detail_manager.dart';
 
 class DLCDetailManagerBloc
-    extends ItemDetailManagerBloc<DLC, DLCEntity, DLCID, DLCRepository> {
+    extends ItemWithImageDetailManagerBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCDetailManagerBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required GameCollectionService collectionService,
   }) : super(
-          id: DLCID(itemId),
-          repository: collectionRepository.dlcRepository,
+          itemId: itemId,
+          service: collectionService.dlcService,
         );
-
-  @override
-  Future<DLC> update(UpdateItemField<DLC> event) {
-    final DLCEntity entity = DLCMapper.modelToEntity(event.item);
-    final DLCEntity updatedEntity = DLCMapper.modelToEntity(event.updatedItem);
-    final Future<DLCEntity> entityFuture =
-        repository.update(entity, updatedEntity);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
-
-  @override
-  Future<DLC> addImage(AddItemImage<DLC> event) async {
-    final Future<DLCEntity> entityFuture =
-        repository.uploadCover(id, event.imagePath, event.oldImageName);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
-
-  @override
-  Future<DLC> updateImageName(UpdateItemImageName<DLC> event) {
-    final Future<DLCEntity> entityFuture =
-        repository.renameCover(id, event.oldImageName, event.newImageName);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
-
-  @override
-  Future<DLC> deleteImage(DeleteItemImage<DLC> event) {
-    final Future<DLCEntity> entityFuture =
-        repository.deleteCover(id, event.imageName);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
 }

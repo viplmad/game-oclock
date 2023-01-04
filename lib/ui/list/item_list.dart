@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/model/list_style.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
+import 'package:backend/model/model.dart' show ListStyle;
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -17,9 +17,8 @@ import '../common/list_view.dart';
 import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
-import '../statistics/statistics_arguments.dart';
 
-abstract class ItemAppBar<T extends Item,
+abstract class ItemAppBar<T extends PrimaryModel,
         K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget
     with PreferredSizeWidget {
   const ItemAppBar({
@@ -158,7 +157,7 @@ abstract class ItemAppBar<T extends Item,
   List<String> views(BuildContext context);
 }
 
-abstract class ItemFAB<T extends Item,
+abstract class ItemFAB<T extends PrimaryModel, N extends Object,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
   const ItemFAB({
@@ -177,19 +176,19 @@ abstract class ItemFAB<T extends Item,
       foregroundColor: Colors.white,
       onPressed: () {
         BlocProvider.of<S>(context).add(
-          AddItem<T>(createItem()),
+          AddItem<N>(createItem()),
         );
       },
       child: const Icon(Icons.add),
     );
   }
 
-  T createItem();
+  N createItem();
   String typeName(BuildContext context);
 }
 
 abstract class ItemList<
-        T extends Item,
+        T extends PrimaryModel,
         K extends Bloc<ItemListEvent, ItemListState>,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
@@ -277,7 +276,7 @@ abstract class ItemList<
             return itemListBodyBuilder(
               items: state.items,
               viewIndex: state.viewIndex,
-              viewYear: state.year,
+              viewArgs: state.viewArgs,
               onDelete: (T item) {
                 BlocProvider.of<S>(context).add(DeleteItem<T>(item));
               },
@@ -327,38 +326,36 @@ abstract class ItemList<
   ItemListBody<T, K> itemListBodyBuilder({
     required List<T> items,
     required int viewIndex,
-    required int? viewYear,
+    required Object? viewArgs,
     required void Function(T) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
   });
 }
 
-abstract class ItemListBody<T extends Item,
+abstract class ItemListBody<T extends PrimaryModel,
     K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
   const ItemListBody({
     Key? key,
     required this.items,
     required this.viewIndex,
-    required this.viewYear,
+    required this.viewArgs,
     required this.onDelete,
     required this.style,
     required this.scrollController,
     required this.detailRouteName,
     required this.searchRouteName,
-    this.statisticsRouteName = '',
   }) : super(key: key);
 
   final List<T> items;
   final int viewIndex;
-  final int? viewYear;
+  final Object? viewArgs;
   final void Function(T) onDelete;
   final ListStyle style;
   final ScrollController scrollController;
 
   final String detailRouteName;
   final String searchRouteName;
-  final String statisticsRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -368,26 +365,6 @@ abstract class ItemListBody<T extends Item,
           color: Colors.grey,
           child: HeaderText(
             text: viewTitle(context),
-            trailingWidget: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.manage_search),
-                  tooltip: GameCollectionLocalisations.of(context)
-                      .searchInViewString,
-                  onPressed: _onSearchTap(context),
-                ),
-                statisticsRouteName.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.insert_chart),
-                        tooltip: GameCollectionLocalisations.of(context)
-                            .statsInViewString,
-                        onPressed:
-                            items.isNotEmpty ? onStatisticsTap(context) : null,
-                      )
-                    : const SizedBox(),
-              ],
-            ),
           ),
         ),
         Expanded(
@@ -466,34 +443,6 @@ abstract class ItemListBody<T extends Item,
     };
   }
 
-  void Function() _onSearchTap(BuildContext context) {
-    return () async {
-      Navigator.pushNamed(
-        context,
-        searchRouteName,
-        arguments: SearchArguments(
-          onTapReturn: false,
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-        ),
-      );
-    };
-  }
-
-  void Function() onStatisticsTap(BuildContext context) {
-    return () async {
-      Navigator.pushNamed(
-        context,
-        statisticsRouteName,
-        arguments: StatisticsArguments(
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          viewTitle: viewTitle(context),
-        ),
-      );
-    };
-  }
-
   String itemTitle(T item);
   String viewTitle(BuildContext context);
 
@@ -501,7 +450,7 @@ abstract class ItemListBody<T extends Item,
   external Widget gridBuilder(BuildContext context, T item);
 }
 
-class ItemCardView<T extends Item> extends StatelessWidget {
+class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
   const ItemCardView({
     Key? key,
     required this.items,
@@ -526,7 +475,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
         final T item = items.elementAt(index);
 
         return DismissibleItem(
-          dismissibleKey: item.uniqueId,
+          dismissibleKey: item.id.toString(), // TODO Wait for uuid
           itemWidget: itemBuilder(context, item),
           onDismissed: (DismissDirection direction) {
             onDismiss(item);
@@ -546,7 +495,7 @@ class ItemCardView<T extends Item> extends StatelessWidget {
   }
 }
 
-class ItemGridView<T extends Item> extends StatelessWidget {
+class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
   const ItemGridView({
     Key? key,
     required this.items,

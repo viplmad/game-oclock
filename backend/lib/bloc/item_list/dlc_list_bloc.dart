@@ -1,32 +1,21 @@
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCID, DLCView;
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/mapper/mapper.dart' show DLCMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, DLCRepository;
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
+
+import 'package:backend/service/service.dart'
+    show DLCService, GameCollectionService;
+import 'package:backend/model/model.dart' show DLCView;
 
 import 'item_list.dart';
 
-class DLCListBloc extends ItemListBloc<DLC, DLCEntity, DLCID, DLCRepository> {
+class DLCListBloc extends ItemListBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCListBloc({
-    required GameCollectionRepository collectionRepository,
+    required GameCollectionService collectionService,
     required super.managerBloc,
-  }) : super(repository: collectionRepository.dlcRepository);
+  }) : super(service: collectionService.dlcService);
 
   @override
   Future<ViewParameters> getStartViewIndex() {
     return Future<ViewParameters>.value(
       ViewParameters(DLCView.main.index),
-    );
-  }
-
-  @override
-  Future<List<DLC>> getAllWithView(int viewIndex, [int? page]) {
-    final DLCView view = DLCView.values[viewIndex];
-    final Future<List<DLCEntity>> entityListFuture =
-        repository.findAllWithView(view, page);
-    return DLCMapper.futureEntityListToModelList(
-      entityListFuture,
-      repository.getImageURI,
     );
   }
 }

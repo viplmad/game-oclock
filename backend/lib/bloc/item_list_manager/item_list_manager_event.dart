@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemListManagerEvent extends Equatable {
   const ItemListManagerEvent();
@@ -9,10 +9,10 @@ abstract class ItemListManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItem<T extends Item> extends ItemListManagerEvent {
+class AddItem<N extends Object> extends ItemListManagerEvent {
   const AddItem(this.item);
 
-  final T item;
+  final N item;
 
   @override
   List<Object> get props => <Object>[item];
@@ -23,7 +23,7 @@ class AddItem<T extends Item> extends ItemListManagerEvent {
       ' }';
 }
 
-class DeleteItem<T extends Item> extends ItemListManagerEvent {
+class DeleteItem<T extends PrimaryModel> extends ItemListManagerEvent {
   const DeleteItem(this.item);
 
   final T item;

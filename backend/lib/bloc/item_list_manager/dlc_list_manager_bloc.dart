@@ -1,27 +1,13 @@
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCID;
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/mapper/mapper.dart' show DLCMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, DLCRepository;
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
+
+import 'package:backend/service/service.dart'
+    show DLCService, GameCollectionService;
 
 import 'item_list_manager.dart';
 
 class DLCListManagerBloc
-    extends ItemListManagerBloc<DLC, DLCEntity, DLCID, DLCRepository> {
+    extends ItemListManagerBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.dlcRepository);
-
-  @override
-  Future<DLC> create(AddItem<DLC> event) {
-    final DLCEntity entity = DLCMapper.modelToEntity(event.item);
-    final Future<DLCEntity> entityFuture = repository.create(entity);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
-
-  @override
-  Future<Object?> delete(DeleteItem<DLC> event) {
-    final DLCEntity entity = DLCMapper.modelToEntity(event.item);
-    return repository.deleteById(entity.createId());
-  }
+    required GameCollectionService collectionService,
+  }) : super(service: collectionService.dlcService);
 }

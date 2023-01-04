@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemDetailState extends Equatable {
   const ItemDetailState();
@@ -11,7 +11,7 @@ abstract class ItemDetailState extends Equatable {
 
 class ItemLoading extends ItemDetailState {}
 
-class ItemLoaded<T extends Item> extends ItemDetailState {
+class ItemLoaded<T extends PrimaryModel> extends ItemDetailState {
   const ItemLoaded(this.item);
 
   final T item;

@@ -6,22 +6,22 @@ import 'package:backend/utils/time_of_day_extension.dart';
 
 import 'time_log_assistant.dart';
 
-class TimeLogAssistantBloc
-    extends Bloc<TimeLogAssistantEvent, TimeLogAssistantState> {
-  TimeLogAssistantBloc() : super(TimeLogAssistantState(DateTime.now())) {
-    on<UpdateTimeLogDate>(_mapUpdateDateToState);
-    on<UpdateTimeLogStartTime>(_mapUpdateStartTimeToState);
-    on<UpdateTimeLogEndTime>(_mapUpdateEndTimeToState);
-    on<UpdateTimeLogDuration>(_mapUpdateDurationToState);
-    on<UpdateTimeLogRecalculationMode>(_mapUpdateModeToState);
+class GameLogAssistantBloc
+    extends Bloc<GameLogAssistantEvent, GameLogAssistantState> {
+  GameLogAssistantBloc() : super(GameLogAssistantState(DateTime.now())) {
+    on<UpdateGameLogDate>(_mapUpdateDateToState);
+    on<UpdateGameLogStartTime>(_mapUpdateStartTimeToState);
+    on<UpdateGameLogEndTime>(_mapUpdateEndTimeToState);
+    on<UpdateGameLogDuration>(_mapUpdateDurationToState);
+    on<UpdateGameLogRecalculationMode>(_mapUpdateModeToState);
   }
 
   void _mapUpdateDateToState(
-    UpdateTimeLogDate event,
-    Emitter<TimeLogAssistantState> emit,
+    UpdateGameLogDate event,
+    Emitter<GameLogAssistantState> emit,
   ) {
     emit(
-      TimeLogAssistantState(
+      GameLogAssistantState(
         event.date,
         state.startTime,
         state.endTime,
@@ -32,8 +32,8 @@ class TimeLogAssistantBloc
   }
 
   void _mapUpdateStartTimeToState(
-    UpdateTimeLogStartTime event,
-    Emitter<TimeLogAssistantState> emit,
+    UpdateGameLogStartTime event,
+    Emitter<GameLogAssistantState> emit,
   ) {
     final TimeOfDay startTime = event.startTime;
 
@@ -44,17 +44,17 @@ class TimeLogAssistantBloc
     } else if (endTime != null && duration == null) {
       duration = _differenceStartEnd(startTime, endTime);
     } else if (endTime != null && duration != null) {
-      final TimeLogRecalculationMode recalculationMode =
+      final GameLogRecalculationMode recalculationMode =
           state.recalculationMode;
-      if (recalculationMode == TimeLogRecalculationMode.duration) {
+      if (recalculationMode == GameLogRecalculationMode.duration) {
         duration = _differenceStartEnd(startTime, endTime);
-      } else if (recalculationMode == TimeLogRecalculationMode.time) {
+      } else if (recalculationMode == GameLogRecalculationMode.time) {
         endTime = startTime.add(duration);
       }
     }
 
     emit(
-      TimeLogAssistantState(
+      GameLogAssistantState(
         state.date,
         event.startTime,
         endTime,
@@ -65,8 +65,8 @@ class TimeLogAssistantBloc
   }
 
   void _mapUpdateEndTimeToState(
-    UpdateTimeLogEndTime event,
-    Emitter<TimeLogAssistantState> emit,
+    UpdateGameLogEndTime event,
+    Emitter<GameLogAssistantState> emit,
   ) {
     final TimeOfDay endTime = event.endTime;
 
@@ -77,17 +77,17 @@ class TimeLogAssistantBloc
     } else if (startTime != null && duration == null) {
       duration = _differenceStartEnd(startTime, endTime);
     } else if (startTime != null && duration != null) {
-      final TimeLogRecalculationMode recalculationMode =
+      final GameLogRecalculationMode recalculationMode =
           state.recalculationMode;
-      if (recalculationMode == TimeLogRecalculationMode.duration) {
+      if (recalculationMode == GameLogRecalculationMode.duration) {
         duration = _differenceStartEnd(startTime, endTime);
-      } else if (recalculationMode == TimeLogRecalculationMode.time) {
+      } else if (recalculationMode == GameLogRecalculationMode.time) {
         startTime = endTime.subtract(duration);
       }
     }
 
     emit(
-      TimeLogAssistantState(
+      GameLogAssistantState(
         state.date,
         startTime,
         event.endTime,
@@ -98,8 +98,8 @@ class TimeLogAssistantBloc
   }
 
   void _mapUpdateDurationToState(
-    UpdateTimeLogDuration event,
-    Emitter<TimeLogAssistantState> emit,
+    UpdateGameLogDuration event,
+    Emitter<GameLogAssistantState> emit,
   ) {
     final Duration duration = event.duration;
 
@@ -113,7 +113,7 @@ class TimeLogAssistantBloc
     }
 
     emit(
-      TimeLogAssistantState(
+      GameLogAssistantState(
         state.date,
         startTime,
         endTime,
@@ -124,11 +124,11 @@ class TimeLogAssistantBloc
   }
 
   void _mapUpdateModeToState(
-    UpdateTimeLogRecalculationMode event,
-    Emitter<TimeLogAssistantState> emit,
+    UpdateGameLogRecalculationMode event,
+    Emitter<GameLogAssistantState> emit,
   ) {
     emit(
-      TimeLogAssistantState(
+      GameLogAssistantState(
         state.date,
         state.startTime,
         state.endTime,

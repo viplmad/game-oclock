@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show Platform;
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, PlatformAvailableDTO;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -10,6 +11,8 @@ import 'theme_utils.dart';
 
 class PlatformTheme {
   PlatformTheme._();
+
+  static const bool hasImage = true;
 
   static const Color primaryColour = Colors.black87;
   static const Color secondaryColour = Colors.black12;
@@ -43,30 +46,45 @@ class PlatformTheme {
 
   static Widget itemCard(
     BuildContext context,
-    Platform item,
-    void Function()? Function(BuildContext, Platform) onTap,
+    PlatformDTO item,
+    void Function()? Function(BuildContext, PlatformDTO) onTap,
   ) {
     return ItemCard(
       title: itemTitle(item),
-      hasImage: Platform.hasImage,
-      imageURL: item.image.url,
+      hasImage: PlatformTheme.hasImage,
+      imageURL: item.iconUrl,
+      onTap: onTap(context, item),
+    );
+  }
+
+  static Widget itemAvailableCard(
+    BuildContext context,
+    PlatformAvailableDTO item,
+    void Function()? Function(BuildContext, PlatformAvailableDTO) onTap,
+  ) {
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle: GameCollectionLocalisations.of(context)
+          .formatDate(item.availableDate),
+      hasImage: PlatformTheme.hasImage,
+      imageURL: item.iconUrl,
       onTap: onTap(context, item),
     );
   }
 
   static Widget itemGrid(
     BuildContext context,
-    Platform item,
-    void Function()? Function(BuildContext, Platform) onTap,
+    PlatformDTO item,
+    void Function()? Function(BuildContext, PlatformDTO) onTap,
   ) {
     return ItemGrid(
       title: itemTitle(item),
-      imageURL: item.image.url,
+      imageURL: item.iconUrl,
       onTap: onTap(context, item),
     );
   }
 
-  static String itemTitle(Platform item) {
+  static String itemTitle(PlatformDTO item) {
     return item.name;
   }
 }

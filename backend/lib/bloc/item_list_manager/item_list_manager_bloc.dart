@@ -1,41 +1,29 @@
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/entity/entity.dart' show ItemEntity;
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show ItemRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import '../bloc_utils.dart';
+import 'package:backend/service/service.dart' show ItemService;
+
 import 'item_list_manager.dart';
 
-abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
-        ID extends Object, R extends ItemRepository<E, ID>>
+abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
+        S extends ItemService<T, N>>
     extends Bloc<ItemListManagerEvent, ItemListManagerState> {
   ItemListManagerBloc({
-    required this.repository,
+    required this.service,
   }) : super(ItemListManagerInitialised()) {
-    on<AddItem<T>>(_mapAddItemToState);
+    on<AddItem<N>>(_mapAddItemToState);
     on<DeleteItem<T>>(_mapDeleteItemToState);
   }
 
-  final R repository;
-
-  Future<void> _checkConnection(Emitter<ItemListManagerState> emit) async {
-    await BlocUtils.checkConnection<ItemListManagerState, ItemNotAdded>(
-      repository,
-      emit,
-      (final String error) => ItemNotAdded(error),
-    );
-  }
+  final S service;
 
   void _mapAddItemToState(
-    AddItem<T> event,
+    AddItem<N> event,
     Emitter<ItemListManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
-      final T item = await create(event);
+      final T item = await _create(event);
       emit(
         ItemAdded<T>(item),
       );
@@ -54,8 +42,6 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
     DeleteItem<T> event,
     Emitter<ItemListManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
       await delete(event);
       emit(
@@ -72,8 +58,11 @@ abstract class ItemListManagerBloc<T extends Item, E extends ItemEntity,
     );
   }
 
-  @protected
-  Future<T> create(AddItem<T> event);
-  @protected
-  Future<Object?> delete(DeleteItem<T> event);
+  Future<T> _create(AddItem<N> event) {
+    return service.create(event.item);
+  }
+
+  Future<void> delete(DeleteItem<T> event) {
+    return service.delete(event.item.id);
+  }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show Platform;
-import 'package:backend/model/list_style.dart';
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, NewPlatformDTO;
 
+import 'package:backend/model/model.dart' show ListStyle;
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -12,13 +13,13 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show PlatformTheme;
 import 'list.dart';
 
-class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
+class PlatformAppBar extends ItemAppBar<PlatformDTO, PlatformListBloc> {
   const PlatformAppBar({
     Key? key,
   }) : super(
           key: key,
           themeColor: PlatformTheme.primaryColour,
-          gridAllowed: Platform.hasImage,
+          gridAllowed: PlatformTheme.hasImage,
           searchRouteName: platformSearchRoute,
           detailRouteName: platformDetailRoute,
         );
@@ -35,7 +36,8 @@ class PlatformAppBar extends ItemAppBar<Platform, PlatformListBloc> {
   List<String> views(BuildContext context) => PlatformTheme.views(context);
 }
 
-class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
+class PlatformFAB
+    extends ItemFAB<PlatformDTO, NewPlatformDTO, PlatformListManagerBloc> {
   const PlatformFAB({
     Key? key,
   }) : super(
@@ -44,13 +46,7 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
         );
 
   @override
-  Platform createItem() => const Platform(
-        id: -1,
-        name: '',
-        iconURL: null,
-        iconFilename: null,
-        type: null,
-      );
+  NewPlatformDTO createItem() => NewPlatformDTO(name: '');
 
   @override
   String typeName(BuildContext context) =>
@@ -58,7 +54,7 @@ class PlatformFAB extends ItemFAB<Platform, PlatformListManagerBloc> {
 }
 
 class PlatformList
-    extends ItemList<Platform, PlatformListBloc, PlatformListManagerBloc> {
+    extends ItemList<PlatformDTO, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
     Key? key,
   }) : super(
@@ -73,17 +69,17 @@ class PlatformList
   @override
   // ignore: library_private_types_in_public_api
   _PlatformListBody itemListBodyBuilder({
-    required List<Platform> items,
+    required List<PlatformDTO> items,
     required int viewIndex,
-    required int? viewYear,
-    required void Function(Platform) onDelete,
+    required Object? viewArgs,
+    required void Function(PlatformDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
   }) {
     return _PlatformListBody(
       items: items,
       viewIndex: viewIndex,
-      viewYear: viewYear,
+      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -91,12 +87,12 @@ class PlatformList
   }
 }
 
-class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
+class _PlatformListBody extends ItemListBody<PlatformDTO, PlatformListBloc> {
   const _PlatformListBody({
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewYear,
+    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,
@@ -107,17 +103,17 @@ class _PlatformListBody extends ItemListBody<Platform, PlatformListBloc> {
         );
 
   @override
-  String itemTitle(Platform item) => PlatformTheme.itemTitle(item);
+  String itemTitle(PlatformDTO item) => PlatformTheme.itemTitle(item);
 
   @override
   String viewTitle(BuildContext context) =>
       PlatformTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, Platform item) =>
+  Widget cardBuilder(BuildContext context, PlatformDTO item) =>
       PlatformTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, Platform item) =>
+  Widget gridBuilder(BuildContext context, PlatformDTO item) =>
       PlatformTheme.itemGrid(context, item, onTap);
 }

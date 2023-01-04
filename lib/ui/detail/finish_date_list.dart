@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/model/model.dart' show ItemFinish;
-
 import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 
@@ -16,11 +15,9 @@ import '../common/skeleton.dart';
 import '../utils/field_utils.dart';
 
 // ignore: must_be_immutable
-abstract class FinishList<
-        F extends ItemFinish,
-        K extends Bloc<ItemRelationEvent, ItemRelationState>,
+abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
-    extends _FinishList<F, K, S> {
+    extends _FinishList<K, S> {
   FinishList({
     Key? key,
     required super.fieldName,
@@ -40,7 +37,7 @@ abstract class FinishList<
     return BlocBuilder<K, ItemRelationState>(
       builder: (BuildContext context, ItemRelationState state) {
         String extra = '';
-        if (state is ItemRelationLoaded<F>) {
+        if (state is ItemRelationLoaded<ItemFinish>) {
           extra = state.otherItems.length > 1 ? '(+)' : '';
         }
 
@@ -52,10 +49,9 @@ abstract class FinishList<
 
 // ignore: must_be_immutable
 abstract class SkeletonFinishList<
-        F extends ItemFinish,
         K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
-    extends _FinishList<F, K, S> {
+    extends _FinishList<K, S> {
   SkeletonFinishList({
     Key? key,
     required super.fieldName,
@@ -77,9 +73,7 @@ abstract class SkeletonFinishList<
 }
 
 // ignore: must_be_immutable
-abstract class _FinishList<
-        F extends ItemFinish,
-        K extends Bloc<ItemRelationEvent, ItemRelationState>,
+abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
     extends StatelessWidget {
   _FinishList({
@@ -100,7 +94,7 @@ abstract class _FinishList<
   Widget build(BuildContext outerContext) {
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
-        if (state is ItemRelationAdded<F>) {
+        if (state is ItemRelationAdded<ItemFinish>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context)
@@ -124,7 +118,7 @@ abstract class _FinishList<
             ),
           );
         }
-        if (state is ItemRelationDeleted<F>) {
+        if (state is ItemRelationDeleted<ItemFinish>) {
           _hasUpdated = true;
 
           final String message = GameCollectionLocalisations.of(context)
@@ -178,8 +172,8 @@ abstract class _FinishList<
                 child: BlocBuilder<K, ItemRelationState>(
                   bloc: BlocProvider.of<K>(outerContext),
                   builder: (BuildContext context, ItemRelationState state) {
-                    if (state is ItemRelationLoaded<F>) {
-                      final List<F> values = state.otherItems;
+                    if (state is ItemRelationLoaded<ItemFinish>) {
+                      final List<ItemFinish> values = state.otherItems;
 
                       if (values.isEmpty) {
                         return Text(
@@ -191,10 +185,11 @@ abstract class _FinishList<
                       return ItemListBuilder(
                         itemCount: values.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final F finish = values.elementAt(index);
+                          final DateTime finishDate =
+                              values.elementAt(index).date;
                           final String dateString =
                               GameCollectionLocalisations.of(context)
-                                  .formatDate(finish.dateTime);
+                                  .formatDate(finishDate);
 
                           return ListTile(
                             title: Text(dateString),
@@ -202,7 +197,9 @@ abstract class _FinishList<
                               icon: const Icon(Icons.link_off),
                               onPressed: () {
                                 BlocProvider.of<S>(outerContext).add(
-                                  DeleteItemRelation<F>(finish),
+                                  DeleteItemRelation<ItemFinish>(
+                                    ItemFinish(finishDate),
+                                  ),
                                 );
                               },
                             ),
@@ -238,7 +235,7 @@ abstract class _FinishList<
                     ).then((DateTime? value) {
                       if (value != null) {
                         BlocProvider.of<S>(outerContext).add(
-                          AddItemRelation<F>(createFinish(value)),
+                          AddItemRelation<ItemFinish>(ItemFinish(value)),
                         );
                       }
                     });
@@ -261,5 +258,4 @@ abstract class _FinishList<
   }
 
   Widget fieldBuilder(BuildContext context);
-  F createFinish(DateTime dateTime);
 }

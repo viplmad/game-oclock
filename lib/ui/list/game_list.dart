@@ -2,59 +2,27 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Game, GameStatus;
-import 'package:backend/model/list_style.dart';
-import 'package:backend/model/app_tab.dart';
+import 'package:game_collection_client/api.dart'
+    show GameDTO, NewGameDTO, GameStatus;
 
-import 'package:backend/bloc/tab/tab.dart';
+import 'package:backend/model/model.dart' show ListStyle, GameView;
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
-import '../theme/app_theme.dart';
 import '../theme/theme.dart' show GameTheme;
-import '../common/tabs_delegate.dart';
 import '../common/year_picker_dialog.dart';
-import '../statistics/statistics_arguments.dart';
 import 'list.dart';
 
-class GameAppBar extends StatelessWidget {
+class GameAppBar extends ItemAppBar<GameDTO, GameListBloc> {
   const GameAppBar({
-    Key? key,
-    required this.gameTab,
-  }) : super(key: key);
-
-  final GameTab gameTab;
-
-  @override
-  Widget build(BuildContext context) {
-    switch (gameTab) {
-      case GameTab.all:
-        return _AllAppBar();
-      case GameTab.game:
-        return _OwnedAppBar();
-      case GameTab.rom:
-        return _RomAppBar();
-    }
-  }
-}
-
-class _AllAppBar extends _GameAppBar<AllListBloc> {}
-
-class _OwnedAppBar extends _GameAppBar<OwnedListBloc> {}
-
-class _RomAppBar extends _GameAppBar<RomListBloc> {}
-
-abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
-    extends ItemAppBar<Game, K> {
-  const _GameAppBar({
     Key? key,
   }) : super(
           key: key,
           themeColor: GameTheme.primaryColour,
-          gridAllowed: Game.hasImage,
+          gridAllowed: GameTheme.hasImage,
           searchRouteName: gameSearchRoute,
           detailRouteName: gameDetailRoute,
           calendarRouteName: gameMultiCalendarRoute,
@@ -63,7 +31,7 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
   @override
   void Function(int) onSelected(BuildContext context, List<String> views) {
     return (int selectedViewIndex) async {
-      if (selectedViewIndex == views.length - 1) {
+      if (selectedViewIndex == GameView.review.index) {
         final int? year = await showDialog<int>(
           context: context,
           builder: (BuildContext context) {
@@ -77,11 +45,12 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
         if (year != null) {
           // Ignore because we will never get to use use unmounted context
           // ignore: use_build_context_synchronously
-          BlocProvider.of<K>(context)
-              .add(UpdateYearView(selectedViewIndex, year));
+          BlocProvider.of<GameListBloc>(context)
+              .add(UpdateView(selectedViewIndex, year));
         }
       } else {
-        BlocProvider.of<K>(context).add(UpdateView(selectedViewIndex));
+        BlocProvider.of<GameListBloc>(context)
+            .add(UpdateView(selectedViewIndex));
       }
     };
   }
@@ -98,37 +67,8 @@ abstract class _GameAppBar<K extends Bloc<ItemListEvent, ItemListState>>
   List<String> views(BuildContext context) => GameTheme.views(context);
 }
 
-class GameFAB extends StatelessWidget {
+class GameFAB extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
   const GameFAB({
-    Key? key,
-    required this.gameTab,
-  }) : super(key: key);
-
-  final GameTab gameTab;
-
-  @override
-  Widget build(BuildContext context) {
-    switch (gameTab) {
-      case GameTab.all:
-        return _AllFAB();
-      case GameTab.game:
-        return _OwnedFAB();
-      case GameTab.rom:
-        return _RomFAB();
-    }
-  }
-}
-
-class _AllFAB extends _GameFAB<AllListManagerBloc> {}
-
-class _OwnedFAB extends _GameFAB<OwnedListManagerBloc> {}
-
-class _RomFAB extends _GameFAB<RomListManagerBloc> {}
-
-abstract class _GameFAB<
-        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
-    extends ItemFAB<Game, S> {
-  const _GameFAB({
     Key? key,
   }) : super(
           key: key,
@@ -136,209 +76,77 @@ abstract class _GameFAB<
         );
 
   @override
-  Game createItem() => const Game(
-        id: -1,
-        name: '',
-        edition: '',
-        releaseYear: null,
-        coverURL: null,
-        coverFilename: null,
-        status: GameStatus.lowPriority,
-        rating: 0,
-        thoughts: '',
-        saveFolder: '',
-        screenshotFolder: '',
-        isBackup: false,
-        firstFinishDate: null,
-        totalTime: Duration(),
-      );
+  NewGameDTO createItem() =>
+      NewGameDTO(name: '', edition: '', status: GameStatus.lowPriority);
 
   @override
   String typeName(BuildContext context) =>
       GameCollectionLocalisations.of(context).gameString;
 }
 
-class GameTabs extends StatelessWidget {
-  const GameTabs({
+class GameList extends ItemList<GameDTO, GameListBloc, GameListManagerBloc> {
+  const GameList({
     Key? key,
-    required this.gameTab,
-  }) : super(key: key);
-
-  final GameTab gameTab;
-
-  @override
-  Widget build(BuildContext context) {
-    final List<String> tabTitles = <String>[
-      GameCollectionLocalisations.of(context).allString,
-      GameCollectionLocalisations.of(context).ownedString,
-      GameCollectionLocalisations.of(context).romsString,
-    ];
-
-    return DefaultTabController(
-      length: tabTitles.length,
-      initialIndex: gameTab.index,
-      child: Builder(
-        builder: (BuildContext context) {
-          DefaultTabController.of(context)!.addListener(() {
-            final GameTab newGameTab = GameTab.values
-                .elementAt(DefaultTabController.of(context)!.index);
-
-            BlocProvider.of<TabBloc>(context).add(UpdateGameTab(newGameTab));
-          });
-
-          return NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverPersistentHeader(
-                  pinned: false,
-                  floating: true,
-                  delegate: TabsDelegate(
-                    tabBar: TabBar(
-                      tabs: tabTitles.map<Tab>((String title) {
-                        return Tab(
-                          text: title,
-                        );
-                      }).toList(growable: false),
-                    ),
-                    color: ElevationOverlay.applySurfaceTint(
-                      AppTheme.defaultThemeSurfaceTintColor(context),
-                      GameTheme.primaryColour,
-                      1.0,
-                    ),
-                  ),
-                ),
-              ];
-            },
-            body: TabBarView(
-              children: <Widget>[
-                _AllGameList(
-                  tabTitle: tabTitles.elementAt(0),
-                ),
-                _OwnedGameList(
-                  tabTitle: tabTitles.elementAt(1),
-                ),
-                _RomGameList(
-                  tabTitle: tabTitles.elementAt(2),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _AllGameList extends _GameList<AllListBloc, AllListManagerBloc> {
-  const _AllGameList({
-    Key? key,
-    required super.tabTitle,
-  }) : super(key: key);
-}
-
-class _OwnedGameList extends _GameList<OwnedListBloc, OwnedListManagerBloc> {
-  const _OwnedGameList({
-    Key? key,
-    required super.tabTitle,
-  }) : super(key: key);
-}
-
-class _RomGameList extends _GameList<RomListBloc, RomListManagerBloc> {
-  const _RomGameList({
-    Key? key,
-    required super.tabTitle,
-  }) : super(key: key);
-}
-
-abstract class _GameList<K extends Bloc<ItemListEvent, ItemListState>,
-        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
-    extends ItemList<Game, K, S> {
-  const _GameList({
-    Key? key,
-    required this.tabTitle,
   }) : super(
           key: key,
           detailRouteName: gameDetailRoute,
         );
 
-  final String tabTitle;
-
   @override
   String typeName(BuildContext context) =>
       GameCollectionLocalisations.of(context).gameString;
 
   @override
-  _GameListBody<K> itemListBodyBuilder({
-    required List<Game> items,
+  // ignore: library_private_types_in_public_api
+  _GameListBody itemListBodyBuilder({
+    required List<GameDTO> items,
     required int viewIndex,
-    required int? viewYear,
-    required void Function(Game) onDelete,
+    required Object? viewArgs,
+    required void Function(GameDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
   }) {
-    return _GameListBody<K>(
+    return _GameListBody(
       items: items,
       viewIndex: viewIndex,
-      viewYear: viewYear,
+      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
-      tabTitle: tabTitle,
       scrollController: scrollController,
     );
   }
 }
 
-class _GameListBody<K extends Bloc<ItemListEvent, ItemListState>>
-    extends ItemListBody<Game, K> {
+class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   const _GameListBody({
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewYear,
+    required super.viewArgs,
     required super.onDelete,
     required super.style,
-    required this.tabTitle,
     required super.scrollController,
   }) : super(
           key: key,
           detailRouteName: gameDetailRoute,
           searchRouteName: gameSearchRoute,
-          statisticsRouteName: gameStatisticsRoute,
         );
 
-  final String tabTitle;
-
   @override
-  void Function() onStatisticsTap(BuildContext context) {
-    return () async {
-      Navigator.pushNamed(
-        context,
-        statisticsRouteName,
-        arguments: StatisticsArguments(
-          viewIndex: viewIndex,
-          viewYear: viewYear,
-          viewTitle: viewTitle(context),
-        ),
-      );
-    };
-  }
-
-  @override
-  String itemTitle(Game item) => GameTheme.itemTitle(item);
+  String itemTitle(GameDTO item) => GameTheme.itemTitle(item);
 
   @override
   String viewTitle(BuildContext context) =>
       GameTheme.views(context).elementAt(viewIndex) +
-      ((viewYear != null)
-          ? ' (${GameCollectionLocalisations.of(context).formatYear(viewYear!)})'
+      ((viewArgs != null && viewArgs is int)
+          ? ' (${GameCollectionLocalisations.of(context).formatYear(viewArgs as int)})'
           : '');
 
   @override
-  Widget cardBuilder(BuildContext context, Game item) =>
+  Widget cardBuilder(BuildContext context, GameDTO item) =>
       GameTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, Game item) =>
+  Widget gridBuilder(BuildContext context, GameDTO item) =>
       GameTheme.itemGrid(context, item, onTap);
 }

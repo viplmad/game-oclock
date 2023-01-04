@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemSearchState extends Equatable {
   const ItemSearchState();
@@ -9,7 +9,7 @@ abstract class ItemSearchState extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class ItemSearchEmpty<T extends Item> extends ItemSearchState {
+class ItemSearchEmpty<T extends PrimaryModel> extends ItemSearchState {
   // ignore: always_specify_types
   const ItemSearchEmpty([this.suggestions = const []]);
 
@@ -26,7 +26,7 @@ class ItemSearchEmpty<T extends Item> extends ItemSearchState {
 
 class ItemSearchLoading extends ItemSearchState {}
 
-class ItemSearchSuccess<T extends Item> extends ItemSearchState {
+class ItemSearchSuccess<T extends PrimaryModel> extends ItemSearchState {
   const ItemSearchSuccess(this.results);
 
   final List<T> results;

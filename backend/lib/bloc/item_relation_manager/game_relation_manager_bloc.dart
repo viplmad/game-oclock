@@ -1,104 +1,119 @@
-import 'package:backend/entity/entity.dart'
+import 'package:game_collection_client/api.dart'
+    show GameLogDTO, DLCDTO, PlatformAvailableDTO, TagDTO;
+
+import 'package:backend/model/model.dart' show ItemFinish;
+import 'package:backend/service/service.dart'
     show
-        DLCEntity,
-        GameFinishEntity,
-        GameID,
-        GameTagEntity,
-        GameTimeLogEntity,
-        PlatformEntity,
-        PurchaseEntity;
-import 'package:backend/model/model.dart'
-    show DLC, Game, GameFinish, GameTimeLog, Item, Platform, Purchase, GameTag;
-import 'package:backend/mapper/mapper.dart'
-    show
-        DLCMapper,
-        GameFinishMapper,
-        GameTagMapper,
-        GameTimeLogMapper,
-        PlatformMapper,
-        PurchaseMapper;
-import 'package:backend/repository/repository.dart'
-    show GameFinishRepository, GameRepository, GameTimeLogRepository;
+        GameCollectionService,
+        GameService,
+        GameFinishService,
+        GameLogService,
+        DLCService;
 
 import 'item_relation_manager.dart';
 
-class GameRelationManagerBloc<W extends Item>
-    extends ItemRelationManagerBloc<Game, GameID, W> {
-  GameRelationManagerBloc({
-    required int itemId,
-    required super.collectionRepository,
-  })  : gameRepository = collectionRepository.gameRepository,
-        gameFinishRepository = collectionRepository.gameFinishRepository,
-        gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
-        super(id: GameID(itemId));
+class GameFinishRelationManagerBloc
+    extends ItemRelationManagerBloc<ItemFinish> {
+  GameFinishRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : gameFinishService = collectionService.gameFinishService,
+        super();
 
-  final GameRepository gameRepository;
-  final GameFinishRepository gameFinishRepository;
-  final GameTimeLogRepository gameTimeLogRepository;
+  final GameFinishService gameFinishService;
 
   @override
-  Future<Object?> addRelation(AddItemRelation<W> event) {
-    final W otherItem = event.otherItem;
-
-    switch (W) {
-      case GameFinish:
-        final GameFinishEntity otherEntity =
-            GameFinishMapper.modelToEntity(id.id, otherItem as GameFinish);
-        return gameFinishRepository.create(otherEntity);
-      case GameTimeLog:
-        final GameTimeLogEntity otherEntity =
-            GameTimeLogMapper.modelToEntity(id.id, otherItem as GameTimeLog);
-        return gameTimeLogRepository.create(otherEntity);
-      case DLC:
-        final DLCEntity otherEntity = DLCMapper.modelToEntity(otherItem as DLC);
-        return gameRepository.relateGameDLC(id, otherEntity.createId());
-      case Platform:
-        final PlatformEntity otherEntity =
-            PlatformMapper.modelToEntity(otherItem as Platform);
-        return gameRepository.relateGamePlatform(id, otherEntity.createId());
-      case Purchase:
-        final PurchaseEntity otherEntity =
-            PurchaseMapper.modelToEntity(otherItem as Purchase);
-        return gameRepository.relateGamePurchase(id, otherEntity.createId());
-      case GameTag:
-        final GameTagEntity otherEntity =
-            GameTagMapper.modelToEntity(otherItem as GameTag);
-        return gameRepository.relateGameTag(id, otherEntity.createId());
-    }
-
-    return super.addRelation(event);
+  Future<void> addRelation(AddItemRelation<ItemFinish> event) {
+    return gameFinishService.create(itemId, event.otherItem.date);
   }
 
   @override
-  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
-    final W otherItem = event.otherItem;
+  Future<void> deleteRelation(DeleteItemRelation<ItemFinish> event) {
+    return gameFinishService.delete(itemId, event.otherItem.date);
+  }
+}
 
-    switch (W) {
-      case GameFinish:
-        final GameFinishEntity otherEntity =
-            GameFinishMapper.modelToEntity(id.id, otherItem as GameFinish);
-        return gameFinishRepository.deleteById(otherEntity.createId());
-      case GameTimeLog:
-        final GameTimeLogEntity otherEntity =
-            GameTimeLogMapper.modelToEntity(id.id, otherItem as GameTimeLog);
-        return gameTimeLogRepository.deleteById(otherEntity.createId());
-      case DLC:
-        final DLCEntity otherEntity = DLCMapper.modelToEntity(otherItem as DLC);
-        return gameRepository.unrelateGameDLC(otherEntity.createId());
-      case Purchase:
-        final PurchaseEntity otherEntity =
-            PurchaseMapper.modelToEntity(otherItem as Purchase);
-        return gameRepository.unrelateGamePurchase(id, otherEntity.createId());
-      case Platform:
-        final PlatformEntity otherEntity =
-            PlatformMapper.modelToEntity(otherItem as Platform);
-        return gameRepository.unrelateGamePlatform(id, otherEntity.createId());
-      case GameTag:
-        final GameTagEntity otherEntity =
-            GameTagMapper.modelToEntity(otherItem as GameTag);
-        return gameRepository.unrelateGameTag(id, otherEntity.createId());
-    }
+class GameLogRelationManagerBloc extends ItemRelationManagerBloc<GameLogDTO> {
+  GameLogRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : gameLogService = collectionService.gameLogService,
+        super();
 
-    return super.deleteRelation(event);
+  final GameLogService gameLogService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<GameLogDTO> event) {
+    return gameLogService.create(itemId, event.otherItem);
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<GameLogDTO> event) {
+    return gameLogService.delete(itemId, event.otherItem.datetime);
+  }
+}
+
+class GameDLCRelationManagerBloc extends ItemRelationManagerBloc<DLCDTO> {
+  GameDLCRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : dlcService = collectionService.dlcService,
+        super();
+
+  final DLCService dlcService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<DLCDTO> event) {
+    return dlcService.setBasegame(event.otherItem.id, itemId);
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<DLCDTO> event) {
+    return dlcService.clearBasegame(event.otherItem.id);
+  }
+}
+
+class GamePlatformRelationManagerBloc
+    extends ItemRelationManagerBloc<PlatformAvailableDTO> {
+  GamePlatformRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : gameService = collectionService.gameService,
+        super();
+
+  final GameService gameService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<PlatformAvailableDTO> event) {
+    return gameService.addAvailability(
+      itemId,
+      event.otherItem.id,
+      event.otherItem.availableDate,
+    );
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<PlatformAvailableDTO> event) {
+    return gameService.removeAvailability(itemId, event.otherItem.id);
+  }
+}
+
+class GameTagRelationManagerBloc extends ItemRelationManagerBloc<TagDTO> {
+  GameTagRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : gameService = collectionService.gameService,
+        super();
+
+  final GameService gameService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<TagDTO> event) {
+    return gameService.tag(itemId, event.otherItem.id);
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<TagDTO> event) {
+    return gameService.untag(itemId, event.otherItem.id);
   }
 }

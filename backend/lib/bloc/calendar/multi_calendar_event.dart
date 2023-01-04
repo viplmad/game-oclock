@@ -1,4 +1,4 @@
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show GameDTO;
 
 import 'calendar_event.dart';
 
@@ -26,7 +26,7 @@ class LoadMultiCalendar extends MultiCalendarEvent {
 class UpdateCalendarListItem extends MultiCalendarEvent {
   const UpdateCalendarListItem(this.item);
 
-  final Game item;
+  final GameDTO item;
 
   @override
   List<Object> get props => <Object>[item];

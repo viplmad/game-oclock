@@ -1,25 +1,29 @@
-import 'package:backend/entity/entity.dart' show DLCEntity, DLCID;
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/mapper/mapper.dart' show DLCMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, DLCRepository;
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
+
+import 'package:backend/model/model.dart' show DLCDetailed;
+import 'package:backend/service/service.dart'
+    show DLCFinishService, DLCService, GameCollectionService;
 
 import 'item_detail.dart';
 
-class DLCDetailBloc
-    extends ItemDetailBloc<DLC, DLCEntity, DLCID, DLCRepository> {
+class DLCDetailBloc extends ItemDetailBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCDetailBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required GameCollectionService collectionService,
     required super.managerBloc,
-  }) : super(
-          id: DLCID(itemId),
-          repository: collectionRepository.dlcRepository,
+  })  : dlcFinishService = collectionService.dlcFinishService,
+        super(
+          itemId: itemId,
+          service: collectionService.dlcService,
         );
 
+  final DLCFinishService dlcFinishService;
+
   @override
-  Future<DLC> get() {
-    final Future<DLCEntity> entityFuture = repository.findById(id);
-    return DLCMapper.futureEntityToModel(entityFuture, repository.getImageURI);
+  Future<DLCDTO> get() async {
+    final DLCDTO dlc = await super.get();
+    final DateTime? firstFinish = await dlcFinishService.getFirstFinish(itemId);
+
+    return DLCDetailed.withDTO(dlc, firstFinish);
   }
 }

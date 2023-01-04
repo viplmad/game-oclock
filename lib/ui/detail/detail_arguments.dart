@@ -1,6 +1,4 @@
-import 'package:backend/model/model.dart' show Item;
-
-class DetailArguments<T extends Item> {
+class DetailArguments<T extends Object> {
   const DetailArguments({
     required this.item,
     this.onUpdate,

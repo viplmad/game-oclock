@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:backend/game_collection_backend.dart'
-    show GameCollectionRepository;
+    show GameCollectionService;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -29,9 +29,9 @@ class GameCollection extends StatelessWidget {
       ]),
     );
 
-    return RepositoryProvider<GameCollectionRepository>(
+    return RepositoryProvider<GameCollectionService>(
       create: (BuildContext context) {
-        return GameCollectionRepository();
+        return GameCollectionService();
       },
       child: MaterialApp(
         onGenerateTitle: (BuildContext context) =>

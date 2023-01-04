@@ -1,44 +1,25 @@
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import '../bloc_utils.dart';
 import 'item_relation_manager.dart';
 
-abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
-        W extends Item>
+abstract class ItemRelationManagerBloc<W extends PrimaryModel>
     extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
-    required this.id,
-    required this.collectionRepository,
+    required this.itemId,
   }) : super(ItemRelationManagerInitialised()) {
     on<AddItemRelation<W>>(_mapAddRelationToState);
     on<DeleteItemRelation<W>>(_mapDeleteRelationToState);
   }
 
-  static const String _errorRelationNotFound = 'Relation does not exist';
-
-  final ID id;
-  final GameCollectionRepository collectionRepository;
-
-  Future<void> _checkConnection(Emitter<ItemRelationManagerState> emit) async {
-    await BlocUtils.checkConnection<ItemRelationManagerState,
-        ItemRelationNotAdded>(
-      collectionRepository.gameRepository,
-      emit,
-      (final String error) => ItemRelationNotAdded(error),
-    );
-  }
+  final int itemId;
 
   void _mapAddRelationToState(
     AddItemRelation<W> event,
     Emitter<ItemRelationManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
       await addRelation(event);
       emit(
@@ -59,8 +40,6 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
     DeleteItemRelation<W> event,
     Emitter<ItemRelationManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
       await deleteRelation(event);
       emit(
@@ -77,15 +56,8 @@ abstract class ItemRelationManagerBloc<T extends Item, ID extends Object,
     );
   }
 
-  @mustCallSuper
   @protected
-  Future<Object?> addRelation(AddItemRelation<W> event) {
-    return Future<Object?>.error(_errorRelationNotFound);
-  }
-
-  @mustCallSuper
+  Future<void> addRelation(AddItemRelation<W> event);
   @protected
-  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
-    return Future<Object?>.error(_errorRelationNotFound);
-  }
+  Future<void> deleteRelation(DeleteItemRelation<W> event);
 }

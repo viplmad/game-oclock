@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemListManagerState extends Equatable {
   const ItemListManagerState();
@@ -11,7 +11,7 @@ abstract class ItemListManagerState extends Equatable {
 
 class ItemListManagerInitialised extends ItemListManagerState {}
 
-class ItemAdded<T extends Item> extends ItemListManagerState {
+class ItemAdded<T extends PrimaryModel> extends ItemListManagerState {
   const ItemAdded(this.item);
 
   final T item;
@@ -39,7 +39,7 @@ class ItemNotAdded extends ItemListManagerState {
       ' }';
 }
 
-class ItemDeleted<T extends Item> extends ItemListManagerState {
+class ItemDeleted<T extends PrimaryModel> extends ItemListManagerState {
   const ItemDeleted(this.item);
 
   final T item;

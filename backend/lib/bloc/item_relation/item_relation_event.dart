@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemRelationEvent extends Equatable {
   const ItemRelationEvent();
@@ -11,7 +11,7 @@ abstract class ItemRelationEvent extends Equatable {
 
 class LoadItemRelation extends ItemRelationEvent {}
 
-class UpdateItemRelation<W extends Item> extends ItemRelationEvent {
+class UpdateItemRelation<W extends PrimaryModel> extends ItemRelationEvent {
   const UpdateItemRelation(this.otherItems);
 
   final List<W> otherItems;
@@ -25,10 +25,10 @@ class UpdateItemRelation<W extends Item> extends ItemRelationEvent {
       ' }';
 }
 
-class UpdateRelationItem<T extends Item> extends ItemRelationEvent {
+class UpdateRelationItem<W extends PrimaryModel> extends ItemRelationEvent {
   const UpdateRelationItem(this.item);
 
-  final T item;
+  final W item;
 
   @override
   List<Object> get props => <Object>[item];

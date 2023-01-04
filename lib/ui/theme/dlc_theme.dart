@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show DLC;
+import 'package:game_collection_client/api.dart' show DLCDTO, DLCAvailableDTO;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -10,6 +10,8 @@ import 'theme_utils.dart';
 
 class DLCTheme {
   DLCTheme._();
+
+  static const bool hasImage = true;
 
   static const Color primaryColour = Colors.deepPurple;
   static const Color secondaryColour = Colors.deepPurpleAccent;
@@ -35,30 +37,45 @@ class DLCTheme {
 
   static Widget itemCard(
     BuildContext context,
-    DLC item,
-    void Function()? Function(BuildContext, DLC) onTap,
+    DLCDTO item,
+    void Function()? Function(BuildContext, DLCDTO) onTap,
   ) {
     return ItemCard(
       title: itemTitle(item),
-      hasImage: DLC.hasImage,
-      imageURL: item.image.url,
+      hasImage: DLCTheme.hasImage,
+      imageURL: item.coverUrl,
+      onTap: onTap(context, item),
+    );
+  }
+
+  static Widget itemAvailableCard(
+    BuildContext context,
+    DLCAvailableDTO item,
+    void Function()? Function(BuildContext, DLCAvailableDTO) onTap,
+  ) {
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle: GameCollectionLocalisations.of(context)
+          .formatDate(item.availableDate),
+      hasImage: DLCTheme.hasImage,
+      imageURL: item.coverUrl,
       onTap: onTap(context, item),
     );
   }
 
   static Widget itemGrid(
     BuildContext context,
-    DLC item,
-    void Function()? Function(BuildContext, DLC) onTap,
+    DLCDTO item,
+    void Function()? Function(BuildContext, DLCDTO) onTap,
   ) {
     return ItemGrid(
       title: itemTitle(item),
-      imageURL: item.image.url,
+      imageURL: item.coverUrl,
       onTap: onTap(context, item),
     );
   }
 
-  static String itemTitle(DLC item) {
+  static String itemTitle(DLCDTO item) {
     return item.name;
   }
 }

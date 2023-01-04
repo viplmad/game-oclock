@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:backend/bloc/connection/connection.dart';
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:backend/service/service.dart' show GameCollectionService;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -21,8 +20,8 @@ class Connectpage extends StatelessWidget {
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
         return ConnectionBloc(
-          collectionRepository:
-              RepositoryProvider.of<GameCollectionRepository>(context),
+          collectionService:
+              RepositoryProvider.of<GameCollectionService>(context),
         )..add(Connect());
       },
       child: const _ConnectpageBody(),
@@ -55,7 +54,7 @@ class _ConnectpageBody extends StatelessWidget {
           if (state is NonexistentConnection) {
             Navigator.pushReplacementNamed(
               context,
-              repositorySettingsRoute,
+              serverSettingsRoute,
             );
           }
         },
@@ -95,7 +94,7 @@ class _ConnectpageBody extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           BlocProvider.of<ConnectionBloc>(context)
-                              .add(Reconnect());
+                              .add(Connect());
                         },
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor:
@@ -109,7 +108,7 @@ class _ConnectpageBody extends StatelessWidget {
                         onPressed: () async {
                           Navigator.pushReplacementNamed(
                             context,
-                            repositorySettingsRoute,
+                            serverSettingsRoute,
                           );
                         },
                         style: ElevatedButton.styleFrom(

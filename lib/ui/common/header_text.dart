@@ -7,33 +7,22 @@ class HeaderText extends StatelessWidget {
   const HeaderText({
     Key? key,
     required this.text,
-    this.trailingWidget,
   }) : super(key: key);
 
   final String text;
-  final Widget? trailingWidget;
 
   @override
   Widget build(BuildContext context) {
-    final bool hasTrailing = trailingWidget != null;
     final Widget titleWidget =
         Text(text, style: Theme.of(context).textTheme.subtitle1);
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        top: hasTrailing ? 0.0 : 16.0,
+        top: 16.0,
       ),
-      child: hasTrailing
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                titleWidget,
-                trailingWidget!,
-              ],
-            )
-          : titleWidget,
+      child: titleWidget,
     );
   }
 }

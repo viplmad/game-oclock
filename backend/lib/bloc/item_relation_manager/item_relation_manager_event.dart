@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemRelationManagerEvent extends Equatable {
   const ItemRelationManagerEvent();
@@ -9,7 +9,7 @@ abstract class ItemRelationManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItemRelation<W extends Item> extends ItemRelationManagerEvent {
+class AddItemRelation<W extends PrimaryModel> extends ItemRelationManagerEvent {
   const AddItemRelation(this.otherItem);
 
   final W otherItem;
@@ -23,7 +23,7 @@ class AddItemRelation<W extends Item> extends ItemRelationManagerEvent {
       ' }';
 }
 
-class DeleteItemRelation<W extends Item> extends ItemRelationManagerEvent {
+class DeleteItemRelation<W extends PrimaryModel> extends ItemRelationManagerEvent {
   const DeleteItemRelation(this.otherItem);
 
   final W otherItem;

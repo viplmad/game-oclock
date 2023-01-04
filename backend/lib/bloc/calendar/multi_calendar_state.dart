@@ -1,6 +1,7 @@
-import 'package:backend/model/model.dart';
-import 'package:backend/model/calendar_range.dart';
-import 'package:backend/model/calendar_style.dart';
+import 'package:game_collection_client/api.dart'
+    show GameWithLogsDTO, GameLogDTO;
+
+import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
 
 import 'calendar_state.dart';
 
@@ -23,11 +24,11 @@ class MultiCalendarLoaded extends MultiCalendarState {
     this.style = CalendarStyle.list,
   ]);
 
-  final List<GameWithLogs> gamesWithLogs;
+  final List<GameWithLogsDTO> gamesWithLogs;
   final Set<DateTime> logDates;
   final DateTime focusedDate;
   final DateTime selectedDate;
-  final List<GameWithLogs> selectedGamesWithLogs;
+  final List<GameWithLogsDTO> selectedGamesWithLogs;
   final Duration selectedTotalTime;
   int get selectedTotalGames => selectedGamesWithLogs.length;
   final CalendarRange range;
@@ -58,12 +59,12 @@ class MultiCalendarLoaded extends MultiCalendarState {
 
 class MultiCalendarGraphLoaded extends MultiCalendarLoaded {
   const MultiCalendarGraphLoaded(
-    List<GameWithLogs> gamesWithLogs,
+    List<GameWithLogsDTO> gamesWithLogs,
     Set<DateTime> logDates,
     DateTime focusedDate,
     DateTime selectedDate,
-    List<GameWithLogs> selectedGamesWithLogs,
-    this.selectedTimeLogs,
+    List<GameWithLogsDTO> selectedGamesWithLogs,
+    this.selectedGameLogs,
     Duration selectedTotalTime,
     CalendarRange range,
   ) : super(
@@ -77,7 +78,7 @@ class MultiCalendarGraphLoaded extends MultiCalendarLoaded {
           CalendarStyle.graph,
         );
 
-  final List<GameTimeLog> selectedTimeLogs;
+  final List<GameLogDTO> selectedGameLogs;
 
   @override
   String toString() => 'MultiCalendarLoaded { '
@@ -85,7 +86,7 @@ class MultiCalendarGraphLoaded extends MultiCalendarLoaded {
       'logDates: $logDates, '
       'focusedDate: $focusedDate, '
       'selectedDate: $selectedDate, '
-      'selectedTimeLogs: $selectedTimeLogs, '
+      'selectedGameLogs: $selectedGameLogs, '
       'selectedTotalTime: $selectedTotalTime, '
       'range: $range, '
       'style: $style'

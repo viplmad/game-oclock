@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/preferences/repository_preferences.dart';
+import 'package:backend/preferences/shared_preferences_state.dart';
 
 import 'start_game_view.dart';
 
@@ -17,7 +17,7 @@ class StartGameViewBloc extends Bloc<StartGameViewEvent, int?> {
 
     try {
       final int? startViewIndex =
-          await RepositoryPreferences.retrieveInitialGameViewIndex();
+          await SharedPreferencesState.retrieveInitialGameViewIndex();
 
       emit(
         startViewIndex,
@@ -33,7 +33,7 @@ class StartGameViewBloc extends Bloc<StartGameViewEvent, int?> {
     try {
       final int startViewIndex = event.startViewIndex;
       final bool setSuccess =
-          await RepositoryPreferences.setStartGameViewIndex(startViewIndex);
+          await SharedPreferencesState.setStartGameViewIndex(startViewIndex);
 
       if (setSuccess) {
         emit(

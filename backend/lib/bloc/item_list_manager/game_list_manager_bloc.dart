@@ -1,45 +1,13 @@
-import 'package:backend/entity/entity.dart' show GameEntity, GameID;
-import 'package:backend/model/model.dart' show Game;
-import 'package:backend/mapper/mapper.dart' show GameMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, GameRepository;
+import 'package:game_collection_client/api.dart' show GameDTO, NewGameDTO;
+
+import 'package:backend/service/service.dart'
+    show GameService, GameCollectionService;
 
 import 'item_list_manager.dart';
 
-class AllListManagerBloc extends GameListManagerBloc {
-  AllListManagerBloc({
-    required super.collectionRepository,
-  });
-}
-
-class OwnedListManagerBloc extends GameListManagerBloc {
-  OwnedListManagerBloc({
-    required super.collectionRepository,
-  });
-}
-
-class RomListManagerBloc extends GameListManagerBloc {
-  RomListManagerBloc({
-    required super.collectionRepository,
-  });
-}
-
 class GameListManagerBloc
-    extends ItemListManagerBloc<Game, GameEntity, GameID, GameRepository> {
+    extends ItemListManagerBloc<GameDTO, NewGameDTO, GameService> {
   GameListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.gameRepository);
-
-  @override
-  Future<Game> create(AddItem<Game> event) {
-    final GameEntity entity = GameMapper.modelToEntity(event.item);
-    final Future<GameEntity> entityFuture = repository.create(entity);
-    return GameMapper.futureEntityToModel(entityFuture, repository.getImageURI);
-  }
-
-  @override
-  Future<Object?> delete(DeleteItem<Game> event) {
-    final GameEntity entity = GameMapper.modelToEntity(event.item);
-    return repository.deleteById(entity.createId());
-  }
+    required GameCollectionService collectionService,
+  }) : super(service: collectionService.gameService);
 }

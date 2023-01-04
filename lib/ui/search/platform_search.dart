@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show Platform;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, NewPlatformDTO;
 
+import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -13,12 +13,11 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show PlatformTheme;
 import 'search.dart';
 
-class PlatformSearch
-    extends ItemSearch<Platform, PlatformSearchBloc, PlatformListManagerBloc> {
+class PlatformSearch extends ItemSearch<PlatformDTO, NewPlatformDTO,
+    PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
     Key? key,
     required super.onTapReturn,
-    required super.viewIndex,
   }) : super(
           key: key,
           detailRouteName: platformDetailRoute,
@@ -26,70 +25,37 @@ class PlatformSearch
 
   @override
   PlatformSearchBloc searchBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
     return PlatformSearchBloc(
-      collectionRepository: collectionRepository,
-      viewIndex: viewIndex,
+      collectionService: collectionService,
     );
   }
 
   @override
   PlatformListManagerBloc managerBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
     return PlatformListManagerBloc(
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
   }
 
   @override
   // ignore: library_private_types_in_public_api
-  _PlatformSearchBody<PlatformSearchBloc> itemSearchBodyBuilder({
-    required void Function()? Function(BuildContext, Platform) onTap,
+  _PlatformSearchBody itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, PlatformDTO) onTap,
     required bool allowNewButton,
   }) {
-    return _PlatformSearchBody<PlatformSearchBloc>(
+    return _PlatformSearchBody(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
   }
 }
 
-class PlatformLocalSearch
-    extends ItemLocalSearch<Platform, PlatformListManagerBloc> {
-  const PlatformLocalSearch({
-    Key? key,
-    required super.items,
-  }) : super(
-          key: key,
-          detailRouteName: platformDetailRoute,
-        );
-
-  @override
-  PlatformListManagerBloc managerBlocBuilder(
-    GameCollectionRepository collectionRepository,
-  ) {
-    return PlatformListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-  }
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _PlatformSearchBody<ItemLocalSearchBloc<Platform>> itemSearchBodyBuilder({
-    required void Function()? Function(BuildContext, Platform) onTap,
-    required bool allowNewButton,
-  }) {
-    return _PlatformSearchBody<ItemLocalSearchBloc<Platform>>(
-      onTap: onTap,
-      allowNewButton: allowNewButton,
-    );
-  }
-}
-
-class _PlatformSearchBody<K extends ItemSearchBloc<Platform>>
-    extends ItemSearchBody<Platform, K, PlatformListManagerBloc> {
+class _PlatformSearchBody extends ItemSearchBody<PlatformDTO, NewPlatformDTO,
+    PlatformSearchBloc, PlatformListManagerBloc> {
   const _PlatformSearchBody({
     Key? key,
     required super.onTap,
@@ -105,15 +71,9 @@ class _PlatformSearchBody<K extends ItemSearchBloc<Platform>>
       GameCollectionLocalisations.of(context).platformsString;
 
   @override
-  Platform createItem(String query) => Platform(
-        id: -1,
-        name: query,
-        iconURL: null,
-        iconFilename: null,
-        type: null,
-      );
+  NewPlatformDTO createItem(String query) => NewPlatformDTO(name: query);
 
   @override
-  Widget cardBuilder(BuildContext context, Platform item) =>
+  Widget cardBuilder(BuildContext context, PlatformDTO item) =>
       PlatformTheme.itemCard(context, item, onTap);
 }

@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
-
 abstract class ItemDetailManagerEvent extends Equatable {
   const ItemDetailManagerEvent();
 
@@ -9,30 +7,27 @@ abstract class ItemDetailManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateItemField<T extends Item> extends ItemDetailManagerEvent {
-  const UpdateItemField(this.item, this.updatedItem);
+class UpdateItemField<N extends Object> extends ItemDetailManagerEvent {
+  const UpdateItemField(this.item);
 
-  final T item;
-  final T updatedItem;
+  final N item;
 
   @override
-  List<Object> get props => <Object>[item, updatedItem];
+  List<Object> get props => <Object>[item];
 
   @override
   String toString() => 'UpdateItemField { '
-      'item: $item, '
-      'updateItem: $updatedItem'
+      'item: $item'
       ' }';
 }
 
-class AddItemImage<T extends Item> extends ItemDetailManagerEvent {
-  const AddItemImage(this.imagePath, [this.oldImageName]);
+class AddItemImage extends ItemDetailManagerEvent {
+  const AddItemImage(this.imagePath);
 
   final String imagePath;
-  final String? oldImageName;
 
   @override
-  List<Object> get props => <Object>[imagePath, oldImageName ?? ''];
+  List<Object> get props => <Object>[imagePath];
 
   @override
   String toString() => 'AddItemImage { '
@@ -40,7 +35,7 @@ class AddItemImage<T extends Item> extends ItemDetailManagerEvent {
       ' }';
 }
 
-class UpdateItemImageName<T extends Item> extends ItemDetailManagerEvent {
+class UpdateItemImageName extends ItemDetailManagerEvent {
   const UpdateItemImageName(this.oldImageName, this.newImageName);
 
   final String oldImageName;
@@ -56,7 +51,7 @@ class UpdateItemImageName<T extends Item> extends ItemDetailManagerEvent {
       ' }';
 }
 
-class DeleteItemImage<T extends Item> extends ItemDetailManagerEvent {
+class DeleteItemImage extends ItemDetailManagerEvent {
   const DeleteItemImage(this.imageName);
 
   final String imageName;

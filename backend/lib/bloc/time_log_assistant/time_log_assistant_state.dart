@@ -4,21 +4,21 @@ import 'package:equatable/equatable.dart';
 
 import 'time_log_recalculation_mode.dart';
 
-class TimeLogAssistantState extends Equatable {
+class GameLogAssistantState extends Equatable {
   // ignore: avoid_positional_boolean_parameters
-  const TimeLogAssistantState(
+  const GameLogAssistantState(
     this.date, [
     this.startTime,
     this.endTime,
     this.duration,
-    this.recalculationMode = TimeLogRecalculationMode.duration,
+    this.recalculationMode = GameLogRecalculationMode.duration,
   ]);
 
   final DateTime date;
   final TimeOfDay? startTime;
   final TimeOfDay? endTime;
   final Duration? duration;
-  final TimeLogRecalculationMode recalculationMode;
+  final GameLogRecalculationMode recalculationMode;
 
   bool get isValid =>
       startTime != null && duration != null && !duration!.isNegative;
@@ -36,7 +36,7 @@ class TimeLogAssistantState extends Equatable {
       ];
 
   @override
-  String toString() => 'TimeLogAssistantState { '
+  String toString() => 'GameLogAssistantState { '
       'date: $date, '
       'startTime: $startTime, '
       'endTime: $endTime, '

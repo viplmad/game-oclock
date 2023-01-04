@@ -1,28 +1,19 @@
-import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformID;
-import 'package:backend/model/model.dart' show Platform;
-import 'package:backend/mapper/mapper.dart' show PlatformMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, PlatformRepository;
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, NewPlatformDTO;
+
+import 'package:backend/service/service.dart'
+    show GameCollectionService, PlatformService;
 
 import 'item_detail.dart';
 
-class PlatformDetailBloc extends ItemDetailBloc<Platform, PlatformEntity,
-    PlatformID, PlatformRepository> {
+class PlatformDetailBloc
+    extends ItemDetailBloc<PlatformDTO, NewPlatformDTO, PlatformService> {
   PlatformDetailBloc({
     required int itemId,
-    required GameCollectionRepository collectionRepository,
+    required GameCollectionService collectionService,
     required super.managerBloc,
   }) : super(
-          id: PlatformID(itemId),
-          repository: collectionRepository.platformRepository,
+          itemId: itemId,
+          service: collectionService.platformService,
         );
-
-  @override
-  Future<Platform> get() {
-    final Future<PlatformEntity> entityFuture = repository.findById(id);
-    return PlatformMapper.futureEntityToModel(
-      entityFuture,
-      repository.getImageURI,
-    );
-  }
 }

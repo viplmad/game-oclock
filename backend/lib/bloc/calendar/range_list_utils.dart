@@ -1,7 +1,8 @@
-import 'package:backend/utils/datetime_extension.dart';
+import 'package:game_collection_client/api.dart'
+    show GameLogDTO;
 
-import 'package:backend/model/model.dart' show GameTimeLog;
-import 'package:backend/model/calendar_range.dart';
+import 'package:backend/model/model.dart' show CalendarRange;
+import 'package:backend/utils/datetime_extension.dart';
 
 class RangeListUtils {
   RangeListUtils._();
@@ -18,49 +19,41 @@ class RangeListUtils {
         (range == CalendarRange.year && !date.isInYearOf(previousDate));
   }
 
-  static Duration getTotalTime(List<GameTimeLog> timeLogs) {
-    return timeLogs.fold<Duration>(
-      const Duration(),
-      (Duration previousDuration, GameTimeLog log) =>
-          previousDuration + log.time,
-    );
-  }
-
-  static List<GameTimeLog> createTimeLogListByRange(
-    List<GameTimeLog> timeLogs,
+  static List<GameLogDTO> createGameLogListByRange(
+    List<GameLogDTO> gameLogs,
     DateTime date,
     CalendarRange range,
   ) {
-    List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
+    List<GameLogDTO> selectedGameLogs = <GameLogDTO>[];
 
     switch (range) {
       case CalendarRange.day:
-        selectedTimeLogs = timeLogs
-            .where((GameTimeLog log) => log.dateTime.isSameDay(date))
+        selectedGameLogs = gameLogs
+            .where((GameLogDTO log) => log.datetime.isSameDay(date))
             .toList(growable: false);
         break;
       case CalendarRange
-          .week: // Create a List of 7 timelogs -> sum of each day of week
-        final DateTime mondayOfSelectedDate = date.getMondayOfWeek();
+          .week: // Create a List of 7 logs -> sum of each day of week
+        final DateTime mondayOfSelectedDate = date.atMondayOfWeek();
 
         DateTime dateOfWeek = mondayOfSelectedDate;
         for (int weekIndex = 0; weekIndex < 7; weekIndex++) {
-          final Iterable<GameTimeLog> dayTimeLogs = timeLogs
-              .where((GameTimeLog log) => log.dateTime.isSameDay(dateOfWeek));
+          final Iterable<GameLogDTO> dayGameLogs = gameLogs
+              .where((GameLogDTO log) => log.datetime.isSameDay(dateOfWeek));
 
-          if (dayTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(
+          if (dayGameLogs.isNotEmpty) {
+            final Duration dayTimeSum = dayGameLogs.fold<Duration>(
               const Duration(),
-              (Duration previousValue, GameTimeLog log) =>
+              (Duration previousValue, GameLogDTO log) =>
                   previousValue + log.time,
             );
 
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfWeek, time: dayTimeSum),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: dateOfWeek, time: dayTimeSum),
             );
           } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfWeek, time: const Duration()),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: dateOfWeek, time: const Duration()),
             );
           }
 
@@ -68,28 +61,28 @@ class RangeListUtils {
         }
         break;
       case CalendarRange
-          .month: // Create a List of 31* timelogs -> sum of each day of month
-        final DateTime firstDayOfSelectedMonth = date.getFirstDayOfMonth();
+          .month: // Create a List of 31* logs -> sum of each day of month
+        final DateTime firstDayOfSelectedMonth = date.atFirstDayOfMonth();
 
         DateTime dateOfMonth = firstDayOfSelectedMonth;
         while (dateOfMonth.isInMonthAndYearOf(date)) {
           // While month does not change
-          final Iterable<GameTimeLog> dayTimeLogs = timeLogs
-              .where((GameTimeLog log) => log.dateTime.isSameDay(dateOfMonth));
+          final Iterable<GameLogDTO> dayGameLogs = gameLogs
+              .where((GameLogDTO log) => log.datetime.isSameDay(dateOfMonth));
 
-          if (dayTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = dayTimeLogs.fold<Duration>(
+          if (dayGameLogs.isNotEmpty) {
+            final Duration dayTimeSum = dayGameLogs.fold<Duration>(
               const Duration(),
-              (Duration previousValue, GameTimeLog log) =>
+              (Duration previousValue, GameLogDTO log) =>
                   previousValue + log.time,
             );
 
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfMonth, time: dayTimeSum),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: dateOfMonth, time: dayTimeSum),
             );
           } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: dateOfMonth, time: const Duration()),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: dateOfMonth, time: const Duration()),
             );
           }
 
@@ -97,35 +90,35 @@ class RangeListUtils {
         }
         break;
       case CalendarRange
-          .year: // Create a List of 12 timelogs -> sum of each month of year
+          .year: // Create a List of 12 logs -> sum of each month of year
         for (int monthIndex = 1; monthIndex <= 12; monthIndex++) {
           final DateTime firstDayOfMonth = DateTime(date.year, monthIndex, 1);
 
-          final Iterable<GameTimeLog> monthTimeLogs = timeLogs.where(
-            (GameTimeLog log) =>
-                log.dateTime.isInMonthAndYearOf(firstDayOfMonth),
+          final Iterable<GameLogDTO> monthGameLogs = gameLogs.where(
+            (GameLogDTO log) =>
+                log.datetime.isInMonthAndYearOf(firstDayOfMonth),
           );
 
-          if (monthTimeLogs.isNotEmpty) {
-            final Duration dayTimeSum = monthTimeLogs.fold<Duration>(
+          if (monthGameLogs.isNotEmpty) {
+            final Duration dayTimeSum = monthGameLogs.fold<Duration>(
               const Duration(),
-              (Duration previousValue, GameTimeLog log) =>
+              (Duration previousValue, GameLogDTO log) =>
                   previousValue + log.time,
             );
 
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: firstDayOfMonth, time: dayTimeSum),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: firstDayOfMonth, time: dayTimeSum),
             );
           } else {
-            selectedTimeLogs.add(
-              GameTimeLog(dateTime: firstDayOfMonth, time: const Duration()),
+            selectedGameLogs.add(
+              GameLogDTO(datetime: firstDayOfMonth, time: const Duration()),
             );
           }
         }
         break;
     }
 
-    return selectedTimeLogs;
+    return selectedGameLogs;
   }
 
   static DateTime getPreviousDateWithLogs(

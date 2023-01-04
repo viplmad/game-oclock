@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:backend/service/service.dart' show GameCollectionService;
 
 import 'package:backend/bloc/tab/tab.dart';
 import 'package:backend/bloc/item_list/item_list.dart';
@@ -12,7 +11,7 @@ import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 import 'package:backend/bloc/about/about.dart';
 import 'package:backend/bloc/start_game_view/start_game_view.dart';
 
-import 'package:backend/model/app_tab.dart';
+import 'package:backend/model/model.dart' show MainTab;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -30,37 +29,20 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository collectionRepository =
-        RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionService collectionService =
+        RepositoryProvider.of<GameCollectionService>(context);
 
-    final AllListManagerBloc allListManagerBloc = AllListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-
-    final OwnedListManagerBloc ownedListManagerBloc = OwnedListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-
-    final RomListManagerBloc romListManagerBloc = RomListManagerBloc(
-      collectionRepository: collectionRepository,
+    final GameListManagerBloc gameListManagerBloc = GameListManagerBloc(
+      collectionService: collectionService,
     );
 
     final DLCListManagerBloc dlcListManagerBloc = DLCListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-
-    final PurchaseListManagerBloc purchaseListManagerBloc =
-        PurchaseListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-
-    final StoreListManagerBloc storeListManagerBloc = StoreListManagerBloc(
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
 
     final PlatformListManagerBloc platformListManagerBloc =
         PlatformListManagerBloc(
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
 
     return MultiBlocProvider(
@@ -70,90 +52,38 @@ class Homepage extends StatelessWidget {
             return TabBloc();
           },
         ),
-        BlocProvider<AllListBloc>(
+        BlocProvider<GameListBloc>(
           create: (BuildContext context) {
-            return AllListBloc(
-              collectionRepository: collectionRepository,
-              managerBloc: allListManagerBloc,
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<OwnedListBloc>(
-          create: (BuildContext context) {
-            return OwnedListBloc(
-              collectionRepository: collectionRepository,
-              managerBloc: ownedListManagerBloc,
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<RomListBloc>(
-          create: (BuildContext context) {
-            return RomListBloc(
-              collectionRepository: collectionRepository,
-              managerBloc: romListManagerBloc,
+            return GameListBloc(
+              collectionService: collectionService,
+              managerBloc: gameListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<DLCListBloc>(
           create: (BuildContext context) {
             return DLCListBloc(
-              collectionRepository: collectionRepository,
+              collectionService: collectionService,
               managerBloc: dlcListManagerBloc,
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<PurchaseListBloc>(
-          create: (BuildContext context) {
-            return PurchaseListBloc(
-              collectionRepository: collectionRepository,
-              managerBloc: purchaseListManagerBloc,
-            )..add(LoadItemList());
-          },
-        ),
-        BlocProvider<StoreListBloc>(
-          create: (BuildContext context) {
-            return StoreListBloc(
-              collectionRepository: collectionRepository,
-              managerBloc: storeListManagerBloc,
             )..add(LoadItemList());
           },
         ),
         BlocProvider<PlatformListBloc>(
           create: (BuildContext context) {
             return PlatformListBloc(
-              collectionRepository: collectionRepository,
+              collectionService: collectionService,
               managerBloc: platformListManagerBloc,
             )..add(LoadItemList());
           },
         ),
-        BlocProvider<AllListManagerBloc>(
+        BlocProvider<GameListManagerBloc>(
           create: (BuildContext context) {
-            return allListManagerBloc;
-          },
-        ),
-        BlocProvider<OwnedListManagerBloc>(
-          create: (BuildContext context) {
-            return ownedListManagerBloc;
-          },
-        ),
-        BlocProvider<RomListManagerBloc>(
-          create: (BuildContext context) {
-            return romListManagerBloc;
+            return gameListManagerBloc;
           },
         ),
         BlocProvider<DLCListManagerBloc>(
           create: (BuildContext context) {
             return dlcListManagerBloc;
-          },
-        ),
-        BlocProvider<PurchaseListManagerBloc>(
-          create: (BuildContext context) {
-            return purchaseListManagerBloc;
-          },
-        ),
-        BlocProvider<StoreListManagerBloc>(
-          create: (BuildContext context) {
-            return storeListManagerBloc;
           },
         ),
         BlocProvider<PlatformListManagerBloc>(
@@ -177,29 +107,26 @@ class _HomepageBar extends StatelessWidget {
     final List<BarData> barDatum = <BarData>[
       GameTheme.barData(context),
       DLCTheme.barData(context),
-      PurchaseTheme.barData(context),
-      StoreTheme.barData(context),
       PlatformTheme.barData(context),
     ];
 
-    return BlocBuilder<TabBloc, TabState>(
-      builder: (BuildContext context, TabState state) {
+    return BlocBuilder<TabBloc, MainTab>(
+      builder: (BuildContext context, MainTab state) {
         return Scaffold(
           appBar: _HomepageAppBar(
-            state: state,
+            tab: state,
           ),
           drawer: const _HomepageDrawer(),
           body: _HomepageBody(
-            state: state,
+            tab: state,
           ),
           bottomNavigationBar: nav_bar_background.NavigationBar(
-            selectedIndex: state.mainTab.index,
+            selectedIndex: state.index,
             onDestinationSelected: (int destinationSelectedIndex) {
               final MainTab selectedMainTab =
                   MainTab.values.elementAt(destinationSelectedIndex);
 
-              BlocProvider.of<TabBloc>(context)
-                  .add(UpdateMainTab(selectedMainTab));
+              BlocProvider.of<TabBloc>(context).add(UpdateTab(selectedMainTab));
             },
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             destinations: barDatum
@@ -215,7 +142,7 @@ class _HomepageBar extends StatelessWidget {
             }).toList(growable: false),
           ),
           floatingActionButton: _HomepageFAB(
-            state: state,
+            tab: state,
           ),
         );
       },
@@ -226,27 +153,21 @@ class _HomepageBar extends StatelessWidget {
 class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
   const _HomepageAppBar({
     Key? key,
-    required this.state,
+    required this.tab,
   }) : super(key: key);
 
-  final TabState state;
+  final MainTab tab;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    switch (state.mainTab) {
+    switch (tab) {
       case MainTab.game:
-        return GameAppBar(
-          gameTab: state.gameTab,
-        );
+        return const GameAppBar();
       case MainTab.dlc:
         return const DLCAppBar();
-      case MainTab.purchase:
-        return const PurchaseAppBar();
-      case MainTab.store:
-        return const StoreAppBar();
       case MainTab.platform:
         return const PlatformAppBar();
     }
@@ -282,7 +203,7 @@ class _HomepageDrawer extends StatelessWidget {
             onTap: () async {
               Navigator.pushNamed(
                 context,
-                gameTagListRoute,
+                tagListRoute,
               );
             },
           ),
@@ -295,7 +216,7 @@ class _HomepageDrawer extends StatelessWidget {
             onTap: () async {
               Navigator.pushReplacementNamed(
                 context,
-                repositorySettingsRoute,
+                serverSettingsRoute,
               );
             },
           ),
@@ -401,24 +322,18 @@ class _HomepageDrawer extends StatelessWidget {
 class _HomepageFAB extends StatelessWidget {
   const _HomepageFAB({
     Key? key,
-    required this.state,
+    required this.tab,
   }) : super(key: key);
 
-  final TabState state;
+  final MainTab tab;
 
   @override
   Widget build(BuildContext context) {
-    switch (state.mainTab) {
+    switch (tab) {
       case MainTab.game:
-        return GameFAB(
-          gameTab: state.gameTab,
-        );
+        return const GameFAB();
       case MainTab.dlc:
         return const DLCFAB();
-      case MainTab.purchase:
-        return const PurchaseFAB();
-      case MainTab.store:
-        return const StoreFAB();
       case MainTab.platform:
         return const PlatformFAB();
     }
@@ -428,24 +343,18 @@ class _HomepageFAB extends StatelessWidget {
 class _HomepageBody extends StatelessWidget {
   const _HomepageBody({
     Key? key,
-    required this.state,
+    required this.tab,
   }) : super(key: key);
 
-  final TabState state;
+  final MainTab tab;
 
   @override
   Widget build(BuildContext context) {
-    switch (state.mainTab) {
+    switch (tab) {
       case MainTab.game:
-        return GameTabs(
-          gameTab: state.gameTab,
-        );
+        return const GameList();
       case MainTab.dlc:
         return const DLCList();
-      case MainTab.purchase:
-        return const PurchaseList();
-      case MainTab.store:
-        return const StoreList();
       case MainTab.platform:
         return const PlatformList();
     }

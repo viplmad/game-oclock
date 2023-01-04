@@ -1,22 +1,19 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/connector/connector.dart'
-    show ItemConnector, ImageConnector;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
-import 'package:backend/preferences/repository_preferences.dart';
+import 'package:game_collection_client/api.dart' show TokenResponse;
+
+import 'package:backend/preferences/shared_preferences_state.dart';
+import 'package:backend/model/model.dart' show ServerConnection;
+import 'package:backend/service/service.dart' show GameCollectionService;
 
 import 'connection.dart';
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
-  ConnectionBloc({
-    required this.collectionRepository,
-  }) : super(Connecting()) {
+  ConnectionBloc({required this.collectionService}) : super(Connecting()) {
     on<Connect>(_mapConnectToState);
-    on<Reconnect>(_mapReconnectToState);
   }
 
-  final GameCollectionRepository collectionRepository;
+  final GameCollectionService collectionService;
 
   void _mapConnectToState(Connect event, Emitter<ConnectState> emit) async {
     emit(
@@ -24,20 +21,24 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
     );
 
     final bool existsConnection =
-        await RepositoryPreferences.existsItemConnection();
+        await SharedPreferencesState.existsActiveServer();
     if (!existsConnection) {
       emit(
         NonexistentConnection(),
       );
     } else {
       try {
-        final ItemConnector itemConnector =
-            (await RepositoryPreferences.retrieveActiveItemConnector())!;
-        final ImageConnector? imageConnector =
-            await RepositoryPreferences.retrieveActiveImageConnector();
+        final ServerConnection connection =
+            (await SharedPreferencesState.retrieveActiveServer())!;
 
-        collectionRepository.connect(itemConnector, imageConnector);
-        await collectionRepository.open();
+        collectionService.connect(connection);
+        // TODO return user in state?
+        final TokenResponse? refreshTokenResponse = await collectionService
+            .testAuth(connection.tokenResponse.refreshToken);
+        // If token was expired -> refresh token used and returned new token response
+        if (refreshTokenResponse != null) {
+          collectionService.connect(connection.withToken(refreshTokenResponse));
+        }
 
         emit(
           Connected(),
@@ -47,25 +48,6 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
           FailedConnection(e.toString()),
         );
       }
-    }
-  }
-
-  void _mapReconnectToState(Reconnect event, Emitter<ConnectState> emit) async {
-    emit(
-      Connecting(),
-    );
-
-    try {
-      collectionRepository.reconnect();
-      await collectionRepository.open();
-
-      emit(
-        Connected(),
-      );
-    } catch (e) {
-      emit(
-        FailedConnection(e.toString()),
-      );
     }
   }
 }

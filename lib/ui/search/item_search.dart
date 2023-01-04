@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
+import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -17,37 +16,36 @@ import '../detail/detail_arguments.dart';
 import '../theme/theme_utils.dart';
 
 abstract class ItemSearch<
-        T extends Item,
+        T extends PrimaryModel,
+        N extends Object,
         K extends Bloc<ItemSearchEvent, ItemSearchState>,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
   const ItemSearch({
     Key? key,
     required this.onTapReturn,
-    required this.viewIndex,
     this.detailRouteName = '',
   }) : super(key: key);
 
   final bool onTapReturn;
-  final int? viewIndex;
   final String detailRouteName;
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository collectionRepository =
-        RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionService collectionService =
+        RepositoryProvider.of<GameCollectionService>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return searchBlocBuilder(collectionRepository)
+            return searchBlocBuilder(collectionService)
               ..add(const SearchTextChanged());
           },
         ),
         BlocProvider<S>(
           create: (BuildContext context) {
-            return managerBlocBuilder(collectionRepository);
+            return managerBlocBuilder(collectionService);
           },
         ),
       ],
@@ -76,78 +74,18 @@ abstract class ItemSearch<
             : null;
   }
 
-  K searchBlocBuilder(GameCollectionRepository collectionRepository);
-  S managerBlocBuilder(GameCollectionRepository collectionRepository);
+  K searchBlocBuilder(GameCollectionService collectionService);
+  S managerBlocBuilder(GameCollectionService collectionService);
 
-  ItemSearchBody<T, K, S> itemSearchBodyBuilder({
-    required void Function()? Function(BuildContext, T) onTap,
-    required bool allowNewButton,
-  });
-}
-
-abstract class ItemLocalSearch<T extends Item,
-        S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
-    extends StatelessWidget {
-  const ItemLocalSearch({
-    Key? key,
-    required this.items,
-    this.detailRouteName = '',
-  }) : super(key: key);
-
-  final List<T> items;
-  final String detailRouteName;
-
-  @override
-  Widget build(BuildContext context) {
-    final GameCollectionRepository collectionRepository =
-        RepositoryProvider.of<GameCollectionRepository>(context);
-
-    return MultiBlocProvider(
-      providers: <BlocProvider<BlocBase<Object?>>>[
-        BlocProvider<ItemLocalSearchBloc<T>>(
-          create: (BuildContext context) {
-            return ItemLocalSearchBloc<T>(
-              items: items,
-            )..add(const SearchTextChanged());
-          },
-        ),
-        BlocProvider<S>(
-          create: (BuildContext context) {
-            return managerBlocBuilder(collectionRepository);
-          },
-        ),
-      ],
-      child: itemSearchBodyBuilder(
-        onTap: _onTap,
-        allowNewButton: false,
-      ),
-    );
-  }
-
-  void Function()? _onTap(BuildContext context, T item) {
-    return detailRouteName.isNotEmpty
-        ? () async {
-            Navigator.pushNamed(
-              context,
-              detailRouteName,
-              arguments: DetailArguments<T>(
-                item: item,
-              ),
-            );
-          }
-        : null;
-  }
-
-  S managerBlocBuilder(GameCollectionRepository collectionRepository);
-
-  ItemSearchBody<T, ItemLocalSearchBloc<T>, S> itemSearchBodyBuilder({
+  ItemSearchBody<T, N, K, S> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, T) onTap,
     required bool allowNewButton,
   });
 }
 
 abstract class ItemSearchBody<
-        T extends Item,
+        T extends PrimaryModel,
+        N extends Object,
         K extends Bloc<ItemSearchEvent, ItemSearchState>,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatefulWidget {
@@ -163,19 +101,20 @@ abstract class ItemSearchBody<
   String typeName(BuildContext context);
   String typesName(BuildContext context);
 
-  T createItem(String query);
+  N createItem(String query);
   Widget cardBuilder(BuildContext context, T item);
 
   @override
-  State<ItemSearchBody<T, K, S>> createState() =>
-      _ItemSearchBodyState<T, K, S>();
+  State<ItemSearchBody<T, N, K, S>> createState() =>
+      _ItemSearchBodyState<T, N, K, S>();
 }
 
 class _ItemSearchBodyState<
-        T extends Item,
+        T extends PrimaryModel,
+        N extends Object,
         K extends Bloc<ItemSearchEvent, ItemSearchState>,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
-    extends State<ItemSearchBody<T, K, S>> {
+    extends State<ItemSearchBody<T, N, K, S>> {
   final TextEditingController _textEditingController = TextEditingController();
   String get query => _textEditingController.text;
   set query(String value) {
@@ -192,7 +131,7 @@ class _ItemSearchBodyState<
           keyboardType: TextInputType.text,
           autofocus: true,
           onChanged: (String newQuery) {
-            //Not sure of this fix to update button text
+            // Not sure of this fix to update button text
             setState(() {});
             BlocProvider.of<K>(context).add(
               SearchTextChanged(query),
@@ -290,7 +229,7 @@ class _ItemSearchBodyState<
       child: TextButton(
         onPressed: () {
           BlocProvider.of<S>(context).add(
-            AddItem<T>(widget.createItem(query)),
+            AddItem<N>(widget.createItem(query)),
           );
         },
         style: TextButton.styleFrom(

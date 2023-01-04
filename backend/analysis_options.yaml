@@ -45,6 +45,7 @@ linter:
     - require_trailing_commas
     - discarded_futures
     - unnecessary_to_list_in_spreads
+    - use_super_parameters
     # Uncomment when dart 2.19.0 comes out
     #- combinators_ordering
     #- use_string_in_part_of_directives

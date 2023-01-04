@@ -1,67 +1,73 @@
-import 'package:backend/entity/entity.dart'
-    show DLCFinishEntity, GameEntity, PurchaseEntity, DLCID;
-import 'package:backend/model/model.dart'
-    show Item, DLC, DLCFinish, Game, Purchase;
-import 'package:backend/mapper/mapper.dart'
-    show DLCFinishMapper, GameMapper, PurchaseMapper;
-import 'package:backend/repository/repository.dart'
-    show DLCRepository, DLCFinishRepository, GameRepository;
+import 'package:game_collection_client/api.dart'
+    show GameDTO, PlatformAvailableDTO;
+
+import 'package:backend/model/model.dart' show ItemFinish;
+import 'package:backend/service/service.dart'
+    show GameCollectionService, DLCService, DLCFinishService;
 
 import 'item_relation_manager.dart';
 
-class DLCRelationManagerBloc<W extends Item>
-    extends ItemRelationManagerBloc<DLC, DLCID, W> {
-  DLCRelationManagerBloc({
-    required int itemId,
-    required super.collectionRepository,
-  })  : dlcFinishRepository = collectionRepository.dlcFinishRepository,
-        gameRepository = collectionRepository.gameRepository,
-        dlcRepository = collectionRepository.dlcRepository,
-        super(id: DLCID(itemId));
+class DLCFinishRelationManagerBloc extends ItemRelationManagerBloc<ItemFinish> {
+  DLCFinishRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : dlcFinishService = collectionService.dlcFinishService,
+        super();
 
-  final DLCFinishRepository dlcFinishRepository;
-  final GameRepository gameRepository;
-  final DLCRepository dlcRepository;
+  final DLCFinishService dlcFinishService;
 
   @override
-  Future<Object?> addRelation(AddItemRelation<W> event) {
-    final W otherItem = event.otherItem;
-
-    switch (W) {
-      case DLCFinish:
-        final DLCFinishEntity otherEntity =
-            DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
-        return dlcFinishRepository.create(otherEntity);
-      case Game:
-        final GameEntity otherEntity =
-            GameMapper.modelToEntity(otherItem as Game);
-        return gameRepository.relateGameDLC(otherEntity.createId(), id);
-      case Purchase:
-        final PurchaseEntity otherEntity =
-            PurchaseMapper.modelToEntity(otherItem as Purchase);
-        return dlcRepository.relateDLCPurchase(id, otherEntity.createId());
-    }
-
-    return super.addRelation(event);
+  Future<void> addRelation(AddItemRelation<ItemFinish> event) {
+    return dlcFinishService.create(itemId, event.otherItem.date);
   }
 
   @override
-  Future<Object?> deleteRelation(DeleteItemRelation<W> event) {
-    final W otherItem = event.otherItem;
+  Future<void> deleteRelation(DeleteItemRelation<ItemFinish> event) {
+    return dlcFinishService.delete(itemId, event.otherItem.date);
+  }
+}
 
-    switch (W) {
-      case DLCFinish:
-        final DLCFinishEntity otherEntity =
-            DLCFinishMapper.modelToEntity(id.id, otherItem as DLCFinish);
-        return dlcFinishRepository.deleteById(otherEntity.createId());
-      case Game:
-        return gameRepository.unrelateGameDLC(id);
-      case Purchase:
-        final PurchaseEntity otherEntity =
-            PurchaseMapper.modelToEntity(otherItem as Purchase);
-        return dlcRepository.unrelateDLCPurchase(id, otherEntity.createId());
-    }
+class DLCGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
+  DLCGameRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : dlcService = collectionService.dlcService,
+        super();
 
-    return super.deleteRelation(event);
+  final DLCService dlcService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<GameDTO> event) {
+    return dlcService.setBasegame(itemId, event.otherItem.id);
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<GameDTO> event) {
+    return dlcService.clearBasegame(itemId);
+  }
+}
+
+class DLCPlatformRelationManagerBloc
+    extends ItemRelationManagerBloc<PlatformAvailableDTO> {
+  DLCPlatformRelationManagerBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+  })  : dlcService = collectionService.dlcService,
+        super();
+
+  final DLCService dlcService;
+
+  @override
+  Future<void> addRelation(AddItemRelation<PlatformAvailableDTO> event) {
+    return dlcService.addAvailability(
+      itemId,
+      event.otherItem.id,
+      event.otherItem.availableDate,
+    );
+  }
+
+  @override
+  Future<void> deleteRelation(DeleteItemRelation<PlatformAvailableDTO> event) {
+    return dlcService.removeAvailability(itemId, event.otherItem.id);
   }
 }

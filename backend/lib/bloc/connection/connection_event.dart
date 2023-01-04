@@ -8,5 +8,3 @@ abstract class ConnectionEvent extends Equatable {
 }
 
 class Connect extends ConnectionEvent {}
-
-class Reconnect extends ConnectionEvent {}

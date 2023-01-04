@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 abstract class ItemRelationManagerState extends Equatable {
   const ItemRelationManagerState();
@@ -11,7 +11,7 @@ abstract class ItemRelationManagerState extends Equatable {
 
 class ItemRelationManagerInitialised extends ItemRelationManagerState {}
 
-class ItemRelationAdded<W extends Item> extends ItemRelationManagerState {
+class ItemRelationAdded<W extends PrimaryModel> extends ItemRelationManagerState {
   const ItemRelationAdded(this.otherItem);
 
   final W otherItem;
@@ -39,7 +39,7 @@ class ItemRelationNotAdded extends ItemRelationManagerState {
       ' }';
 }
 
-class ItemRelationDeleted<W extends Item> extends ItemRelationManagerState {
+class ItemRelationDeleted<W extends PrimaryModel> extends ItemRelationManagerState {
   const ItemRelationDeleted(this.otherItem);
 
   final W otherItem;

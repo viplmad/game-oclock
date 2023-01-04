@@ -1,28 +1,24 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
+import 'package:game_collection_client/api.dart'
+    show GameLogDTO, GameWithLogsDTO;
+
+import 'package:backend/service/service.dart'
+    show GameCollectionService, GameLogService;
+import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:backend/utils/datetime_extension.dart';
+import 'package:backend/utils/game_calendar_utils.dart';
 
-import 'package:backend/entity/entity.dart' show GameWithLogsEntity;
-import 'package:backend/model/model.dart' show GameTimeLog, GameWithLogs;
-import 'package:backend/mapper/mapper.dart' show GameTimeLogMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, GameRepository, GameTimeLogRepository;
-import 'package:backend/model/calendar_range.dart';
-import 'package:backend/model/calendar_style.dart';
-
-import '../bloc_utils.dart';
 import 'multi_calendar.dart';
 import 'range_list_utils.dart';
 
 class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   MultiCalendarBloc({
-    required GameCollectionRepository collectionRepository,
-  })  : gameTimeLogRepository = collectionRepository.gameTimeLogRepository,
-        gameRepository = collectionRepository.gameRepository,
+    required GameCollectionService collectionService,
+  })  : gameLogService = collectionService.gameLogService,
         super(CalendarLoading()) {
     on<LoadMultiCalendar>(_mapLoadToState);
     on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
@@ -35,17 +31,8 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<UpdateCalendarListItem>(_mapUpdateListItemToState);
   }
 
-  final GameTimeLogRepository gameTimeLogRepository;
-  final GameRepository gameRepository;
+  final GameLogService gameLogService;
   final Set<int> yearsLoaded = <int>{};
-
-  Future<void> _checkConnection(Emitter<CalendarState> emit) async {
-    await BlocUtils.checkConnection<CalendarState, CalendarNotLoaded>(
-      gameTimeLogRepository,
-      emit,
-      (final String error) => CalendarNotLoaded(error),
-    );
-  }
 
   void _mapLoadToState(
     LoadMultiCalendar event,
@@ -64,20 +51,19 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     int year,
     Emitter<CalendarState> emit,
   ) async {
-    await _checkConnection(emit);
-
     emit(
       CalendarLoading(),
     );
 
     try {
-      final List<GameWithLogs> gamesWithLogs =
-          await getAllGameWithTimeLogsInYear(year);
+      final List<GameWithLogsDTO> gamesWithLogs =
+          await _getAllGameWithLogsInYear(year);
 
       final Set<DateTime> logDates = gamesWithLogs.fold(
         SplayTreeSet<DateTime>(),
-        (Set<DateTime> previousDates, GameWithLogs gameWithLogs) =>
-            previousDates..addAll(gameWithLogs.logDates),
+        (Set<DateTime> previousDates, GameWithLogsDTO gameWithLogs) =>
+            previousDates
+              ..addAll(GameCalendarUtils.getUniqueLogDates(gameWithLogs.logs)),
       );
 
       DateTime selectedDate = DateTime.now();
@@ -86,7 +72,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       }
 
       const CalendarRange range = CalendarRange.day;
-      final List<GameWithLogs> selectedGamesWithLogs =
+      final List<GameWithLogsDTO> selectedGamesWithLogs =
           _selectedGameWithLogsInRange(
         gamesWithLogs,
         logDates,
@@ -118,15 +104,14 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     int year,
     Emitter<CalendarState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
-      final List<GameWithLogs> gamesWithLogs =
-          List<GameWithLogs>.from((state as MultiCalendarLoaded).gamesWithLogs);
+      final List<GameWithLogsDTO> gamesWithLogs = List<GameWithLogsDTO>.from(
+        (state as MultiCalendarLoaded).gamesWithLogs,
+      );
       final Set<DateTime> logDates =
           SplayTreeSet<DateTime>.from((state as MultiCalendarLoaded).logDates);
       final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
-      final List<GameWithLogs> selectedGamesWithLogs =
+      final List<GameWithLogsDTO> selectedGamesWithLogs =
           (state as MultiCalendarLoaded).selectedGamesWithLogs;
       final Duration selectedTotalTime =
           (state as MultiCalendarLoaded).selectedTotalTime;
@@ -135,17 +120,16 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final DateTime focusedDate = DateTime(year, DateTime.december, 1);
 
-      final List<GameWithLogs> yearGamesWithLogs =
-          await getAllGameWithTimeLogsInYear(year);
+      final List<GameWithLogsDTO> yearGamesWithLogs =
+          await _getAllGameWithLogsInYear(year);
 
-      for (final GameWithLogs yearGameWithLogs in yearGamesWithLogs) {
+      for (final GameWithLogsDTO yearGameWithLogs in yearGamesWithLogs) {
         try {
-          final GameWithLogs gameWithLogs = gamesWithLogs.singleWhere(
-            (GameWithLogs tempGameWithLogs) =>
-                tempGameWithLogs.game.uniqueId ==
-                yearGameWithLogs.game.uniqueId,
+          final GameWithLogsDTO gameWithLogs = gamesWithLogs.singleWhere(
+            (GameWithLogsDTO tempGameWithLogs) =>
+                tempGameWithLogs.id == yearGameWithLogs.id,
           );
-          gameWithLogs.timeLogs.addAll(yearGameWithLogs.timeLogs);
+          gameWithLogs.logs.addAll(yearGameWithLogs.logs);
         } catch (iterableElementError) {
           gamesWithLogs.add(yearGameWithLogs);
         }
@@ -153,14 +137,17 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
       final Set<DateTime> yearLogDates = yearGamesWithLogs.fold(
         SplayTreeSet<DateTime>(),
-        (Set<DateTime> previousDates, GameWithLogs yearGameWithLogs) =>
-            previousDates..addAll(yearGameWithLogs.logDates),
+        (Set<DateTime> previousDates, GameWithLogsDTO yearGameWithLogs) =>
+            previousDates
+              ..addAll(
+                GameCalendarUtils.getUniqueLogDates(yearGameWithLogs.logs),
+              ),
       );
       logDates.addAll(yearLogDates);
 
       if (style == CalendarStyle.graph) {
-        final List<GameTimeLog> selectedTimeLogs =
-            (state as MultiCalendarGraphLoaded).selectedTimeLogs;
+        final List<GameLogDTO> selectedGameLogs =
+            (state as MultiCalendarGraphLoaded).selectedGameLogs;
 
         emit(
           MultiCalendarGraphLoaded(
@@ -169,7 +156,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             focusedDate,
             selectedDate,
             selectedGamesWithLogs,
-            selectedTimeLogs,
+            selectedGameLogs,
             selectedTotalTime,
             range,
           ),
@@ -199,7 +186,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) {
     if (state is MultiCalendarLoaded) {
-      final List<GameWithLogs> gamesWithLogs =
+      final List<GameWithLogsDTO> gamesWithLogs =
           (state as MultiCalendarLoaded).gamesWithLogs;
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
       final CalendarRange range = (state as MultiCalendarLoaded).range;
@@ -207,7 +194,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final DateTime previousSelectedDate =
           (state as MultiCalendarLoaded).selectedDate;
 
-      List<GameWithLogs> selectedGamesWithLogs;
+      List<GameWithLogsDTO> selectedGamesWithLogs;
       Duration selectedTotalTime;
       if (RangeListUtils.doesNewDateNeedRecalculation(
         event.date,
@@ -229,8 +216,8 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       }
 
       if (style == CalendarStyle.graph) {
-        final List<GameTimeLog> selectedTimeLogs =
-            _selectedTimeLogsInRange(selectedGamesWithLogs, event.date, range);
+        final List<GameLogDTO> selectedGameLogs =
+            _selectedGameLogsInRange(selectedGamesWithLogs, event.date, range);
 
         emit(
           MultiCalendarGraphLoaded(
@@ -239,7 +226,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             event.date,
             event.date,
             selectedGamesWithLogs,
-            selectedTimeLogs,
+            selectedGameLogs,
             selectedTotalTime,
             range,
           ),
@@ -327,7 +314,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) {
     if (state is MultiCalendarLoaded) {
-      final List<GameWithLogs> gamesWithLogs =
+      final List<GameWithLogsDTO> gamesWithLogs =
           (state as MultiCalendarLoaded).gamesWithLogs;
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
       final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
@@ -336,7 +323,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final CalendarRange previousRange = (state as MultiCalendarLoaded).range;
 
       if (event.range != previousRange) {
-        final List<GameWithLogs> selectedGamesWithLogs =
+        final List<GameWithLogsDTO> selectedGamesWithLogs =
             _selectedGameWithLogsInRange(
           gamesWithLogs,
           logDates,
@@ -347,7 +334,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         final Duration selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
 
         if (style == CalendarStyle.graph) {
-          final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(
+          final List<GameLogDTO> selectedGameLogs = _selectedGameLogsInRange(
             selectedGamesWithLogs,
             selectedDate,
             event.range,
@@ -360,7 +347,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
               focusedDate,
               selectedDate,
               selectedGamesWithLogs,
-              selectedTimeLogs,
+              selectedGameLogs,
               selectedTotalTime,
               event.range,
             ),
@@ -387,12 +374,12 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) {
     if (state is MultiCalendarLoaded) {
-      final List<GameWithLogs> gamesWithLogs =
+      final List<GameWithLogsDTO> gamesWithLogs =
           (state as MultiCalendarLoaded).gamesWithLogs;
       final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
       final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
       final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
-      final List<GameWithLogs> selectedGamesWithLogs =
+      final List<GameWithLogsDTO> selectedGamesWithLogs =
           (state as MultiCalendarLoaded).selectedGamesWithLogs;
       final Duration selectedTotalTime =
           (state as MultiCalendarLoaded).selectedTotalTime;
@@ -417,7 +404,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } else if (updatedStyle == CalendarStyle.graph) {
-        final List<GameTimeLog> selectedTimeLogs = _selectedTimeLogsInRange(
+        final List<GameLogDTO> selectedGameLogs = _selectedGameLogsInRange(
           selectedGamesWithLogs,
           selectedDate,
           range,
@@ -430,7 +417,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             focusedDate,
             selectedDate,
             selectedGamesWithLogs,
-            selectedTimeLogs,
+            selectedGameLogs,
             selectedTotalTime,
             range,
           ),
@@ -444,80 +431,78 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) {
     if (state is MultiCalendarLoaded) {
-      final List<GameWithLogs> gamesWithLogs =
-          List<GameWithLogs>.from((state as MultiCalendarLoaded).gamesWithLogs);
+      final List<GameWithLogsDTO> gamesWithLogs = List<GameWithLogsDTO>.from(
+        (state as MultiCalendarLoaded).gamesWithLogs,
+      );
       final CalendarStyle style = (state as MultiCalendarLoaded).style;
 
       final int listItemIndex = gamesWithLogs.indexWhere(
-        (GameWithLogs item) => item.game.uniqueId == event.item.uniqueId,
+        (GameWithLogsDTO item) => item.id == event.item.id,
       );
-      final GameWithLogs listItem = gamesWithLogs.elementAt(listItemIndex);
+      final GameWithLogsDTO listItem = gamesWithLogs.elementAt(listItemIndex);
 
-      if (listItem.game != event.item) {
-        gamesWithLogs[listItemIndex] =
-            GameWithLogs(game: event.item, timeLogs: listItem.timeLogs);
+      gamesWithLogs[listItemIndex] =
+          GameWithLogsDTO.withLogs(event.item, listItem.logs);
 
-        final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
-        final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
-        final DateTime selectedDate =
-            (state as MultiCalendarLoaded).selectedDate;
-        final List<GameWithLogs> selectedGamesWithLogs =
-            List<GameWithLogs>.from(
-          (state as MultiCalendarLoaded).selectedGamesWithLogs,
+      final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
+      final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
+      final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
+      final List<GameWithLogsDTO> selectedGamesWithLogs =
+          List<GameWithLogsDTO>.from(
+        (state as MultiCalendarLoaded).selectedGamesWithLogs,
+      );
+      final Duration selectedTotalTime =
+          (state as MultiCalendarLoaded).selectedTotalTime;
+      final CalendarRange range = (state as MultiCalendarLoaded).range;
+
+      final int selectedListItemIndex = selectedGamesWithLogs.indexWhere(
+        (GameWithLogsDTO item) => item.id == event.item.id,
+      );
+
+      if (selectedListItemIndex >= 0) {
+        selectedGamesWithLogs[selectedListItemIndex] =
+            gamesWithLogs[listItemIndex];
+      }
+
+      if (style == CalendarStyle.graph) {
+        final List<GameLogDTO> selectedGameLogs =
+            (state as MultiCalendarGraphLoaded).selectedGameLogs;
+
+        emit(
+          MultiCalendarGraphLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedGameLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
-        final Duration selectedTotalTime =
-            (state as MultiCalendarLoaded).selectedTotalTime;
-        final CalendarRange range = (state as MultiCalendarLoaded).range;
-
-        final int selectedListItemIndex = selectedGamesWithLogs.indexWhere(
-          (GameWithLogs item) => item.game.uniqueId == event.item.uniqueId,
+      } else {
+        emit(
+          MultiCalendarLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTotalTime,
+            range,
+          ),
         );
-
-        if (selectedListItemIndex >= 0) {
-          selectedGamesWithLogs[selectedListItemIndex] =
-              gamesWithLogs[listItemIndex];
-        }
-
-        if (style == CalendarStyle.graph) {
-          final List<GameTimeLog> selectedTimeLogs =
-              (state as MultiCalendarGraphLoaded).selectedTimeLogs;
-
-          emit(
-            MultiCalendarGraphLoaded(
-              gamesWithLogs,
-              logDates,
-              focusedDate,
-              selectedDate,
-              selectedGamesWithLogs,
-              selectedTimeLogs,
-              selectedTotalTime,
-              range,
-            ),
-          );
-        } else {
-          emit(
-            MultiCalendarLoaded(
-              gamesWithLogs,
-              logDates,
-              focusedDate,
-              selectedDate,
-              selectedGamesWithLogs,
-              selectedTotalTime,
-              range,
-            ),
-          );
-        }
       }
     }
   }
 
-  List<GameWithLogs> _selectedGameWithLogsInRange(
-    List<GameWithLogs> gamesWithLogs,
+  List<GameWithLogsDTO> _selectedGameWithLogsInRange(
+    List<GameWithLogsDTO> gamesWithLogs,
     Set<DateTime> logDates,
     DateTime selectedDate,
     CalendarRange range,
   ) {
-    final List<GameWithLogs> selectedGamesWithLogs = <GameWithLogs>[];
+    final List<GameWithLogsDTO> selectedGamesWithLogs = <GameWithLogsDTO>[];
 
     bool Function(DateTime) dateComparer;
     switch (range) {
@@ -536,17 +521,14 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
 
     if (logDates.any(dateComparer)) {
-      for (final GameWithLogs gameWithLogs in gamesWithLogs) {
-        final List<GameTimeLog> logs = gameWithLogs.timeLogs
-            .where((GameTimeLog log) => dateComparer(log.dateTime))
+      for (final GameWithLogsDTO gameWithLogs in gamesWithLogs) {
+        final List<GameLogDTO> logs = gameWithLogs.logs
+            .where((GameLogDTO log) => dateComparer(log.datetime))
             .toList(growable: false);
 
         if (logs.isNotEmpty) {
           selectedGamesWithLogs.add(
-            GameWithLogs(
-              game: gameWithLogs.game,
-              timeLogs: logs,
-            ),
+            GameWithLogsDTO.withLogs(gameWithLogs, logs),
           );
         }
       }
@@ -555,41 +537,41 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     return selectedGamesWithLogs..sort();
   }
 
-  List<GameTimeLog> _selectedTimeLogsInRange(
-    List<GameWithLogs> selectedGamesWithLogs,
+  List<GameLogDTO> _selectedGameLogsInRange(
+    List<GameWithLogsDTO> selectedGamesWithLogs,
     DateTime selectedDate,
     CalendarRange range,
   ) {
-    List<GameTimeLog> selectedTimeLogs = <GameTimeLog>[];
+    List<GameLogDTO> selectedGameLogs = <GameLogDTO>[];
 
-    final List<GameTimeLog> timeLogs =
-        selectedGamesWithLogs.fold<List<GameTimeLog>>(
-      <GameTimeLog>[],
-      (List<GameTimeLog> previousList, GameWithLogs gameWithLogs) =>
-          previousList..addAll(gameWithLogs.timeLogs),
+    final List<GameLogDTO> gameLogs =
+        selectedGamesWithLogs.fold<List<GameLogDTO>>(
+      <GameLogDTO>[],
+      (List<GameLogDTO> previousList, GameWithLogsDTO gameWithLogs) =>
+          previousList..addAll(gameWithLogs.logs),
     );
 
     switch (range) {
       case CalendarRange.day:
-        selectedTimeLogs = timeLogs;
+        selectedGameLogs = gameLogs;
         break;
       default:
-        selectedTimeLogs = RangeListUtils.createTimeLogListByRange(
-          timeLogs,
+        selectedGameLogs = RangeListUtils.createGameLogListByRange(
+          gameLogs,
           selectedDate,
           range,
         );
         break;
     }
 
-    return selectedTimeLogs;
+    return selectedGameLogs;
   }
 
-  Duration _getTotalTime(List<GameWithLogs> gamesWithLogs) {
+  Duration _getTotalTime(List<GameWithLogsDTO> gamesWithLogs) {
     return gamesWithLogs.fold<Duration>(
       const Duration(),
-      (Duration previousDuration, GameWithLogs gameWithLogs) =>
-          previousDuration + gameWithLogs.totalTime,
+      (Duration previousDuration, GameWithLogsDTO gameWithLogs) =>
+          previousDuration + GameCalendarUtils.getTotalTime(gameWithLogs.logs),
     );
   }
 
@@ -598,13 +580,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     return super.close();
   }
 
-  @protected
-  Future<List<GameWithLogs>> getAllGameWithTimeLogsInYear(int year) {
-    final Future<List<GameWithLogsEntity>> entityListFuture =
-        gameTimeLogRepository.findAllWithGameByYear(year);
-    return GameTimeLogMapper.futureGameWithLogEntityListToModelList(
-      entityListFuture,
-      gameRepository.getImageURI,
-    );
+  Future<List<GameWithLogsDTO>> _getAllGameWithLogsInYear(int year) {
+    final DateTime yearDate = DateTime(year);
+    final DateTime firstDayYear = yearDate.atFirstDayOfYear();
+    final DateTime lastDayYear = yearDate.atLastDayOfYear();
+
+    return gameLogService.getPlayedGames(firstDayYear, lastDayYear);
   }
 }

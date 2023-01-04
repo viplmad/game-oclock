@@ -1,4 +1,4 @@
-enum TimeLogRecalculationMode {
+enum GameLogRecalculationMode {
   duration,
   time,
 }

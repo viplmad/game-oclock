@@ -4,15 +4,15 @@ import 'package:equatable/equatable.dart';
 
 import 'time_log_recalculation_mode.dart';
 
-abstract class TimeLogAssistantEvent extends Equatable {
-  const TimeLogAssistantEvent();
+abstract class GameLogAssistantEvent extends Equatable {
+  const GameLogAssistantEvent();
 
   @override
   List<Object> get props => <Object>[];
 }
 
-class UpdateTimeLogDate extends TimeLogAssistantEvent {
-  const UpdateTimeLogDate(this.date);
+class UpdateGameLogDate extends GameLogAssistantEvent {
+  const UpdateGameLogDate(this.date);
 
   final DateTime date;
 
@@ -20,13 +20,13 @@ class UpdateTimeLogDate extends TimeLogAssistantEvent {
   List<Object> get props => <Object>[date];
 
   @override
-  String toString() => 'UpdateTimeLogDate { '
+  String toString() => 'UpdateGameLogDate { '
       'date: $date'
       ' }';
 }
 
-class UpdateTimeLogStartTime extends TimeLogAssistantEvent {
-  const UpdateTimeLogStartTime(this.startTime);
+class UpdateGameLogStartTime extends GameLogAssistantEvent {
+  const UpdateGameLogStartTime(this.startTime);
 
   final TimeOfDay startTime;
 
@@ -34,13 +34,13 @@ class UpdateTimeLogStartTime extends TimeLogAssistantEvent {
   List<Object> get props => <Object>[startTime];
 
   @override
-  String toString() => 'UpdateTimeLogStartTime { '
+  String toString() => 'UpdateGameLogStartTime { '
       'startTime: $startTime'
       ' }';
 }
 
-class UpdateTimeLogEndTime extends TimeLogAssistantEvent {
-  const UpdateTimeLogEndTime(this.endTime);
+class UpdateGameLogEndTime extends GameLogAssistantEvent {
+  const UpdateGameLogEndTime(this.endTime);
 
   final TimeOfDay endTime;
 
@@ -48,13 +48,13 @@ class UpdateTimeLogEndTime extends TimeLogAssistantEvent {
   List<Object> get props => <Object>[endTime];
 
   @override
-  String toString() => 'UpdateTimeLogEndTime { '
+  String toString() => 'UpdateGameLogEndTime { '
       'endTime: $endTime'
       ' }';
 }
 
-class UpdateTimeLogDuration extends TimeLogAssistantEvent {
-  const UpdateTimeLogDuration(this.duration);
+class UpdateGameLogDuration extends GameLogAssistantEvent {
+  const UpdateGameLogDuration(this.duration);
 
   final Duration duration;
 
@@ -62,21 +62,21 @@ class UpdateTimeLogDuration extends TimeLogAssistantEvent {
   List<Object> get props => <Object>[duration];
 
   @override
-  String toString() => 'UpdateTimeLogDuration { '
+  String toString() => 'UpdateGameLogDuration { '
       'duration: $duration'
       ' }';
 }
 
-class UpdateTimeLogRecalculationMode extends TimeLogAssistantEvent {
-  const UpdateTimeLogRecalculationMode(this.mode);
+class UpdateGameLogRecalculationMode extends GameLogAssistantEvent {
+  const UpdateGameLogRecalculationMode(this.mode);
 
-  final TimeLogRecalculationMode mode;
+  final GameLogRecalculationMode mode;
 
   @override
   List<Object> get props => <Object>[mode];
 
   @override
-  String toString() => 'UpdateTimeLogRecalculationMode { '
+  String toString() => 'UpdateGameLogRecalculationMode { '
       'mode: $mode'
       ' }';
 }

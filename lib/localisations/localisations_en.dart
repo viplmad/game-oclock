@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show GameStatus, PlatformType;
-import 'package:backend/model/calendar_range.dart';
+import 'package:game_collection_client/api.dart' show GameStatus, PlatformType;
 
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/utils/duration_extension.dart';
 
 import 'localisations.dart';
@@ -53,25 +53,13 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String imageConnectionString = 'Image connection';
 
   @override
+  final String nameString = 'Name';
+  @override
   final String hostString = 'Host';
   @override
-  final String portString = 'Port';
-  @override
-  final String databaseString = 'Database';
-  @override
-  final String userString = 'User';
+  final String usernameString = 'User';
   @override
   final String passwordString = 'Password';
-
-  @override
-  final String cloudNameString = 'Cloud name';
-  @override
-  final String apiKeyString = 'API Key';
-  @override
-  final String apiSecretString = 'API Secret';
-
-  @override
-  final String localString = 'Local';
 
   @override
   final String searchAllString = 'Global Search';
@@ -83,10 +71,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String changeRangeString = 'Change Range';
   @override
   final String calendarView = 'Calendar View';
-  @override
-  final String searchInViewString = 'Search in View';
-  @override
-  final String statsInViewString = 'Stats in View';
 
   @override
   final String gameListsString = 'Game Lists';
@@ -261,9 +245,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String thoughtsFieldString = 'Thoughts';
   @override
-  final String timeLogFieldString = 'Time Log';
+  final String gameLogFieldString = 'Time Log';
   @override
-  final String timeLogsFieldString = 'Play Time';
+  final String gameLogsFieldString = 'Play Time';
   @override
   final String saveFolderFieldString = 'Save Folder';
   @override
@@ -273,9 +257,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
 
   @override
   String get singleCalendarViewString =>
-      '$timeLogsFieldString & $finishDatesFieldString';
+      '$gameLogsFieldString & $finishDatesFieldString';
   @override
-  String get multiCalendarViewString => timeLogsFieldString;
+  String get multiCalendarViewString => gameLogsFieldString;
   @override
   final String editTimeString = 'Time';
   @override
@@ -283,15 +267,15 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String gameCalendarEventsString = 'Calendar Event';
   @override
-  String get firstTimeLog => 'First $timeLogsFieldString';
+  String get firstGameLog => 'First $gameLogsFieldString';
   @override
-  String get lastTimeLog => 'Last $timeLogsFieldString';
+  String get lastGameLog => 'Last $gameLogsFieldString';
   @override
-  String get previousTimeLog => 'Previous $timeLogsFieldString';
+  String get previousGameLog => 'Previous $gameLogsFieldString';
   @override
-  String get nextTimeLog => 'Next $timeLogsFieldString';
+  String get nextGameLog => 'Next $gameLogsFieldString';
   @override
-  String get emptyTimeLogsString => 'No $timeLogsFieldString';
+  String get emptyGameLogsString => 'No $gameLogsFieldString';
   @override
   String rangeString(CalendarRange range) {
     switch (range) {
@@ -348,9 +332,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   String get totalGamesPlayedString => 'Total played $gamesString';
   @override
-  String get totalTimeString => 'Total $timeLogsFieldString';
+  String get totalTimeString => 'Total $gameLogsFieldString';
   @override
-  String get avgTimeString => 'Average $timeLogsFieldString';
+  String get avgTimeString => 'Average $gameLogsFieldString';
   @override
   String get avgRatingString => 'Average $ratingFieldString';
   @override
@@ -361,9 +345,9 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
       'Number of $gamesString by $releaseYearFieldString';
   @override
   String get sumTimeByFinishDateString =>
-      'Total $timeLogsFieldString by $finishDateFieldString';
+      'Total $gameLogsFieldString by $finishDateFieldString';
   @override
-  String get sumTimeByMonth => 'Total $timeLogsFieldString by month';
+  String get sumTimeByMonth => 'Total $gameLogsFieldString by month';
   @override
   String get countByRatingString =>
       'Number of $gamesString by $ratingFieldString';
@@ -372,7 +356,7 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
       'Number of $gamesString by $finishDateFieldString';
   @override
   String get countByTimeString =>
-      'Number of $gamesString by $timeLogsFieldString';
+      'Number of $gamesString by $gameLogsFieldString';
   @override
   String get avgRatingByFinishDateString =>
       'Average $ratingFieldString by $finishDateFieldString';
@@ -387,47 +371,6 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   @override
   final String baseGameFieldString = 'Base Game';
   //#endregion DLC
-
-  //#region Purchase
-  @override
-  final String purchaseString = 'Purchase';
-  @override
-  String get purchasesString => _plural(purchaseString);
-
-  @override
-  final String descriptionFieldString = 'Description';
-  @override
-  final String priceFieldString = 'Price';
-  @override
-  final String externalCreditsFieldString = 'External Credit';
-  @override
-  final String purchaseDateFieldString = 'Date';
-  @override
-  final String originalPriceFieldString = 'Original Price';
-  @override
-  final String discountFieldString = 'Discount';
-
-  @override
-  final String pendingViewString = 'Pending';
-  @override
-  final String lastPurchasedViewString = 'Last Purchased';
-
-  @override
-  final String totalMoneySpentString = 'Total Money Spent';
-  @override
-  final String totalMoneySavedString = 'Total Money Saved';
-  @override
-  final String realValueString = 'Real Value';
-  @override
-  final String percentageSavedString = 'Percentage Saved';
-  //#endregion Purchase
-
-  //#region Store
-  @override
-  final String storeString = 'Store';
-  @override
-  String get storesString => _plural(storeString);
-  //#endregion Store
 
   //#region Platform
   @override
@@ -455,26 +398,12 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String platformTypeFieldString = 'Type';
   //#endregion Platform
 
-  //#region System
-  @override
-  final String systemString = 'System';
-  @override
-  String get systemsString => _plural(systemString);
-  //#endregion System
-
   //#region Tag
   @override
-  final String gameTagString = 'Tag';
+  final String tagString = 'Tag';
   @override
-  String get gameTagsString => _plural(gameTagString);
+  String get tagsString => _plural(tagString);
   //#endregion Tag
-
-  //#region PurchaseType
-  @override
-  final String purchaseTypeString = 'Type';
-  @override
-  String get purchaseTypesString => _plural(purchaseTypeString);
-  //#endregion PurchaseType
 
   @override
   String formatEuro(double amount) {

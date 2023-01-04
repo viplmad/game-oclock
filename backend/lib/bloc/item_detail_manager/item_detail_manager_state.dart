@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
-
 abstract class ItemDetailManagerState extends Equatable {
   const ItemDetailManagerState();
 
@@ -11,7 +9,7 @@ abstract class ItemDetailManagerState extends Equatable {
 
 class ItemDetailManagerInitialised extends ItemDetailManagerState {}
 
-class ItemFieldUpdated<T extends Item> extends ItemDetailManagerState {
+class ItemFieldUpdated<T extends Object> extends ItemDetailManagerState {
   const ItemFieldUpdated(this.item);
 
   final T item;
@@ -39,7 +37,7 @@ class ItemFieldNotUpdated extends ItemDetailManagerState {
       ' }';
 }
 
-class ItemImageUpdated<T extends Item> extends ItemDetailManagerState {
+class ItemImageUpdated<T extends Object> extends ItemDetailManagerState {
   const ItemImageUpdated(this.item);
 
   final T item;

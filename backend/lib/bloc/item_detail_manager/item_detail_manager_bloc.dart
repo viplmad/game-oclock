@@ -1,70 +1,30 @@
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/entity/entity.dart' show ItemEntity;
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show ItemRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import '../bloc_utils.dart';
+import 'package:backend/service/service.dart'
+    show ItemService, ItemWithImageService;
+
 import 'item_detail_manager.dart';
 
-abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
-        ID extends Object, R extends ItemRepository<E, ID>>
-    extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
-  ItemDetailManagerBloc({
-    required this.id,
-    required this.repository,
-  }) : super(ItemDetailManagerInitialised()) {
-    on<UpdateItemField<T>>(_mapUpdateFieldToState);
-    on<AddItemImage<T>>(_mapAddImageToState);
-    on<UpdateItemImageName<T>>(_mapUpdateImageNameToState);
-    on<DeleteItemImage<T>>(_mapDeleteImageToState);
-  }
-
-  final ID id;
-  final R repository;
-
-  Future<void> _checkConnection(Emitter<ItemDetailManagerState> emit) async {
-    await BlocUtils.checkConnection<ItemDetailManagerState,
-        ItemFieldNotUpdated>(
-      repository,
-      emit,
-      (final String error) => ItemFieldNotUpdated(error),
-    );
-  }
-
-  void _mapUpdateFieldToState(
-    UpdateItemField<T> event,
-    Emitter<ItemDetailManagerState> emit,
-  ) async {
-    await _checkConnection(emit);
-
-    try {
-      if (event.item != event.updatedItem) {
-        final T updatedItem = await update(event);
-        emit(
-          ItemFieldUpdated<T>(updatedItem),
-        );
-      }
-    } catch (e) {
-      emit(
-        ItemFieldNotUpdated(e.toString()),
-      );
-    }
-
-    emit(
-      ItemDetailManagerInitialised(),
-    );
+abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
+        N extends Object, S extends ItemWithImageService<T, N>>
+    extends ItemDetailManagerBloc<T, N, S> {
+  ItemWithImageDetailManagerBloc({
+    required super.itemId,
+    required super.service,
+  }) {
+    on<AddItemImage>(_mapAddImageToState);
+    on<UpdateItemImageName>(_mapUpdateImageNameToState);
+    on<DeleteItemImage>(_mapDeleteImageToState);
   }
 
   void _mapAddImageToState(
-    AddItemImage<T> event,
+    AddItemImage event,
     Emitter<ItemDetailManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
-      final T updatedItem = await addImage(event);
+      final T updatedItem = await _addImage(event);
       emit(
         ItemImageUpdated<T>(updatedItem),
       );
@@ -80,13 +40,11 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
   }
 
   void _mapUpdateImageNameToState(
-    UpdateItemImageName<T> event,
+    UpdateItemImageName event,
     Emitter<ItemDetailManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
-      final T updatedItem = await updateImageName(event);
+      final T updatedItem = await _updateImageName(event);
       emit(
         ItemImageUpdated<T>(updatedItem),
       );
@@ -102,13 +60,11 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
   }
 
   void _mapDeleteImageToState(
-    DeleteItemImage<T> event,
+    DeleteItemImage event,
     Emitter<ItemDetailManagerState> emit,
   ) async {
-    await _checkConnection(emit);
-
     try {
-      final T updatedItem = await deleteImage(event);
+      final T updatedItem = await _deleteImage(event);
       emit(
         ItemImageUpdated<T>(updatedItem),
       );
@@ -123,12 +79,56 @@ abstract class ItemDetailManagerBloc<T extends Item, E extends ItemEntity,
     );
   }
 
-  @protected
-  Future<T> update(UpdateItemField<T> event);
-  @protected
-  external Future<T> addImage(AddItemImage<T> event);
-  @protected
-  external Future<T> deleteImage(DeleteItemImage<T> event);
-  @protected
-  external Future<T> updateImageName(UpdateItemImageName<T> event);
+  Future<T> _addImage(AddItemImage event) async {
+    await service.uploadImage(itemId, event.imagePath);
+    return service.get(itemId);
+  }
+
+  Future<T> _updateImageName(UpdateItemImageName event) async {
+    await service.renameImage(itemId, event.oldImageName, event.newImageName);
+    return service.get(itemId);
+  }
+
+  Future<T> _deleteImage(DeleteItemImage event) async {
+    await service.deleteImage(itemId, event.imageName);
+    return service.get(itemId);
+  }
+}
+
+abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
+        S extends ItemService<T, N>>
+    extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState> {
+  ItemDetailManagerBloc({
+    required this.itemId,
+    required this.service,
+  }) : super(ItemDetailManagerInitialised()) {
+    on<UpdateItemField<N>>(_mapUpdateFieldToState);
+  }
+
+  final int itemId;
+  final S service;
+
+  void _mapUpdateFieldToState(
+    UpdateItemField<N> event,
+    Emitter<ItemDetailManagerState> emit,
+  ) async {
+    try {
+      final T updatedItem = await _update(event);
+      emit(
+        ItemFieldUpdated<T>(updatedItem),
+      );
+    } catch (e) {
+      emit(
+        ItemFieldNotUpdated(e.toString()),
+      );
+    }
+
+    emit(
+      ItemDetailManagerInitialised(),
+    );
+  }
+
+  Future<T> _update(UpdateItemField<N> event) {
+    return service.update(itemId, event.item);
+  }
 }

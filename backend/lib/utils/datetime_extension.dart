@@ -3,37 +3,37 @@ extension DateExtension on DateTime {
     return day == other.day && isInMonthAndYearOf(other);
   }
 
-  DateTime getMondayOfWeek() {
-    DateTime mondayOfDate;
+  DateTime atMondayOfWeek() {
+    DateTime dateAtMonday;
 
     if (weekday == DateTime.monday) {
-      mondayOfDate = this;
+      dateAtMonday = this;
     } else {
       final int daysToRemove = weekday - DateTime.monday;
-      mondayOfDate = substractDays(daysToRemove);
+      dateAtMonday = substractDays(daysToRemove);
     }
 
-    return mondayOfDate;
+    return dateAtMonday;
   }
 
-  DateTime getSundayOfWeek() {
-    DateTime sundayOfDate;
+  DateTime atSundayOfWeek() {
+    DateTime dateAtSunday;
 
     if (weekday == DateTime.sunday) {
-      sundayOfDate = this;
+      dateAtSunday = this;
     } else {
       final int daysToAdd = DateTime.sunday - weekday;
-      sundayOfDate = addDays(daysToAdd);
+      dateAtSunday = addDays(daysToAdd);
     }
 
-    return sundayOfDate;
+    return dateAtSunday;
   }
 
   bool isInWeekOf(DateTime other) {
     bool resultFound = false;
 
-    DateTime dateInWeek = other.getMondayOfWeek();
-    for (int index = 0; index < 7 && !resultFound; index++) {
+    DateTime dateInWeek = other.atMondayOfWeek();
+    for (int index = 0; index < DateTime.daysPerWeek && !resultFound; index++) {
       resultFound = isSameDay(dateInWeek);
 
       dateInWeek = dateInWeek.addDays(1);
@@ -42,8 +42,23 @@ extension DateExtension on DateTime {
     return resultFound;
   }
 
-  DateTime getFirstDayOfMonth() {
+  DateTime atFirstDayOfMonth() {
     return DateTime(year, month, 1);
+  }
+
+  DateTime atLastDayOfMonth() {
+    // Taken from https://stackoverflow.com/questions/14814941/how-to-find-last-day-of-month
+    return month < DateTime.monthsPerYear
+        ? DateTime(year, month + 1, 0)
+        : DateTime(year + 1, DateTime.january, 0);
+  }
+
+  DateTime atFirstDayOfYear() {
+    return DateTime(year, DateTime.january, 1);
+  }
+
+  DateTime atLastDayOfYear() {
+    return DateTime(year, DateTime.december, 31);
   }
 
   bool isInMonthAndYearOf(DateTime other) {

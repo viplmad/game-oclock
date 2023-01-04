@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/model/list_style.dart';
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
+import 'package:backend/model/model.dart' show ListStyle;
 import 'package:backend/bloc/item_list/item_list.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -12,13 +12,13 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme;
 import 'list.dart';
 
-class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
+class DLCAppBar extends ItemAppBar<DLCDTO, DLCListBloc> {
   const DLCAppBar({
     Key? key,
   }) : super(
           key: key,
           themeColor: DLCTheme.primaryColour,
-          gridAllowed: DLC.hasImage,
+          gridAllowed: DLCTheme.hasImage,
           searchRouteName: dlcSearchRoute,
           detailRouteName: dlcDetailRoute,
         );
@@ -35,7 +35,7 @@ class DLCAppBar extends ItemAppBar<DLC, DLCListBloc> {
   List<String> views(BuildContext context) => DLCTheme.views(context);
 }
 
-class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
+class DLCFAB extends ItemFAB<DLCDTO, NewDLCDTO, DLCListManagerBloc> {
   const DLCFAB({
     Key? key,
   }) : super(
@@ -44,22 +44,14 @@ class DLCFAB extends ItemFAB<DLC, DLCListManagerBloc> {
         );
 
   @override
-  DLC createItem() => const DLC(
-        id: -1,
-        name: '',
-        releaseYear: null,
-        coverURL: null,
-        coverFilename: null,
-        baseGame: null,
-        firstFinishDate: null,
-      );
+  NewDLCDTO createItem() => NewDLCDTO(name: '');
 
   @override
   String typeName(BuildContext context) =>
       GameCollectionLocalisations.of(context).dlcString;
 }
 
-class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
+class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
     Key? key,
   }) : super(
@@ -74,17 +66,17 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   @override
   // ignore: library_private_types_in_public_api
   _DLCListBody itemListBodyBuilder({
-    required List<DLC> items,
+    required List<DLCDTO> items,
     required int viewIndex,
-    required int? viewYear,
-    required void Function(DLC) onDelete,
+    required Object? viewArgs,
+    required void Function(DLCDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
   }) {
     return _DLCListBody(
       items: items,
       viewIndex: viewIndex,
-      viewYear: viewYear,
+      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -92,12 +84,12 @@ class DLCList extends ItemList<DLC, DLCListBloc, DLCListManagerBloc> {
   }
 }
 
-class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
+class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
   const _DLCListBody({
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewYear,
+    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,
@@ -108,17 +100,17 @@ class _DLCListBody extends ItemListBody<DLC, DLCListBloc> {
         );
 
   @override
-  String itemTitle(DLC item) => DLCTheme.itemTitle(item);
+  String itemTitle(DLCDTO item) => DLCTheme.itemTitle(item);
 
   @override
   String viewTitle(BuildContext context) =>
       DLCTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, DLC item) =>
+  Widget cardBuilder(BuildContext context, DLCDTO item) =>
       DLCTheme.itemCard(context, item, onTap);
 
   @override
-  Widget gridBuilder(BuildContext context, DLC item) =>
+  Widget gridBuilder(BuildContext context, DLCDTO item) =>
       DLCTheme.itemGrid(context, item, onTap);
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show GameTimeLog;
+import 'package:game_collection_client/api.dart' show GameLogDTO;
+
 import 'package:backend/bloc/time_log_assistant/time_log_assistant.dart';
 import 'package:backend/utils/time_of_day_extension.dart';
 
@@ -11,29 +12,29 @@ import 'package:game_collection/localisations/localisations.dart';
 import '../utils/fab_utils.dart';
 import '../common/field/field.dart' show DateField, DurationField, TimeField;
 
-class TimeLogAssistant extends StatelessWidget {
-  const TimeLogAssistant({
+class GameLogAssistant extends StatelessWidget {
+  const GameLogAssistant({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TimeLogAssistantBloc>(
+    return BlocProvider<GameLogAssistantBloc>(
       create: (BuildContext context) {
-        return TimeLogAssistantBloc();
+        return GameLogAssistantBloc();
       },
       child: Scaffold(
         appBar: AppBar(
           title:
-              Text(GameCollectionLocalisations.of(context).timeLogFieldString),
+              Text(GameCollectionLocalisations.of(context).gameLogFieldString),
           // Fixed elevation so background color doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
         ),
-        body: const _TimeLogAssistantBody(),
+        body: const _GameLogAssistantBody(),
         floatingActionButton:
-            BlocBuilder<TimeLogAssistantBloc, TimeLogAssistantState>(
-          builder: (BuildContext context, TimeLogAssistantState state) {
+            BlocBuilder<GameLogAssistantBloc, GameLogAssistantState>(
+          builder: (BuildContext context, GameLogAssistantState state) {
             return FloatingActionButton.extended(
               label: Text(GameCollectionLocalisations.of(context).saveString),
               icon: const Icon(Icons.cloud_upload),
@@ -53,8 +54,8 @@ class TimeLogAssistant extends StatelessWidget {
 
                       Navigator.maybePop(
                         context,
-                        GameTimeLog(
-                          dateTime: dateTime,
+                        GameLogDTO(
+                          datetime: dateTime,
                           time: state.duration!,
                         ),
                       );
@@ -71,23 +72,23 @@ class TimeLogAssistant extends StatelessWidget {
   }
 }
 
-class _TimeLogAssistantBody extends StatelessWidget {
-  const _TimeLogAssistantBody({
+class _GameLogAssistantBody extends StatelessWidget {
+  const _GameLogAssistantBody({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TimeLogAssistantBloc, TimeLogAssistantState>(
-      builder: (BuildContext context, TimeLogAssistantState state) {
+    return BlocBuilder<GameLogAssistantBloc, GameLogAssistantState>(
+      builder: (BuildContext context, GameLogAssistantState state) {
         return Column(
           children: <Widget>[
             DateField(
               fieldName: GameCollectionLocalisations.of(context).dateString,
               value: state.date,
               update: (DateTime date) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  UpdateTimeLogDate(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  UpdateGameLogDate(
                     date,
                   ),
                 );
@@ -98,15 +99,15 @@ class _TimeLogAssistantBody extends StatelessWidget {
                   GameCollectionLocalisations.of(context).startTimeString,
               value: state.startTime,
               update: (TimeOfDay time) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  UpdateTimeLogStartTime(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  UpdateGameLogStartTime(
                     time,
                   ),
                 );
               },
               onLongPress: () {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  const UpdateTimeLogStartTime(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  const UpdateGameLogStartTime(
                     TimeOfDayExtension.startOfDay,
                   ),
                 );
@@ -116,15 +117,15 @@ class _TimeLogAssistantBody extends StatelessWidget {
               fieldName: GameCollectionLocalisations.of(context).endTimeString,
               value: state.endTime,
               update: (TimeOfDay time) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  UpdateTimeLogEndTime(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  UpdateGameLogEndTime(
                     time,
                   ),
                 );
               },
               onLongPress: () {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  const UpdateTimeLogEndTime(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  const UpdateGameLogEndTime(
                     TimeOfDayExtension.startOfDay,
                   ),
                 );
@@ -134,8 +135,8 @@ class _TimeLogAssistantBody extends StatelessWidget {
               fieldName: GameCollectionLocalisations.of(context).durationString,
               value: state.duration,
               update: (Duration duration) {
-                BlocProvider.of<TimeLogAssistantBloc>(context).add(
-                  UpdateTimeLogDuration(
+                BlocProvider.of<GameLogAssistantBloc>(context).add(
+                  UpdateGameLogDuration(
                     duration,
                   ),
                 );
@@ -152,7 +153,7 @@ class _TimeLogAssistantBody extends StatelessWidget {
 
   List<Widget> _recalculateOptions(
     BuildContext context,
-    TimeLogRecalculationMode recalculationMode,
+    GameLogRecalculationMode recalculationMode,
   ) {
     return <Widget>[
       const Divider(),
@@ -164,31 +165,31 @@ class _TimeLogAssistantBody extends StatelessWidget {
           GameCollectionLocalisations.of(context).recalculationModeSubtitle,
         ),
       ),
-      RadioListTile<TimeLogRecalculationMode>(
+      RadioListTile<GameLogRecalculationMode>(
         title: Text(
           GameCollectionLocalisations.of(context)
               .recalculationModeDurationString,
         ),
         groupValue: recalculationMode,
-        value: TimeLogRecalculationMode.duration,
+        value: GameLogRecalculationMode.duration,
         onChanged: (_) {
-          BlocProvider.of<TimeLogAssistantBloc>(context).add(
-            const UpdateTimeLogRecalculationMode(
-              TimeLogRecalculationMode.duration,
+          BlocProvider.of<GameLogAssistantBloc>(context).add(
+            const UpdateGameLogRecalculationMode(
+              GameLogRecalculationMode.duration,
             ),
           );
         },
       ),
-      RadioListTile<TimeLogRecalculationMode>(
+      RadioListTile<GameLogRecalculationMode>(
         title: Text(
           GameCollectionLocalisations.of(context).recalculationModeTimeString,
         ),
         groupValue: recalculationMode,
-        value: TimeLogRecalculationMode.time,
+        value: GameLogRecalculationMode.time,
         onChanged: (_) {
-          BlocProvider.of<TimeLogAssistantBloc>(context).add(
-            const UpdateTimeLogRecalculationMode(
-              TimeLogRecalculationMode.time,
+          BlocProvider.of<GameLogAssistantBloc>(context).add(
+            const UpdateGameLogRecalculationMode(
+              GameLogRecalculationMode.time,
             ),
           );
         },

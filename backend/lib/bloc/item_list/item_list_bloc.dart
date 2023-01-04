@@ -3,77 +3,58 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/entity/entity.dart' show ItemEntity;
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/model/list_style.dart';
-import 'package:backend/repository/repository.dart' show ItemRepository;
+import 'package:game_collection_client/api.dart' show SearchResultDTO, PrimaryModel;
 
-import '../bloc_utils.dart';
+import 'package:backend/model/list_style.dart';
+import 'package:backend/service/service.dart' show ItemService;
+
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';
 
 class ViewParameters {
-  ViewParameters(this.viewIndex, [this.viewYear]);
+  ViewParameters(this.viewIndex, [this.viewArgs]);
 
   final int viewIndex;
-  final int? viewYear;
+  final Object? viewArgs;
 }
 
-abstract class ItemListBloc<T extends Item, E extends ItemEntity,
-        ID extends Object, R extends ItemRepository<E, ID>>
-    extends Bloc<ItemListEvent, ItemListState> {
+abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
+    S extends ItemService<T, N>> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
-    required this.repository,
-    required ItemListManagerBloc<T, E, ID, R> managerBloc,
+    required this.service,
+    required ItemListManagerBloc<T, N, S> managerBloc,
   }) : super(ItemListLoading()) {
     on<LoadItemList>(_mapLoadToState);
     on<UpdateItemList<T>>(_mapUpdateListToState);
     on<UpdateListItem<T>>(_mapUpdateItemToState);
     on<UpdateView>(_mapUpdateViewToState);
-    on<UpdateYearView>(_mapUpdateYearViewToState);
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
     managerSubscription = managerBloc.stream.listen(mapListManagerStateToEvent);
   }
 
-  final R repository;
+  final S service;
   late final StreamSubscription<ItemListManagerState> managerSubscription;
 
-  Future<void> _checkConnection(Emitter<ItemListState> emit) async {
-    await BlocUtils.checkConnection<ItemListState, ItemListNotLoaded>(
-      repository,
-      emit,
-      (final String error) => ItemListNotLoaded(error),
-    );
-  }
-
   void _mapLoadToState(LoadItemList event, Emitter<ItemListState> emit) async {
-    await _checkConnection(emit);
-
     emit(
       ItemListLoading(),
     );
 
     try {
-      const int page = 0;
-
       final ViewParameters startViewParameters = await getStartViewIndex();
       final int startViewIndex = startViewParameters.viewIndex;
-      final int? year = startViewParameters.viewYear;
+      final Object? srtartingViewArgs = startViewParameters.viewArgs;
 
-      final List<T> items;
-      if (year != null) {
-        items = await getAllWithYearView(startViewIndex, year, page);
-      } else {
-        items = await getAllWithView(startViewIndex, page);
-      }
+      final SearchResultDTO<T> items =
+          await _getAllWithView(startViewIndex, srtartingViewArgs);
 
       emit(
         ItemListLoaded<T>(
-          items,
+          items.data,
           startViewIndex,
-          year,
+          srtartingViewArgs,
         ),
       );
     } catch (e) {
@@ -91,7 +72,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
       ItemListLoaded<T>(
         event.items,
         event.viewIndex,
-        event.year,
+        event.viewArgs,
         event.page,
         event.style,
       ),
@@ -106,14 +87,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
       final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
 
       final int listItemIndex =
-          items.indexWhere((T item) => item.uniqueId == event.item.uniqueId);
+          items.indexWhere((T item) => service.sameId(item, event.item));
       final T listItem = items.elementAt(listItemIndex);
 
       if (listItem != event.item) {
         items[listItemIndex] = event.item;
 
         final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-        final int? year = (state as ItemListLoaded<T>).year;
+        final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
         final int page = (state as ItemListLoaded<T>).page;
         final ListStyle style = (state as ItemListLoaded<T>).style;
 
@@ -121,7 +102,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
           ItemListLoaded<T>(
             items,
             viewIndex,
-            year,
+            viewArgs,
             page,
             style,
           ),
@@ -134,8 +115,6 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     UpdateView event,
     Emitter<ItemListState> emit,
   ) async {
-    await _checkConnection(emit);
-
     ListStyle? style;
     if (state is ItemListLoaded<T>) {
       style = (state as ItemListLoaded<T>).style;
@@ -146,48 +125,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     );
 
     try {
-      const int page = 0;
-      final List<T> items = await _getAllWithView(event, page);
+      final SearchResultDTO<T> items =
+          await _getAllWithView(event.viewIndex, event.viewArgs);
       emit(
         ItemListLoaded<T>(
-          items,
+          items.data,
           event.viewIndex,
-          null,
-          page,
-          style,
-        ),
-      );
-    } catch (e) {
-      emit(
-        ItemListNotLoaded(e.toString()),
-      );
-    }
-  }
-
-  void _mapUpdateYearViewToState(
-    UpdateYearView event,
-    Emitter<ItemListState> emit,
-  ) async {
-    await _checkConnection(emit);
-
-    ListStyle? style;
-    if (state is ItemListLoaded<T>) {
-      style = (state as ItemListLoaded<T>).style;
-    }
-
-    emit(
-      ItemListLoading(),
-    );
-
-    try {
-      const int page = 0;
-      final List<T> items = await _getAllWithYearView(event, page);
-      emit(
-        ItemListLoaded<T>(
-          items,
-          event.viewIndex,
-          event.year,
-          page,
+          event.viewArgs,
+          0,
           style,
         ),
       );
@@ -205,24 +150,20 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     if (state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int? year = (state as ItemListLoaded<T>).year;
+      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final int page = (state as ItemListLoaded<T>).page + 1;
-      List<T> pageItems;
-      if (year != null) {
-        pageItems = await getAllWithYearView(viewIndex, year, page);
-      } else {
-        pageItems = await getAllWithView(viewIndex, page);
-      }
+      final SearchResultDTO<T> pageItems =
+          await _getAllWithView(viewIndex, viewArgs, page);
 
-      final List<T> updatedItems = List<T>.from(items)..addAll(pageItems);
+      final List<T> updatedItems = List<T>.from(items)..addAll(pageItems.data);
 
       emit(
         ItemListLoaded<T>(
           updatedItems,
           viewIndex,
-          year,
+          viewArgs,
           page,
           style,
         ),
@@ -238,14 +179,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
 
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int? year = (state as ItemListLoaded<T>).year;
+      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
       final int page = (state as ItemListLoaded<T>).page;
 
       emit(
         ItemListLoaded<T>(
           items,
           viewIndex,
-          year,
+          viewArgs,
           page,
           updatedStyle,
         ),
@@ -265,7 +206,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     if (state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int? year = (state as ItemListLoaded<T>).year;
+      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
       final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
@@ -275,7 +216,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
         UpdateItemList<T>(
           updatedItems,
           viewIndex,
-          year,
+          viewArgs,
           page,
           style,
         ),
@@ -287,7 +228,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     if (state is ItemListLoaded<T>) {
       final List<T> items = (state as ItemListLoaded<T>).items;
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final int? year = (state as ItemListLoaded<T>).year;
+      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
       final int page = (state as ItemListLoaded<T>).page;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
@@ -299,7 +240,7 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
         UpdateItemList<T>(
           updatedItems,
           viewIndex,
-          year,
+          viewArgs,
           page,
           style,
         ),
@@ -313,19 +254,14 @@ abstract class ItemListBloc<T extends Item, E extends ItemEntity,
     return super.close();
   }
 
-  Future<List<T>> _getAllWithView(UpdateView event, int page) =>
-      getAllWithView(event.viewIndex, page);
-  Future<List<T>> _getAllWithYearView(UpdateYearView event, int page) =>
-      getAllWithYearView(event.viewIndex, event.year, page);
+  Future<SearchResultDTO<T>> _getAllWithView(
+    int viewIndex,
+    Object? viewArgs, [
+    int? page,
+  ]) {
+    return service.getAll(viewIndex, page: page, viewArgs: viewArgs);
+  }
 
   @protected
   Future<ViewParameters> getStartViewIndex();
-  @protected
-  Future<List<T>> getAllWithView(int viewIndex, [int? page]);
-  @protected
-  external Future<List<T>> getAllWithYearView(
-    int viewIndex,
-    int year, [
-    int? page,
-  ]);
 }

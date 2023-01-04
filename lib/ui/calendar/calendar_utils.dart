@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show GameFinish, GameTimeLog;
-import 'package:backend/model/calendar_range.dart';
+import 'package:table_calendar/table_calendar.dart';
 
+import 'package:game_collection_client/api.dart' show GameLogDTO;
+
+import 'package:backend/model/calendar_range.dart';
 import 'package:backend/utils/datetime_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import '../common/statistics_histogram.dart';
 import '../theme/calendar_theme.dart';
@@ -22,7 +23,7 @@ class CalendarUtils {
     required DateTime selectedDay,
     required Set<DateTime> logDays,
     required void Function(DateTime) onDaySelected,
-    List<GameFinish>? finishes,
+    List<DateTime>? finishes,
     void Function(DateTime)? onPageChanged,
   }) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -47,8 +48,7 @@ class CalendarUtils {
       },
       holidayPredicate: finishes != null
           ? (DateTime day) {
-              return finishes
-                  .any((GameFinish finish) => day.isSameDay(finish.dateTime));
+              return finishes.any((DateTime finish) => day.isSameDay(finish));
             }
           : null,
       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -131,7 +131,7 @@ class CalendarUtils {
         break;
       case CalendarRange.week:
         rangeDateString =
-            '${GameCollectionLocalisations.of(context).formatDate(date.getMondayOfWeek())} ⮕ ${GameCollectionLocalisations.of(context).formatDate(date.getSundayOfWeek())}';
+            '${GameCollectionLocalisations.of(context).formatDate(date.atMondayOfWeek())} ⮕ ${GameCollectionLocalisations.of(context).formatDate(date.atSundayOfWeek())}';
         break;
       case CalendarRange.month:
         rangeDateString =
@@ -142,12 +142,12 @@ class CalendarUtils {
             GameCollectionLocalisations.of(context).formatYear(date.year);
         break;
     }
-    return '${GameCollectionLocalisations.of(context).timeLogsFieldString} - $rangeDateString (${GameCollectionLocalisations.of(context).rangeString(range)})';
+    return '${GameCollectionLocalisations.of(context).gameLogsFieldString} - $rangeDateString (${GameCollectionLocalisations.of(context).rangeString(range)})';
   }
 
-  static Widget buildTimeLogsGraph(
+  static Widget buildGameLogsGraph(
     BuildContext context,
-    List<GameTimeLog> timeLogs,
+    List<GameLogDTO> gameLogs,
     CalendarRange range,
   ) {
     List<int> values = <int>[];
@@ -156,9 +156,9 @@ class CalendarUtils {
     if (range == CalendarRange.day) {
       // Create list where each entry is the time in an hour
       values = List<int>.filled(24, 0, growable: false);
-      for (final GameTimeLog log in timeLogs) {
-        int currentHour = log.dateTime.hour;
-        final int pendingMinToChangeHour = 60 - log.dateTime.minute;
+      for (final GameLogDTO log in gameLogs) {
+        int currentHour = log.datetime.hour;
+        final int pendingMinToChangeHour = 60 - log.datetime.minute;
         final int logMin = log.time.inMinutes;
 
         if (pendingMinToChangeHour > logMin) {
@@ -193,7 +193,7 @@ class CalendarUtils {
         return '$index:00';
       });
     } else {
-      values = timeLogs.map<int>((GameTimeLog log) {
+      values = gameLogs.map<int>((GameLogDTO log) {
         return log.time.inMinutes;
       }).toList(growable: false);
 
@@ -218,7 +218,7 @@ class CalendarUtils {
             width: MediaQuery.of(context).size.width * 2,
             child: StatisticsHistogram<int>(
               histogramName:
-                  GameCollectionLocalisations.of(context).timeLogsFieldString,
+                  GameCollectionLocalisations.of(context).gameLogsFieldString,
               domainLabels: labels,
               values: values,
               vertical: true,
@@ -233,7 +233,7 @@ class CalendarUtils {
     } else {
       return StatisticsHistogram<int>(
         histogramName:
-            GameCollectionLocalisations.of(context).timeLogsFieldString,
+            GameCollectionLocalisations.of(context).gameLogsFieldString,
         domainLabels: labels,
         values: values,
         vertical: true,

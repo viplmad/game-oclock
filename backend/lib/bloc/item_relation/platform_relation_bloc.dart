@@ -1,46 +1,39 @@
-import 'package:backend/entity/entity.dart';
-import 'package:backend/model/model.dart' show Item, Platform, Game, System;
-import 'package:backend/mapper/mapper.dart';
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, GameRepository, SystemRepository;
+import 'package:game_collection_client/api.dart'
+    show GameAvailableDTO, DLCAvailableDTO;
+
+import 'package:backend/service/service.dart'
+    show GameCollectionService, GameService, DLCService;
 
 import 'item_relation.dart';
 
-class PlatformRelationBloc<W extends Item>
-    extends ItemRelationBloc<Platform, PlatformID, W> {
-  PlatformRelationBloc({
-    required int itemId,
-    required GameCollectionRepository collectionRepository,
+class PlatformDLCRelationBloc extends ItemRelationBloc<DLCAvailableDTO> {
+  PlatformDLCRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameRepository = collectionRepository.gameRepository,
-        systemRepository = collectionRepository.systemRepository,
-        super(
-          id: PlatformID(itemId),
-          collectionRepository: collectionRepository,
-        );
+  })  : dlcService = collectionService.dlcService,
+        super();
 
-  final GameRepository gameRepository;
-  final SystemRepository systemRepository;
+  final DLCService dlcService;
 
   @override
-  Future<List<W>> getRelationItems() {
-    switch (W) {
-      case Game:
-        final Future<List<GameEntity>> entityListFuture =
-            gameRepository.findAllFromPlatform(id);
-        return GameMapper.futureEntityListToModelList(
-          entityListFuture,
-          gameRepository.getImageURI,
-        ) as Future<List<W>>;
-      case System:
-        final Future<List<SystemEntity>> entityListFuture =
-            systemRepository.findAllFromPlatform(id);
-        return SystemMapper.futureEntityListToModelList(
-          entityListFuture,
-          systemRepository.getImageURI,
-        ) as Future<List<W>>;
-    }
+  Future<List<DLCAvailableDTO>> getRelationItems() {
+    return dlcService.getPlatformAvailableDLCs(itemId);
+  }
+}
 
-    return super.getRelationItems();
+class PlatformGameRelationBloc extends ItemRelationBloc<GameAvailableDTO> {
+  PlatformGameRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+    required super.managerBloc,
+  })  : gameService = collectionService.gameService,
+        super();
+
+  final GameService gameService;
+
+  @override
+  Future<List<GameAvailableDTO>> getRelationItems() {
+    return gameService.getPlatformAvailableGames(itemId);
   }
 }

@@ -1,6 +1,6 @@
-import 'package:backend/model/model.dart';
-import 'package:backend/model/calendar_range.dart';
-import 'package:backend/model/calendar_style.dart';
+import 'package:game_collection_client/api.dart' show GameLogDTO;
+
+import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
 
 import 'calendar_state.dart';
 
@@ -13,11 +13,11 @@ abstract class SingleCalendarState extends CalendarState {
 
 class SingleCalendarLoaded extends SingleCalendarState {
   const SingleCalendarLoaded(
-    this.timeLogs,
+    this.gameLogs,
     this.logDates,
     this.finishDates,
     this.selectedDate,
-    this.selectedTimeLogs,
+    this.selectedGameLogs,
     // ignore: avoid_positional_boolean_parameters
     this.isSelectedDateFinish,
     this.selectedTotalTime,
@@ -25,11 +25,11 @@ class SingleCalendarLoaded extends SingleCalendarState {
     this.style = CalendarStyle.list,
   ]);
 
-  final List<GameTimeLog> timeLogs;
+  final List<GameLogDTO> gameLogs;
   final Set<DateTime> logDates;
-  final List<GameFinish> finishDates;
+  final List<DateTime> finishDates;
   final DateTime selectedDate;
-  final List<GameTimeLog> selectedTimeLogs;
+  final List<GameLogDTO> selectedGameLogs;
   final bool isSelectedDateFinish;
   final Duration selectedTotalTime;
   final CalendarRange range;
@@ -37,15 +37,15 @@ class SingleCalendarLoaded extends SingleCalendarState {
 
   @override
   List<Object> get props =>
-      <Object>[timeLogs, logDates, finishDates, selectedDate, range, style];
+      <Object>[gameLogs, logDates, finishDates, selectedDate, range, style];
 
   @override
   String toString() => 'SingleCalendarLoaded { '
-      'timeLogs: $timeLogs, '
+      'gameLogs: $gameLogs, '
       'logDates: $logDates, '
       'finishDates: $finishDates, '
       'selectedDate: $selectedDate, '
-      'selectedTimeLogs: $selectedTimeLogs, '
+      'selectedGameLogs: $selectedGameLogs, '
       'isSelectedDateFinish: $isSelectedDateFinish, '
       'selectedTotalTime: $selectedTotalTime, '
       'range: $range, '

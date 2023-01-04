@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart'
-    show Item, Platform, PlatformType, Game, System;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, NewPlatformDTO, GameDTO, DLCDTO, PlatformType;
 
+import 'package:backend/model/model.dart' show ItemImage;
+import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:backend/bloc/item_relation/item_relation.dart';
@@ -18,8 +18,8 @@ import '../relation/relation.dart';
 import '../theme/theme.dart' show PlatformTheme;
 import 'item_detail.dart';
 
-class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
-    PlatformDetailManagerBloc> {
+class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
+    PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
     Key? key,
     required super.item,
@@ -28,59 +28,69 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
 
   @override
   PlatformDetailBloc detailBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
     PlatformDetailManagerBloc managerBloc,
   ) {
     return PlatformDetailBloc(
       itemId: item.id,
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
       managerBloc: managerBloc,
     );
   }
 
   @override
   PlatformDetailManagerBloc managerBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
     return PlatformDetailManagerBloc(
       itemId: item.id,
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
   }
 
   @override
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
-    final PlatformRelationManagerBloc<Game> gameRelationManagerBloc =
-        PlatformRelationManagerBloc<Game>(
+    final PlatformGameRelationManagerBloc gameRelationManagerBloc =
+        PlatformGameRelationManagerBloc(
       itemId: item.id,
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
 
-    final PlatformRelationManagerBloc<System> systemRelationManagerBloc =
-        PlatformRelationManagerBloc<System>(
+    final PlatformDLCRelationManagerBloc dlcRelationManagerBloc =
+        PlatformDLCRelationManagerBloc(
       itemId: item.id,
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
-      blocProviderRelationBuilder<Game>(
-        collectionRepository,
-        gameRelationManagerBloc,
+      BlocProvider<PlatformGameRelationBloc>(
+        create: (BuildContext context) {
+          return PlatformGameRelationBloc(
+            itemId: item.id,
+            collectionService: collectionService,
+            managerBloc: gameRelationManagerBloc,
+          )..add(LoadItemRelation());
+        },
       ),
-      blocProviderRelationBuilder<System>(
-        collectionRepository,
-        systemRelationManagerBloc,
+      BlocProvider<PlatformDLCRelationBloc>(
+        create: (BuildContext context) {
+          return PlatformDLCRelationBloc(
+            itemId: item.id,
+            collectionService: collectionService,
+            managerBloc: dlcRelationManagerBloc,
+          )..add(LoadItemRelation());
+        },
       ),
-      BlocProvider<PlatformRelationManagerBloc<Game>>(
+      BlocProvider<PlatformGameRelationManagerBloc>(
         create: (BuildContext context) {
           return gameRelationManagerBloc;
         },
       ),
-      BlocProvider<PlatformRelationManagerBloc<System>>(
+      BlocProvider<PlatformDLCRelationManagerBloc>(
         create: (BuildContext context) {
-          return systemRelationManagerBloc;
+          return dlcRelationManagerBloc;
         },
       ),
     ];
@@ -93,53 +103,39 @@ class PlatformDetail extends ItemDetail<Platform, PlatformDetailBloc,
       onUpdate: onUpdate,
     );
   }
-
-  BlocProvider<PlatformRelationBloc<W>>
-      blocProviderRelationBuilder<W extends Item>(
-    GameCollectionRepository collectionRepository,
-    PlatformRelationManagerBloc<W> managerBloc,
-  ) {
-    return BlocProvider<PlatformRelationBloc<W>>(
-      create: (BuildContext context) {
-        return PlatformRelationBloc<W>(
-          itemId: item.id,
-          collectionRepository: collectionRepository,
-          managerBloc: managerBloc,
-        )..add(LoadItemRelation());
-      },
-    );
-  }
 }
 
 // ignore: must_be_immutable
-class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
-    PlatformDetailManagerBloc> {
+class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
+    PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
     super.onUpdate,
   }) : super(
           key: key,
-          hasImage: Platform.hasImage,
+          hasImage: PlatformTheme.hasImage,
         );
 
   @override
-  String itemTitle(Platform item) => PlatformTheme.itemTitle(item);
+  String itemTitle(PlatformDTO item) => PlatformTheme.itemTitle(item);
 
   @override
-  List<Widget> itemFieldsBuilder(BuildContext context, Platform platform) {
+  List<Widget> itemFieldsBuilder(BuildContext context, PlatformDTO platform) {
     return <Widget>[
       itemTextField(
         context,
         fieldName: GameCollectionLocalisations.of(context).nameFieldString,
         value: platform.name,
         item: platform,
-        itemUpdater: (String newValue) => platform.copyWith(name: newValue),
+        itemUpdater: (String newValue) => platform.newWith(name: newValue),
       ),
       itemChipField(
         context,
         fieldName:
             GameCollectionLocalisations.of(context).platformTypeFieldString,
-        value: platform.type?.index,
+        value: platform.type != null
+            ? PlatformType.values.indexOf(platform.type!)
+            : null,
         possibleValues: <String>[
           GameCollectionLocalisations.of(context).physicalString,
           GameCollectionLocalisations.of(context).digitalString,
@@ -147,7 +143,7 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
         possibleValuesColours: PlatformTheme.typeColours,
         item: platform,
         itemUpdater: (int newValue) =>
-            platform.copyWith(type: PlatformType.values.elementAt(newValue)),
+            platform.newWith(type: PlatformType.values.elementAt(newValue)),
       ),
     ];
   }
@@ -159,9 +155,9 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
         relationName: GameCollectionLocalisations.of(context).gamesString,
         relationTypeName: GameCollectionLocalisations.of(context).gameString,
       ),
-      PlatformSystemRelationList(
-        relationName: GameCollectionLocalisations.of(context).systemsString,
-        relationTypeName: GameCollectionLocalisations.of(context).systemString,
+      PlatformDLCRelationList(
+        relationName: GameCollectionLocalisations.of(context).dlcsString,
+        relationTypeName: GameCollectionLocalisations.of(context).dlcString,
       ),
     ];
   }
@@ -181,5 +177,10 @@ class _PlatformDetailBody extends ItemDetailBody<Platform, PlatformDetailBloc,
         order: order++,
       ),
     ];
+  }
+
+  @override
+  ItemImage buildItemImage(PlatformDTO item) {
+    return ItemImage(item.iconUrl, item.iconFilename);
   }
 }

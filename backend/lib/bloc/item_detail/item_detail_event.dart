@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart';
-
 abstract class ItemDetailEvent extends Equatable {
   const ItemDetailEvent();
 
@@ -13,10 +11,10 @@ class LoadItem extends ItemDetailEvent {}
 
 class ReloadItem extends ItemDetailEvent {}
 
-class UpdateItem<T extends Item> extends ItemDetailEvent {
+class UpdateItem<N extends Object> extends ItemDetailEvent {
   const UpdateItem(this.item);
 
-  final T item;
+  final N item;
 
   @override
   List<Object> get props => <Object>[item];

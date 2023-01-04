@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart'
-    show GameStatus, Manufacturer, PlatformType;
-import 'package:backend/model/calendar_range.dart';
+import 'package:game_collection_client/api.dart' show GameStatus, PlatformType;
+
+import 'package:backend/model/model.dart' show CalendarRange;
 
 import 'localisations_en.dart';
 import 'localisations_es.dart';
@@ -38,27 +38,16 @@ abstract class GameCollectionLocalisations {
   String get itemConnectionString;
   String get imageConnectionString;
 
-  static const String postgresString = 'Postgres';
+  String get nameString;
   String get hostString;
-  String get portString;
-  String get databaseString;
-  String get userString;
+  String get usernameString;
   String get passwordString;
-
-  static const String cloudinaryString = 'Cloudinary';
-  String get cloudNameString;
-  String get apiKeyString;
-  String get apiSecretString;
-
-  String get localString;
 
   String get searchAllString;
   String get changeStyleString;
   String get changeViewString;
   String get changeRangeString;
   String get calendarView;
-  String get searchInViewString;
-  String get statsInViewString;
 
   String get gameListsString;
 
@@ -115,8 +104,8 @@ abstract class GameCollectionLocalisations {
   String get statusFieldString;
   String get ratingFieldString;
   String get thoughtsFieldString;
-  String get timeLogFieldString;
-  String get timeLogsFieldString;
+  String get gameLogFieldString;
+  String get gameLogsFieldString;
   String get saveFolderFieldString;
   String get screenshotFolderFieldString;
   String get backupFieldString;
@@ -126,11 +115,11 @@ abstract class GameCollectionLocalisations {
   String get editTimeString;
   String get selectedDateIsFinishDateString;
   String get gameCalendarEventsString;
-  String get firstTimeLog;
-  String get lastTimeLog;
-  String get previousTimeLog;
-  String get nextTimeLog;
-  String get emptyTimeLogsString;
+  String get firstGameLog;
+  String get lastGameLog;
+  String get previousGameLog;
+  String get nextGameLog;
+  String get emptyGameLogsString;
   String rangeString(CalendarRange range);
   String totalGames(int total);
 
@@ -171,31 +160,6 @@ abstract class GameCollectionLocalisations {
   String get baseGameFieldString;
   //#endregion DLC
 
-  //#region Purchase
-  String get purchaseString;
-  String get purchasesString;
-
-  String get descriptionFieldString;
-  String get priceFieldString;
-  String get externalCreditsFieldString;
-  String get purchaseDateFieldString;
-  String get originalPriceFieldString;
-  String get discountFieldString;
-
-  String get pendingViewString;
-  String get lastPurchasedViewString;
-
-  String get totalMoneySpentString;
-  String get totalMoneySavedString;
-  String get realValueString;
-  String get percentageSavedString;
-  //#endregion Purchase
-
-  //#region Store
-  String get storeString;
-  String get storesString;
-  //#endregion Store
-
   //#region Platform
   String get platformString;
   String get platformsString;
@@ -206,35 +170,10 @@ abstract class GameCollectionLocalisations {
   String get platformTypeFieldString;
   //#endregion Platform
 
-  //#region System
-  String get systemString;
-  String get systemsString;
-
-  static String manufacturerString(Manufacturer? manufacturer) {
-    switch (manufacturer) {
-      case Manufacturer.nintendo:
-        return 'Nintendo';
-      case Manufacturer.sony:
-        return 'Sony';
-      case Manufacturer.microsoft:
-        return 'Microsoft';
-      case Manufacturer.sega:
-        return 'Sega';
-      default:
-        return '';
-    }
-  }
-  //#endregion System
-
-  //#region GameTag
-  String get gameTagString;
-  String get gameTagsString;
-  //#endregion GameTag
-
-  //#region PurchaseType
-  String get purchaseTypeString;
-  String get purchaseTypesString;
-  //#endregion PurchaseType
+  //#region Tag
+  String get tagString;
+  String get tagsString;
+  //#endregion Tag
 
   String formatEuro(double amount);
   String formatPercentage(double amount);

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show DLC;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
+import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_search/item_search.dart';
 import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
 
@@ -13,11 +12,11 @@ import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme;
 import 'search.dart';
 
-class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
+class DLCSearch
+    extends ItemSearch<DLCDTO, NewDLCDTO, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
     Key? key,
     required super.onTapReturn,
-    required super.viewIndex,
   }) : super(
           key: key,
           detailRouteName: dlcDetailRoute,
@@ -25,69 +24,37 @@ class DLCSearch extends ItemSearch<DLC, DLCSearchBloc, DLCListManagerBloc> {
 
   @override
   DLCSearchBloc searchBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
     return DLCSearchBloc(
-      collectionRepository: collectionRepository,
-      viewIndex: viewIndex,
+      collectionService: collectionService,
     );
   }
 
   @override
   DLCListManagerBloc managerBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   ) {
     return DLCListManagerBloc(
-      collectionRepository: collectionRepository,
+      collectionService: collectionService,
     );
   }
 
   @override
   // ignore: library_private_types_in_public_api
-  _DLCSearchBody<DLCSearchBloc> itemSearchBodyBuilder({
-    required void Function()? Function(BuildContext, DLC) onTap,
+  _DLCSearchBody itemSearchBodyBuilder({
+    required void Function()? Function(BuildContext, DLCDTO) onTap,
     required bool allowNewButton,
   }) {
-    return _DLCSearchBody<DLCSearchBloc>(
+    return _DLCSearchBody(
       onTap: onTap,
       allowNewButton: allowNewButton,
     );
   }
 }
 
-class DLCLocalSearch extends ItemLocalSearch<DLC, DLCListManagerBloc> {
-  const DLCLocalSearch({
-    Key? key,
-    required super.items,
-  }) : super(
-          key: key,
-          detailRouteName: dlcDetailRoute,
-        );
-
-  @override
-  DLCListManagerBloc managerBlocBuilder(
-    GameCollectionRepository collectionRepository,
-  ) {
-    return DLCListManagerBloc(
-      collectionRepository: collectionRepository,
-    );
-  }
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _DLCSearchBody<ItemLocalSearchBloc<DLC>> itemSearchBodyBuilder({
-    required void Function()? Function(BuildContext, DLC) onTap,
-    required bool allowNewButton,
-  }) {
-    return _DLCSearchBody<ItemLocalSearchBloc<DLC>>(
-      onTap: onTap,
-      allowNewButton: allowNewButton,
-    );
-  }
-}
-
-class _DLCSearchBody<K extends ItemSearchBloc<DLC>>
-    extends ItemSearchBody<DLC, K, DLCListManagerBloc> {
+class _DLCSearchBody extends ItemSearchBody<DLCDTO, NewDLCDTO, DLCSearchBloc,
+    DLCListManagerBloc> {
   const _DLCSearchBody({
     Key? key,
     required super.onTap,
@@ -103,17 +70,9 @@ class _DLCSearchBody<K extends ItemSearchBloc<DLC>>
       GameCollectionLocalisations.of(context).dlcsString;
 
   @override
-  DLC createItem(String query) => DLC(
-        id: -1,
-        name: query,
-        releaseYear: null,
-        coverURL: null,
-        coverFilename: null,
-        baseGame: null,
-        firstFinishDate: null,
-      );
+  NewDLCDTO createItem(String query) => NewDLCDTO(name: query);
 
   @override
-  Widget cardBuilder(BuildContext context, DLC item) =>
+  Widget cardBuilder(BuildContext context, DLCDTO item) =>
       DLCTheme.itemCard(context, item, onTap);
 }

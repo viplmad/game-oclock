@@ -1,87 +1,85 @@
-import 'package:backend/entity/entity.dart'
+import 'package:game_collection_client/api.dart'
+    show DLCDTO, PlatformAvailableDTO, TagDTO;
+
+import 'package:backend/model/model.dart' show ItemFinish;
+import 'package:backend/service/service.dart'
     show
-        DLCEntity,
-        GameFinishEntity,
-        GameID,
-        GameTagEntity,
-        PlatformEntity,
-        PurchaseEntity;
-import 'package:backend/model/model.dart'
-    show DLC, Game, GameFinish, Item, Platform, Purchase, GameTag;
-import 'package:backend/mapper/mapper.dart'
-    show
-        DLCMapper,
-        GameFinishMapper,
-        GameTagMapper,
-        PlatformMapper,
-        PurchaseMapper;
-import 'package:backend/repository/repository.dart'
-    show
-        DLCRepository,
-        GameCollectionRepository,
-        GameFinishRepository,
-        GameTagRepository,
-        PlatformRepository,
-        PurchaseRepository;
+        GameCollectionService,
+        GameFinishService,
+        DLCService,
+        PlatformService,
+        TagService;
 
 import 'item_relation.dart';
 
-class GameRelationBloc<W extends Item>
-    extends ItemRelationBloc<Game, GameID, W> {
-  GameRelationBloc({
-    required int itemId,
-    required GameCollectionRepository collectionRepository,
+class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
+  GameFinishRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameFinishRepository = collectionRepository.gameFinishRepository,
-        dlcRepository = collectionRepository.dlcRepository,
-        platformRepository = collectionRepository.platformRepository,
-        purchaseRepository = collectionRepository.purchaseRepository,
-        gameTagRepository = collectionRepository.gameTagRepository,
-        super(
-          id: GameID(itemId),
-          collectionRepository: collectionRepository,
-        );
+  })  : gameFinishService = collectionService.gameFinishService,
+        super();
 
-  final GameFinishRepository gameFinishRepository;
-  final DLCRepository dlcRepository;
-  final PlatformRepository platformRepository;
-  final PurchaseRepository purchaseRepository;
-  final GameTagRepository gameTagRepository;
+  final GameFinishService gameFinishService;
 
   @override
-  Future<List<W>> getRelationItems() {
-    switch (W) {
-      case GameFinish:
-        final Future<List<GameFinishEntity>> entityListFuture =
-            gameFinishRepository.findAllFromGame(id);
-        return GameFinishMapper.futureEntityListToModelList(entityListFuture)
-            as Future<List<W>>;
-      case DLC:
-        final Future<List<DLCEntity>> entityListFuture =
-            dlcRepository.findAllFromGame(id);
-        return DLCMapper.futureEntityListToModelList(
-          entityListFuture,
-          dlcRepository.getImageURI,
-        ) as Future<List<W>>;
-      case Platform:
-        final Future<List<PlatformEntity>> entityListFuture =
-            platformRepository.findAllFromGame(id);
-        return PlatformMapper.futureEntityListToModelList(
-          entityListFuture,
-          platformRepository.getImageURI,
-        ) as Future<List<W>>;
-      case Purchase:
-        final Future<List<PurchaseEntity>> entityListFuture =
-            purchaseRepository.findAllFromGame(id);
-        return PurchaseMapper.futureEntityListToModelList(entityListFuture)
-            as Future<List<W>>;
-      case GameTag:
-        final Future<List<GameTagEntity>> entityListFuture =
-            gameTagRepository.findAllFromGame(id);
-        return GameTagMapper.futureEntityListToModelList(entityListFuture)
-            as Future<List<W>>;
-    }
+  Future<List<ItemFinish>> getRelationItems() {
+    return gameFinishService
+        .getAll(itemId)
+        .asStream()
+        .map(
+          (List<DateTime> dates) => dates
+              .map((DateTime date) => ItemFinish(date))
+              .toList(growable: false),
+        )
+        .first;
+  }
+}
 
-    return super.getRelationItems();
+class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO> {
+  GameDLCRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+    required super.managerBloc,
+  })  : dlcService = collectionService.dlcService,
+        super();
+
+  final DLCService dlcService;
+
+  @override
+  Future<List<DLCDTO>> getRelationItems() {
+    return dlcService.getGameDLCs(itemId);
+  }
+}
+
+class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO> {
+  GamePlatformRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+    required super.managerBloc,
+  })  : platformService = collectionService.platformService,
+        super();
+
+  final PlatformService platformService;
+
+  @override
+  Future<List<PlatformAvailableDTO>> getRelationItems() {
+    return platformService.getGameAvailablePlatforms(itemId);
+  }
+}
+
+class GameTagRelationBloc extends ItemRelationBloc<TagDTO> {
+  GameTagRelationBloc({
+    required super.itemId,
+    required GameCollectionService collectionService,
+    required super.managerBloc,
+  })  : tagService = collectionService.tagService,
+        super();
+
+  final TagService tagService;
+
+  @override
+  Future<List<TagDTO>> getRelationItems() {
+    return tagService.getGameTags(itemId);
   }
 }

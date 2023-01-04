@@ -1,30 +1,14 @@
-import 'package:backend/entity/entity.dart' show PlatformEntity, PlatformID;
-import 'package:backend/model/model.dart' show Platform;
-import 'package:backend/mapper/mapper.dart' show PlatformMapper;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository, PlatformRepository;
+import 'package:game_collection_client/api.dart'
+    show PlatformDTO, NewPlatformDTO;
+
+import 'package:backend/service/service.dart'
+    show PlatformService, GameCollectionService;
 
 import 'item_list_manager.dart';
 
-class PlatformListManagerBloc extends ItemListManagerBloc<Platform,
-    PlatformEntity, PlatformID, PlatformRepository> {
+class PlatformListManagerBloc
+    extends ItemListManagerBloc<PlatformDTO, NewPlatformDTO, PlatformService> {
   PlatformListManagerBloc({
-    required GameCollectionRepository collectionRepository,
-  }) : super(repository: collectionRepository.platformRepository);
-
-  @override
-  Future<Platform> create(AddItem<Platform> event) {
-    final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
-    final Future<PlatformEntity> entityFuture = repository.create(entity);
-    return PlatformMapper.futureEntityToModel(
-      entityFuture,
-      repository.getImageURI,
-    );
-  }
-
-  @override
-  Future<Object?> delete(DeleteItem<Platform> event) {
-    final PlatformEntity entity = PlatformMapper.modelToEntity(event.item);
-    return repository.deleteById(entity.createId());
-  }
+    required GameCollectionService collectionService,
+  }) : super(service: collectionService.platformService);
 }

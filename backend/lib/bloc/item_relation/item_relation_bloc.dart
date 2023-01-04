@@ -3,19 +3,15 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import '../bloc_utils.dart';
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
-abstract class ItemRelationBloc<T extends Item, ID extends Object,
-    W extends Item> extends Bloc<ItemRelationEvent, ItemRelationState> {
+abstract class ItemRelationBloc<W extends PrimaryModel>
+    extends Bloc<ItemRelationEvent, ItemRelationState> {
   ItemRelationBloc({
-    required this.id,
-    required this.collectionRepository,
+    required this.itemId,
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
     on<LoadItemRelation>(_mapLoadToState);
@@ -26,27 +22,14 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object,
         managerBloc.stream.listen(mapRelationManagerStateToEvent);
   }
 
-  static const String _errorRelationNotFound = 'Relation does not exist';
-
-  final ID id;
-  final GameCollectionRepository collectionRepository;
-  final ItemRelationManagerBloc<T, ID, W> managerBloc;
+  final int itemId;
+  final ItemRelationManagerBloc<W> managerBloc;
   late StreamSubscription<ItemRelationManagerState> managerSubscription;
-
-  Future<void> _checkConnection(Emitter<ItemRelationState> emit) async {
-    await BlocUtils.checkConnection<ItemRelationState, ItemRelationNotLoaded>(
-      collectionRepository.gameRepository,
-      emit,
-      (final String error) => ItemRelationNotLoaded(error),
-    );
-  }
 
   void _mapLoadToState(
     LoadItemRelation event,
     Emitter<ItemRelationState> emit,
   ) async {
-    await _checkConnection(emit);
-
     emit(
       ItemRelationLoading(),
     );
@@ -81,7 +64,7 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object,
           List<W>.from((state as ItemRelationLoaded<W>).otherItems);
 
       final int listItemIndex =
-          items.indexWhere((W item) => item.uniqueId == event.item.uniqueId);
+          items.indexWhere((W item) => item.id == event.item.id);
       final W listItem = items.elementAt(listItemIndex);
 
       if (listItem != event.item) {
@@ -131,9 +114,6 @@ abstract class ItemRelationBloc<T extends Item, ID extends Object,
     return super.close();
   }
 
-  @mustCallSuper
   @protected
-  Future<List<W>> getRelationItems() {
-    return Future<List<W>>.error(_errorRelationNotFound);
-  }
+  Future<List<W>> getRelationItems();
 }

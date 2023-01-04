@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart';
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 import 'package:backend/bloc/item_relation/item_relation.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
@@ -19,9 +19,9 @@ import '../search/search_arguments.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_utils.dart';
 
+// TODO check only bloc are used in other base classes
 abstract class ItemRelationList<
-        T extends Item,
-        W extends Item,
+        W extends PrimaryModel,
         K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
     extends StatelessWidget {
@@ -33,9 +33,8 @@ abstract class ItemRelationList<
     this.limitHeight = true,
     this.isSingleList = false,
     required this.hasImage,
-    this.detailRouteName = '',
+    required this.detailRouteName,
     required this.searchRouteName,
-    required this.localSearchRouteName,
   }) : super(key: key);
 
   final String relationName;
@@ -47,7 +46,6 @@ abstract class ItemRelationList<
 
   final String detailRouteName;
   final String searchRouteName;
-  final String localSearchRouteName;
 
   @override
   Widget build(BuildContext context) {
@@ -164,9 +162,6 @@ abstract class ItemRelationList<
                     updateAdd: _addRelationFunction(context),
                     updateDelete: _deleteRelationFunction(context),
                     trailingBuilder: trailingBuilder,
-                    onListSearch: state.otherItems.isNotEmpty
-                        ? _onLocalSearchTap(context, state.otherItems)
-                        : null,
                     limitHeight: limitHeight,
                   );
           }
@@ -248,19 +243,6 @@ abstract class ItemRelationList<
     };
   }
 
-  Future<dynamic> Function() _onLocalSearchTap(
-    BuildContext context,
-    List<W> items,
-  ) {
-    return () {
-      return Navigator.pushNamed(
-        context,
-        localSearchRouteName,
-        arguments: items,
-      );
-    };
-  }
-
   @nonVirtual
   void Function()? onTap(BuildContext context, W item) {
     return detailRouteName.isNotEmpty
@@ -292,14 +274,12 @@ class _RelationList extends StatelessWidget {
     required this.relationList,
     this.linkWidget,
     this.trailingWidget,
-    this.onListSearch,
   }) : super(key: key);
 
   final String headerText;
   final Widget relationList;
   final Widget? linkWidget;
   final Widget? trailingWidget;
-  final void Function()? onListSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -317,14 +297,6 @@ class _RelationList extends StatelessWidget {
             children: <Widget>[
               HeaderText(
                 text: headerText,
-                trailingWidget: onListSearch != null
-                    ? IconButton(
-                        icon: const Icon(Icons.search),
-                        tooltip: GameCollectionLocalisations.of(context)
-                            .searchInListString,
-                        onPressed: onListSearch,
-                      )
-                    : const SizedBox(),
               ),
               relationList,
               SizedBox(
@@ -340,7 +312,7 @@ class _RelationList extends StatelessWidget {
   }
 }
 
-class _LinkButton<W extends Item> extends StatelessWidget {
+class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
   const _LinkButton({
     Key? key,
     required this.typeName,
@@ -380,7 +352,7 @@ class _LinkButton<W extends Item> extends StatelessWidget {
   }
 }
 
-class _RelationListSingle<W extends Item> extends StatelessWidget {
+class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
   const _RelationListSingle({
     Key? key,
     required this.items,
@@ -411,7 +383,7 @@ class _RelationListSingle<W extends Item> extends StatelessWidget {
           final W relation = items[index];
 
           return DismissibleItem(
-            dismissibleKey: relation.uniqueId,
+            dismissibleKey: relation.id.toString(), // TODO Wait for uuid
             itemWidget: itemBuilder(context, relation),
             onDismissed: (DismissDirection direction) {
               updateDelete(relation);
@@ -431,7 +403,7 @@ class _RelationListSingle<W extends Item> extends StatelessWidget {
   }
 }
 
-class _RelationListMany<W extends Item> extends StatelessWidget {
+class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
   const _RelationListMany({
     Key? key,
     required this.items,
@@ -442,7 +414,6 @@ class _RelationListMany<W extends Item> extends StatelessWidget {
     required this.updateAdd,
     required this.updateDelete,
     this.trailingBuilder,
-    this.onListSearch,
     this.limitHeight = true,
   }) : super(key: key);
 
@@ -454,7 +425,6 @@ class _RelationListMany<W extends Item> extends StatelessWidget {
   final void Function(W) updateAdd;
   final void Function(W) updateDelete;
   final List<Widget> Function(List<W>)? trailingBuilder;
-  final void Function()? onListSearch;
   final bool limitHeight;
 
   @override
@@ -476,7 +446,7 @@ class _RelationListMany<W extends Item> extends StatelessWidget {
             final W relation = items[index];
 
             return DismissibleItem(
-              dismissibleKey: relation.uniqueId,
+              dismissibleKey: relation.id.toString(), // TODO Wait for uuid,
               itemWidget: itemBuilder(context, relation),
               onDismissed: (DismissDirection direction) {
                 updateDelete(relation);
@@ -496,7 +466,6 @@ class _RelationListMany<W extends Item> extends StatelessWidget {
               children: trailingBuilder!(items),
             )
           : const SizedBox(),
-      onListSearch: onListSearch,
     );
   }
 }

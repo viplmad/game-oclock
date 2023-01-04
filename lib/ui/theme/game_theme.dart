@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:backend/model/model.dart' show Game;
+import 'package:game_collection_client/api.dart' show GameDTO, GameAvailableDTO;
 
 import 'package:game_collection/localisations/localisations.dart';
 
@@ -12,6 +12,8 @@ import 'theme_utils.dart';
 
 class GameTheme {
   GameTheme._();
+
+  static const bool hasImage = true;
 
   static const Color primaryColour = Colors.red;
   static const Color secondaryColour = Colors.redAccent;
@@ -57,16 +59,34 @@ class GameTheme {
 
   static Widget itemCard(
     BuildContext context,
-    Game item,
-    void Function()? Function(BuildContext, Game) onTap,
+    GameDTO item,
+    void Function()? Function(BuildContext, GameDTO) onTap,
   ) {
     return _addRatingBanner(
       item,
       ItemCard(
         title: itemTitle(item),
         subtitle: _itemSubtitle(context, item),
-        hasImage: Game.hasImage,
-        imageURL: item.image.url,
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
+        onTap: onTap(context, item),
+      ),
+    );
+  }
+
+  static Widget itemAvailableCard(
+    BuildContext context,
+    GameAvailableDTO item,
+    void Function()? Function(BuildContext, GameAvailableDTO) onTap,
+  ) {
+    return _addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle: GameCollectionLocalisations.of(context)
+            .formatDate(item.availableDate),
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
         onTap: onTap(context, item),
       ),
     );
@@ -74,9 +94,9 @@ class GameTheme {
 
   static Widget itemCardWithTime(
     BuildContext context,
-    Game item,
+    GameDTO item,
     Duration totalTime,
-    void Function()? Function(BuildContext, Game) onTap,
+    void Function()? Function(BuildContext, GameDTO) onTap,
   ) {
     return _addRatingBanner(
       item,
@@ -85,14 +105,14 @@ class GameTheme {
         subtitle: _itemSubtitle(context, item),
         trailing:
             GameCollectionLocalisations.of(context).formatDuration(totalTime),
-        hasImage: Game.hasImage,
-        imageURL: item.image.url,
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
         onTap: onTap(context, item),
       ),
     );
   }
 
-  static Widget _addRatingBanner(Game item, Widget itemView) {
+  static Widget _addRatingBanner(GameDTO item, Widget itemView) {
     return item.rating > 0
         ? ClipRRect(
             borderRadius: ShapeUtils.cardBorderRadius,
@@ -112,20 +132,20 @@ class GameTheme {
 
   static Widget itemGrid(
     BuildContext context,
-    Game item,
-    void Function()? Function(BuildContext, Game) onTap,
+    GameDTO item,
+    void Function()? Function(BuildContext, GameDTO) onTap,
   ) {
     return _addRatingBanner(
       item,
       ItemGrid(
         title: itemTitle(item),
-        imageURL: item.image.url,
+        imageURL: item.coverUrl,
         onTap: onTap(context, item),
       ),
     );
   }
 
-  static String itemTitle(Game item) {
+  static String itemTitle(GameDTO item) {
     String title = item.name;
 
     if (item.edition.isNotEmpty) {
@@ -135,7 +155,7 @@ class GameTheme {
     return title;
   }
 
-  static String _itemSubtitle(BuildContext context, Game item) {
+  static String _itemSubtitle(BuildContext context, GameDTO item) {
     return '${GameCollectionLocalisations.of(context).gameStatusString(item.status)} · ${item.releaseYear != null ? GameCollectionLocalisations.of(context).formatYear(item.releaseYear!) : ''}';
   }
 }

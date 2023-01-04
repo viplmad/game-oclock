@@ -3,20 +3,19 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/entity/entity.dart' show ItemEntity;
-import 'package:backend/model/model.dart' show Item;
-import 'package:backend/repository/repository.dart' show ItemRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import '../bloc_utils.dart';
+import 'package:backend/service/service.dart' show ItemService;
+
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
-abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
-        ID extends Object, R extends ItemRepository<E, ID>>
+abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
+        S extends ItemService<T, N>>
     extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
-    required this.id,
-    required this.repository,
+    required this.itemId,
+    required this.service,
     required this.managerBloc,
   }) : super(ItemLoading()) {
     on<LoadItem>(_mapLoadToState);
@@ -27,18 +26,10 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
         managerBloc.stream.listen(_mapDetailManagerStateToEvent);
   }
 
-  final ID id;
-  final R repository;
-  final ItemDetailManagerBloc<T, E, ID, R> managerBloc;
+  final int itemId;
+  final S service;
+  final ItemDetailManagerBloc<T, N, S> managerBloc;
   late StreamSubscription<ItemDetailManagerState> managerSubscription;
-
-  Future<void> _checkConnection(Emitter<ItemDetailState> emit) async {
-    await BlocUtils.checkConnection<ItemDetailState, ItemNotLoaded>(
-      repository,
-      emit,
-      (final String error) => ItemNotLoaded(error),
-    );
-  }
 
   void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) async {
     emit(
@@ -56,8 +47,6 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
   }
 
   Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
-    await _checkConnection(emit);
-
     try {
       final T item = await get();
       emit(
@@ -98,6 +87,9 @@ abstract class ItemDetailBloc<T extends Item, E extends ItemEntity,
     return super.close();
   }
 
+  @mustCallSuper
   @protected
-  Future<T> get();
+  Future<T> get() {
+    return service.get(itemId);
+  }
 }

@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:backend/model/model.dart' show Item, ItemImage;
-import 'package:backend/repository/repository.dart'
-    show GameCollectionRepository;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
+import 'package:backend/model/model.dart' show ItemImage;
+import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
 
@@ -20,7 +19,8 @@ import '../common/show_snackbar.dart';
 import '../common/item_view.dart';
 
 abstract class ItemDetail<
-        T extends Item,
+        T extends PrimaryModel,
+        N extends Object,
         K extends Bloc<ItemDetailEvent, ItemDetailState>,
         S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>>
     extends StatelessWidget {
@@ -30,21 +30,21 @@ abstract class ItemDetail<
     this.onUpdate,
   }) : super(key: key);
 
-  final T item;
+  final PrimaryModel item;
   final void Function(T? item)? onUpdate;
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionRepository collectionRepository =
-        RepositoryProvider.of<GameCollectionRepository>(context);
+    final GameCollectionService collectionService =
+        RepositoryProvider.of<GameCollectionService>(context);
 
-    final S managerBloc = managerBlocBuilder(collectionRepository);
+    final S managerBloc = managerBlocBuilder(collectionService);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
         BlocProvider<K>(
           create: (BuildContext context) {
-            return detailBlocBuilder(collectionRepository, managerBloc)
+            return detailBlocBuilder(collectionService, managerBloc)
               ..add(LoadItem());
           },
         ),
@@ -53,27 +53,28 @@ abstract class ItemDetail<
             return managerBloc;
           },
         ),
-        ...relationBlocsBuilder(collectionRepository)
+        ...relationBlocsBuilder(collectionService)
       ],
       child: Scaffold(body: detailBodyBuilder()),
     );
   }
 
   K detailBlocBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
     S managerBloc,
   );
-  S managerBlocBuilder(GameCollectionRepository collectionRepository);
+  S managerBlocBuilder(GameCollectionService collectionService);
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionRepository collectionRepository,
+    GameCollectionService collectionService,
   );
 
-  ItemDetailBody<T, K, S> detailBodyBuilder();
+  ItemDetailBody<T, N, K, S> detailBodyBuilder();
 }
 
 // ignore: must_be_immutable
 abstract class ItemDetailBody<
-        T extends Item,
+        T extends PrimaryModel,
+        N extends Object,
         K extends Bloc<ItemDetailEvent, ItemDetailState>,
         S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>>
     extends StatelessWidget {
@@ -217,7 +218,7 @@ abstract class ItemDetailBody<
             if (state is ItemLoaded<T>) {
               title = itemTitle(state.item);
               useImage = hasImage;
-              image = state.item.image;
+              image = buildItemImage(state.item);
             }
 
             return GestureDetector(
@@ -230,7 +231,7 @@ abstract class ItemDetailBody<
                           return _imageActionListBuilder(
                             innerContext,
                             context,
-                            imageFilename: image!.filename,
+                            imageFilename: image?.filename ?? '',
                           );
                         },
                       );
@@ -241,7 +242,7 @@ abstract class ItemDetailBody<
                 collapseMode: CollapseMode.parallax,
                 background: useImage
                     ? CachedImage(
-                        imageURL: image!.url,
+                        imageURL: image?.url ?? '',
                         fit: BoxFit.cover,
                         applyGradient: true,
                         backgroundColour: Theme.of(context).primaryColor,
@@ -282,9 +283,8 @@ abstract class ItemDetailBody<
                 .then((XFile? imagePicked) {
               if (imagePicked != null) {
                 BlocProvider.of<S>(outerContext).add(
-                  AddItemImage<T>(
+                  AddItemImage(
                     imagePicked.path,
-                    withImage ? imageFilename.split('.').first : null,
                   ),
                 );
               }
@@ -351,7 +351,7 @@ abstract class ItemDetailBody<
             ).then((String? newName) {
               if (newName != null) {
                 BlocProvider.of<S>(outerContext).add(
-                  UpdateItemImageName<T>(
+                  UpdateItemImageName(
                     imageName,
                     newName,
                   ),
@@ -371,7 +371,7 @@ abstract class ItemDetailBody<
             final String imageName = imageFilename.split('.').first;
 
             BlocProvider.of<S>(outerContext).add(
-              DeleteItemImage<T>(
+              DeleteItemImage(
                 imageName,
               ),
             );
@@ -386,14 +386,13 @@ abstract class ItemDetailBody<
   void Function(O) _updateFunction<O>(
     BuildContext context, {
     required T item,
-    required T Function(O newValue) itemUpdater,
+    required N Function(O newValue) itemUpdater,
   }) {
     return (O newValue) {
-      final T updatedItem = itemUpdater(newValue);
+      final N updatedItem = itemUpdater(newValue);
 
       BlocProvider.of<S>(context).add(
-        UpdateItemField<T>(
-          item,
+        UpdateItemField<N>(
           updatedItem,
         ),
       );
@@ -405,7 +404,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required String value,
     required T item,
-    required T Function(String newValue) itemUpdater,
+    required N Function(String newValue) itemUpdater,
   }) {
     return CustomTextField(
       fieldName: fieldName,
@@ -424,7 +423,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required String value,
     required T item,
-    required T Function(String newValue) itemUpdater,
+    required N Function(String newValue) itemUpdater,
   }) {
     return CustomTextField(
       fieldName: fieldName,
@@ -455,7 +454,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required String value,
     required T item,
-    required T Function(String newValue) itemUpdater,
+    required N Function(String newValue) itemUpdater,
   }) {
     return CustomTextField(
       fieldName: fieldName,
@@ -475,7 +474,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required double? value,
     required T item,
-    required T Function(double newValue) itemUpdater,
+    required N Function(double newValue) itemUpdater,
   }) {
     return DoubleField(
       fieldName: fieldName,
@@ -539,7 +538,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required int? value,
     required T item,
-    required T Function(int newValue) itemUpdater,
+    required N Function(int newValue) itemUpdater,
   }) {
     return YearField(
       fieldName: fieldName,
@@ -557,7 +556,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required DateTime? value,
     required T item,
-    required T Function(DateTime newValue) itemUpdater,
+    required N Function(DateTime newValue) itemUpdater,
   }) {
     return DateField(
       fieldName: fieldName,
@@ -575,7 +574,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required int? value,
     required T item,
-    required T Function(int newValue) itemUpdater,
+    required N Function(int newValue) itemUpdater,
   }) {
     return RatingField(
       fieldName: fieldName,
@@ -593,7 +592,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required bool value,
     required T item,
-    required T Function(bool newValue) itemUpdater,
+    required N Function(bool newValue) itemUpdater,
   }) {
     return BoolField(
       fieldName: fieldName,
@@ -613,7 +612,7 @@ abstract class ItemDetailBody<
     required List<String> possibleValues,
     required List<Color> possibleValuesColours,
     required T item,
-    required T Function(int newValue) itemUpdater,
+    required N Function(int newValue) itemUpdater,
   }) {
     return EnumField(
       fieldName: fieldName,
@@ -674,4 +673,5 @@ abstract class ItemDetailBody<
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
   List<Widget> itemSkeletonFieldsBuilder(BuildContext context);
   List<Widget> itemRelationsBuilder(BuildContext context);
+  ItemImage buildItemImage(T item);
 }
