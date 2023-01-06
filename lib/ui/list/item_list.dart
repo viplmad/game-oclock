@@ -363,8 +363,8 @@ abstract class ItemListBody<T extends PrimaryModel,
       children: <Widget>[
         Container(
           color: Colors.grey,
-          child: HeaderText(
-            text: viewTitle(context),
+          child: ListTile( // TODO check padding
+            title: viewTitle(context),
           ),
         ),
         Expanded(
