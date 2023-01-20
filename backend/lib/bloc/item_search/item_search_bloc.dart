@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show SearchResultDTO, PrimaryModel;
+import 'package:game_collection_client/api.dart' show PageResultDTO, PrimaryModel;
 
 import 'package:backend/service/service.dart' show SearchService;
 
@@ -34,12 +34,12 @@ abstract class ItemSearchBloc<T extends PrimaryModel, S extends SearchService<T>
     try {
       final String query = event.query;
       if (query.isEmpty) {
-        final SearchResultDTO<T> initialItems = await _getInitialItems();
+        final PageResultDTO<T> initialItems = await _getInitialItems();
         emit(
           ItemSearchEmpty<T>(initialItems.data),
         );
       } else {
-        final SearchResultDTO<T> items = await _getSearchItems(query);
+        final PageResultDTO<T> items = await _getSearchItems(query);
         emit(
           ItemSearchSuccess<T>(items.data),
         );
@@ -51,11 +51,11 @@ abstract class ItemSearchBloc<T extends PrimaryModel, S extends SearchService<T>
     }
   }
 
-  Future<SearchResultDTO<T>> _getInitialItems() {
+  Future<PageResultDTO<T>> _getInitialItems() {
     return service.getAll(initialViewIndex, size: maxSuggestions);
   }
 
-  Future<SearchResultDTO<T>> _getSearchItems(String query) {
+  Future<PageResultDTO<T>> _getSearchItems(String query) {
     return service.searchAll(quicksearch: query, size: maxResults);
   }
 }

@@ -2,19 +2,19 @@ import 'package:game_collection_client/api.dart'
     show
         ApiClient,
         GameLogDTO,
-        GameWithLogSearchResult,
+        GameWithLogPageResult,
         GameWithLogsDTO,
-        GamesApi,
+        GameLogsApi,
         SearchDTO;
 
 import 'item_service.dart';
 
 class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
   GameLogService(ApiClient apiClient) {
-    _api = GamesApi(apiClient);
+    _api = GameLogsApi(apiClient);
   }
 
-  late final GamesApi _api; // TODO Move to GameLogs api
+  late final GameLogsApi _api;
 
   //#region CREATE
   @override
@@ -26,14 +26,14 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
   //#region READ
   @override
   Future<List<GameLogDTO>> getAll(int primaryId) {
-    return _api.getGameLogs(primaryId) as Future<List<GameLogDTO>>;
+    return _api.getGameLogs(primaryId);
   }
 
   Future<Duration> getTotalPlayedTime(int primaryId) {
-    return _api.getTotalGameLogs(primaryId) as Future<Duration>;
+    return _api.getTotalGameLogs(primaryId);
   }
 
-  Future<GameWithLogSearchResult> getFirstFinishedDLCs(
+  Future<GameWithLogPageResult> getFirstFinishedDLCs(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -41,10 +41,10 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<GameWithLogSearchResult>;
+    );
   }
 
-  Future<GameWithLogSearchResult> getLastFinishedDLCs(
+  Future<GameWithLogPageResult> getLastFinishedDLCs(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -52,15 +52,14 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<GameWithLogSearchResult>;
+    );
   }
 
   Future<List<GameWithLogsDTO>> getPlayedGames(
     DateTime startDate,
     DateTime endDate,
   ) {
-    return _api.getPlayedGames(startDate, endDate)
-        as Future<List<GameWithLogsDTO>>;
+    return _api.getPlayedGames(startDate, endDate);
   }
   //#endregion READ
 

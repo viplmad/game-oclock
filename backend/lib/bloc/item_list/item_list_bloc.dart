@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show SearchResultDTO, PrimaryModel;
+import 'package:game_collection_client/api.dart' show PageResultDTO, PrimaryModel;
 
 import 'package:backend/model/list_style.dart';
 import 'package:backend/service/service.dart' show ItemService;
@@ -47,7 +47,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final int startViewIndex = startViewParameters.viewIndex;
       final Object? srtartingViewArgs = startViewParameters.viewArgs;
 
-      final SearchResultDTO<T> items =
+      final PageResultDTO<T> items =
           await _getAllWithView(startViewIndex, srtartingViewArgs);
 
       emit(
@@ -87,7 +87,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
 
       final int listItemIndex =
-          items.indexWhere((T item) => service.sameId(item, event.item));
+          items.indexWhere((T item) => item.id == event.item.id);
       final T listItem = items.elementAt(listItemIndex);
 
       if (listItem != event.item) {
@@ -125,7 +125,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     );
 
     try {
-      final SearchResultDTO<T> items =
+      final PageResultDTO<T> items =
           await _getAllWithView(event.viewIndex, event.viewArgs);
       emit(
         ItemListLoaded<T>(
@@ -154,7 +154,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final int page = (state as ItemListLoaded<T>).page + 1;
-      final SearchResultDTO<T> pageItems =
+      final PageResultDTO<T> pageItems =
           await _getAllWithView(viewIndex, viewArgs, page);
 
       final List<T> updatedItems = List<T>.from(items)..addAll(pageItems.data);
@@ -254,7 +254,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     return super.close();
   }
 
-  Future<SearchResultDTO<T>> _getAllWithView(
+  Future<PageResultDTO<T>> _getAllWithView(
     int viewIndex,
     Object? viewArgs, [
     int? page,

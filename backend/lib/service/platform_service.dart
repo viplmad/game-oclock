@@ -2,13 +2,11 @@ import 'package:backend/model/model.dart' show PlatformView;
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
-        DLCsApi,
-        GamesApi,
         NewPlatformDTO,
         OrderType,
         PlatformAvailableDTO,
         PlatformDTO,
-        PlatformSearchResult,
+        PlatformPageResult,
         PlatformsApi,
         SearchDTO,
         SortDTO;
@@ -18,34 +16,26 @@ import 'item_service.dart';
 class PlatformService
     implements ItemWithImageService<PlatformDTO, NewPlatformDTO> {
   PlatformService(ApiClient apiClient) {
-    api = PlatformsApi(apiClient);
-    gamesApi = GamesApi(apiClient);
-    dlcsApi = DLCsApi(apiClient);
+    _api = PlatformsApi(apiClient);
   }
 
-  late final PlatformsApi api;
-  late final GamesApi gamesApi; // TODO
-  late final DLCsApi dlcsApi; // TODO
-
-  @override
-  bool sameId(PlatformDTO one, PlatformDTO other) {
-    return one.id == other.id;
-  }
+  late final PlatformsApi _api;
 
   //#region CREATE
   @override
   Future<PlatformDTO> create(NewPlatformDTO newItem) {
-    return api.postPlatform(newItem) as Future<PlatformDTO>;
+    return _api.postPlatform(newItem);
   }
   //#endregion CREATE
 
   //#region READ
   @override
   Future<PlatformDTO> get(int id) {
-    return api.getPlatform(id) as Future<PlatformDTO>;
+    return _api.getPlatform(id);
   }
 
-  Future<PlatformSearchResult> getAll<A>(
+  @override
+  Future<PlatformPageResult> getAll<A>(
     int viewIndex, {
     int? page,
     int? size,
@@ -65,45 +55,43 @@ class PlatformService
         sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
         break;
     }
-    return api.getPlatforms(
+    return _api.getPlatforms(
       SearchDTO(sort: sorts, page: page, size: size),
-    ) as Future<PlatformSearchResult>;
+    );
   }
 
   @override
-  Future<PlatformSearchResult> searchAll({
+  Future<PlatformPageResult> searchAll({
     String? quicksearch,
     int? page,
     int? size,
   }) {
-    return api.getPlatforms(
+    return _api.getPlatforms(
       SearchDTO(page: page, size: size),
       q: quicksearch,
-    ) as Future<PlatformSearchResult>;
+    );
   }
 
   Future<List<PlatformAvailableDTO>> getGameAvailablePlatforms(int gameId) {
-    return gamesApi.getGamePlatforms(gameId)
-        as Future<List<PlatformAvailableDTO>>; // TODO Move to platforms api
+    return _api.getGamePlatforms(gameId);
   }
 
   Future<List<PlatformAvailableDTO>> getDLCAvailablePlatforms(int dlcId) {
-    return dlcsApi.getDlcPlatforms(dlcId)
-        as Future<List<PlatformAvailableDTO>>; // TODO Move to platforms api
+    return _api.getDlcPlatforms(dlcId);
   }
   //#endregion READ
 
   //#region UPDATE
   @override
   Future<PlatformDTO> update(int id, NewPlatformDTO updatedItem) {
-    return api.putPlatform(id, updatedItem) as Future<PlatformDTO>;
+    return _api.putPlatform(id, updatedItem);
   }
   //#endregion UPDATE
 
   //#region DELETE
   @override
   Future<void> delete(int id) {
-    return api.deletePlatform(id);
+    return _api.deletePlatform(id);
   }
   //#endregion DELETE
 
@@ -119,14 +107,13 @@ class PlatformService
   @override
   Future<void> renameImage(
     int id,
-    String imageName,
     String newImageName,
   ) {
     return get(id); // TODO
   }
 
   @override
-  Future<void> deleteImage(int id, String imageName) {
+  Future<void> deleteImage(int id) {
     return get(id); // TODO
   }
   //#endregion IMAGE

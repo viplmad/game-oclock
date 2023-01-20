@@ -3,18 +3,20 @@ import 'package:game_collection_client/api.dart'
 
 class LoginService {
   LoginService(ApiClient apiClient) {
-    api = AuthApi(apiClient);
+    _api = AuthApi(apiClient);
   }
 
-  late final AuthApi api;
+  late final AuthApi _api;
 
   Future<TokenResponse> login(String username, String password) {
-    return api.token(GrantType.password, username: username, password: password)
-        as Future<TokenResponse>;
+    return _api.token(
+      GrantType.password,
+      username: username,
+      password: password,
+    );
   }
 
   Future<TokenResponse> refreshToken(String refreshToken) {
-    return api.token(GrantType.refreshToken, refreshToken: refreshToken)
-        as Future<TokenResponse>;
+    return _api.token(GrantType.refreshToken, refreshToken: refreshToken);
   }
 }

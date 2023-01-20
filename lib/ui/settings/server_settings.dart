@@ -81,26 +81,27 @@ class ServerSettings extends StatelessWidget {
                   Text(GameCollectionLocalisations.of(context).connectString),
               icon: const Icon(Icons.send),
               tooltip: GameCollectionLocalisations.of(context).connectString,
-              onPressed: loaded &&
-                      formKey.currentState != null &&
-                      formKey.currentState!.validate()
+              onPressed: loaded
                   ? () {
-                      managerBloc.add(
-                        SaveServerConnectionSettings(
-                          formData.name,
-                          formData.host,
-                          formData.name,
-                          formData.password,
-                        ),
-                      );
+                      // TODO subscribe to changes if possible
+                      if (formKey.currentState != null &&
+                          formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+                        managerBloc.add(
+                          SaveServerConnectionSettings(
+                            formData.name,
+                            formData.host,
+                            formData.username,
+                            formData.password,
+                          ),
+                        );
+                      }
                     }
                   : null,
               foregroundColor: Colors.white,
               backgroundColor: FABUtils.backgroundIfActive(
                 // TODO check this
-                enabled: loaded &&
-                    formKey.currentState != null &&
-                    formKey.currentState!.validate(),
+                enabled: loaded,
               ),
             );
           },
@@ -123,7 +124,7 @@ class _ServerSettingsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ServerSettingsManagerBloc, ServerSettingsManagerState>(
-      listener: (BuildContext context, ServerSettingsManagerState state) async {
+      listener: (BuildContext context, ServerSettingsManagerState state) {
         if (state is ServerConnectionSettingsSaved) {
           final String message = GameCollectionLocalisations.of(context)
               .updatedItemConnectionString;

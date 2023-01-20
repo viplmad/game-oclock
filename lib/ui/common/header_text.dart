@@ -13,16 +13,18 @@ class HeaderText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget titleWidget =
-        Text(text, style: Theme.of(context).textTheme.subtitle1);
-
     return Padding(
       padding: const EdgeInsets.only(
         left: 16.0,
         right: 16.0,
         top: 16.0,
       ),
-      child: titleWidget,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(text, style: Theme.of(context).textTheme.subtitle1),
+        ],
+      ),
     );
   }
 }

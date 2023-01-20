@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:game_collection_client/api.dart'
-    show GameDTO, GameLogDTO, GameWithLogsDTO;
+    show GameLogDTO;
 
 import 'package:backend/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;

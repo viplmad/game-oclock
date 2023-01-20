@@ -9,10 +9,9 @@ import 'item_detail_manager.dart';
 class PlatformDetailManagerBloc extends ItemWithImageDetailManagerBloc<
     PlatformDTO, NewPlatformDTO, PlatformService> {
   PlatformDetailManagerBloc({
-    required int itemId,
+    required super.itemId,
     required GameCollectionService collectionService,
   }) : super(
-          itemId: itemId,
           service: collectionService.platformService,
         );
 }

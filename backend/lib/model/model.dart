@@ -7,9 +7,8 @@ export 'dlc_view.dart';
 export 'game_view.dart';
 export 'platform_view.dart';
 export 'tag_view.dart';
+export 'user_view.dart';
 
 export 'server_connection.dart';
 export 'item_image.dart';
 export 'item_finish.dart';
-export 'dlc_detailed.dart';
-export 'game_detailed.dart';

@@ -2,8 +2,8 @@ import 'package:game_collection_client/api.dart'
     show
         ApiClient,
         ApiException,
-        GameWithFinishSearchResult,
-        GamesApi,
+        GameWithFinishPageResult,
+        GameFinishApi,
         SearchDTO;
 
 import 'package:backend/utils/http_status.dart';
@@ -12,10 +12,10 @@ import 'item_service.dart';
 
 class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
   GameFinishService(ApiClient apiClient) {
-    _api = GamesApi(apiClient);
+    _api = GameFinishApi(apiClient);
   }
 
-  late final GamesApi _api; // TODO Move to gamefinishapi?
+  late final GameFinishApi _api;
 
   //#region CREATE
   @override
@@ -27,12 +27,12 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region READ
   @override
   Future<List<DateTime>> getAll(int primaryId) {
-    return _api.getGameFinishes(primaryId) as Future<List<DateTime>>;
+    return _api.getGameFinishes(primaryId);
   }
 
-  Future<DateTime?> getFirstFinish(int primaryId) {
+  Future<DateTime?> getFirstFinish(int primaryId) async {
     try {
-      return _api.getFirstGameFinish(primaryId) as Future<DateTime>;
+      return await _api.getFirstGameFinish(primaryId);
     } on ApiException catch (e) {
       if (e.code == HttpStatus.notFound) {
         return Future<DateTime?>.value(null);
@@ -42,7 +42,7 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
     }
   }
 
-  Future<GameWithFinishSearchResult> getFirstFinishedGames(
+  Future<GameWithFinishPageResult> getFirstFinishedGames(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -50,10 +50,10 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<GameWithFinishSearchResult>;
+    );
   }
 
-  Future<GameWithFinishSearchResult> getLastFinishedGames(
+  Future<GameWithFinishPageResult> getLastFinishedGames(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -61,7 +61,7 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<GameWithFinishSearchResult>;
+    );
   }
   //#endregion READ
 

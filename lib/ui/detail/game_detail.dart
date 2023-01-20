@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection_client/api.dart'
     show GameDTO, NewGameDTO, GameStatus;
 
-import 'package:backend/model/model.dart' show GameDetailed, ItemImage;
+import 'package:backend/model/model.dart' show ItemImage;
 import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -21,7 +21,7 @@ import '../calendar/calendar_arguments.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-class GameDetail extends ItemDetail<GameDetailed, NewGameDTO, GameDetailBloc,
+class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
     GameDetailManagerBloc> {
   const GameDetail({
     Key? key,
@@ -150,7 +150,7 @@ class GameDetail extends ItemDetail<GameDetailed, NewGameDTO, GameDetailBloc,
 }
 
 // ignore: must_be_immutable
-class _GameDetailBody extends ItemDetailBody<GameDetailed, NewGameDTO,
+class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
     Key? key,
@@ -167,7 +167,7 @@ class _GameDetailBody extends ItemDetailBody<GameDetailed, NewGameDTO,
   String itemTitle(GameDTO item) => GameTheme.itemTitle(item);
 
   @override
-  List<Widget> itemFieldsBuilder(BuildContext context, GameDetailed game) {
+  List<Widget> itemFieldsBuilder(BuildContext context, GameDTO game) {
     return <Widget>[
       itemTextField(
         context,
@@ -368,7 +368,7 @@ class _GameDetailBody extends ItemDetailBody<GameDetailed, NewGameDTO,
   }
 
   @override
-  ItemImage buildItemImage(GameDetailed item) {
+  ItemImage buildItemImage(GameDTO item) {
     return ItemImage(item.coverUrl, item.coverFilename);
   }
 }

@@ -21,8 +21,8 @@ class UpdateItemField<N extends Object> extends ItemDetailManagerEvent {
       ' }';
 }
 
-class AddItemImage extends ItemDetailManagerEvent {
-  const AddItemImage(this.imagePath);
+class SetItemImage extends ItemDetailManagerEvent {
+  const SetItemImage(this.imagePath);
 
   final String imagePath;
 
@@ -36,31 +36,17 @@ class AddItemImage extends ItemDetailManagerEvent {
 }
 
 class UpdateItemImageName extends ItemDetailManagerEvent {
-  const UpdateItemImageName(this.oldImageName, this.newImageName);
+  const UpdateItemImageName(this.newImageName);
 
-  final String oldImageName;
   final String newImageName;
 
   @override
-  List<Object> get props => <Object>[oldImageName, newImageName];
+  List<Object> get props => <Object>[newImageName];
 
   @override
   String toString() => 'UpdateItemImageName { '
-      'oldImageName: $oldImageName, '
       'newImageName: $newImageName'
       ' }';
 }
 
-class DeleteItemImage extends ItemDetailManagerEvent {
-  const DeleteItemImage(this.imageName);
-
-  final String imageName;
-
-  @override
-  List<Object> get props => <Object>[imageName];
-
-  @override
-  String toString() => 'DeleteItemImage { '
-      'image: $imageName'
-      ' }';
-}
+class DeleteItemImage extends ItemDetailManagerEvent {}

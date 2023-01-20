@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
-import 'package:backend/model/model.dart' show DLCDetailed, ItemImage;
+import 'package:backend/model/model.dart' show ItemImage;
 import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/item_detail/item_detail.dart';
 import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
@@ -18,7 +18,7 @@ import '../theme/theme.dart' show DLCTheme;
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-class DLCDetail extends ItemDetail<DLCDetailed, NewDLCDTO, DLCDetailBloc,
+class DLCDetail extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc,
     DLCDetailManagerBloc> {
   const DLCDetail({
     Key? key,
@@ -126,7 +126,7 @@ class DLCDetail extends ItemDetail<DLCDetailed, NewDLCDTO, DLCDetailBloc,
 }
 
 // ignore: must_be_immutable
-class _DLCDetailBody extends ItemDetailBody<DLCDetailed, NewDLCDTO,
+class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
     DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
@@ -140,7 +140,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDetailed, NewDLCDTO,
   String itemTitle(DLCDTO item) => DLCTheme.itemTitle(item);
 
   @override
-  List<Widget> itemFieldsBuilder(BuildContext context, DLCDetailed dlc) {
+  List<Widget> itemFieldsBuilder(BuildContext context, DLCDTO dlc) {
     return <Widget>[
       itemTextField(
         context,
@@ -214,7 +214,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDetailed, NewDLCDTO,
   }
 
   @override
-  ItemImage buildItemImage(DLCDetailed item) {
+  ItemImage buildItemImage(DLCDTO item) {
     return ItemImage(item.coverUrl, item.coverFilename);
   }
 }

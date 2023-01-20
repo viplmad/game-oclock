@@ -8,10 +8,9 @@ import 'item_detail_manager.dart';
 class DLCDetailManagerBloc
     extends ItemWithImageDetailManagerBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCDetailManagerBloc({
-    required int itemId,
+    required super.itemId,
     required GameCollectionService collectionService,
   }) : super(
-          itemId: itemId,
           service: collectionService.dlcService,
         );
 }

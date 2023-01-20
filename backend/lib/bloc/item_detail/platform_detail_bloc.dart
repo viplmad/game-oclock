@@ -9,11 +9,10 @@ import 'item_detail.dart';
 class PlatformDetailBloc
     extends ItemDetailBloc<PlatformDTO, NewPlatformDTO, PlatformService> {
   PlatformDetailBloc({
-    required int itemId,
+    required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
   }) : super(
-          itemId: itemId,
           service: collectionService.platformService,
         );
 }

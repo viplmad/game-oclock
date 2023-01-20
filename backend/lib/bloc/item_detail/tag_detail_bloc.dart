@@ -7,11 +7,10 @@ import 'item_detail.dart';
 
 class TagDetailBloc extends ItemDetailBloc<TagDTO, NewTagDTO, TagService> {
   TagDetailBloc({
-    required int itemId,
+    required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
   }) : super(
-          itemId: itemId,
           service: collectionService.tagService,
         );
 }

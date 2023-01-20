@@ -55,7 +55,7 @@ class GameCollectionService {
   void _connect(ApiClient apiClient) {
     loginService = LoginService(apiClient);
     userService = UserService(apiClient);
-    gameService = GameService(apiClient); // TODO match barrel order
+    gameService = GameService(apiClient);
     gameFinishService = GameFinishService(apiClient);
     gameLogService = GameLogService(apiClient);
     dlcService = DLCService(apiClient);
@@ -67,6 +67,6 @@ class GameCollectionService {
   static Future<void> testConnection(String host) {
     final ApiClient apiClient = ApiClient(basePath: host);
     final HealthCheckService healthCheckService = HealthCheckService(apiClient);
-    return healthCheckService.isAlive();
+    return healthCheckService.health();
   }
 }

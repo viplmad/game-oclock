@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
-    show PlatformDTO, NewPlatformDTO, GameDTO, DLCDTO, PlatformType;
+    show PlatformDTO, NewPlatformDTO, PlatformType;
 
 import 'package:backend/model/model.dart' show ItemImage;
 import 'package:backend/service/service.dart' show GameCollectionService;

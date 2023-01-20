@@ -7,62 +7,51 @@ import 'package:game_collection_client/api.dart'
         FilterDTO,
         GameAvailableDTO,
         GameDTO,
-        GameSearchResult,
+        GamePageResult,
         GameStatus,
         GamesApi,
         NewGameDTO,
         OperatorType,
         OrderType,
-        PlatformsApi,
         SearchDTO,
         SearchValue,
-        SortDTO,
-        TagsApi;
+        SortDTO;
 
 import '../utils/http_status.dart';
 import 'item_service.dart';
 
 class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   GameService(ApiClient apiClient) {
-    api = GamesApi(apiClient);
-    dlcsApi = DLCsApi(apiClient);
-    platformsApi = PlatformsApi(apiClient);
-    tagsApi = TagsApi(apiClient);
+    _api = GamesApi(apiClient);
+    _dlcsApi = DLCsApi(apiClient);
   }
 
-  late final GamesApi api;
-  late final DLCsApi dlcsApi; // TODO Move calls to game service
-  late final PlatformsApi platformsApi; // TODO Move calls to game service
-  late final TagsApi tagsApi; // TODO Move calls to game service
-
-  @override
-  bool sameId(GameDTO one, GameDTO other) {
-    return one.id == other.id;
-  }
+  late final GamesApi _api;
+  late final DLCsApi _dlcsApi;
 
   //#region CREATE
   @override
   Future<GameDTO> create(NewGameDTO newItem) {
-    return api.postGame(newItem) as Future<GameDTO>;
+    return _api.postGame(newItem);
   }
 
   Future<void> addAvailability(int id, int platformId, DateTime date) {
-    return api.linkGamePlatform(id, platformId, date);
+    return _api.linkGamePlatform(id, platformId, date);
   }
 
   Future<void> tag(int id, int tagId) {
-    return api.linkGameTag(id, tagId);
+    return _api.linkGameTag(id, tagId);
   }
   //#endregion CREATE
 
   //#region READ
   @override
   Future<GameDTO> get(int id) {
-    return api.getGame(id) as Future<GameDTO>;
+    return _api.getGame(id);
   }
 
   @override
-  Future<GameSearchResult> getAll<A>(
+  Future<GamePageResult> getAll<A>(
     int viewIndex, {
     int? page,
     int? size,
@@ -107,30 +96,30 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
         sorts.add(SortDTO(field: 'name', order: OrderType.asc));
         break;
     }
-    return api.getGames(
+    return _api.getGames(
       SearchDTO(filter: filters, sort: sorts, page: page, size: size),
-    ) as Future<GameSearchResult>;
+    );
   }
 
   @override
-  Future<GameSearchResult> searchAll({
+  Future<GamePageResult> searchAll({
     String? quicksearch,
     int? page,
     int? size,
   }) {
-    return api.getGames(
+    return _api.getGames(
       SearchDTO(page: page, size: size),
       q: quicksearch,
-    ) as Future<GameSearchResult>;
+    );
   }
 
-  Future<GameDTO> getDLCBasegame(int dlcId) {
-    return dlcsApi.getDlcBaseGame(dlcId) as Future<GameDTO>;
+  Future<GameDTO> _getDLCBasegame(int dlcId) {
+    return _dlcsApi.getDlcBaseGame(dlcId);
   }
 
   Future<List<GameDTO>> getDLCBasegameAsList(int dlcId) {
     try {
-      return getDLCBasegame(dlcId)
+      return _getDLCBasegame(dlcId)
           .asStream()
           .map(
             (GameDTO game) => <GameDTO>[game],
@@ -146,35 +135,33 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   }
 
   Future<List<GameAvailableDTO>> getPlatformAvailableGames(int platformId) {
-    return platformsApi.getPlatformGames(platformId)
-        as Future<List<GameAvailableDTO>>; // TODO Move to gamesapi?
+    return _api.getPlatformGames(platformId);
   }
 
   Future<List<GameDTO>> getTaggedGames(int tagId) {
-    return tagsApi.getTagGames(tagId)
-        as Future<List<GameDTO>>; // TODO Move to gamesapi?
+    return _api.getTagGames(tagId);
   }
   //#endregion CREATE
 
   //#region UPDATE
   @override
   Future<GameDTO> update(int id, NewGameDTO updatedItem) {
-    return api.putGame(id, updatedItem) as Future<GameDTO>;
+    return _api.putGame(id, updatedItem);
   }
   //#endregion UPDATE
 
   //#region DELETE
   @override
   Future<void> delete(int id) {
-    return api.deleteGame(id);
+    return _api.deleteGame(id);
   }
 
   Future<void> removeAvailability(int id, int platformId) {
-    return api.unlinkGamePlatform(id, platformId);
+    return _api.unlinkGamePlatform(id, platformId);
   }
 
   Future<void> untag(int id, int tagId) {
-    return api.unlinkGameTag(id, tagId);
+    return _api.unlinkGameTag(id, tagId);
   }
   //#endregion DELETE
 
@@ -190,14 +177,13 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   @override
   Future<void> renameImage(
     int id,
-    String imageName,
     String newImageName,
   ) {
     return get(id); // TODO
   }
 
   @override
-  Future<void> deleteImage(int id, String imageName) {
+  Future<void> deleteImage(int id) {
     return get(id); // TODO
   }
   //#endregion IMAGE

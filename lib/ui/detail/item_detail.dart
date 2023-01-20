@@ -283,7 +283,7 @@ abstract class ItemDetailBody<
                 .then((XFile? imagePicked) {
               if (imagePicked != null) {
                 BlocProvider.of<S>(outerContext).add(
-                  AddItemImage(
+                  SetItemImage(
                     imagePicked.path,
                   ),
                 );
@@ -301,8 +301,6 @@ abstract class ItemDetailBody<
           onTap: () async {
             final TextEditingController fieldController =
                 TextEditingController();
-            final String imageName = imageFilename.split('.').first;
-            fieldController.text = imageName.split('-').last.split('_').first;
 
             showDialog<String>(
               context: context,
@@ -352,7 +350,6 @@ abstract class ItemDetailBody<
               if (newName != null) {
                 BlocProvider.of<S>(outerContext).add(
                   UpdateItemImageName(
-                    imageName,
                     newName,
                   ),
                 );
@@ -368,12 +365,8 @@ abstract class ItemDetailBody<
           leading: const Icon(Icons.delete),
           enabled: withImage,
           onTap: () async {
-            final String imageName = imageFilename.split('.').first;
-
             BlocProvider.of<S>(outerContext).add(
-              DeleteItemImage(
-                imageName,
-              ),
+              DeleteItemImage(),
             );
 
             Navigator.maybePop(context);

@@ -1,5 +1,5 @@
 import 'package:game_collection_client/api.dart'
-    show ApiClient, ApiException, DLCWithFinishSearchResult, DLCsApi, SearchDTO;
+    show ApiClient, ApiException, DLCWithFinishPageResult, DLCFinishApi, SearchDTO;
 
 import 'package:backend/utils/http_status.dart';
 
@@ -7,10 +7,10 @@ import 'item_service.dart';
 
 class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
   DLCFinishService(ApiClient apiClient) {
-    _api = DLCsApi(apiClient);
+    _api = DLCFinishApi(apiClient);
   }
 
-  late final DLCsApi _api; // TODO Move to dlcfinishapi?
+  late final DLCFinishApi _api;
 
   //#region CREATE
   @override
@@ -22,12 +22,13 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region READ
   @override
   Future<List<DateTime>> getAll(int primaryId) {
-    return _api.getDlcFinishes(primaryId) as Future<List<DateTime>>;
+    return _api.getDlcFinishes(primaryId);
   }
 
-  Future<DateTime?> getFirstFinish(int primaryId) {
-    try { // TODO extract to method -> defaultIfNotFound
-      return _api.getFirstDlcFinish(primaryId) as Future<DateTime>;
+  Future<DateTime?> getFirstFinish(int primaryId) async {
+    try {
+      // TODO extract to method -> defaultIfNotFound
+      return await _api.getFirstDlcFinish(primaryId);
     } on ApiException catch (e) {
       if (e.code == HttpStatus.notFound) {
         return Future<DateTime?>.value(null);
@@ -37,7 +38,7 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
     }
   }
 
-  Future<DLCWithFinishSearchResult> getFirstFinishedDLCs(
+  Future<DLCWithFinishPageResult> getFirstFinishedDLCs(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -45,10 +46,10 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<DLCWithFinishSearchResult>;
+    );
   }
 
-  Future<DLCWithFinishSearchResult> getLastFinishedDLCs(
+  Future<DLCWithFinishPageResult> getLastFinishedDLCs(
     DateTime? startDate,
     DateTime? endDate,
   ) {
@@ -56,7 +57,7 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
       SearchDTO(),
       startDate: startDate,
       endDate: endDate,
-    ) as Future<DLCWithFinishSearchResult>;
+    );
   }
   //#endregion READ
 
