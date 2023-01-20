@@ -252,11 +252,9 @@ abstract class ItemRelationList<
               detailRouteName,
               arguments: DetailArguments<W>(
                 item: item,
-                onUpdate: (W? updatedItem) {
-                  if (updatedItem != null) {
-                    BlocProvider.of<K>(context)
-                        .add(UpdateRelationItem<W>(updatedItem));
-                  }
+                onChange: () {
+                  // Reload list if changes were made
+                  BlocProvider.of<K>(context).add(ReloadItemRelation());
                 },
               ),
             );

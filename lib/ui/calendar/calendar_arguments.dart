@@ -1,9 +1,9 @@
 class SingleGameCalendarArguments {
   const SingleGameCalendarArguments({
     required this.itemId,
-    this.onUpdate,
+    this.onChange,
   });
 
   final int itemId;
-  final void Function()? onUpdate;
+  final void Function()? onChange;
 }

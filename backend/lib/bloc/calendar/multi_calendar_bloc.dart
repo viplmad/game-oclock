@@ -28,7 +28,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<UpdateSelectedDateLast>(_mapUpdateSelectedDateLastToState);
     on<UpdateSelectedDatePrevious>(_mapUpdateSelectedDatePreviousToState);
     on<UpdateSelectedDateNext>(_mapUpdateSelectedDateNextToState);
-    on<UpdateCalendarListItem>(_mapUpdateListItemToState);
   }
 
   final GameLogService gameLogService;
@@ -418,76 +417,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             selectedDate,
             selectedGamesWithLogs,
             selectedGameLogs,
-            selectedTotalTime,
-            range,
-          ),
-        );
-      }
-    }
-  }
-
-  void _mapUpdateListItemToState(
-    UpdateCalendarListItem event,
-    Emitter<CalendarState> emit,
-  ) {
-    if (state is MultiCalendarLoaded) {
-      final List<GameWithLogsDTO> gamesWithLogs = List<GameWithLogsDTO>.from(
-        (state as MultiCalendarLoaded).gamesWithLogs,
-      );
-      final CalendarStyle style = (state as MultiCalendarLoaded).style;
-
-      final int listItemIndex = gamesWithLogs.indexWhere(
-        (GameWithLogsDTO item) => item.id == event.item.id,
-      );
-      final GameWithLogsDTO listItem = gamesWithLogs.elementAt(listItemIndex);
-
-      gamesWithLogs[listItemIndex] =
-          GameWithLogsDTO.withLogs(event.item, listItem.logs);
-
-      final Set<DateTime> logDates = (state as MultiCalendarLoaded).logDates;
-      final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
-      final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
-      final List<GameWithLogsDTO> selectedGamesWithLogs =
-          List<GameWithLogsDTO>.from(
-        (state as MultiCalendarLoaded).selectedGamesWithLogs,
-      );
-      final Duration selectedTotalTime =
-          (state as MultiCalendarLoaded).selectedTotalTime;
-      final CalendarRange range = (state as MultiCalendarLoaded).range;
-
-      final int selectedListItemIndex = selectedGamesWithLogs.indexWhere(
-        (GameWithLogsDTO item) => item.id == event.item.id,
-      );
-
-      if (selectedListItemIndex >= 0) {
-        selectedGamesWithLogs[selectedListItemIndex] =
-            gamesWithLogs[listItemIndex];
-      }
-
-      if (style == CalendarStyle.graph) {
-        final List<GameLogDTO> selectedGameLogs =
-            (state as MultiCalendarGraphLoaded).selectedGameLogs;
-
-        emit(
-          MultiCalendarGraphLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
-            selectedGameLogs,
-            selectedTotalTime,
-            range,
-          ),
-        );
-      } else {
-        emit(
-          MultiCalendarLoaded(
-            gamesWithLogs,
-            logDates,
-            focusedDate,
-            selectedDate,
-            selectedGamesWithLogs,
             selectedTotalTime,
             range,
           ),

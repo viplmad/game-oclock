@@ -27,11 +27,11 @@ abstract class ItemDetail<
   const ItemDetail({
     Key? key,
     required this.item,
-    this.onUpdate,
+    this.onChange,
   }) : super(key: key);
 
   final PrimaryModel item;
-  final void Function(T? item)? onUpdate;
+  final void Function()? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -80,28 +80,28 @@ abstract class ItemDetailBody<
     extends StatelessWidget {
   ItemDetailBody({
     Key? key,
-    required this.onUpdate,
+    required this.onChange,
     required this.hasImage,
   }) : super(key: key);
 
-  final void Function(T? item)? onUpdate;
+  final void Function()? onChange;
   final bool hasImage;
 
-  T? _updatedItem;
+  bool _changesMade = false;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (onUpdate != null) {
-          onUpdate!(_updatedItem);
+        if (_changesMade && onChange != null) {
+          onChange!();
         }
         return true;
       },
       child: BlocListener<S, ItemDetailManagerState>(
         listener: (BuildContext context, ItemDetailManagerState state) {
           if (state is ItemFieldUpdated<T>) {
-            _updatedItem = state.item;
+            _changesMade = true;
 
             final String message =
                 GameCollectionLocalisations.of(context).fieldUpdatedString;
@@ -125,7 +125,7 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemImageUpdated<T>) {
-            _updatedItem = state.item;
+            _changesMade = true;
 
             final String message =
                 GameCollectionLocalisations.of(context).imageUpdatedString;
@@ -151,30 +151,35 @@ abstract class ItemDetailBody<
         },
         child: NestedScrollView(
           headerSliverBuilder: _appBarBuilder,
-          body: ListView(
-            children: <Widget>[
-              BlocBuilder<K, ItemDetailState>(
-                builder: (BuildContext context, ItemDetailState state) {
-                  if (state is ItemLoaded<T>) {
-                    return Column(
-                      children: itemFieldsBuilder(context, state.item),
-                    );
-                  }
-                  if (state is ItemNotLoaded) {
-                    return Center(
-                      child: Text(state.error),
-                    );
-                  }
+          body: RefreshIndicator(
+            child: ListView(
+              children: <Widget>[
+                BlocBuilder<K, ItemDetailState>(
+                  builder: (BuildContext context, ItemDetailState state) {
+                    if (state is ItemLoaded<T>) {
+                      return Column(
+                        children: itemFieldsBuilder(context, state.item),
+                      );
+                    }
+                    if (state is ItemNotLoaded) {
+                      return Center(
+                        child: Text(state.error),
+                      );
+                    }
 
-                  return Column(
-                    children: itemSkeletonFieldsBuilder(context),
-                  );
-                },
-              ),
-              Column(
-                children: itemRelationsBuilder(context),
-              ),
-            ],
+                    return Column(
+                      children: itemSkeletonFieldsBuilder(context),
+                    );
+                  },
+                ),
+                Column(
+                  children: itemRelationsBuilder(context),
+                ),
+              ],
+            ),
+            onRefresh: () async {
+              BlocProvider.of<K>(context).add(ReloadItem());
+            },
           ),
         ),
       ),

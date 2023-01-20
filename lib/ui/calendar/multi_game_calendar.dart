@@ -253,15 +253,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         gameDetailRoute,
         arguments: DetailArguments<GameDTO>(
           item: item,
-          onUpdate: (GameDTO? updatedItem) {
-            if (updatedItem != null) {
-              BlocProvider.of<MultiCalendarBloc>(context).add(
-                UpdateCalendarListItem(
-                  updatedItem,
-                ),
-              );
-            }
-          },
+          // No action on change
         ),
       );
     };

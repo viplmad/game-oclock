@@ -23,7 +23,7 @@ abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
     required super.fieldName,
     required this.value,
     required super.relationTypeName,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 
   final DateTime? value;
@@ -57,7 +57,7 @@ abstract class SkeletonFinishList<
     required super.fieldName,
     required super.relationTypeName,
     this.order = 0,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 
   final int order;
@@ -80,12 +80,12 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
     Key? key,
     required this.fieldName,
     required this.relationTypeName,
-    required this.onUpdate,
+    required this.onChange,
   }) : super(key: key);
 
   final String fieldName;
   final String relationTypeName;
-  final void Function() onUpdate;
+  final void Function() onChange;
 
   bool _hasUpdated = false;
 
@@ -161,7 +161,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           return WillPopScope(
             onWillPop: () async {
               if (_hasUpdated) {
-                onUpdate();
+                onChange();
               }
               return true;
             },

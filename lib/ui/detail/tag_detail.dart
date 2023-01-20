@@ -22,7 +22,7 @@ class GameTagDetail
   const GameTagDetail({
     Key? key,
     required super.item,
-    super.onUpdate,
+    super.onChange,
   }) : super(key: key);
 
   @override
@@ -80,7 +80,7 @@ class GameTagDetail
   _GameTagDetailBody detailBodyBuilder() {
     return _GameTagDetailBody(
       itemId: item.id,
-      onUpdate: onUpdate,
+      onChange: onChange,
     );
   }
 }
@@ -91,7 +91,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
   _GameTagDetailBody({
     Key? key,
     required this.itemId,
-    super.onUpdate,
+    super.onChange,
   }) : super(
           key: key,
           hasImage: TagTheme.hasImage,

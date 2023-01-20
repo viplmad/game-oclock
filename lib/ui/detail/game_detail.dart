@@ -26,7 +26,7 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
   const GameDetail({
     Key? key,
     required super.item,
-    super.onUpdate,
+    super.onChange,
   }) : super(key: key);
 
   @override
@@ -144,7 +144,7 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
   _GameDetailBody detailBodyBuilder() {
     return _GameDetailBody(
       itemId: item.id,
-      onUpdate: onUpdate,
+      onChange: onChange,
     );
   }
 }
@@ -155,7 +155,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
   _GameDetailBody({
     Key? key,
     required this.itemId,
-    super.onUpdate,
+    super.onChange,
   }) : super(
           key: key,
           hasImage: GameTheme.hasImage,
@@ -256,7 +256,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         value: game.firstFinish,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
-        onUpdate: () {
+        onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
         },
       ),
@@ -337,7 +337,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
         order: order++,
-        onUpdate: () {
+        onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
         },
       ),
@@ -357,7 +357,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
             gameSingleCalendarRoute,
             arguments: SingleGameCalendarArguments(
               itemId: itemId,
-              onUpdate: () {
+              onChange: () {
                 BlocProvider.of<GameDetailBloc>(context).add(ReloadItem());
               },
             ),
@@ -381,7 +381,7 @@ class GameFinishDateList
     required super.fieldName,
     required super.value,
     required super.relationTypeName,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 }
 
@@ -393,6 +393,6 @@ class SkeletonGameFinishDateList extends SkeletonFinishList<
     required super.fieldName,
     required super.relationTypeName,
     required super.order,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 }

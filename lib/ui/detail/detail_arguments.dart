@@ -1,9 +1,9 @@
 class DetailArguments<T extends Object> {
   const DetailArguments({
     required this.item,
-    this.onUpdate,
+    this.onChange,
   });
 
   final T item;
-  final void Function(T? item)? onUpdate;
+  final void Function()? onChange;
 }

@@ -22,17 +22,3 @@ class LoadMultiCalendar extends MultiCalendarEvent {
       'year: $year'
       ' }';
 }
-
-class UpdateCalendarListItem extends MultiCalendarEvent {
-  const UpdateCalendarListItem(this.item);
-
-  final GameDTO item;
-
-  @override
-  List<Object> get props => <Object>[item];
-
-  @override
-  String toString() => 'UpdateListItem { '
-      'item: $item'
-      ' }';
-}

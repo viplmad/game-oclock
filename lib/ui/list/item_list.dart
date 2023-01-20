@@ -433,10 +433,8 @@ abstract class ItemListBody<T extends PrimaryModel,
         detailRouteName,
         arguments: DetailArguments<T>(
           item: item,
-          onUpdate: (T? updatedItem) {
-            if (updatedItem != null) {
-              BlocProvider.of<K>(context).add(UpdateListItem<T>(updatedItem));
-            }
+          onChange: () {
+            BlocProvider.of<K>(context).add(ReloadItemList());
           },
         ),
       );

@@ -15,8 +15,8 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     required this.managerBloc,
   }) : super(ItemRelationLoading()) {
     on<LoadItemRelation>(_mapLoadToState);
-    on<UpdateItemRelation<W>>(_mapUpdateRelationToState);
-    on<UpdateRelationItem<W>>(_mapUpdateItemToState);
+    on<ReloadItemRelation>(_mapReloadToState);
+    on<UpdateItemRelation<W>>(_mapUpdateToState);
 
     managerSubscription =
         managerBloc.stream.listen(mapRelationManagerStateToEvent);
@@ -34,6 +34,17 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
       ItemRelationLoading(),
     );
 
+    await _mapAnyLoadToState(emit);
+  }
+
+  void _mapReloadToState(
+    ReloadItemRelation event,
+    Emitter<ItemRelationState> emit,
+  ) async {
+    await _mapAnyLoadToState(emit);
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<ItemRelationState> emit) async {
     try {
       final List<W> items = await getRelationItems();
       emit(
@@ -46,35 +57,13 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     }
   }
 
-  void _mapUpdateRelationToState(
+  void _mapUpdateToState(
     UpdateItemRelation<W> event,
     Emitter<ItemRelationState> emit,
   ) {
     emit(
       ItemRelationLoaded<W>(event.otherItems),
     );
-  }
-
-  void _mapUpdateItemToState(
-    UpdateRelationItem<W> event,
-    Emitter<ItemRelationState> emit,
-  ) {
-    if (state is ItemRelationLoaded<W>) {
-      final List<W> items =
-          List<W>.from((state as ItemRelationLoaded<W>).otherItems);
-
-      final int listItemIndex =
-          items.indexWhere((W item) => item.id == event.item.id);
-      final W listItem = items.elementAt(listItemIndex);
-
-      if (listItem != event.item) {
-        items[listItemIndex] = event.item;
-
-        emit(
-          ItemRelationLoaded<W>(items),
-        );
-      }
-    }
   }
 
   void mapRelationManagerStateToEvent(ItemRelationManagerState managerState) {

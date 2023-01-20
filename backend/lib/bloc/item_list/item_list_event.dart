@@ -13,6 +13,8 @@ abstract class ItemListEvent extends Equatable {
 
 class LoadItemList extends ItemListEvent {}
 
+class ReloadItemList extends ItemListEvent {}
+
 class UpdateItemList<T extends PrimaryModel> extends ItemListEvent {
   const UpdateItemList(
     this.items,
@@ -39,20 +41,6 @@ class UpdateItemList<T extends PrimaryModel> extends ItemListEvent {
       'viewArgs: $viewArgs, '
       'page: $page, '
       'style: $style'
-      ' }';
-}
-
-class UpdateListItem<T extends PrimaryModel> extends ItemListEvent {
-  const UpdateListItem(this.item);
-
-  final T item;
-
-  @override
-  List<Object> get props => <Object>[item];
-
-  @override
-  String toString() => 'UpdateItemList { '
-      'item: $item'
       ' }';
 }
 

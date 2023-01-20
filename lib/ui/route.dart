@@ -43,7 +43,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return _pageRoute(
         GameDetail(
           item: detailArguments.item,
-          onUpdate: detailArguments.onUpdate,
+          onChange: detailArguments.onChange,
         ),
         themeDataBuilder: GameTheme.themeData,
       );
@@ -54,7 +54,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return _pageRoute(
         DLCDetail(
           item: detailArguments.item,
-          onUpdate: detailArguments.onUpdate,
+          onChange: detailArguments.onChange,
         ),
         themeDataBuilder: DLCTheme.themeData,
       );
@@ -65,7 +65,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return _pageRoute(
         PlatformDetail(
           item: detailArguments.item,
-          onUpdate: detailArguments.onUpdate,
+          onChange: detailArguments.onChange,
         ),
         themeDataBuilder: PlatformTheme.themeData,
       );
@@ -76,7 +76,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return _pageRoute(
         GameTagDetail(
           item: detailArguments.item,
-          onUpdate: detailArguments.onUpdate,
+          onChange: detailArguments.onChange,
         ),
         themeDataBuilder: TagTheme.themeData,
       );
@@ -93,7 +93,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return _pageRoute(
         SingleGameCalendar(
           itemId: gameCalendarArguments.itemId,
-          onUpdate: gameCalendarArguments.onUpdate,
+          onChange: gameCalendarArguments.onChange,
         ),
         themeDataBuilder: GameTheme.themeData,
       );

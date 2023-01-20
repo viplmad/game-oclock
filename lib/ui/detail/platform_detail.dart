@@ -23,7 +23,7 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
   const PlatformDetail({
     Key? key,
     required super.item,
-    super.onUpdate,
+    super.onChange,
   }) : super(key: key);
 
   @override
@@ -100,7 +100,7 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
   // ignore: library_private_types_in_public_api
   _PlatformDetailBody detailBodyBuilder() {
     return _PlatformDetailBody(
-      onUpdate: onUpdate,
+      onChange: onChange,
     );
   }
 }
@@ -110,7 +110,7 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
     PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
     Key? key,
-    super.onUpdate,
+    super.onChange,
   }) : super(
           key: key,
           hasImage: PlatformTheme.hasImage,

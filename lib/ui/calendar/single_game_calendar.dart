@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:game_collection_client/api.dart'
-    show GameLogDTO;
+import 'package:game_collection_client/api.dart' show GameLogDTO;
 
 import 'package:backend/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;
@@ -30,11 +29,11 @@ class SingleGameCalendar extends StatelessWidget {
   const SingleGameCalendar({
     Key? key,
     required this.itemId,
-    this.onUpdate,
+    this.onChange,
   }) : super(key: key);
 
   final int itemId;
-  final void Function()? onUpdate;
+  final void Function()? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +239,7 @@ class SingleGameCalendar extends StatelessWidget {
   // ignore: library_private_types_in_public_api
   _SingleGameCalendarBody bodyBuilder() {
     return _SingleGameCalendarBody(
-      onUpdate: onUpdate,
+      onChange: onChange,
     );
   }
 }
@@ -249,19 +248,19 @@ class SingleGameCalendar extends StatelessWidget {
 class _SingleGameCalendarBody extends StatelessWidget {
   _SingleGameCalendarBody({
     Key? key,
-    required this.onUpdate,
+    required this.onChange,
   }) : super(key: key);
 
-  final void Function()? onUpdate;
+  final void Function()? onChange;
 
-  bool _isUpdated = false;
+  bool _changesMade = false;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_isUpdated && onUpdate != null) {
-          onUpdate!();
+        if (_changesMade && onChange != null) {
+          onChange!();
         }
         return true;
       },
@@ -270,7 +269,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           BlocListener<GameLogRelationManagerBloc, ItemRelationManagerState>(
             listener: (BuildContext context, ItemRelationManagerState state) {
               if (state is ItemRelationAdded<GameLogDTO>) {
-                _isUpdated = true;
+                _changesMade = true;
 
                 final String message =
                     GameCollectionLocalisations.of(context).addedString(
@@ -298,7 +297,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationDeleted) {
-                _isUpdated = true;
+                _changesMade = true;
 
                 final String message =
                     GameCollectionLocalisations.of(context).deletedString(
@@ -330,7 +329,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           BlocListener<GameFinishRelationManagerBloc, ItemRelationManagerState>(
             listener: (BuildContext context, ItemRelationManagerState state) {
               if (state is ItemRelationAdded<ItemFinish>) {
-                _isUpdated = true;
+                _changesMade = true;
 
                 final String message =
                     GameCollectionLocalisations.of(context).addedString(
@@ -358,7 +357,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationDeleted) {
-                _isUpdated = true;
+                _changesMade = true;
 
                 final String message =
                     GameCollectionLocalisations.of(context).deletedString(

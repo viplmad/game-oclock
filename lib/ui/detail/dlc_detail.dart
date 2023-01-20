@@ -23,7 +23,7 @@ class DLCDetail extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc,
   const DLCDetail({
     Key? key,
     required super.item,
-    super.onUpdate,
+    super.onChange,
   }) : super(key: key);
 
   @override
@@ -120,7 +120,7 @@ class DLCDetail extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc,
   // ignore: library_private_types_in_public_api
   _DLCDetailBody detailBodyBuilder() {
     return _DLCDetailBody(
-      onUpdate: onUpdate,
+      onChange: onChange,
     );
   }
 }
@@ -130,7 +130,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
     DLCDetailBloc, DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
-    super.onUpdate,
+    super.onChange,
   }) : super(
           key: key,
           hasImage: DLCTheme.hasImage,
@@ -163,7 +163,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
         value: dlc.firstFinish,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
-        onUpdate: () {
+        onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
         },
       ),
@@ -206,7 +206,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
         order: order++,
-        onUpdate: () {
+        onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
         },
       ),
@@ -227,7 +227,7 @@ class DLCFinishList
     required super.fieldName,
     required super.value,
     required super.relationTypeName,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 }
 
@@ -239,6 +239,6 @@ class SkeletonDLCFinishList extends SkeletonFinishList<DLCFinishRelationBloc,
     required super.fieldName,
     required super.relationTypeName,
     required super.order,
-    required super.onUpdate,
+    required super.onChange,
   }) : super(key: key);
 }

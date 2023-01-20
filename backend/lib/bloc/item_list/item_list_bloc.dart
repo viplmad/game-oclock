@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show PageResultDTO, PrimaryModel;
+import 'package:game_collection_client/api.dart'
+    show PageResultDTO, PrimaryModel;
 
 import 'package:backend/model/list_style.dart';
 import 'package:backend/service/service.dart' show ItemService;
@@ -25,8 +26,8 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     required ItemListManagerBloc<T, N, S> managerBloc,
   }) : super(ItemListLoading()) {
     on<LoadItemList>(_mapLoadToState);
+    on<ReloadItemList>(_mapReloadToState);
     on<UpdateItemList<T>>(_mapUpdateListToState);
-    on<UpdateListItem<T>>(_mapUpdateItemToState);
     on<UpdateView>(_mapUpdateViewToState);
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
@@ -42,6 +43,17 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       ItemListLoading(),
     );
 
+    await _mapAnyLoadToState(emit);
+  }
+
+  void _mapReloadToState(
+    ReloadItemList event,
+    Emitter<ItemListState> emit,
+  ) async {
+    await _mapAnyLoadToState(emit);
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<ItemListState> emit) async {
     try {
       final ViewParameters startViewParameters = await getStartViewIndex();
       final int startViewIndex = startViewParameters.viewIndex;
@@ -77,38 +89,6 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
         event.style,
       ),
     );
-  }
-
-  void _mapUpdateItemToState(
-    UpdateListItem<T> event,
-    Emitter<ItemListState> emit,
-  ) {
-    if (state is ItemListLoaded<T>) {
-      final List<T> items = List<T>.from((state as ItemListLoaded<T>).items);
-
-      final int listItemIndex =
-          items.indexWhere((T item) => item.id == event.item.id);
-      final T listItem = items.elementAt(listItemIndex);
-
-      if (listItem != event.item) {
-        items[listItemIndex] = event.item;
-
-        final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-        final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
-        final int page = (state as ItemListLoaded<T>).page;
-        final ListStyle style = (state as ItemListLoaded<T>).style;
-
-        emit(
-          ItemListLoaded<T>(
-            items,
-            viewIndex,
-            viewArgs,
-            page,
-            style,
-          ),
-        );
-      }
-    }
   }
 
   void _mapUpdateViewToState(
