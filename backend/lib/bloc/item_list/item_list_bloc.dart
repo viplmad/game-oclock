@@ -32,7 +32,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
-    managerSubscription = managerBloc.stream.listen(mapListManagerStateToEvent);
+    managerSubscription = managerBloc.stream.listen(_mapListManagerStateToEvent);
   }
 
   final S service;
@@ -174,7 +174,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     }
   }
 
-  void mapListManagerStateToEvent(ItemListManagerState managerState) {
+  void _mapListManagerStateToEvent(ItemListManagerState managerState) {
     if (managerState is ItemAdded<T>) {
       _mapAddedToEvent(managerState);
     } else if (managerState is ItemDeleted<T>) {
@@ -213,7 +213,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final List<T> updatedItems = items
-          .where((T item) => item != managerState.item)
+          .where((T item) => item.id != managerState.item.id)
           .toList(growable: false);
 
       add(

@@ -2,8 +2,9 @@ import 'package:game_collection_client/api.dart'
     show
         ApiClient,
         ApiException,
-        GameWithFinishPageResult,
+        DateDTO,
         GameFinishApi,
+        GameWithFinishPageResult,
         SearchDTO;
 
 import 'package:backend/utils/http_status.dart';
@@ -20,7 +21,7 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region CREATE
   @override
   Future<void> create(int primaryId, DateTime newItem) {
-    return _api.postGameFinish(primaryId, newItem);
+    return _api.postGameFinish(primaryId, DateDTO(date: newItem));
   }
   //#endregion CREATE
 
@@ -68,7 +69,7 @@ class GameFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region DELETE
   @override
   Future<void> delete(int primaryId, DateTime id) {
-    return _api.deleteGameFinish(primaryId, id);
+    return _api.deleteGameFinish(primaryId, DateDTO(date: id));
   }
   //#endregion DELETE
 }

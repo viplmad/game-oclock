@@ -1,10 +1,11 @@
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
+        DateTimeDTO,
         GameLogDTO,
+        GameLogsApi,
         GameWithLogPageResult,
         GameWithLogsDTO,
-        GameLogsApi,
         SearchDTO;
 
 import 'item_service.dart';
@@ -66,7 +67,7 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
   //#region DELETE
   @override
   Future<void> delete(int primaryId, DateTime id) {
-    return _api.deleteGameLog(primaryId, id);
+    return _api.deleteGameLog(primaryId, DateTimeDTO(datetime: id));
   }
   //#endregion DELETE
 }

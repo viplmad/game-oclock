@@ -6,6 +6,7 @@ import 'package:game_collection_client/api.dart'
         DLCDTO,
         DLCPageResult,
         DLCsApi,
+        DateDTO,
         NewDLCDTO,
         OrderType,
         SearchDTO,
@@ -27,7 +28,7 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
   }
 
   Future<void> addAvailability(int id, int platformId, DateTime date) {
-    return _api.linkDlcPlatform(id, platformId, date);
+    return _api.linkDlcPlatform(id, platformId, DateDTO(date: date));
   }
   //#endregion CREATE
 

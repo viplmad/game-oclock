@@ -4,6 +4,7 @@ import 'package:game_collection_client/api.dart'
         ApiClient,
         ApiException,
         DLCsApi,
+        DateDTO,
         FilterDTO,
         GameAvailableDTO,
         GameDTO,
@@ -36,7 +37,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   }
 
   Future<void> addAvailability(int id, int platformId, DateTime date) {
-    return _api.linkGamePlatform(id, platformId, date);
+    return _api.linkGamePlatform(id, platformId, DateDTO(date: date));
   }
 
   Future<void> tag(int id, int tagId) {

@@ -87,7 +87,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
   final String relationTypeName;
   final void Function() onChange;
 
-  bool _hasUpdated = false;
+  bool _changesMade = false;
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -95,7 +95,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if (state is ItemRelationAdded<ItemFinish>) {
-          _hasUpdated = true;
+          _changesMade = true;
 
           final String message = GameCollectionLocalisations.of(context)
               .addedString(relationTypeName);
@@ -119,7 +119,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           );
         }
         if (state is ItemRelationDeleted<ItemFinish>) {
-          _hasUpdated = true;
+          _changesMade = true;
 
           final String message = GameCollectionLocalisations.of(context)
               .deletedString(relationTypeName);
@@ -160,7 +160,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         builder: (BuildContext context) {
           return WillPopScope(
             onWillPop: () async {
-              if (_hasUpdated) {
+              if (_changesMade) {
                 onChange();
               }
               return true;

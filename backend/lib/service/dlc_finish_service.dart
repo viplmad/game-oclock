@@ -1,5 +1,11 @@
 import 'package:game_collection_client/api.dart'
-    show ApiClient, ApiException, DLCWithFinishPageResult, DLCFinishApi, SearchDTO;
+    show
+        ApiClient,
+        ApiException,
+        DLCFinishApi,
+        DLCWithFinishPageResult,
+        DateDTO,
+        SearchDTO;
 
 import 'package:backend/utils/http_status.dart';
 
@@ -15,7 +21,7 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region CREATE
   @override
   Future<void> create(int primaryId, DateTime newItem) {
-    return _api.postDlcFinish(primaryId, newItem);
+    return _api.postDlcFinish(primaryId, DateDTO(date: newItem));
   }
   //#endregion CREATE
 
@@ -64,7 +70,7 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
   //#region DELETE
   @override
   Future<void> delete(int primaryId, DateTime id) {
-    return _api.deleteDlcFinish(primaryId, id);
+    return _api.deleteDlcFinish(primaryId, DateDTO(date: id));
   }
   //#region DELETE
 }

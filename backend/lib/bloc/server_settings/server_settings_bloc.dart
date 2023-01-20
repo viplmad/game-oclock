@@ -14,7 +14,7 @@ class ServerSettingsBloc
     on<LoadServerSettings>(_mapLoadToState);
     on<UpdateServerSettings>(_mapUpdateToState);
 
-    managerSubscription = managerBloc.stream.listen(mapManagerStateToEvent);
+    managerSubscription = managerBloc.stream.listen(_mapManagerStateToEvent);
   }
 
   late final StreamSubscription<ServerSettingsManagerState> managerSubscription;
@@ -59,7 +59,7 @@ class ServerSettingsBloc
     );
   }
 
-  void mapManagerStateToEvent(ServerSettingsManagerState managerState) {
+  void _mapManagerStateToEvent(ServerSettingsManagerState managerState) {
     if (managerState is ServerConnectionSettingsSaved) {
       _mapSavedServerToEvent(managerState);
     }

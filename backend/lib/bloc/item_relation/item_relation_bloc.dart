@@ -19,7 +19,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     on<UpdateItemRelation<W>>(_mapUpdateToState);
 
     managerSubscription =
-        managerBloc.stream.listen(mapRelationManagerStateToEvent);
+        managerBloc.stream.listen(_mapRelationManagerStateToEvent);
   }
 
   final int itemId;
@@ -66,7 +66,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     );
   }
 
-  void mapRelationManagerStateToEvent(ItemRelationManagerState managerState) {
+  void _mapRelationManagerStateToEvent(ItemRelationManagerState managerState) {
     if (managerState is ItemRelationAdded<W>) {
       _mapAddedToEvent(managerState);
     } else if (managerState is ItemRelationDeleted<W>) {
@@ -90,7 +90,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
       final List<W> items = (state as ItemRelationLoaded<W>).otherItems;
 
       final List<W> updatedItems = items
-          .where((W item) => item != managerState.otherItem)
+          .where((W item) => item.id != managerState.otherItem.id)
           .toList(growable: false);
 
       add(UpdateItemRelation<W>(updatedItems));

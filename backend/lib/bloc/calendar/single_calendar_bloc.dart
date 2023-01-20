@@ -36,9 +36,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<UpdateSingleCalendar>(_mapUpdateToState);
 
     gameLogManagerSubscription =
-        gameLogManagerBloc.stream.listen(mapGameLogManagerStateToEvent);
+        gameLogManagerBloc.stream.listen(_mapGameLogManagerStateToEvent);
     finishDateManagerSubscription =
-        gameFinishManagerBloc.stream.listen(mapFinishDateManagerStateToEvent);
+        gameFinishManagerBloc.stream.listen(_mapFinishDateManagerStateToEvent);
   }
 
   final int itemId;
@@ -319,7 +319,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     );
   }
 
-  void mapGameLogManagerStateToEvent(ItemRelationManagerState managerState) {
+  void _mapGameLogManagerStateToEvent(ItemRelationManagerState managerState) {
     if (managerState is ItemRelationAdded<GameLogDTO>) {
       _mapAddedGameLogToEvent(managerState);
     } else if (managerState is ItemRelationDeleted<GameLogDTO>) {
@@ -327,7 +327,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
   }
 
-  void mapFinishDateManagerStateToEvent(ItemRelationManagerState managerState) {
+  void _mapFinishDateManagerStateToEvent(ItemRelationManagerState managerState) {
     if (managerState is ItemRelationAdded<ItemFinish>) {
       _mapAddedFinishDateToEvent(managerState);
     } else if (managerState is ItemRelationDeleted<ItemFinish>) {
