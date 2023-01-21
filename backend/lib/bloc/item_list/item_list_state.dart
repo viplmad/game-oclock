@@ -29,7 +29,8 @@ class ItemListLoaded<T extends PrimaryModel> extends ItemListState {
   final ListStyle style;
 
   @override
-  List<Object> get props => <Object>[items, viewIndex, viewArgs ?? -1, page, style];
+  List<Object> get props =>
+      <Object>[items, viewIndex, viewArgs ?? -1, page, style];
 
   @override
   String toString() => 'ItemListLoaded { '
@@ -41,16 +42,4 @@ class ItemListLoaded<T extends PrimaryModel> extends ItemListState {
       ' }';
 }
 
-class ItemListNotLoaded extends ItemListState {
-  const ItemListNotLoaded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
-
-  @override
-  String toString() => 'ItemListNotLoaded { '
-      'error: $error'
-      ' }';
-}
+class ItemListError extends ItemListState {}

@@ -51,8 +51,9 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
         ItemRelationLoaded<W>(items),
       );
     } catch (e) {
+      managerBloc.add(WarneItemRelationNotLoaded(e.toString()));
       emit(
-        ItemRelationNotLoaded(e.toString()),
+        ItemRelationError(),
       );
     }
   }

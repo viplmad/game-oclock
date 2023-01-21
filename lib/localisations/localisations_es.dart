@@ -41,6 +41,9 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   final String unableToUpdateConnectionString =
       'No ha sido posible actualizar la conexión';
   @override
+  final String unableToLoadConnectionString =
+      'No ha sido posible cargar conexión';
+  @override
   final String deletedItemConnectionString = 'Conexión de ítem eliminada';
   @override
   final String deletedImageConnectionString = 'Conexión de imagen eliminada';
@@ -566,6 +569,16 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   String searchString(String typeString) {
     return 'Buscar $typeString';
   }
+
+  @override
+  String unableToLoadString(String typeString) {
+    return 'No ha sido posible cargar $typeString';
+  }
+
+  @override
+  final String unableToLoadDetailString = 'No ha sido posible cargar detalles';
+  @override
+  final String unableToLoadCalendar = 'No ha sido posible cargar calendario';
 
   @override
   final String clearSearchString = 'Limpiar';

@@ -12,12 +12,14 @@ import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:backend/utils/datetime_extension.dart';
 import 'package:backend/utils/game_calendar_utils.dart';
 
+import '../calendar_manager/calendar_manager.dart';
 import 'multi_calendar.dart';
 import 'range_list_utils.dart';
 
 class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   MultiCalendarBloc({
     required GameCollectionService collectionService,
+    required this.managerBloc,
   })  : gameLogService = collectionService.gameLogService,
         super(CalendarLoading()) {
     on<LoadMultiCalendar>(_mapLoadToState);
@@ -31,6 +33,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   final GameLogService gameLogService;
+  final CalendarManagerBloc managerBloc;
   final Set<int> yearsLoaded = <int>{};
 
   void _mapLoadToState(
@@ -93,8 +96,9 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
+      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
       emit(
-        CalendarNotLoaded(e.toString()),
+        CalendarError(),
       );
     }
   }
@@ -174,8 +178,9 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         );
       }
     } catch (e) {
+      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
       emit(
-        CalendarNotLoaded(e.toString()),
+        CalendarError(),
       );
     }
   }

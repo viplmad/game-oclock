@@ -64,3 +64,17 @@ class ItemImageNotUpdated extends ItemDetailManagerState {
       'error: $error'
       ' }';
 }
+
+class ItemDetailNotLoaded extends ItemDetailManagerState {
+  const ItemDetailNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'ItemDetailNotLoaded { '
+      'error: $error'
+      ' }';
+}

@@ -12,6 +12,7 @@ import 'package:backend/model/model.dart'
 import 'package:backend/utils/datetime_extension.dart';
 import 'package:backend/utils/game_calendar_utils.dart';
 
+import '../calendar_manager/calendar_manager.dart';
 import '../item_relation_manager/item_relation_manager.dart';
 import 'single_calendar.dart';
 import 'range_list_utils.dart';
@@ -20,6 +21,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   SingleCalendarBloc({
     required this.itemId,
     required GameCollectionService collectionService,
+    required this.managerBloc,
     required this.gameLogManagerBloc,
     required this.gameFinishManagerBloc,
   })  : gameLogService = collectionService.gameLogService,
@@ -44,6 +46,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final int itemId;
   final GameLogService gameLogService;
   final GameFinishService gameFinishService;
+  final CalendarManagerBloc managerBloc;
   final GameLogRelationManagerBloc gameLogManagerBloc;
   final GameFinishRelationManagerBloc gameFinishManagerBloc;
   late final StreamSubscription<ItemRelationManagerState>
@@ -97,8 +100,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
+      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
       emit(
-        CalendarNotLoaded(e.toString()),
+        CalendarError(),
       );
     }
   }

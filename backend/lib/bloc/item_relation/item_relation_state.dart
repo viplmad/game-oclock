@@ -25,16 +25,4 @@ class ItemRelationLoaded<W extends PrimaryModel> extends ItemRelationState {
       ' }';
 }
 
-class ItemRelationNotLoaded extends ItemRelationState {
-  const ItemRelationNotLoaded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
-
-  @override
-  String toString() => 'ItemRelationNotLoaded { '
-      'error: $error'
-      ' }';
-}
+class ItemRelationError extends ItemRelationState {}

@@ -9,16 +9,4 @@ abstract class CalendarState extends Equatable {
 
 class CalendarLoading extends CalendarState {}
 
-class CalendarNotLoaded extends CalendarState {
-  const CalendarNotLoaded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
-
-  @override
-  String toString() => 'CalendarNotLoaded { '
-      'error: $error'
-      ' }';
-}
+class CalendarError extends CalendarState {}

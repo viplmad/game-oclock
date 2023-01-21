@@ -269,6 +269,21 @@ abstract class ItemList<
             ),
           );
         }
+        if (state is ItemListNotLoaded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToLoadString(currentTypeString);
+          showSnackBar(
+            context,
+            message: message,
+            seconds: 2,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
       },
       child: BlocBuilder<K, ItemListState>(
         builder: (BuildContext context, ItemListState state) {
@@ -284,10 +299,8 @@ abstract class ItemList<
               scrollController: scrollController,
             );
           }
-          if (state is ItemListNotLoaded) {
-            return Center(
-              child: Text(state.error),
-            );
+          if (state is ItemListError) {
+            return Container();
           }
 
           return Column(

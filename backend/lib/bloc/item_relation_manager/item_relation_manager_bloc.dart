@@ -12,6 +12,7 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel>
   }) : super(ItemRelationManagerInitialised()) {
     on<AddItemRelation<W>>(_mapAddRelationToState);
     on<DeleteItemRelation<W>>(_mapDeleteRelationToState);
+    on<WarneItemRelationNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   final int itemId;
@@ -54,6 +55,13 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel>
     emit(
       ItemRelationManagerInitialised(),
     );
+  }
+
+  void _mapWarnNotLoadedToState(
+    WarneItemRelationNotLoaded event,
+    Emitter<ItemRelationManagerState> emit,
+  ) {
+    emit(ItemRelationNotLoaded(event.error));
   }
 
   @protected

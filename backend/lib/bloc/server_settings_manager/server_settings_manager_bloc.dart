@@ -13,6 +13,7 @@ class ServerSettingsManagerBloc
   ServerSettingsManagerBloc({required this.collectionService})
       : super(Initialised()) {
     on<SaveServerConnectionSettings>(_mapSaveToState);
+    on<WarnServerSettingsNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   final GameCollectionService collectionService;
@@ -54,5 +55,12 @@ class ServerSettingsManagerBloc
     emit(
       Initialised(),
     );
+  }
+
+  void _mapWarnNotLoadedToState(
+    WarnServerSettingsNotLoaded event,
+    Emitter<ServerSettingsManagerState> emit,
+  ) {
+    emit(ServerSettingsNotLoaded(event.error));
   }
 }

@@ -150,6 +150,20 @@ class _ServerSettingsBody extends StatelessWidget {
             ),
           );
         }
+        if (state is ServerSettingsNotLoaded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToLoadConnectionString;
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
       },
       child: BlocBuilder<ServerSettingsBloc, ServerSettingsState>(
         builder: (BuildContext context, ServerSettingsState state) {
@@ -163,10 +177,8 @@ class _ServerSettingsBody extends StatelessWidget {
             );
             // TODO show token
           }
-          if (state is ServerSettingsNotLoaded) {
-            return Center(
-              child: Text(state.error),
-            );
+          if (state is ServerSettingsError) {
+            return Container();
           }
 
           return const LinearProgressIndicator();

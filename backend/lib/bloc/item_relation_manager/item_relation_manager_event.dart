@@ -23,7 +23,8 @@ class AddItemRelation<W extends PrimaryModel> extends ItemRelationManagerEvent {
       ' }';
 }
 
-class DeleteItemRelation<W extends PrimaryModel> extends ItemRelationManagerEvent {
+class DeleteItemRelation<W extends PrimaryModel>
+    extends ItemRelationManagerEvent {
   const DeleteItemRelation(this.otherItem);
 
   final W otherItem;
@@ -34,5 +35,19 @@ class DeleteItemRelation<W extends PrimaryModel> extends ItemRelationManagerEven
   @override
   String toString() => 'DeleteItemRelation { '
       'otherItem: $otherItem'
+      ' }';
+}
+
+class WarneItemRelationNotLoaded extends ItemRelationManagerEvent {
+  const WarneItemRelationNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'WarneItemRelationNotLoaded { '
+      'error: $error'
       ' }';
 }

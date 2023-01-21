@@ -36,3 +36,17 @@ class DeleteItem<T extends PrimaryModel> extends ItemListManagerEvent {
       'item: $item'
       ' }';
 }
+
+class WarnItemListNotLoaded extends ItemListManagerEvent {
+  const WarnItemListNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'WarnItemListNotLoaded { '
+      'error: $error'
+      ' }';
+}

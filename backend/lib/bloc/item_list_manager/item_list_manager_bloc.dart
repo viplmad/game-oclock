@@ -14,6 +14,7 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
   }) : super(ItemListManagerInitialised()) {
     on<AddItem<N>>(_mapAddItemToState);
     on<DeleteItem<T>>(_mapDeleteItemToState);
+    on<WarnItemListNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   final S service;
@@ -56,6 +57,13 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
     emit(
       ItemListManagerInitialised(),
     );
+  }
+
+  void _mapWarnNotLoadedToState(
+    WarnItemListNotLoaded event,
+    Emitter<ItemListManagerState> emit,
+  ) {
+    emit(ItemListNotLoaded(event.error));
   }
 
   Future<T> _create(AddItem<N> event) {

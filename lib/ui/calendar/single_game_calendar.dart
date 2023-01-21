@@ -9,6 +9,7 @@ import 'package:backend/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;
 import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/calendar/single_calendar.dart';
+import 'package:backend/bloc/calendar_manager/calendar_manager.dart';
 import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
 import 'package:backend/utils/duration_extension.dart';
 import 'package:backend/utils/game_calendar_utils.dart';
@@ -17,11 +18,11 @@ import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/list_view.dart';
 import '../common/skeleton.dart';
-import '../route_constants.dart';
-import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../common/show_snackbar.dart';
 import '../common/show_date_picker.dart';
 import '../common/item_view.dart';
+import '../route_constants.dart';
+import '../theme/theme.dart' show GameTheme, CalendarTheme;
 import '../utils/shape_utils.dart';
 import 'calendar_utils.dart';
 
@@ -40,6 +41,8 @@ class SingleGameCalendar extends StatelessWidget {
     final GameCollectionService collectionService =
         RepositoryProvider.of<GameCollectionService>(context);
 
+    final CalendarManagerBloc managerBloc = CalendarManagerBloc();
+
     final GameLogRelationManagerBloc gameLogRelationManagerBloc =
         GameLogRelationManagerBloc(
       itemId: itemId,
@@ -54,6 +57,7 @@ class SingleGameCalendar extends StatelessWidget {
 
     final SingleCalendarBloc bloc = blocBuilder(
       collectionService,
+      managerBloc,
       gameLogRelationManagerBloc,
       finishRelationManagerBloc,
     );
@@ -63,6 +67,11 @@ class SingleGameCalendar extends StatelessWidget {
         BlocProvider<SingleCalendarBloc>(
           create: (BuildContext context) {
             return bloc..add(LoadSingleCalendar());
+          },
+        ),
+        BlocProvider<CalendarManagerBloc>(
+          create: (BuildContext context) {
+            return managerBloc;
           },
         ),
         BlocProvider<GameLogRelationManagerBloc>(
@@ -157,12 +166,14 @@ class SingleGameCalendar extends StatelessWidget {
 
   SingleCalendarBloc blocBuilder(
     GameCollectionService collectionService,
+    CalendarManagerBloc managerBloc,
     GameLogRelationManagerBloc gameLogManagerBloc,
     GameFinishRelationManagerBloc gameFinishManagerBloc,
   ) {
     return SingleCalendarBloc(
       itemId: itemId,
       collectionService: collectionService,
+      managerBloc: managerBloc,
       gameLogManagerBloc: gameLogManagerBloc,
       gameFinishManagerBloc: gameFinishManagerBloc,
     );
@@ -266,6 +277,26 @@ class _SingleGameCalendarBody extends StatelessWidget {
       },
       child: MultiBlocListener(
         listeners: <BlocListener<dynamic, dynamic>>[
+          BlocListener<CalendarManagerBloc, CalendarManagerState>(
+            listener: (BuildContext context, CalendarManagerState state) {
+              if (state is CalendarNotLoaded) {
+                final String message =
+                    GameCollectionLocalisations.of(context).unableToAddString(
+                  GameCollectionLocalisations.of(context).unableToLoadCalendar,
+                );
+                showSnackBar(
+                  context,
+                  message: message,
+                  snackBarAction: dialogSnackBarAction(
+                    context,
+                    label: GameCollectionLocalisations.of(context).moreString,
+                    title: message,
+                    content: state.error,
+                  ),
+                );
+              }
+            },
+          ),
           BlocListener<GameLogRelationManagerBloc, ItemRelationManagerState>(
             listener: (BuildContext context, ItemRelationManagerState state) {
               if (state is ItemRelationAdded<GameLogDTO>) {
@@ -451,10 +482,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 ],
               );
             }
-            if (state is CalendarNotLoaded) {
-              return Center(
-                child: Text(state.error),
-              );
+            if (state is CalendarError) {
+              return Container();
             }
 
             return Column(

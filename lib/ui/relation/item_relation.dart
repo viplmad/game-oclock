@@ -139,6 +139,20 @@ abstract class ItemRelationList<
             ),
           );
         }
+        if (state is ItemRelationNotLoaded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToLoadString(relationTypeName);
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
       },
       child: BlocBuilder<K, ItemRelationState>(
         builder: (BuildContext context, ItemRelationState state) {
@@ -165,10 +179,8 @@ abstract class ItemRelationList<
                     limitHeight: limitHeight,
                   );
           }
-          if (state is ItemRelationNotLoaded) {
-            return Center(
-              child: Text(state.error),
-            );
+          if (state is ItemRelationError) {
+            return Container();
           }
 
           return Column(

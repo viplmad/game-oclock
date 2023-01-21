@@ -148,6 +148,20 @@ abstract class ItemDetailBody<
               ),
             );
           }
+          if(state is ItemDetailNotLoaded) {
+            final String message = GameCollectionLocalisations.of(context)
+                .unableToLoadDetailString;
+            showSnackBar(
+              context,
+              message: message,
+              snackBarAction: dialogSnackBarAction(
+                context,
+                label: GameCollectionLocalisations.of(context).moreString,
+                title: message,
+                content: state.error,
+              ),
+            );
+          }
         },
         child: NestedScrollView(
           headerSliverBuilder: _appBarBuilder,
@@ -161,10 +175,8 @@ abstract class ItemDetailBody<
                         children: itemFieldsBuilder(context, state.item),
                       );
                     }
-                    if (state is ItemNotLoaded) {
-                      return Center(
-                        child: Text(state.error),
-                      );
+                    if (state is ItemDetailError) {
+                      return Container();
                     }
 
                     return Column(

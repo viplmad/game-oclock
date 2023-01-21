@@ -27,16 +27,4 @@ class ServerSettingsLoaded extends ServerSettingsState {
       ' }';
 }
 
-class ServerSettingsNotLoaded extends ServerSettingsState {
-  const ServerSettingsNotLoaded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
-
-  @override
-  String toString() => 'ServerSettingsNotLoaded { '
-      'error: $error'
-      ' }';
-}
+class ServerSettingsError extends ServerSettingsState {}

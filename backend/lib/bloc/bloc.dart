@@ -1,5 +1,6 @@
 export 'calendar/multi_calendar.dart';
 export 'calendar/single_calendar.dart';
+export 'calendar_manager/calendar_manager.dart';
 export 'connection/connection.dart';
 export 'item_detail/item_detail.dart';
 export 'item_detail_manager/item_detail_manager.dart';

@@ -50,3 +50,17 @@ class UpdateItemImageName extends ItemDetailManagerEvent {
 }
 
 class DeleteItemImage extends ItemDetailManagerEvent {}
+
+class WarnItemDetailNotLoaded extends ItemDetailManagerEvent {
+  const WarnItemDetailNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'WarnItemDetailNotLoaded { '
+      'error: $error'
+      ' }';
+}

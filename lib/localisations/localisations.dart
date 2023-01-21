@@ -31,6 +31,7 @@ abstract class GameCollectionLocalisations {
   String get updatedItemConnectionString;
   String get updatedImageConnectionString;
   String get unableToUpdateConnectionString;
+  String get unableToLoadConnectionString;
   String get deletedItemConnectionString;
   String get deletedImageConnectionString;
   String get unableToDeleteConnectionString;
@@ -209,6 +210,9 @@ abstract class GameCollectionLocalisations {
   String unableToLinkString(String typeString);
   String unlinkedString(String typeString);
   String unableToUnlinkString(String typeString);
+  String unableToLoadString(String typeString);
+  String get unableToLoadDetailString;
+  String get unableToLoadCalendar;
 
   String searchString(String typeString);
   String get clearSearchString;

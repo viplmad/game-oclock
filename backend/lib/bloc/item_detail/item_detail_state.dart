@@ -25,16 +25,4 @@ class ItemLoaded<T extends PrimaryModel> extends ItemDetailState {
       ' }';
 }
 
-class ItemNotLoaded extends ItemDetailState {
-  const ItemNotLoaded(this.error);
-
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
-
-  @override
-  String toString() => 'ItemNotLoaded { '
-      'error: $error'
-      ' }';
-}
+class ItemDetailError extends ItemDetailState {}

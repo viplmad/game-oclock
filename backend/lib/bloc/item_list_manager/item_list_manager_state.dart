@@ -66,3 +66,18 @@ class ItemNotDeleted extends ItemListManagerState {
       'error: $error'
       ' }';
 }
+
+class ItemListNotLoaded extends ItemListManagerState {
+  const ItemListNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'ItemListNotLoaded { '
+      'error: $error'
+      ' }';
+}
+

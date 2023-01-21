@@ -23,7 +23,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     S extends ItemService<T, N>> extends Bloc<ItemListEvent, ItemListState> {
   ItemListBloc({
     required this.service,
-    required ItemListManagerBloc<T, N, S> managerBloc,
+    required this.managerBloc,
   }) : super(ItemListLoading()) {
     on<LoadItemList>(_mapLoadToState);
     on<ReloadItemList>(_mapReloadToState);
@@ -32,10 +32,12 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
-    managerSubscription = managerBloc.stream.listen(_mapListManagerStateToEvent);
+    managerSubscription =
+        managerBloc.stream.listen(_mapListManagerStateToEvent);
   }
 
   final S service;
+  final ItemListManagerBloc<T, N, S> managerBloc;
   late final StreamSubscription<ItemListManagerState> managerSubscription;
 
   void _mapLoadToState(LoadItemList event, Emitter<ItemListState> emit) async {
@@ -70,8 +72,9 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
         ),
       );
     } catch (e) {
+      managerBloc.add(WarnItemListNotLoaded(e.toString()));
       emit(
-        ItemListNotLoaded(e.toString()),
+        ItemListError(),
       );
     }
   }
@@ -117,8 +120,9 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
         ),
       );
     } catch (e) {
+      managerBloc.add(WarnItemListNotLoaded(e.toString()));
       emit(
-        ItemListNotLoaded(e.toString()),
+        ItemListError(),
       );
     }
   }

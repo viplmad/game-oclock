@@ -142,6 +142,20 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
             ),
           );
         }
+        if(state is ItemRelationNotLoaded) {
+          final String message = GameCollectionLocalisations.of(context)
+              .unableToLoadString(relationTypeName);
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
       },
       child: ListTileTheme.merge(
         child: ListTile(
@@ -208,10 +222,8 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                       );
                     }
 
-                    if (state is ItemRelationNotLoaded) {
-                      return Center(
-                        child: Text(state.error),
-                      );
+                    if (state is ItemRelationError) {
+                      return Container();
                     }
 
                     return Column(

@@ -31,3 +31,17 @@ class SaveServerConnectionSettings extends ServerSettingsManagerEvent {
       'password: $password'
       ' }';
 }
+
+class WarnServerSettingsNotLoaded extends ServerSettingsManagerEvent {
+  const WarnServerSettingsNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'WarnServerSettingsNotLoaded { '
+      'error: $error'
+      ' }';
+}

@@ -9,7 +9,7 @@ import 'server_settings.dart';
 
 class ServerSettingsBloc
     extends Bloc<ServerSettingsEvent, ServerSettingsState> {
-  ServerSettingsBloc({required ServerSettingsManagerBloc managerBloc})
+  ServerSettingsBloc({required this.managerBloc})
       : super(ServerSettingsLoading()) {
     on<LoadServerSettings>(_mapLoadToState);
     on<UpdateServerSettings>(_mapUpdateToState);
@@ -17,6 +17,7 @@ class ServerSettingsBloc
     managerSubscription = managerBloc.stream.listen(_mapManagerStateToEvent);
   }
 
+  final ServerSettingsManagerBloc managerBloc;
   late final StreamSubscription<ServerSettingsManagerState> managerSubscription;
 
   void _mapLoadToState(
@@ -37,9 +38,8 @@ class ServerSettingsBloc
           ),
         );
       } catch (e) {
-        emit(
-          ServerSettingsNotLoaded(e.toString()),
-        );
+        managerBloc.add(WarnServerSettingsNotLoaded(e.toString()));
+        emit(ServerSettingsError());
       }
     } else {
       emit(

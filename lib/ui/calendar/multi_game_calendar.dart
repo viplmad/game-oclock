@@ -7,11 +7,13 @@ import 'package:game_collection_client/api.dart' show GameWithLogsDTO, GameDTO;
 import 'package:backend/model/model.dart' show CalendarRange;
 import 'package:backend/service/service.dart' show GameCollectionService;
 import 'package:backend/bloc/calendar/multi_calendar.dart';
+import 'package:backend/bloc/calendar_manager/calendar_manager.dart';
 import 'package:backend/utils/duration_extension.dart';
 import 'package:backend/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
+import '../common/show_snackbar.dart';
 import '../common/list_view.dart';
 import '../common/skeleton.dart';
 import '../route_constants.dart';
@@ -26,14 +28,26 @@ class MultiGameCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CalendarManagerBloc managerBloc = CalendarManagerBloc();
+
     final MultiCalendarBloc bloc = MultiCalendarBloc(
       collectionService: RepositoryProvider.of<GameCollectionService>(context),
+      managerBloc: managerBloc,
     );
 
-    return BlocProvider<MultiCalendarBloc>(
-      create: (BuildContext context) {
-        return bloc..add(LoadMultiCalendar(DateTime.now().year));
-      },
+    return MultiBlocProvider(
+      providers: <BlocProvider<BlocBase<Object?>>>[
+        BlocProvider<MultiCalendarBloc>(
+          create: (BuildContext context) {
+            return bloc..add(LoadMultiCalendar(DateTime.now().year));
+          },
+        ),
+        BlocProvider<CalendarManagerBloc>(
+          create: (BuildContext context) {
+            return managerBloc;
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -121,74 +135,92 @@ class _MultiGameCalendarBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MultiCalendarBloc, CalendarState>(
-      builder: (BuildContext context, CalendarState state) {
-        if (state is MultiCalendarLoaded) {
-          Widget gameLogsWidget;
-          if (state.selectedTotalTime.isZero()) {
-            gameLogsWidget = Center(
-              child: Text(
-                GameCollectionLocalisations.of(context).emptyGameLogsString,
-              ),
-            );
-          } else {
-            if (state is MultiCalendarGraphLoaded) {
-              gameLogsWidget = CalendarUtils.buildGameLogsGraph(
-                context,
-                state.selectedGameLogs,
-                state.range,
+    return BlocListener<CalendarManagerBloc, CalendarManagerState>(
+      listener: (BuildContext context, CalendarManagerState state) {
+        if (state is CalendarNotLoaded) {
+          final String message =
+              GameCollectionLocalisations.of(context).unableToAddString(
+            GameCollectionLocalisations.of(context).unableToLoadCalendar,
+          );
+          showSnackBar(
+            context,
+            message: message,
+            snackBarAction: dialogSnackBarAction(
+              context,
+              label: GameCollectionLocalisations.of(context).moreString,
+              title: message,
+              content: state.error,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<MultiCalendarBloc, CalendarState>(
+        builder: (BuildContext context, CalendarState state) {
+          if (state is MultiCalendarLoaded) {
+            Widget gameLogsWidget;
+            if (state.selectedTotalTime.isZero()) {
+              gameLogsWidget = Center(
+                child: Text(
+                  GameCollectionLocalisations.of(context).emptyGameLogsString,
+                ),
               );
             } else {
-              gameLogsWidget =
-                  _buildGameLogsList(context, state.selectedGamesWithLogs);
+              if (state is MultiCalendarGraphLoaded) {
+                gameLogsWidget = CalendarUtils.buildGameLogsGraph(
+                  context,
+                  state.selectedGameLogs,
+                  state.range,
+                );
+              } else {
+                gameLogsWidget =
+                    _buildGameLogsList(context, state.selectedGamesWithLogs);
+              }
             }
+
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                _buildTableCalendar(
+                  context,
+                  state.logDates,
+                  state.focusedDate,
+                  state.selectedDate,
+                ),
+                const Divider(height: 4.0),
+                ListTile(
+                  title: Text(
+                    CalendarUtils.titleString(
+                      context,
+                      state.selectedDate,
+                      state.range,
+                    ),
+                  ),
+                  trailing: !state.selectedTotalTime.isZero()
+                      ? Text(
+                          '${GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames)} / ${GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)}',
+                        )
+                      : null,
+                ),
+                Expanded(child: gameLogsWidget),
+              ],
+            );
+          }
+          if (state is CalendarError) {
+            return Container();
           }
 
           return Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              _buildTableCalendar(
-                context,
-                state.logDates,
-                state.focusedDate,
-                state.selectedDate,
+              const LinearProgressIndicator(),
+              Skeleton(
+                height: MediaQuery.of(context).size.height / 2.5,
               ),
               const Divider(height: 4.0),
-              ListTile(
-                title: Text(
-                  CalendarUtils.titleString(
-                    context,
-                    state.selectedDate,
-                    state.range,
-                  ),
-                ),
-                trailing: !state.selectedTotalTime.isZero()
-                    ? Text(
-                        '${GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames)} / ${GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)}',
-                      )
-                    : null,
-              ),
-              Expanded(child: gameLogsWidget),
             ],
           );
-        }
-        if (state is CalendarNotLoaded) {
-          return Center(
-            child: Text(state.error),
-          );
-        }
-
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            const LinearProgressIndicator(),
-            Skeleton(
-              height: MediaQuery.of(context).size.height / 2.5,
-            ),
-            const Divider(height: 4.0),
-          ],
-        );
-      },
+        },
+      ),
     );
   }
 

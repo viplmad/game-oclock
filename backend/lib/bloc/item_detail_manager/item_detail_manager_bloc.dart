@@ -17,6 +17,7 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     on<SetItemImage>(_mapSetImageToState);
     on<UpdateItemImageName>(_mapUpdateImageNameToState);
     on<DeleteItemImage>(_mapDeleteImageToState);
+    on<WarnItemDetailNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   void _mapSetImageToState(
@@ -126,6 +127,13 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     emit(
       ItemDetailManagerInitialised(),
     );
+  }
+
+  void _mapWarnNotLoadedToState(
+    WarnItemDetailNotLoaded event,
+    Emitter<ItemDetailManagerState> emit,
+  ) {
+    emit(ItemDetailNotLoaded(event.error));
   }
 
   Future<T> _update(UpdateItemField<N> event) {

@@ -53,8 +53,9 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
         ItemLoaded<T>(item),
       );
     } catch (e) {
+      managerBloc.add(WarnItemDetailNotLoaded(e.toString()));
       emit(
-        ItemNotLoaded(e.toString()),
+        ItemDetailError(),
       );
     }
   }

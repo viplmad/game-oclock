@@ -11,7 +11,8 @@ abstract class ItemRelationManagerState extends Equatable {
 
 class ItemRelationManagerInitialised extends ItemRelationManagerState {}
 
-class ItemRelationAdded<W extends PrimaryModel> extends ItemRelationManagerState {
+class ItemRelationAdded<W extends PrimaryModel>
+    extends ItemRelationManagerState {
   const ItemRelationAdded(this.otherItem);
 
   final W otherItem;
@@ -39,7 +40,8 @@ class ItemRelationNotAdded extends ItemRelationManagerState {
       ' }';
 }
 
-class ItemRelationDeleted<W extends PrimaryModel> extends ItemRelationManagerState {
+class ItemRelationDeleted<W extends PrimaryModel>
+    extends ItemRelationManagerState {
   const ItemRelationDeleted(this.otherItem);
 
   final W otherItem;
@@ -63,6 +65,20 @@ class ItemRelationNotDeleted extends ItemRelationManagerState {
 
   @override
   String toString() => 'ItemRelationNotDeleted { '
+      'error: $error'
+      ' }';
+}
+
+class ItemRelationNotLoaded extends ItemRelationManagerState {
+  const ItemRelationNotLoaded(this.error);
+
+  final String error;
+
+  @override
+  List<Object> get props => <Object>[error];
+
+  @override
+  String toString() => 'ItemRelationNotLoaded { '
       'error: $error'
       ' }';
 }
