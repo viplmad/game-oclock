@@ -163,7 +163,7 @@ abstract class ItemRelationList<
                     relationName: relationName,
                     relationTypeName: relationTypeName,
                     itemBuilder: cardBuilder,
-                    onSearch: _onRepositorySearchTap(context),
+                    onSearch: onSearchTap(context),
                     updateAdd: _addRelationFunction(context),
                     updateDelete: _deleteRelationFunction(context),
                   )
@@ -172,7 +172,7 @@ abstract class ItemRelationList<
                     relationName: relationName,
                     relationTypeName: relationTypeName,
                     itemBuilder: cardBuilder,
-                    onSearch: _onRepositorySearchTap(context),
+                    onSearch: onSearchTap(context),
                     updateAdd: _addRelationFunction(context),
                     updateDelete: _deleteRelationFunction(context),
                     trailingBuilder: trailingBuilder,
@@ -243,7 +243,7 @@ abstract class ItemRelationList<
     };
   }
 
-  Future<W?> Function() _onRepositorySearchTap(BuildContext context) {
+  Future<W?> Function() onSearchTap(BuildContext context) {
     return () {
       return Navigator.pushNamed<W>(
         context,
