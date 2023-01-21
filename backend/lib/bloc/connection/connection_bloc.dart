@@ -32,7 +32,6 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
             (await SharedPreferencesState.retrieveActiveServer())!;
 
         collectionService.connect(connection);
-        // TODO return user in state?
         final TokenResponse? refreshTokenResponse = await collectionService
             .testAuth(connection.tokenResponse.refreshToken);
         // If token was expired -> refresh token used and returned new token response

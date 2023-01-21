@@ -1,5 +1,3 @@
-import 'package:game_collection_client/api.dart' show GameDTO;
-
 import 'calendar_event.dart';
 
 abstract class MultiCalendarEvent extends CalendarEvent {

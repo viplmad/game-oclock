@@ -139,9 +139,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
       listener: (BuildContext context, CalendarManagerState state) {
         if (state is CalendarNotLoaded) {
           final String message =
-              GameCollectionLocalisations.of(context).unableToAddString(
-            GameCollectionLocalisations.of(context).unableToLoadCalendar,
-          );
+              GameCollectionLocalisations.of(context).unableToLoadCalendar;
           showSnackBar(
             context,
             message: message,
@@ -230,15 +228,10 @@ class _MultiGameCalendarBody extends StatelessWidget {
     DateTime focusedDate,
     DateTime selectedDate,
   ) {
-    DateTime lastDate = DateTime.now();
-    if (logDates.isNotEmpty) {
-      lastDate = logDates.last;
-    }
-
     return CalendarUtils.buildTableCalendar(
       context,
       firstDay: DateTime(1970),
-      lastDay: lastDate,
+      lastDay: DateTime.now(),
       focusedDay: focusedDate,
       selectedDay: selectedDate,
       logDays: logDates,

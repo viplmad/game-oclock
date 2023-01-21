@@ -1,6 +1,10 @@
-import 'package:game_collection_client/api.dart' show PageResultDTO;
+import 'package:game_collection_client/api.dart'
+    show ApiException, PageResultDTO;
 
-abstract class ItemWithImageService<T extends Object, N extends Object> implements ItemService<T, N>, ImageService {}
+import '../utils/http_status.dart';
+
+abstract class ItemWithImageService<T extends Object, N extends Object>
+    implements ItemService<T, N>, ImageService {}
 
 abstract class ItemService<T extends Object, N extends Object>
     implements SearchService<T> {
@@ -47,4 +51,28 @@ abstract class ImageService {
     String newImageName,
   );
   Future<void> deleteImage(int id);
+}
+
+Future<T?> nullIfNotFound<T>(Future<T> future) async {
+  try {
+    return await future;
+  } on ApiException catch (e) {
+    if (e.code == HttpStatus.notFound) {
+      return Future<T?>.value(null);
+    }
+
+    rethrow;
+  }
+}
+
+Future<T> defaultIfNotFound<T>(Future<T> future, T defaultValue) async {
+  try {
+    return await future;
+  } on ApiException catch (e) {
+    if (e.code == HttpStatus.notFound) {
+      return Future<T>.value(defaultValue);
+    }
+
+    rethrow;
+  }
 }

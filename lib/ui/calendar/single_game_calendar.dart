@@ -280,10 +280,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
           BlocListener<CalendarManagerBloc, CalendarManagerState>(
             listener: (BuildContext context, CalendarManagerState state) {
               if (state is CalendarNotLoaded) {
-                final String message =
-                    GameCollectionLocalisations.of(context).unableToAddString(
-                  GameCollectionLocalisations.of(context).unableToLoadCalendar,
-                );
+                final String message = GameCollectionLocalisations.of(context)
+                    .unableToLoadCalendar;
                 showSnackBar(
                   context,
                   message: message,

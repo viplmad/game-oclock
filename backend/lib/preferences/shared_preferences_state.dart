@@ -71,7 +71,7 @@ class SharedPreferencesState {
 
     return sharedPreferences.getString(_activeServerIndexKey).then<int?>(
       (String value) {
-        return int.tryParse(value); // TODO Log error
+        return int.tryParse(value);
       },
       onError: (Object error) => null,
     );
@@ -83,7 +83,7 @@ class SharedPreferencesState {
 
     return sharedPreferences.getString(_totalServersKey).then<int?>(
       (String value) {
-        return int.tryParse(value); // TODO Log error
+        return int.tryParse(value);
       },
       onError: (Object error) => null,
     );

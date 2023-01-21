@@ -1,4 +1,3 @@
-import 'package:backend/model/model.dart' show DLCView;
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
@@ -11,6 +10,8 @@ import 'package:game_collection_client/api.dart'
         OrderType,
         SearchDTO,
         SortDTO;
+
+import 'package:backend/model/model.dart' show DLCView;
 
 import 'item_service.dart';
 
@@ -118,7 +119,7 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
     int id,
     String uploadImagePath,
   ) {
-    return get(id); // TODO
+    return _api.postDlcCover(id);
   }
 
   @override
@@ -126,12 +127,12 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
     int id,
     String newImageName,
   ) {
-    return get(id); // TODO
+    return _api.putDlcCover(id, newImageName);
   }
 
   @override
   Future<void> deleteImage(int id) {
-    return get(id); // TODO
+    return _api.deleteDlcCover(id);
   }
   //#endregion IMAGE
 }

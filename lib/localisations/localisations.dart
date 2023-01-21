@@ -43,6 +43,8 @@ abstract class GameCollectionLocalisations {
   String get hostString;
   String get usernameString;
   String get passwordString;
+  String get currentAccessTokenString;
+  String get accessTokenCopied;
 
   String get searchAllString;
   String get changeStyleString;

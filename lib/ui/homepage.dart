@@ -214,7 +214,7 @@ class _HomepageDrawer extends StatelessWidget {
               GameCollectionLocalisations.of(context).changeRepositoryString,
             ),
             onTap: () async {
-              Navigator.pushReplacementNamed(
+              Navigator.pushNamed(
                 context,
                 serverSettingsRoute,
               );

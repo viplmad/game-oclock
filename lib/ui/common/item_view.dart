@@ -78,7 +78,7 @@ class ItemCard extends StatelessWidget {
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
         child: _ItemListTile(
-          title: title,
+          title: title, // TODO add ellipsis
           subtitle: subtitle,
           trailing: trailing,
           hasImage: hasImage,

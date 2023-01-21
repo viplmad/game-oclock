@@ -21,7 +21,7 @@ class DLCFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
   Future<List<ItemFinish>> getRelationItems() {
     return dlcFinishService
         .getAll(itemId)
-        .asStream() // TODO Extract to Utils
+        .asStream()
         .map(
           (List<DateTime> dates) => dates
               .map((DateTime date) => ItemFinish(date))

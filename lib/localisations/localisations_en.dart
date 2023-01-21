@@ -62,6 +62,10 @@ class GameCollectionLocalisationsEn implements GameCollectionLocalisations {
   final String usernameString = 'User';
   @override
   final String passwordString = 'Password';
+  @override
+  final String currentAccessTokenString = 'Current Access Token';
+  @override
+  final String accessTokenCopied = 'Access Token copied';
 
   @override
   final String searchAllString = 'Global Search';

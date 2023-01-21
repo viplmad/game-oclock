@@ -19,7 +19,6 @@ import '../search/search_arguments.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_utils.dart';
 
-// TODO check only bloc are used in other base classes
 abstract class ItemRelationList<
         W extends PrimaryModel,
         K extends Bloc<ItemRelationEvent, ItemRelationState>,

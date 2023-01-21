@@ -1,8 +1,6 @@
-import 'package:backend/model/model.dart' show GameView;
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
-        ApiException,
         DLCsApi,
         DateDTO,
         FilterDTO,
@@ -18,7 +16,8 @@ import 'package:game_collection_client/api.dart'
         SearchValue,
         SortDTO;
 
-import '../utils/http_status.dart';
+import 'package:backend/model/model.dart' show GameView;
+
 import 'item_service.dart';
 
 class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
@@ -119,20 +118,15 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   }
 
   Future<List<GameDTO>> getDLCBasegameAsList(int dlcId) {
-    try {
-      return _getDLCBasegame(dlcId)
+    return defaultIfNotFound(
+      _getDLCBasegame(dlcId)
           .asStream()
           .map(
             (GameDTO game) => <GameDTO>[game],
           )
-          .first;
-    } on ApiException catch (e) {
-      if (e.code == HttpStatus.notFound) {
-        return Future<List<GameDTO>>.value(<GameDTO>[]);
-      }
-
-      rethrow;
-    }
+          .first,
+      <GameDTO>[],
+    );
   }
 
   Future<List<GameAvailableDTO>> getPlatformAvailableGames(int platformId) {
@@ -172,7 +166,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int id,
     String uploadImagePath,
   ) {
-    return get(id); // TODO
+    return _api.postGameCover(id);
   }
 
   @override
@@ -180,12 +174,12 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int id,
     String newImageName,
   ) {
-    return get(id); // TODO
+    return _api.putGameCover(id, newImageName);
   }
 
   @override
   Future<void> deleteImage(int id) {
-    return get(id); // TODO
+    return _api.deleteGameCover(id);
   }
   //#endregion IMAGE
 }

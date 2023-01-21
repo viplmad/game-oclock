@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:backend/game_collection_backend.dart'
     show GameCollectionService;
 
@@ -33,26 +34,30 @@ class GameCollection extends StatelessWidget {
       create: (BuildContext context) {
         return GameCollectionService();
       },
-      child: MaterialApp(
-        onGenerateTitle: (BuildContext context) =>
-            GameCollectionLocalisations.appTitle,
-        theme: AppTheme.themeData(Brightness.light),
-        darkTheme: AppTheme.themeData(Brightness.dark),
-        initialRoute: connectRoute,
-        onGenerateRoute: onGenerateRoute,
-        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GameCollectionLocalisationsDelegate(),
-        ],
-        supportedLocales: const <Locale>[
-          Locale('en', 'GB'),
-          Locale('es', 'ES'),
-          Locale('en'),
-          Locale('es'),
-        ],
-      ),
+      child: _createApp(),
+    );
+  }
+
+  MaterialApp _createApp() {
+    return MaterialApp(
+      onGenerateTitle: (BuildContext context) =>
+          GameCollectionLocalisations.appTitle,
+      theme: AppTheme.themeData(Brightness.light),
+      darkTheme: AppTheme.themeData(Brightness.dark),
+      initialRoute: connectRoute,
+      onGenerateRoute: onGenerateRoute,
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GameCollectionLocalisationsDelegate(),
+      ],
+      supportedLocales: const <Locale>[
+        Locale('en', 'GB'),
+        Locale('es', 'ES'),
+        Locale('en'),
+        Locale('es'),
+      ],
     );
   }
 }

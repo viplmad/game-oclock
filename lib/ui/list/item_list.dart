@@ -73,7 +73,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
                           context,
                           label: GameCollectionLocalisations.of(context)
                               .openString,
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.pushNamed(
                               context,
                               detailRouteName,

@@ -124,7 +124,7 @@ class _ServerSettingsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ServerSettingsManagerBloc, ServerSettingsManagerState>(
-      listener: (BuildContext context, ServerSettingsManagerState state) {
+      listener: (BuildContext context, ServerSettingsManagerState state) async {
         if (state is ServerConnectionSettingsSaved) {
           final String message = GameCollectionLocalisations.of(context)
               .updatedItemConnectionString;
@@ -170,12 +170,39 @@ class _ServerSettingsBody extends StatelessWidget {
           if (state is ServerSettingsLoaded) {
             final ServerConnection? connection = state.activeServerConnection;
 
-            return ServerConnectionForm(
-              formKey: formKey,
-              formData: formData,
-              connection: connection,
+            final List<Widget> children = <Widget>[
+              ServerConnectionForm(
+                formKey: formKey,
+                formData: formData,
+                connection: connection,
+              ),
+            ];
+            if (connection != null) {
+              final String accessToken = connection.tokenResponse.accessToken;
+
+              children.addAll(<Widget>[
+                const Divider(),
+                ListTile(
+                  title: Text(
+                    GameCollectionLocalisations.of(context)
+                        .currentAccessTokenString,
+                  ),
+                  subtitle: Text(accessToken),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.content_copy),
+                    onPressed: () async {
+                      Clipboard.setData(
+                        ClipboardData(text: accessToken),
+                      ).then((_) => showSnackBar(context, message: GameCollectionLocalisations.of(context).accessTokenCopied));
+                    },
+                  ),
+                )
+              ]);
+            }
+
+            return Column(
+              children: children,
             );
-            // TODO show token
           }
           if (state is ServerSettingsError) {
             return Container();

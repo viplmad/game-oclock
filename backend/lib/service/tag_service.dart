@@ -1,4 +1,3 @@
-import 'package:backend/model/model.dart' show TagView;
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
@@ -9,6 +8,8 @@ import 'package:game_collection_client/api.dart'
         TagDTO,
         TagPageResult,
         TagsApi;
+
+import 'package:backend/model/model.dart' show TagView;
 
 import 'item_service.dart';
 

@@ -1,4 +1,3 @@
-import 'package:backend/model/model.dart' show PlatformView;
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
@@ -10,6 +9,8 @@ import 'package:game_collection_client/api.dart'
         PlatformsApi,
         SearchDTO,
         SortDTO;
+
+import 'package:backend/model/model.dart' show PlatformView;
 
 import 'item_service.dart';
 
@@ -101,7 +102,7 @@ class PlatformService
     int id,
     String uploadImagePath,
   ) {
-    return get(id); // TODO
+    return _api.postPlatformIcon(id);
   }
 
   @override
@@ -109,12 +110,12 @@ class PlatformService
     int id,
     String newImageName,
   ) {
-    return get(id); // TODO
+    return _api.putPlatformIcon(id, newImageName);
   }
 
   @override
   Future<void> deleteImage(int id) {
-    return get(id); // TODO
+    return _api.deletePlatformIcon(id);
   }
   //#endregion IMAGE
 }
