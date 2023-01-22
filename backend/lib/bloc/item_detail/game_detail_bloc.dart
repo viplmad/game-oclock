@@ -20,15 +20,31 @@ class GameDetailBloc extends ItemDetailBloc<GameDTO, NewGameDTO, GameService> {
   final GameLogService gameLogService;
 
   @override
-  Future<GameDTO> get() async {
-    final GameDTO game = await super.get();
+  Future<GameDTO> getAdditionalFields(GameDTO item) async {
     final DateTime? firstFinish =
         await gameFinishService.getFirstFinish(itemId);
     final Duration totalTime = await gameLogService.getTotalPlayedTime(itemId);
 
-    game.firstFinish = firstFinish;
-    game.totalTime = totalTime;
+    return _populateGame(item, firstFinish, totalTime);
+  }
 
-    return game;
+  @override
+  GameDTO addAdditionalFields(GameDTO item, GameDTO previousItem) {
+    return _populateGame(
+      item,
+      previousItem.firstFinish,
+      previousItem.totalTime,
+    );
+  }
+
+  GameDTO _populateGame(
+    GameDTO item,
+    DateTime? firstFinish,
+    Duration? totalTime,
+  ) {
+    item.firstFinish = firstFinish;
+    item.totalTime = totalTime;
+
+    return item;
   }
 }

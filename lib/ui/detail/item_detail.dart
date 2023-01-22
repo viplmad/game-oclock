@@ -100,7 +100,7 @@ abstract class ItemDetailBody<
       },
       child: BlocListener<S, ItemDetailManagerState>(
         listener: (BuildContext context, ItemDetailManagerState state) {
-          if (state is ItemFieldUpdated<T>) {
+          if (state is ItemFieldUpdated) {
             _changesMade = true;
 
             final String message =
@@ -124,7 +124,7 @@ abstract class ItemDetailBody<
               ),
             );
           }
-          if (state is ItemImageUpdated<T>) {
+          if (state is ItemImageUpdated) {
             _changesMade = true;
 
             final String message =

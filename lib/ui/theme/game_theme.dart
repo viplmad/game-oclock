@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show GameDTO, GameAvailableDTO;
 
+import 'package:backend/model/model.dart' show GameView;
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
@@ -46,15 +48,26 @@ class GameTheme {
   }
 
   static List<String> views(BuildContext context) {
-    return <String>[
-      GameCollectionLocalisations.of(context).mainViewString,
-      GameCollectionLocalisations.of(context).lastCreatedViewString,
-      GameCollectionLocalisations.of(context).playingViewString,
-      GameCollectionLocalisations.of(context).nextUpViewString,
-      GameCollectionLocalisations.of(context).lastPlayedString,
-      GameCollectionLocalisations.of(context).lastFinishedViewString,
-      GameCollectionLocalisations.of(context).yearInReviewViewString,
-    ];
+    return GameView.values.map<String>((GameView view) {
+      switch (view) {
+        case GameView.main:
+          return GameCollectionLocalisations.of(context).mainViewString;
+        case GameView.lastAdded:
+          return GameCollectionLocalisations.of(context).lastAddedViewString;
+        case GameView.lastUpdated:
+          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
+        case GameView.playing:
+          return GameCollectionLocalisations.of(context).playingViewString;
+        case GameView.nextUp:
+          return GameCollectionLocalisations.of(context).nextUpViewString;
+        case GameView.lastFinished:
+          return GameCollectionLocalisations.of(context).lastFinishedViewString;
+        case GameView.lastPlayed:
+          return GameCollectionLocalisations.of(context).lastPlayedString;
+        case GameView.review:
+          return GameCollectionLocalisations.of(context).yearInReviewViewString;
+      }
+    }).toList(growable: false);
   }
 
   static Widget itemCard(

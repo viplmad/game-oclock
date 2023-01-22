@@ -20,7 +20,6 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
   }) : super(ItemLoading()) {
     on<LoadItem>(_mapLoadToState);
     on<ReloadItem>(_mapReloadToState);
-    on<UpdateItem<T>>(_mapUpdateToState);
 
     managerSubscription =
         managerBloc.stream.listen(_mapDetailManagerStateToEvent);
@@ -43,12 +42,23 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     ReloadItem event,
     Emitter<ItemDetailState> emit,
   ) async {
-    await _mapAnyLoadToState(emit);
+    await _mapAnyLoadToState(emit, event.forceAdditionalFields);
   }
 
-  Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
+  Future<void> _mapAnyLoadToState(
+    Emitter<ItemDetailState> emit, [
+    bool forceAdditionalFields = true,
+  ]) async {
     try {
-      final T item = await get();
+      T item = await _get();
+      if (forceAdditionalFields) {
+        item = await getAdditionalFields(item);
+      } else {
+        if (state is ItemLoaded<T>) {
+          final T previousItem = (state as ItemLoaded<T>).item;
+          item = addAdditionalFields(item, previousItem);
+        }
+      }
       emit(
         ItemLoaded<T>(item),
       );
@@ -60,26 +70,20 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     }
   }
 
-  void _mapUpdateToState(UpdateItem<T> event, Emitter<ItemDetailState> emit) {
-    emit(
-      ItemLoaded<T>(event.item),
-    );
-  }
-
   void _mapDetailManagerStateToEvent(ItemDetailManagerState managerState) {
-    if (managerState is ItemFieldUpdated<T>) {
+    if (managerState is ItemFieldUpdated) {
       _mapFieldUpdatedToEvent(managerState);
-    } else if (managerState is ItemImageUpdated<T>) {
+    } else if (managerState is ItemImageUpdated) {
       _mapImageUpdatedToEvent(managerState);
     }
   }
 
-  void _mapFieldUpdatedToEvent(ItemFieldUpdated<T> event) {
-    add(UpdateItem<T>(event.item));
+  void _mapFieldUpdatedToEvent(ItemFieldUpdated event) {
+    add(const ReloadItem());
   }
 
-  void _mapImageUpdatedToEvent(ItemImageUpdated<T> event) {
-    add(UpdateItem<T>(event.item));
+  void _mapImageUpdatedToEvent(ItemImageUpdated event) {
+    add(const ReloadItem());
   }
 
   @override
@@ -88,9 +92,12 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     return super.close();
   }
 
-  @mustCallSuper
-  @protected
-  Future<T> get() {
+  Future<T> _get() {
     return service.get(itemId);
   }
+
+  @protected
+  Future<T> getAdditionalFields(T item) async => item;
+  @protected
+  T addAdditionalFields(T item, T previousItem) => item;
 }

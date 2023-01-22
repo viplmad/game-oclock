@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO;
 
+import 'package:backend/model/model.dart' show TagView;
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
@@ -20,10 +22,16 @@ class TagTheme {
   }
 
   static List<String> views(BuildContext context) {
-    return <String>[
-      GameCollectionLocalisations.of(context).mainViewString,
-      GameCollectionLocalisations.of(context).lastCreatedViewString,
-    ];
+    return TagView.values.map<String>((TagView view) {
+      switch (view) {
+        case TagView.main:
+          return GameCollectionLocalisations.of(context).mainViewString;
+        case TagView.lastAdded:
+          return GameCollectionLocalisations.of(context).lastAddedViewString;
+        case TagView.lastUpdated:
+          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
+      }
+    }).toList(growable: false);
   }
 
   static Widget itemCard(

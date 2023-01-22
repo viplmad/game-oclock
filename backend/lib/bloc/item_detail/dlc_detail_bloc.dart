@@ -18,12 +18,20 @@ class DLCDetailBloc extends ItemDetailBloc<DLCDTO, NewDLCDTO, DLCService> {
   final DLCFinishService dlcFinishService;
 
   @override
-  Future<DLCDTO> get() async {
-    final DLCDTO dlc = await super.get();
+  Future<DLCDTO> getAdditionalFields(DLCDTO item) async {
     final DateTime? firstFinish = await dlcFinishService.getFirstFinish(itemId);
 
-    dlc.firstFinish = firstFinish;
+    return _populateDlc(item, firstFinish);
+  }
 
-    return dlc;
+  @override
+  DLCDTO addAdditionalFields(DLCDTO item, DLCDTO previousItem) {
+    return _populateDlc(item, previousItem.firstFinish);
+  }
+
+  DLCDTO _populateDlc(DLCDTO item, DateTime? firstFinish) {
+    item.firstFinish = firstFinish;
+
+    return item;
   }
 }

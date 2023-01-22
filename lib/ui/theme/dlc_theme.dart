@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show DLCDTO, DLCAvailableDTO;
 
+import 'package:backend/model/model.dart' show DLCView;
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
@@ -29,10 +31,18 @@ class DLCTheme {
   }
 
   static List<String> views(BuildContext context) {
-    return <String>[
-      GameCollectionLocalisations.of(context).mainViewString,
-      GameCollectionLocalisations.of(context).lastCreatedViewString,
-    ];
+    return DLCView.values.map<String>((DLCView view) {
+      switch (view) {
+        case DLCView.main:
+          return GameCollectionLocalisations.of(context).mainViewString;
+        case DLCView.lastAdded:
+          return GameCollectionLocalisations.of(context).lastAddedViewString;
+        case DLCView.lastUpdated:
+          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
+        case DLCView.lastFinished:
+          return GameCollectionLocalisations.of(context).lastFinishedViewString;
+      }
+    }).toList(growable: false);
   }
 
   static Widget itemCard(

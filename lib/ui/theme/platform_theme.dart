@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, PlatformAvailableDTO;
 
+import 'package:backend/model/model.dart' show PlatformView;
+
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/item_view.dart';
@@ -38,10 +40,16 @@ class PlatformTheme {
   }
 
   static List<String> views(BuildContext context) {
-    return <String>[
-      GameCollectionLocalisations.of(context).mainViewString,
-      GameCollectionLocalisations.of(context).lastCreatedViewString,
-    ];
+    return PlatformView.values.map<String>((PlatformView view) {
+      switch (view) {
+        case PlatformView.main:
+          return GameCollectionLocalisations.of(context).mainViewString;
+        case PlatformView.lastAdded:
+          return GameCollectionLocalisations.of(context).lastAddedViewString;
+        case PlatformView.lastUpdated:
+          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
+      }
+    }).toList(growable: false);
   }
 
   static Widget itemCard(

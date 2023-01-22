@@ -247,5 +247,5 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
   }
 
   @protected
-  Future<ViewParameters> getStartViewIndex();
+  Future<ViewParameters> getStartViewIndex() async => ViewParameters(0);
 }

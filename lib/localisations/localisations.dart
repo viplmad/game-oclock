@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show GameStatus, PlatformType;
 
-import 'package:backend/model/model.dart' show CalendarRange;
+import 'package:backend/model/model.dart' show CalendarRange, GameView;
 
 import 'localisations_en.dart';
 import 'localisations_es.dart';
@@ -78,9 +78,9 @@ abstract class GameCollectionLocalisations {
   String get finishDateFieldString;
   String get finishDatesFieldString;
   String get emptyFinishDatesString;
-
   String get mainViewString;
-  String get lastCreatedViewString;
+  String get lastAddedViewString;
+  String get lastUpdatedViewString;
   String get yearInReviewViewString;
 
   String get generalString;

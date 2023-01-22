@@ -9,18 +9,17 @@ abstract class ItemDetailEvent extends Equatable {
 
 class LoadItem extends ItemDetailEvent {}
 
-class ReloadItem extends ItemDetailEvent {}
+class ReloadItem extends ItemDetailEvent {
+  // ignore: avoid_positional_boolean_parameters
+  const ReloadItem([this.forceAdditionalFields = false]);
 
-class UpdateItem<N extends Object> extends ItemDetailEvent {
-  const UpdateItem(this.item);
-
-  final N item;
-
-  @override
-  List<Object> get props => <Object>[item];
+  final bool forceAdditionalFields;
 
   @override
-  String toString() => 'UpdateItem { '
-      'item: $item'
+  List<Object> get props => <Object>[forceAdditionalFields];
+
+  @override
+  String toString() => 'ReloadItem { '
+      'forceAdditionalFields: $forceAdditionalFields'
       ' }';
 }

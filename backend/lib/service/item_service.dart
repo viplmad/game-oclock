@@ -58,7 +58,7 @@ Future<T?> nullIfNotFound<T>(Future<T> future) async {
     return await future;
   } on ApiException catch (e) {
     if (e.code == HttpStatus.notFound) {
-      return Future<T?>.value(null);
+      return null;
     }
 
     rethrow;
@@ -70,7 +70,7 @@ Future<T> defaultIfNotFound<T>(Future<T> future, T defaultValue) async {
     return await future;
   } on ApiException catch (e) {
     if (e.code == HttpStatus.notFound) {
-      return Future<T>.value(defaultValue);
+      return defaultValue;
     }
 
     rethrow;

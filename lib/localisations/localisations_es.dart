@@ -149,7 +149,9 @@ class GameCollectionLocalisationsEs implements GameCollectionLocalisations {
   @override
   final String mainViewString = 'Principal';
   @override
-  final String lastCreatedViewString = 'Últimos creados';
+  final String lastAddedViewString = 'Últimos añadidos';
+  @override
+  final String lastUpdatedViewString = 'Últimos actualizados';
   @override
   final String yearInReviewViewString = 'Repaso anual';
 

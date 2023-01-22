@@ -19,11 +19,9 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
         await SharedPreferencesState.retrieveInitialGameViewIndex() ??
             GameView.main.index;
 
-    return Future<ViewParameters>.value(
-      ViewParameters(
-        startViewIndex,
-        startViewIndex == GameView.review.index ? DateTime.now().year : null,
-      ),
+    return ViewParameters(
+      startViewIndex,
+      startViewIndex == GameView.review.index ? DateTime.now().year : null,
     );
   }
 }

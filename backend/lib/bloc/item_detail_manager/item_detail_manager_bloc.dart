@@ -17,7 +17,6 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     on<SetItemImage>(_mapSetImageToState);
     on<UpdateItemImageName>(_mapUpdateImageNameToState);
     on<DeleteItemImage>(_mapDeleteImageToState);
-    on<WarnItemDetailNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   void _mapSetImageToState(
@@ -25,9 +24,9 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     Emitter<ItemDetailManagerState> emit,
   ) async {
     try {
-      final T updatedItem = await _setImage(event);
+      await _setImage(event);
       emit(
-        ItemImageUpdated<T>(updatedItem),
+        ItemImageUpdated(),
       );
     } catch (e) {
       emit(
@@ -45,9 +44,9 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     Emitter<ItemDetailManagerState> emit,
   ) async {
     try {
-      final T updatedItem = await _updateImageName(event);
+      await _updateImageName(event);
       emit(
-        ItemImageUpdated<T>(updatedItem),
+        ItemImageUpdated(),
       );
     } catch (e) {
       emit(
@@ -65,9 +64,9 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     Emitter<ItemDetailManagerState> emit,
   ) async {
     try {
-      final T updatedItem = await _deleteImage(event);
+      await _deleteImage(event);
       emit(
-        ItemImageUpdated<T>(updatedItem),
+        ItemImageUpdated(),
       );
     } catch (e) {
       emit(
@@ -80,19 +79,16 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
     );
   }
 
-  Future<T> _setImage(SetItemImage event) async {
-    await service.uploadImage(itemId, event.imagePath);
-    return service.get(itemId);
+  Future<void> _setImage(SetItemImage event) async {
+    return service.uploadImage(itemId, event.imagePath);
   }
 
-  Future<T> _updateImageName(UpdateItemImageName event) async {
-    await service.renameImage(itemId, event.newImageName);
-    return service.get(itemId);
+  Future<void> _updateImageName(UpdateItemImageName event) async {
+    return service.renameImage(itemId, event.newImageName);
   }
 
-  Future<T> _deleteImage(DeleteItemImage event) async {
-    await service.deleteImage(itemId);
-    return service.get(itemId);
+  Future<void> _deleteImage(DeleteItemImage event) async {
+    return service.deleteImage(itemId);
   }
 }
 
@@ -104,6 +100,7 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     required this.service,
   }) : super(ItemDetailManagerInitialised()) {
     on<UpdateItemField<N>>(_mapUpdateFieldToState);
+    on<WarnItemDetailNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   final int itemId;
@@ -114,9 +111,9 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemDetailManagerState> emit,
   ) async {
     try {
-      final T updatedItem = await _update(event);
+      await _update(event);
       emit(
-        ItemFieldUpdated<T>(updatedItem),
+        ItemFieldUpdated(),
       );
     } catch (e) {
       emit(

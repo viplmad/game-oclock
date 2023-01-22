@@ -44,7 +44,7 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemListManagerState> emit,
   ) async {
     try {
-      await delete(event);
+      await _delete(event);
       emit(
         ItemDeleted<T>(event.item),
       );
@@ -70,7 +70,7 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
     return service.create(event.item);
   }
 
-  Future<void> delete(DeleteItem<T> event) {
+  Future<void> _delete(DeleteItem<T> event) {
     return service.delete(event.item.id);
   }
 }
