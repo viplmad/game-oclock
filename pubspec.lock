@@ -267,11 +267,13 @@ packages:
     source: sdk
     version: "0.0.0"
   game_collection_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "../game_collection_client"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "8189cd09cff654ae6bd3f4e15ba0a596ca212e2d"
+      url: "https://github.com/viplmad/game_collection_client_dart.git"
+    source: git
     version: "0.1.0+24"
   http:
     dependency: transitive

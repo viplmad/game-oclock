@@ -3,5 +3,5 @@ class SearchArguments {
     required this.onTapReturn,
   });
 
-  final bool onTapReturn; // TODO Change to action enum
+  final bool onTapReturn;
 }

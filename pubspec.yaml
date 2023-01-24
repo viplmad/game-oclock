@@ -38,9 +38,11 @@ dependencies:
   charts_flutter: ^0.12.0
   package_info_plus: ^3.0.2
 
-# Client
-game_collection_client:
-  path: ../game_collection_client
+  # Client
+  game_collection_client:
+    git:
+      url: https://github.com/viplmad/game_collection_client_dart.git
+      ref: main
 
 dev_dependencies:
   flutter_lints: ^2.0.1

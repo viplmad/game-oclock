@@ -11,7 +11,6 @@ import 'package:backend/bloc/server_settings_manager/server_settings_manager.dar
 import 'package:game_collection/localisations/localisations.dart';
 
 import '../common/show_snackbar.dart';
-import '../utils/fab_utils.dart';
 import '../route_constants.dart';
 
 class ServerConnectionFormData {
@@ -99,10 +98,6 @@ class ServerSettings extends StatelessWidget {
                     }
                   : null,
               foregroundColor: Colors.white,
-              backgroundColor: FABUtils.backgroundIfActive(
-                // TODO check this
-                enabled: loaded,
-              ),
             );
           },
         ),
