@@ -93,7 +93,7 @@ class _DecimalPickerDialogState extends State<_DecimalPickerDialog> {
           ),
           Text(
             '.',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           NumberPicker(
             value: _decimalPart,

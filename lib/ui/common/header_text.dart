@@ -24,7 +24,7 @@ class HeaderText extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text(text, style: Theme.of(context).textTheme.subtitle1),
+          Text(text, style: Theme.of(context).textTheme.titleMedium),
         ],
       ),
     );

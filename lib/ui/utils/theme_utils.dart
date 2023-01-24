@@ -11,7 +11,6 @@ class ThemeUtils {
     final ThemeData contextTheme = Theme.of(context);
     final ThemeData gameTheme = contextTheme.copyWith(
       primaryColor: primary,
-      toggleableActiveColor: secondary,
       colorScheme: contextTheme.colorScheme.copyWith(
         primary: primary,
         secondary: secondary,

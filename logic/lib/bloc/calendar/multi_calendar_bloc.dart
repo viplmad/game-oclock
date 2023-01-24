@@ -510,11 +510,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     );
   }
 
-  @override
-  Future<void> close() {
-    return super.close();
-  }
-
   Future<List<GameWithLogsDTO>> _getAllGameWithLogsInYear(int year) {
     final DateTime yearDate = DateTime(year);
     final DateTime firstDayYear = yearDate.atFirstDayOfYear();

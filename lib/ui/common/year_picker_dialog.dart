@@ -54,7 +54,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                         .formatYear(_selectedDate.year),
                     style: Theme.of(context)
                         .primaryTextTheme
-                        .subtitle1!
+                        .titleMedium!
                         .copyWith(color: Colors.white),
                   ),
                 )
@@ -176,7 +176,7 @@ class _YearPickerState extends State<_YearPicker> {
     } else {
       textColor = colorScheme.onSurface.withOpacity(0.87);
     }
-    final TextStyle itemStyle = textTheme.bodyText1!.apply(color: textColor);
+    final TextStyle itemStyle = textTheme.bodyLarge!.apply(color: textColor);
 
     BoxDecoration? decoration;
     if (isSelected) {

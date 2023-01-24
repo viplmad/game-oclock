@@ -40,7 +40,7 @@ class EnumField extends StatelessWidget {
 
             return ChoiceChip(
               labelPadding: EdgeInsets.zero,
-              labelStyle: textTheme.bodyText1?.copyWith(
+              labelStyle: textTheme.bodyLarge?.copyWith(
                 // Reduce size of chips
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,

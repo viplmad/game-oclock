@@ -14,7 +14,6 @@ class AppTheme {
       brightness: brightness,
       primarySwatch: _primarySwatch,
       indicatorColor: Colors.white,
-      toggleableActiveColor: _secondaryColour,
       colorScheme: ColorScheme.fromSwatch(
         brightness: brightness,
         primarySwatch: _primarySwatch,

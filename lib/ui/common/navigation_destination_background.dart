@@ -235,7 +235,7 @@ class NavigationDestination extends StatelessWidget {
   ///
   /// The accompanying [Text] widget will use
   /// [NavigationBarThemeData.labelTextStyle]. If this are null, the default
-  /// text style would use [TextTheme.overline] with [ColorScheme.onSurface].
+  /// text style would use [TextTheme.labelSmall] with [ColorScheme.onSurface].
   final String label;
 
   /// The text to display in the tooltip for this [NavigationDestination], when
@@ -1215,7 +1215,7 @@ class _NavigationBarDefaultsM2 extends NavigationBarThemeData {
   @override
   MaterialStateProperty<TextStyle?>? get labelTextStyle =>
       MaterialStatePropertyAll<TextStyle?>(
-        _theme.textTheme.overline!.copyWith(color: _colors.onSurface),
+        _theme.textTheme.labelSmall!.copyWith(color: _colors.onSurface),
       );
 }
 
