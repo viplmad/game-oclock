@@ -1,6 +1,6 @@
 import 'package:game_collection_client/api.dart' show GameDTO, NewGameDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameFinishService, GameLogService, GameService;
 
 import 'item_detail.dart';

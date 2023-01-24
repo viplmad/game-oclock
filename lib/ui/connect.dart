@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/bloc/connection/connection.dart';
-import 'package:backend/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/connection/connection.dart';
+import 'package:logic/service/service.dart' show GameCollectionService;
 
 import 'package:game_collection/localisations/localisations.dart';
 

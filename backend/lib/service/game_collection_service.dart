@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart'
     show ApiClient, ApiException, OAuth, TokenResponse;
 
-import 'package:backend/model/model.dart' show ServerConnection;
+import 'package:logic/model/model.dart' show ServerConnection;
 
 import '../utils/http_status.dart';
 import 'service.dart';

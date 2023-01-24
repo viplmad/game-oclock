@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show PlatformService, GameCollectionService;
 
 import 'item_list_manager.dart';

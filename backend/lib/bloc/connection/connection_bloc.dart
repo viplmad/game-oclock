@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection_client/api.dart' show TokenResponse;
 
-import 'package:backend/preferences/shared_preferences_state.dart';
-import 'package:backend/model/model.dart' show ServerConnection;
-import 'package:backend/service/service.dart' show GameCollectionService;
+import 'package:logic/model/model.dart' show ServerConnection;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'connection.dart';
 

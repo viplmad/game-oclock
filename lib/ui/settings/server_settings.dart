@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:backend/model/model.dart' show ServerConnection;
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/server_settings/server_settings.dart';
-import 'package:backend/bloc/server_settings_manager/server_settings_manager.dart';
+import 'package:logic/model/model.dart' show ServerConnection;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/server_settings/server_settings.dart';
+import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

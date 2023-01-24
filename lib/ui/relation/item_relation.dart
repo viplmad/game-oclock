@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:backend/bloc/item_relation/item_relation.dart';
-import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:logic/bloc/item_relation/item_relation.dart';
+import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

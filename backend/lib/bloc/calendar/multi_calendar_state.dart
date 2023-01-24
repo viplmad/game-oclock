@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart'
     show GameWithLogsDTO, GameLogDTO;
 
-import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
+import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 
 import 'calendar_state.dart';
 

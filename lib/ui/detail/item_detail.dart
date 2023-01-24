@@ -7,10 +7,10 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:backend/model/model.dart' show ItemImage;
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/item_detail/item_detail.dart';
-import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
+import 'package:logic/model/model.dart' show ItemImage;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/item_detail/item_detail.dart';
+import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

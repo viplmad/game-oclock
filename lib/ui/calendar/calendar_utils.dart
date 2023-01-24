@@ -4,8 +4,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
-import 'package:backend/model/calendar_range.dart';
-import 'package:backend/utils/datetime_extension.dart';
+import 'package:logic/model/model.dart' show CalendarRange;
+import 'package:logic/utils/datetime_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

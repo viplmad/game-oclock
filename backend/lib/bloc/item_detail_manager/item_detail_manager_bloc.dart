@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show ItemService, ItemWithImageService;
 
 import 'item_detail_manager.dart';

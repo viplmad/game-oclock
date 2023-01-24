@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
-import 'package:backend/model/model.dart' show CalendarRange;
-import 'package:backend/utils/datetime_extension.dart';
+import 'package:logic/model/model.dart' show CalendarRange;
+import 'package:logic/utils/datetime_extension.dart';
 
 class RangeListUtils {
   RangeListUtils._();

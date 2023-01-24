@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO;
 
-import 'package:backend/model/model.dart' show TagView;
+import 'package:logic/model/model.dart' show TagView;
 
 import 'package:game_collection/localisations/localisations.dart';
 

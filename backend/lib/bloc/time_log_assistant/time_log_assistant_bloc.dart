@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/utils/time_of_day_extension.dart';
+import 'package:logic/utils/time_of_day_extension.dart';
 
 import 'time_log_assistant.dart';
 

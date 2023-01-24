@@ -1,6 +1,6 @@
 import 'package:game_collection_client/api.dart' show GameDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameService;
 
 import 'item_relation_manager.dart';

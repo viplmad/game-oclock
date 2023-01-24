@@ -5,14 +5,14 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
-import 'package:backend/model/model.dart'
+import 'package:logic/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/calendar/single_calendar.dart';
-import 'package:backend/bloc/calendar_manager/calendar_manager.dart';
-import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
-import 'package:backend/utils/duration_extension.dart';
-import 'package:backend/utils/game_calendar_utils.dart';
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/calendar/single_calendar.dart';
+import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
+import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:logic/utils/duration_extension.dart';
+import 'package:logic/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

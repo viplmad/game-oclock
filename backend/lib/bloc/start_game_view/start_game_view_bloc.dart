@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/preferences/shared_preferences_state.dart';
+import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'start_game_view.dart';
 

@@ -6,8 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:backend/game_collection_backend.dart'
-    show GameCollectionService;
+import 'package:logic/game_collection_backend.dart' show GameCollectionService;
 
 import 'package:game_collection/localisations/localisations.dart';
 

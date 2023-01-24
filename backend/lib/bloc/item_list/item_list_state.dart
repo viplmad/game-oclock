@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:backend/model/model.dart' show ListStyle;
+import 'package:logic/model/model.dart' show ListStyle;
 
 abstract class ItemListState extends Equatable {
   const ItemListState();

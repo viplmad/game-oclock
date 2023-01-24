@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show GameStatus, PlatformType;
 
-import 'package:backend/model/model.dart' show CalendarRange;
+import 'package:logic/model/model.dart' show CalendarRange;
 
 import 'localisations_en.dart';
 import 'localisations_es.dart';

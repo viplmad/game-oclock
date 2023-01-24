@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
-import 'package:backend/model/model.dart' show ItemImage;
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/item_detail/item_detail.dart';
-import 'package:backend/bloc/item_detail_manager/item_detail_manager.dart';
-import 'package:backend/bloc/item_relation/item_relation.dart';
-import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:logic/model/model.dart' show ItemImage;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/item_detail/item_detail.dart';
+import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
+import 'package:logic/bloc/item_relation/item_relation.dart';
+import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

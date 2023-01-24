@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:backend/service/service.dart' show GameCollectionService;
-
-import 'package:backend/bloc/tab/tab.dart';
-import 'package:backend/bloc/item_list/item_list.dart';
-import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
-import 'package:backend/bloc/about/about.dart';
-import 'package:backend/bloc/start_game_view/start_game_view.dart';
-
-import 'package:backend/model/model.dart' show MainTab;
+import 'package:logic/model/model.dart' show MainTab;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/tab/tab.dart';
+import 'package:logic/bloc/item_list/item_list.dart';
+import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
+import 'package:logic/bloc/about/about.dart';
+import 'package:logic/bloc/start_game_view/start_game_view.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show GameWithLogsDTO, GameDTO;
 
-import 'package:backend/model/model.dart' show CalendarRange;
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/calendar/multi_calendar.dart';
-import 'package:backend/bloc/calendar_manager/calendar_manager.dart';
-import 'package:backend/utils/duration_extension.dart';
-import 'package:backend/utils/game_calendar_utils.dart';
+import 'package:logic/model/model.dart' show CalendarRange;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/calendar/multi_calendar.dart';
+import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
+import 'package:logic/utils/duration_extension.dart';
+import 'package:logic/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

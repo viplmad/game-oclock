@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_collection_client/api.dart'
     show GameDTO, GameWithFinishDTO, GameWithLogDTO, GameAvailableDTO;
 
-import 'package:backend/model/model.dart' show GameView;
+import 'package:logic/model/model.dart' show GameView;
 
 import 'package:game_collection/localisations/localisations.dart';
 

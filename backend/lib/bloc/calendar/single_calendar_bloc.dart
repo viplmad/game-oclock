@@ -5,12 +5,12 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameLogService, GameFinishService;
-import 'package:backend/model/model.dart'
+import 'package:logic/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;
-import 'package:backend/utils/datetime_extension.dart';
-import 'package:backend/utils/game_calendar_utils.dart';
+import 'package:logic/utils/datetime_extension.dart';
+import 'package:logic/utils/game_calendar_utils.dart';
 
 import '../calendar_manager/calendar_manager.dart';
 import '../item_relation_manager/item_relation_manager.dart';

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:game_collection_client/api.dart'
     show GameDTO, NewGameDTO, GameStatus;
 
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/bloc/item_search/item_search.dart';
-import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/item_search/item_search.dart';
+import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/preferences/shared_preferences_state.dart';
+import 'package:logic/preferences/shared_preferences_state.dart';
 
 import '../server_settings_manager/server_settings_manager.dart';
 import 'server_settings.dart';

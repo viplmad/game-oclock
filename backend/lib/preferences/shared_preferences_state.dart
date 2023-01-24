@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
-import 'package:backend/model/model.dart' show ServerConnection;
+import 'package:logic/model/model.dart' show ServerConnection;
 
 class SharedPreferencesState {
   const SharedPreferencesState._();

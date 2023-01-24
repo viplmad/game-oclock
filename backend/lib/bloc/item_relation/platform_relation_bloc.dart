@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart'
     show GameAvailableDTO, DLCAvailableDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameService, DLCService;
 
 import 'item_relation.dart';

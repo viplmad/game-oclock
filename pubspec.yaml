@@ -19,10 +19,6 @@ dependencies:
   # BLoC pattern
   flutter_bloc: ^8.1.1
 
-  # Back-end
-  backend:
-    path: ./backend
-
   # Front-end
   smooth_star_rating:
     git:
@@ -38,7 +34,9 @@ dependencies:
   charts_flutter: ^0.12.0
   package_info_plus: ^3.0.2
 
-  # Client
+# Back-end
+  logic:
+    path: ./backend
   game_collection_client:
     git:
       url: https://github.com/viplmad/game_collection_client_dart.git

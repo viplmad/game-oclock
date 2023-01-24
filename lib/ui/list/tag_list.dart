@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
-import 'package:backend/service/service.dart' show GameCollectionService;
-import 'package:backend/model/model.dart' show ListStyle;
-import 'package:backend/bloc/item_list/item_list.dart';
-import 'package:backend/bloc/item_list_manager/item_list_manager.dart';
+import 'package:logic/model/model.dart' show ListStyle;
+import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/bloc/item_list/item_list.dart';
+import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

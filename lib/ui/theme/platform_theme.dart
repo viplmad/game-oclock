@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, PlatformAvailableDTO;
 
-import 'package:backend/model/model.dart' show PlatformView;
+import 'package:logic/model/model.dart' show PlatformView;
 
 import 'package:game_collection/localisations/localisations.dart';
 

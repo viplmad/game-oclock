@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/app_tab.dart';
+import 'package:logic/model/model.dart' show MainTab;
 
 abstract class TabEvent extends Equatable {
   const TabEvent();

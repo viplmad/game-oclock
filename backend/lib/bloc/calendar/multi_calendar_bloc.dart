@@ -6,11 +6,11 @@ import 'package:bloc/bloc.dart';
 import 'package:game_collection_client/api.dart'
     show GameLogDTO, GameWithLogsDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameLogService;
-import 'package:backend/model/model.dart' show CalendarRange, CalendarStyle;
-import 'package:backend/utils/datetime_extension.dart';
-import 'package:backend/utils/game_calendar_utils.dart';
+import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
+import 'package:logic/utils/datetime_extension.dart';
+import 'package:logic/utils/game_calendar_utils.dart';
 
 import '../calendar_manager/calendar_manager.dart';
 import 'multi_calendar.dart';

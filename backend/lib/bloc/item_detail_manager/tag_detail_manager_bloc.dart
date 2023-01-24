@@ -1,6 +1,6 @@
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, TagService;
 
 import 'item_detail_manager.dart';

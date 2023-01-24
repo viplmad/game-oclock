@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
-import 'package:backend/bloc/time_log_assistant/time_log_assistant.dart';
-import 'package:backend/utils/time_of_day_extension.dart';
+import 'package:logic/bloc/time_log_assistant/time_log_assistant.dart';
+import 'package:logic/utils/time_of_day_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 

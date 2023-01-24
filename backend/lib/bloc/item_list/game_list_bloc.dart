@@ -7,11 +7,11 @@ import 'package:game_collection_client/api.dart'
         GameWithLogPageResult,
         NewGameDTO;
 
-import 'package:backend/service/service.dart'
+import 'package:logic/service/service.dart'
     show GameCollectionService, GameFinishService, GameLogService, GameService;
-import 'package:backend/model/model.dart' show GameView;
-import 'package:backend/preferences/shared_preferences_state.dart';
-import 'package:backend/utils/datetime_extension.dart';
+import 'package:logic/model/model.dart' show GameView;
+import 'package:logic/preferences/shared_preferences_state.dart';
+import 'package:logic/utils/datetime_extension.dart';
 
 import 'item_list.dart';
 

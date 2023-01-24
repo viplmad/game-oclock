@@ -5,8 +5,8 @@ import 'package:bloc/bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:backend/model/list_style.dart';
-import 'package:backend/service/service.dart' show ItemService;
+import 'package:logic/model/model.dart' show ListStyle;
+import 'package:logic/service/service.dart' show ItemService;
 
 import '../item_list_manager/item_list_manager.dart';
 import 'item_list.dart';

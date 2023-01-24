@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/model.dart' show ServerConnection;
+import 'package:logic/model/model.dart' show ServerConnection;
 
 abstract class ServerSettingsState extends Equatable {
   const ServerSettingsState();

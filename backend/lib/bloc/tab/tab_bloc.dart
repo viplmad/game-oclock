@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:backend/model/model.dart' show MainTab;
+import 'package:logic/model/model.dart' show MainTab;
 
 import 'tab.dart';
 

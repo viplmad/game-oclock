@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_collection_client/api.dart'
     show DLCDTO, DLCWithFinishDTO, DLCAvailableDTO;
 
-import 'package:backend/model/model.dart' show DLCView;
+import 'package:logic/model/model.dart' show DLCView;
 
 import 'package:game_collection/localisations/localisations.dart';
 

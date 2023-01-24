@@ -1,8 +1,8 @@
 import 'package:game_collection_client/api.dart'
     show GameDTO, PlatformAvailableDTO;
 
-import 'package:backend/model/model.dart' show ItemFinish;
-import 'package:backend/service/service.dart'
+import 'package:logic/model/model.dart' show ItemFinish;
+import 'package:logic/service/service.dart'
     show GameCollectionService, DLCService, DLCFinishService;
 
 import 'item_relation_manager.dart';

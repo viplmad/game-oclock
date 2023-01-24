@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:backend/model/calendar_range.dart';
+import 'package:logic/model/model.dart' show CalendarRange;
 
 abstract class CalendarEvent extends Equatable {
   const CalendarEvent();

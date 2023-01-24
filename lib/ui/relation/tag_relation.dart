@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart' show GameDTO;
 
-import 'package:backend/bloc/item_relation/item_relation.dart';
-import 'package:backend/bloc/item_relation_manager/item_relation_manager.dart';
+import 'package:logic/bloc/item_relation/item_relation.dart';
+import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
