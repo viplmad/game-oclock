@@ -447,7 +447,8 @@ abstract class ItemDetailBody<
       onLongPress: () async {
         if (await canLaunchUrlString(value)) {
           await launchUrlString(value);
-        } else {
+        } else if(context.mounted) {
+          // Check context is mounted after asynchronous gap
           final String message = GameCollectionLocalisations.of(context)
               .unableToLaunchString(value);
           showSnackBar(
