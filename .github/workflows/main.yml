@@ -29,9 +29,9 @@ jobs:
     # Analyse lib
     - run: flutter analyze
 
-    # Analyse backend
+    # Analyse logic
     - run: |
-        cd ./backend
+        cd ./logic
         flutter analyze
 
   build:
