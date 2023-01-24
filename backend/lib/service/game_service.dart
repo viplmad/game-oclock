@@ -51,53 +51,42 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
   }
 
   @override
-  Future<GamePageResult> getAll<A>(
-    int viewIndex, {
+  Future<GamePageResult> getAll({
     int? page,
     int? size,
-    A? viewArgs,
   }) {
-    final GameView view = GameView.values[viewIndex];
-    final List<FilterDTO> filters = <FilterDTO>[];
     final List<SortDTO> sorts = <SortDTO>[];
-    switch (view) {
-      case GameView.main:
-        sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-      case GameView.lastAdded:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        break;
-      case GameView.lastUpdated:
-        sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
-        break;
-      case GameView.playing:
-        filters.add(
-          FilterDTO(
-            field: 'status',
-            operator_: OperatorType.eq,
-            value: SearchValue(value: GameStatus.playing.value),
-          ),
-        );
+    sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
+    sorts.add(SortDTO(field: 'name', order: OrderType.asc));
 
-        sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-      case GameView.nextUp:
-        filters.add(
-          FilterDTO(
-            field: 'status',
-            operator_: OperatorType.eq,
-            value: SearchValue(value: GameStatus.nextUp.value),
-          ),
-        );
-
-        sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-    }
     return _api.getGames(
-      SearchDTO(filter: filters, sort: sorts, page: page, size: size),
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<GamePageResult> getLastAdded({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+
+    return _api.getGames(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<GamePageResult> getLastUpdated({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
+
+    return _api.getGames(
+      SearchDTO(sort: sorts, page: page, size: size),
     );
   }
 
@@ -110,6 +99,29 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     return _api.getGames(
       SearchDTO(page: page, size: size),
       q: quicksearch,
+    );
+  }
+
+  Future<GamePageResult> getAllWithStatus(
+    GameStatus status, {
+    int? page,
+    int? size,
+  }) {
+    final List<FilterDTO> filters = <FilterDTO>[];
+    filters.add(
+      FilterDTO(
+        field: 'status',
+        operator_: OperatorType.eq,
+        value: SearchValue(value: status.value),
+      ),
+    );
+
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
+    sorts.add(SortDTO(field: 'name', order: OrderType.asc));
+
+    return _api.getGames(
+      SearchDTO(filter: filters, sort: sorts, page: page, size: size),
     );
   }
 

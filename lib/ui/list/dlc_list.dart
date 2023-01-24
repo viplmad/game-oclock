@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
+import 'package:game_collection_client/api.dart'
+    show DLCDTO, NewDLCDTO, DLCWithFinishDTO;
 
 import 'package:backend/model/model.dart' show ListStyle;
 import 'package:backend/bloc/item_list/item_list.dart';
@@ -107,8 +108,13 @@ class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
       DLCTheme.views(context).elementAt(viewIndex);
 
   @override
-  Widget cardBuilder(BuildContext context, DLCDTO item) =>
-      DLCTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, DLCDTO item) {
+    if (item is DLCWithFinishDTO) {
+      return DLCTheme.itemCardFinish(context, item, onTap);
+    }
+
+    return DLCTheme.itemCard(context, item, onTap);
+  }
 
   @override
   Widget gridBuilder(BuildContext context, DLCDTO item) =>

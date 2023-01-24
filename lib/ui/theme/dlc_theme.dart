@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection_client/api.dart' show DLCDTO, DLCAvailableDTO;
+import 'package:game_collection_client/api.dart'
+    show DLCDTO, DLCWithFinishDTO, DLCAvailableDTO;
 
 import 'package:backend/model/model.dart' show DLCView;
 
@@ -58,7 +59,22 @@ class DLCTheme {
     );
   }
 
-  static Widget itemAvailableCard(
+  static Widget itemCardFinish(
+    BuildContext context,
+    DLCWithFinishDTO item,
+    void Function()? Function(BuildContext, DLCDTO) onTap,
+  ) {
+    return ItemCard(
+      title: itemTitle(item),
+      subtitle:
+          GameCollectionLocalisations.of(context).formatDate(item.finishDate),
+      hasImage: DLCTheme.hasImage,
+      imageURL: item.coverUrl,
+      onTap: onTap(context, item),
+    );
+  }
+
+  static Widget itemCardAvailable(
     BuildContext context,
     DLCAvailableDTO item,
     void Function()? Function(BuildContext, DLCAvailableDTO) onTap,

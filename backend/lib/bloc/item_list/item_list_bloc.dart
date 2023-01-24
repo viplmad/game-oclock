@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart'
-    show PageResultDTO, PrimaryModel;
+import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 import 'package:backend/model/list_style.dart';
 import 'package:backend/service/service.dart' show ItemService;
@@ -61,12 +60,12 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final int startViewIndex = startViewParameters.viewIndex;
       final Object? srtartingViewArgs = startViewParameters.viewArgs;
 
-      final PageResultDTO<T> items =
-          await _getAllWithView(startViewIndex, srtartingViewArgs);
+      final List<T> items =
+          await getAllWithView(startViewIndex, srtartingViewArgs);
 
       emit(
         ItemListLoaded<T>(
-          items.data,
+          items,
           startViewIndex,
           srtartingViewArgs,
         ),
@@ -108,11 +107,11 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     );
 
     try {
-      final PageResultDTO<T> items =
-          await _getAllWithView(event.viewIndex, event.viewArgs);
+      final List<T> items =
+          await getAllWithView(event.viewIndex, event.viewArgs);
       emit(
         ItemListLoaded<T>(
-          items.data,
+          items,
           event.viewIndex,
           event.viewArgs,
           0,
@@ -138,10 +137,9 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
       final int page = (state as ItemListLoaded<T>).page + 1;
-      final PageResultDTO<T> pageItems =
-          await _getAllWithView(viewIndex, viewArgs, page);
+      final List<T> pageItems = await getAllWithView(viewIndex, viewArgs, page);
 
-      final List<T> updatedItems = List<T>.from(items)..addAll(pageItems.data);
+      final List<T> updatedItems = List<T>.from(items)..addAll(pageItems);
 
       emit(
         ItemListLoaded<T>(
@@ -179,32 +177,8 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
   }
 
   void _mapListManagerStateToEvent(ItemListManagerState managerState) {
-    if (managerState is ItemAdded<T>) {
-      _mapAddedToEvent(managerState);
-    } else if (managerState is ItemDeleted<T>) {
+    if (managerState is ItemDeleted<T>) {
       _mapDeletedToEvent(managerState);
-    }
-  }
-
-  void _mapAddedToEvent(ItemAdded<T> managerState) {
-    if (state is ItemListLoaded<T>) {
-      final List<T> items = (state as ItemListLoaded<T>).items;
-      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
-      final int page = (state as ItemListLoaded<T>).page;
-      final ListStyle style = (state as ItemListLoaded<T>).style;
-
-      final List<T> updatedItems = List<T>.from(items)..add(managerState.item);
-
-      add(
-        UpdateItemList<T>(
-          updatedItems,
-          viewIndex,
-          viewArgs,
-          page,
-          style,
-        ),
-      );
     }
   }
 
@@ -238,14 +212,15 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     return super.close();
   }
 
-  Future<PageResultDTO<T>> _getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
-    int? page,
-  ]) {
-    return service.getAll(viewIndex, page: page, viewArgs: viewArgs);
+  @protected
+  Future<ViewParameters> getStartViewIndex() async {
+    return ViewParameters(0);
   }
 
   @protected
-  Future<ViewParameters> getStartViewIndex() async => ViewParameters(0);
+  Future<List<T>> getAllWithView(
+    int viewIndex,
+    Object? viewArgs, [
+    int? page,
+  ]);
 }

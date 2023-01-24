@@ -65,7 +65,7 @@ class PlatformTheme {
     );
   }
 
-  static Widget itemAvailableCard(
+  static Widget itemCardAvailable(
     BuildContext context,
     PlatformAvailableDTO item,
     void Function()? Function(BuildContext, PlatformAvailableDTO) onTap,

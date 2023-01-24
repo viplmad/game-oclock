@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection_client/api.dart' show GameDTO, GameAvailableDTO;
+import 'package:game_collection_client/api.dart'
+    show GameDTO, GameWithFinishDTO, GameWithLogDTO, GameAvailableDTO;
 
 import 'package:backend/model/model.dart' show GameView;
 
@@ -87,7 +88,45 @@ class GameTheme {
     );
   }
 
-  static Widget itemAvailableCard(
+  static Widget itemCardFinish(
+    BuildContext context,
+    GameWithFinishDTO item,
+    void Function()? Function(BuildContext, GameDTO) onTap,
+  ) {
+    return _addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle:
+            GameCollectionLocalisations.of(context).formatDate(item.finishDate),
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
+        onTap: onTap(context, item),
+      ),
+    );
+  }
+
+  static Widget itemCardLog(
+    BuildContext context,
+    GameWithLogDTO item,
+    void Function()? Function(BuildContext, GameDTO) onTap,
+  ) {
+    return _addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle: GameCollectionLocalisations.of(context)
+            .formatDate(item.logDatetime),
+        trailing: GameCollectionLocalisations.of(context)
+            .formatDuration(item.logTime),
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
+        onTap: onTap(context, item),
+      ),
+    );
+  }
+
+  static Widget itemCardAvailable(
     BuildContext context,
     GameAvailableDTO item,
     void Function()? Function(BuildContext, GameAvailableDTO) onTap,

@@ -10,9 +10,11 @@ import 'package:backend/service/service.dart' show ItemService;
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
-abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
-        S extends ItemService<T, N>>
-    extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<
+    T extends PrimaryModel,
+    N extends Object, // TODO Add D extends PrimaryModel for actual object to show
+    S extends ItemService<T,
+        N>> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
     required this.itemId,
     required this.service,
@@ -97,7 +99,12 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
   }
 
   @protected
-  Future<T> getAdditionalFields(T item) async => item;
+  Future<T> getAdditionalFields(T item) async {
+    return item;
+  }
+
   @protected
-  T addAdditionalFields(T item, T previousItem) => item;
+  T addAdditionalFields(T item, T previousItem) {
+    return item;
+  }
 }

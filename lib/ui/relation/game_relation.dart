@@ -47,7 +47,7 @@ class GamePlatformRelationList extends ItemRelationList<PlatformAvailableDTO,
 
   @override
   Widget cardBuilder(BuildContext context, PlatformAvailableDTO item) =>
-      PlatformTheme.itemAvailableCard(context, item, onTap);
+      PlatformTheme.itemCardAvailable(context, item, onTap);
 
   @override
   Future<PlatformAvailableDTO?> Function() onSearchTap(BuildContext context) {

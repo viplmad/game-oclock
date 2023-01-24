@@ -39,26 +39,40 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
   }
 
   @override
-  Future<UserPageResult> getAll<A>(
-    int viewIndex, {
+  Future<UserPageResult> getAll({
     int? page,
     int? size,
-    A? viewArgs,
   }) {
-    final UserView view = UserView.values[viewIndex];
     final List<SortDTO> sorts = <SortDTO>[];
-    switch (view) {
-      case UserView.main:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        sorts.add(SortDTO(field: 'username', order: OrderType.asc));
-        break;
-      case UserView.lastAdded:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        break;
-      case UserView.lastUpdated:
-        sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
-        break;
-    }
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+    sorts.add(SortDTO(field: 'username', order: OrderType.asc));
+
+    return _api.getUsers(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<UserPageResult> getLastAdded({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+
+    return _api.getUsers(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<UserPageResult> getLastUpdated({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
+
     return _api.getUsers(
       SearchDTO(sort: sorts, page: page, size: size),
     );

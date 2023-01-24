@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
-    show GameDTO, NewGameDTO, GameStatus;
+    show GameDTO, NewGameDTO, GameStatus, GameWithFinishDTO, GameWithLogDTO;
 
 import 'package:backend/model/model.dart' show ListStyle, GameView;
 import 'package:backend/bloc/item_list/item_list.dart';
@@ -143,8 +143,15 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
           : '');
 
   @override
-  Widget cardBuilder(BuildContext context, GameDTO item) =>
-      GameTheme.itemCard(context, item, onTap);
+  Widget cardBuilder(BuildContext context, GameDTO item) {
+    if (item is GameWithFinishDTO) {
+      return GameTheme.itemCardFinish(context, item, onTap);
+    } else if(item is GameWithLogDTO) {
+      return GameTheme.itemCardLog(context, item, onTap);
+    }
+
+    return GameTheme.itemCard(context, item, onTap);
+  }
 
   @override
   Widget gridBuilder(BuildContext context, GameDTO item) =>

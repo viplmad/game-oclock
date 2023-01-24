@@ -28,7 +28,7 @@ class PlatformGameRelationList extends ItemRelationList<GameAvailableDTO,
 
   @override
   Widget cardBuilder(BuildContext context, GameAvailableDTO item) =>
-      GameTheme.itemAvailableCard(context, item, onTap);
+      GameTheme.itemCardAvailable(context, item, onTap);
 
   @override
   Future<GameAvailableDTO?> Function() onSearchTap(BuildContext context) {
@@ -74,7 +74,7 @@ class PlatformDLCRelationList extends ItemRelationList<DLCAvailableDTO,
 
   @override
   Widget cardBuilder(BuildContext context, DLCAvailableDTO item) =>
-      DLCTheme.itemAvailableCard(context, item, onTap);
+      DLCTheme.itemCardAvailable(context, item, onTap);
 
   @override
   Future<DLCAvailableDTO?> Function() onSearchTap(BuildContext context) {

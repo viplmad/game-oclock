@@ -17,11 +17,19 @@ abstract class ItemService<T extends Object, N extends Object>
 }
 
 abstract class SearchService<T extends Object> {
-  Future<PageResultDTO<T>> getAll<A>(
-    int viewIndex, {
+  Future<PageResultDTO<T>> getAll({
     int? page,
     int? size,
-    A? viewArgs,
+  });
+
+  Future<PageResultDTO<T>> getLastAdded({
+    int? page,
+    int? size,
+  });
+
+  Future<PageResultDTO<T>> getLastUpdated({
+    int? page,
+    int? size,
   });
 
   Future<PageResultDTO<T>> searchAll({

@@ -11,7 +11,7 @@ import 'package:game_collection_client/api.dart'
         SearchDTO,
         SortDTO;
 
-import 'package:backend/model/model.dart' show DLCView;
+import 'package:game_collection_client/api.dart';
 
 import 'item_service.dart';
 
@@ -40,27 +40,41 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
   }
 
   @override
-  Future<DLCPageResult> getAll<A>(
-    int viewIndex, {
+  Future<DLCPageResult> getAll({
     int? page,
     int? size,
-    A? viewArgs,
   }) {
-    final DLCView view = DLCView.values[viewIndex];
     final List<SortDTO> sorts = <SortDTO>[];
-    switch (view) {
-      case DLCView.main:
-        sorts.add(SortDTO(field: 'base_game_id', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-      case DLCView.lastAdded:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        break;
-      case DLCView.lastUpdated:
-        sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
-        break;
-    }
+    sorts.add(SortDTO(field: 'base_game_id', order: OrderType.asc));
+    sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
+    sorts.add(SortDTO(field: 'name', order: OrderType.asc));
+
+    return _api.getDlcs(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<DLCPageResult> getLastAdded({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+
+    return _api.getDlcs(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<DLCPageResult> getLastUpdated({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
+
     return _api.getDlcs(
       SearchDTO(sort: sorts, page: page, size: size),
     );

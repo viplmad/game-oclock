@@ -34,23 +34,27 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
     return _api.getTotalGameLogs(primaryId);
   }
 
-  Future<GameWithLogPageResult> getFirstFinishedDLCs(
+  Future<GameWithLogPageResult> getFirstPlayedGames(
     DateTime? startDate,
-    DateTime? endDate,
-  ) {
+    DateTime? endDate, {
+    int? page,
+    int? size,
+  }) {
     return _api.getFirstPlayedGames(
-      SearchDTO(),
+      SearchDTO(page: page, size: size),
       startDate: startDate,
       endDate: endDate,
     );
   }
 
-  Future<GameWithLogPageResult> getLastFinishedDLCs(
+  Future<GameWithLogPageResult> getLastPlayedGames(
     DateTime? startDate,
-    DateTime? endDate,
-  ) {
+    DateTime? endDate, {
+    int? page,
+    int? size,
+  }) {
     return _api.getLastPlayedGames(
-      SearchDTO(),
+      SearchDTO(page: page, size: size),
       startDate: startDate,
       endDate: endDate,
     );

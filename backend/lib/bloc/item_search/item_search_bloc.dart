@@ -52,7 +52,7 @@ abstract class ItemSearchBloc<T extends PrimaryModel, S extends SearchService<T>
   }
 
   Future<PageResultDTO<T>> _getInitialItems() {
-    return service.getAll(initialViewIndex, size: maxSuggestions);
+    return service.getLastUpdated(size: maxSuggestions);
   }
 
   Future<PageResultDTO<T>> _getSearchItems(String query) {

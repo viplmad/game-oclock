@@ -36,26 +36,40 @@ class PlatformService
   }
 
   @override
-  Future<PlatformPageResult> getAll<A>(
-    int viewIndex, {
+  Future<PlatformPageResult> getAll({
     int? page,
     int? size,
-    A? viewArgs,
   }) {
-    final PlatformView view = PlatformView.values[viewIndex];
     final List<SortDTO> sorts = <SortDTO>[];
-    switch (view) {
-      case PlatformView.main:
-        sorts.add(SortDTO(field: 'type', order: OrderType.asc));
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-      case PlatformView.lastAdded:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        break;
-      case PlatformView.lastUpdated:
-        sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
-        break;
-    }
+    sorts.add(SortDTO(field: 'type', order: OrderType.asc));
+    sorts.add(SortDTO(field: 'name', order: OrderType.asc));
+
+    return _api.getPlatforms(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<PlatformPageResult> getLastAdded({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+
+    return _api.getPlatforms(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<PlatformPageResult> getLastUpdated({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
+
     return _api.getPlatforms(
       SearchDTO(sort: sorts, page: page, size: size),
     );

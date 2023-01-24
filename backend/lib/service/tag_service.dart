@@ -34,25 +34,39 @@ class TagService implements ItemService<TagDTO, NewTagDTO> {
   }
 
   @override
-  Future<TagPageResult> getAll<A>(
-    int viewIndex, {
+  Future<TagPageResult> getAll({
     int? page,
     int? size,
-    A? viewArgs,
   }) {
-    final TagView view = TagView.values[viewIndex];
     final List<SortDTO> sorts = <SortDTO>[];
-    switch (view) {
-      case TagView.main:
-        sorts.add(SortDTO(field: 'name', order: OrderType.asc));
-        break;
-      case TagView.lastAdded:
-        sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
-        break;
-      case TagView.lastUpdated:
-        sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
-        break;
-    }
+    sorts.add(SortDTO(field: 'name', order: OrderType.asc));
+
+    return _api.getTags(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<TagPageResult> getLastAdded({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
+
+    return _api.getTags(
+      SearchDTO(sort: sorts, page: page, size: size),
+    );
+  }
+
+  @override
+  Future<TagPageResult> getLastUpdated({
+    int? page,
+    int? size,
+  }) {
+    final List<SortDTO> sorts = <SortDTO>[];
+    sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
+
     return _api.getTags(
       SearchDTO(sort: sorts, page: page, size: size),
     );

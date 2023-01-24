@@ -1,10 +1,5 @@
 import 'package:game_collection_client/api.dart'
-    show
-        ApiClient,
-        DLCFinishApi,
-        DLCWithFinishPageResult,
-        DateDTO,
-        SearchDTO;
+    show ApiClient, DLCFinishApi, DLCWithFinishPageResult, DateDTO, SearchDTO;
 
 import 'item_service.dart';
 
@@ -34,10 +29,12 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
 
   Future<DLCWithFinishPageResult> getFirstFinishedDLCs(
     DateTime? startDate,
-    DateTime? endDate,
-  ) {
+    DateTime? endDate, {
+    int? page,
+    int? size,
+  }) {
     return _api.getFirstFinishedDlcs(
-      SearchDTO(),
+      SearchDTO(page: page, size: size),
       startDate: startDate,
       endDate: endDate,
     );
@@ -45,10 +42,12 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
 
   Future<DLCWithFinishPageResult> getLastFinishedDLCs(
     DateTime? startDate,
-    DateTime? endDate,
-  ) {
+    DateTime? endDate, {
+    int? page,
+    int? size,
+  }) {
     return _api.getLastFinishedDlcs(
-      SearchDTO(),
+      SearchDTO(page: page, size: size),
       startDate: startDate,
       endDate: endDate,
     );
