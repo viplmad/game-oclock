@@ -11,14 +11,14 @@ class PlatformDLCRelationBloc extends ItemRelationBloc<DLCAvailableDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<List<DLCAvailableDTO>> getRelationItems() {
-    return dlcService.getPlatformAvailableDLCs(itemId);
+    return _dlcService.getPlatformAvailableDLCs(itemId);
   }
 }
 
@@ -27,13 +27,13 @@ class PlatformGameRelationBloc extends ItemRelationBloc<GameAvailableDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<List<GameAvailableDTO>> getRelationItems() {
-    return gameService.getPlatformAvailableGames(itemId);
+    return _gameService.getPlatformAvailableGames(itemId);
   }
 }

@@ -31,13 +31,14 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
 
-    managerSubscription =
+    _managerSubscription =
         managerBloc.stream.listen(_mapListManagerStateToEvent);
   }
 
   final S service;
   final ItemListManagerBloc<T, N, S> managerBloc;
-  late final StreamSubscription<ItemListManagerState> managerSubscription;
+
+  late final StreamSubscription<ItemListManagerState> _managerSubscription;
 
   void _mapLoadToState(LoadItemList event, Emitter<ItemListState> emit) async {
     emit(
@@ -208,7 +209,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
 
   @override
   Future<void> close() {
-    managerSubscription.cancel();
+    _managerSubscription.cancel();
     return super.close();
   }
 

@@ -8,8 +8,8 @@ import 'package:logic/model/model.dart' show CalendarRange;
 import 'package:logic/utils/datetime_extension.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/statistics_histogram.dart';
 
-import '../common/statistics_histogram.dart';
 import '../theme/calendar_theme.dart';
 
 class CalendarUtils {

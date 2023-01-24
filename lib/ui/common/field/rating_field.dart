@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
+import 'package:game_collection/ui/utils/field_utils.dart';
+
 import '../../theme/theme.dart' show GameTheme;
-import '../../utils/field_utils.dart';
 import '../header_text.dart';
 import '../skeleton.dart';
 

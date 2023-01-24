@@ -10,20 +10,20 @@ class GameDetailBloc extends ItemDetailBloc<GameDTO, NewGameDTO, GameService> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameFinishService = collectionService.gameFinishService,
-        gameLogService = collectionService.gameLogService,
+  })  : _gameFinishService = collectionService.gameFinishService,
+        _gameLogService = collectionService.gameLogService,
         super(
           service: collectionService.gameService,
         );
 
-  final GameFinishService gameFinishService;
-  final GameLogService gameLogService;
+  final GameFinishService _gameFinishService;
+  final GameLogService _gameLogService;
 
   @override
   Future<GameDTO> getAdditionalFields(GameDTO item) async {
     final DateTime? firstFinish =
-        await gameFinishService.getFirstFinish(itemId);
-    final Duration totalTime = await gameLogService.getTotalPlayedTime(itemId);
+        await _gameFinishService.getFirstFinish(itemId);
+    final Duration totalTime = await _gameLogService.getTotalPlayedTime(itemId);
 
     return _populateGame(item, firstFinish, totalTime);
   }

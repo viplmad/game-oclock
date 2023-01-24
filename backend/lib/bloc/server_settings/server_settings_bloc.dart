@@ -14,11 +14,13 @@ class ServerSettingsBloc
     on<LoadServerSettings>(_mapLoadToState);
     on<UpdateServerSettings>(_mapUpdateToState);
 
-    managerSubscription = managerBloc.stream.listen(_mapManagerStateToEvent);
+    _managerSubscription = managerBloc.stream.listen(_mapManagerStateToEvent);
   }
 
   final ServerSettingsManagerBloc managerBloc;
-  late final StreamSubscription<ServerSettingsManagerState> managerSubscription;
+
+  late final StreamSubscription<ServerSettingsManagerState>
+      _managerSubscription;
 
   void _mapLoadToState(
     LoadServerSettings event,
@@ -71,7 +73,7 @@ class ServerSettingsBloc
 
   @override
   Future<void> close() {
-    managerSubscription.cancel();
+    _managerSubscription.cancel();
     return super.close();
   }
 }

@@ -9,11 +9,11 @@ import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/list_view.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/utils/theme_utils.dart';
 
-import '../common/list_view.dart';
-import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
-import '../theme/theme_utils.dart';
 
 abstract class ItemSearch<
         T extends PrimaryModel,

@@ -11,19 +11,19 @@ class DLCFinishRelationManagerBloc extends ItemRelationManagerBloc<ItemFinish> {
   DLCFinishRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : dlcFinishService = collectionService.dlcFinishService,
+  })  : _dlcFinishService = collectionService.dlcFinishService,
         super();
 
-  final DLCFinishService dlcFinishService;
+  final DLCFinishService _dlcFinishService;
 
   @override
   Future<void> addRelation(AddItemRelation<ItemFinish> event) {
-    return dlcFinishService.create(itemId, event.otherItem.date);
+    return _dlcFinishService.create(itemId, event.otherItem.date);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<ItemFinish> event) {
-    return dlcFinishService.delete(itemId, event.otherItem.date);
+    return _dlcFinishService.delete(itemId, event.otherItem.date);
   }
 }
 
@@ -31,19 +31,19 @@ class DLCGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
   DLCGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<void> addRelation(AddItemRelation<GameDTO> event) {
-    return dlcService.setBasegame(itemId, event.otherItem.id);
+    return _dlcService.setBasegame(itemId, event.otherItem.id);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<GameDTO> event) {
-    return dlcService.clearBasegame(itemId);
+    return _dlcService.clearBasegame(itemId);
   }
 }
 
@@ -52,14 +52,14 @@ class DLCPlatformRelationManagerBloc
   DLCPlatformRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<void> addRelation(AddItemRelation<PlatformAvailableDTO> event) {
-    return dlcService.addAvailability(
+    return _dlcService.addAvailability(
       itemId,
       event.otherItem.id,
       event.otherItem.availableDate,
@@ -68,6 +68,6 @@ class DLCPlatformRelationManagerBloc
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<PlatformAvailableDTO> event) {
-    return dlcService.removeAvailability(itemId, event.otherItem.id);
+    return _dlcService.removeAvailability(itemId, event.otherItem.id);
   }
 }

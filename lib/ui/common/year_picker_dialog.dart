@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
-
-import '../utils/shape_utils.dart';
+import 'package:game_collection/ui/utils/shape_utils.dart';
 
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({

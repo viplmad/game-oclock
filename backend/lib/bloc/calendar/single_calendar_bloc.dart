@@ -24,8 +24,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required this.managerBloc,
     required this.gameLogManagerBloc,
     required this.gameFinishManagerBloc,
-  })  : gameLogService = collectionService.gameLogService,
-        gameFinishService = collectionService.gameFinishService,
+  })  : _gameLogService = collectionService.gameLogService,
+        _gameFinishService = collectionService.gameFinishService,
         super(CalendarLoading()) {
     on<LoadSingleCalendar>(_mapLoadToState);
     on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
@@ -37,22 +37,24 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<UpdateSelectedDateNext>(_mapUpdateSelectedDateNextToState);
     on<UpdateSingleCalendar>(_mapUpdateToState);
 
-    gameLogManagerSubscription =
+    _gameLogManagerSubscription =
         gameLogManagerBloc.stream.listen(_mapGameLogManagerStateToEvent);
-    finishDateManagerSubscription =
+    _finishDateManagerSubscription =
         gameFinishManagerBloc.stream.listen(_mapFinishDateManagerStateToEvent);
   }
 
   final int itemId;
-  final GameLogService gameLogService;
-  final GameFinishService gameFinishService;
   final CalendarManagerBloc managerBloc;
   final GameLogRelationManagerBloc gameLogManagerBloc;
   final GameFinishRelationManagerBloc gameFinishManagerBloc;
+
+  final GameLogService _gameLogService;
+  final GameFinishService _gameFinishService;
+
   late final StreamSubscription<ItemRelationManagerState>
-      gameLogManagerSubscription;
+      _gameLogManagerSubscription;
   late final StreamSubscription<ItemRelationManagerState>
-      finishDateManagerSubscription;
+      _finishDateManagerSubscription;
 
   void _mapLoadToState(
     LoadSingleCalendar event,
@@ -622,16 +624,16 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
   @override
   Future<void> close() {
-    gameLogManagerSubscription.cancel();
-    finishDateManagerSubscription.cancel();
+    _gameLogManagerSubscription.cancel();
+    _finishDateManagerSubscription.cancel();
     return super.close();
   }
 
   Future<List<GameLogDTO>> _getAllGameLogs() {
-    return gameLogService.getAll(itemId);
+    return _gameLogService.getAll(itemId);
   }
 
   Future<List<DateTime>> _getAllFinishDates() {
-    return gameFinishService.getAll(itemId);
+    return _gameFinishService.getAll(itemId);
   }
 }

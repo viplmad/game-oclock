@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'theme_utils.dart';
+import 'package:game_collection/ui/utils/theme_utils.dart';
 
 class AppTheme {
   AppTheme._();

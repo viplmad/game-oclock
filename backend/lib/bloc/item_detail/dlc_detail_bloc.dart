@@ -10,16 +10,17 @@ class DLCDetailBloc extends ItemDetailBloc<DLCDTO, NewDLCDTO, DLCService> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : dlcFinishService = collectionService.dlcFinishService,
+  })  : _dlcFinishService = collectionService.dlcFinishService,
         super(
           service: collectionService.dlcService,
         );
 
-  final DLCFinishService dlcFinishService;
+  final DLCFinishService _dlcFinishService;
 
   @override
   Future<DLCDTO> getAdditionalFields(DLCDTO item) async {
-    final DateTime? firstFinish = await dlcFinishService.getFirstFinish(itemId);
+    final DateTime? firstFinish =
+        await _dlcFinishService.getFirstFinish(itemId);
 
     return _populateDlc(item, firstFinish);
   }

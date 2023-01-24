@@ -1,7 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/field_utils.dart';
+import 'package:game_collection/ui/utils/field_utils.dart';
 
 class SkeletonUtils {
   SkeletonUtils._();

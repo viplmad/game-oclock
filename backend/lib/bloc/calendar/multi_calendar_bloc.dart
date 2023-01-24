@@ -20,7 +20,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   MultiCalendarBloc({
     required GameCollectionService collectionService,
     required this.managerBloc,
-  })  : gameLogService = collectionService.gameLogService,
+  })  : _gameLogService = collectionService.gameLogService,
         super(CalendarLoading()) {
     on<LoadMultiCalendar>(_mapLoadToState);
     on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
@@ -32,15 +32,16 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<UpdateSelectedDateNext>(_mapUpdateSelectedDateNextToState);
   }
 
-  final GameLogService gameLogService;
   final CalendarManagerBloc managerBloc;
-  final Set<int> yearsLoaded = <int>{};
+
+  final GameLogService _gameLogService;
+  final Set<int> _yearsLoaded = <int>{};
 
   void _mapLoadToState(
     LoadMultiCalendar event,
     Emitter<CalendarState> emit,
   ) async {
-    if (event.year <= DateTime.now().year && yearsLoaded.add(event.year)) {
+    if (event.year <= DateTime.now().year && _yearsLoaded.add(event.year)) {
       if (state is MultiCalendarLoaded) {
         await _mapLoadAdditionalCalendar(event.year, emit);
       } else {
@@ -519,6 +520,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     final DateTime firstDayYear = yearDate.atFirstDayOfYear();
     final DateTime lastDayYear = yearDate.atLastDayOfYear();
 
-    return gameLogService.getPlayedGames(firstDayYear, lastDayYear);
+    return _gameLogService.getPlayedGames(firstDayYear, lastDayYear);
   }
 }

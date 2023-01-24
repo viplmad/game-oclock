@@ -11,10 +11,10 @@ class DLCListBloc extends ItemListBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCListBloc({
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : dlcFinishService = collectionService.dlcFinishService,
+  })  : _dlcFinishService = collectionService.dlcFinishService,
         super(service: collectionService.dlcService);
 
-  final DLCFinishService dlcFinishService;
+  final DLCFinishService _dlcFinishService;
 
   @override
   Future<List<DLCDTO>> getAllWithView(
@@ -35,7 +35,7 @@ class DLCListBloc extends ItemListBloc<DLCDTO, NewDLCDTO, DLCService> {
         return result.data;
       case DLCView.lastFinished:
         // null startDate = since the beginning of time
-        final DLCWithFinishPageResult result = await dlcFinishService
+        final DLCWithFinishPageResult result = await _dlcFinishService
             .getLastFinishedDLCs(null, DateTime.now(), page: page);
         return result.data;
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
 
+import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 import 'package:logic/utils/time_of_day_extension.dart';
 
 import 'time_log_assistant.dart';

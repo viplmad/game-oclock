@@ -1,7 +1,7 @@
 import 'package:game_collection_client/api.dart'
     show ApiException, PageResultDTO;
 
-import '../utils/http_status.dart';
+import 'package:logic/utils/http_status.dart';
 
 abstract class ItemWithImageService<T extends Object, N extends Object>
     implements ItemService<T, N>, ImageService {}

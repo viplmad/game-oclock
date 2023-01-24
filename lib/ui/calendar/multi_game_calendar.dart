@@ -12,10 +12,10 @@ import 'package:logic/utils/duration_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/common/list_view.dart';
+import 'package:game_collection/ui/common/skeleton.dart';
 
-import '../common/show_snackbar.dart';
-import '../common/list_view.dart';
-import '../common/skeleton.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
 import '../detail/detail_arguments.dart';

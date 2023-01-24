@@ -11,14 +11,14 @@ class PlatformDLCRelationManagerBloc
   PlatformDLCRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<void> addRelation(AddItemRelation<DLCAvailableDTO> event) {
-    return dlcService.addAvailability(
+    return _dlcService.addAvailability(
       event.otherItem.id,
       itemId,
       event.otherItem.availableDate,
@@ -27,7 +27,7 @@ class PlatformDLCRelationManagerBloc
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<DLCAvailableDTO> event) {
-    return dlcService.removeAvailability(event.otherItem.id, itemId);
+    return _dlcService.removeAvailability(event.otherItem.id, itemId);
   }
 }
 
@@ -36,14 +36,14 @@ class PlatformGameRelationManagerBloc
   PlatformGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<void> addRelation(AddItemRelation<GameAvailableDTO> event) {
-    return gameService.addAvailability(
+    return _gameService.addAvailability(
       event.otherItem.id,
       itemId,
       event.otherItem.availableDate,
@@ -52,6 +52,6 @@ class PlatformGameRelationManagerBloc
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<GameAvailableDTO> event) {
-    return gameService.removeAvailability(event.otherItem.id, itemId);
+    return _gameService.removeAvailability(event.otherItem.id, itemId);
   }
 }

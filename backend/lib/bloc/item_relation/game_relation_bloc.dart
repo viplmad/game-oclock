@@ -17,14 +17,14 @@ class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameFinishService = collectionService.gameFinishService,
+  })  : _gameFinishService = collectionService.gameFinishService,
         super();
 
-  final GameFinishService gameFinishService;
+  final GameFinishService _gameFinishService;
 
   @override
   Future<List<ItemFinish>> getRelationItems() {
-    return gameFinishService
+    return _gameFinishService
         .getAll(itemId)
         .asStream()
         .map(
@@ -41,14 +41,14 @@ class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<List<DLCDTO>> getRelationItems() {
-    return dlcService.getGameDLCs(itemId);
+    return _dlcService.getGameDLCs(itemId);
   }
 }
 
@@ -57,14 +57,14 @@ class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : platformService = collectionService.platformService,
+  })  : _platformService = collectionService.platformService,
         super();
 
-  final PlatformService platformService;
+  final PlatformService _platformService;
 
   @override
   Future<List<PlatformAvailableDTO>> getRelationItems() {
-    return platformService.getGameAvailablePlatforms(itemId);
+    return _platformService.getGameAvailablePlatforms(itemId);
   }
 }
 
@@ -73,13 +73,13 @@ class GameTagRelationBloc extends ItemRelationBloc<TagDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : tagService = collectionService.tagService,
+  })  : _tagService = collectionService.tagService,
         super();
 
-  final TagService tagService;
+  final TagService _tagService;
 
   @override
   Future<List<TagDTO>> getRelationItems() {
-    return tagService.getGameTags(itemId);
+    return _tagService.getGameTags(itemId);
   }
 }

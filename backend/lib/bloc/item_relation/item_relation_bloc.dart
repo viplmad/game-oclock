@@ -18,13 +18,14 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     on<ReloadItemRelation>(_mapReloadToState);
     on<UpdateItemRelation<W>>(_mapUpdateToState);
 
-    managerSubscription =
+    _managerSubscription =
         managerBloc.stream.listen(_mapRelationManagerStateToEvent);
   }
 
   final int itemId;
   final ItemRelationManagerBloc<W> managerBloc;
-  late StreamSubscription<ItemRelationManagerState> managerSubscription;
+
+  late final StreamSubscription<ItemRelationManagerState> _managerSubscription;
 
   void _mapLoadToState(
     LoadItemRelation event,
@@ -100,7 +101,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
 
   @override
   Future<void> close() {
-    managerSubscription.cancel();
+    _managerSubscription.cancel();
     return super.close();
   }
 

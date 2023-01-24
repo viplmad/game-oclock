@@ -9,8 +9,8 @@ import 'package:logic/bloc/server_settings/server_settings.dart';
 import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
 
-import '../common/show_snackbar.dart';
 import '../route_constants.dart';
 
 class ServerConnectionFormData {

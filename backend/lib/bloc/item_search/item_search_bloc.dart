@@ -19,8 +19,8 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
 
   final S service;
 
-  final int maxSuggestions = 10;
-  final int maxResults = 20;
+  final int _maxSuggestions = 10;
+  final int _maxResults = 20;
 
   Future<void> _mapTextChangedToState(
     SearchTextChanged event,
@@ -51,10 +51,10 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
   }
 
   Future<PageResultDTO<T>> _getInitialItems() {
-    return service.getLastUpdated(size: maxSuggestions);
+    return service.getLastUpdated(size: _maxSuggestions);
   }
 
   Future<PageResultDTO<T>> _getSearchItems(String query) {
-    return service.searchAll(quicksearch: query, size: maxResults);
+    return service.searchAll(quicksearch: query, size: _maxResults);
   }
 }

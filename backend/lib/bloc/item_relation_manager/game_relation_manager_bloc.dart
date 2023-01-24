@@ -17,19 +17,19 @@ class GameFinishRelationManagerBloc
   GameFinishRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameFinishService = collectionService.gameFinishService,
+  })  : _gameFinishService = collectionService.gameFinishService,
         super();
 
-  final GameFinishService gameFinishService;
+  final GameFinishService _gameFinishService;
 
   @override
   Future<void> addRelation(AddItemRelation<ItemFinish> event) {
-    return gameFinishService.create(itemId, event.otherItem.date);
+    return _gameFinishService.create(itemId, event.otherItem.date);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<ItemFinish> event) {
-    return gameFinishService.delete(itemId, event.otherItem.date);
+    return _gameFinishService.delete(itemId, event.otherItem.date);
   }
 }
 
@@ -37,19 +37,19 @@ class GameLogRelationManagerBloc extends ItemRelationManagerBloc<GameLogDTO> {
   GameLogRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameLogService = collectionService.gameLogService,
+  })  : _gameLogService = collectionService.gameLogService,
         super();
 
-  final GameLogService gameLogService;
+  final GameLogService _gameLogService;
 
   @override
   Future<void> addRelation(AddItemRelation<GameLogDTO> event) {
-    return gameLogService.create(itemId, event.otherItem);
+    return _gameLogService.create(itemId, event.otherItem);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<GameLogDTO> event) {
-    return gameLogService.delete(itemId, event.otherItem.datetime);
+    return _gameLogService.delete(itemId, event.otherItem.datetime);
   }
 }
 
@@ -57,19 +57,19 @@ class GameDLCRelationManagerBloc extends ItemRelationManagerBloc<DLCDTO> {
   GameDLCRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : dlcService = collectionService.dlcService,
+  })  : _dlcService = collectionService.dlcService,
         super();
 
-  final DLCService dlcService;
+  final DLCService _dlcService;
 
   @override
   Future<void> addRelation(AddItemRelation<DLCDTO> event) {
-    return dlcService.setBasegame(event.otherItem.id, itemId);
+    return _dlcService.setBasegame(event.otherItem.id, itemId);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<DLCDTO> event) {
-    return dlcService.clearBasegame(event.otherItem.id);
+    return _dlcService.clearBasegame(event.otherItem.id);
   }
 }
 
@@ -78,14 +78,14 @@ class GamePlatformRelationManagerBloc
   GamePlatformRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<void> addRelation(AddItemRelation<PlatformAvailableDTO> event) {
-    return gameService.addAvailability(
+    return _gameService.addAvailability(
       itemId,
       event.otherItem.id,
       event.otherItem.availableDate,
@@ -94,7 +94,7 @@ class GamePlatformRelationManagerBloc
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<PlatformAvailableDTO> event) {
-    return gameService.removeAvailability(itemId, event.otherItem.id);
+    return _gameService.removeAvailability(itemId, event.otherItem.id);
   }
 }
 
@@ -102,18 +102,18 @@ class GameTagRelationManagerBloc extends ItemRelationManagerBloc<TagDTO> {
   GameTagRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<void> addRelation(AddItemRelation<TagDTO> event) {
-    return gameService.tag(itemId, event.otherItem.id);
+    return _gameService.tag(itemId, event.otherItem.id);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<TagDTO> event) {
-    return gameService.untag(itemId, event.otherItem.id);
+    return _gameService.untag(itemId, event.otherItem.id);
   }
 }

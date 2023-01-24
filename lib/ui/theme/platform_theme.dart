@@ -6,10 +6,9 @@ import 'package:game_collection_client/api.dart'
 import 'package:logic/model/model.dart' show PlatformView;
 
 import 'package:game_collection/localisations/localisations.dart';
-
-import '../common/item_view.dart';
-import '../common/bar_data.dart';
-import 'theme_utils.dart';
+import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/ui/common/bar_data.dart';
+import 'package:game_collection/ui/utils/theme_utils.dart';
 
 class PlatformTheme {
   PlatformTheme._();

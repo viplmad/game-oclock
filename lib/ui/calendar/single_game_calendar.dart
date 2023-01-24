@@ -15,15 +15,15 @@ import 'package:logic/utils/duration_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/list_view.dart';
+import 'package:game_collection/ui/common/skeleton.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/common/show_date_picker.dart';
+import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/ui/utils/shape_utils.dart';
 
-import '../common/list_view.dart';
-import '../common/skeleton.dart';
-import '../common/show_snackbar.dart';
-import '../common/show_date_picker.dart';
-import '../common/item_view.dart';
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, CalendarTheme;
-import '../utils/shape_utils.dart';
 import 'calendar_utils.dart';
 
 class SingleGameCalendar extends StatelessWidget {

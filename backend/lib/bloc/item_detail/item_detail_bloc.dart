@@ -23,14 +23,15 @@ abstract class ItemDetailBloc<
     on<LoadItem>(_mapLoadToState);
     on<ReloadItem>(_mapReloadToState);
 
-    managerSubscription =
+    _managerSubscription =
         managerBloc.stream.listen(_mapDetailManagerStateToEvent);
   }
 
   final int itemId;
   final S service;
   final ItemDetailManagerBloc<T, N, S> managerBloc;
-  late StreamSubscription<ItemDetailManagerState> managerSubscription;
+
+  late final StreamSubscription<ItemDetailManagerState> _managerSubscription;
 
   void _mapLoadToState(LoadItem event, Emitter<ItemDetailState> emit) async {
     emit(
@@ -90,7 +91,7 @@ abstract class ItemDetailBloc<
 
   @override
   Future<void> close() {
-    managerSubscription.cancel();
+    _managerSubscription.cancel();
     return super.close();
   }
 

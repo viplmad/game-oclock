@@ -19,12 +19,12 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
   GameListBloc({
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameFinishService = collectionService.gameFinishService,
-        gameLogService = collectionService.gameLogService,
+  })  : _gameFinishService = collectionService.gameFinishService,
+        _gameLogService = collectionService.gameLogService,
         super(service: collectionService.gameService);
 
-  final GameFinishService gameFinishService;
-  final GameLogService gameLogService;
+  final GameFinishService _gameFinishService;
+  final GameLogService _gameLogService;
 
   @override
   Future<ViewParameters> getStartViewIndex() async {
@@ -65,19 +65,19 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
         return result.data;
       case GameView.lastFinished:
         // null startDate = since the beginning of time
-        final GameWithFinishPageResult result = await gameFinishService
+        final GameWithFinishPageResult result = await _gameFinishService
             .getLastFinishedGames(null, DateTime.now(), page: page);
         return result.data;
       case GameView.lastPlayed:
         // null startDate = since the beginning of time
-        final GameWithLogPageResult result = await gameLogService
+        final GameWithLogPageResult result = await _gameLogService
             .getLastPlayedGames(null, DateTime.now(), page: page);
         return result.data;
       case GameView.review:
         final DateTime startDate = _getArgsStartDate(viewArgs);
         final DateTime endDate = startDate.atLastDayOfYear();
 
-        final GameWithFinishPageResult result = await gameFinishService
+        final GameWithFinishPageResult result = await _gameFinishService
             .getFirstFinishedGames(startDate, endDate, page: page);
         return result.data;
     }

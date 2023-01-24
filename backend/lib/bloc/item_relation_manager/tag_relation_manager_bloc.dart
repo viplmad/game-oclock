@@ -9,18 +9,18 @@ class TagGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
   TagGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<void> addRelation(AddItemRelation<GameDTO> event) {
-    return gameService.tag(event.otherItem.id, itemId);
+    return _gameService.tag(event.otherItem.id, itemId);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<GameDTO> event) {
-    return gameService.untag(event.otherItem.id, itemId);
+    return _gameService.untag(event.otherItem.id, itemId);
   }
 }

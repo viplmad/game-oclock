@@ -14,9 +14,9 @@ import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 
-import '../common/field/field.dart';
-import '../common/show_snackbar.dart';
-import '../common/item_view.dart';
+import 'package:game_collection/ui/common/field/field.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_collection/ui/common/item_view.dart';
 
 abstract class ItemDetail<
         T extends PrimaryModel,

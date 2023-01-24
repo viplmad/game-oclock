@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:equatable/equatable.dart';
 
-import 'time_log_recalculation_mode.dart';
+import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 
 abstract class GameLogAssistantEvent extends Equatable {
   const GameLogAssistantEvent();

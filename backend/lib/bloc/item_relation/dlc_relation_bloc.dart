@@ -12,14 +12,14 @@ class DLCFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : dlcFinishService = collectionService.dlcFinishService,
+  })  : _dlcFinishService = collectionService.dlcFinishService,
         super();
 
-  final DLCFinishService dlcFinishService;
+  final DLCFinishService _dlcFinishService;
 
   @override
   Future<List<ItemFinish>> getRelationItems() {
-    return dlcFinishService
+    return _dlcFinishService
         .getAll(itemId)
         .asStream()
         .map(
@@ -36,14 +36,14 @@ class DLCGameRelationBloc extends ItemRelationBloc<GameDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<List<GameDTO>> getRelationItems() {
-    return gameService.getDLCBasegameAsList(itemId);
+    return _gameService.getDLCBasegameAsList(itemId);
   }
 }
 
@@ -52,13 +52,13 @@ class DLCPlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : platformService = collectionService.platformService,
+  })  : _platformService = collectionService.platformService,
         super();
 
-  final PlatformService platformService;
+  final PlatformService _platformService;
 
   @override
   Future<List<PlatformAvailableDTO>> getRelationItems() {
-    return platformService.getDLCAvailablePlatforms(itemId);
+    return _platformService.getDLCAvailablePlatforms(itemId);
   }
 }

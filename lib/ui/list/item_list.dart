@@ -10,11 +10,11 @@ import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/common/header_text.dart';
+import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/ui/common/list_view.dart';
+import 'package:game_collection/ui/common/show_snackbar.dart';
 
-import '../common/header_text.dart';
-import '../common/item_view.dart';
-import '../common/list_view.dart';
-import '../common/show_snackbar.dart';
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
 

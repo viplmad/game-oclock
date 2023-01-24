@@ -10,13 +10,13 @@ class TagGameRelationBloc extends ItemRelationBloc<GameDTO> {
     required super.itemId,
     required GameCollectionService collectionService,
     required super.managerBloc,
-  })  : gameService = collectionService.gameService,
+  })  : _gameService = collectionService.gameService,
         super();
 
-  final GameService gameService;
+  final GameService _gameService;
 
   @override
   Future<List<GameDTO>> getRelationItems() {
-    return gameService.getTaggedGames(itemId);
+    return _gameService.getTaggedGames(itemId);
   }
 }
