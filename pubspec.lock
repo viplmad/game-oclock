@@ -369,10 +369,10 @@ packages:
   logic:
     dependency: "direct main"
     description:
-      path: backend
+      path: logic
       relative: true
     source: path
-    version: "1.0.0"
+    version: "2.0.0"
   matcher:
     dependency: transitive
     description:

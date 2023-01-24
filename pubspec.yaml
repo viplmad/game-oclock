@@ -36,7 +36,7 @@ dependencies:
 
 # Back-end
   logic:
-    path: ./backend
+    path: ./logic
   game_collection_client:
     git:
       url: https://github.com/viplmad/game_collection_client_dart.git
