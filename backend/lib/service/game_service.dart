@@ -16,8 +16,6 @@ import 'package:game_collection_client/api.dart'
         SearchValue,
         SortDTO;
 
-import 'package:backend/model/model.dart' show GameView;
-
 import 'item_service.dart';
 
 class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {

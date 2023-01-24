@@ -148,7 +148,7 @@ abstract class ItemDetailBody<
               ),
             );
           }
-          if(state is ItemDetailNotLoaded) {
+          if (state is ItemDetailNotLoaded) {
             final String message = GameCollectionLocalisations.of(context)
                 .unableToLoadDetailString;
             showSnackBar(
@@ -190,7 +190,7 @@ abstract class ItemDetailBody<
               ],
             ),
             onRefresh: () async {
-              BlocProvider.of<K>(context).add(ReloadItem());
+              BlocProvider.of<K>(context).add(const ReloadItem());
             },
           ),
         ),

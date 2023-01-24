@@ -142,7 +142,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
             ),
           );
         }
-        if(state is ItemRelationNotLoaded) {
+        if (state is ItemRelationNotLoaded) {
           final String message = GameCollectionLocalisations.of(context)
               .unableToLoadString(relationTypeName);
           showSnackBar(

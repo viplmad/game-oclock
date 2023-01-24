@@ -146,7 +146,7 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   Widget cardBuilder(BuildContext context, GameDTO item) {
     if (item is GameWithFinishDTO) {
       return GameTheme.itemCardFinish(context, item, onTap);
-    } else if(item is GameWithLogDTO) {
+    } else if (item is GameWithLogDTO) {
       return GameTheme.itemCardLog(context, item, onTap);
     }
 

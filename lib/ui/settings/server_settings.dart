@@ -193,7 +193,13 @@ class _ServerSettingsBody extends StatelessWidget {
                     onPressed: () async {
                       Clipboard.setData(
                         ClipboardData(text: accessToken),
-                      ).then((_) => showSnackBar(context, message: GameCollectionLocalisations.of(context).accessTokenCopied));
+                      ).then(
+                        (_) => showSnackBar(
+                          context,
+                          message: GameCollectionLocalisations.of(context)
+                              .accessTokenCopied,
+                        ),
+                      );
                     },
                   ),
                 )

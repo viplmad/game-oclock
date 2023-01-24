@@ -18,8 +18,8 @@ import '../theme/theme.dart' show DLCTheme;
 import 'item_detail.dart';
 import 'finish_date_list.dart';
 
-class DLCDetail extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc,
-    DLCDetailManagerBloc> {
+class DLCDetail
+    extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
     Key? key,
     required super.item,
@@ -126,8 +126,8 @@ class DLCDetail extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc,
 }
 
 // ignore: must_be_immutable
-class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
-    DLCDetailBloc, DLCDetailManagerBloc> {
+class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
+    DLCDetailManagerBloc> {
   _DLCDetailBody({
     Key? key,
     super.onChange,
@@ -164,7 +164,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
         onChange: () {
-          BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
+          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
         },
       ),
     ];
@@ -207,7 +207,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO,
             GameCollectionLocalisations.of(context).finishDateFieldString,
         order: order++,
         onChange: () {
-          BlocProvider.of<DLCDetailBloc>(context).add(ReloadItem());
+          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem());
         },
       ),
     ];

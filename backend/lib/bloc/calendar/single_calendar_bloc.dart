@@ -331,7 +331,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
   }
 
-  void _mapFinishDateManagerStateToEvent(ItemRelationManagerState managerState) {
+  void _mapFinishDateManagerStateToEvent(
+    ItemRelationManagerState managerState,
+  ) {
     if (managerState is ItemRelationAdded<ItemFinish>) {
       _mapAddedFinishDateToEvent(managerState);
     } else if (managerState is ItemRelationDeleted<ItemFinish>) {

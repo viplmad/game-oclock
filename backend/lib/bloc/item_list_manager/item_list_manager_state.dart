@@ -80,4 +80,3 @@ class ItemListNotLoaded extends ItemListManagerState {
       'error: $error'
       ' }';
 }
-

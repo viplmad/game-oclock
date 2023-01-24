@@ -10,8 +10,6 @@ import 'package:game_collection_client/api.dart'
         UserPageResult,
         UsersApi;
 
-import 'package:backend/model/model.dart' show UserView;
-
 import 'item_service.dart';
 
 class UserService implements ItemService<UserDTO, NewUserDTO> {

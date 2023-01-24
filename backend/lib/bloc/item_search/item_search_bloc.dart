@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show PageResultDTO, PrimaryModel;
+import 'package:game_collection_client/api.dart'
+    show PageResultDTO, PrimaryModel;
 
 import 'package:backend/service/service.dart' show SearchService;
 
 import 'item_search.dart';
 
-abstract class ItemSearchBloc<T extends PrimaryModel, S extends SearchService<T>>
-    extends Bloc<ItemSearchEvent, ItemSearchState> {
+abstract class ItemSearchBloc<T extends PrimaryModel,
+    S extends SearchService<T>> extends Bloc<ItemSearchEvent, ItemSearchState> {
   ItemSearchBloc({
     required this.service,
     required this.initialViewIndex,

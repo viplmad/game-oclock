@@ -10,8 +10,6 @@ import 'package:game_collection_client/api.dart'
         SearchDTO,
         SortDTO;
 
-import 'package:backend/model/model.dart' show PlatformView;
-
 import 'item_service.dart';
 
 class PlatformService

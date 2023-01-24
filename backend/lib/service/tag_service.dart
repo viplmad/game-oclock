@@ -9,8 +9,6 @@ import 'package:game_collection_client/api.dart'
         TagPageResult,
         TagsApi;
 
-import 'package:backend/model/model.dart' show TagView;
-
 import 'item_service.dart';
 
 class TagService implements ItemService<TagDTO, NewTagDTO> {
