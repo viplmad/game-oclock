@@ -12,7 +12,7 @@ abstract class ItemService<T extends Object, N extends Object>
 
   Future<T> create(N newItem);
   Future<T> get(int id);
-  Future<T> update(int id, N updatedItem);
+  Future<void> update(int id, N updatedItem);
   Future<void> delete(int id);
 }
 

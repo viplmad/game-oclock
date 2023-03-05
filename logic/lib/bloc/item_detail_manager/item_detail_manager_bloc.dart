@@ -133,7 +133,7 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     emit(ItemDetailNotLoaded(event.error));
   }
 
-  Future<T> _update(UpdateItemField<N> event) {
+  Future<void> _update(UpdateItemField<N> event) {
     return service.update(itemId, event.item);
   }
 }

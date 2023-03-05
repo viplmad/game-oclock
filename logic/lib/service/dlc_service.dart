@@ -103,7 +103,7 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
 
   //#region UPDATE
   @override
-  Future<DLCDTO> update(int id, NewDLCDTO updatedItem) {
+  Future<void> update(int id, NewDLCDTO updatedItem) {
     return _api.putDlc(id, updatedItem);
   }
 

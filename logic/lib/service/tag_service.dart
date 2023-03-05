@@ -89,7 +89,7 @@ class TagService implements ItemService<TagDTO, NewTagDTO> {
 
   //#region UPDATE
   @override
-  Future<TagDTO> update(int id, NewTagDTO updatedItem) {
+  Future<void> update(int id, NewTagDTO updatedItem) {
     return _api.putTag(id, updatedItem);
   }
   //#endregion UPDATE

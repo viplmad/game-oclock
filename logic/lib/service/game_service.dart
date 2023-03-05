@@ -150,7 +150,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
 
   //#region UPDATE
   @override
-  Future<GameDTO> update(int id, NewGameDTO updatedItem) {
+  Future<void> update(int id, NewGameDTO updatedItem) {
     return _api.putGame(id, updatedItem);
   }
   //#endregion UPDATE

@@ -96,7 +96,7 @@ class PlatformService
 
   //#region UPDATE
   @override
-  Future<PlatformDTO> update(int id, NewPlatformDTO updatedItem) {
+  Future<void> update(int id, NewPlatformDTO updatedItem) {
     return _api.putPlatform(id, updatedItem);
   }
   //#endregion UPDATE

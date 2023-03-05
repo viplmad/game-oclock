@@ -3,7 +3,6 @@ import 'package:game_collection_client/api.dart'
         ApiClient,
         NewUserDTO,
         OrderType,
-        PasswordChangeDTO,
         SearchDTO,
         SortDTO,
         UserDTO,
@@ -22,7 +21,7 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
   //#region CREATE
   @override
   Future<UserDTO> create(NewUserDTO newItem) {
-    return _api.postUser(newItem);
+    return _api.postUser('password', newItem); // TODO
   }
   //#endregion CREATE
 
@@ -91,17 +90,12 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
 
   //#region UPDATE
   @override
-  Future<UserDTO> update(int id, NewUserDTO updatedItem) {
+  Future<void> update(int id, NewUserDTO updatedItem) {
     return _api.putUser(id, updatedItem);
   }
 
   Future<void> changePassword(String currentPassword, String newPassword) {
-    return _api.changePassword(
-      PasswordChangeDTO(
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-      ),
-    );
+    return _api.changePassword(currentPassword, newPassword);
   }
   //#region UPDATE
 
