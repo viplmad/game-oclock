@@ -1,3 +1,5 @@
+import 'package:http/http.dart';
+
 import 'package:game_collection_client/api.dart'
     show
         ApiClient,
@@ -11,7 +13,7 @@ import 'package:game_collection_client/api.dart'
         SearchDTO,
         SortDTO;
 
-import 'package:game_collection_client/api.dart';
+import 'package:logic/utils/http_utils.dart';
 
 import 'item_service.dart';
 
@@ -132,8 +134,10 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
   Future<void> uploadImage(
     int id,
     String uploadImagePath,
-  ) {
-    return _api.postDlcCover(id);
+  ) async {
+    final MultipartFile file =
+        await HttpUtils.createMultipartImageFile(uploadImagePath);
+    return _api.postDlcCover(id, file);
   }
 
   @override
