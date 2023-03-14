@@ -209,28 +209,6 @@ class NavigationBar extends StatelessWidget {
   }
 }
 
-/// Specifies when each [NavigationDestination]'s label should appear.
-///
-/// This is used to determine the behavior of [NavigationBar]'s destinations.
-enum NavigationDestinationLabelBehavior {
-  /// Always shows all of the labels under each navigation bar destination,
-  /// selected and unselected.
-  alwaysShow,
-
-  /// Never shows any of the labels under the navigation bar destinations,
-  /// regardless of selected vs unselected.
-  alwaysHide,
-
-  /// Only shows the labels of the selected navigation bar destination.
-  ///
-  /// When a destination is unselected, the label will be faded out, and the
-  /// icon will be centered.
-  ///
-  /// When a destination is selected, the label will fade in and the label and
-  /// icon will slide up so that they are both centered.
-  onlyShowSelected,
-}
-
 /// A Material 3 [NavigationBar] destination.
 ///
 /// Displays a label below an icon. Use with [NavigationBar.destinations].

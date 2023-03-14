@@ -10,7 +10,7 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  exclude: [build/**]
+  exclude: [build/**, lib/**/navigation_destination_background.dart]
   strong-mode:
     implicit-casts: false
 
