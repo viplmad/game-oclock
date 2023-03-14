@@ -15,7 +15,7 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel>
     on<WarneItemRelationNotLoaded>(_mapWarnNotLoadedToState);
   }
 
-  final int itemId;
+  final String itemId;
 
   void _mapAddRelationToState(
     AddItemRelation<W> event,

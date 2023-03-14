@@ -12,7 +12,7 @@ import 'item_detail.dart';
 
 abstract class ItemDetailBloc<
     T extends PrimaryModel,
-    N extends Object, // TODO Add D extends PrimaryModel for actual object to show
+    N extends Object,
     S extends ItemService<T,
         N>> extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
@@ -27,7 +27,7 @@ abstract class ItemDetailBloc<
         managerBloc.stream.listen(_mapDetailManagerStateToEvent);
   }
 
-  final int itemId;
+  final String itemId;
   final S service;
   final ItemDetailManagerBloc<T, N, S> managerBloc;
 

@@ -19,18 +19,18 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
 
   //#region CREATE
   @override
-  Future<void> create(int primaryId, GameLogDTO newItem) {
+  Future<void> create(String primaryId, GameLogDTO newItem) {
     return _api.postGameLog(primaryId, newItem);
   }
   //#endregion CREATE
 
   //#region READ
   @override
-  Future<List<GameLogDTO>> getAll(int primaryId) {
+  Future<List<GameLogDTO>> getAll(String primaryId) {
     return _api.getGameLogs(primaryId);
   }
 
-  Future<Duration> getTotalPlayedTime(int primaryId) {
+  Future<Duration> getTotalPlayedTime(String primaryId) {
     return _api.getTotalGameLogs(primaryId);
   }
 
@@ -70,7 +70,7 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
 
   //#region DELETE
   @override
-  Future<void> delete(int primaryId, DateTime id) {
+  Future<void> delete(String primaryId, DateTime id) {
     return _api.deleteGameLog(primaryId, DateTimeDTO(datetime: id));
   }
   //#endregion DELETE

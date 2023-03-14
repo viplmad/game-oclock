@@ -33,7 +33,7 @@ class SingleGameCalendar extends StatelessWidget {
     this.onChange,
   }) : super(key: key);
 
-  final int itemId;
+  final String itemId;
   final void Function()? onChange;
 
   @override

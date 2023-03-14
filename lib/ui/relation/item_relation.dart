@@ -392,7 +392,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
           final W relation = items[index];
 
           return DismissibleItem(
-            dismissibleKey: relation.id.toString(), // TODO Wait for uuid
+            dismissibleKey: relation.id,
             itemWidget: itemBuilder(context, relation),
             onDismissed: (DismissDirection direction) {
               updateDelete(relation);
@@ -455,7 +455,7 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
             final W relation = items[index];
 
             return DismissibleItem(
-              dismissibleKey: relation.id.toString(), // TODO Wait for uuid
+              dismissibleKey: relation.id,
               itemWidget: itemBuilder(context, relation),
               onDismissed: (DismissDirection direction) {
                 updateDelete(relation);

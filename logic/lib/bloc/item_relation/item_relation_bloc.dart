@@ -22,7 +22,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
         managerBloc.stream.listen(_mapRelationManagerStateToEvent);
   }
 
-  final int itemId;
+  final String itemId;
   final ItemRelationManagerBloc<W> managerBloc;
 
   late final StreamSubscription<ItemRelationManagerState> _managerSubscription;

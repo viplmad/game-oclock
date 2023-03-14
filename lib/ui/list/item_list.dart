@@ -486,7 +486,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
         final T item = items.elementAt(index);
 
         return DismissibleItem(
-          dismissibleKey: item.id.toString(), // TODO Wait for uuid
+          dismissibleKey: item.id,
           itemWidget: itemBuilder(context, item),
           onDismissed: (DismissDirection direction) {
             onDismiss(item);

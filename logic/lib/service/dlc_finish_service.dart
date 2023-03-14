@@ -12,18 +12,18 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
 
   //#region CREATE
   @override
-  Future<void> create(int primaryId, DateTime newItem) {
+  Future<void> create(String primaryId, DateTime newItem) {
     return _api.postDlcFinish(primaryId, DateDTO(date: newItem));
   }
   //#endregion CREATE
 
   //#region READ
   @override
-  Future<List<DateTime>> getAll(int primaryId) {
+  Future<List<DateTime>> getAll(String primaryId) {
     return _api.getDlcFinishes(primaryId);
   }
 
-  Future<DateTime?> getFirstFinish(int primaryId) async {
+  Future<DateTime?> getFirstFinish(String primaryId) async {
     return nullIfNotFound(_api.getFirstDlcFinish(primaryId));
   }
 
@@ -56,7 +56,7 @@ class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
 
   //#region DELETE
   @override
-  Future<void> delete(int primaryId, DateTime id) {
+  Future<void> delete(String primaryId, DateTime id) {
     return _api.deleteDlcFinish(primaryId, DateDTO(date: id));
   }
   //#region DELETE

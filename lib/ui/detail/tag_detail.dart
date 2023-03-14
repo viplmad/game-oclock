@@ -97,7 +97,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
           hasImage: TagTheme.hasImage,
         );
 
-  final int itemId;
+  final String itemId;
 
   @override
   String itemTitle(TagDTO item) => TagTheme.itemTitle(item);

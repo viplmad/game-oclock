@@ -103,7 +103,7 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     on<WarnItemDetailNotLoaded>(_mapWarnNotLoadedToState);
   }
 
-  final int itemId;
+  final String itemId;
   final S service;
 
   void _mapUpdateFieldToState(

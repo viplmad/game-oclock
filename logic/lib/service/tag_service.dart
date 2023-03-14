@@ -27,7 +27,7 @@ class TagService implements ItemService<TagDTO, NewTagDTO> {
 
   //#region READ
   @override
-  Future<TagDTO> get(int id) {
+  Future<TagDTO> get(String id) {
     return _api.getTag(id);
   }
 
@@ -82,21 +82,21 @@ class TagService implements ItemService<TagDTO, NewTagDTO> {
     );
   }
 
-  Future<List<TagDTO>> getGameTags(int gameId) {
+  Future<List<TagDTO>> getGameTags(String gameId) {
     return _api.getGameTags(gameId);
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<void> update(int id, NewTagDTO updatedItem) {
+  Future<void> update(String id, NewTagDTO updatedItem) {
     return _api.putTag(id, updatedItem);
   }
   //#endregion UPDATE
 
   //#region DELETE
   @override
-  Future<void> delete(int id) {
+  Future<void> delete(String id) {
     return _api.deleteTag(id);
   }
   //#endregion DELETE

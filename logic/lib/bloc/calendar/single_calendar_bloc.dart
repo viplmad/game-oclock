@@ -43,7 +43,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         gameFinishManagerBloc.stream.listen(_mapFinishDateManagerStateToEvent);
   }
 
-  final int itemId;
+  final String itemId;
   final CalendarManagerBloc managerBloc;
   final GameLogRelationManagerBloc gameLogManagerBloc;
   final GameFinishRelationManagerBloc gameFinishManagerBloc;

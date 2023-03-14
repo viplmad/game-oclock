@@ -33,7 +33,7 @@ class PlatformService
 
   //#region READ
   @override
-  Future<PlatformDTO> get(int id) {
+  Future<PlatformDTO> get(String id) {
     return _api.getPlatform(id);
   }
 
@@ -89,25 +89,25 @@ class PlatformService
     );
   }
 
-  Future<List<PlatformAvailableDTO>> getGameAvailablePlatforms(int gameId) {
+  Future<List<PlatformAvailableDTO>> getGameAvailablePlatforms(String gameId) {
     return _api.getGamePlatforms(gameId);
   }
 
-  Future<List<PlatformAvailableDTO>> getDLCAvailablePlatforms(int dlcId) {
+  Future<List<PlatformAvailableDTO>> getDLCAvailablePlatforms(String dlcId) {
     return _api.getDlcPlatforms(dlcId);
   }
   //#endregion READ
 
   //#region UPDATE
   @override
-  Future<void> update(int id, NewPlatformDTO updatedItem) {
+  Future<void> update(String id, NewPlatformDTO updatedItem) {
     return _api.putPlatform(id, updatedItem);
   }
   //#endregion UPDATE
 
   //#region DELETE
   @override
-  Future<void> delete(int id) {
+  Future<void> delete(String id) {
     return _api.deletePlatform(id);
   }
   //#endregion DELETE
@@ -115,7 +115,7 @@ class PlatformService
   //#region IMAGE
   @override
   Future<void> uploadImage(
-    int id,
+    String id,
     String uploadImagePath,
   ) async {
     final MultipartFile file =
@@ -125,14 +125,14 @@ class PlatformService
 
   @override
   Future<void> renameImage(
-    int id,
+    String id,
     String newImageName,
   ) {
     return _api.putPlatformIcon(id, newImageName);
   }
 
   @override
-  Future<void> deleteImage(int id) {
+  Future<void> deleteImage(String id) {
     return _api.deletePlatformIcon(id);
   }
   //#endregion IMAGE

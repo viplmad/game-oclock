@@ -157,7 +157,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "99f1973066797283e750c2b3419bfa92c5b1b05a"
+      resolved-ref: "40b6f9bf89a4727ed7693f4ea81e0b91545a9fc3"
       url: "https://github.com/viplmad/game_collection_client_dart.git"
     source: git
     version: "0.1.0+24"

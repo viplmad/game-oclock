@@ -30,14 +30,14 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
     return _api.postDlc(newItem);
   }
 
-  Future<void> addAvailability(int id, int platformId, DateTime date) {
+  Future<void> addAvailability(String id, String platformId, DateTime date) {
     return _api.linkDlcPlatform(id, platformId, DateDTO(date: date));
   }
   //#endregion CREATE
 
   //#region READ
   @override
-  Future<DLCDTO> get(int id) {
+  Future<DLCDTO> get(String id) {
     return _api.getDlc(id);
   }
 
@@ -94,37 +94,37 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
     );
   }
 
-  Future<List<DLCDTO>> getGameDLCs(int gameId) {
+  Future<List<DLCDTO>> getGameDLCs(String gameId) {
     return _api.getGameDlcs(gameId);
   }
 
-  Future<List<DLCAvailableDTO>> getPlatformAvailableDLCs(int platformId) {
+  Future<List<DLCAvailableDTO>> getPlatformAvailableDLCs(String platformId) {
     return _api.getPlatformDlcs(platformId);
   }
   //#endregion CREATE
 
   //#region UPDATE
   @override
-  Future<void> update(int id, NewDLCDTO updatedItem) {
+  Future<void> update(String id, NewDLCDTO updatedItem) {
     return _api.putDlc(id, updatedItem);
   }
 
-  Future<void> setBasegame(int id, int gameId) {
+  Future<void> setBasegame(String id, String gameId) {
     return _api.linkDlcGame(id, gameId);
   }
   //#endregion UPDATE
 
   //#region DELETE
   @override
-  Future<void> delete(int id) {
+  Future<void> delete(String id) {
     return _api.deleteDlc(id);
   }
 
-  Future<void> removeAvailability(int id, int platformId) {
+  Future<void> removeAvailability(String id, String platformId) {
     return _api.unlinkDlcPlatform(id, platformId);
   }
 
-  Future<void> clearBasegame(int id) {
+  Future<void> clearBasegame(String id) {
     return _api.unlinkDlcGame(id);
   }
   //#endregion DELETE
@@ -132,7 +132,7 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
   //#region IMAGE
   @override
   Future<void> uploadImage(
-    int id,
+    String id,
     String uploadImagePath,
   ) async {
     final MultipartFile file =
@@ -142,14 +142,14 @@ class DLCService implements ItemWithImageService<DLCDTO, NewDLCDTO> {
 
   @override
   Future<void> renameImage(
-    int id,
+    String id,
     String newImageName,
   ) {
     return _api.putDlcCover(id, newImageName);
   }
 
   @override
-  Future<void> deleteImage(int id) {
+  Future<void> deleteImage(String id) {
     return _api.deleteDlcCover(id);
   }
   //#endregion IMAGE

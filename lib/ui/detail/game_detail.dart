@@ -161,7 +161,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
           hasImage: GameTheme.hasImage,
         );
 
-  final int itemId;
+  final String itemId;
 
   @override
   String itemTitle(GameDTO item) => GameTheme.itemTitle(item);

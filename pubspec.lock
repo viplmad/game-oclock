@@ -298,7 +298,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "99f1973066797283e750c2b3419bfa92c5b1b05a"
+      resolved-ref: "40b6f9bf89a4727ed7693f4ea81e0b91545a9fc3"
       url: "https://github.com/viplmad/game_collection_client_dart.git"
     source: git
     version: "0.1.0+24"
@@ -695,18 +695,18 @@ packages:
     dependency: transitive
     description:
       name: sqflite
-      sha256: "851d5040552cf911f4cabda08d003eca76b27da3ed0002978272e27c8fbf8ecc"
+      sha256: "500d6fec583d2c021f2d25a056d96654f910662c64f836cd2063167b8f1fa758"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.5"
+    version: "2.2.6"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: bfd6973aaeeb93475bc0d875ac9aefddf7965ef22ce09790eb963992ffc5183f
+      sha256: "963dad8c4aa2f814ce7d2d5b1da2f36f31bd1a439d8f27e3dc189bb9d26bc684"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2+2"
+    version: "2.4.3"
   stack_trace:
     dependency: transitive
     description:

@@ -4,6 +4,6 @@ class SingleGameCalendarArguments {
     this.onChange,
   });
 
-  final int itemId;
+  final String itemId;
   final void Function()? onChange;
 }

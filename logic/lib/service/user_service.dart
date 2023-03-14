@@ -27,7 +27,7 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
 
   //#region READ
   @override
-  Future<UserDTO> get(int id) {
+  Future<UserDTO> get(String id) {
     return _api.getUser(id);
   }
 
@@ -90,7 +90,7 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
 
   //#region UPDATE
   @override
-  Future<void> update(int id, NewUserDTO updatedItem) {
+  Future<void> update(String id, NewUserDTO updatedItem) {
     return _api.putUser(id, updatedItem);
   }
 
@@ -101,7 +101,7 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
 
   //#region DELETE
   @override
-  Future<void> delete(int id) {
+  Future<void> delete(String id) {
     return _api.deleteUser(id);
   }
   //#endregion DELETE

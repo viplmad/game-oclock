@@ -11,9 +11,9 @@ abstract class ItemService<T extends Object, N extends Object>
   const ItemService();
 
   Future<T> create(N newItem);
-  Future<T> get(int id);
-  Future<void> update(int id, N updatedItem);
-  Future<void> delete(int id);
+  Future<T> get(String id);
+  Future<void> update(String id, N updatedItem);
+  Future<void> delete(String id);
 }
 
 abstract class SearchService<T extends Object> {
@@ -42,23 +42,23 @@ abstract class SearchService<T extends Object> {
 abstract class SecondaryItemService<ID extends Object, T extends Object> {
   const SecondaryItemService();
 
-  Future<void> create(int primaryId, T newItem);
-  Future<List<T>> getAll(int primaryId);
-  Future<void> delete(int primaryId, ID id);
+  Future<void> create(String primaryId, T newItem);
+  Future<List<T>> getAll(String primaryId);
+  Future<void> delete(String primaryId, ID id);
 }
 
 abstract class ImageService {
   const ImageService();
 
   Future<void> uploadImage(
-    int id,
+    String id,
     String uploadImagePath,
   );
   Future<void> renameImage(
-    int id,
+    String id,
     String newImageName,
   );
-  Future<void> deleteImage(int id);
+  Future<void> deleteImage(String id);
 }
 
 Future<T?> nullIfNotFound<T>(Future<T> future) async {
