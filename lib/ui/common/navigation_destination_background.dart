@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 // TODO Regularly check flutter implementation changes (last remote commit: c6ab0a013788128928adf70af3af8b4187b77d60)
 
+const double _kIndicatorHeight = 32;
+const double _kIndicatorWidth = 64;
+
 /// Material 3 Navigation Bar component.
 ///
 /// Navigation bars offer a persistent and convenient way to switch between
