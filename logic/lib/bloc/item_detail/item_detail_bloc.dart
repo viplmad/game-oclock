@@ -10,11 +10,9 @@ import 'package:logic/service/service.dart' show ItemService;
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
 
-abstract class ItemDetailBloc<
-    T extends PrimaryModel,
-    N extends Object,
-    S extends ItemService<T,
-        N>> extends Bloc<ItemDetailEvent, ItemDetailState> {
+abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
+        S extends ItemService<T, N>>
+    extends Bloc<ItemDetailEvent, ItemDetailState> {
   ItemDetailBloc({
     required this.itemId,
     required this.service,

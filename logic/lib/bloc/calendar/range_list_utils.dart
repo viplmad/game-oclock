@@ -141,7 +141,7 @@ class RangeListUtils {
 
         if (date.isBefore(selectedDate)) {
           // Find previous day with logs
-          if (range == CalendarRange.day
+          if ((range == CalendarRange.day && !date.isSameDay(selectedDate))
               // Week range -> Need to be previous week
               ||
               (range == CalendarRange.week && !date.isInWeekOf(selectedDate))
@@ -181,7 +181,7 @@ class RangeListUtils {
 
         if (date.isAfter(selectedDate)) {
           // Find next day with logs
-          if (range == CalendarRange.day
+          if ((range == CalendarRange.day && !date.isSameDay(selectedDate))
               // Week range -> Need to be next week
               ||
               (range == CalendarRange.week && !date.isInWeekOf(selectedDate))

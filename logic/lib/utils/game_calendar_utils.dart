@@ -1,4 +1,5 @@
-import 'package:game_collection_client/api.dart' show GameLogDTO, GameWithLogsDTO;
+import 'package:game_collection_client/api.dart'
+    show GameLogDTO, GameWithLogsDTO;
 
 import 'datetime_extension.dart';
 
@@ -24,10 +25,13 @@ class GameCalendarUtils {
   }
 
   static Comparator<GameLogDTO> logComparatorEarlierFirst() {
-    return (GameLogDTO one, GameLogDTO other) => one.datetime.compareTo(other.datetime);
+    return (GameLogDTO one, GameLogDTO other) =>
+        one.datetime.compareTo(other.datetime);
   }
 
   static Comparator<GameWithLogsDTO> logsComparatorMostTimeFirst() {
-    return (GameWithLogsDTO one, GameWithLogsDTO other) => (other.totalTime ?? const Duration()).compareTo(one.totalTime ?? const Duration());
+    return (GameWithLogsDTO one, GameWithLogsDTO other) =>
+        (other.totalTime ?? const Duration())
+            .compareTo(one.totalTime ?? const Duration());
   }
 }

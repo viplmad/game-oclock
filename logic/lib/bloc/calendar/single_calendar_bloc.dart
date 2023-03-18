@@ -612,7 +612,8 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) {
     final List<GameLogDTO> selectedGameLogs =
         RangeListUtils.createGameLogListByRange(gameLogs, selectedDate, range);
-    return selectedGameLogs..sort(GameCalendarUtils.logComparatorEarlierFirst());
+    return selectedGameLogs
+      ..sort(GameCalendarUtils.logComparatorEarlierFirst());
   }
 
   bool _isSelectedDateFinish(

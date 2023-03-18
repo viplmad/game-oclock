@@ -19,9 +19,13 @@ class UserService implements ItemService<UserDTO, NewUserDTO> {
   late final UsersApi _api;
 
   //#region CREATE
+  Future<UserDTO> createWithPassword(NewUserDTO newItem, String password) {
+    return _api.postUser(password, newItem);
+  }
+
   @override
   Future<UserDTO> create(NewUserDTO newItem) {
-    return _api.postUser('password', newItem); // TODO
+    return createWithPassword(newItem, 'password');
   }
   //#endregion CREATE
 

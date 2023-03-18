@@ -83,7 +83,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         range,
       );
 
-      _populateTotalTime(selectedGamesWithLogs);
       final Duration selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
 
       emit(
@@ -214,7 +213,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           range,
         );
 
-        _populateTotalTime(selectedGamesWithLogs);
         selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
       } else {
         selectedGamesWithLogs =
@@ -338,7 +336,6 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           event.range,
         );
 
-        _populateTotalTime(selectedGamesWithLogs);
         final Duration selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
 
         if (style == CalendarStyle.graph) {
@@ -472,7 +469,11 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       }
     }
 
-    return selectedGamesWithLogs..sort(GameCalendarUtils.logsComparatorMostTimeFirst());
+    // Populate totalTime before sorting and getting totalTime for selectedDate
+    _populateTotalTime(selectedGamesWithLogs);
+
+    return selectedGamesWithLogs
+      ..sort(GameCalendarUtils.logsComparatorMostTimeFirst());
   }
 
   List<GameLogDTO> _selectedGameLogsInRange(
@@ -505,9 +506,10 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     return selectedGameLogs;
   }
 
-  void _populateTotalTime (List<GameWithLogsDTO> gamesWithLogs) {
-    for(final GameWithLogsDTO gameWithLogs in gamesWithLogs) {
-      gameWithLogs.totalTime = GameCalendarUtils.getTotalTime(gameWithLogs.logs);
+  void _populateTotalTime(List<GameWithLogsDTO> gamesWithLogs) {
+    for (final GameWithLogsDTO gameWithLogs in gamesWithLogs) {
+      gameWithLogs.totalTime =
+          GameCalendarUtils.getTotalTime(gameWithLogs.logs);
     }
   }
 
