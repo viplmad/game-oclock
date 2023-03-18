@@ -375,7 +375,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           addedGameLog.datetime.isSameDay(selectedDate)) {
         selectedGameLogs = List<GameLogDTO>.from(selectedGameLogs)
           ..add(addedGameLog);
-        selectedGameLogs.sort();
+        selectedGameLogs.sort(GameCalendarUtils.logComparatorEarlierFirst());
 
         selectedTotalTime = selectedTotalTime + addedGameLog.time;
       } else if (range == CalendarRange.week &&
@@ -612,7 +612,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) {
     final List<GameLogDTO> selectedGameLogs =
         RangeListUtils.createGameLogListByRange(gameLogs, selectedDate, range);
-    return selectedGameLogs..sort();
+    return selectedGameLogs..sort(GameCalendarUtils.logComparatorEarlierFirst());
   }
 
   bool _isSelectedDateFinish(

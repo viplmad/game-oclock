@@ -264,7 +264,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         return GameTheme.itemCardWithTime(
           context,
           gameWithLogs,
-          GameCalendarUtils.getTotalTime(gameWithLogs.logs),
+          gameWithLogs.totalTime,
           onTap,
         );
       },

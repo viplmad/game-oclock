@@ -22,4 +22,12 @@ class GameCalendarUtils {
   static DateTime getEndDateTime(GameLogDTO gameLog) {
     return gameLog.datetime.add(gameLog.time);
   }
+
+  static Comparator<GameLogDTO> logComparatorEarlierFirst() {
+    return (one, other) => one.dateTime.compareTo(other.dateTime);
+  }
+
+  static Comparator<GameWithLogsDTO> logsComparatorMostTimeFirst() {
+    return (one, other) => other.totalTime.compareTo(one.totalTime);
+  }
 }
