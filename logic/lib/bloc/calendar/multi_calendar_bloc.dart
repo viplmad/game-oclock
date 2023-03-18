@@ -506,7 +506,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   void _populateTotalTime (List<GameWithLogsDTO> gamesWithLogs) {
-    for(gameWithLogs : gamesWithLogs) {
+    for(GameWithLogsDTO gameWithLogs in gamesWithLogs) {
       gameWithLogs.totalTime = GameCalendarUtils.getTotalTime(gameWithLogs.logs);
     }
   }

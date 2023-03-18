@@ -9,7 +9,6 @@ import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/calendar/multi_calendar.dart';
 import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
 import 'package:logic/utils/duration_extension.dart';
-import 'package:logic/utils/game_calendar_utils.dart';
 
 import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
@@ -264,7 +263,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         return GameTheme.itemCardWithTime(
           context,
           gameWithLogs,
-          gameWithLogs.totalTime,
+          gameWithLogs.totalTime ?? Duration(),
           onTap,
         );
       },

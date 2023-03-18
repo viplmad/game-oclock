@@ -24,10 +24,10 @@ class GameCalendarUtils {
   }
 
   static Comparator<GameLogDTO> logComparatorEarlierFirst() {
-    return (one, other) => one.dateTime.compareTo(other.dateTime);
+    return (GameLogDTO one, GameLogDTO other) => one.datetime.compareTo(other.datetime);
   }
 
   static Comparator<GameWithLogsDTO> logsComparatorMostTimeFirst() {
-    return (one, other) => other.totalTime.compareTo(one.totalTime);
+    return (GameWithLogsDTO one, GameWithLogsDTO other) => (other.totalTime ?? Duration()).compareTo(one.totalTime ?? Duration());
   }
 }
