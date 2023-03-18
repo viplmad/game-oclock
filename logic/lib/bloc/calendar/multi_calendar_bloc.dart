@@ -506,7 +506,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   void _populateTotalTime (List<GameWithLogsDTO> gamesWithLogs) {
-    for(GameWithLogsDTO gameWithLogs in gamesWithLogs) {
+    for(final GameWithLogsDTO gameWithLogs in gamesWithLogs) {
       gameWithLogs.totalTime = GameCalendarUtils.getTotalTime(gameWithLogs.logs);
     }
   }
@@ -515,7 +515,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     return gamesWithLogs.fold<Duration>(
       const Duration(),
       (Duration previousDuration, GameWithLogsDTO gameWithLogs) =>
-          previousDuration + (gameWithLogs.totalTime ?? Duration()),
+          previousDuration + (gameWithLogs.totalTime ?? const Duration()),
     );
   }
 

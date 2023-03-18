@@ -263,7 +263,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         return GameTheme.itemCardWithTime(
           context,
           gameWithLogs,
-          gameWithLogs.totalTime ?? Duration(),
+          gameWithLogs.totalTime ?? const Duration(),
           onTap,
         );
       },
