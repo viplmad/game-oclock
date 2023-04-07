@@ -42,6 +42,10 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
     ReloadItemRelation event,
     Emitter<ItemRelationState> emit,
   ) async {
+    emit(
+      ItemRelationLoading(),
+    );
+
     await _mapAnyLoadToState(emit);
   }
 

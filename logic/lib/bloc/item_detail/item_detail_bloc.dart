@@ -43,23 +43,41 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     ReloadItem event,
     Emitter<ItemDetailState> emit,
   ) async {
-    await _mapAnyLoadToState(emit, event.forceAdditionalFields);
-  }
+    if (state is ItemLoaded<T>) {
+      final T previousItem = (state as ItemLoaded<T>).item;
 
-  Future<void> _mapAnyLoadToState(
-    Emitter<ItemDetailState> emit, [
-    bool forceAdditionalFields = true,
-  ]) async {
-    try {
-      T item = await _get();
-      if (forceAdditionalFields) {
-        item = await getAdditionalFields(item);
-      } else {
-        if (state is ItemLoaded<T>) {
-          final T previousItem = (state as ItemLoaded<T>).item;
+      emit(
+        ItemLoading(),
+      );
+
+      try {
+        T item = await _get();
+
+        if (event.forceAdditionalFields) {
+          item = await getAdditionalFields(item);
+        } else {
           item = addAdditionalFields(item, previousItem);
         }
+
+        emit(
+          ItemLoaded<T>(item),
+        );
+      } catch (e) {
+        managerBloc.add(WarnItemDetailNotLoaded(e.toString()));
+        emit(
+          ItemDetailError(),
+        );
       }
+    } else {
+      await _mapAnyLoadToState(emit);
+    }
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
+    try {
+      T item = await _get();
+      item = await getAdditionalFields(item);
+
       emit(
         ItemLoaded<T>(item),
       );

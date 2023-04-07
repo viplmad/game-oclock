@@ -45,6 +45,46 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       ItemListLoading(),
     );
 
+    await _mapAnyLoadToState(emit);
+  }
+
+  void _mapReloadToState(
+    ReloadItemList event,
+    Emitter<ItemListState> emit,
+  ) async {
+    if (state is ItemListLoaded<T>) {
+      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
+      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
+      final ListStyle style = (state as ItemListLoaded<T>).style;
+
+      emit(
+        ItemListLoading(),
+      );
+
+      try {
+        final List<T> items = await getAllWithView(viewIndex, viewArgs);
+
+        emit(
+          ItemListLoaded<T>(
+            items,
+            viewIndex,
+            viewArgs,
+            0,
+            style,
+          ),
+        );
+      } catch (e) {
+        managerBloc.add(WarnItemListNotLoaded(e.toString()));
+        emit(
+          ItemListError(),
+        );
+      }
+    } else {
+      await _mapAnyLoadToState(emit);
+    }
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<ItemListState> emit) async {
     try {
       final ViewParameters startViewParameters = await getStartViewIndex();
       final int startViewIndex = startViewParameters.viewIndex;
@@ -58,38 +98,6 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
           items,
           startViewIndex,
           srtartingViewArgs,
-        ),
-      );
-    } catch (e) {
-      managerBloc.add(WarnItemListNotLoaded(e.toString()));
-      emit(
-        ItemListError(),
-      );
-    }
-  }
-
-  void _mapReloadToState(
-    ReloadItemList event,
-    Emitter<ItemListState> emit,
-  ) async {
-    emit(
-      ItemListLoading(),
-    );
-
-    try {
-      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
-      final ListStyle style = (state as ItemListLoaded<T>).style;
-
-      final List<T> items = await getAllWithView(viewIndex, viewArgs);
-
-      emit(
-        ItemListLoaded<T>(
-          items,
-          viewIndex,
-          viewArgs,
-          0,
-          style,
         ),
       );
     } catch (e) {
