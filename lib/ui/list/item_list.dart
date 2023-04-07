@@ -285,39 +285,44 @@ abstract class ItemList<
           );
         }
       },
-      child: BlocBuilder<K, ItemListState>(
-        builder: (BuildContext context, ItemListState state) {
-          if (state is ItemListLoaded<T>) {
-            return itemListBodyBuilder(
-              items: state.items,
-              viewIndex: state.viewIndex,
-              viewArgs: state.viewArgs,
-              onDelete: (T item) {
-                BlocProvider.of<S>(context).add(DeleteItem<T>(item));
-              },
-              style: state.style,
-              scrollController: scrollController,
-            );
-          }
-          if (state is ItemListError) {
-            return Container();
-          }
-
-          return Column(
-            children: <Widget>[
-              const LinearProgressIndicator(),
-              Container(
-                color: Colors.grey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: const <Widget>[
-                    HeaderSkeleton(),
-                  ],
-                ),
-              ),
-            ],
-          );
+      child: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<K>(context).add(ReloadItemList());
         },
+        child: BlocBuilder<K, ItemListState>(
+          builder: (BuildContext context, ItemListState state) {
+            if (state is ItemListLoaded<T>) {
+              return itemListBodyBuilder(
+                items: state.items,
+                viewIndex: state.viewIndex,
+                viewArgs: state.viewArgs,
+                onDelete: (T item) {
+                  BlocProvider.of<S>(context).add(DeleteItem<T>(item));
+                },
+                style: state.style,
+                scrollController: scrollController,
+              );
+            }
+            if (state is ItemListError) {
+              return Container();
+            }
+
+            return Column(
+              children: <Widget>[
+                const LinearProgressIndicator(),
+                Container(
+                  color: Colors.grey,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const <Widget>[
+                      HeaderSkeleton(),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -380,15 +385,10 @@ abstract class ItemListBody<T extends PrimaryModel,
             text: viewTitle(context),
           ),
         ),
-        RefreshIndicator(
-          onRefresh: () async {
-            BlocProvider.of<K>(context).add(ReloadItemList());
-          },
-          child: Expanded(
-            child: Scrollbar(
-              controller: scrollController,
-              child: _listBuilder(context, scrollController),
-            ),
+        Expanded(
+          child: Scrollbar(
+            controller: scrollController,
+            child: _listBuilder(context, scrollController),
           ),
         ),
       ],

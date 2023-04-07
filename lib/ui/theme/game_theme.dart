@@ -116,8 +116,6 @@ class GameTheme {
         title: itemTitle(item),
         subtitle: GameCollectionLocalisations.of(context)
             .formatDate(item.logDatetime),
-        trailing: GameCollectionLocalisations.of(context)
-            .formatDuration(item.logTime),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
