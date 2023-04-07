@@ -257,7 +257,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         relationTypeName:
             GameCollectionLocalisations.of(context).finishDateFieldString,
         onChange: () {
-          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem());
+          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
         },
       ),
     ];
@@ -338,7 +338,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
             GameCollectionLocalisations.of(context).finishDateFieldString,
         order: order++,
         onChange: () {
-          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem());
+          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
         },
       ),
     ];
@@ -359,7 +359,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
               itemId: itemId,
               onChange: () {
                 BlocProvider.of<GameDetailBloc>(context)
-                    .add(const ReloadItem());
+                    .add(const ReloadItem(true));
               },
             ),
           );

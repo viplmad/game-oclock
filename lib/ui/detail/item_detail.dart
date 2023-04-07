@@ -166,6 +166,9 @@ abstract class ItemDetailBody<
         child: NestedScrollView(
           headerSliverBuilder: _appBarBuilder,
           body: RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<K>(context).add(const ReloadItem(true));
+            },
             child: ListView(
               children: <Widget>[
                 BlocBuilder<K, ItemDetailState>(
@@ -189,9 +192,6 @@ abstract class ItemDetailBody<
                 ),
               ],
             ),
-            onRefresh: () async {
-              BlocProvider.of<K>(context).add(const ReloadItem());
-            },
           ),
         ),
       ),

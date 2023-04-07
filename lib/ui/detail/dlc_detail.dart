@@ -207,7 +207,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
             GameCollectionLocalisations.of(context).finishDateFieldString,
         order: order++,
         onChange: () {
-          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem());
+          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
         },
       ),
     ];

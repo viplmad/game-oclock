@@ -380,10 +380,15 @@ abstract class ItemListBody<T extends PrimaryModel,
             text: viewTitle(context),
           ),
         ),
-        Expanded(
-          child: Scrollbar(
-            controller: scrollController,
-            child: _listBuilder(context, scrollController),
+        RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<K>(context).add(ReloadItemList());
+          },
+          child: Expanded(
+            child: Scrollbar(
+              controller: scrollController,
+              child: _listBuilder(context, scrollController),
+            ),
           ),
         ),
       ],
