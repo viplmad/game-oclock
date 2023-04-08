@@ -46,10 +46,6 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     if (state is ItemLoaded<T>) {
       final T previousItem = (state as ItemLoaded<T>).item;
 
-      emit(
-        ItemLoading(),
-      );
-
       try {
         T item = await _get();
 
