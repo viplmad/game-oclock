@@ -17,7 +17,7 @@ dependencies:
   equatable: ^2.0.0
 
   # Package Info
-  package_info_plus: 3.0.3
+  package_info_plus: ^3.0.2
 
   # Encrypted shared preferences
   encrypted_shared_preferences: ^3.0.0
