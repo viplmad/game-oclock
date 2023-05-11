@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:charts_flutter/flutter.dart';
+import 'package:community_charts_flutter/community_charts_flutter.dart';
 
 class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({

@@ -148,7 +148,7 @@ class _HomepageBar extends StatelessWidget {
   }
 }
 
-class _HomepageAppBar extends StatelessWidget with PreferredSizeWidget {
+class _HomepageAppBar extends StatelessWidget implements PreferredSizeWidget {
   const _HomepageAppBar({
     Key? key,
     required this.tab,

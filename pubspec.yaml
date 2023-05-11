@@ -4,8 +4,8 @@ version: 3.1.1+338
 publish_to: none
 
 environment:
-  sdk: ">=2.19.4 <3.0.0"
-  flutter: ">=3.7.7"
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
 
 dependencies:
   flutter:
@@ -13,8 +13,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  async: ^2.0.0
   cupertino_icons: ^1.0.2
+
+  async: ^2.0.0
 
   # BLoC pattern
   flutter_bloc: ^8.1.1
@@ -31,8 +32,8 @@ dependencies:
   table_calendar: ^3.0.7
   flutter_speed_dial: ^6.0.0
   duration_picker: ^1.0.1
-  charts_flutter: ^0.12.0
-  package_info_plus: ^3.0.2
+  community_charts_flutter: ^1.0.1
+  package_info_plus: ^4.0.0
 
 # Back-end
   logic:

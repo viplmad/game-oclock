@@ -12,7 +12,7 @@ class BoolField extends StatelessWidget {
   final String fieldName;
   final bool? value;
   final bool editable;
-  final Function(bool)? update;
+  final ValueChanged<bool>? update;
 
   @override
   Widget build(BuildContext context) {

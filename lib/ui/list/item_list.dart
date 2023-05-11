@@ -20,7 +20,7 @@ import '../search/search_arguments.dart';
 
 abstract class ItemAppBar<T extends PrimaryModel,
         K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget
-    with PreferredSizeWidget {
+    implements PreferredSizeWidget {
   const ItemAppBar({
     Key? key,
     required this.themeColor,
@@ -312,9 +312,9 @@ abstract class ItemList<
                 const LinearProgressIndicator(),
                 Container(
                   color: Colors.grey,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
+                    children: <Widget>[
                       HeaderSkeleton(),
                     ],
                   ),

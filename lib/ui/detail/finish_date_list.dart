@@ -225,9 +225,9 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                       return Container();
                     }
 
-                    return Column(
+                    return const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const <Widget>[
+                      children: <Widget>[
                         LinearProgressIndicator(),
                       ],
                     );

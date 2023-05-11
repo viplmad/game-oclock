@@ -43,5 +43,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Exclude signing key
 android/key.properties
 key.jks

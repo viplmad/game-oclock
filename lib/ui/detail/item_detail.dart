@@ -603,6 +603,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required bool value,
     required T item,
+    // ignore: avoid_positional_boolean_parameters
     required N Function(bool newValue) itemUpdater,
   }) {
     return BoolField(

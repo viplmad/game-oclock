@@ -37,6 +37,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.n2t.game_collection"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -55,7 +56,9 @@ android {
 
     defaultConfig {
         applicationId "com.n2t.game_collection"
-        minSdkVersion 28
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

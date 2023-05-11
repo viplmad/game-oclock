@@ -243,7 +243,7 @@ class ItemChip extends StatelessWidget {
 
   final String title;
   final bool selected;
-  final void Function(bool)? onTap;
+  final ValueChanged<bool>? onTap;
 
   @override
   Widget build(BuildContext context) {
