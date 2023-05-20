@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
@@ -11,8 +12,6 @@ import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
 import '../theme/theme.dart' show PlatformTheme;
@@ -124,7 +123,7 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
     return <Widget>[
       itemTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         value: platform.name,
         item: platform,
         itemUpdater: (String newValue) => platform.newWith(name: newValue),
@@ -132,13 +131,13 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
       itemChipField(
         context,
         fieldName:
-            GameCollectionLocalisations.of(context).platformTypeFieldString,
+            AppLocalizations.of(context)!.platformTypeFieldString,
         value: platform.type != null
             ? PlatformType.values.indexOf(platform.type!)
             : null,
         possibleValues: <String>[
-          GameCollectionLocalisations.of(context).physicalString,
-          GameCollectionLocalisations.of(context).digitalString,
+          AppLocalizations.of(context)!.physicalString,
+          AppLocalizations.of(context)!.digitalString,
         ],
         possibleValuesColours: PlatformTheme.typeColours,
         item: platform,
@@ -152,12 +151,12 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
   List<Widget> itemRelationsBuilder(BuildContext context) {
     return <Widget>[
       PlatformGameRelationList(
-        relationName: GameCollectionLocalisations.of(context).gamesString,
-        relationTypeName: GameCollectionLocalisations.of(context).gameString,
+        relationName: AppLocalizations.of(context)!.gamesString,
+        relationTypeName: AppLocalizations.of(context)!.gameString,
       ),
       PlatformDLCRelationList(
-        relationName: GameCollectionLocalisations.of(context).dlcsString,
-        relationTypeName: GameCollectionLocalisations.of(context).dlcString,
+        relationName: AppLocalizations.of(context)!.dlcsString,
+        relationTypeName: AppLocalizations.of(context)!.dlcString,
       ),
     ];
   }
@@ -168,12 +167,12 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
 
     return <Widget>[
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
       itemSkeletonChipField(
         fieldName:
-            GameCollectionLocalisations.of(context).platformTypeFieldString,
+            AppLocalizations.of(context)!.platformTypeFieldString,
         order: order++,
       ),
     ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -11,8 +12,6 @@ import 'package:logic/model/model.dart' show ItemImage;
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import 'package:game_collection/ui/common/field/field.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
@@ -104,21 +103,21 @@ abstract class ItemDetailBody<
             _changesMade = true;
 
             final String message =
-                GameCollectionLocalisations.of(context).fieldUpdatedString;
+                AppLocalizations.of(context)!.fieldUpdatedString;
             showSnackBar(
               context,
               message: message,
             );
           }
           if (state is ItemFieldNotUpdated) {
-            final String message = GameCollectionLocalisations.of(context)
+            final String message = AppLocalizations.of(context)!
                 .unableToUpdateFieldString;
             showSnackBar(
               context,
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: GameCollectionLocalisations.of(context).moreString,
+                label: AppLocalizations.of(context)!.moreString,
                 title: message,
                 content: state.error,
               ),
@@ -128,35 +127,35 @@ abstract class ItemDetailBody<
             _changesMade = true;
 
             final String message =
-                GameCollectionLocalisations.of(context).imageUpdatedString;
+                AppLocalizations.of(context)!.imageUpdatedString;
             showSnackBar(
               context,
               message: message,
             );
           }
           if (state is ItemImageNotUpdated) {
-            final String message = GameCollectionLocalisations.of(context)
+            final String message = AppLocalizations.of(context)!
                 .unableToUpdateImageString;
             showSnackBar(
               context,
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: GameCollectionLocalisations.of(context).moreString,
+                label: AppLocalizations.of(context)!.moreString,
                 title: message,
                 content: state.error,
               ),
             );
           }
           if (state is ItemDetailNotLoaded) {
-            final String message = GameCollectionLocalisations.of(context)
+            final String message = AppLocalizations.of(context)!
                 .unableToLoadDetailString;
             showSnackBar(
               context,
               message: message,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: GameCollectionLocalisations.of(context).moreString,
+                label: AppLocalizations.of(context)!.moreString,
                 title: message,
                 content: state.error,
               ),
@@ -289,8 +288,8 @@ abstract class ItemDetailBody<
         const Divider(),
         ListTile(
           title: withImage
-              ? Text(GameCollectionLocalisations.of(context).replaceImageString)
-              : Text(GameCollectionLocalisations.of(context).uploadImageString),
+              ? Text(AppLocalizations.of(context)!.replaceImageString)
+              : Text(AppLocalizations.of(context)!.uploadImageString),
           leading: const Icon(Icons.file_upload),
           onTap: () async {
             picker
@@ -312,7 +311,7 @@ abstract class ItemDetailBody<
         ),
         ListTile(
           title:
-              Text(GameCollectionLocalisations.of(context).renameImageString),
+              Text(AppLocalizations.of(context)!.renameImageString),
           leading: const Icon(Icons.edit),
           enabled: withImage,
           onTap: () async {
@@ -324,8 +323,8 @@ abstract class ItemDetailBody<
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text(
-                    GameCollectionLocalisations.of(context).editString(
-                      GameCollectionLocalisations.of(context).filenameString,
+                    AppLocalizations.of(context)!.editString(
+                      AppLocalizations.of(context)!.filenameString,
                     ),
                   ),
                   content: TextField(
@@ -337,7 +336,7 @@ abstract class ItemDetailBody<
                       FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                     ],
                     decoration: InputDecoration(
-                      hintText: GameCollectionLocalisations.of(context)
+                      hintText: AppLocalizations.of(context)!
                           .filenameString,
                     ),
                   ),
@@ -378,7 +377,7 @@ abstract class ItemDetailBody<
         ),
         ListTile(
           title:
-              Text(GameCollectionLocalisations.of(context).deleteImageString),
+              Text(AppLocalizations.of(context)!.deleteImageString),
           leading: const Icon(Icons.delete),
           enabled: withImage,
           onTap: () async {
@@ -449,7 +448,7 @@ abstract class ItemDetailBody<
           await launchUrlString(value);
         } else if (context.mounted) {
           // Check context is mounted after asynchronous gap
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToLaunchString(value);
           showSnackBar(
             context,
@@ -480,27 +479,6 @@ abstract class ItemDetailBody<
     );
   }
 
-  Widget itemMoneyField(
-    BuildContext context, {
-    required String fieldName,
-    required double? value,
-    required T item,
-    required N Function(double newValue) itemUpdater,
-  }) {
-    return DoubleField(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatEuro(value)
-          : null,
-      update: _updateFunction<double>(
-        context,
-        item: item,
-        itemUpdater: itemUpdater,
-      ),
-    );
-  }
-
   Widget itemDurationField(
     BuildContext context, {
     required String fieldName,
@@ -509,37 +487,6 @@ abstract class ItemDetailBody<
     return DurationField(
       fieldName: fieldName,
       value: value,
-      editable: false,
-    );
-  }
-
-  Widget itemMoneySumField(
-    BuildContext context, {
-    required String fieldName,
-    required double? value,
-  }) {
-    return DoubleField(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatEuro(value)
-          : null,
-      editable: false,
-    );
-  }
-
-  Widget itemPercentageField(
-    BuildContext context, {
-    required String fieldName,
-    required double? value,
-  }) {
-    return DoubleField(
-      fieldName: fieldName,
-      value: value,
-      shownValue: value != null
-          ? GameCollectionLocalisations.of(context)
-              .formatPercentage(value * 100)
-          : null,
       editable: false,
     );
   }

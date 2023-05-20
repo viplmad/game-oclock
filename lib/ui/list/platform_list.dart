@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO;
 
 import 'package:logic/model/model.dart' show ListStyle;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show PlatformTheme;
@@ -26,11 +26,11 @@ class PlatformAppBar extends ItemAppBar<PlatformDTO, PlatformListBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformString;
+      AppLocalizations.of(context)!.platformString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformsString;
+      AppLocalizations.of(context)!.platformsString;
 
   @override
   List<String> views(BuildContext context) => PlatformTheme.views(context);
@@ -50,7 +50,7 @@ class PlatformFAB
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformString;
+      AppLocalizations.of(context)!.platformString;
 }
 
 class PlatformList
@@ -64,7 +64,7 @@ class PlatformList
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformString;
+      AppLocalizations.of(context)!.platformString;
 
   @override
   // ignore: library_private_types_in_public_api

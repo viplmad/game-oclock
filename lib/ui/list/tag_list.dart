@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
@@ -8,8 +9,6 @@ import 'package:logic/model/model.dart' show ListStyle;
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show TagTheme;
@@ -67,11 +66,11 @@ class _TagAppBar extends ItemAppBar<TagDTO, TagListBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagString;
+      AppLocalizations.of(context)!.tagString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagsString;
+      AppLocalizations.of(context)!.tagsString;
 
   @override
   List<String> views(BuildContext context) => TagTheme.views(context);
@@ -90,7 +89,7 @@ class _TagFAB extends ItemFAB<TagDTO, NewTagDTO, TagListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagString;
+      AppLocalizations.of(context)!.tagString;
 }
 
 class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
@@ -103,7 +102,7 @@ class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagString;
+      AppLocalizations.of(context)!.tagString;
 
   @override
   _GameTagListBody itemListBodyBuilder({

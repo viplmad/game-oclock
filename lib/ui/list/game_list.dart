@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
@@ -9,7 +10,6 @@ import 'package:logic/model/model.dart' show ListStyle, GameView;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/year_picker_dialog.dart';
 
 import '../route_constants.dart';
@@ -57,11 +57,11 @@ class GameAppBar extends ItemAppBar<GameDTO, GameListBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gameString;
+      AppLocalizations.of(context)!.gameString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gamesString;
+      AppLocalizations.of(context)!.gamesString;
 
   @override
   List<String> views(BuildContext context) => GameTheme.views(context);
@@ -81,7 +81,7 @@ class GameFAB extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gameString;
+      AppLocalizations.of(context)!.gameString;
 }
 
 class GameList extends ItemList<GameDTO, GameListBloc, GameListManagerBloc> {
@@ -94,7 +94,7 @@ class GameList extends ItemList<GameDTO, GameListBloc, GameListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gameString;
+      AppLocalizations.of(context)!.gameString;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -138,9 +138,7 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   @override
   String viewTitle(BuildContext context) =>
       GameTheme.views(context).elementAt(viewIndex) +
-      ((viewArgs != null && viewArgs is int)
-          ? ' (${GameCollectionLocalisations.of(context).formatYear(viewArgs as int)})'
-          : '');
+      ((viewArgs != null && viewArgs is int) ? ' ($viewArgs)' : '');
 
   @override
   Widget cardBuilder(BuildContext context, GameDTO item) {

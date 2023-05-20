@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, PlatformAvailableDTO;
 
 import 'package:logic/model/model.dart' show PlatformView;
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/bar_data.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
@@ -32,23 +33,27 @@ class PlatformTheme {
 
   static BarData barData(BuildContext context) {
     return BarData(
-      title: GameCollectionLocalisations.of(context).platformsString,
+      title: AppLocalizations.of(context)!.platformsString,
       icon: Icons.phonelink,
       color: primaryColour,
     );
   }
 
   static List<String> views(BuildContext context) {
-    return PlatformView.values.map<String>((PlatformView view) {
-      switch (view) {
-        case PlatformView.main:
-          return GameCollectionLocalisations.of(context).mainViewString;
-        case PlatformView.lastAdded:
-          return GameCollectionLocalisations.of(context).lastAddedViewString;
-        case PlatformView.lastUpdated:
-          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
-      }
-    }).toList(growable: false);
+    return PlatformView.values
+        .map<String>((PlatformView view) => _viewString(context, view))
+        .toList(growable: false);
+  }
+
+  static String _viewString(BuildContext context, PlatformView view) {
+    switch (view) {
+      case PlatformView.main:
+        return AppLocalizations.of(context)!.mainViewString;
+      case PlatformView.lastAdded:
+        return AppLocalizations.of(context)!.lastAddedViewString;
+      case PlatformView.lastUpdated:
+        return AppLocalizations.of(context)!.lastUpdatedViewString;
+    }
   }
 
   static Widget itemCard(
@@ -71,8 +76,8 @@ class PlatformTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      subtitle: GameCollectionLocalisations.of(context)
-          .formatDate(item.availableDate),
+      subtitle: MaterialLocalizations.of(context)
+          .formatCompactDate(item.availableDate),
       hasImage: PlatformTheme.hasImage,
       imageURL: item.iconUrl,
       onTap: onTap(context, item),

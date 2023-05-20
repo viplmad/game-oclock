@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show GameDTO, NewGameDTO, GameStatus;
 
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
@@ -64,11 +64,11 @@ class _GameSearchBody extends ItemSearchBody<GameDTO, NewGameDTO,
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gameString;
+      AppLocalizations.of(context)!.gameString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).gamesString;
+      AppLocalizations.of(context)!.gamesString;
 
   @override
   NewGameDTO createItem(String query) =>

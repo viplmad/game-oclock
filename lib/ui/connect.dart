@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:logic/bloc/connection/connection.dart';
 import 'package:logic/service/service.dart' show GameCollectionService;
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import 'route_constants.dart';
 import 'theme/app_theme.dart';
@@ -38,7 +37,7 @@ class _ConnectpageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(GameCollectionLocalisations.appTitle),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         // No elevation so background color is not affected by theme
         elevation: 0.0,
         scrolledUnderElevation: 0.0,
@@ -67,7 +66,7 @@ class _ConnectpageBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      GameCollectionLocalisations.of(context).connectingString,
+                      AppLocalizations.of(context)!.connectingString,
                     ),
                     const Padding(
                       padding: EdgeInsets.all(28.0),
@@ -87,8 +86,7 @@ class _ConnectpageBody extends StatelessWidget {
                     children: <Widget>[
                       Center(
                         child: Text(
-                          GameCollectionLocalisations.of(context)
-                              .failedConnectionString,
+                          AppLocalizations.of(context)!.failedConnectionString,
                         ),
                       ),
                       ElevatedButton(
@@ -101,7 +99,7 @@ class _ConnectpageBody extends StatelessWidget {
                               AppTheme.defaultThemeSurfaceTintColor(context),
                         ),
                         child: Text(
-                          GameCollectionLocalisations.of(context).retryString,
+                          AppLocalizations.of(context)!.retryString,
                         ),
                       ),
                       ElevatedButton(
@@ -116,8 +114,7 @@ class _ConnectpageBody extends StatelessWidget {
                               AppTheme.defaultThemeSurfaceTintColor(context),
                         ),
                         child: Text(
-                          GameCollectionLocalisations.of(context)
-                              .changeRepositoryString,
+                          AppLocalizations.of(context)!.changeRepositoryString,
                         ),
                       ),
                     ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme;
@@ -63,11 +63,11 @@ class _DLCSearchBody extends ItemSearchBody<DLCDTO, NewDLCDTO, DLCSearchBloc,
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcString;
+      AppLocalizations.of(context)!.dlcString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcsString;
+      AppLocalizations.of(context)!.dlcsString;
 
   @override
   NewDLCDTO createItem(String query) => NewDLCDTO(name: query);

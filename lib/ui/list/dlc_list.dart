@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show DLCDTO, NewDLCDTO, DLCWithFinishDTO;
 
 import 'package:logic/model/model.dart' show ListStyle;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme;
@@ -26,11 +26,11 @@ class DLCAppBar extends ItemAppBar<DLCDTO, DLCListBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcString;
+      AppLocalizations.of(context)!.dlcString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcsString;
+      AppLocalizations.of(context)!.dlcsString;
 
   @override
   List<String> views(BuildContext context) => DLCTheme.views(context);
@@ -49,7 +49,7 @@ class DLCFAB extends ItemFAB<DLCDTO, NewDLCDTO, DLCListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcString;
+      AppLocalizations.of(context)!.dlcString;
 }
 
 class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
@@ -62,7 +62,7 @@ class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).dlcString;
+      AppLocalizations.of(context)!.dlcString;
 
   @override
   // ignore: library_private_types_in_public_api

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -10,8 +11,6 @@ import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 import 'package:logic/bloc/about/about.dart';
 import 'package:logic/bloc/start_game_view/start_game_view.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import 'utils/shape_utils.dart';
 import 'list/list.dart';
@@ -187,17 +186,16 @@ class _HomepageDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
             ),
-            child: const Text(
-              GameCollectionLocalisations.appTitle,
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.appTitle,
+              style: const TextStyle(
                 fontSize: 24,
               ),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.list),
-            title:
-                Text(GameCollectionLocalisations.of(context).gameListsString),
+            title: Text(AppLocalizations.of(context)!.gameListsString),
             onTap: () async {
               Navigator.pushNamed(
                 context,
@@ -209,7 +207,7 @@ class _HomepageDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings),
             title: Text(
-              GameCollectionLocalisations.of(context).changeRepositoryString,
+              AppLocalizations.of(context)!.changeRepositoryString,
             ),
             onTap: () async {
               Navigator.pushNamed(
@@ -221,7 +219,7 @@ class _HomepageDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.view_carousel),
             title: Text(
-              GameCollectionLocalisations.of(context).changeStartGameViewString,
+              AppLocalizations.of(context)!.changeStartGameViewString,
             ),
             onTap: () async {
               showDialog<void>(
@@ -242,12 +240,12 @@ class _HomepageDrawer extends StatelessWidget {
               return ListTile(
                 leading: const Icon(Icons.info),
                 title: Text(
-                  '${GameCollectionLocalisations.of(context).aboutString} - $version',
+                  '${AppLocalizations.of(context)!.aboutString} - $version',
                 ),
                 onTap: () {
                   showLicensePage(
                     context: context,
-                    applicationName: GameCollectionLocalisations.appTitle,
+                    applicationName: AppLocalizations.of(context)!.appTitle,
                     applicationVersion: version,
                     applicationIcon: Container(
                       margin: const EdgeInsets.all(12.0),
@@ -260,8 +258,8 @@ class _HomepageDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    applicationLegalese: GameCollectionLocalisations.of(context)
-                        .licenseInfoString,
+                    applicationLegalese:
+                        AppLocalizations.of(context)!.licenseInfoString,
                   );
                 },
               );
@@ -281,7 +279,7 @@ class _HomepageDrawer extends StatelessWidget {
       },
       child: AlertDialog(
         title: Text(
-          GameCollectionLocalisations.of(context).startGameViewString,
+          AppLocalizations.of(context)!.startGameViewString,
         ),
         content: BlocBuilder<StartGameViewBloc, int?>(
           builder: (BuildContext context, int? startViewIndex) {

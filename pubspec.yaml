@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  intl: any
 
   cupertino_icons: ^1.0.2
 
@@ -25,7 +26,6 @@ dependencies:
     git:
       url: https://github.com/viplmad/smoothratingbar.git
       ref: dev
-  numberpicker: ^2.0.0
   image_picker: ^0.8.0
   cached_network_image: ^3.2.2
   url_launcher: ^6.1.5
@@ -59,6 +59,9 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
+
+  # Necessary for localisation
+  generate: true
 
   assets:
     - assets/images/icon.png

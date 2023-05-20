@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart' show TagDTO;
 
 import 'package:logic/model/model.dart' show TagView;
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
 
@@ -21,16 +22,20 @@ class TagTheme {
   }
 
   static List<String> views(BuildContext context) {
-    return TagView.values.map<String>((TagView view) {
-      switch (view) {
-        case TagView.main:
-          return GameCollectionLocalisations.of(context).mainViewString;
-        case TagView.lastAdded:
-          return GameCollectionLocalisations.of(context).lastAddedViewString;
-        case TagView.lastUpdated:
-          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
-      }
-    }).toList(growable: false);
+    return TagView.values
+        .map<String>((TagView view) => _viewString(context, view))
+        .toList(growable: false);
+  }
+
+  static String _viewString(BuildContext context, TagView view) {
+    switch (view) {
+      case TagView.main:
+        return AppLocalizations.of(context)!.mainViewString;
+      case TagView.lastAdded:
+        return AppLocalizations.of(context)!.lastAddedViewString;
+      case TagView.lastUpdated:
+        return AppLocalizations.of(context)!.lastUpdatedViewString;
+    }
   }
 
   static Widget itemCard(

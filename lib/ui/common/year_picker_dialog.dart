@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/utils/shape_utils.dart';
 
 class YearPickerDialog extends StatefulWidget {
@@ -50,8 +49,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    GameCollectionLocalisations.of(context)
-                        .formatYear(_selectedDate.year),
+                    MaterialLocalizations.of(context).formatYear(_selectedDate),
                     style: Theme.of(context)
                         .primaryTextTheme
                         .titleMedium!
@@ -195,7 +193,7 @@ class _YearPickerState extends State<_YearPicker> {
         child: Center(
           child: Semantics(
             selected: isSelected,
-            child: Text(year.toString(), style: itemStyle),
+            child: Text(year.toString(), style: itemStyle), // No need for intl
           ),
         ),
       ),

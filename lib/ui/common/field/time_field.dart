@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
-
 import 'generic_field.dart';
 
 class TimeField extends StatelessWidget {
@@ -26,7 +24,7 @@ class TimeField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatTimeOfDay(value!)
+          ? MaterialLocalizations.of(context).formatTimeOfDay(value!)
           : null,
       editable: editable,
       update: update,

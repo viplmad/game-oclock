@@ -1,6 +1,5 @@
 export 'bool_field.dart';
 export 'date_field.dart';
-export 'double_field.dart';
 export 'duration_field.dart';
 export 'enum_field.dart';
 export 'generic_field.dart';

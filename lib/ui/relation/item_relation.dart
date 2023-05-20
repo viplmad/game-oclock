@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
@@ -8,7 +9,6 @@ import 'package:game_collection_client/api.dart' show PrimaryModel;
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/header_text.dart';
 import 'package:game_collection/ui/common/list_view.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
@@ -51,14 +51,14 @@ abstract class ItemRelationList<
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if (state is ItemRelationAdded<W>) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .linkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).undoString,
+              label: AppLocalizations.of(context)!.undoString,
               onPressed: () {
                 try {
                   BlocProvider.of<S>(context).add(
@@ -69,7 +69,7 @@ abstract class ItemRelationList<
                 } on FlutterError {
                   // Catch error when undoing if bloc is no longer in context
                   final String unableMessage =
-                      GameCollectionLocalisations.of(context)
+                      AppLocalizations.of(context)!
                           .unableToUndoString;
                   showSnackBar(
                     context,
@@ -81,28 +81,28 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotAdded) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToLinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ItemRelationDeleted<W>) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unlinkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: backgroundSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).undoString,
+              label: AppLocalizations.of(context)!.undoString,
               onPressed: () {
                 try {
                   BlocProvider.of<S>(context).add(
@@ -113,7 +113,7 @@ abstract class ItemRelationList<
                 } on FlutterError {
                   // Catch error when undoing if bloc is no longer in context
                   final String unableMessage =
-                      GameCollectionLocalisations.of(context)
+                      AppLocalizations.of(context)!
                           .unableToUndoString;
                   showSnackBar(
                     context,
@@ -125,28 +125,28 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToUnlinkString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ItemRelationNotLoaded) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToLoadString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -339,7 +339,7 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: ElevatedButton.icon(
         label:
-            Text(GameCollectionLocalisations.of(context).linkString(typeName)),
+            Text(AppLocalizations.of(context)!.linkString(typeName)),
         icon: const Icon(Icons.link),
         onPressed: () async {
           onSearch().then((W? result) {

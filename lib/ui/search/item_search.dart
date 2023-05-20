@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
@@ -8,7 +9,6 @@ import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/list_view.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
@@ -141,7 +141,7 @@ class _ItemSearchBodyState<
           decoration: InputDecoration(
             border: const UnderlineInputBorder(),
             prefixIcon: const Icon(Icons.search),
-            hintText: GameCollectionLocalisations.of(context)
+            hintText: AppLocalizations.of(context)!
                 .searchString(widget.typesName(context)),
           ),
         ),
@@ -155,7 +155,7 @@ class _ItemSearchBodyState<
             Navigator.maybePop<T>(context, state.item);
           }
           if (state is ItemNotAdded) {
-            final String message = GameCollectionLocalisations.of(context)
+            final String message = AppLocalizations.of(context)!
                 .unableToAddString(widget.typeName(context));
             showSnackBar(
               context,
@@ -163,7 +163,7 @@ class _ItemSearchBodyState<
               seconds: 2,
               snackBarAction: dialogSnackBarAction(
                 context,
-                label: GameCollectionLocalisations.of(context).moreString,
+                label: AppLocalizations.of(context)!.moreString,
                 title: message,
                 content: state.error,
               ),
@@ -184,13 +184,13 @@ class _ItemSearchBodyState<
                 if (state is ItemSearchEmpty<T>) {
                   return listItems(
                     state.suggestions,
-                    GameCollectionLocalisations.of(context).noSuggestionsString,
+                    '',
                   );
                 }
                 if (state is ItemSearchSuccess<T>) {
                   return listItems(
                     state.results,
-                    GameCollectionLocalisations.of(context).noResultsString,
+                    AppLocalizations.of(context)!.noResultsString,
                   );
                 }
                 if (state is ItemSearchError) {
@@ -212,7 +212,7 @@ class _ItemSearchBodyState<
     return <Widget>[
       IconButton(
         icon: const Icon(Icons.clear),
-        tooltip: GameCollectionLocalisations.of(context).clearSearchString,
+        tooltip: AppLocalizations.of(context)!.clearSearchString,
         onPressed: () {
           _textEditingController.clear();
           BlocProvider.of<K>(context).add(
@@ -239,7 +239,7 @@ class _ItemSearchBodyState<
               ThemeUtils.isThemeDark(context) ? Colors.black54 : Colors.white,
         ),
         child: Text(
-          GameCollectionLocalisations.of(context)
+          AppLocalizations.of(context)!
               .newWithTitleString(widget.typeName(context), query),
         ),
       ),

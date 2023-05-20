@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show GameWithLogsDTO, GameDTO;
@@ -10,10 +11,10 @@ import 'package:logic/bloc/calendar/multi_calendar.dart';
 import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
 import 'package:logic/utils/duration_extension.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/list_view.dart';
 import 'package:game_collection/ui/common/skeleton.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
@@ -50,7 +51,7 @@ class MultiGameCalendar extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            GameCollectionLocalisations.of(context).multiCalendarViewString,
+            AppLocalizations.of(context)!.calendarViewString,
           ),
           // Fixed elevation so background color doesn't change on scroll
           elevation: 1.0,
@@ -58,36 +59,35 @@ class MultiGameCalendar extends StatelessWidget {
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.first_page),
-              tooltip: GameCollectionLocalisations.of(context).firstGameLog,
+              tooltip: AppLocalizations.of(context)!.firstLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateFirst());
               },
             ),
             IconButton(
               icon: const Icon(Icons.navigate_before),
-              tooltip: GameCollectionLocalisations.of(context).previousGameLog,
+              tooltip: AppLocalizations.of(context)!.previousLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDatePrevious());
               },
             ),
             IconButton(
               icon: const Icon(Icons.navigate_next),
-              tooltip: GameCollectionLocalisations.of(context).nextGameLog,
+              tooltip: AppLocalizations.of(context)!.nextLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateNext());
               },
             ),
             IconButton(
               icon: const Icon(Icons.last_page),
-              tooltip: GameCollectionLocalisations.of(context).lastGameLog,
+              tooltip: AppLocalizations.of(context)!.lastLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateLast());
               },
             ),
             PopupMenuButton<CalendarRange>(
               icon: const Icon(Icons.date_range),
-              tooltip:
-                  GameCollectionLocalisations.of(context).changeRangeString,
+              tooltip: AppLocalizations.of(context)!.changeRangeString,
               itemBuilder: (BuildContext context) {
                 return CalendarRange.values
                     .map<PopupMenuItem<CalendarRange>>((CalendarRange range) {
@@ -95,8 +95,7 @@ class MultiGameCalendar extends StatelessWidget {
                     value: range,
                     child: ListTile(
                       title: Text(
-                        GameCollectionLocalisations.of(context)
-                            .rangeString(range),
+                        CalendarUtils.rangeString(context, range),
                       ),
                     ),
                   );
@@ -108,8 +107,7 @@ class MultiGameCalendar extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.insert_chart),
-              tooltip:
-                  GameCollectionLocalisations.of(context).changeStyleString,
+              tooltip: AppLocalizations.of(context)!.changeStyleString,
               onPressed: () {
                 bloc.add(UpdateCalendarStyle());
               },
@@ -138,13 +136,13 @@ class _MultiGameCalendarBody extends StatelessWidget {
       listener: (BuildContext context, CalendarManagerState state) {
         if (state is CalendarNotLoaded) {
           final String message =
-              GameCollectionLocalisations.of(context).unableToLoadCalendar;
+              AppLocalizations.of(context)!.unableToLoadCalendar;
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -158,7 +156,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
             if (state.selectedTotalTime.isZero()) {
               gameLogsWidget = Center(
                 child: Text(
-                  GameCollectionLocalisations.of(context).emptyGameLogsString,
+                  AppLocalizations.of(context)!.emptyPlayTime,
                 ),
               );
             } else {
@@ -194,7 +192,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
                   ),
                   trailing: !state.selectedTotalTime.isZero()
                       ? Text(
-                          '${GameCollectionLocalisations.of(context).totalGames(state.selectedTotalGames)} / ${GameCollectionLocalisations.of(context).formatDuration(state.selectedTotalTime)}',
+                          '${AppLocalizations.of(context)!.totalGames(state.selectedTotalGames)} / ${AppLocalizationsUtils.formatDuration(context, state.selectedTotalTime)}',
                         )
                       : null,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:logic/model/model.dart' show ServerConnection;
@@ -8,7 +9,6 @@ import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/server_settings/server_settings.dart';
 import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 
 import '../route_constants.dart';
@@ -60,7 +60,7 @@ class ServerSettings extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            GameCollectionLocalisations.of(context).repositorySettingsString,
+            AppLocalizations.of(context)!.repositorySettingsString,
           ),
           // No elevation so background color is not affected by theme
           elevation: 0.0,
@@ -76,10 +76,9 @@ class ServerSettings extends StatelessWidget {
             final bool loaded = state is ServerSettingsLoaded;
 
             return FloatingActionButton.extended(
-              label:
-                  Text(GameCollectionLocalisations.of(context).connectString),
+              label: Text(AppLocalizations.of(context)!.connectString),
               icon: const Icon(Icons.send),
-              tooltip: GameCollectionLocalisations.of(context).connectString,
+              tooltip: AppLocalizations.of(context)!.connectString,
               onPressed: loaded
                   ? () {
                       // TODO subscribe to changes if possible
@@ -121,8 +120,8 @@ class _ServerSettingsBody extends StatelessWidget {
     return BlocListener<ServerSettingsManagerBloc, ServerSettingsManagerState>(
       listener: (BuildContext context, ServerSettingsManagerState state) async {
         if (state is ServerConnectionSettingsSaved) {
-          final String message = GameCollectionLocalisations.of(context)
-              .updatedItemConnectionString;
+          final String message =
+              AppLocalizations.of(context)!.updatedConnectionString;
           showSnackBar(context, message: message);
 
           // When correctly saved -> navigate to connect page
@@ -132,28 +131,28 @@ class _ServerSettingsBody extends StatelessWidget {
           );
         }
         if (state is ServerSettingsNotSaved) {
-          final String message = GameCollectionLocalisations.of(context)
-              .unableToUpdateConnectionString;
+          final String message =
+              AppLocalizations.of(context)!.unableToUpdateConnectionString;
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ServerSettingsNotLoaded) {
-          final String message = GameCollectionLocalisations.of(context)
-              .unableToLoadConnectionString;
+          final String message =
+              AppLocalizations.of(context)!.unableToLoadConnectionString;
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -179,8 +178,7 @@ class _ServerSettingsBody extends StatelessWidget {
                 const Divider(),
                 ListTile(
                   title: Text(
-                    GameCollectionLocalisations.of(context)
-                        .currentAccessTokenString,
+                    AppLocalizations.of(context)!.currentAccessTokenString,
                   ),
                   subtitle: Text(accessToken),
                   trailing: IconButton(
@@ -191,8 +189,8 @@ class _ServerSettingsBody extends StatelessWidget {
                       ).then(
                         (_) => showSnackBar(
                           context,
-                          message: GameCollectionLocalisations.of(context)
-                              .accessTokenCopied,
+                          message:
+                              AppLocalizations.of(context)!.accessTokenCopied,
                         ),
                       );
                     },
@@ -236,28 +234,28 @@ class ServerConnectionForm extends _TextForm {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           textFormField(
-            labelText: GameCollectionLocalisations.of(context).nameString,
+            labelText: AppLocalizations.of(context)!.nameString,
             initialValue: connection?.name,
             onSaved: (String? value) {
               formData.name = value ?? formData.name;
             },
           ),
           textFormField(
-            labelText: GameCollectionLocalisations.of(context).hostString,
+            labelText: AppLocalizations.of(context)!.hostString,
             initialValue: connection?.host,
             onSaved: (String? value) {
               formData.host = value ?? formData.host;
             },
           ),
           textFormField(
-            labelText: GameCollectionLocalisations.of(context).usernameString,
+            labelText: AppLocalizations.of(context)!.usernameString,
             initialValue: connection?.username,
             onSaved: (String? value) {
               formData.username = value ?? formData.username;
             },
           ),
           textFormField(
-            labelText: GameCollectionLocalisations.of(context).passwordString,
+            labelText: AppLocalizations.of(context)!.passwordString,
             initialValue: '', // Password is never saved
             obscureText: true,
             onSaved: (String? value) {
@@ -349,8 +347,8 @@ class _ShowHideTextFormFieldState extends State<_ShowHideTextFormField> {
           suffixIcon: widget.allowObscureText
               ? IconButton(
                   tooltip: obscureText
-                      ? GameCollectionLocalisations.of(context).showString
-                      : GameCollectionLocalisations.of(context).hideString,
+                      ? AppLocalizations.of(context)!.showString
+                      : AppLocalizations.of(context)!.hideString,
                   icon: obscureText
                       ? const Icon(Icons.visibility_off)
                       : const Icon(Icons.visibility),
@@ -366,7 +364,7 @@ class _ShowHideTextFormFieldState extends State<_ShowHideTextFormField> {
         inputFormatters: widget.inputFormatters,
         validator: (String? value) {
           if (value!.isEmpty) {
-            return GameCollectionLocalisations.of(context).enterTextString;
+            return AppLocalizations.of(context)!.enterTextString;
           }
           return null;
         },

@@ -80,4 +80,8 @@ extension DateExtension on DateTime {
   DateTime substractDays(int days) {
     return subtract(Duration(days: days));
   }
+
+  DateTime addMonths(int months) {
+    return DateTime(year, month + months, day);
+  }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
-
 import '../show_date_picker.dart';
 import 'generic_field.dart';
 
@@ -25,7 +23,7 @@ class DateField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatDate(value!)
+          ? MaterialLocalizations.of(context).formatCompactDate(value!)
           : null,
       update: update,
       editable: editable,

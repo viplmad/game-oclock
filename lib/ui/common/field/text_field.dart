@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'generic_field.dart';
 
@@ -42,7 +42,7 @@ class CustomTextField extends StatelessWidget {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text(
-                GameCollectionLocalisations.of(context).editString(fieldName),
+                AppLocalizations.of(context)!.editString(fieldName),
               ),
               content: TextField(
                 controller: fieldController,

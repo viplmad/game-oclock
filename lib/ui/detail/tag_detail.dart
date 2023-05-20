@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
@@ -10,8 +11,6 @@ import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
 import '../theme/theme.dart' show TagTheme;
@@ -107,7 +106,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
     return <Widget>[
       itemTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         value: tag.name,
         item: tag,
         itemUpdater: (String newValue) => tag.newWith(name: newValue),
@@ -119,8 +118,8 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
   List<Widget> itemRelationsBuilder(BuildContext context) {
     return <Widget>[
       TagGameRelationList(
-        relationName: GameCollectionLocalisations.of(context).gamesString,
-        relationTypeName: GameCollectionLocalisations.of(context).gameString,
+        relationName: AppLocalizations.of(context)!.gamesString,
+        relationTypeName: AppLocalizations.of(context)!.gameString,
       )
     ];
   }
@@ -131,7 +130,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
 
     return <Widget>[
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
     ];

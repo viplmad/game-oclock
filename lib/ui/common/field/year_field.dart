@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
-
 import '../year_picker_dialog.dart';
 import 'generic_field.dart';
 
@@ -26,9 +24,7 @@ class YearField extends StatelessWidget {
     return GenericField<int>(
       fieldName: fieldName,
       value: value,
-      shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatYear(value!)
-          : null,
+      shownValue: value?.toString(), // No need for intl
       editable: editable,
       update: update,
       onTap: () async {

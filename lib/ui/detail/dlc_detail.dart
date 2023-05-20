@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
@@ -10,8 +11,6 @@ import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../relation/relation.dart';
 import '../theme/theme.dart' show DLCTheme;
@@ -144,7 +143,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
     return <Widget>[
       itemTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         value: dlc.name,
         item: dlc,
         itemUpdater: (String newValue) => dlc.newWith(name: newValue),
@@ -152,17 +151,17 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
       itemYearField(
         context,
         fieldName:
-            GameCollectionLocalisations.of(context).releaseYearFieldString,
+            AppLocalizations.of(context)!.releaseYearFieldString,
         value: dlc.releaseYear,
         item: dlc,
         itemUpdater: (int newValue) => dlc.newWith(releaseYear: newValue),
       ),
       DLCFinishList(
         fieldName:
-            GameCollectionLocalisations.of(context).finishDatesFieldString,
+            AppLocalizations.of(context)!.finishDatesFieldString,
         value: dlc.firstFinish,
         relationTypeName:
-            GameCollectionLocalisations.of(context).finishDateFieldString,
+            AppLocalizations.of(context)!.finishDateFieldString,
         onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
         },
@@ -175,13 +174,13 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
     return <Widget>[
       DLCGameRelationList(
         relationName:
-            GameCollectionLocalisations.of(context).baseGameFieldString,
-        relationTypeName: GameCollectionLocalisations.of(context).gameString,
+            AppLocalizations.of(context)!.baseGameFieldString,
+        relationTypeName: AppLocalizations.of(context)!.gameString,
       ),
       DLCPlatformRelationList(
-        relationName: GameCollectionLocalisations.of(context).platformsString,
+        relationName: AppLocalizations.of(context)!.platformsString,
         relationTypeName:
-            GameCollectionLocalisations.of(context).platformString,
+            AppLocalizations.of(context)!.platformString,
       ),
     ];
   }
@@ -192,19 +191,19 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
 
     return <Widget>[
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
       itemSkeletonField(
         fieldName:
-            GameCollectionLocalisations.of(context).releaseYearFieldString,
+            AppLocalizations.of(context)!.releaseYearFieldString,
         order: order++,
       ),
       SkeletonDLCFinishList(
         fieldName:
-            GameCollectionLocalisations.of(context).finishDatesFieldString,
+            AppLocalizations.of(context)!.finishDatesFieldString,
         relationTypeName:
-            GameCollectionLocalisations.of(context).finishDateFieldString,
+            AppLocalizations.of(context)!.finishDateFieldString,
         order: order++,
         onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));

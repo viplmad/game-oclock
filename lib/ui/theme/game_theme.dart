@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
-    show GameDTO, GameWithFinishDTO, GameWithLogDTO, GameAvailableDTO;
+    show
+        GameAvailableDTO,
+        GameDTO,
+        GameStatus,
+        GameWithFinishDTO,
+        GameWithLogDTO;
 
 import 'package:logic/model/model.dart' show GameView;
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/bar_data.dart';
 import 'package:game_collection/ui/common/triangle_banner.dart';
 import 'package:game_collection/ui/utils/shape_utils.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 class GameTheme {
   GameTheme._();
@@ -41,33 +48,37 @@ class GameTheme {
 
   static BarData barData(BuildContext context) {
     return BarData(
-      title: GameCollectionLocalisations.of(context).gamesString,
+      title: AppLocalizations.of(context)!.gamesString,
       icon: Icons.videogame_asset,
       color: primaryColour,
     );
   }
 
   static List<String> views(BuildContext context) {
-    return GameView.values.map<String>((GameView view) {
-      switch (view) {
-        case GameView.main:
-          return GameCollectionLocalisations.of(context).mainViewString;
-        case GameView.lastAdded:
-          return GameCollectionLocalisations.of(context).lastAddedViewString;
-        case GameView.lastUpdated:
-          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
-        case GameView.playing:
-          return GameCollectionLocalisations.of(context).playingViewString;
-        case GameView.nextUp:
-          return GameCollectionLocalisations.of(context).nextUpViewString;
-        case GameView.lastFinished:
-          return GameCollectionLocalisations.of(context).lastFinishedViewString;
-        case GameView.lastPlayed:
-          return GameCollectionLocalisations.of(context).lastPlayedString;
-        case GameView.review:
-          return GameCollectionLocalisations.of(context).yearInReviewViewString;
-      }
-    }).toList(growable: false);
+    return GameView.values
+        .map<String>((GameView view) => _viewString(context, view))
+        .toList(growable: false);
+  }
+
+  static String _viewString(BuildContext context, GameView view) {
+    switch (view) {
+      case GameView.main:
+        return AppLocalizations.of(context)!.mainViewString;
+      case GameView.lastAdded:
+        return AppLocalizations.of(context)!.lastAddedViewString;
+      case GameView.lastUpdated:
+        return AppLocalizations.of(context)!.lastUpdatedViewString;
+      case GameView.playing:
+        return AppLocalizations.of(context)!.playingViewString;
+      case GameView.nextUp:
+        return AppLocalizations.of(context)!.nextUpViewString;
+      case GameView.lastFinished:
+        return AppLocalizations.of(context)!.lastFinishedViewString;
+      case GameView.lastPlayed:
+        return AppLocalizations.of(context)!.lastPlayedString;
+      case GameView.review:
+        return AppLocalizations.of(context)!.yearInReviewViewString;
+    }
   }
 
   static Widget itemCard(
@@ -96,8 +107,8 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle:
-            GameCollectionLocalisations.of(context).formatDate(item.finishDate),
+        subtitle: MaterialLocalizations.of(context)
+            .formatCompactDate(item.finishDate),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -114,8 +125,8 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: GameCollectionLocalisations.of(context)
-            .formatDate(item.logDatetime),
+        subtitle: MaterialLocalizations.of(context)
+            .formatCompactDate(item.logDatetime),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -132,8 +143,8 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: GameCollectionLocalisations.of(context)
-            .formatDate(item.availableDate),
+        subtitle: MaterialLocalizations.of(context)
+            .formatCompactDate(item.availableDate),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -152,8 +163,7 @@ class GameTheme {
       ItemCard(
         title: itemTitle(item),
         subtitle: _itemSubtitle(context, item),
-        trailing:
-            GameCollectionLocalisations.of(context).formatDuration(totalTime),
+        trailing: AppLocalizationsUtils.formatDuration(context, totalTime),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -205,6 +215,21 @@ class GameTheme {
   }
 
   static String _itemSubtitle(BuildContext context, GameDTO item) {
-    return '${GameCollectionLocalisations.of(context).gameStatusString(item.status)} · ${item.releaseYear != null ? GameCollectionLocalisations.of(context).formatYear(item.releaseYear!) : ''}';
+    return '${_statusString(context, item.status)} · ${item.releaseYear ?? ''}';
+  }
+
+  static String _statusString(BuildContext context, GameStatus? status) {
+    switch (status) {
+      case GameStatus.lowPriority:
+        return AppLocalizations.of(context)!.lowPriorityString;
+      case GameStatus.nextUp:
+        return AppLocalizations.of(context)!.nextUpString;
+      case GameStatus.playing:
+        return AppLocalizations.of(context)!.playingString;
+      case GameStatus.played:
+        return AppLocalizations.of(context)!.playedString;
+      default:
+        return '';
+    }
   }
 }

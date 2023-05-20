@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
@@ -11,8 +12,6 @@ import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../relation/relation.dart';
@@ -171,14 +170,14 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     return <Widget>[
       itemTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         value: game.name,
         item: game,
         itemUpdater: (String newValue) => game.newWith(name: newValue),
       ),
       itemTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).editionFieldString,
+        fieldName: AppLocalizations.of(context)!.editionFieldString,
         value: game.edition,
         item: game,
         itemUpdater: (String newValue) => game.newWith(edition: newValue),
@@ -186,20 +185,20 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       itemYearField(
         context,
         fieldName:
-            GameCollectionLocalisations.of(context).releaseYearFieldString,
+            AppLocalizations.of(context)!.releaseYearFieldString,
         value: game.releaseYear,
         item: game,
         itemUpdater: (int newValue) => game.newWith(releaseYear: newValue),
       ),
       itemChipField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).statusFieldString,
+        fieldName: AppLocalizations.of(context)!.statusFieldString,
         value: GameStatus.values.indexOf(game.status),
         possibleValues: <String>[
-          GameCollectionLocalisations.of(context).lowPriorityString,
-          GameCollectionLocalisations.of(context).nextUpString,
-          GameCollectionLocalisations.of(context).playingString,
-          GameCollectionLocalisations.of(context).playedString,
+          AppLocalizations.of(context)!.lowPriorityString,
+          AppLocalizations.of(context)!.nextUpString,
+          AppLocalizations.of(context)!.playingString,
+          AppLocalizations.of(context)!.playedString,
         ],
         possibleValuesColours: GameTheme.statusColours,
         item: game,
@@ -208,14 +207,14 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       ),
       itemRatingField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).ratingFieldString,
+        fieldName: AppLocalizations.of(context)!.ratingFieldString,
         value: game.rating,
         item: game,
         itemUpdater: (int newValue) => game.newWith(rating: newValue),
       ),
       itemLongTextField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).thoughtsFieldString,
+        fieldName: AppLocalizations.of(context)!.thoughtsFieldString,
         value: game.notes,
         item: game,
         itemUpdater: (String newValue) => game.newWith(notes: newValue),
@@ -223,7 +222,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       itemURLField(
         context,
         fieldName:
-            GameCollectionLocalisations.of(context).saveFolderFieldString,
+            AppLocalizations.of(context)!.saveFolderFieldString,
         value: game.saveFolder,
         item: game,
         itemUpdater: (String newValue) => game.newWith(saveFolder: newValue),
@@ -231,7 +230,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       itemURLField(
         context,
         fieldName:
-            GameCollectionLocalisations.of(context).screenshotFolderFieldString,
+            AppLocalizations.of(context)!.screenshotFolderFieldString,
         value: game.screenshotFolder,
         item: game,
         itemUpdater: (String newValue) =>
@@ -239,7 +238,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       ),
       itemBoolField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).backupFieldString,
+        fieldName: AppLocalizations.of(context)!.backupFieldString,
         value: game.backup,
         item: game,
         itemUpdater: (bool newValue) => game.newWith(backup: newValue),
@@ -247,15 +246,15 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       _gameCalendarField(context),
       itemDurationField(
         context,
-        fieldName: GameCollectionLocalisations.of(context).gameLogsFieldString,
+        fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
         value: game.totalTime,
       ),
       GameFinishDateList(
         fieldName:
-            GameCollectionLocalisations.of(context).finishDatesFieldString,
+            AppLocalizations.of(context)!.finishDatesFieldString,
         value: game.firstFinish,
         relationTypeName:
-            GameCollectionLocalisations.of(context).finishDateFieldString,
+            AppLocalizations.of(context)!.finishDateFieldString,
         onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
         },
@@ -267,17 +266,17 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
   List<Widget> itemRelationsBuilder(BuildContext context) {
     return <Widget>[
       GamePlatformRelationList(
-        relationName: GameCollectionLocalisations.of(context).platformsString,
+        relationName: AppLocalizations.of(context)!.platformsString,
         relationTypeName:
-            GameCollectionLocalisations.of(context).platformString,
+            AppLocalizations.of(context)!.platformString,
       ),
       GameDLCRelationList(
-        relationName: GameCollectionLocalisations.of(context).dlcsString,
-        relationTypeName: GameCollectionLocalisations.of(context).dlcString,
+        relationName: AppLocalizations.of(context)!.dlcsString,
+        relationTypeName: AppLocalizations.of(context)!.dlcString,
       ),
       GameTagRelationList(
-        relationName: GameCollectionLocalisations.of(context).tagsString,
-        relationTypeName: GameCollectionLocalisations.of(context).tagString,
+        relationName: AppLocalizations.of(context)!.tagsString,
+        relationTypeName: AppLocalizations.of(context)!.tagString,
       ),
     ];
   }
@@ -288,54 +287,54 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
 
     return <Widget>[
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).nameFieldString,
+        fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).editionFieldString,
+        fieldName: AppLocalizations.of(context)!.editionFieldString,
         order: order++,
       ),
       itemSkeletonField(
         fieldName:
-            GameCollectionLocalisations.of(context).releaseYearFieldString,
+            AppLocalizations.of(context)!.releaseYearFieldString,
         order: order++,
       ),
       itemSkeletonChipField(
-        fieldName: GameCollectionLocalisations.of(context).statusFieldString,
+        fieldName: AppLocalizations.of(context)!.statusFieldString,
         order: order++,
       ),
       itemSkeletonRatingField(
-        fieldName: GameCollectionLocalisations.of(context).ratingFieldString,
+        fieldName: AppLocalizations.of(context)!.ratingFieldString,
         order: order++,
       ),
       itemSkeletonLongTextField(
-        fieldName: GameCollectionLocalisations.of(context).thoughtsFieldString,
+        fieldName: AppLocalizations.of(context)!.thoughtsFieldString,
         order: order++,
       ),
       itemSkeletonField(
         fieldName:
-            GameCollectionLocalisations.of(context).saveFolderFieldString,
+            AppLocalizations.of(context)!.saveFolderFieldString,
         order: order++,
       ),
       itemSkeletonField(
         fieldName:
-            GameCollectionLocalisations.of(context).screenshotFolderFieldString,
+            AppLocalizations.of(context)!.screenshotFolderFieldString,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).backupFieldString,
+        fieldName: AppLocalizations.of(context)!.backupFieldString,
         order: order++,
       ),
       _gameCalendarField(context),
       itemSkeletonField(
-        fieldName: GameCollectionLocalisations.of(context).gameLogsFieldString,
+        fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
         order: order++,
       ),
       SkeletonGameFinishDateList(
         fieldName:
-            GameCollectionLocalisations.of(context).finishDatesFieldString,
+            AppLocalizations.of(context)!.finishDatesFieldString,
         relationTypeName:
-            GameCollectionLocalisations.of(context).finishDateFieldString,
+            AppLocalizations.of(context)!.finishDateFieldString,
         order: order++,
         onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
@@ -348,7 +347,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     return ListTileTheme.merge(
       child: ListTile(
         title: Text(
-          GameCollectionLocalisations.of(context).singleCalendarViewString,
+          AppLocalizations.of(context)!.singleCalendarViewString,
         ),
         trailing: const Icon(Icons.arrow_forward),
         onTap: () async {

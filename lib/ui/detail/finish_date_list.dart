@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/list_view.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/show_date_picker.dart';
@@ -30,7 +30,7 @@ abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
   @override
   Widget fieldBuilder(BuildContext context) {
     final String shownValue = value != null
-        ? GameCollectionLocalisations.of(context).formatDate(value!)
+        ? MaterialLocalizations.of(context).formatCompactDate(value!)
         : '';
 
     return BlocBuilder<K, ItemRelationState>(
@@ -96,22 +96,22 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         if (state is ItemRelationAdded<ItemFinish>) {
           _changesMade = true;
 
-          final String message = GameCollectionLocalisations.of(context)
-              .addedString(relationTypeName);
+          final String message =
+              AppLocalizations.of(context)!.addedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
         if (state is ItemRelationNotAdded) {
-          final String message = GameCollectionLocalisations.of(context)
-              .unableToAddString(relationTypeName);
+          final String message =
+              AppLocalizations.of(context)!.unableToAddString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -120,36 +120,36 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         if (state is ItemRelationDeleted<ItemFinish>) {
           _changesMade = true;
 
-          final String message = GameCollectionLocalisations.of(context)
-              .deletedString(relationTypeName);
+          final String message =
+              AppLocalizations.of(context)!.deletedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
           );
         }
         if (state is ItemRelationNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToDeleteString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ItemRelationNotLoaded) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToLoadString(relationTypeName);
           showSnackBar(
             context,
             message: message,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -190,8 +190,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
 
                       if (values.isEmpty) {
                         return Text(
-                          GameCollectionLocalisations.of(context)
-                              .emptyFinishDatesString,
+                          AppLocalizations.of(context)!.emptyFinishDatesString,
                         );
                       }
 
@@ -201,8 +200,8 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                           final DateTime finishDate =
                               values.elementAt(index).date;
                           final String dateString =
-                              GameCollectionLocalisations.of(context)
-                                  .formatDate(finishDate);
+                              MaterialLocalizations.of(context)
+                                  .formatCompactDate(finishDate);
 
                           return ListTile(
                             title: Text(dateString),
@@ -237,8 +236,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
               actions: <Widget>[
                 TextButton(
                   child: Text(
-                    GameCollectionLocalisations.of(context)
-                        .addString(relationTypeName),
+                    AppLocalizations.of(context)!.addString(relationTypeName),
                   ),
                   onPressed: () {
                     showGameDatePicker(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
@@ -8,7 +9,6 @@ import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 import 'package:logic/bloc/time_log_assistant/time_log_assistant.dart';
 import 'package:logic/utils/time_of_day_extension.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/utils/fab_utils.dart';
 import 'package:game_collection/ui/common/field/field.dart'
     show DateField, DurationField, TimeField;
@@ -27,7 +27,7 @@ class GameLogAssistant extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title:
-              Text(GameCollectionLocalisations.of(context).gameLogFieldString),
+              Text(AppLocalizations.of(context)!.gameLogFieldString),
           // Fixed elevation so background color doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
@@ -37,9 +37,9 @@ class GameLogAssistant extends StatelessWidget {
             BlocBuilder<GameLogAssistantBloc, GameLogAssistantState>(
           builder: (BuildContext context, GameLogAssistantState state) {
             return FloatingActionButton.extended(
-              label: Text(GameCollectionLocalisations.of(context).saveString),
+              label: Text(AppLocalizations.of(context)!.saveString),
               icon: const Icon(Icons.cloud_upload),
-              tooltip: GameCollectionLocalisations.of(context).saveString,
+              tooltip: AppLocalizations.of(context)!.saveString,
               onPressed: state.isValid
                   ? () async {
                       final DateTime date = state.date;
@@ -85,7 +85,7 @@ class _GameLogAssistantBody extends StatelessWidget {
         return Column(
           children: <Widget>[
             DateField(
-              fieldName: GameCollectionLocalisations.of(context).dateString,
+              fieldName: AppLocalizations.of(context)!.dateString,
               value: state.date,
               update: (DateTime date) {
                 BlocProvider.of<GameLogAssistantBloc>(context).add(
@@ -97,7 +97,7 @@ class _GameLogAssistantBody extends StatelessWidget {
             ),
             TimeField(
               fieldName:
-                  GameCollectionLocalisations.of(context).startTimeString,
+                  AppLocalizations.of(context)!.startTimeString,
               value: state.startTime,
               update: (TimeOfDay time) {
                 BlocProvider.of<GameLogAssistantBloc>(context).add(
@@ -115,7 +115,7 @@ class _GameLogAssistantBody extends StatelessWidget {
               },
             ),
             TimeField(
-              fieldName: GameCollectionLocalisations.of(context).endTimeString,
+              fieldName: AppLocalizations.of(context)!.endTimeString,
               value: state.endTime,
               update: (TimeOfDay time) {
                 BlocProvider.of<GameLogAssistantBloc>(context).add(
@@ -133,7 +133,7 @@ class _GameLogAssistantBody extends StatelessWidget {
               },
             ),
             DurationField(
-              fieldName: GameCollectionLocalisations.of(context).durationString,
+              fieldName: AppLocalizations.of(context)!.durationString,
               value: state.duration,
               update: (Duration duration) {
                 BlocProvider.of<GameLogAssistantBloc>(context).add(
@@ -160,15 +160,15 @@ class _GameLogAssistantBody extends StatelessWidget {
       const Divider(),
       ListTile(
         title: Text(
-          GameCollectionLocalisations.of(context).recalculationModeTitle,
+          AppLocalizations.of(context)!.recalculationModeTitle,
         ),
         subtitle: Text(
-          GameCollectionLocalisations.of(context).recalculationModeSubtitle,
+          AppLocalizations.of(context)!.recalculationModeSubtitle,
         ),
       ),
       RadioListTile<GameLogRecalculationMode>(
         title: Text(
-          GameCollectionLocalisations.of(context)
+          AppLocalizations.of(context)!
               .recalculationModeDurationString,
         ),
         groupValue: recalculationMode,
@@ -183,7 +183,7 @@ class _GameLogAssistantBody extends StatelessWidget {
       ),
       RadioListTile<GameLogRecalculationMode>(
         title: Text(
-          GameCollectionLocalisations.of(context).recalculationModeTimeString,
+          AppLocalizations.of(context)!.recalculationModeTimeString,
         ),
         groupValue: recalculationMode,
         value: GameLogRecalculationMode.time,

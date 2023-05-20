@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:duration_picker/duration_picker.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 import 'generic_field.dart';
 
@@ -26,7 +26,7 @@ class DurationField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null
-          ? GameCollectionLocalisations.of(context).formatDuration(value!)
+          ? AppLocalizationsUtils.formatDuration(context, value!)
           : null,
       editable: editable,
       update: update,

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
@@ -9,7 +10,6 @@ import 'package:logic/model/model.dart' show ListStyle;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/header_text.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/list_view.dart';
@@ -50,7 +50,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.search),
-          tooltip: GameCollectionLocalisations.of(context).searchAllString,
+          tooltip: AppLocalizations.of(context)!.searchAllString,
           onPressed: searchRouteName.isNotEmpty
               ? () async {
                   Navigator.pushNamed<T>(
@@ -63,7 +63,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
                     if (added != null) {
                       final String typeString = typeName(context);
                       final String message =
-                          GameCollectionLocalisations.of(context)
+                          AppLocalizations.of(context)!
                               .addedString(typeString);
                       showSnackBar(
                         context,
@@ -71,7 +71,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
                         seconds: 2,
                         snackBarAction: backgroundSnackBarAction(
                           context,
-                          label: GameCollectionLocalisations.of(context)
+                          label: AppLocalizations.of(context)!
                               .openString,
                           onPressed: () async {
                             Navigator.pushNamed(
@@ -92,7 +92,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
         calendarRouteName.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.date_range),
-                tooltip: GameCollectionLocalisations.of(context).calendarView,
+                tooltip: AppLocalizations.of(context)!.calendarView,
                 onPressed: _onCalendarTap(context),
               )
             : const SizedBox(),
@@ -100,7 +100,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
             ? IconButton(
                 icon: const Icon(Icons.grid_on),
                 tooltip:
-                    GameCollectionLocalisations.of(context).changeStyleString,
+                    AppLocalizations.of(context)!.changeStyleString,
                 onPressed: () {
                   BlocProvider.of<K>(context).add(
                     UpdateStyle(),
@@ -122,7 +122,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
   }) {
     return PopupMenuButton<int>(
       icon: const Icon(Icons.view_carousel),
-      tooltip: GameCollectionLocalisations.of(context).changeViewString,
+      tooltip: AppLocalizations.of(context)!.changeViewString,
       itemBuilder: (BuildContext context) {
         return views.map<PopupMenuItem<int>>((String view) {
           return PopupMenuItem<int>(
@@ -171,7 +171,7 @@ abstract class ItemFAB<T extends PrimaryModel, N extends Object,
   Widget build(BuildContext context) {
     return FloatingActionButton(
       tooltip:
-          GameCollectionLocalisations.of(context).newString(typeName(context)),
+          AppLocalizations.of(context)!.newString(typeName(context)),
       backgroundColor: themeColor,
       foregroundColor: Colors.white,
       onPressed: () {
@@ -209,7 +209,7 @@ abstract class ItemList<
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if (state is ItemAdded<T>) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .addedString(currentTypeString);
           showSnackBar(
             context,
@@ -217,7 +217,7 @@ abstract class ItemList<
             seconds: 2,
             snackBarAction: backgroundSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).openString,
+              label: AppLocalizations.of(context)!.openString,
               onPressed: () async {
                 Navigator.pushNamed(
                   context,
@@ -231,7 +231,7 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotAdded) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToAddString(currentTypeString);
           showSnackBar(
             context,
@@ -239,14 +239,14 @@ abstract class ItemList<
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ItemDeleted<T>) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .deletedString(currentTypeString);
           showSnackBar(
             context,
@@ -255,7 +255,7 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotDeleted) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToDeleteString(currentTypeString);
           showSnackBar(
             context,
@@ -263,14 +263,14 @@ abstract class ItemList<
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
           );
         }
         if (state is ItemListNotLoaded) {
-          final String message = GameCollectionLocalisations.of(context)
+          final String message = AppLocalizations.of(context)!
               .unableToLoadString(currentTypeString);
           showSnackBar(
             context,
@@ -278,7 +278,7 @@ abstract class ItemList<
             seconds: 2,
             snackBarAction: dialogSnackBarAction(
               context,
-              label: GameCollectionLocalisations.of(context).moreString,
+              label: AppLocalizations.of(context)!.moreString,
               title: message,
               content: state.error,
             ),
@@ -397,14 +397,14 @@ abstract class ItemListBody<T extends PrimaryModel,
 
   Widget _confirmDelete(BuildContext context, T item) {
     return AlertDialog(
-      title: Text(GameCollectionLocalisations.of(context).deleteString),
+      title: Text(AppLocalizations.of(context)!.deleteString),
       content: ListTile(
         title: Text(
-          GameCollectionLocalisations.of(context)
+          AppLocalizations.of(context)!
               .deleteDialogTitle(itemTitle(item)),
         ),
         subtitle:
-            Text(GameCollectionLocalisations.of(context).deleteDialogSubtitle),
+            Text(AppLocalizations.of(context)!.deleteDialogSubtitle),
       ),
       actions: <Widget>[
         TextButton(
@@ -418,7 +418,7 @@ abstract class ItemListBody<T extends PrimaryModel,
             Navigator.maybePop<bool>(context, true);
           },
           child:
-              Text(GameCollectionLocalisations.of(context).deleteButtonLabel),
+              Text(AppLocalizations.of(context)!.deleteButtonLabel),
         )
       ],
     );

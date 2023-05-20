@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO;
 
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show PlatformTheme;
@@ -64,11 +64,11 @@ class _PlatformSearchBody extends ItemSearchBody<PlatformDTO, NewPlatformDTO,
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformString;
+      AppLocalizations.of(context)!.platformString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).platformsString;
+      AppLocalizations.of(context)!.platformsString;
 
   @override
   NewPlatformDTO createItem(String query) => NewPlatformDTO(name: query);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart'
     show DLCDTO, DLCWithFinishDTO, DLCAvailableDTO;
 
 import 'package:logic/model/model.dart' show DLCView;
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/bar_data.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
@@ -24,25 +25,29 @@ class DLCTheme {
 
   static BarData barData(BuildContext context) {
     return BarData(
-      title: GameCollectionLocalisations.of(context).dlcsString,
+      title: AppLocalizations.of(context)!.dlcsString,
       icon: Icons.widgets,
       color: primaryColour,
     );
   }
 
   static List<String> views(BuildContext context) {
-    return DLCView.values.map<String>((DLCView view) {
-      switch (view) {
-        case DLCView.main:
-          return GameCollectionLocalisations.of(context).mainViewString;
-        case DLCView.lastAdded:
-          return GameCollectionLocalisations.of(context).lastAddedViewString;
-        case DLCView.lastUpdated:
-          return GameCollectionLocalisations.of(context).lastUpdatedViewString;
-        case DLCView.lastFinished:
-          return GameCollectionLocalisations.of(context).lastFinishedViewString;
-      }
-    }).toList(growable: false);
+    return DLCView.values
+        .map<String>((DLCView view) => _viewString(context, view))
+        .toList(growable: false);
+  }
+
+  static String _viewString(BuildContext context, DLCView view) {
+    switch (view) {
+      case DLCView.main:
+        return AppLocalizations.of(context)!.mainViewString;
+      case DLCView.lastAdded:
+        return AppLocalizations.of(context)!.lastAddedViewString;
+      case DLCView.lastUpdated:
+        return AppLocalizations.of(context)!.lastUpdatedViewString;
+      case DLCView.lastFinished:
+        return AppLocalizations.of(context)!.lastFinishedViewString;
+    }
   }
 
   static Widget itemCard(
@@ -66,7 +71,7 @@ class DLCTheme {
     return ItemCard(
       title: itemTitle(item),
       subtitle:
-          GameCollectionLocalisations.of(context).formatDate(item.finishDate),
+          MaterialLocalizations.of(context).formatCompactDate(item.finishDate),
       hasImage: DLCTheme.hasImage,
       imageURL: item.coverUrl,
       onTap: onTap(context, item),
@@ -80,8 +85,8 @@ class DLCTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      subtitle: GameCollectionLocalisations.of(context)
-          .formatDate(item.availableDate),
+      subtitle: MaterialLocalizations.of(context)
+          .formatCompactDate(item.availableDate),
       hasImage: DLCTheme.hasImage,
       imageURL: item.coverUrl,
       onTap: onTap(context, item),

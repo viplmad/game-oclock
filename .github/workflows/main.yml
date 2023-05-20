@@ -59,6 +59,9 @@ jobs:
     # Get flutter dependencies.
     - run: flutter pub get
 
+    # Generate localisation files
+    - run: flutter gen-l10n
+
     # Build apk.
     - run: flutter build apk
       env:

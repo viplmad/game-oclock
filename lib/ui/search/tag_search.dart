@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
 import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
-
-import 'package:game_collection/localisations/localisations.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show TagTheme;
@@ -63,11 +63,11 @@ class _GameTagSearchBody extends ItemSearchBody<TagDTO, NewTagDTO,
 
   @override
   String typeName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagString;
+      AppLocalizations.of(context)!.tagString;
 
   @override
   String typesName(BuildContext context) =>
-      GameCollectionLocalisations.of(context).tagsString;
+      AppLocalizations.of(context)!.tagsString;
 
   @override
   NewTagDTO createItem(String query) => NewTagDTO(name: query);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:game_collection_client/api.dart' show GameLogDTO;
@@ -7,8 +8,8 @@ import 'package:game_collection_client/api.dart' show GameLogDTO;
 import 'package:logic/model/model.dart' show CalendarRange;
 import 'package:logic/utils/datetime_extension.dart';
 
-import 'package:game_collection/localisations/localisations.dart';
 import 'package:game_collection/ui/common/statistics_histogram.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 import '../theme/calendar_theme.dart';
 
@@ -127,22 +128,34 @@ class CalendarUtils {
     switch (range) {
       case CalendarRange.day:
         rangeDateString =
-            GameCollectionLocalisations.of(context).formatDate(date);
+            MaterialLocalizations.of(context).formatCompactDate(date);
         break;
       case CalendarRange.week:
         rangeDateString =
-            '${GameCollectionLocalisations.of(context).formatDate(date.atMondayOfWeek())} ⮕ ${GameCollectionLocalisations.of(context).formatDate(date.atSundayOfWeek())}';
+            '${MaterialLocalizations.of(context).formatCompactDate(date.atMondayOfWeek())} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(date.atSundayOfWeek())}';
         break;
       case CalendarRange.month:
         rangeDateString =
-            GameCollectionLocalisations.of(context).formatMonthYear(date);
+            MaterialLocalizations.of(context).formatMonthYear(date);
         break;
       case CalendarRange.year:
-        rangeDateString =
-            GameCollectionLocalisations.of(context).formatYear(date.year);
+        rangeDateString = MaterialLocalizations.of(context).formatYear(date);
         break;
     }
-    return '${GameCollectionLocalisations.of(context).gameLogsFieldString} - $rangeDateString (${GameCollectionLocalisations.of(context).rangeString(range)})';
+    return '${AppLocalizations.of(context)!.gameLogsFieldString} - $rangeDateString (${CalendarUtils.rangeString(context, range)})';
+  }
+
+  static String rangeString(BuildContext context, CalendarRange range) {
+    switch (range) {
+      case CalendarRange.day:
+        return AppLocalizations.of(context)!.dayString;
+      case CalendarRange.week:
+        return AppLocalizations.of(context)!.weekString;
+      case CalendarRange.month:
+        return AppLocalizations.of(context)!.monthString;
+      case CalendarRange.year:
+        return AppLocalizations.of(context)!.yearString;
+    }
   }
 
   static Widget buildGameLogsGraph(
@@ -155,10 +168,11 @@ class CalendarUtils {
 
     if (range == CalendarRange.day) {
       // Create list where each entry is the time in an hour
-      values = List<int>.filled(24, 0, growable: false);
+      values = List<int>.filled(TimeOfDay.hoursPerDay, 0, growable: false);
       for (final GameLogDTO log in gameLogs) {
         int currentHour = log.datetime.hour;
-        final int pendingMinToChangeHour = 60 - log.datetime.minute;
+        final int pendingMinToChangeHour =
+            TimeOfDay.minutesPerHour - log.datetime.minute;
         final int logMin = log.time.inMinutes;
 
         if (pendingMinToChangeHour > logMin) {
@@ -173,24 +187,25 @@ class CalendarUtils {
           while (leftMin > 0) {
             currentHour++;
 
-            if (60 >= leftMin) {
+            if (TimeOfDay.minutesPerHour >= leftMin) {
               // Less than an hour left, put whole time left
               values[currentHour] = leftMin;
 
               leftMin = 0;
             } else {
               // More than an hour left, put hour and continue for next hours
-              values[currentHour] = 60;
+              values[currentHour] = TimeOfDay.minutesPerHour;
 
-              leftMin -= 60;
+              leftMin -= TimeOfDay.minutesPerHour;
             }
           }
         }
       }
 
       // TODO Only show labels for 6, 12 and 18 hours
-      labels = List<String>.generate(24, (int index) {
-        return '$index:00';
+      labels = List<String>.generate(TimeOfDay.hoursPerDay, (int index) {
+        return MaterialLocalizations.of(context)
+            .formatTimeOfDay(TimeOfDay(hour: index, minute: 0));
       });
     } else {
       values = gameLogs.map<int>((GameLogDTO log) {
@@ -198,14 +213,14 @@ class CalendarUtils {
       }).toList(growable: false);
 
       if (range == CalendarRange.week) {
-        labels = GameCollectionLocalisations.of(context).shortDaysOfWeek;
+        labels = AppLocalizationsUtils.daysOfWeekAbbr();
       } else if (range == CalendarRange.month) {
         labels = List<String>.generate(
-          values.length,
-          (int index) => (index + 1).toString(),
+          gameLogs.length,
+          (int index) => (index + 1).toString(), // No need for intl
         );
       } else if (range == CalendarRange.year) {
-        labels = GameCollectionLocalisations.of(context).shortMonths;
+        labels = AppLocalizationsUtils.monthsAbbr();
       }
     }
 
@@ -217,29 +232,31 @@ class CalendarUtils {
           SizedBox(
             width: MediaQuery.of(context).size.width * 2,
             child: StatisticsHistogram<int>(
-              histogramName:
-                  GameCollectionLocalisations.of(context).gameLogsFieldString,
+              histogramName: AppLocalizations.of(context)!.gameLogsFieldString,
               domainLabels: labels,
               values: values,
               vertical: true,
               hideDomainLabels: false,
               valueFormatter: (int value) =>
-                  GameCollectionLocalisations.of(context)
-                      .formatDuration(Duration(minutes: value)),
+                  AppLocalizationsUtils.formatDuration(
+                context,
+                Duration(minutes: value),
+              ),
             ),
           ),
         ],
       );
     } else {
       return StatisticsHistogram<int>(
-        histogramName:
-            GameCollectionLocalisations.of(context).gameLogsFieldString,
+        histogramName: AppLocalizations.of(context)!.gameLogsFieldString,
         domainLabels: labels,
         values: values,
         vertical: true,
         hideDomainLabels: false,
-        valueFormatter: (int value) => GameCollectionLocalisations.of(context)
-            .formatDuration(Duration(minutes: value)),
+        valueFormatter: (int value) => AppLocalizationsUtils.formatDuration(
+          context,
+          Duration(minutes: value),
+        ),
       );
     }
   }
