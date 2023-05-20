@@ -12,6 +12,7 @@ import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/show_date_picker.dart';
 import 'package:game_collection/ui/common/skeleton.dart';
 import 'package:game_collection/ui/utils/field_utils.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 // ignore: must_be_immutable
 abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
@@ -29,9 +30,8 @@ abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
 
   @override
   Widget fieldBuilder(BuildContext context) {
-    final String shownValue = value != null
-        ? MaterialLocalizations.of(context).formatCompactDate(value!)
-        : '';
+    final String shownValue =
+        value != null ? AppLocalizationsUtils.formatDate(value!) : '';
 
     return BlocBuilder<K, ItemRelationState>(
       builder: (BuildContext context, ItemRelationState state) {
@@ -200,8 +200,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                           final DateTime finishDate =
                               values.elementAt(index).date;
                           final String dateString =
-                              MaterialLocalizations.of(context)
-                                  .formatCompactDate(finishDate);
+                              AppLocalizationsUtils.formatDate(finishDate);
 
                           return ListTile(
                             title: Text(dateString),

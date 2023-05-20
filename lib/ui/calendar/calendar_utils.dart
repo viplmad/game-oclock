@@ -127,12 +127,11 @@ class CalendarUtils {
     String rangeDateString;
     switch (range) {
       case CalendarRange.day:
-        rangeDateString =
-            MaterialLocalizations.of(context).formatCompactDate(date);
+        rangeDateString = AppLocalizationsUtils.formatDate(date);
         break;
       case CalendarRange.week:
         rangeDateString =
-            '${MaterialLocalizations.of(context).formatCompactDate(date.atMondayOfWeek())} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(date.atSundayOfWeek())}';
+            '${AppLocalizationsUtils.formatDate(date.atMondayOfWeek())} ⮕ ${AppLocalizationsUtils.formatDate(date.atSundayOfWeek())}';
         break;
       case CalendarRange.month:
         rangeDateString =
@@ -204,8 +203,10 @@ class CalendarUtils {
 
       // TODO Only show labels for 6, 12 and 18 hours
       labels = List<String>.generate(TimeOfDay.hoursPerDay, (int index) {
-        return MaterialLocalizations.of(context)
-            .formatTimeOfDay(TimeOfDay(hour: index, minute: 0));
+        return MaterialLocalizations.of(context).formatTimeOfDay(
+          TimeOfDay(hour: index, minute: 0),
+          alwaysUse24HourFormat: true,
+        );
       });
     } else {
       values = gameLogs.map<int>((GameLogDTO log) {

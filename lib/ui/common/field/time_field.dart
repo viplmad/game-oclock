@@ -24,7 +24,8 @@ class TimeField extends StatelessWidget {
       fieldName: fieldName,
       value: value,
       shownValue: value != null
-          ? MaterialLocalizations.of(context).formatTimeOfDay(value!)
+          ? MaterialLocalizations.of(context)
+              .formatTimeOfDay(value!, alwaysUse24HourFormat: true)
           : null,
       editable: editable,
       update: update,

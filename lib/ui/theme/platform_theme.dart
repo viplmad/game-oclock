@@ -10,6 +10,7 @@ import 'package:logic/model/model.dart' show PlatformView;
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/bar_data.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
 class PlatformTheme {
   PlatformTheme._();
@@ -76,8 +77,7 @@ class PlatformTheme {
   ) {
     return ItemCard(
       title: itemTitle(item),
-      subtitle: MaterialLocalizations.of(context)
-          .formatCompactDate(item.availableDate),
+      subtitle: AppLocalizationsUtils.formatDate(item.availableDate),
       hasImage: PlatformTheme.hasImage,
       imageURL: item.iconUrl,
       onTap: onTap(context, item),

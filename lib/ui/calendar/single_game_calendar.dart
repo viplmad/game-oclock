@@ -566,7 +566,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
         if (range == CalendarRange.day) {
           final String gameLogString =
-              '${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(gameLog.datetime))} ⮕ ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(GameCalendarUtils.getEndDateTime(gameLog)))} - $durationString';
+              '${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(gameLog.datetime), alwaysUse24HourFormat: true)} ⮕ ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(GameCalendarUtils.getEndDateTime(gameLog)), alwaysUse24HourFormat: true)} - $durationString';
 
           return DismissibleItem(
             dismissibleKey: gameLog.datetime.millisecondsSinceEpoch.toString(),

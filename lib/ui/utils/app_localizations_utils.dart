@@ -9,6 +9,40 @@ import 'package:logic/utils/duration_extension.dart';
 class AppLocalizationsUtils {
   const AppLocalizationsUtils();
 
+  static List<String>? _daysOfWeekAbbr;
+
+  static List<String> daysOfWeekAbbr() {
+    if (_daysOfWeekAbbr != null) {
+      return _daysOfWeekAbbr!;
+    }
+
+    final DateTime monday = DateTime.now().atMondayOfWeek();
+    _daysOfWeekAbbr = List<String>.generate(
+      DateTime.daysPerWeek,
+      (int index) {
+        return DateFormat.E().format(monday.addDays(index));
+      },
+    );
+    return _daysOfWeekAbbr!;
+  }
+
+  static List<String>? _monthsAbbr;
+
+  static List<String> monthsAbbr() {
+    if (_monthsAbbr != null) {
+      return _monthsAbbr!;
+    }
+
+    final DateTime firstDay = DateTime.now().atFirstDayOfYear();
+    _monthsAbbr = List<String>.generate(
+      DateTime.monthsPerYear,
+      (int index) {
+        return DateFormat.MMM().format(firstDay.addMonths(index));
+      },
+    );
+    return _monthsAbbr!;
+  }
+
   static String formatWeekday(DateTime date) {
     return DateFormat.EEEE().format(date);
   }
@@ -21,24 +55,8 @@ class AppLocalizationsUtils {
     return DateFormat.MMMM().format(date);
   }
 
-  static List<String> daysOfWeekAbbr() {
-    final DateTime monday = DateTime.now().atMondayOfWeek();
-    return List<String>.generate(
-      DateTime.daysPerWeek,
-      (int index) {
-        return DateFormat.E().format(monday.addDays(index));
-      },
-    );
-  }
-
-  static List<String> monthsAbbr() {
-    final DateTime firstDay = DateTime.now().atFirstDayOfYear();
-    return List<String>.generate(
-      DateTime.monthsPerYear,
-      (int index) {
-        return DateFormat.MMM().format(firstDay.addMonths(index));
-      },
-    );
+  static String formatDate(DateTime date) {
+    return DateFormat('d/M/y').format(date); // Fix date format because I can ;)
   }
 
   static String formatDuration(BuildContext context, Duration duration) {
@@ -49,18 +67,17 @@ class AppLocalizationsUtils {
     final int hours = duration.inHours;
     final int minutes = duration.extractNormalisedMinutes();
 
-    final String hoursAbbr = AppLocalizations.of(context)!.hoursAbbr(hours);
-    final String hourString = '$hours $hoursAbbr';
+    final String hoursString = AppLocalizations.of(context)!.hoursAbbr(hours);
 
-    final String minuteAbbr = AppLocalizations.of(context)!.minutesAbbr;
-    final String minuteString = '$minutes $minuteAbbr';
+    final String minutesString =
+        AppLocalizations.of(context)!.minutesAbbr(minutes);
 
     if (hours == 0) {
-      return minuteString;
+      return minutesString;
     } else if (minutes == 0) {
-      return hourString;
+      return hoursString;
     }
 
-    return '$hourString $minuteString';
+    return '$hoursString $minutesString';
   }
 }

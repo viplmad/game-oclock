@@ -107,8 +107,7 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: MaterialLocalizations.of(context)
-            .formatCompactDate(item.finishDate),
+        subtitle: AppLocalizationsUtils.formatDate(item.finishDate),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -125,8 +124,7 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: MaterialLocalizations.of(context)
-            .formatCompactDate(item.logDatetime),
+        subtitle: AppLocalizationsUtils.formatDate(item.logDatetime),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -143,8 +141,7 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: MaterialLocalizations.of(context)
-            .formatCompactDate(item.availableDate),
+        subtitle: AppLocalizationsUtils.formatDate(item.availableDate),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
