@@ -26,8 +26,7 @@ class GameLogAssistant extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title:
-              Text(AppLocalizations.of(context)!.gameLogFieldString),
+          title: Text(AppLocalizations.of(context)!.gameLogFieldString),
           // Fixed elevation so background color doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
@@ -96,8 +95,7 @@ class _GameLogAssistantBody extends StatelessWidget {
               },
             ),
             TimeField(
-              fieldName:
-                  AppLocalizations.of(context)!.startTimeString,
+              fieldName: AppLocalizations.of(context)!.startTimeString,
               value: state.startTime,
               update: (TimeOfDay time) {
                 BlocProvider.of<GameLogAssistantBloc>(context).add(
@@ -168,8 +166,7 @@ class _GameLogAssistantBody extends StatelessWidget {
       ),
       RadioListTile<GameLogRecalculationMode>(
         title: Text(
-          AppLocalizations.of(context)!
-              .recalculationModeDurationString,
+          AppLocalizations.of(context)!.recalculationModeDurationString,
         ),
         groupValue: recalculationMode,
         value: GameLogRecalculationMode.duration,

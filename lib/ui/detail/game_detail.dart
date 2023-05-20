@@ -184,8 +184,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       ),
       itemYearField(
         context,
-        fieldName:
-            AppLocalizations.of(context)!.releaseYearFieldString,
+        fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         value: game.releaseYear,
         item: game,
         itemUpdater: (int newValue) => game.newWith(releaseYear: newValue),
@@ -221,16 +220,14 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       ),
       itemURLField(
         context,
-        fieldName:
-            AppLocalizations.of(context)!.saveFolderFieldString,
+        fieldName: AppLocalizations.of(context)!.saveFolderFieldString,
         value: game.saveFolder,
         item: game,
         itemUpdater: (String newValue) => game.newWith(saveFolder: newValue),
       ),
       itemURLField(
         context,
-        fieldName:
-            AppLocalizations.of(context)!.screenshotFolderFieldString,
+        fieldName: AppLocalizations.of(context)!.screenshotFolderFieldString,
         value: game.screenshotFolder,
         item: game,
         itemUpdater: (String newValue) =>
@@ -250,11 +247,9 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         value: game.totalTime,
       ),
       GameFinishDateList(
-        fieldName:
-            AppLocalizations.of(context)!.finishDatesFieldString,
+        fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
         value: game.firstFinish,
-        relationTypeName:
-            AppLocalizations.of(context)!.finishDateFieldString,
+        relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
         onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
         },
@@ -267,8 +262,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     return <Widget>[
       GamePlatformRelationList(
         relationName: AppLocalizations.of(context)!.platformsString,
-        relationTypeName:
-            AppLocalizations.of(context)!.platformString,
+        relationTypeName: AppLocalizations.of(context)!.platformString,
       ),
       GameDLCRelationList(
         relationName: AppLocalizations.of(context)!.dlcsString,
@@ -295,8 +289,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName:
-            AppLocalizations.of(context)!.releaseYearFieldString,
+        fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         order: order++,
       ),
       itemSkeletonChipField(
@@ -312,13 +305,11 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName:
-            AppLocalizations.of(context)!.saveFolderFieldString,
+        fieldName: AppLocalizations.of(context)!.saveFolderFieldString,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName:
-            AppLocalizations.of(context)!.screenshotFolderFieldString,
+        fieldName: AppLocalizations.of(context)!.screenshotFolderFieldString,
         order: order++,
       ),
       itemSkeletonField(
@@ -331,10 +322,8 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         order: order++,
       ),
       SkeletonGameFinishDateList(
-        fieldName:
-            AppLocalizations.of(context)!.finishDatesFieldString,
-        relationTypeName:
-            AppLocalizations.of(context)!.finishDateFieldString,
+        fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
+        relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
         order: order++,
         onChange: () {
           BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));

@@ -110,8 +110,8 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemFieldNotUpdated) {
-            final String message = AppLocalizations.of(context)!
-                .unableToUpdateFieldString;
+            final String message =
+                AppLocalizations.of(context)!.unableToUpdateFieldString;
             showSnackBar(
               context,
               message: message,
@@ -134,8 +134,8 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemImageNotUpdated) {
-            final String message = AppLocalizations.of(context)!
-                .unableToUpdateImageString;
+            final String message =
+                AppLocalizations.of(context)!.unableToUpdateImageString;
             showSnackBar(
               context,
               message: message,
@@ -148,8 +148,8 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemDetailNotLoaded) {
-            final String message = AppLocalizations.of(context)!
-                .unableToLoadDetailString;
+            final String message =
+                AppLocalizations.of(context)!.unableToLoadDetailString;
             showSnackBar(
               context,
               message: message,
@@ -310,8 +310,7 @@ abstract class ItemDetailBody<
           },
         ),
         ListTile(
-          title:
-              Text(AppLocalizations.of(context)!.renameImageString),
+          title: Text(AppLocalizations.of(context)!.renameImageString),
           leading: const Icon(Icons.edit),
           enabled: withImage,
           onTap: () async {
@@ -336,8 +335,7 @@ abstract class ItemDetailBody<
                       FilteringTextInputFormatter.allow(RegExp(r'^([A-z])*$')),
                     ],
                     decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!
-                          .filenameString,
+                      hintText: AppLocalizations.of(context)!.filenameString,
                     ),
                   ),
                   actions: <Widget>[
@@ -376,8 +374,7 @@ abstract class ItemDetailBody<
           },
         ),
         ListTile(
-          title:
-              Text(AppLocalizations.of(context)!.deleteImageString),
+          title: Text(AppLocalizations.of(context)!.deleteImageString),
           leading: const Icon(Icons.delete),
           enabled: withImage,
           onTap: () async {
@@ -448,8 +445,8 @@ abstract class ItemDetailBody<
           await launchUrlString(value);
         } else if (context.mounted) {
           // Check context is mounted after asynchronous gap
-          final String message = AppLocalizations.of(context)!
-              .unableToLaunchString(value);
+          final String message =
+              AppLocalizations.of(context)!.unableToLaunchString(value);
           showSnackBar(
             context,
             message: message,

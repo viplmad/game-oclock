@@ -150,18 +150,15 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
       ),
       itemYearField(
         context,
-        fieldName:
-            AppLocalizations.of(context)!.releaseYearFieldString,
+        fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         value: dlc.releaseYear,
         item: dlc,
         itemUpdater: (int newValue) => dlc.newWith(releaseYear: newValue),
       ),
       DLCFinishList(
-        fieldName:
-            AppLocalizations.of(context)!.finishDatesFieldString,
+        fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
         value: dlc.firstFinish,
-        relationTypeName:
-            AppLocalizations.of(context)!.finishDateFieldString,
+        relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
         onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
         },
@@ -173,14 +170,12 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
   List<Widget> itemRelationsBuilder(BuildContext context) {
     return <Widget>[
       DLCGameRelationList(
-        relationName:
-            AppLocalizations.of(context)!.baseGameFieldString,
+        relationName: AppLocalizations.of(context)!.baseGameFieldString,
         relationTypeName: AppLocalizations.of(context)!.gameString,
       ),
       DLCPlatformRelationList(
         relationName: AppLocalizations.of(context)!.platformsString,
-        relationTypeName:
-            AppLocalizations.of(context)!.platformString,
+        relationTypeName: AppLocalizations.of(context)!.platformString,
       ),
     ];
   }
@@ -195,15 +190,12 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
         order: order++,
       ),
       itemSkeletonField(
-        fieldName:
-            AppLocalizations.of(context)!.releaseYearFieldString,
+        fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         order: order++,
       ),
       SkeletonDLCFinishList(
-        fieldName:
-            AppLocalizations.of(context)!.finishDatesFieldString,
-        relationTypeName:
-            AppLocalizations.of(context)!.finishDateFieldString,
+        fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
+        relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
         order: order++,
         onChange: () {
           BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));

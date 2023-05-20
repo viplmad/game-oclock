@@ -51,8 +51,8 @@ abstract class ItemRelationList<
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
         if (state is ItemRelationAdded<W>) {
-          final String message = AppLocalizations.of(context)!
-              .linkedString(relationTypeName);
+          final String message =
+              AppLocalizations.of(context)!.linkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -69,8 +69,7 @@ abstract class ItemRelationList<
                 } on FlutterError {
                   // Catch error when undoing if bloc is no longer in context
                   final String unableMessage =
-                      AppLocalizations.of(context)!
-                          .unableToUndoString;
+                      AppLocalizations.of(context)!.unableToUndoString;
                   showSnackBar(
                     context,
                     message: unableMessage,
@@ -95,8 +94,8 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationDeleted<W>) {
-          final String message = AppLocalizations.of(context)!
-              .unlinkedString(relationTypeName);
+          final String message =
+              AppLocalizations.of(context)!.unlinkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
@@ -113,8 +112,7 @@ abstract class ItemRelationList<
                 } on FlutterError {
                   // Catch error when undoing if bloc is no longer in context
                   final String unableMessage =
-                      AppLocalizations.of(context)!
-                          .unableToUndoString;
+                      AppLocalizations.of(context)!.unableToUndoString;
                   showSnackBar(
                     context,
                     message: unableMessage,
@@ -338,8 +336,7 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: ElevatedButton.icon(
-        label:
-            Text(AppLocalizations.of(context)!.linkString(typeName)),
+        label: Text(AppLocalizations.of(context)!.linkString(typeName)),
         icon: const Icon(Icons.link),
         onPressed: () async {
           onSearch().then((W? result) {

@@ -63,16 +63,14 @@ abstract class ItemAppBar<T extends PrimaryModel,
                     if (added != null) {
                       final String typeString = typeName(context);
                       final String message =
-                          AppLocalizations.of(context)!
-                              .addedString(typeString);
+                          AppLocalizations.of(context)!.addedString(typeString);
                       showSnackBar(
                         context,
                         message: message,
                         seconds: 2,
                         snackBarAction: backgroundSnackBarAction(
                           context,
-                          label: AppLocalizations.of(context)!
-                              .openString,
+                          label: AppLocalizations.of(context)!.openString,
                           onPressed: () async {
                             Navigator.pushNamed(
                               context,
@@ -99,8 +97,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
         gridAllowed
             ? IconButton(
                 icon: const Icon(Icons.grid_on),
-                tooltip:
-                    AppLocalizations.of(context)!.changeStyleString,
+                tooltip: AppLocalizations.of(context)!.changeStyleString,
                 onPressed: () {
                   BlocProvider.of<K>(context).add(
                     UpdateStyle(),
@@ -170,8 +167,7 @@ abstract class ItemFAB<T extends PrimaryModel, N extends Object,
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      tooltip:
-          AppLocalizations.of(context)!.newString(typeName(context)),
+      tooltip: AppLocalizations.of(context)!.newString(typeName(context)),
       backgroundColor: themeColor,
       foregroundColor: Colors.white,
       onPressed: () {
@@ -209,8 +205,8 @@ abstract class ItemList<
     return BlocListener<S, ItemListManagerState>(
       listener: (BuildContext context, ItemListManagerState state) {
         if (state is ItemAdded<T>) {
-          final String message = AppLocalizations.of(context)!
-              .addedString(currentTypeString);
+          final String message =
+              AppLocalizations.of(context)!.addedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -246,8 +242,8 @@ abstract class ItemList<
           );
         }
         if (state is ItemDeleted<T>) {
-          final String message = AppLocalizations.of(context)!
-              .deletedString(currentTypeString);
+          final String message =
+              AppLocalizations.of(context)!.deletedString(currentTypeString);
           showSnackBar(
             context,
             message: message,
@@ -400,11 +396,9 @@ abstract class ItemListBody<T extends PrimaryModel,
       title: Text(AppLocalizations.of(context)!.deleteString),
       content: ListTile(
         title: Text(
-          AppLocalizations.of(context)!
-              .deleteDialogTitle(itemTitle(item)),
+          AppLocalizations.of(context)!.deleteDialogTitle(itemTitle(item)),
         ),
-        subtitle:
-            Text(AppLocalizations.of(context)!.deleteDialogSubtitle),
+        subtitle: Text(AppLocalizations.of(context)!.deleteDialogSubtitle),
       ),
       actions: <Widget>[
         TextButton(
@@ -417,8 +411,7 @@ abstract class ItemListBody<T extends PrimaryModel,
           onPressed: () async {
             Navigator.maybePop<bool>(context, true);
           },
-          child:
-              Text(AppLocalizations.of(context)!.deleteButtonLabel),
+          child: Text(AppLocalizations.of(context)!.deleteButtonLabel),
         )
       ],
     );

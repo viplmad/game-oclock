@@ -130,8 +130,7 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
       ),
       itemChipField(
         context,
-        fieldName:
-            AppLocalizations.of(context)!.platformTypeFieldString,
+        fieldName: AppLocalizations.of(context)!.platformTypeFieldString,
         value: platform.type != null
             ? PlatformType.values.indexOf(platform.type!)
             : null,
@@ -171,8 +170,7 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
         order: order++,
       ),
       itemSkeletonChipField(
-        fieldName:
-            AppLocalizations.of(context)!.platformTypeFieldString,
+        fieldName: AppLocalizations.of(context)!.platformTypeFieldString,
         order: order++,
       ),
     ];

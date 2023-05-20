@@ -31,8 +31,8 @@ class RangeListUtils {
             .where((GameLogDTO log) => log.datetime.isSameDay(date))
             .toList(growable: false);
         break;
-      case CalendarRange
-          .week: // Create a List of 7 logs -> sum of each day of week
+      case CalendarRange.week:
+        // Create a List of 7 logs -> sum of each day of week
         final DateTime mondayOfSelectedDate = date.atMondayOfWeek();
 
         DateTime dateOfWeek = mondayOfSelectedDate;
@@ -59,8 +59,8 @@ class RangeListUtils {
           dateOfWeek = dateOfWeek.addDays(1);
         }
         break;
-      case CalendarRange
-          .month: // Create a List of 31* logs -> sum of each day of month
+      case CalendarRange.month:
+        // Create a List of 31* logs -> sum of each day of month
         final DateTime firstDayOfSelectedMonth = date.atFirstDayOfMonth();
 
         DateTime dateOfMonth = firstDayOfSelectedMonth;
@@ -88,8 +88,8 @@ class RangeListUtils {
           dateOfMonth = dateOfMonth.addDays(1);
         }
         break;
-      case CalendarRange
-          .year: // Create a List of 12 logs -> sum of each month of year
+      case CalendarRange.year:
+        // Create a List of 12 logs -> sum of each month of year
         for (int monthIndex = 1; monthIndex <= 12; monthIndex++) {
           final DateTime firstDayOfMonth = DateTime(date.year, monthIndex, 1);
 
