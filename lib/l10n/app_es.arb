@@ -130,6 +130,6 @@
   "weekString": "Semana",
   "monthString": "Mes",
   "yearString": "Año",
-  "hoursAbbr": "{hours} {hours, plural, =1{h} other{h}}",
+  "hoursAbbr": "{hours} h",
   "minutesAbbr": "{minutes} min"
 }
