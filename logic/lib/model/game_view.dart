@@ -4,7 +4,6 @@ enum GameView {
   lastUpdated,
   playing,
   nextUp,
-  wishlisted,
   lastFinished,
   lastPlayed,
   review,

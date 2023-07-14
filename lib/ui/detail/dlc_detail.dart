@@ -153,7 +153,8 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
         fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         value: dlc.releaseYear,
         item: dlc,
-        itemUpdater: (int newValue) => dlc.newWith(releaseYear: newValue),
+        itemUpdater: (int? newValue) =>
+            dlc.newWith(releaseYear: newValue)..releaseYear = newValue,
       ),
       DLCFinishList(
         fieldName: AppLocalizations.of(context)!.finishDatesFieldString,

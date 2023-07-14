@@ -167,7 +167,9 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, GameDTO game) {
-    return <Widget>[
+    final bool isWishlisted = game.status != GameStatus.wishlist;
+
+    final List<Widget> fields = <Widget>[
       itemTextField(
         context,
         fieldName: AppLocalizations.of(context)!.nameFieldString,
@@ -187,74 +189,83 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         value: game.releaseYear,
         item: game,
-        itemUpdater: (int newValue) => game.newWith(releaseYear: newValue),
-      ),
-      itemChipField(
-        context,
-        fieldName: AppLocalizations.of(context)!.statusFieldString,
-        value: GameStatus.values.indexOf(game.status),
-        possibleValues: <String>[
-          AppLocalizations.of(context)!.lowPriorityString,
-          AppLocalizations.of(context)!.nextUpString,
-          AppLocalizations.of(context)!.playingString,
-          AppLocalizations.of(context)!.playedString,
-        ],
-        possibleValuesColours: GameTheme.statusColours,
-        item: game,
-        itemUpdater: (int newValue) =>
-            game.newWith(status: GameStatus.values.elementAt(newValue)),
-      ),
-      itemRatingField(
-        context,
-        fieldName: AppLocalizations.of(context)!.ratingFieldString,
-        value: game.rating,
-        item: game,
-        itemUpdater: (int newValue) => game.newWith(rating: newValue),
-      ),
-      itemLongTextField(
-        context,
-        fieldName: AppLocalizations.of(context)!.thoughtsFieldString,
-        value: game.notes,
-        item: game,
-        itemUpdater: (String newValue) => game.newWith(notes: newValue),
-      ),
-      itemURLField(
-        context,
-        fieldName: AppLocalizations.of(context)!.saveFolderFieldString,
-        value: game.saveFolder,
-        item: game,
-        itemUpdater: (String newValue) => game.newWith(saveFolder: newValue),
-      ),
-      itemURLField(
-        context,
-        fieldName: AppLocalizations.of(context)!.screenshotFolderFieldString,
-        value: game.screenshotFolder,
-        item: game,
-        itemUpdater: (String newValue) =>
-            game.newWith(screenshotFolder: newValue),
-      ),
-      itemBoolField(
-        context,
-        fieldName: AppLocalizations.of(context)!.backupFieldString,
-        value: game.backup,
-        item: game,
-        itemUpdater: (bool newValue) => game.newWith(backup: newValue),
-      ),
-      _gameCalendarField(context),
-      itemDurationField(
-        context,
-        fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
-        value: game.totalTime,
-      ),
-      GameFinishDateList(
-        fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
-        value: game.firstFinish,
-        relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
-        onChange: () {
-          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
-        },
+        itemUpdater: (int? newValue) =>
+            game.newWith(releaseYear: newValue)..releaseYear = newValue,
       ),
     ];
+
+    if (isWishlisted) {
+      fields.addAll(<Widget>[
+        itemChipField(
+          context,
+          fieldName: AppLocalizations.of(context)!.statusFieldString,
+          value: GameStatus.values.indexOf(game.status),
+          possibleValues: <String>[
+            AppLocalizations.of(context)!.lowPriorityString,
+            AppLocalizations.of(context)!.nextUpString,
+            AppLocalizations.of(context)!.playingString,
+            AppLocalizations.of(context)!.playedString,
+          ],
+          possibleValuesColours: GameTheme.statusColours,
+          item: game,
+          itemUpdater: (int newValue) =>
+              game.newWith(status: GameStatus.values.elementAt(newValue)),
+        ),
+        itemRatingField(
+          context,
+          fieldName: AppLocalizations.of(context)!.ratingFieldString,
+          value: game.rating,
+          item: game,
+          itemUpdater: (int newValue) => game.newWith(rating: newValue),
+        ),
+        itemLongTextField(
+          context,
+          fieldName: AppLocalizations.of(context)!.thoughtsFieldString,
+          value: game.notes,
+          item: game,
+          itemUpdater: (String newValue) => game.newWith(notes: newValue),
+        ),
+        itemURLField(
+          context,
+          fieldName: AppLocalizations.of(context)!.saveFolderFieldString,
+          value: game.saveFolder,
+          item: game,
+          itemUpdater: (String newValue) => game.newWith(saveFolder: newValue),
+        ),
+        itemURLField(
+          context,
+          fieldName: AppLocalizations.of(context)!.screenshotFolderFieldString,
+          value: game.screenshotFolder,
+          item: game,
+          itemUpdater: (String newValue) =>
+              game.newWith(screenshotFolder: newValue),
+        ),
+        itemBoolField(
+          context,
+          fieldName: AppLocalizations.of(context)!.backupFieldString,
+          value: game.backup,
+          item: game,
+          itemUpdater: (bool newValue) => game.newWith(backup: newValue),
+        ),
+        _gameCalendarField(context),
+        itemDurationField(
+          context,
+          fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
+          value: game.totalTime,
+        ),
+        GameFinishDateList(
+          fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
+          value: game.firstFinish,
+          relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
+          onChange: () {
+            BlocProvider.of<GameDetailBloc>(context)
+                .add(const ReloadItem(true));
+          },
+        ),
+      ]);
+    }
+
+    return fields;
   }
 
   @override

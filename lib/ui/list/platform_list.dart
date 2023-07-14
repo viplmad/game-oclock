@@ -99,7 +99,6 @@ class _PlatformListBody extends ItemListBody<PlatformDTO, PlatformListBloc> {
   }) : super(
           key: key,
           detailRouteName: platformDetailRoute,
-          searchRouteName: platformSearchRoute,
         );
 
   @override

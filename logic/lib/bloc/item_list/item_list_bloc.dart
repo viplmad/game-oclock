@@ -207,33 +207,19 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
   }
 
   void _mapListManagerStateToEvent(ItemListManagerState managerState) {
-    if (managerState is ItemDeleted<T>) {
+    if (managerState is ItemAdded<T>) {
+      _mapAddedToEvent(managerState);
+    } else if (managerState is ItemDeleted<T>) {
       _mapDeletedToEvent(managerState);
     }
   }
 
+  void _mapAddedToEvent(ItemAdded<T> managerState) {
+    add(ReloadItemList());
+  }
+
   void _mapDeletedToEvent(ItemDeleted<T> managerState) {
-    if (state is ItemListLoaded<T>) {
-      final List<T> items = (state as ItemListLoaded<T>).items;
-      final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
-      final Object? viewArgs = (state as ItemListLoaded<T>).viewArgs;
-      final int page = (state as ItemListLoaded<T>).page;
-      final ListStyle style = (state as ItemListLoaded<T>).style;
-
-      final List<T> updatedItems = items
-          .where((T item) => item.id != managerState.item.id)
-          .toList(growable: false);
-
-      add(
-        UpdateItemList<T>(
-          updatedItems,
-          viewIndex,
-          viewArgs,
-          page,
-          style,
-        ),
-      );
-    }
+    add(ReloadItemList());
   }
 
   @override

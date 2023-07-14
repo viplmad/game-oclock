@@ -493,7 +493,7 @@ abstract class ItemDetailBody<
     required String fieldName,
     required int? value,
     required T item,
-    required N Function(int newValue) itemUpdater,
+    required N Function(int? newValue) itemUpdater,
   }) {
     return YearField(
       fieldName: fieldName,
@@ -502,6 +502,10 @@ abstract class ItemDetailBody<
         context,
         item: item,
         itemUpdater: itemUpdater,
+      ),
+      onLongPress: () =>
+          _updateFunction<int?>(context, item: item, itemUpdater: itemUpdater)(
+        null,
       ),
     );
   }

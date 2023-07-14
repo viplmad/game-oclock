@@ -129,7 +129,6 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   }) : super(
           key: key,
           detailRouteName: gameDetailRoute,
-          searchRouteName: gameSearchRoute,
         );
 
   @override

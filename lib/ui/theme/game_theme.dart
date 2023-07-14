@@ -72,8 +72,6 @@ class GameTheme {
         return AppLocalizations.of(context)!.playingViewString;
       case GameView.nextUp:
         return AppLocalizations.of(context)!.nextUpViewString;
-      case GameView.wishlisted:
-        return AppLocalizations.of(context)!.wishlistedViewString;
       case GameView.lastFinished:
         return AppLocalizations.of(context)!.lastFinishedViewString;
       case GameView.lastPlayed:

@@ -87,6 +87,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         themeDataBuilder: TagTheme.themeData,
       );
 
+    case gameWishlistedListRoute:
+      return _pageRoute(
+        const GameWishlistedList(),
+        themeDataBuilder: GameTheme.themeData,
+      );
+
     case gameSingleCalendarRoute:
       final SingleGameCalendarArguments gameCalendarArguments =
           settings.arguments as SingleGameCalendarArguments;
@@ -139,6 +145,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           settings.arguments as SearchArguments;
       return _pageRoute<TagDTO>(
         GameTagSearch(
+          onTapReturn: searchArguments.onTapReturn,
+        ),
+      );
+
+    case gameWishlistedSearchRoute:
+      final SearchArguments searchArguments =
+          settings.arguments as SearchArguments;
+      return _pageRoute<GameDTO>(
+        GameWishlistedSearch(
           onTapReturn: searchArguments.onTapReturn,
         ),
       );

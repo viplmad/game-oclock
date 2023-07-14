@@ -97,7 +97,6 @@ class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
   }) : super(
           key: key,
           detailRouteName: dlcDetailRoute,
-          searchRouteName: dlcSearchRoute,
         );
 
   @override

@@ -41,6 +41,8 @@ abstract class ItemAppBar<T extends PrimaryModel,
 
   @override
   Widget build(BuildContext context) {
+    final List<String> computedViews = views(context);
+
     return AppBar(
       title: Text(typesName(context)),
       surfaceTintColor: themeColor,
@@ -105,10 +107,12 @@ abstract class ItemAppBar<T extends PrimaryModel,
                 },
               )
             : const SizedBox(),
-        _viewActionBuilder(
-          context,
-          views: views(context),
-        ),
+        computedViews.isNotEmpty
+            ? _viewActionBuilder(
+                context,
+                views: computedViews,
+              )
+            : const SizedBox(),
       ],
     );
   }
@@ -358,7 +362,6 @@ abstract class ItemListBody<T extends PrimaryModel,
     required this.style,
     required this.scrollController,
     required this.detailRouteName,
-    required this.searchRouteName,
   }) : super(key: key);
 
   final List<T> items;
@@ -369,29 +372,33 @@ abstract class ItemListBody<T extends PrimaryModel,
   final ScrollController scrollController;
 
   final String detailRouteName;
-  final String searchRouteName;
 
   @override
   Widget build(BuildContext context) {
+    final String computedViewTitle = viewTitle(context);
+
     return Column(
       children: <Widget>[
-        Container(
-          color: Colors.grey,
-          child: HeaderText(
-            text: viewTitle(context),
-          ),
-        ),
+        computedViewTitle.isNotEmpty
+            ? Container(
+                color: Colors.grey,
+                child: HeaderText(
+                  text: computedViewTitle,
+                ),
+              )
+            : const SizedBox(),
         Expanded(
           child: Scrollbar(
             controller: scrollController,
-            child: _listBuilder(context, scrollController),
+            child: listBuilder(context, scrollController),
           ),
         ),
       ],
     );
   }
 
-  Widget _confirmDelete(BuildContext context, T item) {
+  @nonVirtual
+  Widget confirmDelete(BuildContext context, T item) {
     return AlertDialog(
       title: Text(AppLocalizations.of(context)!.deleteString),
       content: ListTile(
@@ -417,14 +424,15 @@ abstract class ItemListBody<T extends PrimaryModel,
     );
   }
 
-  Widget _listBuilder(BuildContext context, ScrollController scrollController) {
+  @protected
+  Widget listBuilder(BuildContext context, ScrollController scrollController) {
     switch (style) {
       case ListStyle.card:
         return ItemCardView<T>(
           items: items,
           itemBuilder: cardBuilder,
           onDismiss: onDelete,
-          confirmDelete: _confirmDelete,
+          confirmDelete: confirmDelete,
           scrollController: scrollController,
         );
       case ListStyle.grid:

@@ -77,26 +77,11 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
   }
 
   void _mapAddedToEvent(ItemRelationAdded<W> managerState) {
-    if (state is ItemRelationLoaded<W>) {
-      final List<W> items = (state as ItemRelationLoaded<W>).otherItems;
-
-      final List<W> updatedItems = List<W>.from(items)
-        ..add(managerState.otherItem);
-
-      add(UpdateItemRelation<W>(updatedItems));
-    }
+    add(ReloadItemRelation());
   }
 
   void _mapDeletedToEvent(ItemRelationDeleted<W> managerState) {
-    if (state is ItemRelationLoaded<W>) {
-      final List<W> items = (state as ItemRelationLoaded<W>).otherItems;
-
-      final List<W> updatedItems = items
-          .where((W item) => item.id != managerState.otherItem.id)
-          .toList(growable: false);
-
-      add(UpdateItemRelation<W>(updatedItems));
-    }
+    add(ReloadItemRelation());
   }
 
   @override

@@ -7,11 +7,13 @@ const String serverSettingsRoute = '${_settingsRoute}server';
 const String _detailRoute = '/detail';
 const String _searchRoute = '/search';
 const String _calendarRoute = '/calendar';
+const String _listRoute = '/list';
 
 const String _gameIdentifier = 'game';
 const String _dlcIdentifier = 'dlc';
 const String _platformIdentifier = 'platform';
 const String _tagIdentifier = 'tag';
+const String _gameWishlistedIdentifier = '${_gameIdentifier}Wishlisted';
 
 const String gameDetailRoute = _detailRoute + _gameIdentifier;
 const String gameSearchRoute = _searchRoute + _gameIdentifier;
@@ -24,8 +26,12 @@ const String dlcSearchRoute = _searchRoute + _dlcIdentifier;
 const String platformDetailRoute = _detailRoute + _platformIdentifier;
 const String platformSearchRoute = _searchRoute + _platformIdentifier;
 
-const String tagListRoute = '/list$_tagIdentifier';
+const String tagListRoute = _listRoute + _tagIdentifier;
 const String tagDetailRoute = _detailRoute + _tagIdentifier;
 const String tagSearchRoute = _searchRoute + _tagIdentifier;
+
+const String gameWishlistedListRoute = _listRoute + _gameWishlistedIdentifier;
+const String gameWishlistedSearchRoute =
+    _searchRoute + _gameWishlistedIdentifier;
 
 const String gameLogAssistantRoute = '/gameLogAssistant';

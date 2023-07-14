@@ -136,7 +136,6 @@ class _GameTagListBody extends ItemListBody<TagDTO, TagListBloc> {
   }) : super(
           key: key,
           detailRouteName: tagDetailRoute,
-          searchRouteName: tagSearchRoute,
         );
 
   @override

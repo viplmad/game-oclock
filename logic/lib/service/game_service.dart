@@ -57,6 +57,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    // Exclude wishlisted
     final List<FilterDTO> filters = <FilterDTO>[];
     filters.add(
       FilterDTO(
@@ -80,6 +81,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    // Exclude wishlisted
     final List<FilterDTO> filters = <FilterDTO>[];
     filters.add(
       FilterDTO(
@@ -102,6 +104,7 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    // Exclude wishlisted
     final List<FilterDTO> filters = <FilterDTO>[];
     filters.add(
       FilterDTO(
