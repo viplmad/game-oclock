@@ -240,7 +240,7 @@ class _ItemSearchBodyState<
         ),
         child: Text(
           AppLocalizations.of(context)!
-              .newWithTitleString(widget.typeName(context), query),
+              .newWithTitleString(query, widget.typeName(context)),
         ),
       ),
     );

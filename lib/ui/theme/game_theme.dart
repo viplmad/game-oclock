@@ -72,6 +72,8 @@ class GameTheme {
         return AppLocalizations.of(context)!.playingViewString;
       case GameView.nextUp:
         return AppLocalizations.of(context)!.nextUpViewString;
+      case GameView.wishlisted:
+        return AppLocalizations.of(context)!.wishlistedViewString;
       case GameView.lastFinished:
         return AppLocalizations.of(context)!.lastFinishedViewString;
       case GameView.lastPlayed:
@@ -225,6 +227,8 @@ class GameTheme {
         return AppLocalizations.of(context)!.playingString;
       case GameStatus.played:
         return AppLocalizations.of(context)!.playedString;
+      case GameStatus.wishlist:
+        return AppLocalizations.of(context)!.wishlistString;
       default:
         return '';
     }

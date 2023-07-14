@@ -63,6 +63,10 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
         final GamePageResult result =
             await service.getAllWithStatus(GameStatus.nextUp, page: page);
         return result.data;
+      case GameView.wishlisted:
+        final GamePageResult result =
+            await service.getAllWithStatus(GameStatus.wishlist, page: page);
+        return result.data;
       case GameView.lastFinished:
         // null startDate = since the beginning of time
         final GameWithFinishPageResult result = await _gameFinishService

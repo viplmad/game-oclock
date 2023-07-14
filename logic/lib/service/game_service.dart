@@ -57,12 +57,21 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    final List<FilterDTO> filters = <FilterDTO>[];
+    filters.add(
+      FilterDTO(
+        field: 'status',
+        operator_: OperatorType.notEq,
+        value: SearchValue(value: GameStatus.wishlist.value),
+      ),
+    );
+
     final List<SortDTO> sorts = <SortDTO>[];
     sorts.add(SortDTO(field: 'release_year', order: OrderType.asc));
     sorts.add(SortDTO(field: 'name', order: OrderType.asc));
 
     return _api.getGames(
-      SearchDTO(sort: sorts, page: page, size: size),
+      SearchDTO(filter: filters, sort: sorts, page: page, size: size),
     );
   }
 
@@ -71,11 +80,20 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    final List<FilterDTO> filters = <FilterDTO>[];
+    filters.add(
+      FilterDTO(
+        field: 'status',
+        operator_: OperatorType.notEq,
+        value: SearchValue(value: GameStatus.wishlist.value),
+      ),
+    );
+
     final List<SortDTO> sorts = <SortDTO>[];
     sorts.add(SortDTO(field: 'added_datetime', order: OrderType.desc));
 
     return _api.getGames(
-      SearchDTO(sort: sorts, page: page, size: size),
+      SearchDTO(filter: filters, sort: sorts, page: page, size: size),
     );
   }
 
@@ -84,11 +102,20 @@ class GameService implements ItemWithImageService<GameDTO, NewGameDTO> {
     int? page,
     int? size,
   }) {
+    final List<FilterDTO> filters = <FilterDTO>[];
+    filters.add(
+      FilterDTO(
+        field: 'status',
+        operator_: OperatorType.notEq,
+        value: SearchValue(value: GameStatus.wishlist.value),
+      ),
+    );
+
     final List<SortDTO> sorts = <SortDTO>[];
     sorts.add(SortDTO(field: 'updated_datetime', order: OrderType.desc));
 
     return _api.getGames(
-      SearchDTO(sort: sorts, page: page, size: size),
+      SearchDTO(filter: filters, sort: sorts, page: page, size: size),
     );
   }
 
