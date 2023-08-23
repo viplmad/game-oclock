@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:game_collection_client/api.dart'
-    show GameDTO, DLCDTO, PlatformDTO, TagDTO, GameLogDTO;
+    show DLCDTO, GameDTO, NewGameLogDTO, PlatformDTO, TagDTO;
 
 import 'assistant/time_log_assistant.dart';
 import 'list/list.dart';
@@ -159,7 +159,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
 
     case gameLogAssistantRoute:
-      return _pageRoute<GameLogDTO>(
+      return _pageRoute<NewGameLogDTO>(
         const GameLogAssistant(),
         themeDataBuilder: GameTheme.themeData,
       );
