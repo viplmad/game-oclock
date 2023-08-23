@@ -52,7 +52,8 @@ class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO, DLCDTO> {
   }
 }
 
-class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
+class GamePlatformRelationBloc
+    extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
   GamePlatformRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,

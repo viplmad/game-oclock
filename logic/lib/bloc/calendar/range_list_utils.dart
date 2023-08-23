@@ -37,8 +37,9 @@ class RangeListUtils {
 
         DateTime dateOfWeek = mondayOfSelectedDate;
         for (int weekIndex = 0; weekIndex < 7; weekIndex++) {
-          final Iterable<GameLogDTO> dayGameLogs = gameLogs
-              .where((GameLogDTO log) => log.startDatetime.isSameDay(dateOfWeek));
+          final Iterable<GameLogDTO> dayGameLogs = gameLogs.where(
+            (GameLogDTO log) => log.startDatetime.isSameDay(dateOfWeek),
+          );
 
           if (dayGameLogs.isNotEmpty) {
             final Duration dayTimeSum = dayGameLogs.fold<Duration>(
@@ -48,11 +49,19 @@ class RangeListUtils {
             );
 
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: dateOfWeek, endDatetime: dateOfWeek, time: dayTimeSum),
+              GameLogDTO(
+                startDatetime: dateOfWeek,
+                endDatetime: dateOfWeek,
+                time: dayTimeSum,
+              ),
             );
           } else {
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: dateOfWeek, endDatetime: dateOfWeek, time: const Duration()),
+              GameLogDTO(
+                startDatetime: dateOfWeek,
+                endDatetime: dateOfWeek,
+                time: const Duration(),
+              ),
             );
           }
 
@@ -66,8 +75,9 @@ class RangeListUtils {
         DateTime dateOfMonth = firstDayOfSelectedMonth;
         while (dateOfMonth.isInMonthAndYearOf(date)) {
           // While month does not change
-          final Iterable<GameLogDTO> dayGameLogs = gameLogs
-              .where((GameLogDTO log) => log.startDatetime.isSameDay(dateOfMonth));
+          final Iterable<GameLogDTO> dayGameLogs = gameLogs.where(
+            (GameLogDTO log) => log.startDatetime.isSameDay(dateOfMonth),
+          );
 
           if (dayGameLogs.isNotEmpty) {
             final Duration dayTimeSum = dayGameLogs.fold<Duration>(
@@ -77,11 +87,19 @@ class RangeListUtils {
             );
 
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: dateOfMonth, endDatetime: dateOfMonth, time: dayTimeSum),
+              GameLogDTO(
+                startDatetime: dateOfMonth,
+                endDatetime: dateOfMonth,
+                time: dayTimeSum,
+              ),
             );
           } else {
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: dateOfMonth, endDatetime: dateOfMonth, time: const Duration()),
+              GameLogDTO(
+                startDatetime: dateOfMonth,
+                endDatetime: dateOfMonth,
+                time: const Duration(),
+              ),
             );
           }
 
@@ -106,11 +124,19 @@ class RangeListUtils {
             );
 
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: firstDayOfMonth, endDatetime: firstDayOfMonth, time: dayTimeSum),
+              GameLogDTO(
+                startDatetime: firstDayOfMonth,
+                endDatetime: firstDayOfMonth,
+                time: dayTimeSum,
+              ),
             );
           } else {
             selectedGameLogs.add(
-              GameLogDTO(startDatetime: firstDayOfMonth, endDatetime: firstDayOfMonth, time: const Duration()),
+              GameLogDTO(
+                startDatetime: firstDayOfMonth,
+                endDatetime: firstDayOfMonth,
+                time: const Duration(),
+              ),
             );
           }
         }

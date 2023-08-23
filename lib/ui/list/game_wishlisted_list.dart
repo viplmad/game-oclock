@@ -238,7 +238,7 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
               child: itemInnerBuilder(context, index),
             );
           },
-        )
+        ),
       ],
     );
   }
@@ -293,7 +293,7 @@ class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
 
             return itemBuilder(context, item);
           },
-        )
+        ),
       ],
     );
   }

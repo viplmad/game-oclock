@@ -32,7 +32,7 @@ class GameLogAssistantState extends Equatable {
         startTime ?? TimeOfDay.now(),
         endTime ?? TimeOfDay.now(),
         duration ?? Duration.zero,
-        recalculationMode
+        recalculationMode,
       ];
 
   @override

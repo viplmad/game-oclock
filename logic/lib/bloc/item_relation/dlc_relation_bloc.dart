@@ -47,7 +47,8 @@ class DLCGameRelationBloc extends ItemRelationBloc<GameDTO, GameDTO> {
   }
 }
 
-class DLCPlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
+class DLCPlatformRelationBloc
+    extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
   DLCPlatformRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,

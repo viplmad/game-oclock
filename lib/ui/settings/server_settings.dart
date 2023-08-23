@@ -195,7 +195,7 @@ class _ServerSettingsBody extends StatelessWidget {
                       );
                     },
                   ),
-                )
+                ),
               ]);
             }
 

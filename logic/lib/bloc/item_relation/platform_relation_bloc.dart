@@ -6,7 +6,8 @@ import 'package:logic/service/service.dart'
 
 import 'item_relation.dart';
 
-class PlatformDLCRelationBloc extends ItemRelationBloc<DLCAvailableDTO, DLCAvailableDTO> {
+class PlatformDLCRelationBloc
+    extends ItemRelationBloc<DLCAvailableDTO, DLCAvailableDTO> {
   PlatformDLCRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -22,7 +23,8 @@ class PlatformDLCRelationBloc extends ItemRelationBloc<DLCAvailableDTO, DLCAvail
   }
 }
 
-class PlatformGameRelationBloc extends ItemRelationBloc<GameAvailableDTO, GameAvailableDTO> {
+class PlatformGameRelationBloc
+    extends ItemRelationBloc<GameAvailableDTO, GameAvailableDTO> {
   PlatformGameRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,

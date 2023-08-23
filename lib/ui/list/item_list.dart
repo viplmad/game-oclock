@@ -419,7 +419,7 @@ abstract class ItemListBody<T extends PrimaryModel,
             Navigator.maybePop<bool>(context, true);
           },
           child: Text(AppLocalizations.of(context)!.deleteButtonLabel),
-        )
+        ),
       ],
     );
   }

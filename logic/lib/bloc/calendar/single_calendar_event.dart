@@ -13,7 +13,7 @@ abstract class SingleCalendarEvent extends CalendarEvent {
 
 class LoadSingleCalendar extends SingleCalendarEvent {}
 
-class ReloadSingleCalendar extends SingleCalendarEvent {} // TODO use in ui
+class ReloadSingleCalendar extends SingleCalendarEvent {}
 
 class UpdateSingleCalendar extends SingleCalendarEvent {
   const UpdateSingleCalendar(

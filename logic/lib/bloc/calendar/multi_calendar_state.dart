@@ -41,7 +41,7 @@ class MultiCalendarLoaded extends MultiCalendarState {
         focusedDate,
         selectedDate,
         range,
-        style
+        style,
       ];
 
   @override

@@ -55,7 +55,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                         .titleMedium!
                         .copyWith(color: Colors.white),
                   ),
-                )
+                ),
               ],
             ),
           ),

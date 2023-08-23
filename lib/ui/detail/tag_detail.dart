@@ -120,7 +120,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
       TagGameRelationList(
         relationName: AppLocalizations.of(context)!.gamesString,
         relationTypeName: AppLocalizations.of(context)!.gameString,
-      )
+      ),
     ];
   }
 
