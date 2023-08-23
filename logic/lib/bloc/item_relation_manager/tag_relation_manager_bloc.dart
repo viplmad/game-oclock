@@ -5,7 +5,8 @@ import 'package:logic/service/service.dart'
 
 import 'item_relation_manager.dart';
 
-class TagGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
+class TagGameRelationManagerBloc
+    extends ItemRelationManagerBloc<GameDTO, GameDTO> {
   TagGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,

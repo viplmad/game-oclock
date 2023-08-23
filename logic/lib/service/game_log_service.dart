@@ -6,11 +6,13 @@ import 'package:game_collection_client/api.dart'
         GameLogsApi,
         GameWithLogPageResult,
         GameWithLogsDTO,
+        NewGameLogDTO,
         SearchDTO;
 
 import 'item_service.dart';
 
-class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
+class GameLogService
+    implements SecondaryItemService<DateTime, GameLogDTO, NewGameLogDTO> {
   GameLogService(ApiClient apiClient) {
     _api = GameLogsApi(apiClient);
   }
@@ -19,7 +21,7 @@ class GameLogService implements SecondaryItemService<DateTime, GameLogDTO> {
 
   //#region CREATE
   @override
-  Future<void> create(String primaryId, GameLogDTO newItem) {
+  Future<void> create(String primaryId, NewGameLogDTO newItem) {
     return _api.postGameLog(primaryId, newItem);
   }
   //#endregion CREATE

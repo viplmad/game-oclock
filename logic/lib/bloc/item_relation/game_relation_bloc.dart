@@ -12,7 +12,7 @@ import 'package:logic/service/service.dart'
 
 import 'item_relation.dart';
 
-class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
+class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish, DateTime> {
   GameFinishRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -36,7 +36,7 @@ class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish> {
   }
 }
 
-class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO> {
+class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO, DLCDTO> {
   GameDLCRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -52,7 +52,7 @@ class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO> {
   }
 }
 
-class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO> {
+class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
   GamePlatformRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -68,7 +68,7 @@ class GamePlatformRelationBloc extends ItemRelationBloc<PlatformAvailableDTO> {
   }
 }
 
-class GameTagRelationBloc extends ItemRelationBloc<TagDTO> {
+class GameTagRelationBloc extends ItemRelationBloc<TagDTO, TagDTO> {
   GameTagRelationBloc({
     required super.itemId,
     required GameCollectionService collectionService,

@@ -1,5 +1,5 @@
 import 'package:game_collection_client/api.dart'
-    show GameLogDTO, DLCDTO, PlatformAvailableDTO, TagDTO;
+    show DLCDTO, GameLogDTO, NewGameLogDTO, PlatformAvailableDTO, TagDTO;
 
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'
@@ -13,7 +13,7 @@ import 'package:logic/service/service.dart'
 import 'item_relation_manager.dart';
 
 class GameFinishRelationManagerBloc
-    extends ItemRelationManagerBloc<ItemFinish> {
+    extends ItemRelationManagerBloc<ItemFinish, DateTime> {
   GameFinishRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -23,8 +23,8 @@ class GameFinishRelationManagerBloc
   final GameFinishService _gameFinishService;
 
   @override
-  Future<void> addRelation(AddItemRelation<ItemFinish> event) {
-    return _gameFinishService.create(itemId, event.otherItem.date);
+  Future<void> addRelation(AddItemRelation<DateTime> event) {
+    return _gameFinishService.create(itemId, event.otherItem);
   }
 
   @override
@@ -33,7 +33,8 @@ class GameFinishRelationManagerBloc
   }
 }
 
-class GameLogRelationManagerBloc extends ItemRelationManagerBloc<GameLogDTO> {
+class GameLogRelationManagerBloc
+    extends ItemRelationManagerBloc<GameLogDTO, NewGameLogDTO> {
   GameLogRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -43,17 +44,18 @@ class GameLogRelationManagerBloc extends ItemRelationManagerBloc<GameLogDTO> {
   final GameLogService _gameLogService;
 
   @override
-  Future<void> addRelation(AddItemRelation<GameLogDTO> event) {
+  Future<void> addRelation(AddItemRelation<NewGameLogDTO> event) {
     return _gameLogService.create(itemId, event.otherItem);
   }
 
   @override
   Future<void> deleteRelation(DeleteItemRelation<GameLogDTO> event) {
-    return _gameLogService.delete(itemId, event.otherItem.datetime);
+    return _gameLogService.delete(itemId, event.otherItem.startDatetime);
   }
 }
 
-class GameDLCRelationManagerBloc extends ItemRelationManagerBloc<DLCDTO> {
+class GameDLCRelationManagerBloc
+    extends ItemRelationManagerBloc<DLCDTO, DLCDTO> {
   GameDLCRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -73,8 +75,8 @@ class GameDLCRelationManagerBloc extends ItemRelationManagerBloc<DLCDTO> {
   }
 }
 
-class GamePlatformRelationManagerBloc
-    extends ItemRelationManagerBloc<PlatformAvailableDTO> {
+class GamePlatformRelationManagerBloc extends ItemRelationManagerBloc<
+    PlatformAvailableDTO, PlatformAvailableDTO> {
   GamePlatformRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -98,7 +100,8 @@ class GamePlatformRelationManagerBloc
   }
 }
 
-class GameTagRelationManagerBloc extends ItemRelationManagerBloc<TagDTO> {
+class GameTagRelationManagerBloc
+    extends ItemRelationManagerBloc<TagDTO, TagDTO> {
   GameTagRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,

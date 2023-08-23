@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection_client/api.dart' show PrimaryModel;
-
 abstract class ItemRelationManagerState extends Equatable {
   const ItemRelationManagerState();
 
@@ -11,20 +9,7 @@ abstract class ItemRelationManagerState extends Equatable {
 
 class ItemRelationManagerInitialised extends ItemRelationManagerState {}
 
-class ItemRelationAdded<W extends PrimaryModel>
-    extends ItemRelationManagerState {
-  const ItemRelationAdded(this.otherItem);
-
-  final W otherItem;
-
-  @override
-  List<Object> get props => <Object>[otherItem];
-
-  @override
-  String toString() => 'ItemRelationAdded { '
-      'otherItem: $otherItem'
-      ' }';
-}
+class ItemRelationAdded extends ItemRelationManagerState {}
 
 class ItemRelationNotAdded extends ItemRelationManagerState {
   const ItemRelationNotAdded(this.error);
@@ -40,20 +25,7 @@ class ItemRelationNotAdded extends ItemRelationManagerState {
       ' }';
 }
 
-class ItemRelationDeleted<W extends PrimaryModel>
-    extends ItemRelationManagerState {
-  const ItemRelationDeleted(this.otherItem);
-
-  final W otherItem;
-
-  @override
-  List<Object> get props => <Object>[otherItem];
-
-  @override
-  String toString() => 'ItemRelationDeleted { '
-      'otherItem: $otherItem'
-      ' }';
-}
+class ItemRelationDeleted extends ItemRelationManagerState {}
 
 class ItemRelationNotDeleted extends ItemRelationManagerState {
   const ItemRelationNotDeleted(this.error);

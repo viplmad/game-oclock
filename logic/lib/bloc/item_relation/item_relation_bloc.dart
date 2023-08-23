@@ -8,7 +8,7 @@ import 'package:game_collection_client/api.dart' show PrimaryModel;
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
 
-abstract class ItemRelationBloc<W extends PrimaryModel>
+abstract class ItemRelationBloc<W extends PrimaryModel, N extends Object>
     extends Bloc<ItemRelationEvent, ItemRelationState> {
   ItemRelationBloc({
     required this.itemId,
@@ -23,7 +23,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
   }
 
   final String itemId;
-  final ItemRelationManagerBloc<W> managerBloc;
+  final ItemRelationManagerBloc<W, N> managerBloc;
 
   late final StreamSubscription<ItemRelationManagerState> _managerSubscription;
 
@@ -52,7 +52,7 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
         ItemRelationLoaded<W>(items),
       );
     } catch (e) {
-      managerBloc.add(WarneItemRelationNotLoaded(e.toString()));
+      managerBloc.add(WarnItemRelationNotLoaded(e.toString()));
       emit(
         ItemRelationError(),
       );
@@ -69,18 +69,18 @@ abstract class ItemRelationBloc<W extends PrimaryModel>
   }
 
   void _mapRelationManagerStateToEvent(ItemRelationManagerState managerState) {
-    if (managerState is ItemRelationAdded<W>) {
+    if (managerState is ItemRelationAdded) {
       _mapAddedToEvent(managerState);
-    } else if (managerState is ItemRelationDeleted<W>) {
+    } else if (managerState is ItemRelationDeleted) {
       _mapDeletedToEvent(managerState);
     }
   }
 
-  void _mapAddedToEvent(ItemRelationAdded<W> managerState) {
+  void _mapAddedToEvent(ItemRelationAdded managerState) {
     add(ReloadItemRelation());
   }
 
-  void _mapDeletedToEvent(ItemRelationDeleted<W> managerState) {
+  void _mapDeletedToEvent(ItemRelationDeleted managerState) {
     add(ReloadItemRelation());
   }
 

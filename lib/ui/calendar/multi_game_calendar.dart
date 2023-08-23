@@ -149,72 +149,78 @@ class _MultiGameCalendarBody extends StatelessWidget {
           );
         }
       },
-      child: BlocBuilder<MultiCalendarBloc, CalendarState>(
-        builder: (BuildContext context, CalendarState state) {
-          if (state is MultiCalendarLoaded) {
-            Widget gameLogsWidget;
-            if (state.selectedTotalTime.isZero()) {
-              gameLogsWidget = Center(
-                child: Text(
-                  AppLocalizations.of(context)!.emptyPlayTime,
-                ),
-              );
-            } else {
-              if (state is MultiCalendarGraphLoaded) {
-                gameLogsWidget = CalendarUtils.buildGameLogsGraph(
-                  context,
-                  state.selectedGameLogs,
-                  state.range,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<MultiCalendarBloc>(context)
+              .add(ReloadMultiCalendar());
+        },
+        child: BlocBuilder<MultiCalendarBloc, CalendarState>(
+          builder: (BuildContext context, CalendarState state) {
+            if (state is MultiCalendarLoaded) {
+              Widget gameLogsWidget;
+              if (state.selectedTotalTime.isZero()) {
+                gameLogsWidget = Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.emptyPlayTime,
+                  ),
                 );
               } else {
-                gameLogsWidget =
-                    _buildGameLogsList(context, state.selectedGamesWithLogs);
+                if (state is MultiCalendarGraphLoaded) {
+                  gameLogsWidget = CalendarUtils.buildGameLogsGraph(
+                    context,
+                    state.selectedGameLogs,
+                    state.range,
+                  );
+                } else {
+                  gameLogsWidget =
+                      _buildGameLogsList(context, state.selectedGamesWithLogs);
+                }
               }
+
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  _buildTableCalendar(
+                    context,
+                    state.logDates,
+                    state.focusedDate,
+                    state.selectedDate,
+                  ),
+                  const Divider(height: 4.0),
+                  ListTile(
+                    title: Text(
+                      CalendarUtils.titleString(
+                        context,
+                        state.selectedDate,
+                        state.range,
+                      ),
+                    ),
+                    trailing: !state.selectedTotalTime.isZero()
+                        ? Text(
+                            '${AppLocalizations.of(context)!.totalGames(state.selectedTotalGames)} / ${AppLocalizationsUtils.formatDuration(context, state.selectedTotalTime)}',
+                          )
+                        : null,
+                  ),
+                  Expanded(child: gameLogsWidget),
+                ],
+              );
+            }
+            if (state is CalendarError) {
+              return Container();
             }
 
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                _buildTableCalendar(
-                  context,
-                  state.logDates,
-                  state.focusedDate,
-                  state.selectedDate,
+                const LinearProgressIndicator(),
+                Skeleton(
+                  height: MediaQuery.of(context).size.height / 2.5,
                 ),
                 const Divider(height: 4.0),
-                ListTile(
-                  title: Text(
-                    CalendarUtils.titleString(
-                      context,
-                      state.selectedDate,
-                      state.range,
-                    ),
-                  ),
-                  trailing: !state.selectedTotalTime.isZero()
-                      ? Text(
-                          '${AppLocalizations.of(context)!.totalGames(state.selectedTotalGames)} / ${AppLocalizationsUtils.formatDuration(context, state.selectedTotalTime)}',
-                        )
-                      : null,
-                ),
-                Expanded(child: gameLogsWidget),
               ],
             );
-          }
-          if (state is CalendarError) {
-            return Container();
-          }
-
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              const LinearProgressIndicator(),
-              Skeleton(
-                height: MediaQuery.of(context).size.height / 2.5,
-              ),
-              const Divider(height: 4.0),
-            ],
-          );
-        },
+          },
+        ),
       ),
     );
   }

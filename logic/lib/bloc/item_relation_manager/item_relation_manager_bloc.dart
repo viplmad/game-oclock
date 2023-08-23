@@ -5,26 +5,26 @@ import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 import 'item_relation_manager.dart';
 
-abstract class ItemRelationManagerBloc<W extends PrimaryModel>
+abstract class ItemRelationManagerBloc<W extends PrimaryModel, N extends Object>
     extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState> {
   ItemRelationManagerBloc({
     required this.itemId,
   }) : super(ItemRelationManagerInitialised()) {
-    on<AddItemRelation<W>>(_mapAddRelationToState);
+    on<AddItemRelation<N>>(_mapAddRelationToState);
     on<DeleteItemRelation<W>>(_mapDeleteRelationToState);
-    on<WarneItemRelationNotLoaded>(_mapWarnNotLoadedToState);
+    on<WarnItemRelationNotLoaded>(_mapWarnNotLoadedToState);
   }
 
   final String itemId;
 
   void _mapAddRelationToState(
-    AddItemRelation<W> event,
+    AddItemRelation<N> event,
     Emitter<ItemRelationManagerState> emit,
   ) async {
     try {
       await addRelation(event);
       emit(
-        ItemRelationAdded<W>(event.otherItem),
+        ItemRelationAdded(),
       );
     } catch (e) {
       emit(
@@ -44,7 +44,7 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel>
     try {
       await deleteRelation(event);
       emit(
-        ItemRelationDeleted<W>(event.otherItem),
+        ItemRelationDeleted(),
       );
     } catch (e) {
       emit(
@@ -58,14 +58,14 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel>
   }
 
   void _mapWarnNotLoadedToState(
-    WarneItemRelationNotLoaded event,
+    WarnItemRelationNotLoaded event,
     Emitter<ItemRelationManagerState> emit,
   ) {
     emit(ItemRelationNotLoaded(event.error));
   }
 
   @protected
-  Future<void> addRelation(AddItemRelation<W> event);
+  Future<void> addRelation(AddItemRelation<N> event);
   @protected
   Future<void> deleteRelation(DeleteItemRelation<W> event);
 }

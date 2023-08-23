@@ -7,8 +7,7 @@ import 'package:game_collection_client/api.dart' show GameLogDTO;
 
 import 'package:logic/service/service.dart'
     show GameCollectionService, GameLogService, GameFinishService;
-import 'package:logic/model/model.dart'
-    show CalendarRange, CalendarStyle, ItemFinish;
+import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
 
@@ -28,6 +27,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         _gameFinishService = collectionService.gameFinishService,
         super(CalendarLoading()) {
     on<LoadSingleCalendar>(_mapLoadToState);
+    on<ReloadSingleCalendar>(_mapReloadToState);
     on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
     on<UpdateCalendarRange>(_mapUpdateRangeToState);
     on<UpdateCalendarStyle>(_mapUpdateStyleToState);
@@ -64,6 +64,67 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       CalendarLoading(),
     );
 
+    _mapAnyLoadToState(emit);
+  }
+
+  void _mapReloadToState(
+    ReloadSingleCalendar event,
+    Emitter<CalendarState> emit,
+  ) async {
+    if (state is SingleCalendarLoaded) {
+      final CalendarRange range = (state as SingleCalendarLoaded).range;
+      final CalendarStyle style = (state as SingleCalendarLoaded).style;
+      final DateTime selectedDate =
+          (state as SingleCalendarLoaded).selectedDate;
+
+      emit(
+        CalendarLoading(),
+      );
+
+      try {
+        final List<GameLogDTO> gameLogs = await _getAllGameLogs();
+        final List<DateTime> finishDates = await _getAllFinishDates();
+
+        final Set<DateTime> logDates = gameLogs.fold(
+          SplayTreeSet<DateTime>(),
+          (Set<DateTime> previousDates, GameLogDTO log) =>
+              previousDates..add(log.startDatetime),
+        );
+
+        final List<GameLogDTO> selectedGameLogs =
+            _selectedGameLogsInRange(gameLogs, selectedDate, range);
+
+        final Duration selectedTotalTime =
+            GameCalendarUtils.getTotalTime(selectedGameLogs);
+
+        final bool isSelectedDateFinish =
+            _isSelectedDateFinish(finishDates, selectedDate);
+
+        emit(
+          SingleCalendarLoaded(
+            gameLogs,
+            logDates,
+            finishDates,
+            selectedDate,
+            selectedGameLogs,
+            isSelectedDateFinish,
+            selectedTotalTime,
+            range,
+            style,
+          ),
+        );
+      } catch (e) {
+        managerBloc.add(WarnCalendarNotLoaded(e.toString()));
+        emit(
+          CalendarError(),
+        );
+      }
+    } else {
+      await _mapAnyLoadToState(emit);
+    }
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<CalendarState> emit) async {
     try {
       final List<GameLogDTO> gameLogs = await _getAllGameLogs();
       final List<DateTime> finishDates = await _getAllFinishDates();
@@ -71,7 +132,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final Set<DateTime> logDates = gameLogs.fold(
         SplayTreeSet<DateTime>(),
         (Set<DateTime> previousDates, GameLogDTO log) =>
-            previousDates..add(log.datetime),
+            previousDates..add(log.startDatetime),
       );
 
       DateTime selectedDate = DateTime.now();
@@ -326,9 +387,9 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   void _mapGameLogManagerStateToEvent(ItemRelationManagerState managerState) {
-    if (managerState is ItemRelationAdded<GameLogDTO>) {
+    if (managerState is ItemRelationAdded) {
       _mapAddedGameLogToEvent(managerState);
-    } else if (managerState is ItemRelationDeleted<GameLogDTO>) {
+    } else if (managerState is ItemRelationDeleted) {
       _mapDeletedGameLogToEvent(managerState);
     }
   }
@@ -336,273 +397,27 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   void _mapFinishDateManagerStateToEvent(
     ItemRelationManagerState managerState,
   ) {
-    if (managerState is ItemRelationAdded<ItemFinish>) {
+    if (managerState is ItemRelationAdded) {
       _mapAddedFinishDateToEvent(managerState);
-    } else if (managerState is ItemRelationDeleted<ItemFinish>) {
+    } else if (managerState is ItemRelationDeleted) {
       _mapDeletedFinishDateToEvent(managerState);
     }
   }
 
-  void _mapAddedGameLogToEvent(ItemRelationAdded<GameLogDTO> managerState) {
-    if (state is SingleCalendarLoaded) {
-      final List<GameLogDTO> gameLogs =
-          (state as SingleCalendarLoaded).gameLogs;
-      final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
-      final List<DateTime> finishDates =
-          (state as SingleCalendarLoaded).finishDates;
-      DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
-      List<GameLogDTO> selectedGameLogs =
-          (state as SingleCalendarLoaded).selectedGameLogs;
-      final bool isSelectedDateFinish =
-          (state as SingleCalendarLoaded).isSelectedDateFinish;
-      final CalendarRange range = (state as SingleCalendarLoaded).range;
-      final CalendarStyle style = (state as SingleCalendarLoaded).style;
-
-      final GameLogDTO addedGameLog = managerState.otherItem;
-
-      if (gameLogs.isEmpty) {
-        selectedDate = addedGameLog.datetime;
-      }
-
-      final List<GameLogDTO> updatedGameLogs = List<GameLogDTO>.from(gameLogs)
-        ..add(addedGameLog);
-      final Set<DateTime> updatedLogDates =
-          SplayTreeSet<DateTime>.from(logDates)..add(addedGameLog.datetime);
-
-      Duration selectedTotalTime =
-          (state as SingleCalendarLoaded).selectedTotalTime;
-      if (range == CalendarRange.day &&
-          addedGameLog.datetime.isSameDay(selectedDate)) {
-        selectedGameLogs = List<GameLogDTO>.from(selectedGameLogs)
-          ..add(addedGameLog);
-        selectedGameLogs.sort(GameCalendarUtils.logComparatorEarlierFirst());
-
-        selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if (range == CalendarRange.week &&
-          addedGameLog.datetime.isInWeekOf(selectedDate)) {
-        final int weekIndex = addedGameLog.datetime.weekday - 1;
-        final GameLogDTO dayGameLog = selectedGameLogs.elementAt(weekIndex);
-        selectedGameLogs[weekIndex] = GameLogDTO(
-          datetime: dayGameLog.datetime,
-          time: dayGameLog.time + addedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if (range == CalendarRange.month &&
-          addedGameLog.datetime.isInMonthAndYearOf(selectedDate)) {
-        final int monthIndex = addedGameLog.datetime.day - 1;
-        final GameLogDTO dayGameLog = selectedGameLogs.elementAt(monthIndex);
-        selectedGameLogs[monthIndex] = GameLogDTO(
-          datetime: dayGameLog.datetime,
-          time: dayGameLog.time + addedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      } else if (range == CalendarRange.year &&
-          addedGameLog.datetime.isInYearOf(selectedDate)) {
-        final int yearIndex = addedGameLog.datetime.month - 1;
-        final GameLogDTO monthGameLog = selectedGameLogs.elementAt(yearIndex);
-        selectedGameLogs[yearIndex] = GameLogDTO(
-          datetime: monthGameLog.datetime,
-          time: monthGameLog.time + addedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime + addedGameLog.time;
-      }
-
-      add(
-        UpdateSingleCalendar(
-          updatedGameLogs,
-          updatedLogDates,
-          finishDates,
-          selectedDate,
-          selectedGameLogs,
-          isSelectedDateFinish,
-          selectedTotalTime,
-          range,
-          style,
-        ),
-      );
-    }
+  void _mapAddedGameLogToEvent(ItemRelationAdded managerState) {
+    add(ReloadSingleCalendar());
   }
 
-  void _mapDeletedGameLogToEvent(
-    ItemRelationDeleted<GameLogDTO> managerState,
-  ) {
-    if (state is SingleCalendarLoaded) {
-      final List<GameLogDTO> gameLogs =
-          (state as SingleCalendarLoaded).gameLogs;
-      final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
-      final List<DateTime> finishDates =
-          (state as SingleCalendarLoaded).finishDates;
-      DateTime selectedDate = (state as SingleCalendarLoaded).selectedDate;
-      List<GameLogDTO> selectedGameLogs =
-          (state as SingleCalendarLoaded).selectedGameLogs;
-      final bool isSelectedDateFinish =
-          (state as SingleCalendarLoaded).isSelectedDateFinish;
-      final CalendarRange range = (state as SingleCalendarLoaded).range;
-      final CalendarStyle style = (state as SingleCalendarLoaded).style;
-
-      final GameLogDTO deletedGameLog = managerState.otherItem;
-
-      final List<GameLogDTO> updatedGameLogs = gameLogs
-          .where((GameLogDTO log) => log.datetime != deletedGameLog.datetime)
-          .toList(growable: false);
-
-      if (!updatedGameLogs.any(
-        (GameLogDTO log) => log.datetime.isSameDay(deletedGameLog.datetime),
-      )) {
-        logDates.removeWhere(
-          (DateTime date) => date.isSameDay(deletedGameLog.datetime),
-        );
-      }
-
-      if (updatedGameLogs.isEmpty) {
-        selectedDate = DateTime.now();
-      }
-
-      Duration selectedTotalTime =
-          (state as SingleCalendarLoaded).selectedTotalTime;
-      if (range == CalendarRange.day &&
-          deletedGameLog.datetime.isSameDay(selectedDate)) {
-        selectedGameLogs = selectedGameLogs
-            .where(
-              (GameLogDTO log) => log.datetime != deletedGameLog.datetime,
-            )
-            .toList(growable: false);
-
-        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if (range == CalendarRange.week &&
-          deletedGameLog.datetime.isInWeekOf(selectedDate)) {
-        final int weekIndex = deletedGameLog.datetime.weekday - 1;
-        final GameLogDTO dayGameLog = selectedGameLogs.elementAt(weekIndex);
-        selectedGameLogs[weekIndex] = GameLogDTO(
-          datetime: dayGameLog.datetime,
-          time: dayGameLog.time - deletedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if (range == CalendarRange.month &&
-          deletedGameLog.datetime.isInMonthAndYearOf(selectedDate)) {
-        final int monthIndex = deletedGameLog.datetime.day - 1;
-        final GameLogDTO dayGameLog = selectedGameLogs.elementAt(monthIndex);
-        selectedGameLogs[monthIndex] = GameLogDTO(
-          datetime: dayGameLog.datetime,
-          time: dayGameLog.time - deletedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      } else if (range == CalendarRange.year &&
-          deletedGameLog.datetime.isInYearOf(selectedDate)) {
-        final int yearIndex = deletedGameLog.datetime.month - 1;
-        final GameLogDTO monthGameLog = selectedGameLogs.elementAt(yearIndex);
-        selectedGameLogs[yearIndex] = GameLogDTO(
-          datetime: monthGameLog.datetime,
-          time: monthGameLog.time - deletedGameLog.time,
-        );
-
-        selectedTotalTime = selectedTotalTime - deletedGameLog.time;
-      }
-
-      add(
-        UpdateSingleCalendar(
-          updatedGameLogs,
-          logDates,
-          finishDates,
-          selectedDate,
-          selectedGameLogs,
-          isSelectedDateFinish,
-          selectedTotalTime,
-          range,
-          style,
-        ),
-      );
-    }
+  void _mapDeletedGameLogToEvent(ItemRelationDeleted managerState) {
+    add(ReloadSingleCalendar());
   }
 
-  void _mapAddedFinishDateToEvent(ItemRelationAdded<ItemFinish> managerState) {
-    if (state is SingleCalendarLoaded) {
-      final List<GameLogDTO> gameLogs =
-          (state as SingleCalendarLoaded).gameLogs;
-      final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
-      final List<DateTime> finishDates =
-          (state as SingleCalendarLoaded).finishDates;
-      final DateTime selectedDate =
-          (state as SingleCalendarLoaded).selectedDate;
-      final List<GameLogDTO> selectedGameLogs =
-          (state as SingleCalendarLoaded).selectedGameLogs;
-      final Duration selectedTotalTime =
-          (state as SingleCalendarLoaded).selectedTotalTime;
-      final CalendarRange range = (state as SingleCalendarLoaded).range;
-      final CalendarStyle style = (state as SingleCalendarLoaded).style;
-      bool isSelectedDateFinish =
-          (state as SingleCalendarLoaded).isSelectedDateFinish;
-
-      final List<DateTime> updatedFinishDates = List<DateTime>.from(finishDates)
-        ..add(managerState.otherItem.date);
-
-      isSelectedDateFinish = isSelectedDateFinish ||
-          managerState.otherItem.date.isSameDay(selectedDate);
-
-      add(
-        UpdateSingleCalendar(
-          gameLogs,
-          logDates,
-          updatedFinishDates,
-          selectedDate,
-          selectedGameLogs,
-          isSelectedDateFinish,
-          selectedTotalTime,
-          range,
-          style,
-        ),
-      );
-    }
+  void _mapAddedFinishDateToEvent(ItemRelationAdded managerState) {
+    add(ReloadSingleCalendar());
   }
 
-  void _mapDeletedFinishDateToEvent(
-    ItemRelationDeleted<ItemFinish> managerState,
-  ) {
-    if (state is SingleCalendarLoaded) {
-      final List<GameLogDTO> gameLogs =
-          (state as SingleCalendarLoaded).gameLogs;
-      final Set<DateTime> logDates = (state as SingleCalendarLoaded).logDates;
-      final List<DateTime> finishDates =
-          (state as SingleCalendarLoaded).finishDates;
-      final DateTime selectedDate =
-          (state as SingleCalendarLoaded).selectedDate;
-      final List<GameLogDTO> selectedGameLogs =
-          (state as SingleCalendarLoaded).selectedGameLogs;
-      final Duration selectedTotalTime =
-          (state as SingleCalendarLoaded).selectedTotalTime;
-      final CalendarRange range = (state as SingleCalendarLoaded).range;
-      final CalendarStyle style = (state as SingleCalendarLoaded).style;
-      bool isSelectedDateFinish =
-          (state as SingleCalendarLoaded).isSelectedDateFinish;
-
-      final List<DateTime> updatedFinishDates = finishDates
-          .where(
-            (DateTime finish) => !finish.isSameDay(managerState.otherItem.date),
-          )
-          .toList(growable: false);
-
-      isSelectedDateFinish = !(isSelectedDateFinish &&
-          managerState.otherItem.date.isSameDay(selectedDate));
-
-      add(
-        UpdateSingleCalendar(
-          gameLogs,
-          logDates,
-          updatedFinishDates,
-          selectedDate,
-          selectedGameLogs,
-          isSelectedDateFinish,
-          selectedTotalTime,
-          range,
-          style,
-        ),
-      );
-    }
+  void _mapDeletedFinishDateToEvent(ItemRelationDeleted managerState) {
+    add(ReloadSingleCalendar());
   }
 
   List<GameLogDTO> _selectedGameLogsInRange(

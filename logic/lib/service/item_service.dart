@@ -39,10 +39,11 @@ abstract class SearchService<T extends Object> {
   });
 }
 
-abstract class SecondaryItemService<ID extends Object, T extends Object> {
+abstract class SecondaryItemService<ID extends Object, T extends Object,
+    N extends Object> {
   const SecondaryItemService();
 
-  Future<void> create(String primaryId, T newItem);
+  Future<void> create(String primaryId, N newItem);
   Future<List<T>> getAll(String primaryId);
   Future<void> delete(String primaryId, ID id);
 }

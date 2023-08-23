@@ -7,7 +7,8 @@ import 'package:logic/service/service.dart'
 
 import 'item_relation_manager.dart';
 
-class DLCFinishRelationManagerBloc extends ItemRelationManagerBloc<ItemFinish> {
+class DLCFinishRelationManagerBloc
+    extends ItemRelationManagerBloc<ItemFinish, DateTime> {
   DLCFinishRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -17,8 +18,8 @@ class DLCFinishRelationManagerBloc extends ItemRelationManagerBloc<ItemFinish> {
   final DLCFinishService _dlcFinishService;
 
   @override
-  Future<void> addRelation(AddItemRelation<ItemFinish> event) {
-    return _dlcFinishService.create(itemId, event.otherItem.date);
+  Future<void> addRelation(AddItemRelation<DateTime> event) {
+    return _dlcFinishService.create(itemId, event.otherItem);
   }
 
   @override
@@ -27,7 +28,8 @@ class DLCFinishRelationManagerBloc extends ItemRelationManagerBloc<ItemFinish> {
   }
 }
 
-class DLCGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
+class DLCGameRelationManagerBloc
+    extends ItemRelationManagerBloc<GameDTO, GameDTO> {
   DLCGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -47,8 +49,8 @@ class DLCGameRelationManagerBloc extends ItemRelationManagerBloc<GameDTO> {
   }
 }
 
-class DLCPlatformRelationManagerBloc
-    extends ItemRelationManagerBloc<PlatformAvailableDTO> {
+class DLCPlatformRelationManagerBloc extends ItemRelationManagerBloc<
+    PlatformAvailableDTO, PlatformAvailableDTO> {
   DLCPlatformRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,

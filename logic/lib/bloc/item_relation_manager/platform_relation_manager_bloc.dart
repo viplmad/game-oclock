@@ -7,7 +7,7 @@ import 'package:logic/service/service.dart'
 import 'item_relation_manager.dart';
 
 class PlatformDLCRelationManagerBloc
-    extends ItemRelationManagerBloc<DLCAvailableDTO> {
+    extends ItemRelationManagerBloc<DLCAvailableDTO, DLCAvailableDTO> {
   PlatformDLCRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,
@@ -32,7 +32,7 @@ class PlatformDLCRelationManagerBloc
 }
 
 class PlatformGameRelationManagerBloc
-    extends ItemRelationManagerBloc<GameAvailableDTO> {
+    extends ItemRelationManagerBloc<GameAvailableDTO, GameAvailableDTO> {
   PlatformGameRelationManagerBloc({
     required super.itemId,
     required GameCollectionService collectionService,

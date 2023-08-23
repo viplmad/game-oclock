@@ -169,9 +169,9 @@ class CalendarUtils {
       // Create list where each entry is the time in an hour
       values = List<int>.filled(TimeOfDay.hoursPerDay, 0, growable: false);
       for (final GameLogDTO log in gameLogs) {
-        int currentHour = log.datetime.hour;
+        int currentHour = log.startDatetime.hour;
         final int pendingMinToChangeHour =
-            TimeOfDay.minutesPerHour - log.datetime.minute;
+            TimeOfDay.minutesPerHour - log.startDatetime.minute;
         final int logMin = log.time.inMinutes;
 
         if (pendingMinToChangeHour > logMin) {

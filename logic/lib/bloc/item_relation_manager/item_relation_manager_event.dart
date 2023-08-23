@@ -9,10 +9,10 @@ abstract class ItemRelationManagerEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class AddItemRelation<W extends PrimaryModel> extends ItemRelationManagerEvent {
+class AddItemRelation<N extends Object> extends ItemRelationManagerEvent {
   const AddItemRelation(this.otherItem);
 
-  final W otherItem;
+  final N otherItem;
 
   @override
   List<Object> get props => <Object>[otherItem];
@@ -38,8 +38,8 @@ class DeleteItemRelation<W extends PrimaryModel>
       ' }';
 }
 
-class WarneItemRelationNotLoaded extends ItemRelationManagerEvent {
-  const WarneItemRelationNotLoaded(this.error);
+class WarnItemRelationNotLoaded extends ItemRelationManagerEvent {
+  const WarnItemRelationNotLoaded(this.error);
 
   final String error;
 

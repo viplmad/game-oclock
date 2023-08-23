@@ -23,7 +23,6 @@ dependencies:
   encrypted_shared_preferences: ^3.0.0
 
   # Client
-  http: ^0.13.0
   game_collection_client:
     git:
       url: https://github.com/viplmad/game_collection_client_dart.git

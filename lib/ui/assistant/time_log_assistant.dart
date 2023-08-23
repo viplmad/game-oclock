@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection_client/api.dart' show GameLogDTO;
+import 'package:game_collection_client/api.dart' show NewGameLogDTO;
 
 import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 import 'package:logic/bloc/time_log_assistant/time_log_assistant.dart';
@@ -44,7 +44,7 @@ class GameLogAssistant extends StatelessWidget {
                       final DateTime date = state.date;
                       final TimeOfDay startTime = state.startTime!;
 
-                      final DateTime dateTime = DateTime(
+                      final DateTime startDateTime = DateTime(
                         date.year,
                         date.month,
                         date.day,
@@ -52,11 +52,14 @@ class GameLogAssistant extends StatelessWidget {
                         startTime.minute,
                       );
 
+                      final DateTime endDateTime =
+                          startDateTime.add(state.duration!);
+
                       Navigator.maybePop(
                         context,
-                        GameLogDTO(
-                          datetime: dateTime,
-                          time: state.duration!,
+                        NewGameLogDTO(
+                          startDatetime: startDateTime,
+                          endDatetime: endDateTime,
                         ),
                       );
                     }

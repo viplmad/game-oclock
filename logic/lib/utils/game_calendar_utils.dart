@@ -16,17 +16,13 @@ class GameCalendarUtils {
 
   static Set<DateTime> getUniqueLogDates(List<GameLogDTO> gameLogs) {
     return gameLogs
-        .map<DateTime>((GameLogDTO log) => log.datetime.toDate())
+        .map<DateTime>((GameLogDTO log) => log.startDatetime.toDate())
         .toSet();
-  }
-
-  static DateTime getEndDateTime(GameLogDTO gameLog) {
-    return gameLog.datetime.add(gameLog.time);
   }
 
   static Comparator<GameLogDTO> logComparatorEarlierFirst() {
     return (GameLogDTO one, GameLogDTO other) =>
-        one.datetime.compareTo(other.datetime);
+        one.startDatetime.compareTo(other.startDatetime);
   }
 
   static Comparator<GameWithLogsDTO> logsComparatorMostTimeFirst() {

@@ -52,7 +52,7 @@ abstract class ItemDetail<
             return managerBloc;
           },
         ),
-        ...relationBlocsBuilder(collectionService)
+        ...relationBlocsBuilder(collectionService),
       ],
       child: Scaffold(body: detailBodyBuilder()),
     );
@@ -384,7 +384,7 @@ abstract class ItemDetailBody<
 
             Navigator.maybePop(context);
           },
-        )
+        ),
       ],
     );
   }

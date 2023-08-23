@@ -23,6 +23,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   })  : _gameLogService = collectionService.gameLogService,
         super(CalendarLoading()) {
     on<LoadMultiCalendar>(_mapLoadToState);
+    on<ReloadMultiCalendar>(_mapReloadToState);
     on<UpdateSelectedDate>(_mapUpdateSelectedDateToState);
     on<UpdateCalendarRange>(_mapUpdateRangeToState);
     on<UpdateCalendarStyle>(_mapUpdateStyleToState);
@@ -47,6 +48,70 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       } else {
         await _mapLoadInitialCalendar(event.year, emit);
       }
+    }
+  }
+
+  void _mapReloadToState(
+    ReloadMultiCalendar event,
+    Emitter<CalendarState> emit,
+  ) async {
+    _yearsLoaded.clear();
+
+    if (state is MultiCalendarLoaded) {
+      final DateTime focusedDate = (state as MultiCalendarLoaded).focusedDate;
+      final DateTime selectedDate = (state as MultiCalendarLoaded).selectedDate;
+      final CalendarRange range = (state as MultiCalendarLoaded).range;
+      final CalendarStyle style = (state as MultiCalendarLoaded).style;
+
+      final int year = focusedDate.year;
+
+      emit(
+        CalendarLoading(),
+      );
+
+      try {
+        final List<GameWithLogsDTO> gamesWithLogs =
+            await _getAllGameWithLogsInYear(year);
+
+        final Set<DateTime> logDates = gamesWithLogs.fold(
+          SplayTreeSet<DateTime>(),
+          (Set<DateTime> previousDates, GameWithLogsDTO gameWithLogs) =>
+              previousDates
+                ..addAll(
+                  GameCalendarUtils.getUniqueLogDates(gameWithLogs.logs),
+                ),
+        );
+
+        final List<GameWithLogsDTO> selectedGamesWithLogs =
+            _selectedGameWithLogsInRange(
+          gamesWithLogs,
+          logDates,
+          selectedDate,
+          range,
+        );
+
+        final Duration selectedTotalTime = _getTotalTime(selectedGamesWithLogs);
+
+        emit(
+          MultiCalendarLoaded(
+            gamesWithLogs,
+            logDates,
+            focusedDate,
+            selectedDate,
+            selectedGamesWithLogs,
+            selectedTotalTime,
+            range,
+            style,
+          ),
+        );
+      } catch (e) {
+        managerBloc.add(WarnCalendarNotLoaded(e.toString()));
+        emit(
+          CalendarError(),
+        );
+      }
+    } else {
+      await _mapLoadInitialCalendar(DateTime.now().year, emit);
     }
   }
 
@@ -458,7 +523,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     if (logDates.any(dateComparer)) {
       for (final GameWithLogsDTO gameWithLogs in gamesWithLogs) {
         final List<GameLogDTO> logs = gameWithLogs.logs
-            .where((GameLogDTO log) => dateComparer(log.datetime))
+            .where((GameLogDTO log) => dateComparer(log.startDatetime))
             .toList(growable: false);
 
         if (logs.isNotEmpty) {

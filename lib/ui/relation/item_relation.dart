@@ -50,33 +50,12 @@ abstract class ItemRelationList<
   Widget build(BuildContext context) {
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
-        if (state is ItemRelationAdded<W>) {
+        if (state is ItemRelationAdded) {
           final String message =
               AppLocalizations.of(context)!.linkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
-            snackBarAction: backgroundSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.undoString,
-              onPressed: () {
-                try {
-                  BlocProvider.of<S>(context).add(
-                    DeleteItemRelation<W>(
-                      state.otherItem,
-                    ),
-                  );
-                } on FlutterError {
-                  // Catch error when undoing if bloc is no longer in context
-                  final String unableMessage =
-                      AppLocalizations.of(context)!.unableToUndoString;
-                  showSnackBar(
-                    context,
-                    message: unableMessage,
-                  );
-                }
-              },
-            ),
           );
         }
         if (state is ItemRelationNotAdded) {
@@ -93,33 +72,12 @@ abstract class ItemRelationList<
             ),
           );
         }
-        if (state is ItemRelationDeleted<W>) {
+        if (state is ItemRelationDeleted) {
           final String message =
               AppLocalizations.of(context)!.unlinkedString(relationTypeName);
           showSnackBar(
             context,
             message: message,
-            snackBarAction: backgroundSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.undoString,
-              onPressed: () {
-                try {
-                  BlocProvider.of<S>(context).add(
-                    AddItemRelation<W>(
-                      state.otherItem,
-                    ),
-                  );
-                } on FlutterError {
-                  // Catch error when undoing if bloc is no longer in context
-                  final String unableMessage =
-                      AppLocalizations.of(context)!.unableToUndoString;
-                  showSnackBar(
-                    context,
-                    message: unableMessage,
-                  );
-                }
-              },
-            ),
           );
         }
         if (state is ItemRelationNotDeleted) {

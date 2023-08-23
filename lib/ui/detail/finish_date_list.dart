@@ -93,7 +93,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
   Widget build(BuildContext outerContext) {
     return BlocListener<S, ItemRelationManagerState>(
       listener: (BuildContext context, ItemRelationManagerState state) {
-        if (state is ItemRelationAdded<ItemFinish>) {
+        if (state is ItemRelationAdded) {
           _changesMade = true;
 
           final String message =
@@ -117,7 +117,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
             ),
           );
         }
-        if (state is ItemRelationDeleted<ItemFinish>) {
+        if (state is ItemRelationDeleted) {
           _changesMade = true;
 
           final String message =
@@ -243,7 +243,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                     ).then((DateTime? value) {
                       if (value != null) {
                         BlocProvider.of<S>(outerContext).add(
-                          AddItemRelation<ItemFinish>(ItemFinish(value)),
+                          AddItemRelation<DateTime>(value),
                         );
                       }
                     });

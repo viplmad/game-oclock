@@ -20,3 +20,5 @@ class LoadMultiCalendar extends MultiCalendarEvent {
       'year: $year'
       ' }';
 }
+
+class ReloadMultiCalendar extends MultiCalendarEvent {}

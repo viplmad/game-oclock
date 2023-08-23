@@ -3,7 +3,8 @@ import 'package:game_collection_client/api.dart'
 
 import 'item_service.dart';
 
-class DLCFinishService implements SecondaryItemService<DateTime, DateTime> {
+class DLCFinishService
+    implements SecondaryItemService<DateTime, DateTime, DateTime> {
   DLCFinishService(ApiClient apiClient) {
     _api = DLCFinishApi(apiClient);
   }
