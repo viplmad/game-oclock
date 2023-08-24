@@ -64,7 +64,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       CalendarLoading(),
     );
 
-    _mapAnyLoadToState(emit);
+    await _mapAnyLoadToState(emit);
   }
 
   void _mapReloadToState(
