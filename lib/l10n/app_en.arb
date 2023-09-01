@@ -116,6 +116,7 @@
   "unableToUpdateImageString": "Unable to update image",
   "unableToLaunchString": "Could not launch {url}",
   "linkString": "Link {type}",
+  "unlinkString": "Unlink {type}",
   "undoString": "Undo",
   "unableToUndoString": "Unable to undo action",
   "moreString": "More",

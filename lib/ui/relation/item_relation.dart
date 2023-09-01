@@ -347,12 +347,12 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
           final W relation = items[index];
 
           return DismissibleItem(
-            dismissibleKey: relation.id,
             itemWidget: itemBuilder(context, relation),
-            onDismissed: (DismissDirection direction) {
+            onDismissed: () {
               updateDelete(relation);
             },
             dismissIcon: Icons.link_off,
+            dismissLabel: AppLocalizations.of(context)!.unlinkString(relationTypeName),
           );
         },
       ),
@@ -410,12 +410,12 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
             final W relation = items[index];
 
             return DismissibleItem(
-              dismissibleKey: relation.id,
               itemWidget: itemBuilder(context, relation),
-              onDismissed: (DismissDirection direction) {
+              onDismissed: () {
                 updateDelete(relation);
               },
               dismissIcon: Icons.link_off,
+              dismissLabel: AppLocalizations.of(context)!.unlinkString(relationTypeName),
             );
           },
         ),

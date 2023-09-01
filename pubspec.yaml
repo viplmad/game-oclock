@@ -31,7 +31,6 @@ dependencies:
   url_launcher: ^6.1.5
   table_calendar: ^3.0.7
   flutter_speed_dial: ^6.0.0
-  sliver_tools: ^0.2.10
   duration_picker: ^1.0.1
   community_charts_flutter: ^1.0.1
   package_info_plus: ^4.0.0

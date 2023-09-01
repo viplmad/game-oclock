@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:sliver_tools/sliver_tools.dart';
-
 import 'package:game_collection_client/api.dart'
     show GameDTO, GameStatus, NewGameDTO, PrimaryModel;
 
@@ -13,7 +11,9 @@ import 'package:logic/service/service.dart' show GameCollectionService;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
+import 'package:game_collection/ui/common/header_text.dart';
 import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_collection/ui/utils/shape_utils.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
@@ -181,6 +181,8 @@ class _GameWishlistedListBody
                 title: sectionTitle,
                 items: yearGames.value,
                 itemBuilder: gridBuilder,
+                onDismiss: onDelete,
+                confirmDelete: confirmDelete,
               );
           }
         },
@@ -221,10 +223,12 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiSliver(
-      pushPinnedChildren: true,
-      children: <Widget>[
-        SliverPinnedHeader(child: ListTile(title: Text(title))),
+    return SliverMainAxisGroup(
+      slivers: <Widget>[
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: ItemSliverHeaderDelegate(title),
+        ),
         SliverList.builder(
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
@@ -235,7 +239,9 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
                 bottom: 4.0,
                 top: 4.0,
               ),
-              child: itemInnerBuilder(context, index),
+              child: ShapeUtils.forceCardRound(
+                innerItemBuilder(context, index),
+              ),
             );
           },
         ),
@@ -243,16 +249,15 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
     );
   }
 
-  Widget itemInnerBuilder(BuildContext context, int index) {
+  Widget innerItemBuilder(BuildContext context, int index) {
     final T item = items.elementAt(index);
 
     return DismissibleItem(
-      dismissibleKey: item.id,
       itemWidget: itemBuilder(context, item),
-      onDismissed: (DismissDirection direction) {
+      onDismissed: () {
         onDismiss(item);
       },
-      confirmDismiss: (DismissDirection direction) async {
+      confirmDismiss: () async {
         return showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
@@ -261,6 +266,7 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
         ).then((bool? value) => value ?? false);
       },
       dismissIcon: Icons.delete,
+      dismissLabel: AppLocalizations.of(context)!.deleteString,
     );
   }
 }
@@ -271,30 +277,95 @@ class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
     required this.title,
     required this.items,
     required this.itemBuilder,
+    required this.onDismiss,
+    required this.confirmDelete,
   }) : super(key: key);
 
   final String title;
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
+  final void Function(T item) onDismiss;
+  final Widget Function(BuildContext, T) confirmDelete;
 
   @override
   Widget build(BuildContext context) {
-    return MultiSliver(
-      pushPinnedChildren: true,
-      children: <Widget>[
-        SliverPinnedHeader(child: ListTile(title: Text(title))),
+    return SliverMainAxisGroup(
+      slivers: <Widget>[
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: ItemSliverHeaderDelegate(title),
+        ),
         SliverGrid.builder(
           itemCount: items.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
           ),
           itemBuilder: (BuildContext context, int index) {
-            final T item = items[index];
-
-            return itemBuilder(context, item);
+            return Padding(
+              padding: const EdgeInsets.only(
+                right: 4.0,
+                left: 4.0,
+                bottom: 4.0,
+                top: 4.0,
+              ),
+              child: ShapeUtils.forceCardRound(
+                innerItemBuilder(context, index),
+              ),
+            );
           },
         ),
       ],
     );
   }
+
+  Widget innerItemBuilder(BuildContext context, int index) {
+    final T item = items.elementAt(index);
+
+    return DismissibleItem(
+      itemWidget: itemBuilder(context, item),
+      onDismissed: () {
+        onDismiss(item);
+      },
+      confirmDismiss: () async {
+        return showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return confirmDelete(context, item);
+          },
+        ).then((bool? value) => value ?? false);
+      },
+      dismissIcon: Icons.delete,
+      dismissLabel: AppLocalizations.of(context)!.deleteString,
+    );
+  }
+}
+
+class ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
+  ItemSliverHeaderDelegate(this.title);
+
+  final String title;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.grey,
+      child: HeaderText(
+        text: title,
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => minExtent;
+
+  @override
+  double get minExtent => 40.0;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }

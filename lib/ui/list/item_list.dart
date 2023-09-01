@@ -439,6 +439,8 @@ abstract class ItemListBody<T extends PrimaryModel,
         return ItemGridView<T>(
           items: items,
           itemBuilder: gridBuilder,
+          onDismiss: onDelete,
+          confirmDelete: confirmDelete,
           scrollController: scrollController,
         );
     }
@@ -492,12 +494,11 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
         final T item = items.elementAt(index);
 
         return DismissibleItem(
-          dismissibleKey: item.id,
           itemWidget: itemBuilder(context, item),
-          onDismissed: (DismissDirection direction) {
+          onDismissed: () {
             onDismiss(item);
           },
-          confirmDismiss: (DismissDirection direction) async {
+          confirmDismiss: () async {
             return showDialog<bool>(
               context: context,
               builder: (BuildContext context) {
@@ -506,6 +507,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
             ).then((bool? value) => value ?? false);
           },
           dismissIcon: Icons.delete,
+          dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },
     );
@@ -517,26 +519,41 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
     Key? key,
     required this.items,
     required this.itemBuilder,
+    required this.onDismiss,
+    required this.confirmDelete,
     required this.scrollController,
   }) : super(key: key);
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
+  final void Function(T item) onDismiss;
+  final Widget Function(BuildContext, T) confirmDelete;
   final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
+    return ItemGridBuilder(
       itemCount: items.length,
       controller: scrollController,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
-      ),
       itemBuilder: (BuildContext context, int index) {
-        final T item = items[index];
+        final T item = items.elementAt(index);
 
-        return itemBuilder(context, item);
+        return DismissibleItem(
+          itemWidget: itemBuilder(context, item),
+          onDismissed: () {
+            onDismiss(item);
+          },
+          confirmDismiss: () async {
+            return showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return confirmDelete(context, item);
+              },
+            ).then((bool? value) => value ?? false);
+          },
+          dismissIcon: Icons.delete,
+          dismissLabel: AppLocalizations.of(context)!.deleteString,
+        );
       },
     );
   }

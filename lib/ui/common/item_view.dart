@@ -10,43 +10,48 @@ import 'skeleton.dart';
 class DismissibleItem extends StatelessWidget {
   const DismissibleItem({
     Key? key,
-    required this.dismissibleKey,
     required this.itemWidget,
     required this.onDismissed,
     required this.dismissIcon,
+    required this.dismissLabel,
     this.confirmDismiss,
   }) : super(key: key);
 
-  final String dismissibleKey;
   final Widget itemWidget;
-  final void Function(DismissDirection direction) onDismissed;
+  final void Function() onDismissed;
   final IconData dismissIcon;
-  final Future<bool> Function(DismissDirection direction)? confirmDismiss;
+  final String dismissLabel;
+  final Future<bool> Function()? confirmDismiss;
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: ValueKey<String>(dismissibleKey),
-      background: backgroundBuilder(Alignment.centerLeft),
-      secondaryBackground: backgroundBuilder(Alignment.centerRight),
-      onDismissed: onDismissed,
-      confirmDismiss: confirmDismiss,
-      child: itemWidget,
-    );
-  }
+    final MenuController menuController = MenuController();
 
-  Widget backgroundBuilder(AlignmentGeometry alignment) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.red,
-        borderRadius: ShapeUtils.cardBorderRadius,
-      ),
-      child: Align(
-        alignment: alignment,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Icon(dismissIcon, color: Colors.white),
-        ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onLongPressStart: (LongPressStartDetails details) =>
+          menuController.open(position: details.localPosition),
+      child: MenuAnchor(
+        controller: menuController,
+        anchorTapClosesMenu: true,
+        menuChildren: <Widget>[
+          MenuItemButton(
+            leadingIcon: Icon(dismissIcon),
+            child: Text(dismissLabel),
+            onPressed: () async {
+              if (confirmDismiss != null) {
+                confirmDismiss!().then((bool confirm) {
+                  if (confirm) {
+                    onDismissed();
+                  }
+                });
+              } else {
+                onDismissed();
+              }
+            },
+          ),
+        ],
+        child: itemWidget,
       ),
     );
   }
@@ -73,7 +78,6 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // No margin so dismissible background fits well
       margin: const EdgeInsets.all(0.0),
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
@@ -125,7 +129,7 @@ class _ItemListTile extends StatelessWidget {
               ),
             )
           : null,
-      title: Text(title),
+      title: Text(title, maxLines: 2),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing: trailing != null ? Text(trailing!) : null,
     );
@@ -135,23 +139,21 @@ class _ItemListTile extends StatelessWidget {
 class ItemGrid extends StatelessWidget {
   const ItemGrid({
     Key? key,
-    required this.title,
     this.imageURL,
     required this.onTap,
   }) : super(key: key);
 
-  final String title;
   final String? imageURL;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.all(0.0),
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
         child: _ItemGridTile(
-          title: title,
           imageURL: imageURL,
         ),
       ),
@@ -162,11 +164,9 @@ class ItemGrid extends StatelessWidget {
 class _ItemGridTile extends StatelessWidget {
   const _ItemGridTile({
     Key? key,
-    required this.title,
     this.imageURL,
   }) : super(key: key);
 
-  final String title;
   final String? imageURL;
 
   @override
@@ -174,10 +174,6 @@ class _ItemGridTile extends StatelessWidget {
     return GridTile(
       footer: Container(
         color: Colors.black87.withOpacity(0.5),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 18.0, color: Colors.white),
-        ),
       ),
       child: CachedImage(
         imageURL: imageURL ?? '',

@@ -116,6 +116,7 @@
   "unableToUpdateImageString": "No ha sido posible actualizar la imagen",
   "unableToLaunchString": "No se puede abrir {url}",
   "linkString": "Vincular {type}",
+  "unlinkString": "Desvincular {type}",
   "undoString": "Deshacer",
   "unableToUndoString": "No ha sido posible deshacer la acción",
   "moreString": "Más",

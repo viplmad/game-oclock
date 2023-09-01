@@ -23,4 +23,11 @@ class ShapeUtils {
     bottomLeft: Radius.circular(12.0),
     bottomRight: Radius.circular(12.0),
   );
+
+  static Widget forceCardRound(Widget widget) {
+    return ClipRRect(
+      borderRadius: ShapeUtils.cardBorderRadius,
+      child: widget,
+    );
+  }
 }

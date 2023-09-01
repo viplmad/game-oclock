@@ -18,7 +18,6 @@ import 'package:game_collection/ui/common/list_view.dart';
 import 'package:game_collection/ui/common/skeleton.dart';
 import 'package:game_collection/ui/common/show_snackbar.dart';
 import 'package:game_collection/ui/common/show_date_picker.dart';
-import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/utils/shape_utils.dart';
 import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
@@ -573,30 +572,19 @@ class _SingleGameCalendarBody extends StatelessWidget {
           final String gameLogString =
               '${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(gameLog.startDatetime), alwaysUse24HourFormat: true)} ⮕ ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(gameLog.endDatetime), alwaysUse24HourFormat: true)} - $durationString';
 
-          return DismissibleItem(
-            dismissibleKey:
-                gameLog.startDatetime.millisecondsSinceEpoch.toString(),
-            itemWidget: ListTile(
-              title: Text(gameLogString),
-              trailing: IconButton(
-                icon: const Icon(Icons.link_off),
-                onPressed: () {
-                  BlocProvider.of<GameLogRelationManagerBloc>(context).add(
-                    DeleteItemRelation<GameLogDTO>(
-                      gameLog,
-                    ),
-                  );
-                },
-              ),
+          return ListTile(
+            title: Text(gameLogString),
+            trailing: IconButton(
+              icon: const Icon(Icons.link_off),
+              tooltip: AppLocalizations.of(context)!.deleteString,
+              onPressed: () {
+                BlocProvider.of<GameLogRelationManagerBloc>(context).add(
+                  DeleteItemRelation<GameLogDTO>(
+                    gameLog,
+                  ),
+                );
+              },
             ),
-            onDismissed: (DismissDirection direction) {
-              BlocProvider.of<GameLogRelationManagerBloc>(context).add(
-                DeleteItemRelation<GameLogDTO>(
-                  gameLog,
-                ),
-              );
-            },
-            dismissIcon: Icons.link_off,
           );
         } else {
           String rangeString = '';

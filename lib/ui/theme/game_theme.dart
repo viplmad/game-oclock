@@ -15,7 +15,6 @@ import 'package:logic/model/model.dart' show GameView;
 import 'package:game_collection/ui/common/item_view.dart';
 import 'package:game_collection/ui/common/bar_data.dart';
 import 'package:game_collection/ui/common/triangle_banner.dart';
-import 'package:game_collection/ui/utils/shape_utils.dart';
 import 'package:game_collection/ui/utils/theme_utils.dart';
 import 'package:game_collection/ui/utils/app_localizations_utils.dart';
 
@@ -168,24 +167,6 @@ class GameTheme {
     );
   }
 
-  static Widget _addRatingBanner(GameDTO item, Widget itemView) {
-    return item.rating > 0
-        ? ClipRRect(
-            borderRadius: ShapeUtils.cardBorderRadius,
-            child: TriangleBanner(
-              message: item.rating.toString(),
-              location: TriangleBannerLocation.end,
-              showShadow: false,
-              color: ratingColour,
-              textStyle: const TextStyle(
-                fontSize: 20,
-              ),
-              child: itemView,
-            ),
-          )
-        : itemView;
-  }
-
   static Widget itemGrid(
     BuildContext context,
     GameDTO item,
@@ -194,11 +175,25 @@ class GameTheme {
     return _addRatingBanner(
       item,
       ItemGrid(
-        title: itemTitle(item),
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
       ),
     );
+  }
+
+  static Widget _addRatingBanner(GameDTO item, Widget itemView) {
+    return item.rating > 0
+        ? TriangleBanner(
+            message: item.rating.toString(),
+            location: TriangleBannerLocation.end,
+            showShadow: false,
+            color: ratingColour,
+            textStyle: const TextStyle(
+              fontSize: 20,
+            ),
+            child: itemView,
+          )
+        : itemView;
   }
 
   static String itemTitle(GameDTO item) {

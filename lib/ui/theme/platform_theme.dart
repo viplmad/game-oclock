@@ -90,7 +90,6 @@ class PlatformTheme {
     void Function()? Function(BuildContext, PlatformDTO) onTap,
   ) {
     return ItemGrid(
-      title: itemTitle(item),
       imageURL: item.iconUrl,
       onTap: onTap(context, item),
     );
