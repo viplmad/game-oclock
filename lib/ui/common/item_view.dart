@@ -28,7 +28,6 @@ class DismissibleItem extends StatelessWidget {
     final MenuController menuController = MenuController();
 
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onLongPressStart: (LongPressStartDetails details) =>
           menuController.open(position: details.localPosition),
       child: MenuAnchor(
@@ -52,6 +51,14 @@ class DismissibleItem extends StatelessWidget {
           ),
         ],
         child: itemWidget,
+        builder:
+            (BuildContext context, MenuController controller, Widget? child) {
+          // Ignore pointers on current if open
+          return IgnorePointer(
+            ignoring: controller.isOpen,
+            child: child,
+          );
+        },
       ),
     );
   }

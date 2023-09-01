@@ -352,7 +352,8 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
               updateDelete(relation);
             },
             dismissIcon: Icons.link_off,
-            dismissLabel: AppLocalizations.of(context)!.unlinkString(relationTypeName),
+            dismissLabel:
+                AppLocalizations.of(context)!.unlinkString(relationTypeName),
           );
         },
       ),
@@ -415,7 +416,8 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
                 updateDelete(relation);
               },
               dismissIcon: Icons.link_off,
-              dismissLabel: AppLocalizations.of(context)!.unlinkString(relationTypeName),
+              dismissLabel:
+                  AppLocalizations.of(context)!.unlinkString(relationTypeName),
             );
           },
         ),
