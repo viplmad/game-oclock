@@ -98,6 +98,7 @@ class DLCTheme {
     void Function()? Function(BuildContext, DLCDTO) onTap,
   ) {
     return ItemGrid(
+      title: itemTitle(item),
       imageURL: item.coverUrl,
       onTap: onTap(context, item),
     );

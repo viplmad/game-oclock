@@ -175,6 +175,7 @@ class GameTheme {
     return _addRatingBanner(
       item,
       ItemGrid(
+        title: itemTitle(item),
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
       ),

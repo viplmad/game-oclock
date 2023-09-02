@@ -1,6 +1,6 @@
 name: game_collection
 description: A simple and intuitive game collection manager.
-version: 3.2.0+350-beta
+version: 3.2.1+361
 publish_to: none
 
 environment:
@@ -26,11 +26,11 @@ dependencies:
     git:
       url: https://github.com/viplmad/smoothratingbar.git
       ref: dev
-  image_picker: ^0.8.0
+  image_picker: ^1.0.4
   cached_network_image: ^3.2.2
   url_launcher: ^6.1.5
   table_calendar: ^3.0.7
-  flutter_speed_dial: ^6.0.0
+  flutter_speed_dial: ^7.0.0
   duration_picker: ^1.0.1
   community_charts_flutter: ^1.0.1
   package_info_plus: ^4.0.0
