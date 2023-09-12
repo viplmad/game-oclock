@@ -134,7 +134,7 @@ class _ItemSearchBodyState<
             // Not sure of this fix to update button text
             setState(() {});
             BlocProvider.of<K>(context).add(
-              SearchTextChanged(query),
+              SearchTextChanged(query.trim()),
             );
           },
           maxLines: 1,
