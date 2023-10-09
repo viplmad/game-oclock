@@ -241,7 +241,7 @@ class CachedImage extends StatelessWidget {
       imageUrl: imageURL,
       fit: fit,
       useOldImageOnUrlChange: true,
-      progressIndicatorBuilder: (_, __, ___) => const Skeleton(),
+      progressIndicatorBuilder: (_, __, ___) => const Skeleton(omitRounding: true),
       errorWidget: (_, __, ___) => Container(color: backgroundColour),
     );
   }

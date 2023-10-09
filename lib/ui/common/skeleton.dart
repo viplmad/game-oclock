@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:game_collection/ui/utils/field_utils.dart';
 
+import '../utils/shape_utils.dart';
+
 class SkeletonUtils {
   SkeletonUtils._();
 
   static const Color _gradientColor = Colors.black26;
+  static const BorderRadius _borderRadius = ShapeUtils.cardBorderRadius;
   static const int _animationDurationMilliseconds = 1000;
   static const int _timeBetweenMilliseconds = 200;
 
@@ -118,11 +121,13 @@ class Skeleton extends StatefulWidget {
     this.width,
     this.height,
     this.order = 0,
+    this.omitRounding = false,
   }) : super(key: key);
 
   final double? width;
   final double? height;
   final int order;
+  final bool omitRounding;
 
   @override
   State<Skeleton> createState() => _SkeletonState();
@@ -173,7 +178,11 @@ class _SkeletonState extends State<Skeleton>
       child: Container(
         width: widget.width,
         height: widget.height,
-        color: SkeletonUtils._gradientColor,
+        decoration: BoxDecoration(
+          borderRadius:
+              widget.omitRounding ? null : SkeletonUtils._borderRadius,
+          color: SkeletonUtils._gradientColor,
+        ),
       ),
     );
   }

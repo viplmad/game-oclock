@@ -17,12 +17,8 @@ class ShapeUtils {
   static const BorderRadius fabBorderRadius =
       BorderRadius.all(Radius.circular(16.0));
 
-  static const BorderRadius cardBorderRadius = BorderRadius.only(
-    topLeft: Radius.circular(12.0),
-    topRight: Radius.circular(12.0),
-    bottomLeft: Radius.circular(12.0),
-    bottomRight: Radius.circular(12.0),
-  );
+  static const BorderRadius cardBorderRadius =
+      BorderRadius.all(Radius.circular(12.0));
 
   static Widget forceCardRound(Widget widget) {
     return ClipRRect(
