@@ -209,6 +209,13 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
   ItemImage buildItemImage(DLCDTO item) {
     return ItemImage(item.coverUrl, item.coverFilename);
   }
+
+  @override
+  void reloadItemRelations(BuildContext context) {
+    BlocProvider.of<DLCFinishRelationBloc>(context).add(ReloadItemRelation());
+    BlocProvider.of<DLCGameRelationBloc>(context).add(ReloadItemRelation());
+    BlocProvider.of<DLCPlatformRelationBloc>(context).add(ReloadItemRelation());
+  }
 }
 
 // ignore: must_be_immutable

@@ -166,7 +166,7 @@ abstract class ItemDetailBody<
           headerSliverBuilder: _appBarBuilder,
           body: RefreshIndicator(
             onRefresh: () async {
-              BlocProvider.of<K>(context).add(const ReloadItem(true));
+              reloadItem(context);
             },
             child: ListView(
               children: <Widget>[
@@ -195,6 +195,11 @@ abstract class ItemDetailBody<
         ),
       ),
     );
+  }
+
+  void reloadItem(BuildContext context) {
+    BlocProvider.of<K>(context).add(const ReloadItem(true));
+    reloadItemRelations(context);
   }
 
   List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
@@ -634,4 +639,5 @@ abstract class ItemDetailBody<
   List<Widget> itemSkeletonFieldsBuilder(BuildContext context);
   List<Widget> itemRelationsBuilder(BuildContext context);
   ItemImage buildItemImage(T item);
+  void reloadItemRelations(BuildContext context);
 }

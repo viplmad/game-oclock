@@ -180,4 +180,11 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
   ItemImage buildItemImage(PlatformDTO item) {
     return ItemImage(item.iconUrl, item.iconFilename);
   }
+
+  @override
+  void reloadItemRelations(BuildContext context) {
+    BlocProvider.of<PlatformGameRelationBloc>(context)
+        .add(ReloadItemRelation());
+    BlocProvider.of<PlatformDLCRelationBloc>(context).add(ReloadItemRelation());
+  }
 }

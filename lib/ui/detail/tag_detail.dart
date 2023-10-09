@@ -140,4 +140,9 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
   ItemImage buildItemImage(TagDTO item) {
     return const ItemImage.empty();
   }
+
+  @override
+  void reloadItemRelations(BuildContext context) {
+    BlocProvider.of<TagGameRelationBloc>(context).add(ReloadItemRelation());
+  }
 }

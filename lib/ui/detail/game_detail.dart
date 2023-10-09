@@ -371,6 +371,15 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
   ItemImage buildItemImage(GameDTO item) {
     return ItemImage(item.coverUrl, item.coverFilename);
   }
+
+  @override
+  void reloadItemRelations(BuildContext context) {
+    BlocProvider.of<GameFinishRelationBloc>(context).add(ReloadItemRelation());
+    BlocProvider.of<GamePlatformRelationBloc>(context)
+        .add(ReloadItemRelation());
+    BlocProvider.of<GameDLCRelationBloc>(context).add(ReloadItemRelation());
+    BlocProvider.of<GameTagRelationBloc>(context).add(ReloadItemRelation());
+  }
 }
 
 // ignore: must_be_immutable
