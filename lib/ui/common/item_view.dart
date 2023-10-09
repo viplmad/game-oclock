@@ -90,7 +90,7 @@ class ItemCard extends StatelessWidget {
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
         child: _ItemListTile(
-          title: title, // TODO add ellipsis
+          title: title,
           subtitle: subtitle,
           trailing: trailing,
           hasImage: hasImage,
@@ -136,7 +136,11 @@ class _ItemListTile extends StatelessWidget {
               ),
             )
           : null,
-      title: Text(title, maxLines: 2),
+      title: Text(
+        title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing: trailing != null ? Text(trailing!) : null,
     );
@@ -189,6 +193,8 @@ class _ItemGridTile extends StatelessWidget {
               color: Colors.black87.withOpacity(0.5),
               child: Text(
                 title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             )
@@ -241,7 +247,8 @@ class CachedImage extends StatelessWidget {
       imageUrl: imageURL,
       fit: fit,
       useOldImageOnUrlChange: true,
-      progressIndicatorBuilder: (_, __, ___) => const Skeleton(omitRounding: true),
+      progressIndicatorBuilder: (_, __, ___) =>
+          const Skeleton(omitRounding: true),
       errorWidget: (_, __, ___) => Container(color: backgroundColour),
     );
   }
