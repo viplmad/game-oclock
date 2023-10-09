@@ -50,7 +50,11 @@ class GenericField<K> extends StatelessWidget {
         : ListTileTheme.merge(
             child: ListTile(
               title: Text(fieldName),
-              trailing: Text(shownValue ?? ''),
+              trailing: Text(
+                shownValue ?? '',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: onTapWrapped,
               onLongPress: onLongPress,
             ),
