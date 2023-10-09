@@ -1,6 +1,6 @@
 name: game_collection
 description: A simple and intuitive game collection manager.
-version: 3.2.1+361
+version: 3.2.2+366
 publish_to: none
 
 environment:
