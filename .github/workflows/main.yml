@@ -1,14 +1,9 @@
-name: Flutter CI
+name: Build CI
 
-# This workflow is triggered on pushes to the repository.
-
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the bloc-pattern branch
+  # Triggers the workflow on push or pull request events but only for the default branch
   push:
     branches: [ main ]
-
-# on: push    # Default will running for every branch.
 
 jobs:
   analysis:
@@ -16,21 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v3.3.0
+    - name: Checkout
+      uses: actions/checkout@v4.1.0
 
-    # Setup the flutter environment.
-    - uses: subosito/flutter-action@v2.8.0
+    - name: Setup flutter environment
+      uses: subosito/flutter-action@v2.11.0
       with:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
 
-    # Get flutter dependencies.
-    - run: flutter pub get
+    - name: Get dependencies
+      run: flutter pub get
 
-    # Analyse lib
-    - run: flutter analyze
+    - name: Analyse ui library
+      run: flutter analyze
 
-    # Analyse logic
-    - run: |
+    - name: Analyse logic library
+      run: |
         cd ./logic
         flutter analyze
 
@@ -40,38 +36,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    # Setup Java environment in order to build the Android app.
-    - uses: actions/checkout@v3.3.0
-    - uses: actions/setup-java@v3.10.0
+    - name: Checkout
+      uses: actions/checkout@v4.1.0
+
+    - name: Setup java environment
+      uses: actions/setup-java@v3.13.0
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    - run: echo $SIGNING_KEY | base64 -d > android/app/key.jks
+    - name: Recreate signing key form environment variable
+      run: echo $SIGNING_KEY | base64 -d > android/app/key.jks
       env:
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
-    # Setup the flutter environment.
-    - uses: subosito/flutter-action@v2.8.0
+    - name: Setup flutter environment
+      uses: subosito/flutter-action@v2.11.0
       with:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
 
-    # Get flutter dependencies.
-    - run: flutter pub get
+    - name: Get dependencies
+      run: flutter pub get
 
-    # Generate localisation files
-    - run: flutter gen-l10n
+    - name: Generate localisation files
+      run: flutter gen-l10n
 
-    # Build apk.
-    - run: flutter build apk
+    - name: Build apk
+      run: flutter build apk
       env:
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         ALIAS: ${{ secrets.ALIAS }}
         KEY_PATH: key.jks
 
-    # Upload generated apk to the artifacts.
-    - uses: actions/upload-artifact@v3.1.2
+    - name: Upload generated apk to the artifacts
+      uses: actions/upload-artifact@v3.1.3
       with:
         name: release-apk
         path: build/app/outputs/apk/release/app-release.apk

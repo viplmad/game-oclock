@@ -1,0 +1,39 @@
+name: Docs CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the default branch
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.0
+
+      - name: Setup python environment
+        uses: actions/setup-python@v4.7.1
+        with:
+          python-version: 3.x
+
+      - name: Store cache id
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+
+      - name: Cache build
+        uses: actions/cache@v3.3.2
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - name: Get dependencies
+        run: pip install mkdocs-material
+
+      - name: Build and deploy to gh-pages branch
+        run: mkdocs gh-deploy --force

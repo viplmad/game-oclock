@@ -46,3 +46,7 @@ app.*.map.json
 # Exclude signing key
 android/key.properties
 key.jks
+
+# MkDocs
+docs/site
+docs/.cache
