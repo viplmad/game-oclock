@@ -5,11 +5,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:logic/model/model.dart' show ServerConnection;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/server_settings/server_settings.dart';
 import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
-import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
 
 import '../route_constants.dart';
 
@@ -32,8 +32,8 @@ class ServerSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final ServerSettingsManagerBloc managerBloc = ServerSettingsManagerBloc(
       collectionService: collectionService,

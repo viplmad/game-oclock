@@ -7,7 +7,7 @@ import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO, PlatformType;
 
 import 'package:logic/model/model.dart' show ItemImage;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
@@ -27,7 +27,7 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
 
   @override
   PlatformDetailBloc detailBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
     PlatformDetailManagerBloc managerBloc,
   ) {
     return PlatformDetailBloc(
@@ -39,7 +39,7 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
 
   @override
   PlatformDetailManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return PlatformDetailManagerBloc(
       itemId: item.id,
@@ -49,7 +49,7 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
 
   @override
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     final PlatformGameRelationManagerBloc gameRelationManagerBloc =
         PlatformGameRelationManagerBloc(

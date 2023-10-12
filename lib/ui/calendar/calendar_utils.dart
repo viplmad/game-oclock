@@ -8,8 +8,8 @@ import 'package:game_collection_client/api.dart' show GameLogDTO;
 import 'package:logic/model/model.dart' show CalendarRange;
 import 'package:logic/utils/datetime_extension.dart';
 
-import 'package:game_collection/ui/common/statistics_histogram.dart';
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/common/statistics_histogram.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../theme/calendar_theme.dart';
 

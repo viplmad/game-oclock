@@ -1,3 +1,3 @@
-# game_collection
+# Game o'Clock
 
-A new Game Collection manager built in Flutter
+A game collection manager with special focus in tracking play time.

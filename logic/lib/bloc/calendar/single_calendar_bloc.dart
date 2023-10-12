@@ -6,7 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:game_collection_client/api.dart' show GameLogDTO;
 
 import 'package:logic/service/service.dart'
-    show GameCollectionService, GameLogService, GameFinishService;
+    show GameOClockService, GameLogService, GameFinishService;
 import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
@@ -19,7 +19,7 @@ import 'range_list_utils.dart';
 class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   SingleCalendarBloc({
     required this.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required this.managerBloc,
     required this.gameLogManagerBloc,
     required this.gameFinishManagerBloc,

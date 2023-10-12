@@ -1,12 +1,11 @@
 import 'package:game_collection_client/api.dart' show GameDTO;
 
-import 'package:logic/service/service.dart'
-    show GameCollectionService, GameService;
+import 'package:logic/service/service.dart' show GameOClockService, GameService;
 
 import 'item_search.dart';
 
 class GameSearchBloc extends ItemSearchBloc<GameDTO, GameService> {
   GameSearchBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   }) : super(service: collectionService.gameService);
 }

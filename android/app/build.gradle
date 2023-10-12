@@ -37,7 +37,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.n2t.game_collection"
+    namespace "com.viplmad.game_oclock"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -55,7 +55,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.n2t.game_collection"
+        applicationId "com.viplmad.game_oclock"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 29

@@ -2,7 +2,7 @@ import 'package:game_collection_client/api.dart'
     show GameAvailableDTO, DLCAvailableDTO;
 
 import 'package:logic/service/service.dart'
-    show GameCollectionService, GameService, DLCService;
+    show GameOClockService, GameService, DLCService;
 
 import 'item_relation_manager.dart';
 
@@ -10,7 +10,7 @@ class PlatformDLCRelationManagerBloc
     extends ItemRelationManagerBloc<DLCAvailableDTO, DLCAvailableDTO> {
   PlatformDLCRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _dlcService = collectionService.dlcService,
         super();
 
@@ -35,7 +35,7 @@ class PlatformGameRelationManagerBloc
     extends ItemRelationManagerBloc<GameAvailableDTO, GameAvailableDTO> {
   PlatformGameRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameService = collectionService.gameService,
         super();
 

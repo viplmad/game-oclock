@@ -3,13 +3,13 @@ import 'package:game_collection_client/api.dart'
 
 import 'package:logic/model/model.dart' show DLCView;
 import 'package:logic/service/service.dart'
-    show DLCService, DLCFinishService, GameCollectionService;
+    show DLCService, DLCFinishService, GameOClockService;
 
 import 'item_list.dart';
 
 class DLCListBloc extends ItemListBloc<DLCDTO, NewDLCDTO, DLCService> {
   DLCListBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _dlcFinishService = collectionService.dlcFinishService,
         super(service: collectionService.dlcService);

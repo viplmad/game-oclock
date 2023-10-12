@@ -9,11 +9,11 @@ import 'package:game_collection_client/api.dart' show PrimaryModel;
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
-import 'package:game_collection/ui/common/header_text.dart';
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';

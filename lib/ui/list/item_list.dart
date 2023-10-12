@@ -10,10 +10,10 @@ import 'package:logic/model/model.dart' show ListStyle;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/ui/common/header_text.dart';
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
 
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';

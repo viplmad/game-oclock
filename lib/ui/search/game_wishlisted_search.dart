@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:game_collection_client/api.dart'
     show GameDTO, GameStatus, NewGameDTO;
 
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
@@ -25,7 +25,7 @@ class GameWishlistedSearch extends ItemSearch<GameDTO, NewGameDTO,
 
   @override
   GameSearchBloc searchBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return GameSearchBloc(
       collectionService: collectionService,
@@ -34,7 +34,7 @@ class GameWishlistedSearch extends ItemSearch<GameDTO, NewGameDTO,
 
   @override
   GameListManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return GameListManagerBloc(
       collectionService: collectionService,

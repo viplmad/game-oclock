@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
 import 'package:logic/model/model.dart' show ItemImage;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
@@ -26,7 +26,7 @@ class GameTagDetail
 
   @override
   TagDetailBloc detailBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
     TagDetailManagerBloc managerBloc,
   ) {
     return TagDetailBloc(
@@ -38,7 +38,7 @@ class GameTagDetail
 
   @override
   TagDetailManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return TagDetailManagerBloc(
       itemId: item.id,
@@ -48,7 +48,7 @@ class GameTagDetail
 
   @override
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     final TagGameRelationManagerBloc gameRelationManagerBloc =
         TagGameRelationManagerBloc(

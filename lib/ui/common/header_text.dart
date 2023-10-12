@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/ui/utils/field_utils.dart';
+import 'package:game_oclock/ui/utils/field_utils.dart';
 
 import 'skeleton.dart';
 

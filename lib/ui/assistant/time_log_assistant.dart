@@ -9,8 +9,8 @@ import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 import 'package:logic/bloc/time_log_assistant/time_log_assistant.dart';
 import 'package:logic/utils/time_of_day_extension.dart';
 
-import 'package:game_collection/ui/utils/fab_utils.dart';
-import 'package:game_collection/ui/common/field/field.dart'
+import 'package:game_oclock/ui/utils/fab_utils.dart';
+import 'package:game_oclock/ui/common/field/field.dart'
     show DateField, DurationField, TimeField;
 
 class GameLogAssistant extends StatelessWidget {

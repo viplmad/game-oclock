@@ -7,12 +7,12 @@ import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/show_date_picker.dart';
-import 'package:game_collection/ui/common/skeleton.dart';
-import 'package:game_collection/ui/utils/field_utils.dart';
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/show_date_picker.dart';
+import 'package:game_oclock/ui/common/skeleton.dart';
+import 'package:game_oclock/ui/utils/field_utils.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 // ignore: must_be_immutable
 abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,

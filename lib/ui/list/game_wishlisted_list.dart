@@ -7,13 +7,13 @@ import 'package:game_collection_client/api.dart'
     show GameDTO, GameStatus, NewGameDTO, PrimaryModel;
 
 import 'package:logic/model/model.dart' show ListStyle;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/ui/common/header_text.dart';
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/utils/shape_utils.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/utils/shape_utils.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
@@ -26,8 +26,8 @@ class GameWishlistedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final GameListManagerBloc gameListManagerBloc = GameListManagerBloc(
       collectionService: collectionService,

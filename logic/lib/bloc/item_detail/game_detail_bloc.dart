@@ -1,14 +1,14 @@
 import 'package:game_collection_client/api.dart' show GameDTO, NewGameDTO;
 
 import 'package:logic/service/service.dart'
-    show GameCollectionService, GameFinishService, GameLogService, GameService;
+    show GameOClockService, GameFinishService, GameLogService, GameService;
 
 import 'item_detail.dart';
 
 class GameDetailBloc extends ItemDetailBloc<GameDTO, NewGameDTO, GameService> {
   GameDetailBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _gameFinishService = collectionService.gameFinishService,
         _gameLogService = collectionService.gameLogService,

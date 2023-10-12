@@ -3,7 +3,7 @@ import 'package:game_collection_client/api.dart'
 
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'
-    show GameCollectionService, DLCService, DLCFinishService;
+    show GameOClockService, DLCService, DLCFinishService;
 
 import 'item_relation_manager.dart';
 
@@ -11,7 +11,7 @@ class DLCFinishRelationManagerBloc
     extends ItemRelationManagerBloc<ItemFinish, DateTime> {
   DLCFinishRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _dlcFinishService = collectionService.dlcFinishService,
         super();
 
@@ -32,7 +32,7 @@ class DLCGameRelationManagerBloc
     extends ItemRelationManagerBloc<GameDTO, GameDTO> {
   DLCGameRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _dlcService = collectionService.dlcService,
         super();
 
@@ -53,7 +53,7 @@ class DLCPlatformRelationManagerBloc extends ItemRelationManagerBloc<
     PlatformAvailableDTO, PlatformAvailableDTO> {
   DLCPlatformRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _dlcService = collectionService.dlcService,
         super();
 

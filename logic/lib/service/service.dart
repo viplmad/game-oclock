@@ -1,4 +1,4 @@
-export 'game_collection_service.dart';
+export 'game_oclock_service.dart';
 export 'item_service.dart';
 
 export 'health_check_service.dart';

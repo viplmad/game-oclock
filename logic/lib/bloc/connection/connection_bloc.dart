@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:game_collection_client/api.dart' show TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'connection.dart';
@@ -13,7 +13,7 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
     on<Connect>(_mapConnectToState);
   }
 
-  final GameCollectionService collectionService;
+  final GameOClockService collectionService;
 
   void _mapConnectToState(Connect event, Emitter<ConnectState> emit) async {
     emit(

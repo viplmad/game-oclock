@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
@@ -24,7 +24,7 @@ class DLCSearch
 
   @override
   DLCSearchBloc searchBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return DLCSearchBloc(
       collectionService: collectionService,
@@ -33,7 +33,7 @@ class DLCSearch
 
   @override
   DLCListManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return DLCListManagerBloc(
       collectionService: collectionService,

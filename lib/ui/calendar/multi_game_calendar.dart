@@ -6,15 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection_client/api.dart' show GameWithLogsDTO, GameDTO;
 
 import 'package:logic/model/model.dart' show CalendarRange;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/calendar/multi_calendar.dart';
 import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
 import 'package:logic/utils/duration_extension.dart';
 
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/skeleton.dart';
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/skeleton.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;
@@ -31,7 +31,7 @@ class MultiGameCalendar extends StatelessWidget {
     final CalendarManagerBloc managerBloc = CalendarManagerBloc();
 
     final MultiCalendarBloc bloc = MultiCalendarBloc(
-      collectionService: RepositoryProvider.of<GameCollectionService>(context),
+      collectionService: RepositoryProvider.of<GameOClockService>(context),
       managerBloc: managerBloc,
     );
 

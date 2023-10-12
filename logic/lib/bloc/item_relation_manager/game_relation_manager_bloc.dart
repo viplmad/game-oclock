@@ -4,7 +4,7 @@ import 'package:game_collection_client/api.dart'
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'
     show
-        GameCollectionService,
+        GameOClockService,
         GameService,
         GameFinishService,
         GameLogService,
@@ -16,7 +16,7 @@ class GameFinishRelationManagerBloc
     extends ItemRelationManagerBloc<ItemFinish, DateTime> {
   GameFinishRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameFinishService = collectionService.gameFinishService,
         super();
 
@@ -37,7 +37,7 @@ class GameLogRelationManagerBloc
     extends ItemRelationManagerBloc<GameLogDTO, NewGameLogDTO> {
   GameLogRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameLogService = collectionService.gameLogService,
         super();
 
@@ -58,7 +58,7 @@ class GameDLCRelationManagerBloc
     extends ItemRelationManagerBloc<DLCDTO, DLCDTO> {
   GameDLCRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _dlcService = collectionService.dlcService,
         super();
 
@@ -79,7 +79,7 @@ class GamePlatformRelationManagerBloc extends ItemRelationManagerBloc<
     PlatformAvailableDTO, PlatformAvailableDTO> {
   GamePlatformRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameService = collectionService.gameService,
         super();
 
@@ -104,7 +104,7 @@ class GameTagRelationManagerBloc
     extends ItemRelationManagerBloc<TagDTO, TagDTO> {
   GameTagRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameService = collectionService.gameService,
         super();
 

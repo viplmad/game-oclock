@@ -4,7 +4,7 @@ import 'package:game_collection_client/api.dart'
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'
     show
-        GameCollectionService,
+        GameOClockService,
         GameFinishService,
         DLCService,
         PlatformService,
@@ -15,7 +15,7 @@ import 'item_relation.dart';
 class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish, DateTime> {
   GameFinishRelationBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _gameFinishService = collectionService.gameFinishService,
         super();
@@ -39,7 +39,7 @@ class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish, DateTime> {
 class GameDLCRelationBloc extends ItemRelationBloc<DLCDTO, DLCDTO> {
   GameDLCRelationBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _dlcService = collectionService.dlcService,
         super();
@@ -56,7 +56,7 @@ class GamePlatformRelationBloc
     extends ItemRelationBloc<PlatformAvailableDTO, PlatformAvailableDTO> {
   GamePlatformRelationBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _platformService = collectionService.platformService,
         super();
@@ -72,7 +72,7 @@ class GamePlatformRelationBloc
 class GameTagRelationBloc extends ItemRelationBloc<TagDTO, TagDTO> {
   GameTagRelationBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _tagService = collectionService.tagService,
         super();

@@ -9,13 +9,13 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
 import 'package:logic/model/model.dart' show ItemImage;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 
-import 'package:game_collection/ui/common/field/field.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/item_view.dart';
+import 'package:game_oclock/ui/common/field/field.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
 
 abstract class ItemDetail<
         T extends PrimaryModel,
@@ -34,8 +34,8 @@ abstract class ItemDetail<
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final S managerBloc = managerBlocBuilder(collectionService);
 
@@ -59,12 +59,12 @@ abstract class ItemDetail<
   }
 
   K detailBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
     S managerBloc,
   );
-  S managerBlocBuilder(GameCollectionService collectionService);
+  S managerBlocBuilder(GameOClockService collectionService);
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   );
 
   ItemDetailBody<T, N, K, S> detailBodyBuilder();

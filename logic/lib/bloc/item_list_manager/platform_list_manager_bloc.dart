@@ -2,13 +2,13 @@ import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO;
 
 import 'package:logic/service/service.dart'
-    show PlatformService, GameCollectionService;
+    show PlatformService, GameOClockService;
 
 import 'item_list_manager.dart';
 
 class PlatformListManagerBloc
     extends ItemListManagerBloc<PlatformDTO, NewPlatformDTO, PlatformService> {
   PlatformListManagerBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   }) : super(service: collectionService.platformService);
 }

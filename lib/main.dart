@@ -6,15 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:logic/game_collection_backend.dart' show GameCollectionService;
+import 'package:logic/game_oclock_logic.dart' show GameOClockService;
 
-import 'package:game_collection/ui/route.dart';
-import 'package:game_collection/ui/theme/app_theme.dart';
+import 'package:game_oclock/ui/route.dart';
+import 'package:game_oclock/ui/theme/app_theme.dart';
 
-void main() => runApp(const GameCollection());
+void main() => runApp(const GameOClock());
 
-class GameCollection extends StatelessWidget {
-  const GameCollection({
+class GameOClock extends StatelessWidget {
+  const GameOClock({
     Key? key,
   }) : super(key: key);
 
@@ -27,9 +27,9 @@ class GameCollection extends StatelessWidget {
       ]),
     );
 
-    return RepositoryProvider<GameCollectionService>(
+    return RepositoryProvider<GameOClockService>(
       create: (BuildContext context) {
-        return GameCollectionService();
+        return GameOClockService();
       },
       child: _createApp(),
     );

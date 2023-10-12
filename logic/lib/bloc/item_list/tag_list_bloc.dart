@@ -2,14 +2,13 @@ import 'package:game_collection_client/api.dart'
     show NewTagDTO, TagDTO, TagPageResult;
 
 import 'package:logic/model/model.dart' show TagView;
-import 'package:logic/service/service.dart'
-    show TagService, GameCollectionService;
+import 'package:logic/service/service.dart' show TagService, GameOClockService;
 
 import 'item_list.dart';
 
 class TagListBloc extends ItemListBloc<TagDTO, NewTagDTO, TagService> {
   TagListBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   }) : super(service: collectionService.tagService);
 

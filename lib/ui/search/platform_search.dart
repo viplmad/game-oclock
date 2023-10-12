@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:game_collection_client/api.dart'
     show PlatformDTO, NewPlatformDTO;
 
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
@@ -25,7 +25,7 @@ class PlatformSearch extends ItemSearch<PlatformDTO, NewPlatformDTO,
 
   @override
   PlatformSearchBloc searchBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return PlatformSearchBloc(
       collectionService: collectionService,
@@ -34,7 +34,7 @@ class PlatformSearch extends ItemSearch<PlatformDTO, NewPlatformDTO,
 
   @override
   PlatformListManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return PlatformListManagerBloc(
       collectionService: collectionService,

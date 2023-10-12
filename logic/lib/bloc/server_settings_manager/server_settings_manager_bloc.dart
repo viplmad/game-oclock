@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:game_collection_client/api.dart' show TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'server_settings_manager.dart';
@@ -16,7 +16,7 @@ class ServerSettingsManagerBloc
     on<WarnServerSettingsNotLoaded>(_mapWarnNotLoadedToState);
   }
 
-  final GameCollectionService collectionService;
+  final GameOClockService collectionService;
 
   void _mapSaveToState(
     SaveServerConnectionSettings event,
@@ -27,7 +27,7 @@ class ServerSettingsManagerBloc
       final String username = event.username;
 
       // First test connection to host
-      await GameCollectionService.testConnection(host);
+      await GameOClockService.testConnection(host);
       // Then try to obtain login token with credentials
       final TokenResponse loginResponse = await collectionService.login(
         host,

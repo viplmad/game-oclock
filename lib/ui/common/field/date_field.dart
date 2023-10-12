@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../show_date_picker.dart';
 import 'generic_field.dart';

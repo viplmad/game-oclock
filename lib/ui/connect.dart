@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:logic/bloc/connection/connection.dart';
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 
 import 'route_constants.dart';
 import 'theme/app_theme.dart';
@@ -19,8 +19,7 @@ class Connectpage extends StatelessWidget {
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
         return ConnectionBloc(
-          collectionService:
-              RepositoryProvider.of<GameCollectionService>(context),
+          collectionService: RepositoryProvider.of<GameOClockService>(context),
         )..add(Connect());
       },
       child: const _ConnectpageBody(),

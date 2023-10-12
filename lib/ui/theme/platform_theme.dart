@@ -7,10 +7,10 @@ import 'package:game_collection_client/api.dart'
 
 import 'package:logic/model/model.dart' show PlatformView;
 
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/common/bar_data.dart';
-import 'package:game_collection/ui/utils/theme_utils.dart';
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/common/bar_data.dart';
+import 'package:game_oclock/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 class PlatformTheme {
   PlatformTheme._();

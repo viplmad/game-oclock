@@ -6,8 +6,8 @@ import 'package:game_collection_client/api.dart' show TagDTO;
 
 import 'package:logic/model/model.dart' show TagView;
 
-import 'package:game_collection/ui/common/item_view.dart';
-import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 class TagTheme {
   TagTheme._();

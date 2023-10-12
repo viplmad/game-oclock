@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:logic/model/model.dart' show MainTab;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/tab/tab.dart';
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
@@ -26,8 +26,8 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final GameListManagerBloc gameListManagerBloc = GameListManagerBloc(
       collectionService: collectionService,

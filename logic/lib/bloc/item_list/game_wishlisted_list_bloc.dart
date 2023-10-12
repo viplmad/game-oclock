@@ -1,15 +1,14 @@
 import 'package:game_collection_client/api.dart'
     show GameDTO, GamePageResult, GameStatus, NewGameDTO;
 
-import 'package:logic/service/service.dart'
-    show GameCollectionService, GameService;
+import 'package:logic/service/service.dart' show GameOClockService, GameService;
 
 import 'item_list.dart';
 
 class GameWishlistedListBloc
     extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
   GameWishlistedListBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   }) : super(service: collectionService.gameService);
 

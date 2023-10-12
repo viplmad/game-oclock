@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection_client/api.dart' show TagDTO, NewTagDTO;
 
 import 'package:logic/model/model.dart' show ListStyle;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
@@ -21,8 +21,8 @@ class TagList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final TagListManagerBloc gameTagListManagerBloc = TagListManagerBloc(
       collectionService: collectionService,

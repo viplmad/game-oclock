@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:duration_picker/duration_picker.dart';
 
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import 'generic_field.dart';
 

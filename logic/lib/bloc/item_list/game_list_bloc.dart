@@ -8,7 +8,7 @@ import 'package:game_collection_client/api.dart'
         NewGameDTO;
 
 import 'package:logic/service/service.dart'
-    show GameCollectionService, GameFinishService, GameLogService, GameService;
+    show GameOClockService, GameFinishService, GameLogService, GameService;
 import 'package:logic/model/model.dart' show GameView;
 import 'package:logic/preferences/shared_preferences_state.dart';
 import 'package:logic/utils/datetime_extension.dart';
@@ -17,7 +17,7 @@ import 'item_list.dart';
 
 class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
   GameListBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required super.managerBloc,
   })  : _gameFinishService = collectionService.gameFinishService,
         _gameLogService = collectionService.gameLogService,

@@ -8,18 +8,18 @@ import 'package:game_collection_client/api.dart' show GameLogDTO, NewGameLogDTO;
 
 import 'package:logic/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/calendar/single_calendar.dart';
 import 'package:logic/bloc/calendar_manager/calendar_manager.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 import 'package:logic/utils/duration_extension.dart';
 
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/skeleton.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/common/show_date_picker.dart';
-import 'package:game_collection/ui/utils/shape_utils.dart';
-import 'package:game_collection/ui/utils/app_localizations_utils.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/skeleton.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/show_date_picker.dart';
+import 'package:game_oclock/ui/utils/shape_utils.dart';
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme, CalendarTheme;
@@ -37,8 +37,8 @@ class SingleGameCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     final CalendarManagerBloc managerBloc = CalendarManagerBloc();
 
@@ -161,7 +161,7 @@ class SingleGameCalendar extends StatelessWidget {
   }
 
   SingleCalendarBloc blocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
     CalendarManagerBloc managerBloc,
     GameLogRelationManagerBloc gameLogManagerBloc,
     GameFinishRelationManagerBloc gameFinishManagerBloc,

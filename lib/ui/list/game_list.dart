@@ -10,7 +10,7 @@ import 'package:logic/model/model.dart' show ListStyle, GameView;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/ui/common/year_picker_dialog.dart';
+import 'package:game_oclock/ui/common/year_picker_dialog.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show GameTheme;

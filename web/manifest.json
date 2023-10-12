@@ -1,6 +1,6 @@
 {
-    "name": "game_collection",
-    "short_name": "game_collection",
+    "name": "game_oclock",
+    "short_name": "game_oclock",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,7 +1,6 @@
 import 'package:game_collection_client/api.dart' show GameDTO;
 
-import 'package:logic/service/service.dart'
-    show GameCollectionService, GameService;
+import 'package:logic/service/service.dart' show GameOClockService, GameService;
 
 import 'item_relation_manager.dart';
 
@@ -9,7 +8,7 @@ class TagGameRelationManagerBloc
     extends ItemRelationManagerBloc<GameDTO, GameDTO> {
   TagGameRelationManagerBloc({
     required super.itemId,
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
   })  : _gameService = collectionService.gameService,
         super();
 

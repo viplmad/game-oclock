@@ -7,7 +7,7 @@ import 'package:game_collection_client/api.dart'
     show GameLogDTO, GameWithLogsDTO;
 
 import 'package:logic/service/service.dart'
-    show GameCollectionService, GameLogService;
+    show GameOClockService, GameLogService;
 import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
@@ -18,7 +18,7 @@ import 'range_list_utils.dart';
 
 class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   MultiCalendarBloc({
-    required GameCollectionService collectionService,
+    required GameOClockService collectionService,
     required this.managerBloc,
   })  : _gameLogService = collectionService.gameLogService,
         super(CalendarLoading()) {

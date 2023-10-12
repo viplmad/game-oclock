@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart' show PrimaryModel;
 
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_search/item_search.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_collection/ui/common/list_view.dart';
-import 'package:game_collection/ui/common/show_snackbar.dart';
-import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 import '../detail/detail_arguments.dart';
 
@@ -32,8 +32,8 @@ abstract class ItemSearch<
 
   @override
   Widget build(BuildContext context) {
-    final GameCollectionService collectionService =
-        RepositoryProvider.of<GameCollectionService>(context);
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
 
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object?>>>[
@@ -74,8 +74,8 @@ abstract class ItemSearch<
             : null;
   }
 
-  K searchBlocBuilder(GameCollectionService collectionService);
-  S managerBlocBuilder(GameCollectionService collectionService);
+  K searchBlocBuilder(GameOClockService collectionService);
+  S managerBlocBuilder(GameOClockService collectionService);
 
   ItemSearchBody<T, N, K, S> itemSearchBodyBuilder({
     required void Function()? Function(BuildContext, T) onTap,

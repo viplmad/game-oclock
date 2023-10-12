@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 void showSnackBar(
   BuildContext context, {

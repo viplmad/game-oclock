@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:game_collection/ui/utils/shape_utils.dart';
+import 'package:game_oclock/ui/utils/shape_utils.dart';
 
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({

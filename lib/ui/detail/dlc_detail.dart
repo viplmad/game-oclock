@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_collection_client/api.dart' show DLCDTO, NewDLCDTO;
 
 import 'package:logic/model/model.dart' show ItemImage;
-import 'package:logic/service/service.dart' show GameCollectionService;
+import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_detail/item_detail.dart';
 import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:logic/bloc/item_relation/item_relation.dart';
@@ -27,7 +27,7 @@ class DLCDetail
 
   @override
   DLCDetailBloc detailBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
     DLCDetailManagerBloc managerBloc,
   ) {
     return DLCDetailBloc(
@@ -39,7 +39,7 @@ class DLCDetail
 
   @override
   DLCDetailManagerBloc managerBlocBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     return DLCDetailManagerBloc(
       itemId: item.id,
@@ -49,7 +49,7 @@ class DLCDetail
 
   @override
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
-    GameCollectionService collectionService,
+    GameOClockService collectionService,
   ) {
     final DLCFinishRelationManagerBloc finishRelationManagerBloc =
         DLCFinishRelationManagerBloc(

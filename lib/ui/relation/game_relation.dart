@@ -6,7 +6,7 @@ import 'package:game_collection_client/api.dart'
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
-import 'package:game_collection/ui/common/show_date_picker.dart';
+import 'package:game_oclock/ui/common/show_date_picker.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show DLCTheme, PlatformTheme, TagTheme;
