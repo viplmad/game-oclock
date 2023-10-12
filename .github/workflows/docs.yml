@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   deploy:
+    name: Deploy
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
     steps:
@@ -36,4 +37,6 @@ jobs:
         run: pip install mkdocs-material
 
       - name: Build and deploy to gh-pages branch
-        run: mkdocs gh-deploy --force
+        run: |
+          cd ./docs
+          mkdocs gh-deploy --force
