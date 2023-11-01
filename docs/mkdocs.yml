@@ -12,11 +12,11 @@ theme:
   name: material
   custom_dir: overrides
 
+plugins:
+  - swagger-ui-tag
+
 nav:
   - Home: index.md
-  - App:
-    - Home: app/index.md
-  - Server:
-    - Home: server/index.md
-  - Client:
-    - Home: client/index.md
+  - Quickstart: quickstart.md
+  - OpenAPI: openapi.md
+  - Dev: dev.md
