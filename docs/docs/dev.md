@@ -15,4 +15,4 @@ Database access is handled through [sqlx](https://crates.io/crates/sqlx). There 
 OpenAPI specification is (semi)automatically generated using the [utoipa crate](https://crates.io/crates/utoipa) and is accessible in /api-docs/ when the server is up. It can also be accessed through this docs [here](../openapi).
 
 #### Client
-Initially built from the openapi specification using the [OpenAPI Generator](https://openapi-generator.tech). From that initial automatic generation some some tweaks were applied. It's also updated (manually) whenever the server changes with the help of the aforementioned generator.
+Initially built from the OpenAPI specification using the [OpenAPI Generator](https://openapi-generator.tech). From that initial automatic generation some tweaks were applied. It's also updated (manually) whenever the server changes with the help of the aforementioned generator.
