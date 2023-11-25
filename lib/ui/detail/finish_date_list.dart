@@ -171,12 +171,12 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
       showDialog(
         context: outerContext,
         builder: (BuildContext context) {
-          return WillPopScope(
-            onWillPop: () async {
+          return PopScope(
+            canPop: true,
+            onPopInvoked: (bool didPop) {
               if (_changesMade) {
                 onChange();
               }
-              return true;
             },
             child: AlertDialog(
               title: Text(fieldName),

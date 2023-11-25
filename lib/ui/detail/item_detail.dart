@@ -90,12 +90,12 @@ abstract class ItemDetailBody<
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
         if (_changesMade && onChange != null) {
           onChange!();
         }
-        return true;
       },
       child: BlocListener<S, ItemDetailManagerState>(
         listener: (BuildContext context, ItemDetailManagerState state) {

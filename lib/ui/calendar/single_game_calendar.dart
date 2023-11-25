@@ -264,12 +264,12 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
         if (_changesMade && onChange != null) {
           onChange!();
         }
-        return true;
       },
       child: MultiBlocListener(
         listeners: <BlocListener<dynamic, dynamic>>[
