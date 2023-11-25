@@ -123,7 +123,8 @@ class GameTheme {
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: AppLocalizationsUtils.formatDate(item.logDatetime),
+        subtitle:
+            '${AppLocalizationsUtils.formatDate(item.logStartDatetime)} ⮕ ${AppLocalizationsUtils.formatDate(item.logEndDatetime)}',
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -208,7 +209,13 @@ class GameTheme {
   }
 
   static String _itemSubtitle(BuildContext context, GameDTO item) {
-    return '${_statusString(context, item.status)} · ${item.releaseYear ?? ''}';
+    String subtitle = _statusString(context, item.status);
+
+    if (item.releaseYear != null) {
+      subtitle += ' · ${item.releaseYear}';
+    }
+
+    return subtitle;
   }
 
   static String _statusString(BuildContext context, GameStatus? status) {
