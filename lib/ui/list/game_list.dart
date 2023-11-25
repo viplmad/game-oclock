@@ -144,7 +144,7 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
     if (item is GameWithFinishDTO) {
       return GameTheme.itemCardFinish(context, item, onTap);
     } else if (item is GameWithLogDTO) {
-      return GameTheme.itemCardLog(context, item, onTap);
+      return GameTheme.itemCardLog(context, item, onTap, isLastPlayed: true);
     }
 
     return GameTheme.itemCard(context, item, onTap);

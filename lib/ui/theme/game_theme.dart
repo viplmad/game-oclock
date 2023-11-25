@@ -117,14 +117,16 @@ class GameTheme {
   static Widget itemCardLog(
     BuildContext context,
     GameWithLogDTO item,
-    void Function()? Function(BuildContext, GameDTO) onTap,
-  ) {
+    void Function()? Function(BuildContext, GameDTO) onTap, {
+    required bool isLastPlayed,
+  }) {
     return _addRatingBanner(
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle:
-            '${AppLocalizationsUtils.formatDate(item.logStartDatetime)} ⮕ ${AppLocalizationsUtils.formatDate(item.logEndDatetime)}',
+        subtitle: isLastPlayed
+            ? AppLocalizationsUtils.formatDate(item.logEndDatetime)
+            : AppLocalizationsUtils.formatDate(item.logStartDatetime),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
