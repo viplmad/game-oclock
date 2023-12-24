@@ -9,6 +9,8 @@ export 'item_list_manager/item_list_manager.dart';
 export 'item_relation/item_relation.dart';
 export 'item_relation_manager/item_relation_manager.dart';
 export 'item_search/item_search.dart';
+export 'review/review.dart';
+export 'review_manager/review_manager.dart';
 export 'server_settings/server_settings.dart';
 export 'server_settings_manager/server_settings_manager.dart';
 export 'tab/tab.dart';

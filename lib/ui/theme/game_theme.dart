@@ -170,6 +170,25 @@ class GameTheme {
     );
   }
 
+  static Widget itemCardWithAdditionalWidgets(
+    BuildContext context,
+    GameDTO item,
+    List<Widget> additionalWidgets,
+    void Function()? Function(BuildContext, GameDTO) onTap,
+  ) {
+    return _addRatingBanner(
+      item,
+      ItemCard(
+        title: itemTitle(item),
+        subtitle: _itemSubtitle(context, item),
+        hasImage: GameTheme.hasImage,
+        imageURL: item.coverUrl,
+        onTap: onTap(context, item),
+        additionalWidgets: additionalWidgets,
+      ),
+    );
+  }
+
   static Widget itemGrid(
     BuildContext context,
     GameDTO item,

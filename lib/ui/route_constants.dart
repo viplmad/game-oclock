@@ -5,9 +5,10 @@ const String _settingsRoute = '/settings';
 const String serverSettingsRoute = '${_settingsRoute}server';
 
 const String _detailRoute = '/detail';
+const String _listRoute = '/list';
 const String _searchRoute = '/search';
 const String _calendarRoute = '/calendar';
-const String _listRoute = '/list';
+const String _reviewRoute = '/review';
 
 const String _gameIdentifier = 'game';
 const String _dlcIdentifier = 'dlc';
@@ -35,3 +36,5 @@ const String gameWishlistedSearchRoute =
     _searchRoute + _gameWishlistedIdentifier;
 
 const String gameLogAssistantRoute = '/gameLogAssistant';
+
+const String reviewYearRoute = '${_reviewRoute}year';

@@ -72,6 +72,7 @@ class ItemCard extends StatelessWidget {
     this.trailing,
     required this.hasImage,
     this.imageURL,
+    this.additionalWidgets = const <Widget>[],
     required this.onTap,
   }) : super(key: key);
 
@@ -80,22 +81,33 @@ class ItemCard extends StatelessWidget {
   final String? trailing;
   final bool hasImage;
   final String? imageURL;
+  final List<Widget> additionalWidgets;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final _ItemListTile itemListTile = _ItemListTile(
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
+      hasImage: hasImage,
+      imageURL: imageURL,
+    );
+
     return Card(
       margin: const EdgeInsets.all(0.0),
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
-        child: _ItemListTile(
-          title: title,
-          subtitle: subtitle,
-          trailing: trailing,
-          hasImage: hasImage,
-          imageURL: imageURL,
-        ),
+        child: additionalWidgets.isEmpty
+            ? itemListTile
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  itemListTile,
+                  ...additionalWidgets,
+                ],
+              ),
       ),
     );
   }

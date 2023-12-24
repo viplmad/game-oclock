@@ -6,6 +6,7 @@ import 'package:game_collection_client/api.dart'
         GameLogsApi,
         GameWithLogPageResult,
         GameWithLogsDTO,
+        GamesWithLogsExtendedDTO,
         NewGameLogDTO,
         SearchDTO;
 
@@ -67,6 +68,13 @@ class GameLogService
     DateTime endDate,
   ) {
     return _api.getPlayedGames(startDate, endDate);
+  }
+
+  Future<GamesWithLogsExtendedDTO> getReview(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return _api.getPlayedGamesDetailed(startDate, endDate);
   }
   //#endregion READ
 

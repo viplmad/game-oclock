@@ -14,6 +14,7 @@ import 'package:logic/bloc/start_game_view/start_game_view.dart';
 
 import 'utils/shape_utils.dart';
 import 'list/list.dart';
+import 'review/review_arguments.dart';
 import 'theme/theme.dart';
 import 'common/bar_data.dart';
 import 'common/navigation_destination_background.dart' as nav_bar_background;
@@ -210,6 +211,18 @@ class _HomepageDrawer extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 gameWishlistedListRoute,
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.reviews),
+            title: Text(AppLocalizations.of(context)!.yearInReviewViewString),
+            onTap: () async {
+              Navigator.pushNamed(
+                context,
+                reviewYearRoute,
+                arguments: const ReviewArguments(),
               );
             },
           ),

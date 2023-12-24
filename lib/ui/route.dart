@@ -12,11 +12,13 @@ import 'settings/settings.dart';
 import 'detail/detail.dart';
 import 'search/search.dart';
 import 'calendar/calendar.dart';
+import 'review/review.dart';
 import 'theme/theme.dart';
 
 import 'detail/detail_arguments.dart';
 import 'search/search_arguments.dart';
 import 'calendar/calendar_arguments.dart';
+import 'review/review_arguments.dart';
 
 export 'route_constants.dart';
 
@@ -107,6 +109,16 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case gameMultiCalendarRoute:
       return _pageRoute(
         const MultiGameCalendar(),
+        themeDataBuilder: GameTheme.themeData,
+      );
+
+    case reviewYearRoute:
+      final ReviewArguments reviewArguments =
+          settings.arguments as ReviewArguments;
+      return _pageRoute(
+        ReviewYear(
+          year: reviewArguments.year,
+        ),
         themeDataBuilder: GameTheme.themeData,
       );
 

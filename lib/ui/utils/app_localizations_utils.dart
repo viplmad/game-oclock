@@ -80,4 +80,8 @@ class AppLocalizationsUtils {
 
     return '$hoursString $minutesString';
   }
+
+  static String formatPercentage(double value) {
+    return NumberFormat.decimalPercentPattern(decimalDigits: 0).format(value);
+  }
 }
