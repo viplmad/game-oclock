@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection_client/api.dart' show GamesWithLogsExtendedDTO;
+import 'package:game_collection_client/api.dart'
+    show GamesFinishedReviewDTO, GamesPlayedReviewDTO;
 
 abstract class ReviewState extends Equatable {
   const ReviewState();
@@ -12,17 +13,20 @@ abstract class ReviewState extends Equatable {
 class ReviewLoading extends ReviewState {}
 
 class ReviewLoaded extends ReviewState {
-  const ReviewLoaded(this.year, this.data);
+  const ReviewLoaded(this.year, this.playedData, this.finishedData);
 
   final int year;
-  final GamesWithLogsExtendedDTO data;
+  final GamesPlayedReviewDTO playedData;
+  final GamesFinishedReviewDTO finishedData;
 
   @override
-  List<Object> get props => <Object>[data];
+  List<Object> get props => <Object>[year, playedData, finishedData];
 
   @override
   String toString() => 'ReviewLoaded { '
-      'data: $data'
+      'year: $year, '
+      'playedData: $playedData, '
+      'finishedData: $finishedData'
       ' }';
 }
 

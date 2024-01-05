@@ -135,7 +135,7 @@ abstract class ItemRelationList<
                   );
           }
           if (state is ItemRelationError) {
-            return Container();
+            return const SizedBox();
           }
 
           return Column(

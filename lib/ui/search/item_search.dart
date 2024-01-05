@@ -145,7 +145,7 @@ class _ItemSearchBodyState<
                 .searchString(widget.typesName(context)),
           ),
         ),
-        // Fixed elevation so background color doesn't change on scroll
+        // Fixed elevation so background colour doesn't change on scroll
         elevation: 1.0,
         scrolledUnderElevation: 1.0,
       ),

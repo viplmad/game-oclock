@@ -89,7 +89,7 @@ class SingleGameCalendar extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.calendarViewString,
           ),
-          // Fixed elevation so background color doesn't change on scroll
+          // Fixed elevation so background colour doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
           actions: <Widget>[
@@ -195,7 +195,7 @@ class SingleGameCalendar extends StatelessWidget {
       closeDialOnPop: true,
       children: <SpeedDialChild>[
         SpeedDialChild(
-          child: const Icon(Icons.add_alarm, color: Colors.white),
+          child: const Icon(Icons.more_time, color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.fabShapeBorder,
           label: AppLocalizations.of(context)!.addString(
@@ -219,6 +219,7 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
+          // TODO change icon to calendar_add
           child: const Icon(Icons.event_available, color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.fabShapeBorder,
@@ -484,7 +485,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is CalendarError) {
-                return Container();
+                return const SizedBox();
               }
 
               return Column(

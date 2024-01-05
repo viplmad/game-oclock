@@ -220,7 +220,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                     }
 
                     if (state is ItemRelationError) {
-                      return Container();
+                      return const SizedBox();
                     }
 
                     return const Column(

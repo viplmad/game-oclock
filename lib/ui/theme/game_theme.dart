@@ -41,6 +41,21 @@ class GameTheme {
     playedStatusColour,
   ];
 
+  static List<Color> chartColors = <Color>[
+    Colors.redAccent,
+    Colors.deepPurpleAccent,
+    Colors.blueAccent,
+    Colors.lightGreen[700]!,
+    Colors.deepOrangeAccent,
+    Colors.blueGrey,
+    Colors.lime[900]!,
+    Colors.indigoAccent,
+    Colors.pinkAccent,
+    Colors.cyan[700]!,
+    Colors.purple[300]!,
+    Colors.orangeAccent,
+  ];
+
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }

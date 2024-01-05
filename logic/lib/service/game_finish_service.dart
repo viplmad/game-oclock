@@ -1,5 +1,11 @@
 import 'package:game_collection_client/api.dart'
-    show ApiClient, DateDTO, GameFinishApi, GameWithFinishPageResult, SearchDTO;
+    show
+        ApiClient,
+        DateDTO,
+        GameFinishApi,
+        GameWithFinishPageResult,
+        GamesFinishedReviewDTO,
+        SearchDTO;
 
 import 'item_service.dart';
 
@@ -52,6 +58,13 @@ class GameFinishService
       startDate: startDate,
       endDate: endDate,
     );
+  }
+
+  Future<GamesFinishedReviewDTO> getReview(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return _api.getFinishedGamesReview(startDate, endDate);
   }
   //#endregion READ
 

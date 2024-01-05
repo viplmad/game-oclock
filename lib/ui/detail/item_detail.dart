@@ -178,7 +178,7 @@ abstract class ItemDetailBody<
                       );
                     }
                     if (state is ItemDetailError) {
-                      return Container();
+                      return const SizedBox();
                     }
 
                     return Column(
@@ -208,7 +208,7 @@ abstract class ItemDetailBody<
         expandedHeight: MediaQuery.of(context).size.height /
             3, //Third part of height of screen
         surfaceTintColor: Theme.of(context).primaryColor,
-        // Fixed elevation so background color doesn't change on scroll
+        // Fixed elevation so background colour doesn't change on scroll
         forceElevated: true,
         elevation: 1.0,
         scrolledUnderElevation: 1.0,
@@ -226,7 +226,7 @@ abstract class ItemDetailBody<
                 return const LinearProgressIndicator();
               }
 
-              return Container();
+              return const SizedBox();
             },
           ),
         ),

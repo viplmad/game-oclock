@@ -110,7 +110,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           CalendarError(),
         );
       }
-    } else {
+    } else if (state is! CalendarLoading) {
       await _mapLoadInitialCalendar(DateTime.now().year, emit);
     }
   }

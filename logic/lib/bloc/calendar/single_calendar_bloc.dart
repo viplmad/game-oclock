@@ -119,7 +119,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           CalendarError(),
         );
       }
-    } else {
+    } else if (state is! CalendarLoading) {
       await _mapAnyLoadToState(emit);
     }
   }

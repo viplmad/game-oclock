@@ -79,7 +79,7 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
           ItemListError(),
         );
       }
-    } else {
+    } else if (state is! ItemListLoading) {
       await _mapAnyLoadToState(emit);
     }
   }

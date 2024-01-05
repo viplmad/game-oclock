@@ -64,7 +64,7 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
           ItemDetailError(),
         );
       }
-    } else {
+    } else if (state is! ItemLoading) {
       await _mapAnyLoadToState(emit);
     }
   }

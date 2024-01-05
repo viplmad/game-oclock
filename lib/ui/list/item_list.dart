@@ -46,7 +46,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
     return AppBar(
       title: Text(typesName(context)),
       surfaceTintColor: themeColor,
-      // Fixed elevation so background color doesn't change on scroll
+      // Fixed elevation so background colour doesn't change on scroll
       elevation: 1.0,
       scrolledUnderElevation: 1.0,
       actions: <Widget>[
@@ -304,7 +304,7 @@ abstract class ItemList<
               );
             }
             if (state is ItemListError) {
-              return Container();
+              return const SizedBox();
             }
 
             return Column(

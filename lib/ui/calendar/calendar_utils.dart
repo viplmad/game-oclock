@@ -233,7 +233,7 @@ class CalendarUtils {
           SizedBox(
             width: MediaQuery.of(context).size.width * 2,
             child: StatisticsHistogram<int>(
-              histogramName: AppLocalizations.of(context)!.gameLogsFieldString,
+              name: AppLocalizations.of(context)!.gameLogsFieldString,
               domainLabels: labels,
               values: values,
               vertical: true,
@@ -249,7 +249,7 @@ class CalendarUtils {
       );
     } else {
       return StatisticsHistogram<int>(
-        histogramName: AppLocalizations.of(context)!.gameLogsFieldString,
+        name: AppLocalizations.of(context)!.gameLogsFieldString,
         domainLabels: labels,
         values: values,
         vertical: true,

@@ -204,7 +204,7 @@ class _ServerSettingsBody extends StatelessWidget {
             );
           }
           if (state is ServerSettingsError) {
-            return Container();
+            return const SizedBox();
           }
 
           return const LinearProgressIndicator();

@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show GamesWithLogsExtendedDTO;
+import 'package:game_collection_client/api.dart'
+    show GamesFinishedReviewDTO, GamesPlayedReviewDTO;
 
 import 'package:logic/service/service.dart'
-    show GameOClockService, GameLogService;
+    show GameFinishService, GameLogService, GameOClockService;
 import 'package:logic/utils/datetime_extension.dart';
 
 import '../review_manager/review_manager.dart';
@@ -15,13 +16,15 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ReviewBloc({
     required GameOClockService collectionService,
     required this.managerBloc,
-  })  : service = collectionService.gameLogService,
+  })  : logService = collectionService.gameLogService,
+        finishService = collectionService.gameFinishService,
         super(ReviewLoading()) {
     on<LoadReview>(_mapLoadToState);
     on<ReloadReview>(_mapReloadToState);
   }
 
-  final GameLogService service;
+  final GameLogService logService;
+  final GameFinishService finishService;
   final ReviewManagerBloc managerBloc;
 
   void _mapLoadToState(LoadReview event, Emitter<ReviewState> emit) async {
@@ -37,11 +40,14 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     Emitter<ReviewState> emit,
   ) async {
     if (state is ReviewLoaded) {
-      final int previousYear = (state as ReviewLoaded).year;
+      final int year = (state as ReviewLoaded).year;
 
-      _mapAnyLoadToState(previousYear, emit);
-    } else {
-      // TODO: careful if still loading
+      emit(
+        ReviewLoading(),
+      );
+
+      await _mapAnyLoadToState(year, emit);
+    } else if (state is! ReviewLoading) {
       await _mapAnyLoadToState(null, emit);
     }
   }
@@ -49,10 +55,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   Future<void> _mapAnyLoadToState(int? year, Emitter<ReviewState> emit) async {
     try {
       final int finalYear = year ?? DateTime.now().year;
-      final GamesWithLogsExtendedDTO data = await _get(finalYear);
+      final GamesPlayedReviewDTO playedData = await _getPlayed(finalYear);
+      final GamesFinishedReviewDTO finishedData = await _getFinished(finalYear);
 
       emit(
-        ReviewLoaded(finalYear, data),
+        ReviewLoaded(finalYear, playedData, finishedData),
       );
     } catch (e) {
       managerBloc.add(WarnReviewNotLoaded(e.toString()));
@@ -62,10 +69,17 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     }
   }
 
-  Future<GamesWithLogsExtendedDTO> _get(int year) {
+  Future<GamesPlayedReviewDTO> _getPlayed(int year) {
     final DateTime startDate = DateTime(year).atFirstDayOfYear();
     final DateTime endDate = startDate.atLastDayOfYear();
 
-    return service.getReview(startDate, endDate);
+    return logService.getReview(startDate, endDate);
+  }
+
+  Future<GamesFinishedReviewDTO> _getFinished(int year) {
+    final DateTime startDate = DateTime(year).atFirstDayOfYear();
+    final DateTime endDate = startDate.atLastDayOfYear();
+
+    return finishService.getReview(startDate, endDate);
   }
 }

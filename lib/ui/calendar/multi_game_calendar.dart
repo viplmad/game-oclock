@@ -53,7 +53,7 @@ class MultiGameCalendar extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.calendarViewString,
           ),
-          // Fixed elevation so background color doesn't change on scroll
+          // Fixed elevation so background colour doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
           actions: <Widget>[
@@ -206,7 +206,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
               );
             }
             if (state is CalendarError) {
-              return Container();
+              return const SizedBox();
             }
 
             return Column(
