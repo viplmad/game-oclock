@@ -17,7 +17,7 @@ import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
-import '../theme/app_theme.dart';
+import '../theme/theme.dart' show AppTheme;
 
 abstract class ItemRelationList<
         W extends PrimaryModel,
@@ -295,7 +295,7 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
       child: ElevatedButton.icon(
         label: Text(AppLocalizations.of(context)!.linkString(typeName)),
-        icon: const Icon(Icons.link),
+        icon: const Icon(AppTheme.linkIcon),
         onPressed: () async {
           onSearch().then((W? result) {
             if (result != null) {
@@ -351,7 +351,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
             onDismissed: () {
               updateDelete(relation);
             },
-            dismissIcon: Icons.link_off,
+            dismissIconData: AppTheme.unlinkIcon,
             dismissLabel:
                 AppLocalizations.of(context)!.unlinkString(relationTypeName),
           );
@@ -415,7 +415,7 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
               onDismissed: () {
                 updateDelete(relation);
               },
-              dismissIcon: Icons.link_off,
+              dismissIconData: AppTheme.unlinkIcon,
               dismissLabel:
                   AppLocalizations.of(context)!.unlinkString(relationTypeName),
             );

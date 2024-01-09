@@ -56,6 +56,17 @@ class GameTheme {
     Colors.orangeAccent,
   ];
 
+  static const IconData primaryIcon = Icons.videogame_asset_outlined;
+  static const IconData sessionIcon = Icons.schedule;
+  static const IconData finishIcon = Icons.emoji_events_outlined;
+  static const IconData longestSessionIcon = Icons.timelapse;
+  static const IconData longestStreakIcon = Icons.browse_gallery_outlined;
+  static const IconData firstPlayedIcon = Icons.fiber_new_outlined;
+  static const IconData notFirstPlayedIcon = Icons.history;
+  static const IconData firstFinishedIcon = finishIcon;
+  static const IconData notFirstFinishedIcon =
+      Icons.event_repeat_outlined; // TODO
+
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
@@ -63,7 +74,7 @@ class GameTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.gamesString,
-      icon: Icons.videogame_asset,
+      iconData: primaryIcon,
       color: primaryColour,
     );
   }

@@ -17,6 +17,7 @@ import 'package:game_oclock/ui/common/show_snackbar.dart';
 
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
+import '../theme/theme.dart' show AppTheme;
 
 abstract class ItemAppBar<T extends PrimaryModel,
         K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget
@@ -51,7 +52,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
       scrolledUnderElevation: 1.0,
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.search),
+          icon: const Icon(AppTheme.searchIcon),
           tooltip: AppLocalizations.of(context)!.searchAllString,
           onPressed: searchRouteName.isNotEmpty
               ? () async {
@@ -91,14 +92,14 @@ abstract class ItemAppBar<T extends PrimaryModel,
         ),
         calendarRouteName.isNotEmpty
             ? IconButton(
-                icon: const Icon(Icons.date_range),
+                icon: const Icon(AppTheme.calendarIcon),
                 tooltip: AppLocalizations.of(context)!.calendarView,
                 onPressed: _onCalendarTap(context),
               )
             : const SizedBox(),
         gridAllowed
             ? IconButton(
-                icon: const Icon(Icons.grid_on),
+                icon: const Icon(AppTheme.changeStyleIcon),
                 tooltip: AppLocalizations.of(context)!.changeStyleString,
                 onPressed: () {
                   BlocProvider.of<K>(context).add(
@@ -122,7 +123,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
     required List<String> views,
   }) {
     return PopupMenuButton<int>(
-      icon: const Icon(Icons.view_carousel),
+      icon: const Icon(AppTheme.changeViewIcon),
       tooltip: AppLocalizations.of(context)!.changeViewString,
       itemBuilder: (BuildContext context) {
         return views.map<PopupMenuItem<int>>((String view) {
@@ -179,7 +180,7 @@ abstract class ItemFAB<T extends PrimaryModel, N extends Object,
           AddItem<N>(createItem()),
         );
       },
-      child: const Icon(Icons.add),
+      child: const Icon(AppTheme.addIcon),
     );
   }
 
@@ -506,7 +507,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIcon: Icons.delete,
+          dismissIconData: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },
@@ -551,7 +552,7 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIcon: Icons.delete,
+          dismissIconData: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },

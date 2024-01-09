@@ -12,14 +12,14 @@ class DismissibleItem extends StatelessWidget {
     Key? key,
     required this.itemWidget,
     required this.onDismissed,
-    required this.dismissIcon,
+    required this.dismissIconData,
     required this.dismissLabel,
     this.confirmDismiss,
   }) : super(key: key);
 
   final Widget itemWidget;
   final void Function() onDismissed;
-  final IconData dismissIcon;
+  final IconData dismissIconData;
   final String dismissLabel;
   final Future<bool> Function()? confirmDismiss;
 
@@ -35,7 +35,7 @@ class DismissibleItem extends StatelessWidget {
         anchorTapClosesMenu: true,
         menuChildren: <Widget>[
           MenuItemButton(
-            leadingIcon: Icon(dismissIcon),
+            leadingIcon: Icon(dismissIconData),
             child: Text(dismissLabel),
             onPressed: () async {
               if (confirmDismiss != null) {

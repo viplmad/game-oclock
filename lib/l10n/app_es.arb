@@ -123,6 +123,7 @@
   "startedThisYearString": "Empezado este año",
   "pickedBackThisYearString": "Volviste a jugar este año",
   "firstFinishedThisYearString": "Terminado por primera vez este año",
+  "finishedAgainThisYearString": "Terminado otra vez este año",
   "gamesPlayedByReleaseYearString": "Juegos por año de lanzamiento",
   "gamesFinishedByReleaseYearString": "Juegos terminados por año de lanzamiento",
   "playTimeByByMonthString": "Tiempo de juego por mes",

@@ -16,7 +16,7 @@ import 'package:game_oclock/ui/common/item_view.dart';
 import 'package:game_oclock/ui/utils/shape_utils.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart' show GameTheme;
+import '../theme/theme.dart' show AppTheme, GameTheme;
 import 'list.dart';
 
 class GameWishlistedList extends StatelessWidget {
@@ -265,7 +265,7 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
           },
         ).then((bool? value) => value ?? false);
       },
-      dismissIcon: Icons.delete,
+      dismissIconData: AppTheme.deleteIcon,
       dismissLabel: AppLocalizations.of(context)!.deleteString,
     );
   }
@@ -334,7 +334,7 @@ class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
           },
         ).then((bool? value) => value ?? false);
       },
-      dismissIcon: Icons.delete,
+      dismissIconData: AppTheme.deleteIcon,
       dismissLabel: AppLocalizations.of(context)!.deleteString,
     );
   }

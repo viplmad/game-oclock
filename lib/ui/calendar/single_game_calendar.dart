@@ -22,7 +22,7 @@ import 'package:game_oclock/ui/utils/shape_utils.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart' show GameTheme, CalendarTheme;
+import '../theme/theme.dart' show AppTheme, GameTheme, CalendarTheme;
 import 'calendar_utils.dart';
 
 class SingleGameCalendar extends StatelessWidget {
@@ -94,35 +94,35 @@ class SingleGameCalendar extends StatelessWidget {
           scrolledUnderElevation: 1.0,
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.first_page),
+              icon: const Icon(CalendarTheme.firstIcon),
               tooltip: AppLocalizations.of(context)!.firstLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateFirst());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.navigate_before),
+              icon: const Icon(CalendarTheme.previousIcon),
               tooltip: AppLocalizations.of(context)!.previousLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDatePrevious());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.navigate_next),
+              icon: const Icon(CalendarTheme.nextIcon),
               tooltip: AppLocalizations.of(context)!.nextLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateNext());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.last_page),
+              icon: const Icon(CalendarTheme.lastIcon),
               tooltip: AppLocalizations.of(context)!.lastLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateLast());
               },
             ),
             PopupMenuButton<CalendarRange>(
-              icon: const Icon(Icons.date_range),
+              icon: const Icon(AppTheme.changeRangeIcon),
               tooltip: AppLocalizations.of(context)!.changeRangeString,
               itemBuilder: (BuildContext context) {
                 return CalendarRange.values
@@ -142,7 +142,7 @@ class SingleGameCalendar extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.insert_chart),
+              icon: const Icon(CalendarTheme.changeStyleIcon),
               tooltip: AppLocalizations.of(context)!.changeStyleString,
               onPressed: () {
                 bloc.add(UpdateCalendarStyle());
@@ -181,8 +181,8 @@ class SingleGameCalendar extends StatelessWidget {
     GameFinishRelationManagerBloc gameFinishManagerBloc,
   ) {
     return SpeedDial(
-      icon: Icons.add,
-      activeIcon: Icons.remove,
+      icon: AppTheme.addIcon,
+      activeIcon: AppTheme.closeIcon,
       shape: ShapeUtils.fabShapeBorder,
       tooltip: AppLocalizations.of(context)!.addString(
         AppLocalizations.of(context)!.gameCalendarEventsString,
@@ -195,7 +195,7 @@ class SingleGameCalendar extends StatelessWidget {
       closeDialOnPop: true,
       children: <SpeedDialChild>[
         SpeedDialChild(
-          child: const Icon(Icons.more_time, color: Colors.white),
+          child: const Icon(GameTheme.sessionIcon, color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.fabShapeBorder,
           label: AppLocalizations.of(context)!.addString(
@@ -219,8 +219,7 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
-          // TODO change icon to calendar_add
-          child: const Icon(Icons.event_available, color: Colors.white),
+          child: const Icon(GameTheme.finishIcon, color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.fabShapeBorder,
           label: AppLocalizations.of(context)!.addString(
@@ -542,7 +541,8 @@ class _SingleGameCalendarBody extends StatelessWidget {
         AppLocalizations.of(context)!.selectedDateIsFinishDateString,
       ),
       trailing: IconButton(
-        icon: const Icon(Icons.link_off),
+        icon: const Icon(AppTheme.unlinkIcon),
+        tooltip: AppLocalizations.of(context)!.deleteString,
         onPressed: () {
           BlocProvider.of<GameFinishRelationManagerBloc>(context).add(
             DeleteItemRelation<ItemFinish>(ItemFinish(selectedDate)),
@@ -576,7 +576,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           return ListTile(
             title: Text(gameLogString),
             trailing: IconButton(
-              icon: const Icon(Icons.link_off),
+              icon: const Icon(AppTheme.unlinkIcon),
               tooltip: AppLocalizations.of(context)!.deleteString,
               onPressed: () {
                 BlocProvider.of<GameLogRelationManagerBloc>(context).add(

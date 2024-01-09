@@ -1,3 +1,4 @@
+export 'app_theme.dart';
 export 'game_theme.dart';
 export 'dlc_theme.dart';
 export 'platform_theme.dart';

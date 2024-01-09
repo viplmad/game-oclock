@@ -20,6 +20,8 @@ class DLCTheme {
   static const Color primaryColour = Colors.deepPurple;
   static const Color secondaryColour = Colors.deepPurpleAccent;
 
+  static const IconData primaryIcon = Icons.widgets_outlined;
+
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
@@ -27,7 +29,7 @@ class DLCTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.dlcsString,
-      icon: Icons.widgets,
+      iconData: primaryIcon,
       color: primaryColour,
     );
   }

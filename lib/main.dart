@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logic/game_oclock_logic.dart' show GameOClockService;
 
 import 'package:game_oclock/ui/route.dart';
-import 'package:game_oclock/ui/theme/app_theme.dart';
+import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 void main() => runApp(const GameOClock());
 

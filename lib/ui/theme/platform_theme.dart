@@ -28,6 +28,8 @@ class PlatformTheme {
     digitalTypeColour,
   ];
 
+  static const IconData primaryIcon = Icons.phonelink;
+
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
@@ -35,7 +37,7 @@ class PlatformTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.platformsString,
-      icon: Icons.phonelink,
+      iconData: primaryIcon,
       color: primaryColour,
     );
   }

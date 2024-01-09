@@ -12,6 +12,7 @@ import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart'
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 
 import '../route_constants.dart';
+import '../theme/theme.dart' show AppTheme;
 
 class ServerConnectionFormData {
   ServerConnectionFormData()
@@ -77,7 +78,7 @@ class ServerSettings extends StatelessWidget {
 
             return FloatingActionButton.extended(
               label: Text(AppLocalizations.of(context)!.connectString),
-              icon: const Icon(Icons.send),
+              icon: const Icon(AppTheme.acceptIcon),
               tooltip: AppLocalizations.of(context)!.connectString,
               onPressed: loaded
                   ? () {
@@ -182,7 +183,7 @@ class _ServerSettingsBody extends StatelessWidget {
                   ),
                   subtitle: Text(accessToken),
                   trailing: IconButton(
-                    icon: const Icon(Icons.content_copy),
+                    icon: const Icon(AppTheme.copyIcon),
                     onPressed: () async {
                       Clipboard.setData(
                         ClipboardData(text: accessToken),
@@ -349,9 +350,9 @@ class _ShowHideTextFormFieldState extends State<_ShowHideTextFormField> {
                   tooltip: obscureText
                       ? AppLocalizations.of(context)!.showString
                       : AppLocalizations.of(context)!.hideString,
-                  icon: obscureText
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
+                  icon: Icon(
+                    obscureText ? AppTheme.showIcon : AppTheme.hideIcon,
+                  ),
                   onPressed: () {
                     setState(() {
                       obscureText = !obscureText;

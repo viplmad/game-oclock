@@ -133,7 +133,7 @@ class _HomepageBar extends StatelessWidget {
               return nav_bar_background.NavigationDestination(
                 label: barItem.title,
                 icon: Icon(
-                  barItem.icon,
+                  barItem.iconData,
                 ),
                 indicatorColor: barItem.color,
               );

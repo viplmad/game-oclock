@@ -123,6 +123,7 @@
   "startedThisYearString": "Started this year",
   "pickedBackThisYearString": "Picked back up this year",
   "firstFinishedThisYearString": "First finished this year",
+  "finishedAgainThisYearString": "Finished again this year",
   "gamesPlayedByReleaseYearString": "Games played by release year",
   "gamesFinishedByReleaseYearString": "Games finished by release year",
   "playTimeByByMonthString": "Play Time by month",

@@ -17,6 +17,8 @@ import 'package:game_oclock/ui/common/field/field.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
 
+import '../theme/theme.dart' show AppTheme;
+
 abstract class ItemDetail<
         T extends PrimaryModel,
         N extends Object,
@@ -292,10 +294,14 @@ abstract class ItemDetailBody<
         ),
         const Divider(),
         ListTile(
-          title: withImage
-              ? Text(AppLocalizations.of(context)!.replaceImageString)
-              : Text(AppLocalizations.of(context)!.uploadImageString),
-          leading: const Icon(Icons.file_upload),
+          title: Text(
+            withImage
+                ? AppLocalizations.of(context)!.replaceImageString
+                : AppLocalizations.of(context)!.uploadImageString,
+          ),
+          leading: Icon(
+            withImage ? AppTheme.replaceUploadIcon : AppTheme.uploadIcon,
+          ),
           onTap: () async {
             picker
                 .pickImage(
@@ -316,7 +322,7 @@ abstract class ItemDetailBody<
         ),
         ListTile(
           title: Text(AppLocalizations.of(context)!.renameImageString),
-          leading: const Icon(Icons.edit),
+          leading: const Icon(AppTheme.editIcon),
           enabled: withImage,
           onTap: () async {
             final TextEditingController fieldController =
@@ -380,7 +386,7 @@ abstract class ItemDetailBody<
         ),
         ListTile(
           title: Text(AppLocalizations.of(context)!.deleteImageString),
-          leading: const Icon(Icons.delete),
+          leading: const Icon(AppTheme.deleteIcon),
           enabled: withImage,
           onTap: () async {
             BlocProvider.of<S>(outerContext).add(

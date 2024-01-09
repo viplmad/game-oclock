@@ -15,7 +15,7 @@ import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';
 
 import '../route_constants.dart';
 import '../relation/relation.dart';
-import '../theme/theme.dart' show GameTheme;
+import '../theme/theme.dart' show AppTheme, GameTheme;
 import '../calendar/calendar_arguments.dart';
 import 'item_detail.dart';
 import 'finish_date_list.dart';
@@ -349,7 +349,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         title: Text(
           AppLocalizations.of(context)!.singleCalendarViewString,
         ),
-        trailing: const Icon(Icons.arrow_forward),
+        trailing: const Icon(AppTheme.goIcon),
         onTap: () async {
           Navigator.pushNamed(
             context,

@@ -14,6 +14,8 @@ import 'package:game_oclock/ui/common/skeleton.dart';
 import 'package:game_oclock/ui/utils/field_utils.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
+import '../theme/theme.dart' show AppTheme;
+
 // ignore: must_be_immutable
 abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
@@ -205,7 +207,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                           return ListTile(
                             title: Text(dateString),
                             trailing: IconButton(
-                              icon: const Icon(Icons.link_off),
+                              icon: const Icon(AppTheme.unlinkIcon),
                               onPressed: () {
                                 BlocProvider.of<S>(outerContext).add(
                                   DeleteItemRelation<ItemFinish>(

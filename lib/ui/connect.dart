@@ -7,7 +7,7 @@ import 'package:logic/bloc/connection/connection.dart';
 import 'package:logic/service/service.dart' show GameOClockService;
 
 import 'route_constants.dart';
-import 'theme/app_theme.dart';
+import 'theme/theme.dart' show AppTheme;
 
 class Connectpage extends StatelessWidget {
   const Connectpage({

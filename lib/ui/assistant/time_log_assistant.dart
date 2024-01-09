@@ -12,6 +12,7 @@ import 'package:logic/utils/time_of_day_extension.dart';
 import 'package:game_oclock/ui/utils/fab_utils.dart';
 import 'package:game_oclock/ui/common/field/field.dart'
     show DateField, DurationField, TimeField;
+import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 class GameLogAssistant extends StatelessWidget {
   const GameLogAssistant({
@@ -37,7 +38,7 @@ class GameLogAssistant extends StatelessWidget {
           builder: (BuildContext context, GameLogAssistantState state) {
             return FloatingActionButton.extended(
               label: Text(AppLocalizations.of(context)!.saveString),
-              icon: const Icon(Icons.cloud_upload),
+              icon: const Icon(AppTheme.acceptIcon),
               tooltip: AppLocalizations.of(context)!.saveString,
               onPressed: state.isValid
                   ? () async {

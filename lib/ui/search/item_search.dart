@@ -14,6 +14,7 @@ import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 import '../detail/detail_arguments.dart';
+import '../theme/theme.dart' show AppTheme;
 
 abstract class ItemSearch<
         T extends PrimaryModel,
@@ -140,7 +141,7 @@ class _ItemSearchBodyState<
           maxLines: 1,
           decoration: InputDecoration(
             border: const UnderlineInputBorder(),
-            prefixIcon: const Icon(Icons.search),
+            prefixIcon: const Icon(AppTheme.searchIcon),
             hintText: AppLocalizations.of(context)!
                 .searchString(widget.typesName(context)),
           ),
@@ -211,7 +212,7 @@ class _ItemSearchBodyState<
   List<Widget> _buildActions() {
     return <Widget>[
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(AppTheme.clearIcon),
         tooltip: AppLocalizations.of(context)!.clearSearchString,
         onPressed: () {
           _textEditingController.clear();

@@ -17,7 +17,7 @@ import 'package:game_oclock/ui/common/skeleton.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 import '../route_constants.dart';
-import '../theme/theme.dart' show GameTheme;
+import '../theme/theme.dart' show AppTheme, GameTheme, CalendarTheme;
 import '../detail/detail_arguments.dart';
 import 'calendar_utils.dart';
 
@@ -58,35 +58,35 @@ class MultiGameCalendar extends StatelessWidget {
           scrolledUnderElevation: 1.0,
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.first_page),
+              icon: const Icon(CalendarTheme.firstIcon),
               tooltip: AppLocalizations.of(context)!.firstLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateFirst());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.navigate_before),
+              icon: const Icon(CalendarTheme.previousIcon),
               tooltip: AppLocalizations.of(context)!.previousLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDatePrevious());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.navigate_next),
+              icon: const Icon(CalendarTheme.nextIcon),
               tooltip: AppLocalizations.of(context)!.nextLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateNext());
               },
             ),
             IconButton(
-              icon: const Icon(Icons.last_page),
+              icon: const Icon(CalendarTheme.lastIcon),
               tooltip: AppLocalizations.of(context)!.lastLabel,
               onPressed: () {
                 bloc.add(UpdateSelectedDateLast());
               },
             ),
             PopupMenuButton<CalendarRange>(
-              icon: const Icon(Icons.date_range),
+              icon: const Icon(AppTheme.changeRangeIcon),
               tooltip: AppLocalizations.of(context)!.changeRangeString,
               itemBuilder: (BuildContext context) {
                 return CalendarRange.values
@@ -106,7 +106,7 @@ class MultiGameCalendar extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.insert_chart),
+              icon: const Icon(CalendarTheme.changeStyleIcon),
               tooltip: AppLocalizations.of(context)!.changeStyleString,
               onPressed: () {
                 bloc.add(UpdateCalendarStyle());
