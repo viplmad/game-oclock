@@ -131,6 +131,8 @@
   "playTimeByByMonthString": "Tiempo de juego por mes",
   "sessionsPlayedByMonthString": "Sesiones por mes",
   "gamesFinishedByMonthString": "Juegos terminados por mes",
+  "playedInString": "Jugado en {month}",
+  "finishedInString": "Terminados en {month}",
   "newRelasesString": "Nuevos lanzamientos",
   "recentString": "Recientes",
   "classicGamesString": "Juegos clásicos",

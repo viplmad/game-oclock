@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -467,6 +469,14 @@ class _ReviewYearBody extends StatelessWidget {
                         )
                         .toList(growable: false),
                     playedData.totalTime,
+                    (int month) => _onTotalTimeMonthTap(
+                      context,
+                      gamesColour,
+                      month,
+                      games,
+                      finishedGames,
+                      playedData.totalTime,
+                    ),
                   ),
                 ),
               );
@@ -500,6 +510,14 @@ class _ReviewYearBody extends StatelessWidget {
                       context,
                       finishedData.totalFinishedGrouped,
                       finishedData.totalFinished,
+                      (int month) => _onFinishedMonthTap(
+                        context,
+                        gamesColour,
+                        month,
+                        finishedGames,
+                        games,
+                        playedData.totalTime,
+                      ),
                     ),
                   ),
                 );
@@ -725,6 +743,7 @@ class _ReviewYearBody extends StatelessWidget {
     List<Color> colours,
     List<Map<int, Duration>> gamesTotalTimeGrouped,
     Duration totalTime,
+    void Function(int month)? onMonthTap,
   ) {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
@@ -750,6 +769,9 @@ class _ReviewYearBody extends StatelessWidget {
         colours: colours,
         valueFormatter: _formatPercentageValueForChart,
         measureFormatter: _formatPercentageMeasureForChart,
+        onDomainTap: onMonthTap != null
+            ? (int domainIndex) => onMonthTap(domainIndex + 1)
+            : null,
       ),
     );
   }
@@ -759,6 +781,7 @@ class _ReviewYearBody extends StatelessWidget {
     List<Color> colours,
     List<Map<int, int>> gamesTotalSessionsGrouped,
     int totalSessions,
+    // void Function(int month)? onMonthTap, //TODO
   ) {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
@@ -792,6 +815,7 @@ class _ReviewYearBody extends StatelessWidget {
     BuildContext context,
     Map<int, int> totalFinishedGrouped,
     int totalFinished,
+    void Function(int month) onMonthTap,
   ) {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
@@ -805,6 +829,7 @@ class _ReviewYearBody extends StatelessWidget {
         }).toList(growable: false),
         valueFormatter: _formatPercentageValueForChart,
         measureFormatter: _formatPercentageMeasureForChart,
+        onDomainTap: (int domainIndex) => onMonthTap(domainIndex + 1),
       ),
     );
   }
@@ -820,6 +845,7 @@ class _ReviewYearBody extends StatelessWidget {
       <Color>[colour],
       <Map<int, Duration>>[gameTotalTimeGrouped],
       totalTime,
+      null,
     );
   }
 
@@ -859,7 +885,7 @@ class _ReviewYearBody extends StatelessWidget {
           )}';
   }
 
-  void Function()? _onPlayedTap(
+  void Function() _onPlayedTap(
     BuildContext context,
     Map<String, Color> gamesColour,
     List<GamePlayedReviewDTO> games,
@@ -873,23 +899,16 @@ class _ReviewYearBody extends StatelessWidget {
         useSafeArea: true,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          final List<Widget> widgets = games.map((GamePlayedReviewDTO game) {
-            GameFinishedReviewDTO? finishedGame;
-            try {
-              finishedGame = finishedGames.firstWhere(
-                (GameFinishedReviewDTO g) => g.id == game.id,
-              );
-            } on StateError catch (_) {}
-
-            // TODO show different information for played, ordered by first play or grouped by month
-            return _buildSimpleGameCard(
-              context,
-              gamesColour[game.id]!,
-              game,
-              finishedGame,
-              totalTime,
-            );
-          }).toList(growable: false);
+          final SplayTreeMap<int, List<GamePlayedReviewDTO>> monthGamesMap =
+              SplayTreeMap<int, List<GamePlayedReviewDTO>>();
+          for (final GamePlayedReviewDTO game in games) {
+            for (final int month in game.totalTimeGrouped.keys) {
+              final List<GamePlayedReviewDTO> monthGames =
+                  monthGamesMap[month] ?? <GamePlayedReviewDTO>[];
+              monthGames.add(game);
+              monthGamesMap[month] = monthGames;
+            }
+          }
 
           return Column(
             children: <Widget>[
@@ -901,11 +920,40 @@ class _ReviewYearBody extends StatelessWidget {
               ),
               Expanded(
                 child: Scrollbar(
-                  child: ItemListBuilder(
-                    itemCount: widgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return widgets.elementAt(index);
-                    },
+                  child: CustomScrollView(
+                    shrinkWrap: true,
+                    slivers: monthGamesMap.entries.map(
+                      (MapEntry<int, List<GamePlayedReviewDTO>> monthGames) {
+                        final String sectionTitle =
+                            AppLocalizationsUtils.months()
+                                .elementAt(monthGames.key - 1);
+
+                        return ItemSliverCardSectionBuilder(
+                          title: sectionTitle,
+                          itemCount: monthGames.value.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final GamePlayedReviewDTO game =
+                                monthGames.value.elementAt(index);
+
+                            GameFinishedReviewDTO? finishedGame;
+                            try {
+                              finishedGame = finishedGames.firstWhere(
+                                (GameFinishedReviewDTO g) => g.id == game.id,
+                              );
+                            } on StateError catch (_) {}
+
+                            // TODO show different information for played, ordered by first play
+                            return _buildSimpleGameCard(
+                              context,
+                              gamesColour[game.id]!,
+                              game,
+                              finishedGame,
+                              totalTime,
+                            );
+                          },
+                        );
+                      },
+                    ).toList(growable: false),
                   ),
                 ),
               ),
@@ -916,7 +964,7 @@ class _ReviewYearBody extends StatelessWidget {
     };
   }
 
-  void Function()? _onFinishedTap(
+  void Function() _onFinishedTap(
     BuildContext context,
     Map<String, Color> gamesColour,
     List<GameFinishedReviewDTO> games,
@@ -930,20 +978,16 @@ class _ReviewYearBody extends StatelessWidget {
         useSafeArea: true,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          final List<Widget> widgets = games.map((GameFinishedReviewDTO game) {
-            final GamePlayedReviewDTO playedGame = playedGames.firstWhere(
-              (GamePlayedReviewDTO g) => g.id == game.id,
-            );
-
-            // TODO show different information for finished, ordered by first finished or grouped by month finished
-            return _buildSimpleGameCard(
-              context,
-              gamesColour[game.id]!,
-              playedGame,
-              game,
-              totalTime,
-            );
-          }).toList(growable: false);
+          final SplayTreeMap<int, List<GameFinishedReviewDTO>> monthGamesMap =
+              SplayTreeMap<int, List<GameFinishedReviewDTO>>();
+          for (final GameFinishedReviewDTO game in games) {
+            for (final int month in game.totalFinishedGrouped.keys) {
+              final List<GameFinishedReviewDTO> monthGames =
+                  monthGamesMap[month] ?? <GameFinishedReviewDTO>[];
+              monthGames.add(game);
+              monthGamesMap[month] = monthGames;
+            }
+          }
 
           return Column(
             children: <Widget>[
@@ -955,11 +999,38 @@ class _ReviewYearBody extends StatelessWidget {
               ),
               Expanded(
                 child: Scrollbar(
-                  child: ItemListBuilder(
-                    itemCount: widgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return widgets.elementAt(index);
-                    },
+                  child: CustomScrollView(
+                    shrinkWrap: true,
+                    slivers: monthGamesMap.entries.map(
+                      (MapEntry<int, List<GameFinishedReviewDTO>> monthGames) {
+                        final String sectionTitle =
+                            AppLocalizationsUtils.months()
+                                .elementAt(monthGames.key - 1);
+
+                        return ItemSliverCardSectionBuilder(
+                          title: sectionTitle,
+                          itemCount: monthGames.value.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final GameFinishedReviewDTO game =
+                                monthGames.value.elementAt(index);
+
+                            final GamePlayedReviewDTO playedGame =
+                                playedGames.firstWhere(
+                              (GamePlayedReviewDTO g) => g.id == game.id,
+                            );
+
+                            // TODO show different information for finished, ordered by first finished
+                            return _buildSimpleGameCard(
+                              context,
+                              gamesColour[game.id]!,
+                              playedGame,
+                              game,
+                              totalTime,
+                            );
+                          },
+                        );
+                      },
+                    ).toList(growable: false),
                   ),
                 ),
               ),
@@ -970,7 +1041,7 @@ class _ReviewYearBody extends StatelessWidget {
     };
   }
 
-  void Function()? _onLongestStreakTap(
+  void Function() _onLongestStreakTap(
     BuildContext context,
     Map<String, Color> gamesColour,
     List<GamePlayedReviewDTO> games,
@@ -1026,7 +1097,140 @@ class _ReviewYearBody extends StatelessWidget {
     };
   }
 
-  void Function()? _onGameTap(
+  void _onTotalTimeMonthTap(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int month,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) async {
+    final List<GamePlayedReviewDTO> playedMonthGames =
+        games.where((GamePlayedReviewDTO game) {
+      final Duration? monthFinished = game.totalTimeGrouped[month];
+      return monthFinished != null && !monthFinished.isZero();
+    }).toList(growable: false);
+
+    if (playedMonthGames.isEmpty) {
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        final String monthLabel =
+            AppLocalizationsUtils.months().elementAt(month - 1);
+
+        return Column(
+          children: <Widget>[
+            Container(
+              color: Colors.grey,
+              child: HeaderText(
+                text: AppLocalizations.of(context)!.playedInString(monthLabel),
+              ),
+            ),
+            Expanded(
+              child: Scrollbar(
+                child: ItemListBuilder(
+                  itemCount: playedMonthGames.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final GamePlayedReviewDTO game =
+                        playedMonthGames.elementAt(index);
+
+                    GameFinishedReviewDTO? finishedGame;
+                    try {
+                      finishedGame = finishedGames.firstWhere(
+                        (GameFinishedReviewDTO g) => g.id == game.id,
+                      );
+                    } on StateError catch (_) {}
+
+                    // TODO show different information for played, ordered by percentage
+                    return _buildSimpleGameCard(
+                      context,
+                      gamesColour[game.id]!,
+                      game,
+                      finishedGame,
+                      totalTime,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onFinishedMonthTap(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int month,
+    List<GameFinishedReviewDTO> games,
+    List<GamePlayedReviewDTO> playedGames,
+    Duration totalTime,
+  ) async {
+    final List<GameFinishedReviewDTO> finishedMonthGames =
+        games.where((GameFinishedReviewDTO game) {
+      final int? monthFinished = game.totalFinishedGrouped[month];
+      return monthFinished != null && monthFinished >= 1;
+    }).toList(growable: false);
+
+    if (finishedMonthGames.isEmpty) {
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        final String monthLabel =
+            AppLocalizationsUtils.months().elementAt(month - 1);
+
+        return Column(
+          children: <Widget>[
+            Container(
+              color: Colors.grey,
+              child: HeaderText(
+                text:
+                    AppLocalizations.of(context)!.finishedInString(monthLabel),
+              ),
+            ),
+            Expanded(
+              child: Scrollbar(
+                child: ItemListBuilder(
+                  itemCount: finishedMonthGames.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final GameFinishedReviewDTO game =
+                        finishedMonthGames.elementAt(index);
+
+                    final GamePlayedReviewDTO playedGame =
+                        playedGames.firstWhere(
+                      (GamePlayedReviewDTO g) => g.id == game.id,
+                    );
+
+                    // TODO show different information for finished
+                    return _buildSimpleGameCard(
+                      context,
+                      gamesColour[game.id]!,
+                      playedGame,
+                      game,
+                      totalTime,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void Function() _onGameTap(
     BuildContext context,
     Color gameColour,
     GamePlayedReviewDTO game,
@@ -1192,7 +1396,7 @@ class _ReviewYearBody extends StatelessWidget {
   }
 
   // TODO go to game detail somewhere
-  void Function()? _onGameDetailTap(BuildContext context, GameDTO game) {
+  /*void Function() _onGameDetailTap(BuildContext context, GameDTO game) {
     return () async {
       Navigator.pushNamed(
         context,
@@ -1205,5 +1409,5 @@ class _ReviewYearBody extends StatelessWidget {
         ),
       );
     };
-  }
+  }*/
 }

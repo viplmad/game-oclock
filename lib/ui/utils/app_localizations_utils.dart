@@ -43,6 +43,23 @@ class AppLocalizationsUtils {
     return _monthsAbbr!;
   }
 
+  static List<String>? _months;
+
+  static List<String> months() {
+    if (_months != null) {
+      return _months!;
+    }
+
+    final DateTime firstDay = DateTime.now().atFirstDayOfYear();
+    _months = List<String>.generate(
+      DateTime.monthsPerYear,
+      (int index) {
+        return DateFormat.MMMM().format(firstDay.addMonths(index));
+      },
+    );
+    return _months!;
+  }
+
   static String formatWeekday(DateTime date) {
     return DateFormat.EEEE().format(date);
   }

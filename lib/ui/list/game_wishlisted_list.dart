@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,9 +13,8 @@ import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/item_list/item_list.dart';
 import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 
-import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
-import 'package:game_oclock/ui/utils/shape_utils.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show AppTheme, GameTheme;
@@ -149,7 +150,8 @@ class _GameWishlistedListBody
 
   @override
   Widget listBuilder(BuildContext context, ScrollController scrollController) {
-    final Map<int, List<GameDTO>> yearGamesMap = <int, List<GameDTO>>{};
+    final SplayTreeMap<int, List<GameDTO>> yearGamesMap =
+        SplayTreeMap<int, List<GameDTO>>();
     for (final GameDTO game in items) {
       final int releaseYear = game.releaseYear ?? -1;
       final List<GameDTO> yearGames = yearGamesMap[releaseYear] ?? <GameDTO>[];
@@ -223,50 +225,29 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: <Widget>[
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: ItemSliverHeaderDelegate(title),
-        ),
-        SliverList.builder(
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                right: 4.0,
-                left: 4.0,
-                bottom: 4.0,
-                top: 4.0,
-              ),
-              child: ShapeUtils.forceCardRound(
-                innerItemBuilder(context, index),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
+    return ItemSliverCardSectionBuilder(
+      title: title,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        final T item = items.elementAt(index);
 
-  Widget innerItemBuilder(BuildContext context, int index) {
-    final T item = items.elementAt(index);
-
-    return DismissibleItem(
-      itemWidget: itemBuilder(context, item),
-      onDismissed: () {
-        onDismiss(item);
-      },
-      confirmDismiss: () async {
-        return showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return confirmDelete(context, item);
+        return DismissibleItem(
+          itemWidget: itemBuilder(context, item),
+          onDismissed: () {
+            onDismiss(item);
           },
-        ).then((bool? value) => value ?? false);
+          confirmDismiss: () async {
+            return showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return confirmDelete(context, item);
+              },
+            ).then((bool? value) => value ?? false);
+          },
+          dismissIconData: AppTheme.deleteIcon,
+          dismissLabel: AppLocalizations.of(context)!.deleteString,
+        );
       },
-      dismissIconData: AppTheme.deleteIcon,
-      dismissLabel: AppLocalizations.of(context)!.deleteString,
     );
   }
 }
@@ -289,83 +270,29 @@ class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: <Widget>[
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: ItemSliverHeaderDelegate(title),
-        ),
-        SliverGrid.builder(
-          itemCount: items.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                right: 4.0,
-                left: 4.0,
-                bottom: 4.0,
-                top: 4.0,
-              ),
-              child: ShapeUtils.forceCardRound(
-                innerItemBuilder(context, index),
-              ),
-            );
+    return ItemSliverGridSectionBuilder(
+      title: title,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        final T item = items.elementAt(index);
+
+        return DismissibleItem(
+          itemWidget: itemBuilder(context, item),
+          onDismissed: () {
+            onDismiss(item);
           },
-        ),
-      ],
-    );
-  }
-
-  Widget innerItemBuilder(BuildContext context, int index) {
-    final T item = items.elementAt(index);
-
-    return DismissibleItem(
-      itemWidget: itemBuilder(context, item),
-      onDismissed: () {
-        onDismiss(item);
-      },
-      confirmDismiss: () async {
-        return showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return confirmDelete(context, item);
+          confirmDismiss: () async {
+            return showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return confirmDelete(context, item);
+              },
+            ).then((bool? value) => value ?? false);
           },
-        ).then((bool? value) => value ?? false);
+          dismissIconData: AppTheme.deleteIcon,
+          dismissLabel: AppLocalizations.of(context)!.deleteString,
+        );
       },
-      dismissIconData: AppTheme.deleteIcon,
-      dismissLabel: AppLocalizations.of(context)!.deleteString,
     );
   }
-}
-
-class ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
-  ItemSliverHeaderDelegate(this.title);
-
-  final String title;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: Colors.grey,
-      child: HeaderText(
-        text: title,
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => minExtent;
-
-  @override
-  double get minExtent => 40.0;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
 }

@@ -15,6 +15,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     this.hideDomainLabels = false,
     this.valueFormatter,
     this.measureFormatter,
+    this.onDomainTap,
   }) : super(key: key);
 
   final String name;
@@ -24,6 +25,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   final bool hideDomainLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
+  final void Function(int)? onDomainTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
       hideDomainLabels: hideDomainLabels,
       valueFormatter: valueFormatter,
       measureFormatter: measureFormatter,
+      onDomainTap: onDomainTap,
     );
   }
 }
@@ -50,6 +53,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
     this.hideDomainLabels = false,
     this.valueFormatter,
     this.measureFormatter,
+    this.onDomainTap,
   }) : super(key: key);
 
   final String id;
@@ -60,6 +64,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
   final bool hideDomainLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
+  final void Function(int)? onDomainTap;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +135,20 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
             ? charts.BasicNumericTickFormatterSpec(measureFormatter)
             : null,
       ),
+      selectionModels: onDomainTap != null
+          ? <charts.SelectionModelConfig<String>>[
+              charts.SelectionModelConfig<String>(
+                changedListener: (charts.SelectionModel<String> model) {
+                  final charts.SeriesDatum<String>? firstDatum =
+                      model.selectedDatum.firstOrNull;
+                  if (firstDatum != null && firstDatum.index != null) {
+                    final int domainIndex = firstDatum.index!;
+                    onDomainTap!(domainIndex);
+                  }
+                },
+              ),
+            ]
+          : null,
     );
   }
 }

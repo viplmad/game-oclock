@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:game_oclock/ui/utils/shape_utils.dart';
 
+import 'header_text.dart';
 import 'skeleton.dart';
 
 class ItemListBuilder extends StatelessWidget {
@@ -30,12 +31,7 @@ class ItemListBuilder extends StatelessWidget {
       itemCount: itemCount,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.only(
-            right: 4.0,
-            left: 4.0,
-            bottom: 4.0,
-            top: 4.0,
-          ),
+          padding: const EdgeInsets.all(4.0),
           child: ShapeUtils.forceCardRound(
             itemBuilder(context, index),
           ),
@@ -74,12 +70,7 @@ class ItemGridBuilder extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.only(
-            right: 4.0,
-            left: 4.0,
-            bottom: 4.0,
-            top: 4.0,
-          ),
+          padding: const EdgeInsets.all(4.0),
           child: ShapeUtils.forceCardRound(
             itemBuilder(context, index),
           ),
@@ -87,6 +78,111 @@ class ItemGridBuilder extends StatelessWidget {
       },
     );
   }
+}
+
+class ItemSliverCardSectionBuilder extends StatelessWidget {
+  const ItemSliverCardSectionBuilder({
+    Key? key,
+    required this.title,
+    required this.itemCount,
+    required this.itemBuilder,
+  }) : super(key: key);
+
+  final String title;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverMainAxisGroup(
+      slivers: <Widget>[
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _ItemSliverHeaderDelegate(title),
+        ),
+        SliverList.builder(
+          itemCount: itemCount,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ShapeUtils.forceCardRound(
+                itemBuilder(context, index),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ItemSliverGridSectionBuilder extends StatelessWidget {
+  const ItemSliverGridSectionBuilder({
+    Key? key,
+    required this.title,
+    required this.itemCount,
+    required this.itemBuilder,
+  }) : super(key: key);
+
+  final String title;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverMainAxisGroup(
+      slivers: <Widget>[
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _ItemSliverHeaderDelegate(title),
+        ),
+        SliverGrid.builder(
+          itemCount: itemCount,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ShapeUtils.forceCardRound(
+                itemBuilder(context, index),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _ItemSliverHeaderDelegate(this.title);
+
+  final String title;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.grey,
+      child: HeaderText(
+        text: title,
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => minExtent;
+
+  @override
+  double get minExtent => 40.0;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }
 
 class SkeletonItemList extends StatelessWidget {

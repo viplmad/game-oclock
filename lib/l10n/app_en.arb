@@ -131,6 +131,8 @@
   "playTimeByByMonthString": "Play Time by month",
   "sessionsPlayedByMonthString": "Sessions played by month",
   "gamesFinishedByMonthString": "Games finished by month",
+  "playedInString": "Played in {month}",
+  "finishedInString": "Finished in {month}",
   "newRelasesString": "New releases",
   "recentString": "Recent",
   "classicGamesString": "Classic games",
