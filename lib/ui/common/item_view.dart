@@ -78,7 +78,7 @@ class ItemCard extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final String? trailing;
+  final Widget? trailing;
   final bool hasImage;
   final String? imageURL;
   final List<Widget> additionalWidgets;
@@ -94,20 +94,39 @@ class ItemCard extends StatelessWidget {
       imageURL: imageURL,
     );
 
+    return CardWithTap(
+      onTap: onTap,
+      child: additionalWidgets.isEmpty
+          ? itemListTile
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                itemListTile,
+                ...additionalWidgets,
+              ],
+            ),
+    );
+  }
+}
+
+class CardWithTap extends StatelessWidget {
+  const CardWithTap({
+    Key? key,
+    required this.child,
+    required this.onTap,
+  }) : super(key: key);
+
+  final Widget child;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(0.0),
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
-        child: additionalWidgets.isEmpty
-            ? itemListTile
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  itemListTile,
-                  ...additionalWidgets,
-                ],
-              ),
+        child: child,
       ),
     );
   }
@@ -125,7 +144,7 @@ class _ItemListTile extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final String? trailing;
+  final Widget? trailing;
   final bool hasImage;
   final String? imageURL;
 
@@ -154,7 +173,7 @@ class _ItemListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: subtitle != null ? Text(subtitle!) : null,
-      trailing: trailing != null ? Text(trailing!) : null,
+      trailing: trailing,
     );
   }
 }

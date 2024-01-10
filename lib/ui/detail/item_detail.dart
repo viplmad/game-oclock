@@ -250,6 +250,8 @@ abstract class ItemDetailBody<
                   ? () async {
                       showModalBottomSheet(
                         context: context,
+                        showDragHandle: true,
+                        useSafeArea: true,
                         builder: (BuildContext innerContext) {
                           return _imageActionListBuilder(
                             innerContext,

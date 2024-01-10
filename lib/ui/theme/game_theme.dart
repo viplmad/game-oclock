@@ -66,6 +66,11 @@ class GameTheme {
   static const IconData firstFinishedIcon = finishIcon;
   static const IconData notFirstFinishedIcon =
       Icons.event_repeat_outlined; // TODO
+  static const IconData firstIcon = Icons.looks_one_outlined;
+  static const IconData secondIcon = Icons.looks_two_outlined;
+  static const IconData thirdIcon = Icons.looks_3_outlined;
+  static const IconData fourthIcon = Icons.looks_4_outlined;
+  static const IconData fifthIcon = Icons.looks_5_outlined;
 
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
@@ -188,7 +193,8 @@ class GameTheme {
       ItemCard(
         title: itemTitle(item),
         subtitle: _itemSubtitle(context, item),
-        trailing: AppLocalizationsUtils.formatDuration(context, totalTime),
+        trailing:
+            Text(AppLocalizationsUtils.formatDuration(context, totalTime)),
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
@@ -199,6 +205,7 @@ class GameTheme {
   static Widget itemCardWithAdditionalWidgets(
     BuildContext context,
     GameDTO item,
+    Widget trailing,
     List<Widget> additionalWidgets,
     void Function()? Function(BuildContext, GameDTO) onTap,
   ) {
@@ -207,6 +214,7 @@ class GameTheme {
       ItemCard(
         title: itemTitle(item),
         subtitle: _itemSubtitle(context, item),
+        trailing: trailing,
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),

@@ -276,8 +276,8 @@ class _HomepageDrawer extends StatelessWidget {
                         borderRadius: ShapeUtils.fabBorderRadius,
                         child: Image.asset(
                           'assets/images/icon.png',
-                          height: 48.0,
-                          width: 48.0,
+                          height: kMinInteractiveDimension,
+                          width: kMinInteractiveDimension,
                         ),
                       ),
                     ),
