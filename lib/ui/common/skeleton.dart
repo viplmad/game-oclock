@@ -80,7 +80,7 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(0.0),
+      margin: EdgeInsets.zero,
       child: ListTile(
         leading: widget.hasImage
             ? SizedBox(

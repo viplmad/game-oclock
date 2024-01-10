@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:community_charts_flutter/community_charts_flutter.dart'
     as charts;
 
+import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
+
 class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({
     Key? key,
@@ -12,6 +14,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     this.vertical = true,
     this.hideDomainLabels = false,
     this.valueFormatter,
+    this.measureFormatter,
   }) : super(key: key);
 
   final String name;
@@ -20,16 +23,18 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   final bool vertical;
   final bool hideDomainLabels;
   final String Function(N)? valueFormatter;
+  final String Function(num?)? measureFormatter;
 
   @override
   Widget build(BuildContext context) {
     return StatisticsStackedHistogram<N>(
-      name: name,
+      id: name,
       domainLabels: domainLabels,
       stackedValues: <List<N>>[values],
       vertical: vertical,
       hideDomainLabels: hideDomainLabels,
       valueFormatter: valueFormatter,
+      measureFormatter: measureFormatter,
     );
   }
 }
@@ -37,22 +42,24 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
 class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
   const StatisticsStackedHistogram({
     Key? key,
-    required this.name,
+    required this.id,
     required this.domainLabels,
     required this.stackedValues,
     this.colours = const <Color>[],
     this.vertical = true,
     this.hideDomainLabels = false,
     this.valueFormatter,
+    this.measureFormatter,
   }) : super(key: key);
 
-  final String name;
+  final String id;
   final List<String> domainLabels;
   final List<List<N>> stackedValues;
   final List<Color> colours;
   final bool vertical;
   final bool hideDomainLabels;
   final String Function(N)? valueFormatter;
+  final String Function(num?)? measureFormatter;
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +93,18 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
         domainFn: (_SeriesElement<N> element, _) => element.domainLabel,
         measureFn: (_SeriesElement<N> element, _) => element.value,
         data: data,
-
-        //domainFormatterFn: (_, index) => domainAccessor(index),
         labelAccessorFn: (_SeriesElement<N> element, _) =>
             element.value > 0 ? labelAccessor(element.value) : '',
       );
 
       seriesList.add(series);
     }
+
+    final charts.TextStyleSpec textStyleSpec = charts.TextStyleSpec(
+      color: charts.ColorUtil.fromDartColor(
+        AppTheme.defaultThemeTextColor(context),
+      ),
+    );
 
     return charts.BarChart(
       seriesList,
@@ -106,7 +117,19 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
           ? const charts.OrdinalAxisSpec(
               renderSpec: charts.NoneRenderSpec<String>(),
             )
-          : const charts.OrdinalAxisSpec(),
+          : charts.OrdinalAxisSpec(
+              renderSpec: charts.GridlineRendererSpec<String>(
+                labelStyle: textStyleSpec,
+              ),
+            ),
+      primaryMeasureAxis: charts.NumericAxisSpec(
+        renderSpec: charts.GridlineRendererSpec<num>(
+          labelStyle: textStyleSpec,
+        ),
+        tickFormatterSpec: measureFormatter != null
+            ? charts.BasicNumericTickFormatterSpec(measureFormatter)
+            : null,
+      ),
     );
   }
 }
@@ -114,14 +137,14 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
 class StatisticsPieChart<N extends num> extends StatelessWidget {
   const StatisticsPieChart({
     Key? key,
-    required this.name,
+    required this.id,
     required this.domainLabels,
     required this.values,
     this.colours = const <Color>[],
     this.valueFormatter,
   }) : super(key: key);
 
-  final String name;
+  final String id;
   final List<String> domainLabels;
   final List<N> values;
   final List<Color> colours;
@@ -145,7 +168,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
 
     final charts.Series<_SeriesElement<N>, String> series =
         charts.Series<_SeriesElement<N>, String>(
-      id: name,
+      id: id,
       colorFn: (_SeriesElement<N> element, __) =>
           charts.ColorUtil.fromDartColor(
         colours.isEmpty
@@ -155,8 +178,6 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       domainFn: (_SeriesElement<N> element, _) => element.domainLabel,
       measureFn: (_SeriesElement<N> element, _) => element.value,
       data: data,
-
-      //domainFormatterFn: (_, index) => domainAccessor(index),
       labelAccessorFn: (_SeriesElement<N> element, _) => element.value > 0
           ? labelAccessor(element.domainLabel, element.value)
           : '',

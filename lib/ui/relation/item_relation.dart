@@ -304,8 +304,7 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
           });
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor:
-              ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
+          foregroundColor: AppTheme.defaultThemeTextColor(context),
           backgroundColor: ThemeUtils.isThemeDark(context)
               ? Colors.grey[700]
               : Colors.grey[300],

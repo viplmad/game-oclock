@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_oclock/ui/utils/theme_utils.dart';
+import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 void showSnackBar(
   BuildContext context, {
@@ -65,7 +65,7 @@ SnackBarAction backgroundSnackBarAction(
 }) {
   return SnackBarAction(
     label: label,
-    textColor: ThemeUtils.isThemeDark(context) ? Colors.black : Colors.white,
+    textColor: AppTheme.defaultThemeTextColorReverse(context),
     onPressed: onPressed,
   );
 }

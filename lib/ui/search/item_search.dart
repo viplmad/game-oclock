@@ -234,8 +234,7 @@ class _ItemSearchBodyState<
           );
         },
         style: TextButton.styleFrom(
-          foregroundColor:
-              ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87,
+          foregroundColor: AppTheme.defaultThemeTextColor(context),
           backgroundColor:
               ThemeUtils.isThemeDark(context) ? Colors.black54 : Colors.white,
         ),

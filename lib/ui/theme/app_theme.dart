@@ -41,17 +41,25 @@ class AppTheme {
         secondary: _secondaryColour,
       ),
       cardTheme: CardTheme(
-        surfaceTintColor: defaultSurfaceTintColor(brightness),
+        surfaceTintColor: _defaultSurfaceTintColor(brightness),
       ),
     );
   }
 
   static Color defaultThemeSurfaceTintColor(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
-    return defaultSurfaceTintColor(brightness);
+    return _defaultSurfaceTintColor(brightness);
   }
 
-  static Color defaultSurfaceTintColor(Brightness brightness) {
+  static Color defaultThemeTextColor(BuildContext context) {
+    return ThemeUtils.isThemeDark(context) ? Colors.white : Colors.black87;
+  }
+
+  static Color defaultThemeTextColorReverse(BuildContext context) {
+    return ThemeUtils.isThemeDark(context) ? Colors.black87 : Colors.white;
+  }
+
+  static Color _defaultSurfaceTintColor(Brightness brightness) {
     return ThemeUtils.isDark(brightness) ? Colors.grey[800]! : Colors.white;
   }
 }

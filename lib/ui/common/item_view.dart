@@ -122,7 +122,7 @@ class CardWithTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(0.0),
+      margin: EdgeInsets.zero,
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
@@ -193,7 +193,7 @@ class ItemGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(0.0),
+      margin: EdgeInsets.zero,
       child: InkWell(
         borderRadius: ShapeUtils.cardBorderRadius,
         onTap: onTap,
