@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:game_collection_client/api.dart'
     show
-        GameDTO,
         GameFinishedReviewDTO,
         GamePlayedReviewDTO,
         GamesFinishedReviewDTO,
@@ -26,8 +25,6 @@ import 'package:game_oclock/ui/common/list_view.dart';
 import 'package:game_oclock/ui/common/statistics_histogram.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
-import '../route_constants.dart';
-import '../detail/detail_arguments.dart';
 import '../theme/theme.dart' show AppTheme, GameTheme;
 
 const int topMax = 5;
