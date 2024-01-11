@@ -21,10 +21,17 @@ class TagTheme {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }
 
+  static List<String>? _views;
+
   static List<String> views(BuildContext context) {
-    return TagView.values
+    if (_views != null) {
+      return _views!;
+    }
+
+    _views = TagView.values
         .map<String>((TagView view) => _viewString(context, view))
         .toList(growable: false);
+    return _views!;
   }
 
   static String _viewString(BuildContext context, TagView view) {

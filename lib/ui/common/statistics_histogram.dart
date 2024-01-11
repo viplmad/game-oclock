@@ -8,21 +8,25 @@ import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({
     Key? key,
-    required this.name,
+    required this.id,
     required this.domainLabels,
     required this.values,
+    this.colour,
     this.vertical = true,
     this.hideDomainLabels = false,
+    this.hideValueLabels = false,
     this.valueFormatter,
     this.measureFormatter,
     this.onDomainTap,
   }) : super(key: key);
 
-  final String name;
+  final String id;
   final List<String> domainLabels;
   final List<N> values;
+  final Color? colour;
   final bool vertical;
   final bool hideDomainLabels;
+  final bool hideValueLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
   final void Function(int)? onDomainTap;
@@ -30,14 +34,16 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StatisticsStackedHistogram<N>(
-      id: name,
+      id: id,
       domainLabels: domainLabels,
       stackedValues: <List<N>>[values],
+      colours: colour != null ? <Color>[colour!] : <Color>[],
       vertical: vertical,
       hideDomainLabels: hideDomainLabels,
+      hideValueLabels: hideValueLabels,
       valueFormatter: valueFormatter,
       measureFormatter: measureFormatter,
-      onDomainTap: onDomainTap,
+      onTap: onDomainTap,
     );
   }
 }
@@ -51,9 +57,10 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
     this.colours = const <Color>[],
     this.vertical = true,
     this.hideDomainLabels = false,
+    this.hideValueLabels = false,
     this.valueFormatter,
     this.measureFormatter,
-    this.onDomainTap,
+    this.onTap,
   }) : super(key: key);
 
   final String id;
@@ -62,14 +69,16 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
   final List<Color> colours;
   final bool vertical;
   final bool hideDomainLabels;
+  final bool hideValueLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
-  final void Function(int)? onDomainTap;
+  final void Function(int)? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final String Function(N) labelAccessor =
-        valueFormatter ?? (N value) => value.toString();
+    final String Function(N) labelAccessor = hideValueLabels
+        ? (_) => ''
+        : valueFormatter ?? (N value) => value.toString();
 
     final List<charts.Series<_SeriesElement<N>, String>> seriesList =
         <charts.Series<_SeriesElement<N>, String>>[];
@@ -135,7 +144,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
             ? charts.BasicNumericTickFormatterSpec(measureFormatter)
             : null,
       ),
-      selectionModels: onDomainTap != null
+      selectionModels: onTap != null
           ? <charts.SelectionModelConfig<String>>[
               charts.SelectionModelConfig<String>(
                 changedListener: (charts.SelectionModel<String> model) {
@@ -143,7 +152,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
                       model.selectedDatum.firstOrNull;
                   if (firstDatum != null && firstDatum.index != null) {
                     final int domainIndex = firstDatum.index!;
-                    onDomainTap!(domainIndex);
+                    onTap!(domainIndex);
                   }
                 },
               ),
@@ -161,6 +170,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
     required this.values,
     this.colours = const <Color>[],
     this.valueFormatter,
+    this.onTap,
   }) : super(key: key);
 
   final String id;
@@ -168,6 +178,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
   final List<N> values;
   final List<Color> colours;
   final String Function(String, N)? valueFormatter;
+  final void Function(int)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +226,20 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
           charts.ArcLabelDecorator<String>(),
         ],
       ),
+      selectionModels: onTap != null
+          ? <charts.SelectionModelConfig<String>>[
+              charts.SelectionModelConfig<String>(
+                changedListener: (charts.SelectionModel<String> model) {
+                  final charts.SeriesDatum<String>? firstDatum =
+                      model.selectedDatum.firstOrNull;
+                  if (firstDatum != null && firstDatum.index != null) {
+                    final int domainIndex = firstDatum.index!;
+                    onTap!(domainIndex);
+                  }
+                },
+              ),
+            ]
+          : null,
     );
   }
 }

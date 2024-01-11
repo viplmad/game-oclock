@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:game_oclock/ui/utils/shape_utils.dart';
+import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 import 'header_text.dart';
 import 'skeleton.dart';
@@ -167,7 +168,7 @@ class _ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: Colors.grey,
+      color: AppTheme.defaultBackgroundColor(context),
       child: HeaderText(
         text: title,
       ),

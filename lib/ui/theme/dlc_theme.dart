@@ -34,10 +34,17 @@ class DLCTheme {
     );
   }
 
+  static List<String>? _views;
+
   static List<String> views(BuildContext context) {
-    return DLCView.values
+    if (_views != null) {
+      return _views!;
+    }
+
+    _views = DLCView.values
         .map<String>((DLCView view) => _viewString(context, view))
         .toList(growable: false);
+    return _views!;
   }
 
   static String _viewString(BuildContext context, DLCView view) {

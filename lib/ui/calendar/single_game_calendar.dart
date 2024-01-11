@@ -185,7 +185,7 @@ class SingleGameCalendar extends StatelessWidget {
       activeIcon: AppTheme.closeIcon,
       shape: ShapeUtils.fabShapeBorder,
       tooltip: AppLocalizations.of(context)!.addString(
-        AppLocalizations.of(context)!.gameCalendarEventsString,
+        AppLocalizations.of(context)!.gameCalendarEventString,
       ),
       overlayColor: Colors.black87,
       foregroundColor: Colors.white,
@@ -219,7 +219,7 @@ class SingleGameCalendar extends StatelessWidget {
           },
         ),
         SpeedDialChild(
-          child: const Icon(GameTheme.finishIcon, color: Colors.white),
+          child: const Icon(GameTheme.finishedIcon, color: Colors.white),
           backgroundColor: GameTheme.primaryColour,
           shape: ShapeUtils.fabShapeBorder,
           label: AppLocalizations.of(context)!.addString(
@@ -537,8 +537,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
 
   Widget _buildFinishDate(BuildContext context, DateTime selectedDate) {
     return ListTile(
+      leading: const Icon(GameTheme.finishedIcon),
       title: Text(
-        AppLocalizations.of(context)!.selectedDateIsFinishDateString,
+        AppLocalizations.of(context)!.finishedThisDayString,
       ),
       trailing: IconButton(
         icon: const Icon(AppTheme.unlinkIcon),
@@ -549,7 +550,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
           );
         },
       ),
-      tileColor: CalendarTheme.finishedColour,
+      tileColor: GameTheme.finishedColour,
     );
   }
 

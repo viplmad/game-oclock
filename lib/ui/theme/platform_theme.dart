@@ -42,10 +42,17 @@ class PlatformTheme {
     );
   }
 
+  static List<String>? _views;
+
   static List<String> views(BuildContext context) {
-    return PlatformView.values
+    if (_views != null) {
+      return _views!;
+    }
+
+    _views = PlatformView.values
         .map<String>((PlatformView view) => _viewString(context, view))
         .toList(growable: false);
+    return _views!;
   }
 
   static String _viewString(BuildContext context, PlatformView view) {

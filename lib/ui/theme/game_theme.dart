@@ -30,6 +30,7 @@ class GameTheme {
   static const Color nextUpStatusColour = Colors.redAccent;
   static const Color playingStatusColour = Colors.blueAccent;
   static const Color playedStatusColour = Colors.greenAccent;
+  static Color finishedColour = Colors.grey[800]!;
 
   static const Color ratingColour = Color(0xA0B71C1C);
   static const Color ratingBorderColour = secondaryColour;
@@ -48,6 +49,7 @@ class GameTheme {
     Colors.lightGreen[700]!,
     Colors.deepOrangeAccent,
     Colors.blueGrey,
+    Colors.brown,
     Colors.lime[900]!,
     Colors.indigoAccent,
     Colors.pinkAccent,
@@ -58,12 +60,12 @@ class GameTheme {
 
   static const IconData primaryIcon = Icons.videogame_asset_outlined;
   static const IconData sessionIcon = Icons.schedule;
-  static const IconData finishIcon = Icons.emoji_events_outlined;
+  static const IconData finishedIcon = Icons.emoji_events_outlined;
   static const IconData longestSessionIcon = Icons.timelapse;
   static const IconData longestStreakIcon = Icons.browse_gallery_outlined;
   static const IconData firstPlayedIcon = Icons.fiber_new_outlined;
   static const IconData notFirstPlayedIcon = Icons.history;
-  static const IconData firstFinishedIcon = finishIcon;
+  static const IconData firstFinishedIcon = finishedIcon;
   static const IconData notFirstFinishedIcon =
       Icons.event_repeat_outlined; // TODO
   static const IconData firstIcon = Icons.looks_one_outlined;
@@ -84,10 +86,17 @@ class GameTheme {
     );
   }
 
+  static List<String>? _views;
+
   static List<String> views(BuildContext context) {
-    return GameView.values
+    if (_views != null) {
+      return _views!;
+    }
+
+    _views = GameView.values
         .map<String>((GameView view) => _viewString(context, view))
         .toList(growable: false);
+    return _views!;
   }
 
   static String _viewString(BuildContext context, GameView view) {
@@ -109,6 +118,40 @@ class GameTheme {
       case GameView.review:
         return AppLocalizations.of(context)!.yearInReviewViewString;
     }
+  }
+
+  static List<String>? _releaseYearTypes;
+
+  static List<String> releaseYearTypes(BuildContext context) {
+    if (_releaseYearTypes != null) {
+      return _releaseYearTypes!;
+    }
+
+    _releaseYearTypes = <String>[
+      AppLocalizations.of(context)!.newRelasesString,
+      AppLocalizations.of(context)!.recentString,
+      AppLocalizations.of(context)!.classicGamesString,
+    ];
+    return _releaseYearTypes!;
+  }
+
+  static List<String>? _releaseYearTypeDescriptions;
+
+  static List<String> releaseYearTypeDescriptions(
+    BuildContext context,
+    int recentYearsMax,
+  ) {
+    if (_releaseYearTypeDescriptions != null) {
+      return _releaseYearTypeDescriptions!;
+    }
+
+    _releaseYearTypeDescriptions = <String>[
+      '',
+      AppLocalizations.of(context)!.recentDescriptionString(recentYearsMax),
+      AppLocalizations.of(context)!
+          .classicGamesDescriptionString(recentYearsMax + 1),
+    ];
+    return _releaseYearTypeDescriptions!;
   }
 
   static Widget itemCard(
@@ -205,15 +248,16 @@ class GameTheme {
   static Widget itemCardWithAdditionalWidgets(
     BuildContext context,
     GameDTO item,
-    Widget trailing,
     List<Widget> additionalWidgets,
-    void Function()? Function(BuildContext, GameDTO) onTap,
-  ) {
+    void Function()? Function(BuildContext, GameDTO) onTap, {
+    String? subtitle,
+    Widget? trailing,
+  }) {
     return _addRatingBanner(
       item,
       ItemCard(
         title: itemTitle(item),
-        subtitle: _itemSubtitle(context, item),
+        subtitle: subtitle ?? _itemSubtitle(context, item),
         trailing: trailing,
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,

@@ -11,7 +11,7 @@ import 'package:logic/utils/datetime_extension.dart';
 import 'package:game_oclock/ui/common/statistics_histogram.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
-import '../theme/calendar_theme.dart';
+import '../theme/theme.dart' show GameTheme, CalendarTheme;
 
 class CalendarUtils {
   CalendarUtils._();
@@ -93,16 +93,16 @@ class CalendarUtils {
         markersAlignment: Alignment.bottomRight,
         markerSizeScale: 0.35,
         markerDecoration: const BoxDecoration(
-          color: CalendarTheme.playedColour,
+          color: GameTheme.playingStatusColour,
           shape: CalendarTheme.shape,
         ),
 
         ///HOLIDAY - Finish dates
-        holidayDecoration: const BoxDecoration(
-          color: CalendarTheme.finishedColour,
+        holidayDecoration: BoxDecoration(
+          color: GameTheme.finishedColour,
           shape: CalendarTheme.shape,
         ),
-        holidayTextStyle: const TextStyle(color: Color(0xFF5A5A5A)),
+        holidayTextStyle: const TextStyle(color: Colors.white),
 
         /// TextStyle - Like Calendar Date Picker
         // Enabled
@@ -233,7 +233,7 @@ class CalendarUtils {
           SizedBox(
             width: MediaQuery.of(context).size.width * 2,
             child: StatisticsHistogram<int>(
-              name: AppLocalizations.of(context)!.gameLogsFieldString,
+              id: 'gameLogsChart',
               domainLabels: labels,
               values: values,
               vertical: true,
@@ -249,7 +249,7 @@ class CalendarUtils {
       );
     } else {
       return StatisticsHistogram<int>(
-        name: AppLocalizations.of(context)!.gameLogsFieldString,
+        id: 'gameLogsChart',
         domainLabels: labels,
         values: values,
         vertical: true,

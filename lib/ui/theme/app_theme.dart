@@ -39,8 +39,13 @@ class AppTheme {
         primarySwatch: _primarySwatch,
       ).copyWith(
         secondary: _secondaryColour,
+        background: _defaultBackgroundColor(brightness),
       ),
       cardTheme: CardTheme(
+        surfaceTintColor: _defaultSurfaceTintColor(brightness),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: _defaultBackgroundColor(brightness),
         surfaceTintColor: _defaultSurfaceTintColor(brightness),
       ),
     );
@@ -49,6 +54,11 @@ class AppTheme {
   static Color defaultThemeSurfaceTintColor(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
     return _defaultSurfaceTintColor(brightness);
+  }
+
+  static Color defaultBackgroundColor(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+    return _defaultBackgroundColor(brightness);
   }
 
   static Color defaultThemeTextColor(BuildContext context) {
@@ -61,5 +71,11 @@ class AppTheme {
 
   static Color _defaultSurfaceTintColor(Brightness brightness) {
     return ThemeUtils.isDark(brightness) ? Colors.grey[800]! : Colors.white;
+  }
+
+  static Color _defaultBackgroundColor(Brightness brightness) {
+    return ThemeUtils.isDark(brightness)
+        ? Colors.grey[700]!
+        : Colors.grey[300]!;
   }
 }

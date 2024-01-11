@@ -13,7 +13,6 @@ import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/common/list_view.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
-import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 import '../detail/detail_arguments.dart';
 import '../search/search_arguments.dart';
@@ -305,9 +304,7 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: AppTheme.defaultThemeTextColor(context),
-          backgroundColor: ThemeUtils.isThemeDark(context)
-              ? Colors.grey[700]
-              : Colors.grey[300],
+          backgroundColor: AppTheme.defaultBackgroundColor(context),
           surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
         ),
       ),

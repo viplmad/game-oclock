@@ -98,6 +98,17 @@ class AppLocalizationsUtils {
     return '$hoursString $minutesString';
   }
 
+  static String formatMinutesAsHours(BuildContext context, int minutes) {
+    num hours = 0;
+    if (minutes % 60 == 0) {
+      hours = (minutes / 60).round();
+    } else {
+      hours = double.parse((minutes / 60).toStringAsFixed(1));
+    }
+
+    return AppLocalizations.of(context)!.hoursAbbr(hours);
+  }
+
   static String formatPercentage(double value) {
     return NumberFormat.decimalPercentPattern(decimalDigits: 0).format(value);
   }
