@@ -1,6 +1,6 @@
 import 'package:http/http.dart';
 
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show
         ApiClient,
         DLCAvailableDTO,

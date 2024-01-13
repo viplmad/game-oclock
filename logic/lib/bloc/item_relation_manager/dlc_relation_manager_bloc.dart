@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show GameDTO, PlatformAvailableDTO;
+import 'package:game_oclock_client/api.dart' show GameDTO, PlatformAvailableDTO;
 
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'

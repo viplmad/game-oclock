@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart'
-    show PageResultDTO, PrimaryModel;
+import 'package:game_oclock_client/api.dart' show PageResultDTO, PrimaryModel;
 
 import 'package:logic/service/service.dart' show SearchService;
 

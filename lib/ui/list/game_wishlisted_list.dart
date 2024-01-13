@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show GameDTO, GameStatus, NewGameDTO, PrimaryModel;
 
 import 'package:logic/model/model.dart' show ListStyle;

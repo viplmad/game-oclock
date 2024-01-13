@@ -1,10 +1,10 @@
 name: logic
-version: 2.0.0
+version: 3.0.0
 publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.10.0'
+  flutter: '>=3.16.0'
 
 dependencies:
   flutter:
@@ -24,7 +24,7 @@ dependencies:
 
   # Client
   http: ^1.1.0
-  game_collection_client:
+  game_oclock_client:
     git:
       url: https://github.com/viplmad/game-oclock-client-dart.git
       ref: main

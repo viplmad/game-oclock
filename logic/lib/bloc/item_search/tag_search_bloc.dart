@@ -1,4 +1,4 @@
-import 'package:game_collection_client/api.dart' show TagDTO;
+import 'package:game_oclock_client/api.dart' show TagDTO;
 
 import 'package:logic/service/service.dart' show GameOClockService, TagService;
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show GameDTO, NewGameDTO, GameStatus;
 
 import 'package:logic/service/service.dart' show GameOClockService;

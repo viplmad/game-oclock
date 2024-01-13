@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show ApiException, PageResultDTO;
+import 'package:game_oclock_client/api.dart' show ApiException, PageResultDTO;
 
 import 'package:logic/utils/http_utils.dart';
 

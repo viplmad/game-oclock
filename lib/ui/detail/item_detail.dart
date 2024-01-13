@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:game_collection_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show PrimaryModel;
 
 import 'package:logic/model/model.dart' show ItemImage;
 import 'package:logic/service/service.dart' show GameOClockService;

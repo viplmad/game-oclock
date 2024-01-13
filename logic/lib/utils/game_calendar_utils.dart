@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show GameLogDTO, GameWithLogsDTO;
+import 'package:game_oclock_client/api.dart' show GameLogDTO, GameWithLogsDTO;
 
 import 'datetime_extension.dart';
 

@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show PrimaryModel;
 
 import 'item_relation_manager.dart';
 

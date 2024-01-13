@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show TokenResponse, mapValueOfType;
+import 'package:game_oclock_client/api.dart' show TokenResponse, mapValueOfType;
 
 class ServerConnection {
   ServerConnection({

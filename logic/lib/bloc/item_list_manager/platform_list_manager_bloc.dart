@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show PlatformDTO, NewPlatformDTO;
+import 'package:game_oclock_client/api.dart' show PlatformDTO, NewPlatformDTO;
 
 import 'package:logic/service/service.dart'
     show PlatformService, GameOClockService;

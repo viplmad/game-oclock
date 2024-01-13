@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_collection_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show PrimaryModel;
 
 abstract class ItemRelationState extends Equatable {
   const ItemRelationState();

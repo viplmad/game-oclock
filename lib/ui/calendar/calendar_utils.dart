@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:game_collection_client/api.dart' show GameLogDTO;
+import 'package:game_oclock_client/api.dart' show GameLogDTO;
 
 import 'package:logic/model/model.dart' show CalendarRange;
 import 'package:logic/utils/datetime_extension.dart';

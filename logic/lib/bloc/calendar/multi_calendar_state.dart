@@ -1,5 +1,4 @@
-import 'package:game_collection_client/api.dart'
-    show GameWithLogsDTO, GameLogDTO;
+import 'package:game_oclock_client/api.dart' show GameWithLogsDTO, GameLogDTO;
 
 import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 

@@ -1,6 +1,6 @@
 name: game_oclock
 description: A simple game collection manager.
-version: 3.3.1+376
+version: 3.3.2+386
 publish_to: none
 
 environment:
@@ -38,7 +38,7 @@ dependencies:
 # Back-end
   logic:
     path: ./logic
-  game_collection_client:
+  game_oclock_client:
     git:
       url: https://github.com/viplmad/game-oclock-client-dart.git
       ref: main

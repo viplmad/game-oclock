@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:game_collection_client/api.dart' show GameLogDTO, NewGameLogDTO;
+import 'package:game_oclock_client/api.dart' show GameLogDTO, NewGameLogDTO;
 
 import 'package:logic/model/model.dart'
     show CalendarRange, CalendarStyle, ItemFinish;

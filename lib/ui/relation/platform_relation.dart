@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show GameAvailableDTO, DLCAvailableDTO, GameDTO, DLCDTO;
 
 import 'package:logic/bloc/item_relation/item_relation.dart';

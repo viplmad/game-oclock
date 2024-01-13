@@ -1,4 +1,4 @@
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show DLCDTO, GameLogDTO, NewGameLogDTO, PlatformAvailableDTO, TagDTO;
 
 import 'package:logic/model/model.dart' show ItemFinish;

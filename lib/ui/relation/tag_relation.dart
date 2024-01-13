@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_collection_client/api.dart' show GameDTO;
+import 'package:game_oclock_client/api.dart' show GameDTO;
 
 import 'package:logic/bloc/item_relation/item_relation.dart';
 import 'package:logic/bloc/item_relation_manager/item_relation_manager.dart';

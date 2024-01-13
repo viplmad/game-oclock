@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:game_collection_client/api.dart' show TokenResponse;
+import 'package:game_oclock_client/api.dart' show TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
 import 'package:logic/service/service.dart' show GameOClockService;

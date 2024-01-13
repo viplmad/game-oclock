@@ -1,4 +1,4 @@
-import 'package:game_collection_client/api.dart'
+import 'package:game_oclock_client/api.dart'
     show ApiClient, ApiException, OAuth, TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
