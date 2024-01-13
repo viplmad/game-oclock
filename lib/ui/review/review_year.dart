@@ -10,7 +10,9 @@ import 'package:game_oclock_client/api.dart'
         GameFinishedReviewDTO,
         GamePlayedReviewDTO,
         GamesFinishedReviewDTO,
-        GamesPlayedReviewDTO;
+        GamesLogDTO,
+        GamesPlayedReviewDTO,
+        GamesStreakDTO;
 
 import 'package:logic/service/service.dart' show GameOClockService;
 import 'package:logic/bloc/review/review.dart';
@@ -184,213 +186,50 @@ class _ReviewYearBody extends StatelessWidget {
 
               final List<Widget> widgets = <Widget>[];
               widgets.add(
-                CardWithTap(
-                  onTap: _onPlayedTap(
-                    context,
-                    gamesColour,
-                    games,
-                    finishedGames,
-                    playedData.totalTime,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(GameTheme.sessionIcon),
-                        title: Text(
-                          AppLocalizations.of(context)!
-                              .totalGamesPlayedString(playedData.totalPlayed),
-                        ),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .sessionsPlayedString(
-                                playedData.totalSessions,
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.playTimeString(
-                                AppLocalizationsUtils.formatDuration(
-                                  context,
-                                  playedData.totalTime,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(GameTheme.firstPlayedIcon),
-                        title: Text(
-                          AppLocalizations.of(context)!.totalFirstPlayedString(
-                            playedData.totalFirstPlayed,
-                          ),
-                        ),
-                        subtitle: Text(
-                          AppLocalizations.of(context)!
-                              .percentagePlayedStartedThisYear(
-                            _formatPercentageForCard(
-                              playedData.totalFirstPlayed /
-                                  playedData.totalPlayed,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                _buildPlayedCard(
+                  context,
+                  gamesColour,
+                  playedData.totalPlayed,
+                  playedData.totalFirstPlayed,
+                  playedData.totalSessions,
+                  games,
+                  finishedGames,
+                  playedData.totalTime,
                 ),
               );
               if (shouldShowFinishedInfo) {
                 widgets.add(
-                  CardWithTap(
-                    onTap: _onFinishedTap(
-                      context,
-                      gamesColour,
-                      finishedGames,
-                      games,
-                      playedData.totalTime,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(GameTheme.finishedIcon),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .totalGamesFinishedString(
-                              finishedData.totalFinished,
-                            ),
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .percentagePlayedFinishedString(
-                              _formatPercentageForCard(
-                                finishedData.totalFinished /
-                                    playedData.totalPlayed,
-                              ),
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          leading: const Icon(GameTheme.firstPlayedIcon),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .totalFirstFinishedString(
-                              finishedData.totalFirstFinished,
-                            ),
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .percentageFinishedFirstFinishedThisYearString(
-                              _formatPercentageForCard(
-                                finishedData.totalFirstFinished /
-                                    finishedData.totalFinished,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  _buildFinishedCard(
+                    context,
+                    gamesColour,
+                    finishedData.totalFinished,
+                    finishedData.totalFirstFinished,
+                    playedData.totalPlayed,
+                    finishedGames,
+                    games,
+                    playedData.totalTime,
                   ),
                 );
               }
-              final GamePlayedReviewDTO longestSessionGame = games.firstWhere(
-                (GamePlayedReviewDTO g) =>
-                    g.id == playedData.longestSession.gameId,
-              );
-              GameFinishedReviewDTO? longestSessionFinishedGame;
-              try {
-                longestSessionFinishedGame = finishedGames.firstWhere(
-                  (GameFinishedReviewDTO g) => g.id == longestSessionGame.id,
-                );
-              } on StateError catch (_) {}
               widgets.add(
-                CardWithTap(
-                  onTap: _onGameTap(
-                    context,
-                    gamesColour[longestSessionGame.id]!,
-                    longestSessionGame,
-                    longestSessionFinishedGame,
-                    playedData.totalTime,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(GameTheme.longestSessionIcon),
-                        title: Text(
-                          AppLocalizations.of(context)!
-                              .playTimeLongestSessionString(
-                            AppLocalizationsUtils.formatDuration(
-                              context,
-                              playedData.longestSession.time,
-                            ),
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context)!.playingGameString(
-                                GameTheme.itemTitle(longestSessionGame),
-                              ),
-                            ),
-                            Text(
-                              '${AppLocalizationsUtils.formatDate(playedData.longestSession.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(playedData.longestSession.startDatetime), alwaysUse24HourFormat: true)} ⮕ ${AppLocalizationsUtils.formatDate(playedData.longestSession.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(playedData.longestSession.endDatetime), alwaysUse24HourFormat: true)}',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                _buildLongestSessionCard(
+                  context,
+                  gamesColour,
+                  playedData.longestSession,
+                  games,
+                  finishedGames,
+                  playedData.totalTime,
                 ),
               );
               if (playedData.longestStreak.days > 1) {
                 widgets.add(
-                  CardWithTap(
-                    onTap: _onLongestStreakTap(
-                      context,
-                      gamesColour,
-                      playedData.longestStreak.startDate,
-                      playedData.longestStreak.endDate,
-                      playedData.longestStreak.gamesIds
-                          .map(
-                            (String streakGameId) => games.firstWhere(
-                              (GamePlayedReviewDTO g) => g.id == streakGameId,
-                            ),
-                          )
-                          .toList(growable: false),
-                      finishedGames,
-                      playedData.totalTime,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(GameTheme.longestStreakIcon),
-                          title: Text(
-                            AppLocalizations.of(context)!
-                                .daysLongestStreakString(
-                              playedData.longestStreak.days,
-                            ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .playingDifferentGameString(
-                                  playedData.longestStreak.gamesIds.length,
-                                ),
-                              ),
-                              Text(
-                                '${AppLocalizationsUtils.formatDate(playedData.longestStreak.startDate)} ⮕ ${AppLocalizationsUtils.formatDate(playedData.longestStreak.endDate)}',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  _buildLongestStreakCard(
+                    context,
+                    gamesColour,
+                    playedData.longestStreak,
+                    games,
+                    finishedGames,
+                    playedData.totalTime,
                   ),
                 );
               }
@@ -406,12 +245,8 @@ class _ReviewYearBody extends StatelessWidget {
               ];
               final Iterable<Widget> topGamesWidgets =
                   topGames.map((GamePlayedReviewDTO game) {
-                GameFinishedReviewDTO? finishedGame;
-                try {
-                  finishedGame = finishedGames.firstWhere(
-                    (GameFinishedReviewDTO g) => g.id == game.id,
-                  );
-                } on StateError catch (_) {}
+                final GameFinishedReviewDTO? finishedGame =
+                    _getFinishedGame(finishedGames, game.id);
 
                 return _buildTopGameCard(
                   context,
@@ -429,104 +264,53 @@ class _ReviewYearBody extends StatelessWidget {
                 const Divider(height: 4.0),
               );
               widgets.add(
-                _buildChartCard(
+                _buildTotalPlayedByReleaseYearChart(
                   context,
-                  AppLocalizations.of(context)!.gamesPlayedByReleaseYearString,
-                  _buildTotalPlayedByReleaseYearPieChart(
-                    context,
-                    playedData.totalPlayedByReleaseYear,
-                    playedData.totalPlayed,
-                    state.year,
-                    recentYears,
-                    (int type) => _onPlayedReleaseYearTypeTap(
-                      context,
-                      gamesColour,
-                      state.year,
-                      recentYears,
-                      type,
-                      games,
-                      finishedGames,
-                      playedData.totalTime,
-                    ),
-                  ),
+                  gamesColour,
+                  state.year,
+                  recentYears,
+                  playedData.totalPlayedByReleaseYear,
+                  playedData.totalPlayed,
+                  games,
+                  finishedGames,
+                  playedData.totalTime,
                 ),
               );
               if (shouldShowFinishedInfo) {
                 widgets.add(
-                  _buildChartCard(
+                  _buildTotalFinishedByReleaseYearChart(
                     context,
-                    AppLocalizations.of(context)!
-                        .gamesFinishedByReleaseYearString,
-                    _buildTotalFinishedByReleaseYearPieChart(
-                      context,
-                      finishedData.totalFinishedByReleaseYear,
-                      finishedData.totalFinished,
-                      state.year,
-                      recentYears,
-                      (int type) => _onFinishedReleaseYearTypeTap(
-                        context,
-                        gamesColour,
-                        state.year,
-                        recentYears,
-                        type,
-                        finishedGames,
-                        games,
-                        playedData.totalTime,
-                      ),
-                    ),
+                    gamesColour,
+                    state.year,
+                    recentYears,
+                    finishedData.totalFinishedByReleaseYear,
+                    finishedData.totalFinished,
+                    finishedGames,
+                    games,
+                    playedData.totalTime,
                   ),
                 );
               }
               widgets.add(
-                _buildChartCard(
+                _buildTotalTimeByMonthChart(
                   context,
-                  AppLocalizations.of(context)!.playTimeByByMonthString,
-                  // TODO order each bar by most played
-                  _buildTotalTimeByMonthStackedBarChart(
-                    context,
-                    games
-                        .map(
-                          (GamePlayedReviewDTO game) => gamesColour[game.id]!,
-                        )
-                        .toList(growable: false),
-                    games
-                        .map(
-                          (GamePlayedReviewDTO game) => game.totalTimeGrouped,
-                        )
-                        .toList(growable: false),
-                    playedData.totalTime,
-                    (int month) => _onTotalTimeMonthTap(
-                      context,
-                      gamesColour,
-                      month,
-                      playedData.totalTimeGrouped[month] ?? const Duration(),
-                      games,
-                      finishedGames,
-                      playedData.totalTime,
-                    ),
-                  ),
+                  gamesColour,
+                  playedData.totalTimeGrouped,
+                  games,
+                  finishedGames,
+                  playedData.totalTime,
                 ),
               );
               if (shouldShowFinishedInfo) {
                 widgets.add(
-                  _buildChartCard(
+                  _buildTotalFinishedByMonthChart(
                     context,
-                    AppLocalizations.of(context)!.gamesFinishedByMonthString,
-                    _buildTotalFinishedByMonthBarChart(
-                      context,
-                      finishedData.totalFinishedGrouped,
-                      finishedData.totalFinished,
-                      (int month) => _onFinishedMonthTap(
-                        context,
-                        gamesColour,
-                        month,
-                        finishedData.totalFinishedGrouped[month] ?? 0,
-                        finishedData.totalFinished,
-                        finishedGames,
-                        games,
-                        playedData.totalTime,
-                      ),
-                    ),
+                    gamesColour,
+                    finishedData.totalFinishedGrouped,
+                    finishedData.totalFinished,
+                    finishedGames,
+                    games,
+                    playedData.totalTime,
                   ),
                 );
               }
@@ -571,6 +355,393 @@ class _ReviewYearBody extends StatelessWidget {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+
+  CardWithTap _buildPlayedCard(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int totalPlayed,
+    int totalFirstPlayed,
+    int totalSessions,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    return CardWithTap(
+      onTap: _onPlayedTap(
+        context,
+        gamesColour,
+        games,
+        finishedGames,
+        totalTime,
+      ),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(GameTheme.sessionIcon),
+            title: Text(
+              AppLocalizations.of(context)!.totalGamesPlayedString(totalPlayed),
+            ),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)!.sessionsPlayedString(
+                    totalSessions,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.playTimeString(
+                    AppLocalizationsUtils.formatDuration(
+                      context,
+                      totalTime,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(GameTheme.firstPlayedIcon),
+            title: Text(
+              AppLocalizations.of(context)!.totalFirstPlayedString(
+                totalFirstPlayed,
+              ),
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.percentagePlayedStartedThisYear(
+                _formatPercentageForCard(
+                  totalFirstPlayed / totalPlayed,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CardWithTap _buildFinishedCard(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int totalFinished,
+    int totalFirstFinished,
+    int totalPlayed,
+    List<GameFinishedReviewDTO> games,
+    List<GamePlayedReviewDTO> playedGames,
+    Duration totalTime,
+  ) {
+    return CardWithTap(
+      onTap: _onFinishedTap(
+        context,
+        gamesColour,
+        games,
+        playedGames,
+        totalTime,
+      ),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(GameTheme.finishedIcon),
+            title: Text(
+              AppLocalizations.of(context)!.totalGamesFinishedString(
+                totalFinished,
+              ),
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.percentagePlayedFinishedString(
+                _formatPercentageForCard(
+                  totalFinished / totalPlayed,
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(GameTheme.firstPlayedIcon),
+            title: Text(
+              AppLocalizations.of(context)!.totalFirstFinishedString(
+                totalFirstFinished,
+              ),
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!
+                  .percentageFinishedFirstFinishedThisYearString(
+                _formatPercentageForCard(
+                  totalFirstFinished / totalFinished,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CardWithTap _buildLongestSessionCard(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    GamesLogDTO longestSession,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    final GamePlayedReviewDTO longestSessionGame =
+        _getPlayedGame(games, longestSession.gameId);
+    final GameFinishedReviewDTO? longestSessionFinishedGame =
+        _getFinishedGame(finishedGames, longestSessionGame.id);
+
+    return CardWithTap(
+      onTap: _onGameTap(
+        context,
+        gamesColour[longestSessionGame.id]!,
+        longestSessionGame,
+        longestSessionFinishedGame,
+        totalTime,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(GameTheme.longestSessionIcon),
+            title: Text(
+              AppLocalizations.of(context)!.playTimeLongestSessionString(
+                AppLocalizationsUtils.formatDuration(
+                  context,
+                  longestSession.time,
+                ),
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)!.playingGameString(
+                    GameTheme.itemTitle(longestSessionGame),
+                  ),
+                ),
+                Text(
+                  '${AppLocalizationsUtils.formatDate(longestSession.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(longestSession.startDatetime), alwaysUse24HourFormat: true)} ⮕ ${AppLocalizationsUtils.formatDate(longestSession.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(longestSession.endDatetime), alwaysUse24HourFormat: true)}',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CardWithTap _buildLongestStreakCard(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    GamesStreakDTO longestStreak,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    return CardWithTap(
+      onTap: _onLongestStreakTap(
+        context,
+        gamesColour,
+        longestStreak.startDate,
+        longestStreak.endDate,
+        longestStreak.gamesIds
+            .map(
+              (String streakGameId) => _getPlayedGame(games, streakGameId),
+            )
+            .toList(growable: false),
+        finishedGames,
+        totalTime,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(GameTheme.longestStreakIcon),
+            title: Text(
+              AppLocalizations.of(context)!.daysLongestStreakString(
+                longestStreak.days,
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)!.playingDifferentGameString(
+                    longestStreak.gamesIds.length,
+                  ),
+                ),
+                Text(
+                  '${AppLocalizationsUtils.formatDate(longestStreak.startDate)} ⮕ ${AppLocalizationsUtils.formatDate(longestStreak.endDate)}',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalPlayedByReleaseYearChart(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int year,
+    List<int> recentYears,
+    Map<int, int> totalPlayedByReleaseYear,
+    int totalPlayed,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    final int totalCurrentYear = totalPlayedByReleaseYear[year] ?? 0;
+    final int totalRecentYears = recentYears
+        .map((int recentYear) => totalPlayedByReleaseYear[recentYear] ?? 0)
+        .fold(0, (int acc, int val) => acc += val);
+    final int totalClassic = totalPlayed - totalCurrentYear - totalRecentYears;
+
+    final List<int> releasedTypeTotals = <int>[
+      totalCurrentYear,
+      totalRecentYears,
+      totalClassic,
+    ];
+
+    return _buildChartCard(
+      context,
+      AppLocalizations.of(context)!.gamesPlayedByReleaseYearString,
+      _buildTotalPlayedByReleaseYearPieChart(
+        context,
+        GameTheme.chartColors.take(3).toList(growable: false),
+        releasedTypeTotals,
+        totalPlayed,
+        (int type) => _onPlayedReleaseYearTypeTap(
+          context,
+          gamesColour,
+          type,
+          releasedTypeTotals.elementAt(type),
+          totalPlayed,
+          year,
+          recentYears,
+          games,
+          finishedGames,
+          totalTime,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTotalFinishedByReleaseYearChart(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int year,
+    List<int> recentYears,
+    Map<int, int> totalFinishedByReleaseYear,
+    int totalFinished,
+    List<GameFinishedReviewDTO> games,
+    List<GamePlayedReviewDTO> playedGames,
+    Duration totalTime,
+  ) {
+    final int totalCurrentYear = totalFinishedByReleaseYear[year] ?? 0;
+    final int totalRecentYears = recentYears
+        .map((int recentYear) => totalFinishedByReleaseYear[recentYear] ?? 0)
+        .fold(0, (int acc, int val) => acc += val);
+    final int totalClassic =
+        totalFinished - totalCurrentYear - totalRecentYears;
+
+    final List<int> releasedTypeTotals = <int>[
+      totalCurrentYear,
+      totalRecentYears,
+      totalClassic,
+    ];
+
+    return _buildChartCard(
+      context,
+      AppLocalizations.of(context)!.gamesFinishedByReleaseYearString,
+      _buildTotalFinishedByReleaseYearPieChart(
+        context,
+        GameTheme.chartColors.take(3).toList(growable: false),
+        releasedTypeTotals,
+        totalFinished,
+        (int type) => _onFinishedReleaseYearTypeTap(
+          context,
+          gamesColour,
+          type,
+          releasedTypeTotals.elementAt(type),
+          totalFinished,
+          year,
+          recentYears,
+          games,
+          playedGames,
+          totalTime,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTotalTimeByMonthChart(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    Map<int, Duration> totalTimeGrouped,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    return _buildChartCard(
+      context,
+      AppLocalizations.of(context)!.playTimeByByMonthString,
+      // TODO order each bar by most played
+      _buildTotalTimeByMonthStackedBarChart(
+        context,
+        games
+            .map(
+              (GamePlayedReviewDTO game) => gamesColour[game.id]!,
+            )
+            .toList(growable: false),
+        games
+            .map(
+              (GamePlayedReviewDTO game) => game.totalTimeGrouped,
+            )
+            .toList(growable: false),
+        totalTime,
+        (int month) => _onTotalTimeMonthTap(
+          context,
+          gamesColour,
+          month,
+          totalTimeGrouped[month] ?? const Duration(),
+          games,
+          finishedGames,
+          totalTime,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTotalFinishedByMonthChart(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    Map<int, int> totalFinishedGrouped,
+    int totalFinished,
+    List<GameFinishedReviewDTO> games,
+    List<GamePlayedReviewDTO> playedGames,
+    Duration totalTime,
+  ) {
+    return _buildChartCard(
+      context,
+      AppLocalizations.of(context)!.gamesFinishedByMonthString,
+      _buildTotalFinishedByMonthBarChart(
+        context,
+        totalFinishedGrouped,
+        totalFinished,
+        (int month) => _onFinishedMonthTap(
+          context,
+          gamesColour,
+          month,
+          totalFinishedGrouped[month] ?? 0,
+          totalFinished,
+          games,
+          playedGames,
+          totalTime,
         ),
       ),
     );
@@ -687,31 +858,23 @@ class _ReviewYearBody extends StatelessWidget {
 
   SizedBox _buildTotalPlayedByReleaseYearPieChart(
     BuildContext context,
-    Map<int, int> totalPlayedByReleaseYear,
+    List<Color> colours,
+    List<int> releasedTypeTotals,
     int totalPlayed,
-    int year,
-    List<int> recentYears,
     void Function(int type) onTypeTap,
   ) {
-    final int totalCurrentYear = totalPlayedByReleaseYear[year] ?? 0;
-    final int totalRecentYears = recentYears
-        .map((int recentYear) => totalPlayedByReleaseYear[recentYear] ?? 0)
-        .fold(0, (int acc, int val) => acc += val);
-    final int totalClassic = totalPlayed - totalCurrentYear - totalRecentYears;
-
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
       child: StatisticsPieChart<double>(
         id: 'playedByReleaseYear',
         domainLabels: GameTheme.releaseYearTypes(context),
-        values: <int>[totalCurrentYear, totalRecentYears, totalClassic]
+        values: releasedTypeTotals
             .map(
               (int totalReleaseYear) => totalReleaseYear / totalPlayed,
             )
             .toList(growable: false),
-        colours: GameTheme.chartColors.take(3).toList(growable: false),
-        valueFormatter: (String domainLabel, double percentage) =>
-            '$domainLabel - ${AppLocalizationsUtils.formatPercentage(percentage)}',
+        colours: colours,
+        valueFormatter: (String domainLabel, _) => domainLabel,
         onTap: onTypeTap,
       ),
     );
@@ -719,32 +882,23 @@ class _ReviewYearBody extends StatelessWidget {
 
   SizedBox _buildTotalFinishedByReleaseYearPieChart(
     BuildContext context,
-    Map<int, int> totalFinishedByReleaseYear,
+    List<Color> colours,
+    List<int> releasedTypeTotals,
     int totalFinished,
-    int year,
-    List<int> recentYears,
     void Function(int type) onTypeTap,
   ) {
-    final int totalCurrentYear = totalFinishedByReleaseYear[year] ?? 0;
-    final int totalRecentYears = recentYears
-        .map((int recentYear) => totalFinishedByReleaseYear[recentYear] ?? 0)
-        .fold(0, (int acc, int val) => acc += val);
-    final int totalClassic =
-        totalFinished - totalCurrentYear - totalRecentYears;
-
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
       child: StatisticsPieChart<double>(
         id: 'finishedByReleaseYear',
         domainLabels: GameTheme.releaseYearTypes(context),
-        values: <int>[totalCurrentYear, totalRecentYears, totalClassic]
+        values: releasedTypeTotals
             .map(
               (int totalReleaseYear) => totalReleaseYear / totalFinished,
             )
             .toList(growable: false),
-        colours: GameTheme.chartColors.take(3).toList(growable: false),
-        valueFormatter: (String domainLabel, double percentage) =>
-            '$domainLabel - ${AppLocalizationsUtils.formatPercentage(percentage)}',
+        colours: colours,
+        valueFormatter: (String domainLabel, _) => domainLabel,
         onTap: onTypeTap,
       ),
     );
@@ -833,40 +987,6 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
-  static int _preparePercentageForChart(double percentage) {
-    return (percentage * 100).round();
-  }
-
-  static String _formatDurationValueForChart(
-    BuildContext context,
-    int minutes,
-  ) {
-    return AppLocalizationsUtils.formatMinutesAsHours(context, minutes);
-  }
-
-  static String _formatPercentageMeasureForChart(num? percentage) {
-    return percentage != null ? _formatPercentageForCard(percentage / 100) : '';
-  }
-
-  static String _formatDurationMeasureForChart(
-    BuildContext context,
-    num? minutes,
-  ) {
-    return minutes != null
-        ? AppLocalizationsUtils.formatMinutesAsHours(context, minutes.round())
-        : '';
-  }
-
-  static String _formatPercentageForCard(double percentage) {
-    return percentage >= 0.01
-        ? AppLocalizationsUtils.formatPercentage(
-            percentage,
-          )
-        : '<${AppLocalizationsUtils.formatPercentage(
-            0.01,
-          )}';
-  }
-
   void Function() _onPlayedTap(
     BuildContext context,
     Map<String, Color> gamesColour,
@@ -921,13 +1041,8 @@ class _ReviewYearBody extends StatelessWidget {
                           itemBuilder: (BuildContext context, int index) {
                             final GamePlayedReviewDTO game =
                                 monthGames.value.elementAt(index);
-
-                            GameFinishedReviewDTO? finishedGame;
-                            try {
-                              finishedGame = finishedGames.firstWhere(
-                                (GameFinishedReviewDTO g) => g.id == game.id,
-                              );
-                            } on StateError catch (_) {}
+                            final GameFinishedReviewDTO? finishedGame =
+                                _getFinishedGame(finishedGames, game.id);
 
                             return _buildGameCard(
                               context,
@@ -1011,11 +1126,8 @@ class _ReviewYearBody extends StatelessWidget {
                           itemBuilder: (BuildContext context, int index) {
                             final GameFinishedReviewDTO game =
                                 monthGames.value.elementAt(index);
-
                             final GamePlayedReviewDTO playedGame =
-                                playedGames.firstWhere(
-                              (GamePlayedReviewDTO g) => g.id == game.id,
-                            );
+                                _getPlayedGame(playedGames, game.id);
 
                             return _buildGameCard(
                               context,
@@ -1071,12 +1183,8 @@ class _ReviewYearBody extends StatelessWidget {
           );
           widgets.addAll(
             games.map((GamePlayedReviewDTO game) {
-              GameFinishedReviewDTO? finishedGame;
-              try {
-                finishedGame = finishedGames.firstWhere(
-                  (GameFinishedReviewDTO g) => g.id == game.id,
-                );
-              } on StateError catch (_) {}
+              final GameFinishedReviewDTO? finishedGame =
+                  _getFinishedGame(finishedGames, game.id);
 
               // TODO show different information for streaks
               return _buildSimpleGameCard(
@@ -1117,9 +1225,11 @@ class _ReviewYearBody extends StatelessWidget {
   void _onPlayedReleaseYearTypeTap(
     BuildContext context,
     Map<String, Color> gamesColour,
+    int type,
+    int typeTotal,
+    int totalPlayed,
     int year,
     List<int> recentYears,
-    int type,
     List<GamePlayedReviewDTO> games,
     List<GameFinishedReviewDTO> finishedGames,
     Duration totalTime,
@@ -1167,6 +1277,36 @@ class _ReviewYearBody extends StatelessWidget {
             ? '$typeTitle ($typeDescription)'
             : typeTitle;
 
+        final List<Widget> widgets = <Widget>[];
+        widgets.add(
+          ListTile(
+            title: Text(
+              '${AppLocalizations.of(context)!.percentagePlayedString(
+                _formatPercentageForCard(
+                  typeTotal / totalPlayed,
+                ),
+              )} · ${AppLocalizations.of(context)!.totalPlayedString(
+                typeTotal,
+              )}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        widgets.addAll(
+          releasedTypeGames.map((GamePlayedReviewDTO game) {
+            final GameFinishedReviewDTO? finishedGame =
+                _getFinishedGame(finishedGames, game.id);
+
+            return _buildSimpleGameCard(
+              context,
+              gamesColour[game.id]!,
+              game,
+              finishedGame,
+              totalTime,
+            );
+          }),
+        );
+
         return Column(
           children: <Widget>[
             Container(
@@ -1178,25 +1318,9 @@ class _ReviewYearBody extends StatelessWidget {
             Expanded(
               child: Scrollbar(
                 child: ItemListBuilder(
-                  itemCount: releasedTypeGames.length,
+                  itemCount: widgets.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final GamePlayedReviewDTO game =
-                        releasedTypeGames.elementAt(index);
-
-                    GameFinishedReviewDTO? finishedGame;
-                    try {
-                      finishedGame = finishedGames.firstWhere(
-                        (GameFinishedReviewDTO g) => g.id == game.id,
-                      );
-                    } on StateError catch (_) {}
-
-                    return _buildSimpleGameCard(
-                      context,
-                      gamesColour[game.id]!,
-                      game,
-                      finishedGame,
-                      totalTime,
-                    );
+                    return widgets.elementAt(index);
                   },
                 ),
               ),
@@ -1210,9 +1334,11 @@ class _ReviewYearBody extends StatelessWidget {
   void _onFinishedReleaseYearTypeTap(
     BuildContext context,
     Map<String, Color> gamesColour,
+    int type,
+    int typeTotal,
+    int totalFinished,
     int year,
     List<int> recentYears,
-    int type,
     List<GameFinishedReviewDTO> games,
     List<GamePlayedReviewDTO> playedGames,
     Duration totalTime,
@@ -1260,6 +1386,36 @@ class _ReviewYearBody extends StatelessWidget {
             ? '$typeTitle ($typeDescription)'
             : typeTitle;
 
+        final List<Widget> widgets = <Widget>[];
+        widgets.add(
+          ListTile(
+            title: Text(
+              '${AppLocalizations.of(context)!.percentageFinishedString(
+                _formatPercentageForCard(
+                  typeTotal / totalFinished,
+                ),
+              )} · ${AppLocalizations.of(context)!.totalFinishedString(
+                typeTotal,
+              )}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        widgets.addAll(
+          releasedTypeGames.map((GameFinishedReviewDTO game) {
+            final GamePlayedReviewDTO playedGame =
+                _getPlayedGame(playedGames, game.id);
+
+            return _buildSimpleGameCard(
+              context,
+              gamesColour[game.id]!,
+              playedGame,
+              game,
+              totalTime,
+            );
+          }),
+        );
+
         return Column(
           children: <Widget>[
             Container(
@@ -1271,23 +1427,9 @@ class _ReviewYearBody extends StatelessWidget {
             Expanded(
               child: Scrollbar(
                 child: ItemListBuilder(
-                  itemCount: releasedTypeGames.length,
+                  itemCount: widgets.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final GameFinishedReviewDTO game =
-                        releasedTypeGames.elementAt(index);
-
-                    final GamePlayedReviewDTO playedGame =
-                        playedGames.firstWhere(
-                      (GamePlayedReviewDTO g) => g.id == game.id,
-                    );
-
-                    return _buildSimpleGameCard(
-                      context,
-                      gamesColour[game.id]!,
-                      playedGame,
-                      game,
-                      totalTime,
-                    );
+                    return widgets.elementAt(index);
                   },
                 ),
               ),
@@ -1349,13 +1491,8 @@ class _ReviewYearBody extends StatelessWidget {
         widgets.addAll(
           playedMonthGames.map((GamePlayedReviewDTO game) {
             final Duration gameMonthTotalTime = game.totalTimeGrouped[month]!;
-
-            GameFinishedReviewDTO? finishedGame;
-            try {
-              finishedGame = finishedGames.firstWhere(
-                (GameFinishedReviewDTO g) => g.id == game.id,
-              );
-            } on StateError catch (_) {}
+            final GameFinishedReviewDTO? finishedGame =
+                _getFinishedGame(finishedGames, game.id);
 
             return _buildGameCard(
               context,
@@ -1451,9 +1588,8 @@ class _ReviewYearBody extends StatelessWidget {
         );
         widgets.addAll(
           finishedMonthGames.map((GameFinishedReviewDTO game) {
-            final GamePlayedReviewDTO playedGame = playedGames.firstWhere(
-              (GamePlayedReviewDTO g) => g.id == game.id,
-            );
+            final GamePlayedReviewDTO playedGame =
+                _getPlayedGame(playedGames, game.id);
 
             return _buildGameCard(
               context,
@@ -1645,6 +1781,62 @@ class _ReviewYearBody extends StatelessWidget {
       subtitle: Text(
         '${AppLocalizationsUtils.formatDate(game.longestStreak.startDate)} ⮕ ${AppLocalizationsUtils.formatDate(game.longestStreak.endDate)}',
       ),
+    );
+  }
+
+  static int _preparePercentageForChart(double percentage) {
+    return (percentage * 100).round();
+  }
+
+  static String _formatDurationValueForChart(
+    BuildContext context,
+    int minutes,
+  ) {
+    return AppLocalizationsUtils.formatMinutesAsHours(context, minutes);
+  }
+
+  static String _formatPercentageMeasureForChart(num? percentage) {
+    return percentage != null ? _formatPercentageForCard(percentage / 100) : '';
+  }
+
+  static String _formatDurationMeasureForChart(
+    BuildContext context,
+    num? minutes,
+  ) {
+    return minutes != null
+        ? AppLocalizationsUtils.formatMinutesAsHours(context, minutes.round())
+        : '';
+  }
+
+  static String _formatPercentageForCard(double percentage) {
+    return percentage >= 0.01
+        ? AppLocalizationsUtils.formatPercentage(
+            percentage,
+          )
+        : '<${AppLocalizationsUtils.formatPercentage(
+            0.01,
+          )}';
+  }
+
+  static GameFinishedReviewDTO? _getFinishedGame(
+    List<GameFinishedReviewDTO> finishedGames,
+    String id,
+  ) {
+    GameFinishedReviewDTO? finishedGame;
+    try {
+      finishedGame = finishedGames.firstWhere(
+        (GameFinishedReviewDTO g) => g.id == id,
+      );
+    } on StateError catch (_) {}
+    return finishedGame;
+  }
+
+  static GamePlayedReviewDTO _getPlayedGame(
+    List<GamePlayedReviewDTO> playedGames,
+    String id,
+  ) {
+    return playedGames.firstWhere(
+      (GamePlayedReviewDTO g) => g.id == id,
     );
   }
 }

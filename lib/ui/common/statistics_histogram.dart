@@ -147,7 +147,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
       selectionModels: onTap != null
           ? <charts.SelectionModelConfig<String>>[
               charts.SelectionModelConfig<String>(
-                changedListener: (charts.SelectionModel<String> model) {
+                updatedListener: (charts.SelectionModel<String> model) {
                   final charts.SeriesDatum<String>? firstDatum =
                       model.selectedDatum.firstOrNull;
                   if (firstDatum != null && firstDatum.index != null) {
@@ -220,7 +220,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       seriesList,
       animate: true,
       defaultRenderer: charts.ArcRendererConfig<String>(
-        arcWidth: 90,
+        arcWidth: 100,
         // ignore: always_specify_types
         arcRendererDecorators: [
           charts.ArcLabelDecorator<String>(),
@@ -229,7 +229,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       selectionModels: onTap != null
           ? <charts.SelectionModelConfig<String>>[
               charts.SelectionModelConfig<String>(
-                changedListener: (charts.SelectionModel<String> model) {
+                updatedListener: (charts.SelectionModel<String> model) {
                   final charts.SeriesDatum<String>? firstDatum =
                       model.selectedDatum.firstOrNull;
                   if (firstDatum != null && firstDatum.index != null) {
