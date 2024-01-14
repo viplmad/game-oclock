@@ -58,7 +58,7 @@ class GameTheme {
     Colors.orangeAccent,
   ];
 
-  static const IconData primaryIcon = Icons.videogame_asset_outlined;
+  static const IconData primaryIcon = Icons.videogame_asset;
   static const IconData sessionIcon = Icons.schedule;
   static const IconData finishedIcon = Icons.emoji_events_outlined;
   static const IconData longestSessionIcon = Icons.timelapse;

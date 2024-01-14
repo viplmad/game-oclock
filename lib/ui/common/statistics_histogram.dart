@@ -88,6 +88,10 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
       final Color colour = colours.isEmpty
           ? Theme.of(context).primaryColor
           : colours.elementAt(valueIndex);
+      final charts.Color seriesColour = charts.ColorUtil.fromDartColor(colour);
+      final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
+        AppTheme.defaultThemeTextColor(context),
+      );
 
       final List<_SeriesElement<N>> data = <_SeriesElement<N>>[];
 
@@ -103,12 +107,14 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
       final charts.Series<_SeriesElement<N>, String> series =
           charts.Series<_SeriesElement<N>, String>(
         id: valueIndex.toString(),
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colour),
+        colorFn: (_, __) => seriesColour,
         domainFn: (_SeriesElement<N> element, _) => element.domainLabel,
         measureFn: (_SeriesElement<N> element, _) => element.value,
         data: data,
         labelAccessorFn: (_SeriesElement<N> element, _) =>
             element.value > 0 ? labelAccessor(element.value) : '',
+        outsideLabelStyleAccessorFn: (_, __) =>
+            charts.TextStyleSpec(color: outsideTextColour),
       );
 
       seriesList.add(series);
@@ -196,6 +202,10 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       data.add(seriesElement);
     }
 
+    final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
+      AppTheme.defaultThemeTextColor(context),
+    );
+
     final charts.Series<_SeriesElement<N>, String> series =
         charts.Series<_SeriesElement<N>, String>(
       id: id,
@@ -211,6 +221,8 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       labelAccessorFn: (_SeriesElement<N> element, _) => element.value > 0
           ? labelAccessor(element.domainLabel, element.value)
           : '',
+      outsideLabelStyleAccessorFn: (_, __) =>
+          charts.TextStyleSpec(color: outsideTextColour),
     );
 
     final List<charts.Series<_SeriesElement<N>, String>> seriesList =
