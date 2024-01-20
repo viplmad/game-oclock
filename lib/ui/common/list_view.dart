@@ -193,28 +193,55 @@ class ItemError extends StatelessWidget {
     Key? key,
     required this.title,
     required this.onRetryTap,
+    this.additionalWidgets = const <Widget>[],
   }) : super(key: key);
 
   final String title;
   final void Function() onRetryTap;
+  final List<Widget> additionalWidgets;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Center(
-          child: Text(title),
-        ),
-        ElevatedButton(
-          onPressed: onRetryTap,
-          style: ElevatedButton.styleFrom(
-            surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Center(
+            child: Text(title),
           ),
-          child: Text(
-            AppLocalizations.of(context)!.retryString,
+          ElevatedButton(
+            onPressed: onRetryTap,
+            style: ElevatedButton.styleFrom(
+              surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.retryString,
+            ),
           ),
-        ),
-      ],
+          ...additionalWidgets,
+        ],
+      ),
+    );
+  }
+}
+
+class ItemEmpty extends StatelessWidget {
+  const ItemEmpty({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Text(title),
+      ),
     );
   }
 }

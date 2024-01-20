@@ -113,7 +113,14 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemFieldNotUpdated) {
-            showErrorSnackbar(context, state.error, state.errorDescription);
+            final String message =
+                AppLocalizations.of(context)!.unableToUpdateFieldString;
+            showErrorSnackbar(
+              context,
+              title: message,
+              error: state.error,
+              errorDescription: state.errorDescription,
+            );
           }
           if (state is ItemImageUpdated) {
             _changesMade = true;
@@ -126,10 +133,24 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemImageNotUpdated) {
-            showErrorSnackbar(context, state.error, state.errorDescription);
+            final String message =
+                AppLocalizations.of(context)!.unableToUpdateImageString;
+            showErrorSnackbar(
+              context,
+              title: message,
+              error: state.error,
+              errorDescription: state.errorDescription,
+            );
           }
           if (state is ItemDetailNotLoaded) {
-            showErrorSnackbar(context, state.error, state.errorDescription);
+            final String message =
+                AppLocalizations.of(context)!.unableToLoadDetailString;
+            showErrorSnackbar(
+              context,
+              title: message,
+              error: state.error,
+              errorDescription: state.errorDescription,
+            );
           }
         },
         child: NestedScrollView(

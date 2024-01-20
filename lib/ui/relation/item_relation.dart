@@ -58,7 +58,14 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotAdded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToLinkString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemRelationDeleted) {
           final String message =
@@ -69,10 +76,24 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotDeleted) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToUnlinkString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemRelationNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToLoadString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: BlocBuilder<K, ItemRelationState>(

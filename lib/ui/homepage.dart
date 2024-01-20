@@ -51,6 +51,11 @@ class Homepage extends StatelessWidget {
             return TabBloc();
           },
         ),
+        BlocProvider<AboutBloc>(
+          create: (BuildContext context) {
+            return AboutBloc()..add(LoadAbout());
+          },
+        ),
         BlocProvider<GameListBloc>(
           create: (BuildContext context) {
             return GameListBloc(
@@ -256,11 +261,17 @@ class _HomepageDrawer extends StatelessWidget {
           BlocListener<AboutBloc, AboutState>(
             listener: (BuildContext context, AboutState state) {
               if (state is AboutNotLoaded) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToLoadAppVersionString;
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
             child: BlocBuilder<AboutBloc, AboutState>(
-              bloc: AboutBloc()..add(LoadAbout()),
               builder: (BuildContext context, AboutState state) {
                 String version = '';
                 if (state is AboutLoaded) {

@@ -16,10 +16,13 @@ class Connectpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GameOClockService collectionService =
+        RepositoryProvider.of<GameOClockService>(context);
+
     return BlocProvider<ConnectionBloc>(
       create: (BuildContext context) {
         return ConnectionBloc(
-          collectionService: RepositoryProvider.of<GameOClockService>(context),
+          collectionService: collectionService,
         )..add(Connect());
       },
       child: const _ConnectpageBody(),

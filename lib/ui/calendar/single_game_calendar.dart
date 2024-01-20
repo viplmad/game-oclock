@@ -276,7 +276,14 @@ class _SingleGameCalendarBody extends StatelessWidget {
           BlocListener<CalendarManagerBloc, CalendarManagerState>(
             listener: (BuildContext context, CalendarManagerState state) {
               if (state is CalendarNotLoaded) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToLoadCalendarString;
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
           ),
@@ -295,7 +302,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationNotAdded) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToAddString(
+                  AppLocalizations.of(context)!.gameLogFieldString,
+                );
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
               if (state is ItemRelationDeleted) {
                 _changesMade = true;
@@ -310,7 +326,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationNotDeleted) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToDeleteString(
+                  AppLocalizations.of(context)!.gameLogFieldString,
+                );
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
           ),
@@ -329,7 +354,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationNotAdded) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToAddString(
+                  AppLocalizations.of(context)!.finishDateFieldString,
+                );
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
               if (state is ItemRelationDeleted) {
                 _changesMade = true;
@@ -344,7 +378,16 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
               }
               if (state is ItemRelationNotDeleted) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToDeleteString(
+                  AppLocalizations.of(context)!.finishDateFieldString,
+                );
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
           ),

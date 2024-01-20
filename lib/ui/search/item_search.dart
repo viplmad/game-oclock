@@ -158,14 +158,28 @@ class _ItemSearchBodyState<
                 Navigator.maybePop<T>(context, state.item);
               }
               if (state is ItemNotAdded) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message = AppLocalizations.of(context)!
+                    .unableToAddString(widget.typeName(context));
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
           ),
           BlocListener<K, ItemSearchState>(
             listener: (BuildContext context, ItemSearchState state) async {
               if (state is ItemSearchError) {
-                showErrorSnackbar(context, state.error, state.errorDescription);
+                final String message =
+                    AppLocalizations.of(context)!.unableToLoadSearchString;
+                showErrorSnackbar(
+                  context,
+                  title: message,
+                  error: state.error,
+                  errorDescription: state.errorDescription,
+                );
               }
             },
           ),
@@ -250,9 +264,9 @@ class _ItemSearchBodyState<
 
   Widget listItems(List<T> results, String emptyMessage) {
     if (results.isEmpty) {
-      return Center(
-        child: Text(emptyMessage),
-      );
+      return ItemEmpty(
+        title: emptyMessage,
+      ); // TODO add everywhere
     }
 
     return Expanded(

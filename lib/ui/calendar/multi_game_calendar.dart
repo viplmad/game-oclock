@@ -135,7 +135,14 @@ class _MultiGameCalendarBody extends StatelessWidget {
     return BlocListener<CalendarManagerBloc, CalendarManagerState>(
       listener: (BuildContext context, CalendarManagerState state) {
         if (state is CalendarNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message =
+              AppLocalizations.of(context)!.unableToLoadCalendarString;
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: RefreshIndicator(

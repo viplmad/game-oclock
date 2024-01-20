@@ -133,10 +133,24 @@ class _ServerSettingsBody extends StatelessWidget {
           );
         }
         if (state is ServerSettingsNotSaved) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message =
+              AppLocalizations.of(context)!.unableToUpdateConnectionString;
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ServerSettingsNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message =
+              AppLocalizations.of(context)!.unableToLoadConnectionString;
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: BlocBuilder<ServerSettingsBloc, ServerSettingsState>(

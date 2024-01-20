@@ -126,7 +126,14 @@ class _ReviewYearBody extends StatelessWidget {
     return BlocListener<ReviewManagerBloc, ReviewManagerState>(
       listener: (BuildContext context, ReviewManagerState state) {
         if (state is ReviewNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message =
+              AppLocalizations.of(context)!.unableToLoadReviewString;
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: RefreshIndicator(
@@ -373,6 +380,7 @@ class _ReviewYearBody extends StatelessWidget {
               AppLocalizations.of(context)!.totalGamesPlayedString(totalPlayed),
             ),
             subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   AppLocalizations.of(context)!.playTimeString(
@@ -1229,15 +1237,8 @@ class _ReviewYearBody extends StatelessWidget {
         totalTime,
       );
 
-      widgets.add(
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            topIcons.elementAt(index),
-            topGameCard,
-          ],
-        ),
-      );
+      widgets.add(topIcons.elementAt(index));
+      widgets.add(topGameCard);
     }
 
     return widgets;
@@ -1749,6 +1750,7 @@ class _ReviewYearBody extends StatelessWidget {
         ),
       ),
       subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             AppLocalizations.of(context)!.sessionsPlayedString(

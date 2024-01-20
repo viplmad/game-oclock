@@ -27,18 +27,20 @@ void showSnackBar(
 }
 
 void showErrorSnackbar(
-  BuildContext context,
-  ErrorCode error,
-  String errorDescription,
-) {
+  BuildContext context, {
+  required String title,
+  required ErrorCode error,
+  required String errorDescription,
+}) {
   final String message = AppLocalizationsUtils.getErrorMessage(context, error);
   showSnackBar(
     context,
-    message: message,
+    message: '$title - $message',
     snackBarAction: _dialogSnackBarAction(
       context,
       label: AppLocalizations.of(context)!.moreString,
-      title: message,
+      title: title,
+      subtitle: message,
       content: errorDescription,
     ),
   );
@@ -48,6 +50,7 @@ SnackBarAction _dialogSnackBarAction(
   BuildContext context, {
   required String label,
   required String title,
+  required String subtitle,
   required String content,
 }) {
   return backgroundSnackBarAction(
@@ -58,7 +61,10 @@ SnackBarAction _dialogSnackBarAction(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(title),
+            title: ListTile(
+              title: Text(title),
+              subtitle: Text(subtitle),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,

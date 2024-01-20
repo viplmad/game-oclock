@@ -106,7 +106,14 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           );
         }
         if (state is ItemRelationNotAdded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message =
+              AppLocalizations.of(context)!.unableToAddString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemRelationDeleted) {
           _changesMade = true;
@@ -119,10 +126,24 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           );
         }
         if (state is ItemRelationNotDeleted) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToDeleteString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemRelationNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToLoadString(relationTypeName);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: ListTileTheme.merge(

@@ -232,7 +232,14 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotAdded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToAddString(currentTypeString);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemDeleted<T>) {
           final String message =
@@ -244,10 +251,24 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotDeleted) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToDeleteString(currentTypeString);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
         if (state is ItemListNotLoaded) {
-          showErrorSnackbar(context, state.error, state.errorDescription);
+          final String message = AppLocalizations.of(context)!
+              .unableToLoadString(currentTypeString);
+          showErrorSnackbar(
+            context,
+            title: message,
+            error: state.error,
+            errorDescription: state.errorDescription,
+          );
         }
       },
       child: RefreshIndicator(
