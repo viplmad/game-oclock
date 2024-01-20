@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:game_oclock/ui/utils/shape_utils.dart';
 import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
@@ -184,6 +186,37 @@ class _ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
+}
+
+class ItemError extends StatelessWidget {
+  const ItemError({
+    Key? key,
+    required this.title,
+    required this.onRetryTap,
+  }) : super(key: key);
+
+  final String title;
+  final void Function() onRetryTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Center(
+          child: Text(title),
+        ),
+        ElevatedButton(
+          onPressed: onRetryTap,
+          style: ElevatedButton.styleFrom(
+            surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
+          ),
+          child: Text(
+            AppLocalizations.of(context)!.retryString,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class SkeletonItemList extends StatelessWidget {

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 abstract class CalendarManagerEvent extends Equatable {
   const CalendarManagerEvent();
 
@@ -8,15 +10,17 @@ abstract class CalendarManagerEvent extends Equatable {
 }
 
 class WarnCalendarNotLoaded extends CalendarManagerEvent {
-  const WarnCalendarNotLoaded(this.error);
+  const WarnCalendarNotLoaded(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'WarnCalendarNotLoaded { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

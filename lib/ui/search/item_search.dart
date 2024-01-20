@@ -150,27 +150,26 @@ class _ItemSearchBodyState<
         elevation: 1.0,
         scrolledUnderElevation: 1.0,
       ),
-      body: BlocListener<S, ItemListManagerState>(
-        listener: (BuildContext context, ItemListManagerState state) async {
-          if (state is ItemAdded<T>) {
-            Navigator.maybePop<T>(context, state.item);
-          }
-          if (state is ItemNotAdded) {
-            final String message = AppLocalizations.of(context)!
-                .unableToAddString(widget.typeName(context));
-            showSnackBar(
-              context,
-              message: message,
-              seconds: 2,
-              snackBarAction: dialogSnackBarAction(
-                context,
-                label: AppLocalizations.of(context)!.moreString,
-                title: message,
-                content: state.error,
-              ),
-            );
-          }
-        },
+      body: MultiBlocListener(
+        listeners: <BlocListener<dynamic, dynamic>>[
+          BlocListener<S, ItemListManagerState>(
+            listener: (BuildContext context, ItemListManagerState state) async {
+              if (state is ItemAdded<T>) {
+                Navigator.maybePop<T>(context, state.item);
+              }
+              if (state is ItemNotAdded) {
+                showErrorSnackbar(context, state.error, state.errorDescription);
+              }
+            },
+          ),
+          BlocListener<K, ItemSearchState>(
+            listener: (BuildContext context, ItemSearchState state) async {
+              if (state is ItemSearchError) {
+                showErrorSnackbar(context, state.error, state.errorDescription);
+              }
+            },
+          ),
+        ],
         child: Column(
           children: <Widget>[
             widget.allowNewButton
@@ -195,8 +194,11 @@ class _ItemSearchBodyState<
                   );
                 }
                 if (state is ItemSearchError) {
-                  return Center(
-                    child: Text(state.error),
+                  return ItemError(
+                    title:
+                        AppLocalizations.of(context)!.somethingWentWrongString,
+                    onRetryTap: () =>
+                        BlocProvider.of<K>(context).add(ReloadItemSearch()),
                   );
                 }
 

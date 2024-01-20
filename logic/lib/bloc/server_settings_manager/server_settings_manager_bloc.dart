@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show TokenResponse;
+import 'package:game_oclock_client/api.dart' show ErrorCode, TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
 import 'package:logic/service/service.dart' show GameOClockService;
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'server_settings_manager.dart';
@@ -47,9 +48,7 @@ class ServerSettingsManagerBloc
         ServerConnectionSettingsSaved(fullConnection),
       );
     } catch (e) {
-      emit(
-        ServerSettingsNotSaved(e.toString()),
-      );
+      _handleError(e, emit);
     }
 
     emit(
@@ -61,6 +60,15 @@ class ServerSettingsManagerBloc
     WarnServerSettingsNotLoaded event,
     Emitter<ServerSettingsManagerState> emit,
   ) {
-    emit(ServerSettingsNotLoaded(event.error));
+    emit(ServerSettingsNotLoaded(event.error, event.errorDescription));
+  }
+
+  void _handleError(Object e, Emitter<ServerSettingsManagerState> emit) {
+    BlocUtils.handleError(
+      e,
+      emit,
+      (ErrorCode error, String errorDescription) =>
+          ServerSettingsNotSaved(error, errorDescription),
+    );
   }
 }

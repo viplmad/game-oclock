@@ -32,6 +32,14 @@ import '../theme/theme.dart' show AppTheme, GameTheme;
 const int topMax = 5;
 const int maxRecentYears = 7;
 
+const List<Icon> topIcons = <Icon>[
+  Icon(GameTheme.firstIcon),
+  Icon(GameTheme.secondIcon),
+  Icon(GameTheme.thirdIcon),
+  Icon(GameTheme.fourthIcon),
+  Icon(GameTheme.fifthIcon),
+];
+
 class ReviewYear extends StatelessWidget {
   const ReviewYear({
     Key? key,
@@ -67,7 +75,7 @@ class ReviewYear extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.yearInReviewViewString),
+          title: Text(AppLocalizations.of(context)!.yearInReviewString),
           // Fixed elevation so background colour doesn't change on scroll
           elevation: 1.0,
           scrolledUnderElevation: 1.0,
@@ -118,18 +126,7 @@ class _ReviewYearBody extends StatelessWidget {
     return BlocListener<ReviewManagerBloc, ReviewManagerState>(
       listener: (BuildContext context, ReviewManagerState state) {
         if (state is ReviewNotLoaded) {
-          final String message =
-              AppLocalizations.of(context)!.unableToLoadReview;
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: RefreshIndicator(
@@ -149,10 +146,10 @@ class _ReviewYearBody extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.emptyPlayTime,
-                        ),
+                      child: ItemError(
+                        title: AppLocalizations.of(context)!.emptyPlayTime,
+                        onRetryTap: () => BlocProvider.of<ReviewBloc>(context)
+                            .add(ReloadReview()),
                       ),
                     ),
                   ],
@@ -236,30 +233,15 @@ class _ReviewYearBody extends StatelessWidget {
               widgets.add(
                 const Divider(height: 4.0),
               );
-              final List<Icon> topIcons = <Icon>[
-                const Icon(GameTheme.firstIcon),
-                const Icon(GameTheme.secondIcon),
-                const Icon(GameTheme.thirdIcon),
-                const Icon(GameTheme.fourthIcon),
-                const Icon(GameTheme.fifthIcon),
-              ];
-              final Iterable<Widget> topGamesWidgets =
-                  topGames.map((GamePlayedReviewDTO game) {
-                final GameFinishedReviewDTO? finishedGame =
-                    _getFinishedGame(finishedGames, game.id);
-
-                return _buildTopGameCard(
+              widgets.addAll(
+                _buildTopGames(
                   context,
-                  gamesColour[game.id]!,
-                  game,
-                  finishedGame,
+                  gamesColour,
+                  topGames,
+                  finishedGames,
                   playedData.totalTime,
-                );
-              });
-              for (int index = 0; index < topGames.length; index++) {
-                widgets.add(topIcons.elementAt(index));
-                widgets.add(topGamesWidgets.elementAt(index));
-              }
+                ),
+              );
               widgets.add(
                 const Divider(height: 4.0),
               );
@@ -337,7 +319,12 @@ class _ReviewYearBody extends StatelessWidget {
               );
             }
             if (state is ReviewError) {
-              return const SizedBox();
+              return ItemError(
+                title: AppLocalizations.of(context)!.somethingWentWrongString,
+                onRetryTap: () {
+                  BlocProvider.of<ReviewBloc>(context).add(ReloadReview());
+                },
+              );
             }
 
             return Column(
@@ -385,20 +372,19 @@ class _ReviewYearBody extends StatelessWidget {
             title: Text(
               AppLocalizations.of(context)!.totalGamesPlayedString(totalPlayed),
             ),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            subtitle: Column(
               children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.sessionsPlayedString(
-                    totalSessions,
-                  ),
-                ),
                 Text(
                   AppLocalizations.of(context)!.playTimeString(
                     AppLocalizationsUtils.formatDuration(
                       context,
                       totalTime,
                     ),
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.sessionsPlayedString(
+                    totalSessions,
                   ),
                 ),
               ],
@@ -1222,6 +1208,41 @@ class _ReviewYearBody extends StatelessWidget {
     };
   }
 
+  List<Widget> _buildTopGames(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    Iterable<GamePlayedReviewDTO> topGames,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    final List<Widget> widgets = <Widget>[];
+    for (int index = 0; index < topGames.length; index++) {
+      final GamePlayedReviewDTO game = topGames.elementAt(index);
+      final GameFinishedReviewDTO? finishedGame =
+          _getFinishedGame(finishedGames, game.id);
+
+      final Widget topGameCard = _buildTopGameCard(
+        context,
+        gamesColour[game.id]!,
+        game,
+        finishedGame,
+        totalTime,
+      );
+
+      widgets.add(
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            topIcons.elementAt(index),
+            topGameCard,
+          ],
+        ),
+      );
+    }
+
+    return widgets;
+  }
+
   void _onPlayedReleaseYearTypeTap(
     BuildContext context,
     Map<String, Color> gamesColour,
@@ -1719,8 +1740,15 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return ListTile(
       leading: const Icon(GameTheme.sessionIcon),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      title: Text(
+        AppLocalizations.of(context)!.playTimeString(
+          AppLocalizationsUtils.formatDuration(
+            context,
+            game.totalTime!,
+          ),
+        ),
+      ),
+      subtitle: Column(
         children: <Widget>[
           Text(
             AppLocalizations.of(context)!.sessionsPlayedString(
@@ -1728,21 +1756,13 @@ class _ReviewYearBody extends StatelessWidget {
             ),
           ),
           Text(
-            AppLocalizations.of(context)!.playTimeString(
-              AppLocalizationsUtils.formatDuration(
-                context,
-                game.totalTime!,
+            AppLocalizations.of(context)!.percentagePlayTimeString(
+              _formatPercentageForCard(
+                game.totalTime!.inMinutes / totalTime.inMinutes,
               ),
             ),
           ),
         ],
-      ),
-      subtitle: Text(
-        AppLocalizations.of(context)!.percentagePlayTimeString(
-          _formatPercentageForCard(
-            game.totalTime!.inMinutes / totalTime.inMinutes,
-          ),
-        ),
       ),
     );
   }

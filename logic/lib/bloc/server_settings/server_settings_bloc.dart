@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import '../server_settings_manager/server_settings_manager.dart';
@@ -40,8 +43,7 @@ class ServerSettingsBloc
           ),
         );
       } catch (e) {
-        managerBloc.add(WarnServerSettingsNotLoaded(e.toString()));
-        emit(ServerSettingsError());
+        _handleError(e, emit);
       }
     } else {
       emit(
@@ -58,6 +60,17 @@ class ServerSettingsBloc
       ServerSettingsLoaded(
         event.savedServerConnection,
       ),
+    );
+  }
+
+  void _handleError(Object e, Emitter<ServerSettingsState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => ServerSettingsError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnServerSettingsNotLoaded(error, errorDescription),
     );
   }
 

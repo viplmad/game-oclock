@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 import 'package:logic/model/model.dart' show ServerConnection;
 
 abstract class ServerSettingsManagerState extends Equatable {
@@ -26,29 +28,33 @@ class ServerConnectionSettingsSaved extends ServerSettingsManagerState {
 }
 
 class ServerSettingsNotSaved extends ServerSettingsManagerState {
-  const ServerSettingsNotSaved(this.error);
+  const ServerSettingsNotSaved(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'ServerSettingsNotSaved { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }
 
 class ServerSettingsNotLoaded extends ServerSettingsManagerState {
-  const ServerSettingsNotLoaded(this.error);
+  const ServerSettingsNotLoaded(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'ServerSettingsNotLoaded { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

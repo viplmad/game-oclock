@@ -18,8 +18,7 @@ class DLCListBloc extends ItemListBloc<DLCDTO, NewDLCDTO, DLCService> {
 
   @override
   Future<List<DLCDTO>> getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
+    int viewIndex, [
     int? page,
   ]) async {
     final DLCView view = DLCView.values[viewIndex];

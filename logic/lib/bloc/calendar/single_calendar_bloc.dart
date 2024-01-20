@@ -3,11 +3,12 @@ import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show GameLogDTO;
+import 'package:game_oclock_client/api.dart' show ErrorCode, GameLogDTO;
 
+import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:logic/service/service.dart'
     show GameOClockService, GameLogService, GameFinishService;
-import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
 
@@ -114,10 +115,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } catch (e) {
-        managerBloc.add(WarnCalendarNotLoaded(e.toString()));
-        emit(
-          CalendarError(),
-        );
+        _handleError(e, emit);
       }
     } else if (state is! CalendarLoading) {
       await _mapAnyLoadToState(emit);
@@ -163,10 +161,7 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
-      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
-      emit(
-        CalendarError(),
-      );
+      _handleError(e, emit);
     }
   }
 
@@ -383,6 +378,17 @@ class SingleCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         event.range,
         event.style,
       ),
+    );
+  }
+
+  void _handleError(Object e, Emitter<CalendarState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => CalendarError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnCalendarNotLoaded(error, errorDescription),
     );
   }
 

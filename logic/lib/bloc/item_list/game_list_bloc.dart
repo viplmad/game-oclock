@@ -7,11 +7,10 @@ import 'package:game_oclock_client/api.dart'
         GameWithLogPageResult,
         NewGameDTO;
 
+import 'package:logic/model/model.dart' show GameView;
 import 'package:logic/service/service.dart'
     show GameOClockService, GameFinishService, GameLogService, GameService;
-import 'package:logic/model/model.dart' show GameView;
 import 'package:logic/preferences/shared_preferences_state.dart';
-import 'package:logic/utils/datetime_extension.dart';
 
 import 'item_list.dart';
 
@@ -27,21 +26,14 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
   final GameLogService _gameLogService;
 
   @override
-  Future<ViewParameters> getStartViewIndex() async {
-    final int startViewIndex =
-        await SharedPreferencesState.retrieveInitialGameViewIndex() ??
-            GameView.main.index;
-
-    return ViewParameters(
-      startViewIndex,
-      startViewIndex == GameView.review.index ? DateTime.now().year : null,
-    );
+  Future<int> getStartViewIndex() async {
+    return await SharedPreferencesState.retrieveInitialGameViewIndex() ??
+        GameView.main.index;
   }
 
   @override
   Future<List<GameDTO>> getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
+    int viewIndex, [
     int? page,
   ]) async {
     final GameView view = GameView.values[viewIndex];
@@ -73,25 +65,6 @@ class GameListBloc extends ItemListBloc<GameDTO, NewGameDTO, GameService> {
         final GameWithLogPageResult result = await _gameLogService
             .getLastPlayedGames(null, DateTime.now(), page: page);
         return result.data;
-      case GameView.review:
-        final DateTime startDate = _getArgsStartDate(viewArgs);
-        final DateTime endDate = startDate.atLastDayOfYear();
-
-        final GameWithFinishPageResult result = await _gameFinishService
-            .getFirstFinishedGames(startDate, endDate, page: page);
-        return result.data;
     }
-  }
-
-  DateTime _getArgsStartDate(Object? viewArgs) {
-    DateTime startDate;
-    if (viewArgs != null && viewArgs is int) {
-      final int year = viewArgs;
-      startDate = DateTime(year).atFirstDayOfYear();
-    } else {
-      startDate = DateTime.now().atFirstDayOfYear();
-    }
-
-    return startDate;
   }
 }

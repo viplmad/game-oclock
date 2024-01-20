@@ -16,8 +16,7 @@ class PlatformListBloc
 
   @override
   Future<List<PlatformDTO>> getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
+    int viewIndex, [
     int? page,
   ]) async {
     final PlatformView view = PlatformView.values[viewIndex];

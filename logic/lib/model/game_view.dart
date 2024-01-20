@@ -6,5 +6,4 @@ enum GameView {
   nextUp,
   lastFinished,
   lastPlayed,
-  review, // TODO remove
 }

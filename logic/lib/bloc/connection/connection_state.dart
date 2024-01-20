@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 abstract class ConnectState extends Equatable {
   const ConnectState();
 
@@ -14,15 +16,17 @@ class Connected extends ConnectState {}
 class NonexistentConnection extends ConnectState {}
 
 class FailedConnection extends ConnectState {
-  const FailedConnection(this.error);
+  const FailedConnection(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'FailedConnection { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

@@ -3,11 +3,13 @@ import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show GameLogDTO, GameWithLogsDTO;
+import 'package:game_oclock_client/api.dart'
+    show ErrorCode, GameLogDTO, GameWithLogsDTO;
 
+import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
 import 'package:logic/service/service.dart'
     show GameOClockService, GameLogService;
-import 'package:logic/model/model.dart' show CalendarRange, CalendarStyle;
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/game_calendar_utils.dart';
 
@@ -104,10 +106,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } catch (e) {
-        managerBloc.add(WarnCalendarNotLoaded(e.toString()));
-        emit(
-          CalendarError(),
-        );
+        _handleError(e, emit);
       }
     } else if (state is! CalendarLoading) {
       await _mapLoadInitialCalendar(DateTime.now().year, emit);
@@ -161,10 +160,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
-      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
-      emit(
-        CalendarError(),
-      );
+      _handleError(e, emit);
     }
   }
 
@@ -243,10 +239,7 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         );
       }
     } catch (e) {
-      managerBloc.add(WarnCalendarNotLoaded(e.toString()));
-      emit(
-        CalendarError(),
-      );
+      _handleError(e, emit);
     }
   }
 
@@ -493,6 +486,17 @@ class MultiCalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         );
       }
     }
+  }
+
+  void _handleError(Object e, Emitter<CalendarState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => CalendarError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnCalendarNotLoaded(error, errorDescription),
+    );
   }
 
   List<GameWithLogsDTO> _selectedGameWithLogsInRange(

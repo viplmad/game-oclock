@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
+
+import 'package:logic/bloc/bloc_utils.dart';
 
 import '../item_relation_manager/item_relation_manager.dart';
 import 'item_relation.dart';
@@ -54,11 +56,19 @@ abstract class ItemRelationBloc<W extends PrimaryModel, N extends Object>
         ItemRelationLoaded<W>(items),
       );
     } catch (e) {
-      managerBloc.add(WarnItemRelationNotLoaded(e.toString()));
-      emit(
-        ItemRelationError(),
-      );
+      _handleError(e, emit);
     }
+  }
+
+  void _handleError(Object e, Emitter<ItemRelationState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => ItemRelationError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnItemRelationNotLoaded(error, errorDescription),
+    );
   }
 
   void _mapUpdateToState(

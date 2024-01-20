@@ -117,7 +117,6 @@ class _GameWishlistedList
   _GameWishlistedListBody itemListBodyBuilder({
     required List<GameDTO> items,
     required int viewIndex,
-    required Object? viewArgs,
     required void Function(GameDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -125,7 +124,6 @@ class _GameWishlistedList
     return _GameWishlistedListBody(
       items: items,
       viewIndex: viewIndex,
-      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -139,7 +137,6 @@ class _GameWishlistedListBody
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,

@@ -58,18 +58,7 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotAdded) {
-          final String message = AppLocalizations.of(context)!
-              .unableToLinkString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemRelationDeleted) {
           final String message =
@@ -80,32 +69,10 @@ abstract class ItemRelationList<
           );
         }
         if (state is ItemRelationNotDeleted) {
-          final String message = AppLocalizations.of(context)!
-              .unableToUnlinkString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemRelationNotLoaded) {
-          final String message = AppLocalizations.of(context)!
-              .unableToLoadString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: BlocBuilder<K, ItemRelationState>(
@@ -134,7 +101,11 @@ abstract class ItemRelationList<
                   );
           }
           if (state is ItemRelationError) {
-            return const SizedBox();
+            return ItemError(
+              title: AppLocalizations.of(context)!.somethingWentWrongString,
+              onRetryTap: () =>
+                  BlocProvider.of<K>(context).add(ReloadItemRelation()),
+            );
           }
 
           return Column(

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show PageResultDTO, PrimaryModel;
+import 'package:game_oclock_client/api.dart'
+    show ErrorCode, PageResultDTO, PrimaryModel;
 
 import 'package:logic/service/service.dart' show SearchService;
+import 'package:logic/bloc/bloc_utils.dart';
 
 import 'item_search.dart';
 
@@ -14,6 +16,7 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
     required this.service,
   }) : super(ItemSearchEmpty<T>()) {
     on<SearchTextChanged>(_mapTextChangedToState);
+    on<ReloadItemSearch>(_mapReloadToState);
   }
 
   final S service;
@@ -21,7 +24,7 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
   final int _maxSuggestions = 10;
   final int _maxResults = 20;
 
-  Future<void> _mapTextChangedToState(
+  void _mapTextChangedToState(
     SearchTextChanged event,
     Emitter<ItemSearchState> emit,
   ) async {
@@ -29,8 +32,39 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
       ItemSearchLoading(),
     );
 
+    await _mapAnyLoadToState(event.query, emit);
+  }
+
+  void _mapReloadToState(
+    ReloadItemSearch event,
+    Emitter<ItemSearchState> emit,
+  ) async {
+    if (state is ItemSearchSuccess<T>) {
+      final String query = (state as ItemSearchSuccess<T>).query;
+
+      emit(
+        ItemSearchLoading(),
+      );
+
+      await _mapAnyLoadToState(query, emit);
+    } else if (state is ItemSearchError) {
+      final String query = (state as ItemSearchError).query;
+
+      emit(
+        ItemSearchLoading(),
+      );
+
+      await _mapAnyLoadToState(query, emit);
+    } else if (state is! ItemSearchLoading) {
+      await _mapAnyLoadToState('', emit);
+    }
+  }
+
+  Future<void> _mapAnyLoadToState(
+    String query,
+    Emitter<ItemSearchState> emit,
+  ) async {
     try {
-      final String query = event.query;
       if (query.isEmpty) {
         final PageResultDTO<T> initialItems = await _getInitialItems();
         emit(
@@ -39,14 +73,21 @@ abstract class ItemSearchBloc<T extends PrimaryModel,
       } else {
         final PageResultDTO<T> items = await _getSearchItems(query);
         emit(
-          ItemSearchSuccess<T>(items.data),
+          ItemSearchSuccess<T>(query, items.data),
         );
       }
     } catch (e) {
-      emit(
-        ItemSearchError(e.toString()),
-      );
+      _handleError(query, e, emit);
     }
+  }
+
+  void _handleError(String query, Object e, Emitter<ItemSearchState> emit) {
+    BlocUtils.handleError(
+      e,
+      emit,
+      (ErrorCode error, String errorDescription) =>
+          ItemSearchError(query, error, errorDescription),
+    );
   }
 
   Future<PageResultDTO<T>> _getInitialItems() {

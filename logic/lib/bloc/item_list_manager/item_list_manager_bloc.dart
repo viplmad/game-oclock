@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 import 'package:logic/service/service.dart' show ItemService;
+import 'package:logic/bloc/bloc_utils.dart';
 
 import 'item_list_manager.dart';
 
@@ -29,8 +30,11 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
         ItemAdded<T>(item),
       );
     } catch (e) {
-      emit(
-        ItemNotAdded(e.toString()),
+      BlocUtils.handleError(
+        e,
+        emit,
+        (ErrorCode error, String errorDescription) =>
+            ItemNotAdded(error, errorDescription),
       );
     }
 
@@ -49,8 +53,11 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
         ItemDeleted<T>(event.item),
       );
     } catch (e) {
-      emit(
-        ItemNotDeleted(e.toString()),
+      BlocUtils.handleError(
+        e,
+        emit,
+        (ErrorCode error, String errorDescription) =>
+            ItemNotDeleted(error, errorDescription),
       );
     }
 
@@ -63,7 +70,7 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
     WarnItemListNotLoaded event,
     Emitter<ItemListManagerState> emit,
   ) {
-    emit(ItemListNotLoaded(event.error));
+    emit(ItemListNotLoaded(event.error, event.errorDescription));
   }
 
   Future<T> _create(AddItem<N> event) {

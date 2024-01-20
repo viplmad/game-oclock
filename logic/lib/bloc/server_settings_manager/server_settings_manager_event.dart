@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 abstract class ServerSettingsManagerEvent extends Equatable {
   const ServerSettingsManagerEvent();
 
@@ -33,15 +35,17 @@ class SaveServerConnectionSettings extends ServerSettingsManagerEvent {
 }
 
 class WarnServerSettingsNotLoaded extends ServerSettingsManagerEvent {
-  const WarnServerSettingsNotLoaded(this.error);
+  const WarnServerSettingsNotLoaded(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'WarnServerSettingsNotLoaded { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

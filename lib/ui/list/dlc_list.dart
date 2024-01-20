@@ -69,7 +69,6 @@ class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
   _DLCListBody itemListBodyBuilder({
     required List<DLCDTO> items,
     required int viewIndex,
-    required Object? viewArgs,
     required void Function(DLCDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -77,7 +76,6 @@ class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
     return _DLCListBody(
       items: items,
       viewIndex: viewIndex,
-      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -90,7 +88,6 @@ class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,

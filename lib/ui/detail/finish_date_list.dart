@@ -106,18 +106,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           );
         }
         if (state is ItemRelationNotAdded) {
-          final String message =
-              AppLocalizations.of(context)!.unableToAddString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemRelationDeleted) {
           _changesMade = true;
@@ -130,32 +119,10 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           );
         }
         if (state is ItemRelationNotDeleted) {
-          final String message = AppLocalizations.of(context)!
-              .unableToDeleteString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemRelationNotLoaded) {
-          final String message = AppLocalizations.of(context)!
-              .unableToLoadString(relationTypeName);
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: ListTileTheme.merge(
@@ -222,7 +189,12 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                     }
 
                     if (state is ItemRelationError) {
-                      return const SizedBox();
+                      return ItemError(
+                        title: AppLocalizations.of(context)!
+                            .somethingWentWrongString,
+                        onRetryTap: () => BlocProvider.of<K>(context)
+                            .add(ReloadItemRelation()),
+                      );
                     }
 
                     return const Column(

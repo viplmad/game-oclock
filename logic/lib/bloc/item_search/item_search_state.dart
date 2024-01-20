@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 abstract class ItemSearchState extends Equatable {
   const ItemSearchState();
@@ -27,29 +27,35 @@ class ItemSearchEmpty<T extends PrimaryModel> extends ItemSearchState {
 class ItemSearchLoading extends ItemSearchState {}
 
 class ItemSearchSuccess<T extends PrimaryModel> extends ItemSearchState {
-  const ItemSearchSuccess(this.results);
+  const ItemSearchSuccess(this.query, this.results);
 
+  final String query;
   final List<T> results;
 
   @override
-  List<Object> get props => <Object>[results];
+  List<Object> get props => <Object>[query, results];
 
   @override
   String toString() => 'ItemSearchSuccess { '
+      'query: $query, '
       'results: $results'
       ' }';
 }
 
 class ItemSearchError extends ItemSearchState {
-  const ItemSearchError(this.error);
+  const ItemSearchError(this.query, this.error, this.errorDescription);
 
-  final String error;
+  final String query;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'ItemSearchError { '
-      'error: $error'
+      'query: $query, '
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

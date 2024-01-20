@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_oclock_client/api.dart'
-    show GamesFinishedReviewDTO, GamesPlayedReviewDTO;
+    show ErrorCode, GamesFinishedReviewDTO, GamesPlayedReviewDTO;
 
 import 'package:logic/service/service.dart'
     show GameFinishService, GameLogService, GameOClockService;
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/utils/datetime_extension.dart';
 
 import '../review_manager/review_manager.dart';
@@ -62,11 +63,19 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         ReviewLoaded(finalYear, playedData, finishedData),
       );
     } catch (e) {
-      managerBloc.add(WarnReviewNotLoaded(e.toString()));
-      emit(
-        ReviewError(),
-      );
+      _handleError(e, emit);
     }
+  }
+
+  void _handleError(Object e, Emitter<ReviewState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => ReviewError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnReviewNotLoaded(error, errorDescription),
+    );
   }
 
   Future<GamesPlayedReviewDTO> _getPlayed(int year) {

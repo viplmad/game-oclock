@@ -115,8 +115,6 @@ class GameTheme {
         return AppLocalizations.of(context)!.lastFinishedViewString;
       case GameView.lastPlayed:
         return AppLocalizations.of(context)!.lastPlayedString;
-      case GameView.review:
-        return AppLocalizations.of(context)!.yearInReviewViewString;
     }
   }
 

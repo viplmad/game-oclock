@@ -14,8 +14,7 @@ class TagListBloc extends ItemListBloc<TagDTO, NewTagDTO, TagService> {
 
   @override
   Future<List<TagDTO>> getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
+    int viewIndex, [
     int? page,
   ]) async {
     final TagView view = TagView.values[viewIndex];

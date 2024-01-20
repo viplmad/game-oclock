@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
+import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 void showSnackBar(
   BuildContext context, {
@@ -21,7 +26,25 @@ void showSnackBar(
   messengerState.showSnackBar(snackBar);
 }
 
-SnackBarAction dialogSnackBarAction(
+void showErrorSnackbar(
+  BuildContext context,
+  ErrorCode error,
+  String errorDescription,
+) {
+  final String message = AppLocalizationsUtils.getErrorMessage(context, error);
+  showSnackBar(
+    context,
+    message: message,
+    snackBarAction: _dialogSnackBarAction(
+      context,
+      label: AppLocalizations.of(context)!.moreString,
+      title: message,
+      content: errorDescription,
+    ),
+  );
+}
+
+SnackBarAction _dialogSnackBarAction(
   BuildContext context, {
   required String label,
   required String title,

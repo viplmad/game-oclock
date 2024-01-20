@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 import 'package:logic/service/service.dart'
     show ItemService, ItemWithImageService;
+import 'package:logic/bloc/bloc_utils.dart';
 
 import 'item_detail_manager.dart';
 
@@ -29,9 +30,7 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
         ItemImageUpdated(),
       );
     } catch (e) {
-      emit(
-        ItemImageNotUpdated(e.toString()),
-      );
+      _handleImageError(e, emit);
     }
 
     emit(
@@ -49,9 +48,7 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
         ItemImageUpdated(),
       );
     } catch (e) {
-      emit(
-        ItemImageNotUpdated(e.toString()),
-      );
+      _handleImageError(e, emit);
     }
 
     emit(
@@ -69,13 +66,20 @@ abstract class ItemWithImageDetailManagerBloc<T extends PrimaryModel,
         ItemImageUpdated(),
       );
     } catch (e) {
-      emit(
-        ItemImageNotUpdated(e.toString()),
-      );
+      _handleImageError(e, emit);
     }
 
     emit(
       ItemDetailManagerInitialised(),
+    );
+  }
+
+  void _handleImageError(Object e, Emitter<ItemDetailManagerState> emit) {
+    BlocUtils.handleError(
+      e,
+      emit,
+      (ErrorCode error, String errorDescription) =>
+          ItemImageNotUpdated(error, errorDescription),
     );
   }
 
@@ -116,9 +120,7 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
         ItemFieldUpdated(),
       );
     } catch (e) {
-      emit(
-        ItemFieldNotUpdated(e.toString()),
-      );
+      _handleError(e, emit);
     }
 
     emit(
@@ -130,7 +132,16 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     WarnItemDetailNotLoaded event,
     Emitter<ItemDetailManagerState> emit,
   ) {
-    emit(ItemDetailNotLoaded(event.error));
+    emit(ItemDetailNotLoaded(event.error, event.errorDescription));
+  }
+
+  void _handleError(Object e, Emitter<ItemDetailManagerState> emit) {
+    BlocUtils.handleError(
+      e,
+      emit,
+      (ErrorCode error, String errorDescription) =>
+          ItemFieldNotUpdated(error, errorDescription),
+    );
   }
 
   Future<void> _update(UpdateItemField<N> event) {

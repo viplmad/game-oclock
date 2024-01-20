@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 abstract class ItemRelationManagerEvent extends Equatable {
   const ItemRelationManagerEvent();
@@ -39,15 +39,17 @@ class DeleteItemRelation<W extends PrimaryModel>
 }
 
 class WarnItemRelationNotLoaded extends ItemRelationManagerEvent {
-  const WarnItemRelationNotLoaded(this.error);
+  const WarnItemRelationNotLoaded(this.error, this.errorDescription);
 
-  final String error;
-
-  @override
-  List<Object> get props => <Object>[error];
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  String toString() => 'WarneItemRelationNotLoaded { '
-      'error: $error'
+  List<Object> get props => <Object>[error, errorDescription];
+
+  @override
+  String toString() => 'WarnItemRelationNotLoaded { '
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

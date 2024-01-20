@@ -232,19 +232,7 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotAdded) {
-          final String message = AppLocalizations.of(context)!
-              .unableToAddString(currentTypeString);
-          showSnackBar(
-            context,
-            message: message,
-            seconds: 2,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemDeleted<T>) {
           final String message =
@@ -256,34 +244,10 @@ abstract class ItemList<
           );
         }
         if (state is ItemNotDeleted) {
-          final String message = AppLocalizations.of(context)!
-              .unableToDeleteString(currentTypeString);
-          showSnackBar(
-            context,
-            message: message,
-            seconds: 2,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ItemListNotLoaded) {
-          final String message = AppLocalizations.of(context)!
-              .unableToLoadString(currentTypeString);
-          showSnackBar(
-            context,
-            message: message,
-            seconds: 2,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: RefreshIndicator(
@@ -296,7 +260,6 @@ abstract class ItemList<
               return itemListBodyBuilder(
                 items: state.items,
                 viewIndex: state.viewIndex,
-                viewArgs: state.viewArgs,
                 onDelete: (T item) {
                   BlocProvider.of<S>(context).add(DeleteItem<T>(item));
                 },
@@ -305,7 +268,11 @@ abstract class ItemList<
               );
             }
             if (state is ItemListError) {
-              return const SizedBox();
+              return ItemError(
+                title: AppLocalizations.of(context)!.somethingWentWrongString,
+                onRetryTap: () =>
+                    BlocProvider.of<K>(context).add(ReloadItemList()),
+              );
             }
 
             return Column(
@@ -345,7 +312,6 @@ abstract class ItemList<
   ItemListBody<T, K> itemListBodyBuilder({
     required List<T> items,
     required int viewIndex,
-    required Object? viewArgs,
     required void Function(T) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -358,7 +324,6 @@ abstract class ItemListBody<T extends PrimaryModel,
     Key? key,
     required this.items,
     required this.viewIndex,
-    required this.viewArgs,
     required this.onDelete,
     required this.style,
     required this.scrollController,
@@ -367,7 +332,6 @@ abstract class ItemListBody<T extends PrimaryModel,
 
   final List<T> items;
   final int viewIndex;
-  final Object? viewArgs;
   final void Function(T) onDelete;
   final ListStyle style;
   final ScrollController scrollController;

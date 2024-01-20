@@ -108,7 +108,6 @@ class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
   _GameTagListBody itemListBodyBuilder({
     required List<TagDTO> items,
     required int viewIndex,
-    required Object? viewArgs,
     required void Function(TagDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -116,7 +115,6 @@ class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
     return _GameTagListBody(
       items: items,
       viewIndex: viewIndex,
-      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -129,7 +127,6 @@ class _GameTagListBody extends ItemListBody<TagDTO, TagListBloc> {
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,

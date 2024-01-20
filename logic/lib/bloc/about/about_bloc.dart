@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 import 'about.dart';
 
 class AboutBloc extends Bloc<AboutEvent, AboutState> {
@@ -20,9 +22,13 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
         AboutLoaded(packageInfo),
       );
     } catch (e) {
-      emit(
-        AboutNotLoaded(e.toString()),
-      );
+      _handleError(emit, e);
     }
+  }
+
+  void _handleError(Emitter<AboutState> emit, Object e) {
+    emit(
+      AboutNotLoaded(ErrorCode.unknown, e.toString()),
+    );
   }
 }

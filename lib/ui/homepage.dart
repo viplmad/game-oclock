@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:logic/model/model.dart' show MainTab;
@@ -216,8 +217,8 @@ class _HomepageDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.reviews),
-            title: Text(AppLocalizations.of(context)!.yearInReviewViewString),
+            leading: const Icon(Icons.cake),
+            title: Text(AppLocalizations.of(context)!.yearInReviewString),
             onTap: () async {
               Navigator.pushNamed(
                 context,
@@ -252,41 +253,48 @@ class _HomepageDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
-          BlocBuilder<AboutBloc, AboutState>(
-            bloc: AboutBloc()..add(LoadAbout()),
-            builder: (BuildContext context, AboutState state) {
-              String version = '';
-              if (state is AboutLoaded) {
-                version = _createVersionString(state.packageInfo);
+          BlocListener<AboutBloc, AboutState>(
+            listener: (BuildContext context, AboutState state) {
+              if (state is AboutNotLoaded) {
+                showErrorSnackbar(context, state.error, state.errorDescription);
               }
+            },
+            child: BlocBuilder<AboutBloc, AboutState>(
+              bloc: AboutBloc()..add(LoadAbout()),
+              builder: (BuildContext context, AboutState state) {
+                String version = '';
+                if (state is AboutLoaded) {
+                  version = _createVersionString(state.packageInfo);
+                }
 
-              return ListTile(
-                leading: const Icon(Icons.info),
-                title: Text(
-                  '${AppLocalizations.of(context)!.aboutString} - $version',
-                ),
-                onTap: () {
-                  showLicensePage(
-                    context: context,
-                    applicationName: AppLocalizations.of(context)!.appTitle,
-                    applicationVersion: version,
-                    applicationIcon: Container(
-                      margin: const EdgeInsets.all(12.0),
-                      child: ClipRRect(
-                        borderRadius: ShapeUtils.fabBorderRadius,
-                        child: Image.asset(
-                          'assets/images/icon.png',
-                          height: kMinInteractiveDimension,
-                          width: kMinInteractiveDimension,
+                return ListTile(
+                  leading: const Icon(Icons.info),
+                  title: Text(
+                    '${AppLocalizations.of(context)!.aboutString} - $version',
+                  ),
+                  onTap: () {
+                    showLicensePage(
+                      context: context,
+                      applicationName: AppLocalizations.of(context)!.appTitle,
+                      applicationVersion: version,
+                      applicationIcon: Container(
+                        margin: const EdgeInsets.all(12.0),
+                        child: ClipRRect(
+                          borderRadius: ShapeUtils.fabBorderRadius,
+                          child: Image.asset(
+                            'assets/images/icon.png',
+                            height: kMinInteractiveDimension,
+                            width: kMinInteractiveDimension,
+                          ),
                         ),
                       ),
-                    ),
-                    applicationLegalese:
-                        AppLocalizations.of(context)!.licenseInfoString,
-                  );
-                },
-              );
-            },
+                      applicationLegalese:
+                          AppLocalizations.of(context)!.licenseInfoString,
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),

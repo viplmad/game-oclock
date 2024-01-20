@@ -1,6 +1,5 @@
-import 'package:game_oclock_client/api.dart' show ApiException, PageResultDTO;
-
-import 'package:logic/utils/http_utils.dart';
+import 'package:game_oclock_client/api.dart'
+    show ApiException, NotFoundApiException, PageResultDTO;
 
 abstract class ItemWithImageService<T extends Object, N extends Object>
     implements ItemService<T, N>, ImageService {}
@@ -65,7 +64,7 @@ Future<T?> nullIfNotFound<T>(Future<T> future) async {
   try {
     return await future;
   } on ApiException catch (e) {
-    if (e.code == HttpStatus.notFound) {
+    if (e is NotFoundApiException) {
       return null;
     }
 
@@ -77,7 +76,7 @@ Future<T> defaultIfNotFound<T>(Future<T> future, T defaultValue) async {
   try {
     return await future;
   } on ApiException catch (e) {
-    if (e.code == HttpStatus.notFound) {
+    if (e is NotFoundApiException) {
       return defaultValue;
     }
 

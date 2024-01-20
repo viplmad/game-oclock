@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class AboutState extends Equatable {
@@ -28,15 +30,17 @@ class AboutLoaded extends AboutState {
 }
 
 class AboutNotLoaded extends AboutState {
-  const AboutNotLoaded(this.error);
+  const AboutNotLoaded(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'AboutNotLoaded { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

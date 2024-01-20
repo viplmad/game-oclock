@@ -7,6 +7,8 @@ abstract class ItemSearchEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
+class ReloadItemSearch extends ItemSearchEvent {}
+
 class SearchTextChanged extends ItemSearchEvent {
   const SearchTextChanged([this.query = '']);
 

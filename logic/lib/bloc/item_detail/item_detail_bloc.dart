@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 import 'package:logic/service/service.dart' show ItemService;
+import 'package:logic/bloc/bloc_utils.dart';
 
 import '../item_detail_manager/item_detail_manager.dart';
 import 'item_detail.dart';
@@ -59,10 +60,7 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
           ItemLoaded<T>(item),
         );
       } catch (e) {
-        managerBloc.add(WarnItemDetailNotLoaded(e.toString()));
-        emit(
-          ItemDetailError(),
-        );
+        _handleError(e, emit);
       }
     } else if (state is! ItemLoading) {
       await _mapAnyLoadToState(emit);
@@ -78,11 +76,19 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
         ItemLoaded<T>(item),
       );
     } catch (e) {
-      managerBloc.add(WarnItemDetailNotLoaded(e.toString()));
-      emit(
-        ItemDetailError(),
-      );
+      _handleError(e, emit);
     }
+  }
+
+  void _handleError(Object e, Emitter<ItemDetailState> emit) {
+    BlocUtils.handleErrorWithManager(
+      e,
+      emit,
+      managerBloc,
+      () => ItemDetailError(),
+      (ErrorCode error, String errorDescription) =>
+          WarnItemDetailNotLoaded(error, errorDescription),
+    );
   }
 
   void _mapDetailManagerStateToEvent(ItemDetailManagerState managerState) {

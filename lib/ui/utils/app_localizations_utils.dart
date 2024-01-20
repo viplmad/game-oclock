@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:game_oclock_client/api.dart' show ErrorCode;
+
 import 'package:logic/utils/datetime_extension.dart';
 import 'package:logic/utils/duration_extension.dart';
 
@@ -111,5 +113,31 @@ class AppLocalizationsUtils {
 
   static String formatPercentage(double value) {
     return NumberFormat.decimalPercentPattern(decimalDigits: 0).format(value);
+  }
+
+  static String getErrorMessage(BuildContext context, ErrorCode error) {
+    switch (error) {
+      case ErrorCode.invalidParameter:
+        return AppLocalizations.of(context)!.unexpectedParametersString;
+      case ErrorCode.alreadyExists:
+        return AppLocalizations.of(context)!.similarEntityAlreadyExistsString;
+      case ErrorCode.notFound:
+        return AppLocalizations.of(context)!.entityNotFoundString;
+      case ErrorCode.notSupported:
+        return AppLocalizations.of(context)!.notImplementedYetString;
+      case ErrorCode.forbidden:
+        return AppLocalizations.of(context)!.forbiddenAccessString;
+      case ErrorCode.authInvalidRequest:
+      case ErrorCode.authInvalidGrant:
+      case ErrorCode.authUnsupportedGrantType:
+        return AppLocalizations.of(context)!.authErrorString;
+      case ErrorCode.connectionFailed:
+        return AppLocalizations.of(context)!.failedConnectionString;
+      case ErrorCode.responseMismatch:
+        return AppLocalizations.of(context)!.unexpectedResponseString;
+      case ErrorCode.unexpected:
+      case ErrorCode.unknown:
+        return AppLocalizations.of(context)!.unknownErrorString;
+    }
   }
 }

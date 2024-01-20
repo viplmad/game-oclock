@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:game_oclock_client/api.dart' show TokenResponse;
+import 'package:game_oclock_client/api.dart' show ErrorCode, TokenResponse;
 
 import 'package:logic/model/model.dart' show ServerConnection;
 import 'package:logic/service/service.dart' show GameOClockService;
+import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'connection.dart';
@@ -50,10 +51,17 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
           Connected(),
         );
       } catch (e) {
-        emit(
-          FailedConnection(e.toString()),
-        );
+        _handleError(e, emit);
       }
     }
+  }
+
+  void _handleError(Object e, Emitter<ConnectState> emit) {
+    BlocUtils.handleError(
+      e,
+      emit,
+      (ErrorCode error, String errorDescription) =>
+          FailedConnection(error, errorDescription),
+    );
   }
 }

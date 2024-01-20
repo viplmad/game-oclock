@@ -135,18 +135,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
     return BlocListener<CalendarManagerBloc, CalendarManagerState>(
       listener: (BuildContext context, CalendarManagerState state) {
         if (state is CalendarNotLoaded) {
-          final String message =
-              AppLocalizations.of(context)!.unableToLoadCalendar;
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: RefreshIndicator(
@@ -206,7 +195,11 @@ class _MultiGameCalendarBody extends StatelessWidget {
               );
             }
             if (state is CalendarError) {
-              return const SizedBox();
+              return ItemError(
+                title: AppLocalizations.of(context)!.somethingWentWrongString,
+                onRetryTap: () => BlocProvider.of<MultiCalendarBloc>(context)
+                    .add(ReloadMultiCalendar()),
+              );
             }
 
             return Column(

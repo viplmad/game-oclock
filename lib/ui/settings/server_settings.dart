@@ -10,6 +10,7 @@ import 'package:logic/bloc/server_settings/server_settings.dart';
 import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
 import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show AppTheme;
@@ -132,32 +133,10 @@ class _ServerSettingsBody extends StatelessWidget {
           );
         }
         if (state is ServerSettingsNotSaved) {
-          final String message =
-              AppLocalizations.of(context)!.unableToUpdateConnectionString;
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
         if (state is ServerSettingsNotLoaded) {
-          final String message =
-              AppLocalizations.of(context)!.unableToLoadConnectionString;
-          showSnackBar(
-            context,
-            message: message,
-            snackBarAction: dialogSnackBarAction(
-              context,
-              label: AppLocalizations.of(context)!.moreString,
-              title: message,
-              content: state.error,
-            ),
-          );
+          showErrorSnackbar(context, state.error, state.errorDescription);
         }
       },
       child: BlocBuilder<ServerSettingsBloc, ServerSettingsState>(
@@ -205,7 +184,11 @@ class _ServerSettingsBody extends StatelessWidget {
             );
           }
           if (state is ServerSettingsError) {
-            return const SizedBox();
+            return ItemError(
+              title: AppLocalizations.of(context)!.somethingWentWrongString,
+              onRetryTap: () => BlocProvider.of<ServerSettingsBloc>(context)
+                  .add(LoadServerSettings()), // TODO Reload
+            );
           }
 
           return const LinearProgressIndicator();

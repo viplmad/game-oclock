@@ -70,7 +70,6 @@ class PlatformList
   _PlatformListBody itemListBodyBuilder({
     required List<PlatformDTO> items,
     required int viewIndex,
-    required Object? viewArgs,
     required void Function(PlatformDTO) onDelete,
     required ListStyle style,
     required ScrollController scrollController,
@@ -78,7 +77,6 @@ class PlatformList
     return _PlatformListBody(
       items: items,
       viewIndex: viewIndex,
-      viewArgs: viewArgs,
       onDelete: onDelete,
       style: style,
       scrollController: scrollController,
@@ -91,7 +89,6 @@ class _PlatformListBody extends ItemListBody<PlatformDTO, PlatformListBloc> {
     Key? key,
     required super.items,
     required super.viewIndex,
-    required super.viewArgs,
     required super.onDelete,
     required super.style,
     required super.scrollController,

@@ -14,8 +14,7 @@ class GameWishlistedListBloc
 
   @override
   Future<List<GameDTO>> getAllWithView(
-    int viewIndex,
-    Object? viewArgs, [
+    int viewIndex, [
     int? page,
   ]) async {
     final GamePageResult result =

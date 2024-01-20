@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
+import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
 
 abstract class ItemListManagerEvent extends Equatable {
   const ItemListManagerEvent();
@@ -38,15 +38,17 @@ class DeleteItem<T extends PrimaryModel> extends ItemListManagerEvent {
 }
 
 class WarnItemListNotLoaded extends ItemListManagerEvent {
-  const WarnItemListNotLoaded(this.error);
+  const WarnItemListNotLoaded(this.error, this.errorDescription);
 
-  final String error;
+  final ErrorCode error;
+  final String errorDescription;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, errorDescription];
 
   @override
   String toString() => 'WarnItemListNotLoaded { '
-      'error: $error'
+      'error: $error, '
+      'errorDescription: $errorDescription'
       ' }';
 }

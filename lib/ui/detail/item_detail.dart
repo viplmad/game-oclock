@@ -16,6 +16,7 @@ import 'package:logic/bloc/item_detail_manager/item_detail_manager.dart';
 import 'package:game_oclock/ui/common/field/field.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/common/list_view.dart';
 
 import '../theme/theme.dart' show AppTheme;
 
@@ -112,18 +113,7 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemFieldNotUpdated) {
-            final String message =
-                AppLocalizations.of(context)!.unableToUpdateFieldString;
-            showSnackBar(
-              context,
-              message: message,
-              snackBarAction: dialogSnackBarAction(
-                context,
-                label: AppLocalizations.of(context)!.moreString,
-                title: message,
-                content: state.error,
-              ),
-            );
+            showErrorSnackbar(context, state.error, state.errorDescription);
           }
           if (state is ItemImageUpdated) {
             _changesMade = true;
@@ -136,32 +126,10 @@ abstract class ItemDetailBody<
             );
           }
           if (state is ItemImageNotUpdated) {
-            final String message =
-                AppLocalizations.of(context)!.unableToUpdateImageString;
-            showSnackBar(
-              context,
-              message: message,
-              snackBarAction: dialogSnackBarAction(
-                context,
-                label: AppLocalizations.of(context)!.moreString,
-                title: message,
-                content: state.error,
-              ),
-            );
+            showErrorSnackbar(context, state.error, state.errorDescription);
           }
           if (state is ItemDetailNotLoaded) {
-            final String message =
-                AppLocalizations.of(context)!.unableToLoadDetailString;
-            showSnackBar(
-              context,
-              message: message,
-              snackBarAction: dialogSnackBarAction(
-                context,
-                label: AppLocalizations.of(context)!.moreString,
-                title: message,
-                content: state.error,
-              ),
-            );
+            showErrorSnackbar(context, state.error, state.errorDescription);
           }
         },
         child: NestedScrollView(
@@ -180,7 +148,11 @@ abstract class ItemDetailBody<
                       );
                     }
                     if (state is ItemDetailError) {
-                      return const SizedBox();
+                      return ItemError(
+                        title: AppLocalizations.of(context)!
+                            .somethingWentWrongString,
+                        onRetryTap: () => reloadItem(context),
+                      );
                     }
 
                     return Column(
