@@ -39,8 +39,8 @@ class EnumField extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.only(
-                left: 4.0,
-                right: 4.0,
+                left: 2.0,
+                right: 2.0,
               ),
               child: ChoiceChip(
                 labelPadding: EdgeInsets.zero,
