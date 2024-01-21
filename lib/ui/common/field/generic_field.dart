@@ -41,23 +41,17 @@ class GenericField<K> extends StatelessWidget {
         : null;
 
     return extended
-        ? ColumnListTile(
-            title: HeaderText(text: fieldName),
-            subtitle: Text(shownValue ?? ''),
+        ? ExtendedFieldListTile(
+            title: HeaderText(fieldName),
+            subtitle: BodyText(shownValue ?? ''),
             onTap: onTapWrapped,
             onLongPress: onLongPress,
           )
-        : ListTileTheme.merge(
-            child: ListTile(
-              title: Text(fieldName),
-              trailing: Text(
-                shownValue ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: onTapWrapped,
-              onLongPress: onLongPress,
-            ),
+        : FieldListTile(
+            title: HeaderText(fieldName),
+            subtitle: BodyText(shownValue ?? ''),
+            onTap: onTapWrapped,
+            onLongPress: onLongPress,
           );
   }
 }
@@ -76,40 +70,20 @@ class SkeletonGenericField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return extended
-        ? ColumnListTile(
-            title: fieldName != null
-                ? HeaderText(
-                    text: fieldName!,
-                  )
-                : SizedBox(
-                    width: FieldUtils.titleTextWidth,
-                    height: FieldUtils.titleTextHeight,
-                    child: Skeleton(
-                      order: order,
-                    ),
-                  ),
-            subtitle: Skeleton(
-              height: FieldUtils.subtitleTextHeight,
-              order: order,
-            ),
-          )
-        : ListTileTheme.merge(
-            child: ListTile(
-              title: fieldName != null
-                  ? Text(fieldName!)
-                  : SizedBox(
-                      height: FieldUtils.titleTextHeight,
-                      child: Skeleton(
-                        order: order,
-                      ),
-                    ),
-              trailing: Skeleton(
-                width: FieldUtils.subtitleTextWidth,
-                height: FieldUtils.subtitleTextHeight,
+    return ExtendedFieldListTile(
+      title: fieldName != null
+          ? HeaderText(fieldName!)
+          : SizedBox(
+              height: FieldUtils.titleTextHeight,
+              child: Skeleton(
                 order: order,
               ),
             ),
-          );
+      subtitle: Skeleton(
+        width: FieldUtils.subtitleTextWidth,
+        height: FieldUtils.subtitleTextHeight,
+        order: order,
+      ),
+    );
   }
 }

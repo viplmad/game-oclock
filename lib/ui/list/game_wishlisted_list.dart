@@ -193,6 +193,10 @@ class _GameWishlistedListBody
   String itemTitle(GameDTO item) => GameTheme.itemTitle(item);
 
   @override
+  String typesName(BuildContext context) =>
+      AppLocalizations.of(context)!.wishlistedGamesString;
+
+  @override
   String viewTitle(BuildContext context) => '';
 
   @override

@@ -130,7 +130,7 @@ class _ReviewYearBody extends StatelessWidget {
               AppLocalizations.of(context)!.unableToLoadReviewString;
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -148,15 +148,14 @@ class _ReviewYearBody extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       color: Colors.grey,
-                      child: HeaderText(
+                      child: ListHeader(
                         text: '${state.year}',
                       ),
                     ),
                     Expanded(
-                      child: ItemError(
-                        title: AppLocalizations.of(context)!.emptyPlayTime,
-                        onRetryTap: () => BlocProvider.of<ReviewBloc>(context)
-                            .add(ReloadReview()),
+                      child: ListEmpty(
+                        emptyTitle:
+                            AppLocalizations.of(context)!.emptyPlayTimeString,
                       ),
                     ),
                   ],
@@ -308,7 +307,7 @@ class _ReviewYearBody extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     color: Colors.grey,
-                    child: HeaderText(
+                    child: ListHeader(
                       text: '${state.year}',
                     ),
                   ),
@@ -342,7 +341,7 @@ class _ReviewYearBody extends StatelessWidget {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      HeaderSkeleton(),
+                      ListHeaderSkeleton(),
                     ],
                   ),
                 ),
@@ -683,7 +682,7 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return _buildChartCard(
       context,
-      AppLocalizations.of(context)!.playTimeByByMonthString,
+      AppLocalizations.of(context)!.playTimeByMonthString,
       // TODO order each bar by most played
       _buildTotalTimeByMonthStackedBarChart(
         context,
@@ -762,7 +761,7 @@ class _ReviewYearBody extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             left: 8.0,
-            right: 8.0,
+            right: 0.0, // Use blank space to the right
             bottom: 8.0,
           ),
           child: chartWidget,
@@ -908,7 +907,7 @@ class _ReviewYearBody extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
       child: StatisticsStackedHistogram<int>(
-        id: 'playTimeByByMonth',
+        id: 'playTimeByMonth',
         domainLabels: AppLocalizationsUtils.monthsAbbr(),
         stackedValues: gamesTotalTimeGrouped
             .map(
@@ -964,7 +963,7 @@ class _ReviewYearBody extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
       child: StatisticsHistogram<int>(
-        id: 'gamePlayTimeByByMonth',
+        id: 'gamePlayTimeByMonth',
         domainLabels: AppLocalizationsUtils.monthsAbbr(),
         // First normalise entries
         values: List<int>.generate(DateTime.monthsPerYear, (int index) {
@@ -1015,7 +1014,7 @@ class _ReviewYearBody extends StatelessWidget {
             children: <Widget>[
               Container(
                 color: Colors.grey,
-                child: HeaderText(
+                child: ListHeader(
                   text: AppLocalizations.of(context)!.playedString,
                 ),
               ),
@@ -1100,7 +1099,7 @@ class _ReviewYearBody extends StatelessWidget {
             children: <Widget>[
               Container(
                 color: Colors.grey,
-                child: HeaderText(
+                child: ListHeader(
                   text: AppLocalizations.of(context)!.finishedString,
                 ),
               ),
@@ -1195,7 +1194,7 @@ class _ReviewYearBody extends StatelessWidget {
             children: <Widget>[
               Container(
                 color: Colors.grey,
-                child: HeaderText(
+                child: ListHeader(
                   text: AppLocalizations.of(context)!.longestStreakString,
                 ),
               ),
@@ -1333,7 +1332,7 @@ class _ReviewYearBody extends StatelessWidget {
           children: <Widget>[
             Container(
               color: Colors.grey,
-              child: HeaderText(
+              child: ListHeader(
                 text: typeLabel,
               ),
             ),
@@ -1442,7 +1441,7 @@ class _ReviewYearBody extends StatelessWidget {
           children: <Widget>[
             Container(
               color: Colors.grey,
-              child: HeaderText(
+              child: ListHeader(
                 text: typeLabel,
               ),
             ),
@@ -1540,7 +1539,7 @@ class _ReviewYearBody extends StatelessWidget {
           children: <Widget>[
             Container(
               color: Colors.grey,
-              child: HeaderText(
+              child: ListHeader(
                 text: AppLocalizations.of(context)!.playedInString(monthLabel),
               ),
             ),
@@ -1629,7 +1628,7 @@ class _ReviewYearBody extends StatelessWidget {
           children: <Widget>[
             Container(
               color: Colors.grey,
-              child: HeaderText(
+              child: ListHeader(
                 text:
                     AppLocalizations.of(context)!.finishedInString(monthLabel),
               ),
@@ -1699,7 +1698,7 @@ class _ReviewYearBody extends StatelessWidget {
               height: 4.0,
             ),
             _buildChartWithTitle(
-              AppLocalizations.of(context)!.playTimeByByMonthString,
+              AppLocalizations.of(context)!.playTimeByMonthString,
               _buildGameTotalTimeByMonthBarChart(
                 context,
                 gameColour,
@@ -1713,7 +1712,7 @@ class _ReviewYearBody extends StatelessWidget {
             children: <Widget>[
               Container(
                 color: Colors.grey,
-                child: HeaderText(
+                child: ListHeader(
                   text: GameTheme.itemTitle(game),
                 ),
               ),
@@ -1814,7 +1813,7 @@ class _ReviewYearBody extends StatelessWidget {
     BuildContext context,
     int minutes,
   ) {
-    return AppLocalizationsUtils.formatMinutesAsHours(context, minutes);
+    return '${AppLocalizationsUtils.getMinutesAsHours(minutes)}';
   }
 
   static String _formatPercentageMeasureForChart(num? percentage) {

@@ -11,6 +11,8 @@ abstract class ServerSettingsEvent extends Equatable {
 
 class LoadServerSettings extends ServerSettingsEvent {}
 
+class ReloadServerSettings extends ServerSettingsEvent {}
+
 class UpdateServerSettings extends ServerSettingsEvent {
   const UpdateServerSettings(
     this.savedServerConnection,

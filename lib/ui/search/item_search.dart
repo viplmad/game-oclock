@@ -162,7 +162,7 @@ class _ItemSearchBodyState<
                     .unableToAddString(widget.typeName(context));
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -176,7 +176,7 @@ class _ItemSearchBodyState<
                     AppLocalizations.of(context)!.unableToLoadSearchString;
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -263,17 +263,11 @@ class _ItemSearchBodyState<
   }
 
   Widget listItems(List<T> results, String emptyMessage) {
-    if (results.isEmpty) {
-      return ItemEmpty(
-        title: emptyMessage,
-      ); // TODO add everywhere
-    }
-
     return Expanded(
       child: Scrollbar(
         child: ItemListBuilder(
-          padding: const EdgeInsets.all(8.0),
           itemCount: results.length,
+          emptyTitle: emptyMessage,
           itemBuilder: (BuildContext context, int index) {
             final T result = results[index];
 

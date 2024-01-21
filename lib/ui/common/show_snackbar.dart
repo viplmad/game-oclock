@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:game_oclock_client/api.dart' show ErrorCode;
 
 import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
+import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
 void showSnackBar(
@@ -28,19 +29,19 @@ void showSnackBar(
 
 void showErrorSnackbar(
   BuildContext context, {
-  required String title,
+  required String name,
   required ErrorCode error,
   required String errorDescription,
 }) {
   final String message = AppLocalizationsUtils.getErrorMessage(context, error);
+  final String title = '$name - $message';
   showSnackBar(
     context,
-    message: '$title - $message',
+    message: title,
     snackBarAction: _dialogSnackBarAction(
       context,
       label: AppLocalizations.of(context)!.moreString,
       title: title,
-      subtitle: message,
       content: errorDescription,
     ),
   );
@@ -50,7 +51,6 @@ SnackBarAction _dialogSnackBarAction(
   BuildContext context, {
   required String label,
   required String title,
-  required String subtitle,
   required String content,
 }) {
   return backgroundSnackBarAction(
@@ -61,10 +61,7 @@ SnackBarAction _dialogSnackBarAction(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: ListTile(
-              title: Text(title),
-              subtitle: Text(subtitle),
-            ),
+            title: HeaderText(title),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,

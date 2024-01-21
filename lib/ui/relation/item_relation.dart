@@ -62,7 +62,7 @@ abstract class ItemRelationList<
               .unableToLinkString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -80,7 +80,7 @@ abstract class ItemRelationList<
               .unableToUnlinkString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -90,7 +90,7 @@ abstract class ItemRelationList<
               .unableToLoadString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -142,7 +142,7 @@ abstract class ItemRelationList<
                 ),
                 child: Column(
                   children: <Widget>[
-                    HeaderText(
+                    ListHeader(
                       text: relationName,
                     ),
                     Container(
@@ -251,7 +251,7 @@ class _RelationList extends StatelessWidget {
           ),
           child: Column(
             children: <Widget>[
-              HeaderText(
+              ListHeader(
                 text: headerText,
               ),
               relationList,

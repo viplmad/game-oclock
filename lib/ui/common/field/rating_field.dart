@@ -24,11 +24,9 @@ class RatingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColumnListTile(
+    return ExtendedFieldListTile(
       center: true,
-      title: HeaderText(
-        text: fieldName,
-      ),
+      title: HeaderText(fieldName),
       subtitle: SmoothStarRating(
         allowHalfRating: false,
         starCount: 10,
@@ -62,10 +60,9 @@ class SkeletonRatingField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColumnListTile(
-      title: HeaderText(
-        text: fieldName,
-      ),
+    return ExtendedFieldListTile(
+      center: true,
+      title: HeaderText(fieldName),
       subtitle: Skeleton(
         height: FieldUtils.subtitleTextHeight,
         order: order,

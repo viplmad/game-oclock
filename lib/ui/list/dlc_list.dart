@@ -100,6 +100,10 @@ class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
   String itemTitle(DLCDTO item) => DLCTheme.itemTitle(item);
 
   @override
+  String typesName(BuildContext context) =>
+      AppLocalizations.of(context)!.dlcsString;
+
+  @override
   String viewTitle(BuildContext context) =>
       DLCTheme.views(context).elementAt(viewIndex);
 

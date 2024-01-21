@@ -13,24 +13,30 @@ class ItemListBuilder extends StatelessWidget {
     Key? key,
     required this.itemCount,
     required this.itemBuilder,
+    this.emptyTitle = '',
     this.controller,
     this.canBeDragged = false,
-    this.padding,
   }) : super(key: key);
 
-  final Widget Function(BuildContext, int) itemBuilder;
   final int itemCount;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final String emptyTitle;
   final ScrollController? controller;
   final bool canBeDragged;
-  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
+    if (itemCount == 0 && emptyTitle.isNotEmpty) {
+      return ListEmpty(
+        emptyTitle: emptyTitle,
+        canBeDragged: canBeDragged,
+      );
+    }
+
     return ListView.builder(
       shrinkWrap: true,
       physics: canBeDragged ? const ClampingScrollPhysics() : null,
       controller: controller,
-      padding: padding,
       itemCount: itemCount,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -49,24 +55,30 @@ class ItemGridBuilder extends StatelessWidget {
     Key? key,
     required this.itemCount,
     required this.itemBuilder,
+    this.emptyTitle = '',
     this.controller,
     this.canBeDragged = false,
-    this.padding,
   }) : super(key: key);
 
-  final Widget Function(BuildContext, int) itemBuilder;
   final int itemCount;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final String emptyTitle;
   final ScrollController? controller;
   final bool canBeDragged;
-  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
+    if (itemCount == 0 && emptyTitle.isNotEmpty) {
+      return ListEmpty(
+        emptyTitle: emptyTitle,
+        canBeDragged: canBeDragged,
+      );
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       physics: canBeDragged ? const ClampingScrollPhysics() : null,
       controller: controller,
-      padding: padding,
       itemCount: itemCount,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
@@ -171,7 +183,7 @@ class _ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return Container(
       color: AppTheme.defaultBackgroundColor(context),
-      child: HeaderText(
+      child: ListHeader(
         text: title,
       ),
     );
@@ -227,21 +239,29 @@ class ItemError extends StatelessWidget {
   }
 }
 
-class ItemEmpty extends StatelessWidget {
-  const ItemEmpty({
+class ListEmpty extends StatelessWidget {
+  const ListEmpty({
     Key? key,
-    required this.title,
+    required this.emptyTitle,
+    this.canBeDragged = false,
   }) : super(key: key);
 
-  final String title;
+  final String emptyTitle;
+  final bool canBeDragged;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Text(title),
-      ),
+    return ListView(
+      shrinkWrap: true,
+      physics: canBeDragged ? const ClampingScrollPhysics() : null,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Text(emptyTitle),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -252,20 +272,18 @@ class SkeletonItemList extends StatelessWidget {
     this.single = false,
     this.canBeDragged = false,
     required this.itemHasImage,
-    this.padding,
   }) : super(key: key);
 
   final bool single;
   final bool canBeDragged;
   final bool itemHasImage;
-  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     return ItemListBuilder(
       canBeDragged: canBeDragged,
-      padding: padding,
       itemCount: single ? 1 : 3,
+      emptyTitle: '',
       itemBuilder: (BuildContext context, int index) {
         return SkeletonItemCard(
           hasImage: itemHasImage,

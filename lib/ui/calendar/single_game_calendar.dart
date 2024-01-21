@@ -280,7 +280,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToLoadCalendarString;
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -308,7 +308,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -332,7 +332,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -360,7 +360,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -384,7 +384,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                 );
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -402,10 +402,9 @@ class _SingleGameCalendarBody extends StatelessWidget {
               if (state is SingleCalendarLoaded) {
                 Widget gameLogsWidget;
                 if (state.selectedTotalTime.isZero()) {
-                  gameLogsWidget = Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.emptyPlayTime,
-                    ),
+                  gameLogsWidget = ListEmpty(
+                    emptyTitle:
+                        AppLocalizations.of(context)!.emptyPlayTimeString,
                   );
                 } else {
                   switch (state.style) {

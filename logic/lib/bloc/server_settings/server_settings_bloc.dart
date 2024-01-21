@@ -15,6 +15,7 @@ class ServerSettingsBloc
   ServerSettingsBloc({required this.managerBloc})
       : super(ServerSettingsLoading()) {
     on<LoadServerSettings>(_mapLoadToState);
+    on<ReloadServerSettings>(_mapReloadToState);
     on<UpdateServerSettings>(_mapUpdateToState);
 
     _managerSubscription = managerBloc.stream.listen(_mapManagerStateToEvent);
@@ -33,6 +34,21 @@ class ServerSettingsBloc
       ServerSettingsLoading(),
     );
 
+    await _mapAnyLoadToState(emit);
+  }
+
+  void _mapReloadToState(
+    ReloadServerSettings event,
+    Emitter<ServerSettingsState> emit,
+  ) async {
+    emit(
+      ServerSettingsLoading(),
+    );
+
+    await _mapAnyLoadToState(emit);
+  }
+
+  Future<void> _mapAnyLoadToState(Emitter<ServerSettingsState> emit) async {
     final bool existsConnection =
         await SharedPreferencesState.existsActiveServer();
     if (existsConnection) {

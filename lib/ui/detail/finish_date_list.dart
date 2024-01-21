@@ -11,6 +11,7 @@ import 'package:game_oclock/ui/common/list_view.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/show_date_picker.dart';
 import 'package:game_oclock/ui/common/skeleton.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/field_utils.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
@@ -42,7 +43,7 @@ abstract class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
           extra = state.otherItems.length > 1 ? '(+)' : '';
         }
 
-        return Text('$shownValue $extra');
+        return BodyText('$shownValue $extra');
       },
     );
   }
@@ -110,7 +111,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
               AppLocalizations.of(context)!.unableToAddString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -130,7 +131,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
               .unableToDeleteString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -140,18 +141,16 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
               .unableToLoadString(relationTypeName);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
         }
       },
-      child: ListTileTheme.merge(
-        child: ListTile(
-          title: Text(fieldName),
-          trailing: fieldBuilder(outerContext),
-          onTap: _onTap(outerContext),
-        ),
+      child: FieldListTile(
+        title: HeaderText(fieldName),
+        subtitle: fieldBuilder(outerContext),
+        onTap: _onTap(outerContext),
       ),
     );
   }
@@ -169,7 +168,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
               }
             },
             child: AlertDialog(
-              title: Text(fieldName),
+              title: HeaderText(fieldName),
               content: SizedBox(
                 width: double.maxFinite,
                 child: BlocBuilder<K, ItemRelationState>(
@@ -178,14 +177,10 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
                     if (state is ItemRelationLoaded<ItemFinish>) {
                       final List<ItemFinish> values = state.otherItems;
 
-                      if (values.isEmpty) {
-                        return Text(
-                          AppLocalizations.of(context)!.emptyFinishDatesString,
-                        );
-                      }
-
                       return ItemListBuilder(
                         itemCount: values.length,
+                        emptyTitle: AppLocalizations.of(context)!
+                            .emptyFinishDatesString,
                         itemBuilder: (BuildContext context, int index) {
                           final DateTime finishDate =
                               values.elementAt(index).date;

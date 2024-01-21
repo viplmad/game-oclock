@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/field_utils.dart';
 import 'package:game_oclock/ui/utils/shape_utils.dart';
 
@@ -167,12 +168,8 @@ class _ItemListTile extends StatelessWidget {
               ),
             )
           : null,
-      title: Text(
-        title,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: subtitle != null ? Text(subtitle!) : null,
+      title: HeaderText(title),
+      subtitle: subtitle != null ? BodyText(subtitle!) : null,
       trailing: trailing,
     );
   }

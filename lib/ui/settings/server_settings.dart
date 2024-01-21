@@ -11,17 +11,16 @@ import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart'
 
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
 
 import '../route_constants.dart';
 import '../theme/theme.dart' show AppTheme;
 
 class ServerConnectionFormData {
   ServerConnectionFormData()
-      : name = '',
-        host = '',
+      : host = '',
         username = '',
         password = '';
-  String name;
   String host;
   String username;
   String password;
@@ -89,7 +88,7 @@ class ServerSettings extends StatelessWidget {
                         formKey.currentState!.save();
                         managerBloc.add(
                           SaveServerConnectionSettings(
-                            formData.name,
+                            'main',
                             formData.host,
                             formData.username,
                             formData.password,
@@ -137,7 +136,7 @@ class _ServerSettingsBody extends StatelessWidget {
               AppLocalizations.of(context)!.unableToUpdateConnectionString;
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -147,7 +146,7 @@ class _ServerSettingsBody extends StatelessWidget {
               AppLocalizations.of(context)!.unableToLoadConnectionString;
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -171,11 +170,13 @@ class _ServerSettingsBody extends StatelessWidget {
               children.addAll(<Widget>[
                 const Divider(),
                 ListTile(
-                  title: Text(
+                  title: HeaderText(
                     AppLocalizations.of(context)!.currentAccessTokenString,
                   ),
                   subtitle: Text(accessToken),
                   trailing: IconButton(
+                    tooltip:
+                        AppLocalizations.of(context)!.copyAccessTokenString,
                     icon: const Icon(AppTheme.copyIcon),
                     onPressed: () async {
                       Clipboard.setData(
@@ -183,8 +184,8 @@ class _ServerSettingsBody extends StatelessWidget {
                       ).then(
                         (_) => showSnackBar(
                           context,
-                          message:
-                              AppLocalizations.of(context)!.accessTokenCopied,
+                          message: AppLocalizations.of(context)!
+                              .accessTokenCopiedString,
                         ),
                       );
                     },
@@ -201,7 +202,7 @@ class _ServerSettingsBody extends StatelessWidget {
             return ItemError(
               title: AppLocalizations.of(context)!.somethingWentWrongString,
               onRetryTap: () => BlocProvider.of<ServerSettingsBloc>(context)
-                  .add(LoadServerSettings()), // TODO Reload
+                  .add(ReloadServerSettings()),
             );
           }
 
@@ -231,13 +232,6 @@ class ServerConnectionForm extends _TextForm {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          textFormField(
-            labelText: AppLocalizations.of(context)!.nameString,
-            initialValue: connection?.name,
-            onSaved: (String? value) {
-              formData.name = value ?? formData.name;
-            },
-          ),
           textFormField(
             labelText: AppLocalizations.of(context)!.hostString,
             initialValue: connection?.host,

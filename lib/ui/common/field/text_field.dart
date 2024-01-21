@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:game_oclock/ui/common/header_text.dart';
+
 import 'generic_field.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -14,6 +16,7 @@ class CustomTextField extends StatelessWidget {
     this.onLongPress,
     this.update,
     this.isLongText = false,
+    this.isMultiline = false,
   }) : super(key: key);
 
   final String fieldName;
@@ -23,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final void Function()? onLongPress;
   final void Function(String)? update;
   final bool isLongText;
+  final bool isMultiline;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +45,13 @@ class CustomTextField extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(
+              title: HeaderText(
                 AppLocalizations.of(context)!.editString(fieldName),
               ),
               content: TextField(
                 controller: fieldController,
                 keyboardType:
-                    isLongText ? TextInputType.multiline : TextInputType.text,
+                    isMultiline ? TextInputType.multiline : TextInputType.text,
                 autofocus: true,
                 maxLines: null,
                 decoration: InputDecoration(

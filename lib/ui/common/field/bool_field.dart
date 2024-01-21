@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../header_text.dart';
+
 class BoolField extends StatelessWidget {
   const BoolField({
     Key? key,
@@ -17,7 +19,7 @@ class BoolField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      title: Text(fieldName),
+      title: HeaderText(fieldName),
       value: value ?? false,
       onChanged: editable ? update : null,
     );

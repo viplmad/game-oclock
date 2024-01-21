@@ -7,6 +7,7 @@ import 'package:game_oclock_client/api.dart' show TagDTO;
 import 'package:logic/model/model.dart' show TagView;
 
 import 'package:game_oclock/ui/common/item_view.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/theme_utils.dart';
 
 class TagTheme {
@@ -63,7 +64,7 @@ class TagTheme {
     void Function()? Function(BuildContext, TagDTO) onTap,
   ) {
     return ListTile(
-      title: Text(itemTitle(item)),
+      title: HeaderText(itemTitle(item)),
       onTap: onTap(context, item),
     );
   }

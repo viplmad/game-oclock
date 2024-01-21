@@ -17,6 +17,7 @@ import 'package:game_oclock/ui/common/field/field.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
 import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
 
 import '../theme/theme.dart' show AppTheme;
 
@@ -117,7 +118,7 @@ abstract class ItemDetailBody<
                 AppLocalizations.of(context)!.unableToUpdateFieldString;
             showErrorSnackbar(
               context,
-              title: message,
+              name: message,
               error: state.error,
               errorDescription: state.errorDescription,
             );
@@ -137,7 +138,7 @@ abstract class ItemDetailBody<
                 AppLocalizations.of(context)!.unableToUpdateImageString;
             showErrorSnackbar(
               context,
-              title: message,
+              name: message,
               error: state.error,
               errorDescription: state.errorDescription,
             );
@@ -147,7 +148,7 @@ abstract class ItemDetailBody<
                 AppLocalizations.of(context)!.unableToLoadDetailString;
             showErrorSnackbar(
               context,
-              title: message,
+              name: message,
               error: state.error,
               errorDescription: state.errorDescription,
             );
@@ -284,10 +285,14 @@ abstract class ItemDetailBody<
 
     return Wrap(
       children: <Widget>[
-        ListTile(
-          title: Text(withImage ? imageFilename : ''),
-        ),
-        const Divider(),
+        ...(withImage
+            ? <Widget>[
+                ListTile(
+                  title: Text(withImage ? imageFilename : ''),
+                ),
+                const Divider(),
+              ]
+            : <Widget>[]),
         ListTile(
           title: Text(
             withImage
@@ -327,7 +332,7 @@ abstract class ItemDetailBody<
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text(
+                  title: HeaderText(
                     AppLocalizations.of(context)!.editString(
                       AppLocalizations.of(context)!.filenameString,
                     ),
@@ -427,6 +432,7 @@ abstract class ItemDetailBody<
         item: item,
         itemUpdater: itemUpdater,
       ),
+      isLongText: true,
     );
   }
 
@@ -459,6 +465,7 @@ abstract class ItemDetailBody<
           );
         }
       },
+      isLongText: true,
     );
   }
 
@@ -479,6 +486,7 @@ abstract class ItemDetailBody<
         itemUpdater: itemUpdater,
       ),
       isLongText: true,
+      isMultiline: true,
     );
   }
 

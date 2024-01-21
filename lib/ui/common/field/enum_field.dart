@@ -23,10 +23,9 @@ class EnumField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColumnListTile(
-      title: HeaderText(
-        text: fieldName,
-      ),
+    return ExtendedFieldListTile(
+      center: true,
+      title: HeaderText(fieldName),
       subtitle: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.spaceAround,
@@ -38,21 +37,27 @@ class EnumField extends StatelessWidget {
             final String option = enumValues[index];
             final Color optionColour = enumColours.elementAt(index);
 
-            return ChoiceChip(
-              labelPadding: EdgeInsets.zero,
-              labelStyle: textTheme.bodyLarge?.copyWith(
-                // Reduce size of chips
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
+            return Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
               ),
-              label: Text(option),
-              selected: value == index,
-              selectedColor: optionColour.withOpacity(0.5),
-              onSelected: (bool newChoice) {
-                if (newChoice) {
-                  update(index);
-                }
-              },
+              child: ChoiceChip(
+                labelPadding: EdgeInsets.zero,
+                labelStyle: textTheme.bodyLarge?.copyWith(
+                  // Reduce size of chips
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                label: Text(option),
+                selected: value == index,
+                selectedColor: optionColour.withOpacity(0.5),
+                onSelected: (bool newChoice) {
+                  if (newChoice) {
+                    update(index);
+                  }
+                },
+              ),
             );
           },
         ).toList(growable: false),
@@ -73,10 +78,9 @@ class SkeletonEnumField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColumnListTile(
-      title: HeaderText(
-        text: fieldName,
-      ),
+    return ExtendedFieldListTile(
+      center: true,
+      title: HeaderText(fieldName),
       subtitle: Skeleton(
         height: FieldUtils.subtitleTextHeight,
         order: order,

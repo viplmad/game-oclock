@@ -236,7 +236,7 @@ abstract class ItemList<
               .unableToAddString(currentTypeString);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -255,7 +255,7 @@ abstract class ItemList<
               .unableToDeleteString(currentTypeString);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -265,7 +265,7 @@ abstract class ItemList<
               .unableToLoadString(currentTypeString);
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -304,7 +304,7 @@ abstract class ItemList<
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      HeaderSkeleton(),
+                      ListHeaderSkeleton(),
                     ],
                   ),
                 ),
@@ -368,7 +368,7 @@ abstract class ItemListBody<T extends PrimaryModel,
         computedViewTitle.isNotEmpty
             ? Container(
                 color: Colors.grey,
-                child: HeaderText(
+                child: ListHeader(
                   text: computedViewTitle,
                 ),
               )
@@ -386,7 +386,7 @@ abstract class ItemListBody<T extends PrimaryModel,
   @nonVirtual
   Widget confirmDelete(BuildContext context, T item) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.deleteString),
+      title: HeaderText(AppLocalizations.of(context)!.deleteString),
       content: ListTile(
         title: Text(
           AppLocalizations.of(context)!.deleteDialogTitle(itemTitle(item)),
@@ -412,11 +412,15 @@ abstract class ItemListBody<T extends PrimaryModel,
 
   @protected
   Widget listBuilder(BuildContext context, ScrollController scrollController) {
+    final String computedEmptyTitle =
+        AppLocalizations.of(context)!.emptyString(typesName(context));
+
     switch (style) {
       case ListStyle.card:
         return ItemCardView<T>(
           items: items,
           itemBuilder: cardBuilder,
+          emptyTitle: computedEmptyTitle,
           onDismiss: onDelete,
           confirmDelete: confirmDelete,
           scrollController: scrollController,
@@ -425,6 +429,7 @@ abstract class ItemListBody<T extends PrimaryModel,
         return ItemGridView<T>(
           items: items,
           itemBuilder: gridBuilder,
+          emptyTitle: computedEmptyTitle,
           onDismiss: onDelete,
           confirmDelete: confirmDelete,
           scrollController: scrollController,
@@ -449,6 +454,7 @@ abstract class ItemListBody<T extends PrimaryModel,
   }
 
   String itemTitle(T item);
+  String typesName(BuildContext context);
   String viewTitle(BuildContext context);
 
   Widget cardBuilder(BuildContext context, T item);
@@ -460,6 +466,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
     Key? key,
     required this.items,
     required this.itemBuilder,
+    required this.emptyTitle,
     required this.onDismiss,
     required this.confirmDelete,
     required this.scrollController,
@@ -467,6 +474,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
+  final String emptyTitle;
   final void Function(T item) onDismiss;
   final Widget Function(BuildContext, T) confirmDelete;
   final ScrollController scrollController;
@@ -475,6 +483,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemListBuilder(
       itemCount: items.length,
+      emptyTitle: emptyTitle,
       controller: scrollController,
       itemBuilder: (BuildContext context, int index) {
         final T item = items.elementAt(index);
@@ -505,6 +514,7 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
     Key? key,
     required this.items,
     required this.itemBuilder,
+    required this.emptyTitle,
     required this.onDismiss,
     required this.confirmDelete,
     required this.scrollController,
@@ -512,6 +522,7 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
+  final String emptyTitle;
   final void Function(T item) onDismiss;
   final Widget Function(BuildContext, T) confirmDelete;
   final ScrollController scrollController;
@@ -520,6 +531,7 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemGridBuilder(
       itemCount: items.length,
+      emptyTitle: emptyTitle,
       controller: scrollController,
       itemBuilder: (BuildContext context, int index) {
         final T item = items.elementAt(index);

@@ -139,7 +139,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
               AppLocalizations.of(context)!.unableToLoadCalendarString;
           showErrorSnackbar(
             context,
-            title: message,
+            name: message,
             error: state.error,
             errorDescription: state.errorDescription,
           );
@@ -155,10 +155,8 @@ class _MultiGameCalendarBody extends StatelessWidget {
             if (state is MultiCalendarLoaded) {
               Widget gameLogsWidget;
               if (state.selectedTotalTime.isZero()) {
-                gameLogsWidget = Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.emptyPlayTime,
-                  ),
+                gameLogsWidget = ListEmpty(
+                  emptyTitle: AppLocalizations.of(context)!.emptyPlayTimeString,
                 );
               } else {
                 if (state is MultiCalendarGraphLoaded) {
@@ -193,7 +191,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
                     ),
                     trailing: !state.selectedTotalTime.isZero()
                         ? Text(
-                            '${AppLocalizations.of(context)!.totalGames(state.selectedTotalGames)} / ${AppLocalizationsUtils.formatDuration(context, state.selectedTotalTime)}',
+                            '${AppLocalizations.of(context)!.totalGamesString(state.selectedTotalGames)} / ${AppLocalizationsUtils.formatDuration(context, state.selectedTotalTime)}',
                           )
                         : null,
                   ),

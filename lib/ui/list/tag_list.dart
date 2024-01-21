@@ -139,6 +139,10 @@ class _GameTagListBody extends ItemListBody<TagDTO, TagListBloc> {
   String itemTitle(TagDTO item) => TagTheme.itemTitle(item);
 
   @override
+  String typesName(BuildContext context) =>
+      AppLocalizations.of(context)!.tagsString;
+
+  @override
   String viewTitle(BuildContext context) =>
       TagTheme.views(context).elementAt(viewIndex);
 

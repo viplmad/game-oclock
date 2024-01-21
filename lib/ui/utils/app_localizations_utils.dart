@@ -101,6 +101,12 @@ class AppLocalizationsUtils {
   }
 
   static String formatMinutesAsHours(BuildContext context, int minutes) {
+    final num hours = getMinutesAsHours(minutes);
+
+    return AppLocalizations.of(context)!.hoursAbbr(hours);
+  }
+
+  static num getMinutesAsHours(int minutes) {
     num hours = 0;
     if (minutes % 60 == 0) {
       hours = (minutes / 60).round();
@@ -108,7 +114,7 @@ class AppLocalizationsUtils {
       hours = double.parse((minutes / 60).toStringAsFixed(1));
     }
 
-    return AppLocalizations.of(context)!.hoursAbbr(hours);
+    return hours;
   }
 
   static String formatPercentage(double value) {

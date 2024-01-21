@@ -167,7 +167,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
 
   @override
   List<Widget> itemFieldsBuilder(BuildContext context, GameDTO game) {
-    final bool isWishlisted = game.status != GameStatus.wishlist;
+    final bool isNotWishlisted = game.status != GameStatus.wishlist;
 
     final List<Widget> fields = <Widget>[
       itemTextField(
@@ -194,7 +194,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
       ),
     ];
 
-    if (isWishlisted) {
+    if (isNotWishlisted) {
       fields.addAll(<Widget>[
         itemChipField(
           context,
@@ -344,26 +344,24 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
   }
 
   Widget _gameCalendarField(BuildContext context) {
-    return ListTileTheme.merge(
-      child: ListTile(
-        title: Text(
-          AppLocalizations.of(context)!.singleCalendarViewString,
-        ),
-        trailing: const Icon(AppTheme.goIcon),
-        onTap: () async {
-          Navigator.pushNamed(
-            context,
-            gameSingleCalendarRoute,
-            arguments: SingleGameCalendarArguments(
-              itemId: itemId,
-              onChange: () {
-                BlocProvider.of<GameDetailBloc>(context)
-                    .add(const ReloadItem(true));
-              },
-            ),
-          );
-        },
+    return ListTile(
+      title: Text(
+        AppLocalizations.of(context)!.singleCalendarViewString,
       ),
+      trailing: const Icon(AppTheme.goIcon),
+      onTap: () async {
+        Navigator.pushNamed(
+          context,
+          gameSingleCalendarRoute,
+          arguments: SingleGameCalendarArguments(
+            itemId: itemId,
+            onChange: () {
+              BlocProvider.of<GameDetailBloc>(context)
+                  .add(const ReloadItem(true));
+            },
+          ),
+        );
+      },
     );
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:logic/model/model.dart' show MainTab;
@@ -13,7 +12,10 @@ import 'package:logic/bloc/item_list_manager/item_list_manager.dart';
 import 'package:logic/bloc/about/about.dart';
 import 'package:logic/bloc/start_game_view/start_game_view.dart';
 
-import 'utils/shape_utils.dart';
+import 'package:game_oclock/ui/common/header_text.dart';
+import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/utils/shape_utils.dart';
+
 import 'list/list.dart';
 import 'review/review_arguments.dart';
 import 'theme/theme.dart';
@@ -265,7 +267,7 @@ class _HomepageDrawer extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToLoadAppVersionString;
                 showErrorSnackbar(
                   context,
-                  title: message,
+                  name: message,
                   error: state.error,
                   errorDescription: state.errorDescription,
                 );
@@ -320,7 +322,7 @@ class _HomepageDrawer extends StatelessWidget {
         return StartGameViewBloc()..add(LoadStartGameView());
       },
       child: AlertDialog(
-        title: Text(
+        title: HeaderText(
           AppLocalizations.of(context)!.startGameViewString,
         ),
         content: BlocBuilder<StartGameViewBloc, int?>(

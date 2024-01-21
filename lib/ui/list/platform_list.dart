@@ -101,6 +101,10 @@ class _PlatformListBody extends ItemListBody<PlatformDTO, PlatformListBloc> {
   String itemTitle(PlatformDTO item) => PlatformTheme.itemTitle(item);
 
   @override
+  String typesName(BuildContext context) =>
+      AppLocalizations.of(context)!.platformsString;
+
+  @override
   String viewTitle(BuildContext context) =>
       PlatformTheme.views(context).elementAt(viewIndex);
 

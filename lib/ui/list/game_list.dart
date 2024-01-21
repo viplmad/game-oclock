@@ -102,6 +102,10 @@ class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   String itemTitle(GameDTO item) => GameTheme.itemTitle(item);
 
   @override
+  String typesName(BuildContext context) =>
+      AppLocalizations.of(context)!.gamesString;
+
+  @override
   String viewTitle(BuildContext context) =>
       GameTheme.views(context).elementAt(viewIndex);
 
