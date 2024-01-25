@@ -27,7 +27,7 @@ void showSnackBar(
   messengerState.showSnackBar(snackBar);
 }
 
-void showErrorSnackbar(
+void showApiErrorSnackbar(
   BuildContext context, {
   required String name,
   required ErrorCode error,

@@ -109,7 +109,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         if (state is ItemRelationNotAdded) {
           final String message =
               AppLocalizations.of(context)!.unableToAddString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -129,7 +129,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         if (state is ItemRelationNotDeleted) {
           final String message = AppLocalizations.of(context)!
               .unableToDeleteString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -139,7 +139,7 @@ abstract class _FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         if (state is ItemRelationNotLoaded) {
           final String message = AppLocalizations.of(context)!
               .unableToLoadString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,

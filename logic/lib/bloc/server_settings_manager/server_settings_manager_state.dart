@@ -11,7 +11,7 @@ abstract class ServerSettingsManagerState extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class Initialised extends ServerSettingsManagerState {}
+class ServerSettingsManagerInitialised extends ServerSettingsManagerState {}
 
 class ServerConnectionSettingsSaved extends ServerSettingsManagerState {
   const ServerConnectionSettingsSaved(this.connection);

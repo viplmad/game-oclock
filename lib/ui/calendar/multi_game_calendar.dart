@@ -137,7 +137,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
         if (state is CalendarNotLoaded) {
           final String message =
               AppLocalizations.of(context)!.unableToLoadCalendarString;
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -180,7 +180,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
                     state.focusedDate,
                     state.selectedDate,
                   ),
-                  const Divider(height: 4.0),
+                  const ListDivider(),
                   ListTile(
                     title: Text(
                       CalendarUtils.titleString(
@@ -214,7 +214,7 @@ class _MultiGameCalendarBody extends StatelessWidget {
                 Skeleton(
                   height: MediaQuery.of(context).size.height / 2.5,
                 ),
-                const Divider(height: 4.0),
+                const ListDivider(),
               ],
             );
           },

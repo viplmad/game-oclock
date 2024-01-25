@@ -128,7 +128,7 @@ class _ReviewYearBody extends StatelessWidget {
         if (state is ReviewNotLoaded) {
           final String message =
               AppLocalizations.of(context)!.unableToLoadReviewString;
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -237,7 +237,7 @@ class _ReviewYearBody extends StatelessWidget {
                 );
               }
               widgets.add(
-                const Divider(height: 4.0),
+                const ListDivider(),
               );
               widgets.addAll(
                 _buildTopGames(
@@ -249,7 +249,7 @@ class _ReviewYearBody extends StatelessWidget {
                 ),
               );
               widgets.add(
-                const Divider(height: 4.0),
+                const ListDivider(),
               );
               widgets.add(
                 _buildTotalPlayedByReleaseYearChart(
@@ -1015,6 +1015,7 @@ class _ReviewYearBody extends StatelessWidget {
               Container(
                 color: Colors.grey,
                 child: ListHeader(
+                  icon: GameTheme.sessionIcon,
                   text: AppLocalizations.of(context)!.playedString,
                 ),
               ),
@@ -1100,6 +1101,7 @@ class _ReviewYearBody extends StatelessWidget {
               Container(
                 color: Colors.grey,
                 child: ListHeader(
+                  icon: GameTheme.finishedIcon,
                   text: AppLocalizations.of(context)!.finishedString,
                 ),
               ),
@@ -1195,6 +1197,7 @@ class _ReviewYearBody extends StatelessWidget {
               Container(
                 color: Colors.grey,
                 child: ListHeader(
+                  icon: GameTheme.longestStreakIcon,
                   text: AppLocalizations.of(context)!.longestStreakString,
                 ),
               ),
@@ -1333,6 +1336,7 @@ class _ReviewYearBody extends StatelessWidget {
             Container(
               color: Colors.grey,
               child: ListHeader(
+                icon: GameTheme.sessionIcon,
                 text: typeLabel,
               ),
             ),
@@ -1442,6 +1446,7 @@ class _ReviewYearBody extends StatelessWidget {
             Container(
               color: Colors.grey,
               child: ListHeader(
+                icon: GameTheme.finishedIcon,
                 text: typeLabel,
               ),
             ),
@@ -1540,6 +1545,7 @@ class _ReviewYearBody extends StatelessWidget {
             Container(
               color: Colors.grey,
               child: ListHeader(
+                icon: GameTheme.sessionIcon,
                 text: AppLocalizations.of(context)!.playedInString(monthLabel),
               ),
             ),
@@ -1629,6 +1635,7 @@ class _ReviewYearBody extends StatelessWidget {
             Container(
               color: Colors.grey,
               child: ListHeader(
+                icon: GameTheme.finishedIcon,
                 text:
                     AppLocalizations.of(context)!.finishedInString(monthLabel),
               ),
@@ -1694,9 +1701,7 @@ class _ReviewYearBody extends StatelessWidget {
             _buildGameSessionTime(context, game, totalTime),
             _buildGameLongestSession(context, game),
             _buildGameLongestStreak(context, game),
-            const Divider(
-              height: 4.0,
-            ),
+            const ListDivider(),
             _buildChartWithTitle(
               AppLocalizations.of(context)!.playTimeByMonthString,
               _buildGameTotalTimeByMonthBarChart(

@@ -160,7 +160,7 @@ class _ItemSearchBodyState<
               if (state is ItemNotAdded) {
                 final String message = AppLocalizations.of(context)!
                     .unableToAddString(widget.typeName(context));
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -174,7 +174,7 @@ class _ItemSearchBodyState<
               if (state is ItemSearchError) {
                 final String message =
                     AppLocalizations.of(context)!.unableToLoadSearchString;
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,

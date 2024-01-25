@@ -11,12 +11,18 @@ class DateField extends StatelessWidget {
     required this.fieldName,
     required this.value,
     this.editable = true,
+    this.firstDate,
+    this.lastDate,
+    this.onLongPress,
     this.update,
   }) : super(key: key);
 
   final String fieldName;
   final DateTime? value;
   final bool editable;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+  final void Function()? onLongPress;
   final void Function(DateTime)? update;
 
   @override
@@ -32,8 +38,11 @@ class DateField extends StatelessWidget {
         return showGameDatePicker(
           context: context,
           initialDate: value,
+          firstDate: firstDate,
+          lastDate: lastDate,
         );
       },
+      onLongPress: onLongPress,
     );
   }
 }

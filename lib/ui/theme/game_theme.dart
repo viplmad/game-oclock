@@ -59,6 +59,8 @@ class GameTheme {
   ];
 
   static const IconData primaryIcon = Icons.videogame_asset;
+  static const IconData wishlistIcon = Icons.shopping_bag;
+  static const IconData reviewIcon = Icons.cake;
   static const IconData sessionIcon = Icons.schedule;
   static const IconData finishedIcon = Icons.emoji_events_outlined;
   static const IconData longestSessionIcon = Icons.timelapse;
@@ -81,7 +83,7 @@ class GameTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.gamesString,
-      iconData: primaryIcon,
+      icon: primaryIcon,
       color: primaryColour,
     );
   }

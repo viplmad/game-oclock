@@ -11,45 +11,57 @@ abstract class GameLogAssistantEvent extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class UpdateGameLogDate extends GameLogAssistantEvent {
+abstract class UpdateGameLogDate extends GameLogAssistantEvent {
   const UpdateGameLogDate(this.date);
 
   final DateTime date;
 
   @override
   List<Object> get props => <Object>[date];
+}
+
+class UpdateGameLogStartDate extends UpdateGameLogDate {
+  const UpdateGameLogStartDate(super.date);
 
   @override
-  String toString() => 'UpdateGameLogDate { '
+  String toString() => 'UpdateGameLogStartDate { '
       'date: $date'
       ' }';
 }
 
-class UpdateGameLogStartTime extends GameLogAssistantEvent {
-  const UpdateGameLogStartTime(this.startTime);
-
-  final TimeOfDay startTime;
+class UpdateGameLogEndDate extends UpdateGameLogDate {
+  const UpdateGameLogEndDate(super.date);
 
   @override
-  List<Object> get props => <Object>[startTime];
-
-  @override
-  String toString() => 'UpdateGameLogStartTime { '
-      'startTime: $startTime'
+  String toString() => 'UpdateGameLogEndDate { '
+      'date: $date'
       ' }';
 }
 
-class UpdateGameLogEndTime extends GameLogAssistantEvent {
-  const UpdateGameLogEndTime(this.endTime);
+abstract class UpdateGameLogTime extends GameLogAssistantEvent {
+  const UpdateGameLogTime(this.time);
 
-  final TimeOfDay endTime;
+  final TimeOfDay time;
 
   @override
-  List<Object> get props => <Object>[endTime];
+  List<Object> get props => <Object>[time];
+}
+
+class UpdateGameLogStartTime extends UpdateGameLogTime {
+  const UpdateGameLogStartTime(super.time);
+
+  @override
+  String toString() => 'UpdateGameLogStartTime { '
+      'time: $time'
+      ' }';
+}
+
+class UpdateGameLogEndTime extends UpdateGameLogTime {
+  const UpdateGameLogEndTime(super.time);
 
   @override
   String toString() => 'UpdateGameLogEndTime { '
-      'endTime: $endTime'
+      'time: $time'
       ' }';
 }
 

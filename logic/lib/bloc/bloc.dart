@@ -12,5 +12,7 @@ export 'item_search/item_search.dart';
 export 'review/review.dart';
 export 'review_manager/review_manager.dart';
 export 'server_settings/server_settings.dart';
+export 'time_log_assistant/time_log_assistant.dart';
+export 'time_log_assistant_manager/time_log_assistant_manager.dart';
 export 'server_settings_manager/server_settings_manager.dart';
 export 'tab/tab.dart';

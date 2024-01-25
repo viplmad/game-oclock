@@ -266,6 +266,17 @@ class ListEmpty extends StatelessWidget {
   }
 }
 
+class ListDivider extends StatelessWidget {
+  const ListDivider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(height: 4.0);
+  }
+}
+
 class SkeletonItemList extends StatelessWidget {
   const SkeletonItemList({
     Key? key,

@@ -7,9 +7,11 @@ import 'skeleton.dart';
 class ListHeader extends StatelessWidget {
   const ListHeader({
     Key? key,
+    this.icon,
     required this.text,
   }) : super(key: key);
 
+  final IconData? icon;
   final String text;
 
   @override
@@ -24,6 +26,12 @@ class ListHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          icon != null
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Icon(icon),
+                )
+              : const SizedBox(),
           HeaderText(text),
         ],
       ),

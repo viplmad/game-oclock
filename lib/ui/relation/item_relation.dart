@@ -25,6 +25,7 @@ abstract class ItemRelationList<
     extends StatelessWidget {
   const ItemRelationList({
     Key? key,
+    required this.relationIcon,
     required this.relationName,
     required this.relationTypeName,
     this.trailingBuilder,
@@ -35,6 +36,7 @@ abstract class ItemRelationList<
     required this.searchRouteName,
   }) : super(key: key);
 
+  final IconData relationIcon;
   final String relationName;
   final String relationTypeName;
   final List<Widget> Function(List<W>)? trailingBuilder;
@@ -60,7 +62,7 @@ abstract class ItemRelationList<
         if (state is ItemRelationNotAdded) {
           final String message = AppLocalizations.of(context)!
               .unableToLinkString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -78,7 +80,7 @@ abstract class ItemRelationList<
         if (state is ItemRelationNotDeleted) {
           final String message = AppLocalizations.of(context)!
               .unableToUnlinkString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -88,7 +90,7 @@ abstract class ItemRelationList<
         if (state is ItemRelationNotLoaded) {
           final String message = AppLocalizations.of(context)!
               .unableToLoadString(relationTypeName);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -102,6 +104,7 @@ abstract class ItemRelationList<
             return (isSingleList)
                 ? _RelationListSingle<W>(
                     items: state.otherItems,
+                    relationIcon: relationIcon,
                     relationName: relationName,
                     relationTypeName: relationTypeName,
                     itemBuilder: cardBuilder,
@@ -111,6 +114,7 @@ abstract class ItemRelationList<
                   )
                 : _RelationListMany<W>(
                     items: state.otherItems,
+                    relationIcon: relationIcon,
                     relationName: relationName,
                     relationTypeName: relationTypeName,
                     itemBuilder: cardBuilder,
@@ -132,7 +136,7 @@ abstract class ItemRelationList<
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Divider(),
+              const ListDivider(),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 8.0,
@@ -143,6 +147,7 @@ abstract class ItemRelationList<
                 child: Column(
                   children: <Widget>[
                     ListHeader(
+                      icon: relationIcon,
                       text: relationName,
                     ),
                     Container(
@@ -226,12 +231,14 @@ abstract class ItemRelationList<
 class _RelationList extends StatelessWidget {
   const _RelationList({
     Key? key,
+    required this.headerIcon,
     required this.headerText,
     required this.relationList,
     this.linkWidget,
     this.trailingWidget,
   }) : super(key: key);
 
+  final IconData headerIcon;
   final String headerText;
   final Widget relationList;
   final Widget? linkWidget;
@@ -242,7 +249,7 @@ class _RelationList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Divider(),
+        const ListDivider(),
         Padding(
           padding: const EdgeInsets.only(
             left: 8.0,
@@ -252,6 +259,7 @@ class _RelationList extends StatelessWidget {
           child: Column(
             children: <Widget>[
               ListHeader(
+                icon: headerIcon,
                 text: headerText,
               ),
               relationList,
@@ -308,6 +316,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
   const _RelationListSingle({
     Key? key,
     required this.items,
+    required this.relationIcon,
     required this.relationName,
     required this.relationTypeName,
     required this.itemBuilder,
@@ -317,6 +326,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
   }) : super(key: key);
 
   final List<W> items;
+  final IconData relationIcon;
   final String relationName;
   final String relationTypeName;
   final Widget Function(BuildContext, W) itemBuilder;
@@ -327,6 +337,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _RelationList(
+      headerIcon: relationIcon,
       headerText: relationName,
       relationList: ItemListBuilder(
         canBeDragged: true,
@@ -339,7 +350,7 @@ class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
             onDismissed: () {
               updateDelete(relation);
             },
-            dismissIconData: AppTheme.unlinkIcon,
+            dismissIcon: AppTheme.unlinkIcon,
             dismissLabel:
                 AppLocalizations.of(context)!.unlinkString(relationTypeName),
           );
@@ -360,6 +371,7 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
   const _RelationListMany({
     Key? key,
     required this.items,
+    required this.relationIcon,
     required this.relationName,
     required this.relationTypeName,
     required this.itemBuilder,
@@ -371,6 +383,7 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
   }) : super(key: key);
 
   final List<W> items;
+  final IconData relationIcon;
   final String relationName;
   final String relationTypeName;
   final Widget Function(BuildContext, W) itemBuilder;
@@ -383,7 +396,9 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _RelationList(
-      headerText: '$relationName (${items.length})',
+      headerIcon: relationIcon,
+      headerText:
+          '$relationName${items.isNotEmpty ? ' (${items.length})' : ''}',
       relationList: Container(
         constraints: limitHeight
             ? BoxConstraints.loose(
@@ -403,7 +418,7 @@ class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
               onDismissed: () {
                 updateDelete(relation);
               },
-              dismissIconData: AppTheme.unlinkIcon,
+              dismissIcon: AppTheme.unlinkIcon,
               dismissLabel:
                   AppLocalizations.of(context)!.unlinkString(relationTypeName),
             );

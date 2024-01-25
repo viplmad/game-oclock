@@ -116,7 +116,7 @@ abstract class ItemDetailBody<
           if (state is ItemFieldNotUpdated) {
             final String message =
                 AppLocalizations.of(context)!.unableToUpdateFieldString;
-            showErrorSnackbar(
+            showApiErrorSnackbar(
               context,
               name: message,
               error: state.error,
@@ -136,7 +136,7 @@ abstract class ItemDetailBody<
           if (state is ItemImageNotUpdated) {
             final String message =
                 AppLocalizations.of(context)!.unableToUpdateImageString;
-            showErrorSnackbar(
+            showApiErrorSnackbar(
               context,
               name: message,
               error: state.error,
@@ -146,7 +146,7 @@ abstract class ItemDetailBody<
           if (state is ItemDetailNotLoaded) {
             final String message =
                 AppLocalizations.of(context)!.unableToLoadDetailString;
-            showErrorSnackbar(
+            showApiErrorSnackbar(
               context,
               name: message,
               error: state.error,
@@ -290,7 +290,7 @@ abstract class ItemDetailBody<
                 ListTile(
                   title: Text(withImage ? imageFilename : ''),
                 ),
-                const Divider(),
+                const ListDivider(),
               ]
             : <Widget>[]),
         ListTile(

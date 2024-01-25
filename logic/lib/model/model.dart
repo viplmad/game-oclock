@@ -2,7 +2,8 @@ export 'app_tab.dart';
 export 'list_style.dart';
 export 'calendar_range.dart';
 export 'calendar_style.dart';
-export 'time_log_recalculation_mode.dart';
+export 'game_log_error_code.dart';
+export 'game_log_recalculation_mode.dart';
 
 export 'dlc_view.dart';
 export 'game_view.dart';

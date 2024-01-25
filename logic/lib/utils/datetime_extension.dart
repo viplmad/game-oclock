@@ -1,6 +1,12 @@
+import 'package:flutter/material.dart';
+
 extension DateExtension on DateTime {
   bool isSameDay(DateTime other) {
     return day == other.day && isInMonthAndYearOf(other);
+  }
+
+  DateTime withTime(TimeOfDay time) {
+    return DateTime(year, month, day, time.hour, time.minute);
   }
 
   DateTime atMondayOfWeek() {

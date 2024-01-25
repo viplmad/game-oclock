@@ -12,7 +12,7 @@ import 'server_settings_manager.dart';
 class ServerSettingsManagerBloc
     extends Bloc<ServerSettingsManagerEvent, ServerSettingsManagerState> {
   ServerSettingsManagerBloc({required this.collectionService})
-      : super(Initialised()) {
+      : super(ServerSettingsManagerInitialised()) {
     on<SaveServerConnectionSettings>(_mapSaveToState);
     on<WarnServerSettingsNotLoaded>(_mapWarnNotLoadedToState);
   }
@@ -52,7 +52,7 @@ class ServerSettingsManagerBloc
     }
 
     emit(
-      Initialised(),
+      ServerSettingsManagerInitialised(),
     );
   }
 
@@ -61,6 +61,11 @@ class ServerSettingsManagerBloc
     Emitter<ServerSettingsManagerState> emit,
   ) {
     emit(ServerSettingsNotLoaded(event.error, event.errorDescription));
+
+    // TODO Check others missing initialised
+    emit(
+      ServerSettingsManagerInitialised(),
+    );
   }
 
   void _handleError(Object e, Emitter<ServerSettingsManagerState> emit) {

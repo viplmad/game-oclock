@@ -18,6 +18,8 @@ class TagTheme {
   static const Color primaryColour = Colors.black87;
   static const Color secondaryColour = Colors.black12;
 
+  static const IconData primaryIcon = Icons.sell;
+
   static ThemeData themeData(BuildContext context) {
     return ThemeUtils.themeByColours(context, primaryColour, secondaryColour);
   }

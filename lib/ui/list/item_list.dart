@@ -234,7 +234,7 @@ abstract class ItemList<
         if (state is ItemNotAdded) {
           final String message = AppLocalizations.of(context)!
               .unableToAddString(currentTypeString);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -253,7 +253,7 @@ abstract class ItemList<
         if (state is ItemNotDeleted) {
           final String message = AppLocalizations.of(context)!
               .unableToDeleteString(currentTypeString);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -263,7 +263,7 @@ abstract class ItemList<
         if (state is ItemListNotLoaded) {
           final String message = AppLocalizations.of(context)!
               .unableToLoadString(currentTypeString);
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -501,7 +501,7 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIconData: AppTheme.deleteIcon,
+          dismissIcon: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },
@@ -549,7 +549,7 @@ class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIconData: AppTheme.deleteIcon,
+          dismissIcon: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },

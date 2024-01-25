@@ -245,7 +245,7 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIconData: AppTheme.deleteIcon,
+          dismissIcon: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },
@@ -290,7 +290,7 @@ class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
               },
             ).then((bool? value) => value ?? false);
           },
-          dismissIconData: AppTheme.deleteIcon,
+          dismissIcon: AppTheme.deleteIcon,
           dismissLabel: AppLocalizations.of(context)!.deleteString,
         );
       },

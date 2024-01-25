@@ -37,7 +37,7 @@ class PlatformTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.platformsString,
-      iconData: primaryIcon,
+      icon: primaryIcon,
       color: primaryColour,
     );
   }

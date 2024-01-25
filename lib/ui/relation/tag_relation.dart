@@ -19,6 +19,7 @@ class TagGameRelationList extends ItemRelationList<GameDTO, TagGameRelationBloc,
   }) : super(
           key: key,
           limitHeight: false,
+          relationIcon: GameTheme.primaryIcon,
           hasImage: GameTheme.hasImage,
           detailRouteName: gameDetailRoute,
           searchRouteName: gameSearchRoute,

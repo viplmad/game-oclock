@@ -224,7 +224,7 @@ class _YearPickerState extends State<_YearPicker> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const Divider(),
+        const Divider(height: 0.0),
         Expanded(
           child: GridView.builder(
             controller: scrollController,
@@ -234,7 +234,7 @@ class _YearPickerState extends State<_YearPicker> {
             padding: const EdgeInsets.symmetric(horizontal: _yearPickerPadding),
           ),
         ),
-        const Divider(),
+        const Divider(height: 0.0),
       ],
     );
   }

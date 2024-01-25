@@ -126,15 +126,18 @@ class _ServerSettingsBody extends StatelessWidget {
           showSnackBar(context, message: message);
 
           // When correctly saved -> navigate to connect page
-          Navigator.pushReplacementNamed(
+          // Remove previous routes so we can't go to a homepage of old login
+          Navigator.pushNamedAndRemoveUntil(
             context,
             connectRoute,
+            // Remove all the routes
+            (_) => false,
           );
         }
         if (state is ServerSettingsNotSaved) {
           final String message =
               AppLocalizations.of(context)!.unableToUpdateConnectionString;
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -144,7 +147,7 @@ class _ServerSettingsBody extends StatelessWidget {
         if (state is ServerSettingsNotLoaded) {
           final String message =
               AppLocalizations.of(context)!.unableToLoadConnectionString;
-          showErrorSnackbar(
+          showApiErrorSnackbar(
             context,
             name: message,
             error: state.error,
@@ -168,7 +171,7 @@ class _ServerSettingsBody extends StatelessWidget {
               final String accessToken = connection.tokenResponse.accessToken;
 
               children.addAll(<Widget>[
-                const Divider(),
+                const ListDivider(),
                 ListTile(
                   title: HeaderText(
                     AppLocalizations.of(context)!.currentAccessTokenString,

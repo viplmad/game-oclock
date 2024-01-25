@@ -20,6 +20,7 @@ import 'list/list.dart';
 import 'review/review_arguments.dart';
 import 'theme/theme.dart';
 import 'common/bar_data.dart';
+import 'common/list_view.dart';
 import 'common/navigation_destination_background.dart' as nav_bar_background;
 import 'route_constants.dart';
 
@@ -141,7 +142,7 @@ class _HomepageBar extends StatelessWidget {
               return nav_bar_background.NavigationDestination(
                 label: barItem.title,
                 icon: Icon(
-                  barItem.iconData,
+                  barItem.icon,
                 ),
                 indicatorColor: barItem.color,
               );
@@ -203,7 +204,7 @@ class _HomepageDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.bookmarks),
+            leading: const Icon(TagTheme.primaryIcon),
             title: Text(AppLocalizations.of(context)!.gameListsString),
             onTap: () async {
               Navigator.pushNamed(
@@ -213,7 +214,7 @@ class _HomepageDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.loyalty),
+            leading: const Icon(GameTheme.wishlistIcon),
             title: Text(AppLocalizations.of(context)!.wishlistedString),
             onTap: () async {
               Navigator.pushNamed(
@@ -222,9 +223,9 @@ class _HomepageDrawer extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
+          const ListDivider(),
           ListTile(
-            leading: const Icon(Icons.cake),
+            leading: const Icon(GameTheme.reviewIcon),
             title: Text(AppLocalizations.of(context)!.yearInReviewString),
             onTap: () async {
               Navigator.pushNamed(
@@ -234,7 +235,7 @@ class _HomepageDrawer extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
+          const ListDivider(),
           ListTile(
             leading: const Icon(Icons.settings),
             title: Text(
@@ -259,13 +260,13 @@ class _HomepageDrawer extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
+          const ListDivider(),
           BlocListener<AboutBloc, AboutState>(
             listener: (BuildContext context, AboutState state) {
               if (state is AboutNotLoaded) {
                 final String message =
                     AppLocalizations.of(context)!.unableToLoadAppVersionString;
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,

@@ -29,7 +29,7 @@ class DLCTheme {
   static BarData barData(BuildContext context) {
     return BarData(
       title: AppLocalizations.of(context)!.dlcsString,
-      iconData: primaryIcon,
+      icon: primaryIcon,
       color: primaryColour,
     );
   }

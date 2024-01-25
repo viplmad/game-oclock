@@ -5,30 +5,29 @@ import 'package:equatable/equatable.dart';
 import 'package:logic/model/model.dart' show GameLogRecalculationMode;
 
 class GameLogAssistantState extends Equatable {
-  // ignore: avoid_positional_boolean_parameters
   const GameLogAssistantState(
-    this.date, [
+    this.startDate,
+    this.endDate, [
     this.startTime,
     this.endTime,
     this.duration,
     this.recalculationMode = GameLogRecalculationMode.duration,
   ]);
 
-  final DateTime date;
+  final DateTime startDate;
+  final DateTime endDate;
   final TimeOfDay? startTime;
   final TimeOfDay? endTime;
   final Duration? duration;
   final GameLogRecalculationMode recalculationMode;
 
-  bool get isValid =>
-      startTime != null && duration != null && !duration!.isNegative;
-
-  bool get canRecalculate =>
+  bool get isComplete =>
       startTime != null && endTime != null && duration != null;
 
   @override
   List<Object> get props => <Object>[
-        date,
+        startDate,
+        endDate,
         startTime ?? TimeOfDay.now(),
         endTime ?? TimeOfDay.now(),
         duration ?? Duration.zero,
@@ -37,7 +36,8 @@ class GameLogAssistantState extends Equatable {
 
   @override
   String toString() => 'GameLogAssistantState { '
-      'date: $date, '
+      'startDate: $startDate, '
+      'endDate: $endDate, '
       'startTime: $startTime, '
       'endTime: $endTime, '
       'duration: $duration, '

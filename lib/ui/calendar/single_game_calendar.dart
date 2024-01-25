@@ -278,7 +278,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
               if (state is CalendarNotLoaded) {
                 final String message =
                     AppLocalizations.of(context)!.unableToLoadCalendarString;
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -306,7 +306,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToAddString(
                   AppLocalizations.of(context)!.gameLogFieldString,
                 );
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -330,7 +330,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToDeleteString(
                   AppLocalizations.of(context)!.gameLogFieldString,
                 );
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -358,7 +358,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToAddString(
                   AppLocalizations.of(context)!.finishDateFieldString,
                 );
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -382,7 +382,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                     AppLocalizations.of(context)!.unableToDeleteString(
                   AppLocalizations.of(context)!.finishDateFieldString,
                 );
-                showErrorSnackbar(
+                showApiErrorSnackbar(
                   context,
                   name: message,
                   error: state.error,
@@ -434,11 +434,11 @@ class _SingleGameCalendarBody extends StatelessWidget {
                       state.finishDates,
                       state.selectedDate,
                     ),
-                    const Divider(height: 4.0),
+                    const ListDivider(),
                     ...(state.isSelectedDateFinish
                         ? <Widget>[
                             _buildFinishDate(context, state.selectedDate),
-                            const Divider(height: 4.0),
+                            const ListDivider(),
                           ]
                         : <Widget>[]),
                     ListTile(
@@ -477,7 +477,7 @@ class _SingleGameCalendarBody extends StatelessWidget {
                   Skeleton(
                     height: MediaQuery.of(context).size.height / 2.5,
                   ),
-                  const Divider(height: 4.0),
+                  const ListDivider(),
                 ],
               );
             },
