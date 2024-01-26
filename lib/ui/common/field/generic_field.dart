@@ -70,20 +70,28 @@ class SkeletonGenericField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExtendedFieldListTile(
-      title: fieldName != null
-          ? HeaderText(fieldName!)
-          : SizedBox(
-              height: FieldUtils.titleTextHeight,
-              child: Skeleton(
-                order: order,
-              ),
+    final Widget title = fieldName != null
+        ? HeaderText(fieldName!)
+        : SizedBox(
+            height: FieldUtils.titleTextHeight,
+            child: Skeleton(
+              order: order,
             ),
-      subtitle: Skeleton(
-        width: FieldUtils.subtitleTextWidth,
-        height: FieldUtils.subtitleTextHeight,
-        order: order,
-      ),
+          );
+    final Widget subtitle = Skeleton(
+      width: FieldUtils.subtitleTextWidth,
+      height: FieldUtils.subtitleTextHeight,
+      order: order,
     );
+
+    return extended
+        ? ExtendedFieldListTile(
+            title: title,
+            subtitle: subtitle,
+          )
+        : FieldListTile(
+            title: title,
+            subtitle: subtitle,
+          );
   }
 }

@@ -129,7 +129,7 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
     int order = 0;
 
     return <Widget>[
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
@@ -139,10 +139,5 @@ class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
   @override
   ItemImage buildItemImage(TagDTO item) {
     return const ItemImage.empty();
-  }
-
-  @override
-  void reloadItemRelations(BuildContext context) {
-    BlocProvider.of<TagGameRelationBloc>(context).add(ReloadItemRelation());
   }
 }

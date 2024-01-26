@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:game_oclock_client/api.dart' show ErrorCode, PrimaryModel;
@@ -45,23 +44,11 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemDetailState> emit,
   ) async {
     if (state is ItemLoaded<T>) {
-      final T previousItem = (state as ItemLoaded<T>).item;
+      emit(
+        ItemLoading(),
+      );
 
-      try {
-        T item = await _get();
-
-        if (event.forceAdditionalFields) {
-          item = await getAdditionalFields(item);
-        } else {
-          item = addAdditionalFields(item, previousItem);
-        }
-
-        emit(
-          ItemLoaded<T>(item),
-        );
-      } catch (e) {
-        _handleError(e, emit);
-      }
+      await _mapAnyLoadToState(emit);
     } else if (state is! ItemLoading) {
       await _mapAnyLoadToState(emit);
     }
@@ -69,9 +56,7 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
 
   Future<void> _mapAnyLoadToState(Emitter<ItemDetailState> emit) async {
     try {
-      T item = await _get();
-      item = await getAdditionalFields(item);
-
+      final T item = await _get();
       emit(
         ItemLoaded<T>(item),
       );
@@ -100,11 +85,11 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
   }
 
   void _mapFieldUpdatedToEvent(ItemFieldUpdated event) {
-    add(const ReloadItem());
+    add(ReloadItem());
   }
 
   void _mapImageUpdatedToEvent(ItemImageUpdated event) {
-    add(const ReloadItem());
+    add(ReloadItem());
   }
 
   @override
@@ -115,15 +100,5 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
 
   Future<T> _get() {
     return service.get(itemId);
-  }
-
-  @protected
-  Future<T> getAdditionalFields(T item) async {
-    return item;
-  }
-
-  @protected
-  T addAdditionalFields(T item, T previousItem) {
-    return item;
   }
 }

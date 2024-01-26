@@ -1,12 +1,13 @@
 import 'package:game_oclock_client/api.dart'
-    show DLCDTO, PlatformAvailableDTO, TagDTO;
+    show DLCDTO, GameLogDTO, NewGameLogDTO, PlatformAvailableDTO, TagDTO;
 
 import 'package:logic/model/model.dart' show ItemFinish;
 import 'package:logic/service/service.dart'
     show
-        GameOClockService,
-        GameFinishService,
         DLCService,
+        GameFinishService,
+        GameLogService,
+        GameOClockService,
         PlatformService,
         TagService;
 
@@ -31,6 +32,36 @@ class GameFinishRelationBloc extends ItemRelationBloc<ItemFinish, DateTime> {
           (List<DateTime> dates) => dates
               .map((DateTime date) => ItemFinish(date))
               .toList(growable: false),
+        )
+        .first;
+  }
+}
+
+class GamePlayTimeRelationBloc
+    extends ItemRelationBloc<GameLogDTO, NewGameLogDTO> {
+  GamePlayTimeRelationBloc({
+    required super.itemId,
+    required GameOClockService collectionService,
+    required super.managerBloc,
+  })  : _gameLogsService = collectionService.gameLogService,
+        super();
+
+  final GameLogService _gameLogsService;
+
+  @override
+  Future<List<GameLogDTO>> getRelationItems() {
+    return _gameLogsService
+        .getTotalPlayedTime(itemId)
+        .asStream()
+        .map(
+          (Duration time) => <GameLogDTO>[
+            GameLogDTO(
+              startDatetime: DateTime.now(),
+              endDatetime: DateTime.now(),
+              // Only need time
+              time: time,
+            ),
+          ],
         )
         .first;
   }

@@ -48,6 +48,13 @@ class AppTheme {
         backgroundColor: _defaultBackgroundColor(brightness),
         surfaceTintColor: _defaultSurfaceTintColor(brightness),
       ),
+      menuTheme: MenuThemeData(
+        style: MenuStyle(
+          surfaceTintColor: MaterialStatePropertyAll<Color?>(
+            _defaultSurfaceTintColor(brightness),
+          ),
+        ),
+      ),
     );
   }
 

@@ -157,10 +157,9 @@ abstract class ItemDetailBody<
         child: NestedScrollView(
           headerSliverBuilder: _appBarBuilder,
           body: RefreshIndicator(
-            onRefresh: () async {
-              reloadItem(context);
-            },
+            onRefresh: () async => reloadItem(context),
             child: ListView(
+              padding: EdgeInsets.zero,
               children: <Widget>[
                 BlocBuilder<K, ItemDetailState>(
                   builder: (BuildContext context, ItemDetailState state) {
@@ -194,8 +193,8 @@ abstract class ItemDetailBody<
   }
 
   void reloadItem(BuildContext context) {
-    BlocProvider.of<K>(context).add(const ReloadItem(true));
-    reloadItemRelations(context);
+    BlocProvider.of<K>(context).add(ReloadItem());
+    reloadExtraFields(context);
   }
 
   List<Widget> _appBarBuilder(BuildContext context, bool innerBoxIsScrolled) {
@@ -642,11 +641,12 @@ abstract class ItemDetailBody<
     );
   }
 
+  void reloadExtraFields(BuildContext context) {}
+
   String itemTitle(T item);
 
   List<Widget> itemFieldsBuilder(BuildContext context, T item);
   List<Widget> itemSkeletonFieldsBuilder(BuildContext context);
   List<Widget> itemRelationsBuilder(BuildContext context);
   ItemImage buildItemImage(T item);
-  void reloadItemRelations(BuildContext context);
 }

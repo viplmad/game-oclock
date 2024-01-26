@@ -18,6 +18,7 @@ import '../relation/relation.dart';
 import '../theme/theme.dart' show AppTheme, GameTheme;
 import '../calendar/calendar_arguments.dart';
 import 'item_detail.dart';
+import 'play_time_field.dart';
 import 'finish_date_list.dart';
 
 class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
@@ -54,6 +55,12 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
   List<BlocProvider<BlocBase<Object?>>> relationBlocsBuilder(
     GameOClockService collectionService,
   ) {
+    final GameLogRelationManagerBloc logRelationManagerBloc =
+        GameLogRelationManagerBloc(
+      itemId: item.id,
+      collectionService: collectionService,
+    );
+
     final GameFinishRelationManagerBloc finishRelationManagerBloc =
         GameFinishRelationManagerBloc(
       itemId: item.id,
@@ -79,6 +86,15 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
     );
 
     return <BlocProvider<BlocBase<Object?>>>[
+      BlocProvider<GamePlayTimeRelationBloc>(
+        create: (BuildContext context) {
+          return GamePlayTimeRelationBloc(
+            itemId: item.id,
+            collectionService: collectionService,
+            managerBloc: logRelationManagerBloc,
+          )..add(LoadItemRelation());
+        },
+      ),
       BlocProvider<GameFinishRelationBloc>(
         create: (BuildContext context) {
           return GameFinishRelationBloc(
@@ -113,6 +129,11 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
             collectionService: collectionService,
             managerBloc: tagRelationManagerBloc,
           )..add(LoadItemRelation());
+        },
+      ),
+      BlocProvider<GameLogRelationManagerBloc>(
+        create: (BuildContext context) {
+          return logRelationManagerBloc;
         },
       ),
       BlocProvider<GameFinishRelationManagerBloc>(
@@ -248,19 +269,13 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
           itemUpdater: (bool newValue) => game.newWith(backup: newValue),
         ),
         _gameCalendarField(context),
-        itemDurationField(
-          context,
+        GameTotalPlayTimeField(
           fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
-          value: game.totalTime,
+          relationTypeName: AppLocalizations.of(context)!.gameLogsFieldString,
         ),
         GameFinishDateList(
           fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
-          value: game.firstFinish,
           relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
-          onChange: () {
-            BlocProvider.of<GameDetailBloc>(context)
-                .add(const ReloadItem(true));
-          },
         ),
       ]);
     }
@@ -291,11 +306,11 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     int order = 0;
 
     return <Widget>[
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.editionFieldString,
         order: order++,
       ),
@@ -315,11 +330,11 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         fieldName: AppLocalizations.of(context)!.thoughtsFieldString,
         order: order++,
       ),
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.saveFolderFieldString,
         order: order++,
       ),
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.screenshotFolderFieldString,
         order: order++,
       ),
@@ -328,17 +343,15 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
         order: order++,
       ),
       _gameCalendarField(context),
-      itemSkeletonField(
+      GameTotalPlayTimeField(
         fieldName: AppLocalizations.of(context)!.gameLogsFieldString,
-        order: order++,
+        relationTypeName: AppLocalizations.of(context)!.gameLogsFieldString,
+        skeletonOrder: order++,
       ),
-      SkeletonGameFinishDateList(
+      GameFinishDateList(
         fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
         relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
-        order: order++,
-        onChange: () {
-          BlocProvider.of<GameDetailBloc>(context).add(const ReloadItem(true));
-        },
+        skeletonOrder: order++,
       ),
     ];
   }
@@ -356,8 +369,7 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
           arguments: SingleGameCalendarArguments(
             itemId: itemId,
             onChange: () {
-              BlocProvider.of<GameDetailBloc>(context)
-                  .add(const ReloadItem(true));
+              reloadItem(context);
             },
           ),
         );
@@ -371,35 +383,19 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
   }
 
   @override
-  void reloadItemRelations(BuildContext context) {
-    BlocProvider.of<GameFinishRelationBloc>(context).add(ReloadItemRelation());
-    BlocProvider.of<GamePlatformRelationBloc>(context)
+  void reloadExtraFields(BuildContext context) {
+    BlocProvider.of<GamePlayTimeRelationBloc>(context)
         .add(ReloadItemRelation());
-    BlocProvider.of<GameDLCRelationBloc>(context).add(ReloadItemRelation());
-    BlocProvider.of<GameTagRelationBloc>(context).add(ReloadItemRelation());
+    BlocProvider.of<GameFinishRelationBloc>(context).add(ReloadItemRelation());
   }
 }
 
-// ignore: must_be_immutable
 class GameFinishDateList
     extends FinishList<GameFinishRelationBloc, GameFinishRelationManagerBloc> {
-  GameFinishDateList({
-    Key? key,
-    required super.fieldName,
-    required super.value,
-    required super.relationTypeName,
-    required super.onChange,
-  }) : super(key: key);
-}
-
-// ignore: must_be_immutable
-class SkeletonGameFinishDateList extends SkeletonFinishList<
-    GameFinishRelationBloc, GameFinishRelationManagerBloc> {
-  SkeletonGameFinishDateList({
+  const GameFinishDateList({
     Key? key,
     required super.fieldName,
     required super.relationTypeName,
-    required super.order,
-    required super.onChange,
+    super.skeletonOrder,
   }) : super(key: key);
 }

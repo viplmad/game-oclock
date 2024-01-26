@@ -165,7 +165,7 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
     int order = 0;
 
     return <Widget>[
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
@@ -179,12 +179,5 @@ class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
   @override
   ItemImage buildItemImage(PlatformDTO item) {
     return ItemImage(item.iconUrl, item.iconFilename);
-  }
-
-  @override
-  void reloadItemRelations(BuildContext context) {
-    BlocProvider.of<PlatformGameRelationBloc>(context)
-        .add(ReloadItemRelation());
-    BlocProvider.of<PlatformDLCRelationBloc>(context).add(ReloadItemRelation());
   }
 }

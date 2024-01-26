@@ -15,7 +15,6 @@ class TagGameRelationList extends ItemRelationList<GameDTO, TagGameRelationBloc,
     Key? key,
     required super.relationName,
     required super.relationTypeName,
-    super.trailingBuilder,
   }) : super(
           key: key,
           limitHeight: false,

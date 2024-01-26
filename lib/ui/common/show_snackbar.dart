@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:game_oclock_client/api.dart' show ErrorCode;
 
 import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
+import 'package:game_oclock/ui/common/copy_to_clipboard.dart';
 import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
@@ -38,16 +39,16 @@ void showApiErrorSnackbar(
   showSnackBar(
     context,
     message: title,
-    snackBarAction: _dialogSnackBarAction(
+    snackBarAction: _apiErrorSnackBarAction(
       context,
-      label: AppLocalizations.of(context)!.moreString,
+      label: MaterialLocalizations.of(context).moreButtonTooltip,
       title: title,
       content: errorDescription,
     ),
   );
 }
 
-SnackBarAction _dialogSnackBarAction(
+SnackBarAction _apiErrorSnackBarAction(
   BuildContext context, {
   required String label,
   required String title,
@@ -62,14 +63,27 @@ SnackBarAction _dialogSnackBarAction(
         builder: (BuildContext context) {
           return AlertDialog(
             title: HeaderText(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(content),
-              ],
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: <Widget>[
+                  Text(content),
+                ],
+              ),
             ),
             actions: <Widget>[
+              TextButton(
+                child: Text(MaterialLocalizations.of(context).copyButtonLabel),
+                onPressed: () {
+                  copyToClipboardAndNotify(
+                    context,
+                    '$title\n\n$content',
+                    AppLocalizations.of(context)!.errorCopiedString,
+                  );
+                },
+              ),
               TextButton(
                 child: Text(MaterialLocalizations.of(context).okButtonLabel),
                 onPressed: () {

@@ -28,7 +28,6 @@ abstract class ItemRelationList<
     required this.relationIcon,
     required this.relationName,
     required this.relationTypeName,
-    this.trailingBuilder,
     this.limitHeight = true,
     this.isSingleList = false,
     required this.hasImage,
@@ -39,7 +38,6 @@ abstract class ItemRelationList<
   final IconData relationIcon;
   final String relationName;
   final String relationTypeName;
-  final List<Widget> Function(List<W>)? trailingBuilder;
   final bool limitHeight;
   final bool isSingleList;
   final bool hasImage;
@@ -100,31 +98,6 @@ abstract class ItemRelationList<
       },
       child: BlocBuilder<K, ItemRelationState>(
         builder: (BuildContext context, ItemRelationState state) {
-          if (state is ItemRelationLoaded<W>) {
-            return (isSingleList)
-                ? _RelationListSingle<W>(
-                    items: state.otherItems,
-                    relationIcon: relationIcon,
-                    relationName: relationName,
-                    relationTypeName: relationTypeName,
-                    itemBuilder: cardBuilder,
-                    onSearch: onSearchTap(context),
-                    updateAdd: _addRelationFunction(context),
-                    updateDelete: _deleteRelationFunction(context),
-                  )
-                : _RelationListMany<W>(
-                    items: state.otherItems,
-                    relationIcon: relationIcon,
-                    relationName: relationName,
-                    relationTypeName: relationTypeName,
-                    itemBuilder: cardBuilder,
-                    onSearch: onSearchTap(context),
-                    updateAdd: _addRelationFunction(context),
-                    updateDelete: _deleteRelationFunction(context),
-                    trailingBuilder: trailingBuilder,
-                    limitHeight: limitHeight,
-                  );
-          }
           if (state is ItemRelationError) {
             return ItemError(
               title: AppLocalizations.of(context)!.somethingWentWrongString,
@@ -133,41 +106,67 @@ abstract class ItemRelationList<
             );
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const ListDivider(),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 8.0,
-                  right: 8.0,
-                  top: 16.0,
-                  bottom: 16.0,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    ListHeader(
-                      icon: relationIcon,
-                      text: relationName,
-                    ),
-                    Container(
-                      constraints: limitHeight
-                          ? BoxConstraints.loose(
-                              Size.fromHeight(
-                                (MediaQuery.of(context).size.height / 3),
-                              ),
-                            )
-                          : null,
-                      child: SkeletonItemList(
-                        single: isSingleList,
-                        canBeDragged: true,
-                        itemHasImage: hasImage,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Widget relationListWidget = const SizedBox();
+          bool showLinkButton = isSingleList;
+          String extraHeaderText = '';
+          if (state is ItemRelationLoaded<W>) {
+            final List<W> otherItems = state.otherItems;
+            relationListWidget = ItemListBuilder(
+              canBeDragged: true,
+              itemCount: otherItems.length,
+              itemBuilder: (BuildContext context, int index) {
+                final W relation = otherItems[index];
+
+                return DismissibleItem(
+                  itemWidget: cardBuilder(context, relation),
+                  onDismissed: () {
+                    _deleteRelationFunction(context)(relation);
+                  },
+                  dismissIcon: AppTheme.unlinkIcon,
+                  dismissLabel: AppLocalizations.of(context)!
+                      .unlinkString(relationTypeName),
+                );
+              },
+            );
+            showLinkButton = isSingleList ? otherItems.isEmpty : true;
+            extraHeaderText = isSingleList
+                ? ''
+                : otherItems.isNotEmpty
+                    ? ' (${otherItems.length})'
+                    : '';
+          }
+          if (state is ItemRelationLoading) {
+            relationListWidget = SkeletonItemList(
+              single: isSingleList,
+              canBeDragged: true,
+              itemHasImage: hasImage,
+            );
+            showLinkButton = isSingleList;
+          }
+
+          return _RelationList(
+            headerIcon: relationIcon,
+            headerText: '$relationName$extraHeaderText',
+            relationList: isSingleList
+                ? relationListWidget
+                : Container(
+                    constraints: limitHeight
+                        ? BoxConstraints.loose(
+                            Size.fromHeight(
+                              (MediaQuery.of(context).size.height / 3),
+                            ),
+                          )
+                        : null,
+                    child: relationListWidget,
+                  ),
+            linkWidget: showLinkButton
+                ? _LinkButton<W>(
+                    typeName: relationTypeName,
+                    onSearch: onSearchTap(context),
+                    updateAdd: _addRelationFunction(context),
+                  )
+                : null,
+            reload: () => BlocProvider.of<K>(context).add(ReloadItemRelation()),
           );
         },
       ),
@@ -235,14 +234,14 @@ class _RelationList extends StatelessWidget {
     required this.headerText,
     required this.relationList,
     this.linkWidget,
-    this.trailingWidget,
+    required this.reload,
   }) : super(key: key);
 
   final IconData headerIcon;
   final String headerText;
   final Widget relationList;
   final Widget? linkWidget;
-  final Widget? trailingWidget;
+  final void Function() reload;
 
   @override
   Widget build(BuildContext context) {
@@ -261,13 +260,17 @@ class _RelationList extends StatelessWidget {
               ListHeader(
                 icon: headerIcon,
                 text: headerText,
+                trailingWidget: IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: AppLocalizations.of(context)!.retryString,
+                  onPressed: reload,
+                ),
               ),
               relationList,
               SizedBox(
                 width: double.maxFinite,
                 child: linkWidget,
               ),
-              trailingWidget ?? const SizedBox(),
             ],
           ),
         ),
@@ -308,133 +311,6 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
           surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
         ),
       ),
-    );
-  }
-}
-
-class _RelationListSingle<W extends PrimaryModel> extends StatelessWidget {
-  const _RelationListSingle({
-    Key? key,
-    required this.items,
-    required this.relationIcon,
-    required this.relationName,
-    required this.relationTypeName,
-    required this.itemBuilder,
-    required this.onSearch,
-    required this.updateAdd,
-    required this.updateDelete,
-  }) : super(key: key);
-
-  final List<W> items;
-  final IconData relationIcon;
-  final String relationName;
-  final String relationTypeName;
-  final Widget Function(BuildContext, W) itemBuilder;
-  final Future<W?> Function() onSearch;
-  final void Function(W) updateAdd;
-  final void Function(W) updateDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    return _RelationList(
-      headerIcon: relationIcon,
-      headerText: relationName,
-      relationList: ItemListBuilder(
-        canBeDragged: true,
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          final W relation = items[index];
-
-          return DismissibleItem(
-            itemWidget: itemBuilder(context, relation),
-            onDismissed: () {
-              updateDelete(relation);
-            },
-            dismissIcon: AppTheme.unlinkIcon,
-            dismissLabel:
-                AppLocalizations.of(context)!.unlinkString(relationTypeName),
-          );
-        },
-      ),
-      linkWidget: items.isEmpty
-          ? _LinkButton<W>(
-              typeName: relationTypeName,
-              onSearch: onSearch,
-              updateAdd: updateAdd,
-            )
-          : const SizedBox(),
-    );
-  }
-}
-
-class _RelationListMany<W extends PrimaryModel> extends StatelessWidget {
-  const _RelationListMany({
-    Key? key,
-    required this.items,
-    required this.relationIcon,
-    required this.relationName,
-    required this.relationTypeName,
-    required this.itemBuilder,
-    required this.onSearch,
-    required this.updateAdd,
-    required this.updateDelete,
-    this.trailingBuilder,
-    this.limitHeight = true,
-  }) : super(key: key);
-
-  final List<W> items;
-  final IconData relationIcon;
-  final String relationName;
-  final String relationTypeName;
-  final Widget Function(BuildContext, W) itemBuilder;
-  final Future<W?> Function() onSearch;
-  final void Function(W) updateAdd;
-  final void Function(W) updateDelete;
-  final List<Widget> Function(List<W>)? trailingBuilder;
-  final bool limitHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    return _RelationList(
-      headerIcon: relationIcon,
-      headerText:
-          '$relationName${items.isNotEmpty ? ' (${items.length})' : ''}',
-      relationList: Container(
-        constraints: limitHeight
-            ? BoxConstraints.loose(
-                Size.fromHeight(
-                  (MediaQuery.of(context).size.height / 3),
-                ),
-              )
-            : null,
-        child: ItemListBuilder(
-          canBeDragged: true,
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            final W relation = items[index];
-
-            return DismissibleItem(
-              itemWidget: itemBuilder(context, relation),
-              onDismissed: () {
-                updateDelete(relation);
-              },
-              dismissIcon: AppTheme.unlinkIcon,
-              dismissLabel:
-                  AppLocalizations.of(context)!.unlinkString(relationTypeName),
-            );
-          },
-        ),
-      ),
-      linkWidget: _LinkButton<W>(
-        typeName: relationTypeName,
-        onSearch: onSearch,
-        updateAdd: updateAdd,
-      ),
-      trailingWidget: trailingBuilder != null
-          ? Column(
-              children: trailingBuilder!(items),
-            )
-          : const SizedBox(),
     );
   }
 }

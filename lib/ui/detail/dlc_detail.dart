@@ -158,11 +158,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
       ),
       DLCFinishList(
         fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
-        value: dlc.firstFinish,
         relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
-        onChange: () {
-          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
-        },
       ),
     ];
   }
@@ -186,7 +182,7 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
     int order = 0;
 
     return <Widget>[
-      itemSkeletonField(
+      itemSkeletonLongTextField(
         fieldName: AppLocalizations.of(context)!.nameFieldString,
         order: order++,
       ),
@@ -194,13 +190,10 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
         fieldName: AppLocalizations.of(context)!.releaseYearFieldString,
         order: order++,
       ),
-      SkeletonDLCFinishList(
+      DLCFinishList(
         fieldName: AppLocalizations.of(context)!.finishDatesFieldString,
         relationTypeName: AppLocalizations.of(context)!.finishDateFieldString,
-        order: order++,
-        onChange: () {
-          BlocProvider.of<DLCDetailBloc>(context).add(const ReloadItem(true));
-        },
+        skeletonOrder: order++,
       ),
     ];
   }
@@ -211,33 +204,17 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
   }
 
   @override
-  void reloadItemRelations(BuildContext context) {
+  void reloadExtraFields(BuildContext context) {
     BlocProvider.of<DLCFinishRelationBloc>(context).add(ReloadItemRelation());
-    BlocProvider.of<DLCGameRelationBloc>(context).add(ReloadItemRelation());
-    BlocProvider.of<DLCPlatformRelationBloc>(context).add(ReloadItemRelation());
   }
 }
 
-// ignore: must_be_immutable
 class DLCFinishList
     extends FinishList<DLCFinishRelationBloc, DLCFinishRelationManagerBloc> {
-  DLCFinishList({
-    Key? key,
-    required super.fieldName,
-    required super.value,
-    required super.relationTypeName,
-    required super.onChange,
-  }) : super(key: key);
-}
-
-// ignore: must_be_immutable
-class SkeletonDLCFinishList extends SkeletonFinishList<DLCFinishRelationBloc,
-    DLCFinishRelationManagerBloc> {
-  SkeletonDLCFinishList({
+  const DLCFinishList({
     Key? key,
     required super.fieldName,
     required super.relationTypeName,
-    required super.order,
-    required super.onChange,
+    super.skeletonOrder,
   }) : super(key: key);
 }

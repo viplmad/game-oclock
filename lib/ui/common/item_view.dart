@@ -189,16 +189,23 @@ class ItemGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        borderRadius: ShapeUtils.cardBorderRadius,
-        onTap: onTap,
-        child: _ItemGridTile(
-          title: title,
-          imageURL: imageURL,
+    return Stack(
+      children: <Widget>[
+        Positioned.fill(
+          child: _ItemGridTile(
+            title: title,
+            imageURL: imageURL,
+          ),
         ),
-      ),
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

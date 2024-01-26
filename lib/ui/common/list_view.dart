@@ -34,6 +34,7 @@ class ItemListBuilder extends StatelessWidget {
     }
 
     return ListView.builder(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: canBeDragged ? const ClampingScrollPhysics() : null,
       controller: controller,
@@ -81,7 +82,8 @@ class ItemGridBuilder extends StatelessWidget {
       controller: controller,
       itemCount: itemCount,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: (MediaQuery.of(context).size.width / 200).ceil(),
+        childAspectRatio: 1.85, // Steam header aspect ratio
+        crossAxisCount: (MediaQuery.of(context).size.width / 400).ceil(),
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -252,6 +254,7 @@ class ListEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: canBeDragged ? const ClampingScrollPhysics() : null,
       children: <Widget>[

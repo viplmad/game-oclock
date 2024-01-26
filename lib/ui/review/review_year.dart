@@ -177,7 +177,7 @@ class _ReviewYearBody extends StatelessWidget {
               // Get top games
               games.sort(
                 (GamePlayedReviewDTO a, GamePlayedReviewDTO b) =>
-                    -a.totalTime!.compareTo(b.totalTime!),
+                    -a.totalTime.compareTo(b.totalTime),
               );
               final Iterable<GamePlayedReviewDTO> topGames = games.take(topMax);
 
@@ -1083,13 +1083,13 @@ class _ReviewYearBody extends StatelessWidget {
           // Sort by first finish
           games.sort(
             (GameFinishedReviewDTO a, GameFinishedReviewDTO b) =>
-                a.firstFinish!.compareTo(b.firstFinish!),
+                a.firstFinish.compareTo(b.firstFinish),
           );
 
           final SplayTreeMap<int, List<GameFinishedReviewDTO>> monthGamesMap =
               SplayTreeMap<int, List<GameFinishedReviewDTO>>();
           for (final GameFinishedReviewDTO game in games) {
-            final int month = game.firstFinish!.month;
+            final int month = game.firstFinish.month;
             final List<GameFinishedReviewDTO> monthGames =
                 monthGamesMap[month] ?? <GameFinishedReviewDTO>[];
             monthGames.add(game);
@@ -1134,7 +1134,7 @@ class _ReviewYearBody extends StatelessWidget {
                               subtitle: AppLocalizations.of(context)!
                                   .finishedOnDayString(
                                 AppLocalizationsUtils.formatDay(
-                                  game.firstFinish!,
+                                  game.firstFinish,
                                 ),
                               ),
                             );
@@ -1583,7 +1583,7 @@ class _ReviewYearBody extends StatelessWidget {
     // Sort by first finish (assumes only one finish per year)
     finishedMonthGames.sort(
       (GameFinishedReviewDTO a, GameFinishedReviewDTO b) =>
-          a.firstFinish!.compareTo(b.firstFinish!),
+          a.firstFinish.compareTo(b.firstFinish),
     );
 
     if (finishedMonthGames.isEmpty) {
@@ -1625,7 +1625,7 @@ class _ReviewYearBody extends StatelessWidget {
               game,
               totalTime,
               <Widget>[],
-              subtitle: AppLocalizationsUtils.formatDate(game.firstFinish!),
+              subtitle: AppLocalizationsUtils.formatDate(game.firstFinish),
             );
           }),
         );
@@ -1708,7 +1708,7 @@ class _ReviewYearBody extends StatelessWidget {
                 context,
                 gameColour,
                 game.totalTimeGrouped,
-                game.totalTime!,
+                game.totalTime,
               ),
             ),
           ];
@@ -1749,7 +1749,7 @@ class _ReviewYearBody extends StatelessWidget {
         AppLocalizations.of(context)!.playTimeString(
           AppLocalizationsUtils.formatDuration(
             context,
-            game.totalTime!,
+            game.totalTime,
           ),
         ),
       ),
@@ -1764,7 +1764,7 @@ class _ReviewYearBody extends StatelessWidget {
           Text(
             AppLocalizations.of(context)!.percentagePlayTimeString(
               _formatPercentageForCard(
-                game.totalTime!.inMinutes / totalTime.inMinutes,
+                game.totalTime.inMinutes / totalTime.inMinutes,
               ),
             ),
           ),

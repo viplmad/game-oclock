@@ -9,17 +9,4 @@ abstract class ItemDetailEvent extends Equatable {
 
 class LoadItem extends ItemDetailEvent {}
 
-class ReloadItem extends ItemDetailEvent {
-  // ignore: avoid_positional_boolean_parameters
-  const ReloadItem([this.forceAdditionalFields = false]);
-
-  final bool forceAdditionalFields;
-
-  @override
-  List<Object> get props => <Object>[forceAdditionalFields];
-
-  @override
-  String toString() => 'ReloadItem { '
-      'forceAdditionalFields: $forceAdditionalFields'
-      ' }';
-}
+class ReloadItem extends ItemDetailEvent {}

@@ -227,6 +227,7 @@ class CalendarUtils {
 
     if (range == CalendarRange.day || range == CalendarRange.month) {
       return ListView(
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         children: <Widget>[

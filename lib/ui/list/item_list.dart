@@ -123,6 +123,7 @@ abstract class ItemAppBar<T extends PrimaryModel,
     required List<String> views,
   }) {
     return PopupMenuButton<int>(
+      surfaceTintColor: themeColor,
       icon: const Icon(AppTheme.changeViewIcon),
       tooltip: AppLocalizations.of(context)!.changeViewString,
       itemBuilder: (BuildContext context) {

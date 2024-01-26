@@ -9,30 +9,37 @@ class ListHeader extends StatelessWidget {
     Key? key,
     this.icon,
     required this.text,
+    this.trailingWidget,
   }) : super(key: key);
 
   final IconData? icon;
   final String text;
+  final Widget? trailingWidget;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
         left: 16.0,
-        right: 16.0,
+        right: 24.0,
         top: 8.0,
         bottom: 8.0,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          icon != null
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Icon(icon),
-                )
-              : const SizedBox(),
-          HeaderText(text),
+          Row(
+            children: <Widget>[
+              icon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(icon),
+                    )
+                  : const SizedBox(),
+              HeaderText(text),
+            ],
+          ),
+          trailingWidget ?? const SizedBox(),
         ],
       ),
     );
@@ -49,7 +56,7 @@ class ListHeaderSkeleton extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.only(
         left: 16.0,
-        right: 16.0,
+        right: 24.0,
         top: 10.0,
         bottom: 10.0,
       ),
@@ -124,7 +131,7 @@ class ExtendedFieldListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(
           left: 16.0,
-          right: 16.0,
+          right: 24.0,
           top: 8.0,
           bottom: 8.0,
         ),
@@ -152,12 +159,14 @@ class FieldListTile extends StatelessWidget {
     Key? key,
     required this.title,
     required this.subtitle,
+    this.trailing,
     this.onTap,
     this.onLongPress,
   }) : super(key: key);
 
   final Widget title;
   final Widget subtitle;
+  final Widget? trailing;
   final GestureTapCallback? onTap;
   final GestureLongPressCallback? onLongPress;
 
@@ -165,7 +174,13 @@ class FieldListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: title,
-      trailing: subtitle,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          subtitle,
+          trailing ?? const SizedBox(),
+        ],
+      ),
       onTap: onTap,
       onLongPress: onLongPress,
     );

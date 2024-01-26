@@ -10,6 +10,7 @@ import 'package:logic/bloc/server_settings/server_settings.dart';
 import 'package:logic/bloc/server_settings_manager/server_settings_manager.dart';
 
 import 'package:game_oclock/ui/common/show_snackbar.dart';
+import 'package:game_oclock/ui/common/copy_to_clipboard.dart';
 import 'package:game_oclock/ui/common/list_view.dart';
 import 'package:game_oclock/ui/common/header_text.dart';
 
@@ -176,20 +177,15 @@ class _ServerSettingsBody extends StatelessWidget {
                   title: HeaderText(
                     AppLocalizations.of(context)!.currentAccessTokenString,
                   ),
-                  subtitle: Text(accessToken),
+                  subtitle: BodyText(accessToken),
                   trailing: IconButton(
-                    tooltip:
-                        AppLocalizations.of(context)!.copyAccessTokenString,
+                    tooltip: MaterialLocalizations.of(context).copyButtonLabel,
                     icon: const Icon(AppTheme.copyIcon),
-                    onPressed: () async {
-                      Clipboard.setData(
-                        ClipboardData(text: accessToken),
-                      ).then(
-                        (_) => showSnackBar(
-                          context,
-                          message: AppLocalizations.of(context)!
-                              .accessTokenCopiedString,
-                        ),
+                    onPressed: () {
+                      copyToClipboardAndNotify(
+                        context,
+                        accessToken,
+                        AppLocalizations.of(context)!.accessTokenCopiedString,
                       );
                     },
                   ),
