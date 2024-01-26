@@ -128,6 +128,7 @@ class _HomepageBar extends StatelessWidget {
             tab: state,
           ),
           bottomNavigationBar: nav_bar_background.NavigationBar(
+            surfaceTintColor: barDatum.elementAt(state.index).color,
             selectedIndex: state.index,
             onDestinationSelected: (int destinationSelectedIndex) {
               final MainTab selectedMainTab =
