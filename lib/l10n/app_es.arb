@@ -66,7 +66,7 @@
   "statusFieldString": "Estado",
   "ratingFieldString": "Valoración",
   "thoughtsFieldString": "Notas",
-  "gameLogFieldString": "Tiempo de juego",
+  "gameLogFieldString": "Sesión",
   "gameLogsFieldString": "Tiempo de juego",
   "saveFolderFieldString": "Carpeta de guardado",
   "screenshotFolderFieldString": "Carpeta de capturas",
