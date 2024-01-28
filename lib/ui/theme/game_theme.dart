@@ -63,6 +63,7 @@ class GameTheme {
   static const IconData reviewIcon = Icons.cake;
   static const IconData sessionIcon = Icons.schedule;
   static const IconData finishedIcon = Icons.emoji_events_outlined;
+  static const IconData ratingIcon = Icons.star_outline;
   static const IconData longestSessionIcon = Icons.timelapse;
   static const IconData longestStreakIcon = Icons.browse_gallery_outlined;
   static const IconData firstPlayedIcon = Icons.fiber_new_outlined;

@@ -129,9 +129,9 @@ class ExtendedFieldListTile extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Padding(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           left: 16.0,
-          right: 24.0,
+          right: center ? 16.0 : 24.0,
           top: 8.0,
           bottom: 8.0,
         ),

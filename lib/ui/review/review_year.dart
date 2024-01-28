@@ -289,6 +289,17 @@ class _ReviewYearBody extends StatelessWidget {
                   playedData.totalTime,
                 ),
               );
+              widgets.add(
+                _buildTotalPlayedByRatingChart(
+                  context,
+                  gamesColour,
+                  playedData.totalPlayedByRating,
+                  playedData.totalPlayed,
+                  games,
+                  finishedGames,
+                  playedData.totalTime,
+                ),
+              );
               if (shouldShowFinishedInfo) {
                 widgets.add(
                   _buildTotalFinishedByMonthChart(
@@ -710,6 +721,36 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
+  Widget _buildTotalPlayedByRatingChart(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    Map<int, int> totalPlayedByRating,
+    int totalPlayed,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) {
+    return _buildChartCard(
+      context,
+      AppLocalizations.of(context)!.gamesPlayedByRatingString,
+      _buildTotalPlayedByRatingBarChart(
+        context,
+        totalPlayedByRating,
+        totalPlayed,
+        (int rating) => _onPlayedRatingTap(
+          context,
+          gamesColour,
+          rating,
+          totalPlayedByRating[rating] ?? 0,
+          totalPlayed,
+          games,
+          finishedGames,
+          totalTime,
+        ),
+      ),
+    );
+  }
+
   Widget _buildTotalFinishedByMonthChart(
     BuildContext context,
     Map<String, Color> gamesColour,
@@ -933,6 +974,33 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
+  SizedBox _buildTotalPlayedByRatingBarChart(
+    BuildContext context,
+    Map<int, int> totalPlayedByRating,
+    int totalPlayed,
+    void Function(int rating) onRatingTap,
+  ) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2.5,
+      child: StatisticsHistogram<int>(
+        id: 'playedByRating',
+        domainLabels: List<String>.generate(
+          10,
+          (int i) => i == 0
+              ? AppLocalizations.of(context)!.noRatingShortString
+              : '${i + 1}',
+          growable: false,
+        ),
+        // First normalise entries
+        values: List<int>.generate(10, (int rating) {
+          final int ratingTotalPlayed = totalPlayedByRating[rating] ?? 0;
+          return ratingTotalPlayed;
+        }).toList(growable: false),
+        onDomainTap: onRatingTap,
+      ),
+    );
+  }
+
   SizedBox _buildTotalFinishedByMonthBarChart(
     BuildContext context,
     Map<int, int> totalFinishedGrouped,
@@ -942,7 +1010,7 @@ class _ReviewYearBody extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.5,
       child: StatisticsHistogram<int>(
-        id: 'gamesFinishedByMonth',
+        id: 'finishedByMonth',
         domainLabels: AppLocalizationsUtils.monthsAbbr(),
         // First normalise entries
         values: List<int>.generate(DateTime.monthsPerYear, (int index) {
@@ -1547,6 +1615,93 @@ class _ReviewYearBody extends StatelessWidget {
               child: ListHeader(
                 icon: GameTheme.sessionIcon,
                 text: AppLocalizations.of(context)!.playedInString(monthLabel),
+              ),
+            ),
+            Expanded(
+              child: Scrollbar(
+                child: ItemListBuilder(
+                  itemCount: widgets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return widgets.elementAt(index);
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onPlayedRatingTap(
+    BuildContext context,
+    Map<String, Color> gamesColour,
+    int rating,
+    int ratingTotalPlayed,
+    int totalPlayed,
+    List<GamePlayedReviewDTO> games,
+    List<GameFinishedReviewDTO> finishedGames,
+    Duration totalTime,
+  ) async {
+    final List<GamePlayedReviewDTO> releasedTypeGames = games
+        .where((GamePlayedReviewDTO game) => game.rating == rating)
+        .toList(growable: false);
+    // Sort by oldest release year
+    releasedTypeGames.sort(
+      (GamePlayedReviewDTO a, GamePlayedReviewDTO b) =>
+          a.releaseYear != null && b.releaseYear != null
+              ? a.releaseYear!.compareTo(b.releaseYear!)
+              : 0,
+    );
+
+    if (releasedTypeGames.isEmpty) {
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        final List<Widget> widgets = <Widget>[];
+        widgets.add(
+          ListTile(
+            title: Text(
+              '${AppLocalizations.of(context)!.percentagePlayedString(
+                _formatPercentageForCard(
+                  ratingTotalPlayed / totalPlayed,
+                ),
+              )} · ${AppLocalizations.of(context)!.totalRatedString(
+                ratingTotalPlayed,
+              )}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        widgets.addAll(
+          releasedTypeGames.map((GamePlayedReviewDTO game) {
+            final GameFinishedReviewDTO? finishedGame =
+                _getFinishedGame(finishedGames, game.id);
+
+            return _buildSimpleGameCard(
+              context,
+              gamesColour[game.id]!,
+              game,
+              finishedGame,
+              totalTime,
+            );
+          }),
+        );
+
+        return Column(
+          children: <Widget>[
+            Container(
+              color: Colors.grey,
+              child: ListHeader(
+                icon: GameTheme.ratingIcon,
+                text: rating == 0
+                    ? AppLocalizations.of(context)!.noRatingString
+                    : AppLocalizations.of(context)!.ratedWithString('$rating'),
               ),
             ),
             Expanded(
