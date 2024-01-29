@@ -24,6 +24,7 @@ import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/common/show_snackbar.dart';
 import 'package:game_oclock/ui/common/item_view.dart';
 import 'package:game_oclock/ui/common/list_view.dart';
+import 'package:game_oclock/ui/common/triangle_banner.dart';
 import 'package:game_oclock/ui/common/statistics_histogram.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
@@ -289,17 +290,19 @@ class _ReviewYearBody extends StatelessWidget {
                   playedData.totalTime,
                 ),
               );
-              widgets.add(
-                _buildTotalRatedByRatingChart(
-                  context,
-                  gamesColour,
-                  playedData.totalRatedByRating,
-                  playedData.totalRated,
-                  games,
-                  finishedGames,
-                  playedData.totalTime,
-                ),
-              );
+              if (playedData.totalRated > 0) {
+                widgets.add(
+                  _buildTotalRatedByRatingChart(
+                    context,
+                    gamesColour,
+                    playedData.totalRatedByRating,
+                    playedData.totalRated,
+                    games,
+                    finishedGames,
+                    playedData.totalTime,
+                  ),
+                );
+              }
               if (shouldShowFinishedInfo) {
                 widgets.add(
                   _buildTotalFinishedByMonthChart(
@@ -613,6 +616,7 @@ class _ReviewYearBody extends StatelessWidget {
 
     return _buildChartCard(
       context,
+      Icons.new_releases_outlined,
       AppLocalizations.of(context)!.gamesPlayedByReleaseYearString,
       _buildTotalPlayedByReleaseYearPieChart(
         context,
@@ -661,6 +665,7 @@ class _ReviewYearBody extends StatelessWidget {
 
     return _buildChartCard(
       context,
+      Icons.new_releases_outlined,
       AppLocalizations.of(context)!.gamesFinishedByReleaseYearString,
       _buildTotalFinishedByReleaseYearPieChart(
         context,
@@ -693,6 +698,7 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return _buildChartCard(
       context,
+      Icons.calendar_month_outlined,
       AppLocalizations.of(context)!.playTimeByMonthString,
       // TODO order each bar by most played
       _buildTotalTimeByMonthStackedBarChart(
@@ -732,6 +738,7 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return _buildChartCard(
       context,
+      GameTheme.ratingIcon,
       AppLocalizations.of(context)!.gamesPlayedByRatingString,
       _buildTotalRatedByRatingBarChart(
         context,
@@ -762,6 +769,7 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return _buildChartCard(
       context,
+      Icons.calendar_month_outlined,
       AppLocalizations.of(context)!.gamesFinishedByMonthString,
       _buildTotalFinishedByMonthBarChart(
         context,
@@ -783,17 +791,19 @@ class _ReviewYearBody extends StatelessWidget {
 
   Widget _buildChartCard(
     BuildContext context,
+    IconData icon,
     String title,
     Widget chartWidget,
   ) {
     return Card(
       margin: EdgeInsets.zero,
-      child: _buildChartWithTitle(context, title, chartWidget),
+      child: _buildChartWithTitle(context, icon, title, chartWidget),
     );
   }
 
   Column _buildChartWithTitle(
     BuildContext context,
+    IconData icon,
     String title,
     Widget chartWidget,
   ) {
@@ -801,6 +811,7 @@ class _ReviewYearBody extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListTile(
+          leading: Icon(icon),
           title: Text(title),
         ),
         Padding(
@@ -1574,23 +1585,30 @@ class _ReviewYearBody extends StatelessWidget {
             final Duration gameMonthTotalTime = game.totalTimeGrouped[month]!;
             final GameFinishedReviewDTO? finishedGame =
                 _getFinishedGame(finishedGames, game.id);
+            final Color gameColour = gamesColour[game.id]!;
 
-            return _buildGameCard(
-              context,
-              gamesColour[game.id]!,
-              game,
-              finishedGame,
-              totalTime,
-              <Widget>[],
-              subtitle:
-                  '${AppLocalizations.of(context)!.percentageMonthPlayTimeString(
-                _formatPercentageForCard(
-                  gameMonthTotalTime.inMinutes / monthTotalTime.inMinutes,
-                ),
-              )} · ${AppLocalizationsUtils.formatDuration(
+            return TriangleBanner(
+              message: '',
+              location: TriangleBannerLocation.start,
+              showShadow: false,
+              color: gameColour,
+              child: _buildGameCard(
                 context,
-                gameMonthTotalTime,
-              )}',
+                gameColour,
+                game,
+                finishedGame,
+                totalTime,
+                <Widget>[],
+                subtitle:
+                    '${AppLocalizations.of(context)!.percentageMonthPlayTimeString(
+                  _formatPercentageForCard(
+                    gameMonthTotalTime.inMinutes / monthTotalTime.inMinutes,
+                  ),
+                )} · ${AppLocalizationsUtils.formatDuration(
+                  context,
+                  gameMonthTotalTime,
+                )}',
+              ),
             );
           }),
         );
@@ -1844,6 +1862,7 @@ class _ReviewYearBody extends StatelessWidget {
             const ListDivider(),
             _buildChartWithTitle(
               context,
+              Icons.calendar_month_outlined,
               AppLocalizations.of(context)!.playTimeByMonthString,
               _buildGameTotalTimeByMonthBarChart(
                 context,
