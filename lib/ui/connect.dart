@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logic/bloc/connection/connection.dart';
 import 'package:logic/service/service.dart' show GameOClockService;
 
+import 'package:game_oclock/ui/common/list_view.dart';
+
 import 'route_constants.dart';
 import 'theme/theme.dart' show AppTheme;
 
@@ -80,47 +82,28 @@ class _ConnectpageBody extends StatelessWidget {
                 );
               }
               if (state is FailedConnection) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.failedConnectionString,
-                        ),
+                return ItemError(
+                  title: AppLocalizations.of(context)!.failedConnectionString,
+                  onRetryTap: () {
+                    BlocProvider.of<ConnectionBloc>(context).add(Connect());
+                  },
+                  additionalWidgets: <Widget>[
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          serverSettingsRoute,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        surfaceTintColor:
+                            AppTheme.defaultThemeSurfaceTintColor(context),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<ConnectionBloc>(context)
-                              .add(Connect());
-                        },
-                        style: ElevatedButton.styleFrom(
-                          surfaceTintColor:
-                              AppTheme.defaultThemeSurfaceTintColor(context),
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.retryString,
-                        ),
+                      child: Text(
+                        AppLocalizations.of(context)!.changeRepositoryString,
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            serverSettingsRoute,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          surfaceTintColor:
-                              AppTheme.defaultThemeSurfaceTintColor(context),
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.changeRepositoryString,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               }
 

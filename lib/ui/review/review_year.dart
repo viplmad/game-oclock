@@ -990,7 +990,7 @@ class _ReviewYearBody extends StatelessWidget {
         final int ratingTotalRated = totalRatedByRating[index + 1] ?? 0;
         return ratingTotalRated;
       }).toList(growable: false),
-      onDomainTap: onRatingTap,
+      onDomainTap: (int domainIndex) => onRatingTap(domainIndex + 1),
     );
   }
 

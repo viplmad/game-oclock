@@ -19,12 +19,7 @@ class ListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 24.0,
-        top: 8.0,
-        bottom: 8.0,
-      ),
+      padding: FieldUtils.tilePadding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -54,12 +49,7 @@ class ListHeaderSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 24.0,
-        top: 10.0,
-        bottom: 10.0,
-      ),
+      padding: FieldUtils.tilePadding,
       child: SizedBox(
         width: FieldUtils.titleTextWidth,
         height: FieldUtils.titleTextHeight,
@@ -129,11 +119,10 @@ class ExtendedFieldListTile extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Padding(
-        padding: EdgeInsets.only(
-          left: 16.0,
-          right: center ? 16.0 : 24.0,
-          top: 8.0,
-          bottom: 8.0,
+        padding: FieldUtils.tilePadding.copyWith(
+          right: center
+              ? FieldUtils.tilePadding.left
+              : FieldUtils.tilePadding.right,
         ),
         child: Column(
           crossAxisAlignment:

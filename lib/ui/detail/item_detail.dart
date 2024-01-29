@@ -159,7 +159,7 @@ abstract class ItemDetailBody<
           body: RefreshIndicator(
             onRefresh: () async => reloadItem(context),
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.only(top: 16.0),
               children: <Widget>[
                 BlocBuilder<K, ItemDetailState>(
                   builder: (BuildContext context, ItemDetailState state) {

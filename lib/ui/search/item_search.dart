@@ -189,7 +189,7 @@ class _ItemSearchBodyState<
             widget.allowNewButton
                 ? Container(
                     color: Colors.grey,
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: _newButton(),
                   )
                 : const SizedBox(),

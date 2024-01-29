@@ -8,6 +8,8 @@ import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 import 'header_text.dart';
 import 'skeleton.dart';
 
+const EdgeInsets _listItemPadding = EdgeInsets.all(4.0);
+
 class ItemListBuilder extends StatelessWidget {
   const ItemListBuilder({
     Key? key,
@@ -41,7 +43,7 @@ class ItemListBuilder extends StatelessWidget {
       itemCount: itemCount,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: _listItemPadding,
           child: ShapeUtils.forceCardRound(
             itemBuilder(context, index),
           ),
@@ -87,7 +89,7 @@ class ItemGridBuilder extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: _listItemPadding,
           child: ShapeUtils.forceCardRound(
             itemBuilder(context, index),
           ),
@@ -121,7 +123,7 @@ class ItemSliverCardSectionBuilder extends StatelessWidget {
           itemCount: itemCount,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: _listItemPadding,
               child: ShapeUtils.forceCardRound(
                 itemBuilder(context, index),
               ),
@@ -160,7 +162,7 @@ class ItemSliverGridSectionBuilder extends StatelessWidget {
           ),
           itemBuilder: (BuildContext context, int index) {
             return Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: _listItemPadding,
               child: ShapeUtils.forceCardRound(
                 itemBuilder(context, index),
               ),

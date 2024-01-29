@@ -293,23 +293,20 @@ class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-      child: ElevatedButton.icon(
-        label: Text(AppLocalizations.of(context)!.linkString(typeName)),
-        icon: const Icon(AppTheme.linkIcon),
-        onPressed: () async {
-          onSearch().then((W? result) {
-            if (result != null) {
-              updateAdd(result);
-            }
-          });
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: AppTheme.defaultThemeTextColor(context),
-          backgroundColor: AppTheme.defaultBackgroundColor(context),
-          surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
-        ),
+    return ElevatedButton.icon(
+      label: Text(AppLocalizations.of(context)!.linkString(typeName)),
+      icon: const Icon(AppTheme.linkIcon),
+      onPressed: () async {
+        onSearch().then((W? result) {
+          if (result != null) {
+            updateAdd(result);
+          }
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        foregroundColor: AppTheme.defaultThemeTextColor(context),
+        backgroundColor: AppTheme.defaultBackgroundColor(context),
+        surfaceTintColor: AppTheme.defaultThemeSurfaceTintColor(context),
       ),
     );
   }
