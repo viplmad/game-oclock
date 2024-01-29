@@ -290,11 +290,11 @@ class _ReviewYearBody extends StatelessWidget {
                 ),
               );
               widgets.add(
-                _buildTotalPlayedByRatingChart(
+                _buildTotalRatedByRatingChart(
                   context,
                   gamesColour,
-                  playedData.totalPlayedByRating,
-                  playedData.totalPlayed,
+                  playedData.totalRatedByRating,
+                  playedData.totalRated,
                   games,
                   finishedGames,
                   playedData.totalTime,
@@ -721,11 +721,11 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalPlayedByRatingChart(
+  Widget _buildTotalRatedByRatingChart(
     BuildContext context,
     Map<String, Color> gamesColour,
-    Map<int, int> totalPlayedByRating,
-    int totalPlayed,
+    Map<int, int> totalRatedByRating,
+    int totalRated,
     List<GamePlayedReviewDTO> games,
     List<GameFinishedReviewDTO> finishedGames,
     Duration totalTime,
@@ -733,16 +733,16 @@ class _ReviewYearBody extends StatelessWidget {
     return _buildChartCard(
       context,
       AppLocalizations.of(context)!.gamesPlayedByRatingString,
-      _buildTotalPlayedByRatingBarChart(
+      _buildTotalRatedByRatingBarChart(
         context,
-        totalPlayedByRating,
-        totalPlayed,
-        (int rating) => _onPlayedRatingTap(
+        totalRatedByRating,
+        totalRated,
+        (int rating) => _onRatedRatingTap(
           context,
           gamesColour,
           rating,
-          totalPlayedByRating[rating] ?? 0,
-          totalPlayed,
+          totalRatedByRating[rating] ?? 0,
+          totalRated,
           games,
           finishedGames,
           totalTime,
@@ -788,11 +788,15 @@ class _ReviewYearBody extends StatelessWidget {
   ) {
     return Card(
       margin: EdgeInsets.zero,
-      child: _buildChartWithTitle(title, chartWidget),
+      child: _buildChartWithTitle(context, title, chartWidget),
     );
   }
 
-  Column _buildChartWithTitle(String title, Widget chartWidget) {
+  Column _buildChartWithTitle(
+    BuildContext context,
+    String title,
+    Widget chartWidget,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -805,7 +809,10 @@ class _ReviewYearBody extends StatelessWidget {
             right: 0.0, // Use blank space to the right
             bottom: 8.0,
           ),
-          child: chartWidget,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height / 2.5,
+            child: chartWidget,
+          ),
         ),
       ],
     );
@@ -890,161 +897,141 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
-  SizedBox _buildTotalPlayedByReleaseYearPieChart(
+  Widget _buildTotalPlayedByReleaseYearPieChart(
     BuildContext context,
     List<Color> colours,
     List<int> releasedTypeTotals,
     int totalPlayed,
     void Function(int type) onTypeTap,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsPieChart<double>(
-        id: 'playedByReleaseYear',
-        domainLabels: GameTheme.releaseYearTypes(context),
-        values: releasedTypeTotals
-            .map(
-              (int totalReleaseYear) => totalReleaseYear / totalPlayed,
-            )
-            .toList(growable: false),
-        colours: colours,
-        valueFormatter: (String domainLabel, _) => domainLabel,
-        onTap: onTypeTap,
-      ),
+    return StatisticsPieChart<double>(
+      id: 'playedByReleaseYear',
+      domainLabels: GameTheme.releaseYearTypes(context),
+      values: releasedTypeTotals
+          .map(
+            (int totalReleaseYear) => totalReleaseYear / totalPlayed,
+          )
+          .toList(growable: false),
+      colours: colours,
+      valueFormatter: (String domainLabel, _) => domainLabel,
+      onTap: onTypeTap,
     );
   }
 
-  SizedBox _buildTotalFinishedByReleaseYearPieChart(
+  Widget _buildTotalFinishedByReleaseYearPieChart(
     BuildContext context,
     List<Color> colours,
     List<int> releasedTypeTotals,
     int totalFinished,
     void Function(int type) onTypeTap,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsPieChart<double>(
-        id: 'finishedByReleaseYear',
-        domainLabels: GameTheme.releaseYearTypes(context),
-        values: releasedTypeTotals
-            .map(
-              (int totalReleaseYear) => totalReleaseYear / totalFinished,
-            )
-            .toList(growable: false),
-        colours: colours,
-        valueFormatter: (String domainLabel, _) => domainLabel,
-        onTap: onTypeTap,
-      ),
+    return StatisticsPieChart<double>(
+      id: 'finishedByReleaseYear',
+      domainLabels: GameTheme.releaseYearTypes(context),
+      values: releasedTypeTotals
+          .map(
+            (int totalReleaseYear) => totalReleaseYear / totalFinished,
+          )
+          .toList(growable: false),
+      colours: colours,
+      valueFormatter: (String domainLabel, _) => domainLabel,
+      onTap: onTypeTap,
     );
   }
 
-  SizedBox _buildTotalTimeByMonthStackedBarChart(
+  Widget _buildTotalTimeByMonthStackedBarChart(
     BuildContext context,
     List<Color> colours,
     List<Map<int, Duration>> gamesTotalTimeGrouped,
     Duration totalTime,
     void Function(int month) onMonthTap,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsStackedHistogram<int>(
-        id: 'playTimeByMonth',
-        domainLabels: AppLocalizationsUtils.monthsAbbr(),
-        stackedValues: gamesTotalTimeGrouped
-            .map(
-              (Map<int, Duration> gameTotalTimeGrouped) =>
-                  // First normalise entries
-                  List<int>.generate(
-                DateTime.monthsPerYear,
-                (int index) {
-                  final Duration gameMonthTotalTime =
-                      gameTotalTimeGrouped[index + 1] ?? const Duration();
-                  return _preparePercentageForChart(
-                    gameMonthTotalTime.inMinutes / totalTime.inMinutes,
-                  );
-                },
-              ),
-            )
-            .toList(growable: false),
-        colours: colours,
-        hideValueLabels: true,
-        measureFormatter: _formatPercentageMeasureForChart,
-        onTap: (int domainIndex) => onMonthTap(domainIndex + 1),
-      ),
+    return StatisticsStackedHistogram<int>(
+      id: 'playTimeByMonth',
+      domainLabels: AppLocalizationsUtils.monthsAbbr(),
+      stackedValues: gamesTotalTimeGrouped
+          .map(
+            (Map<int, Duration> gameTotalTimeGrouped) =>
+                // First normalise entries
+                List<int>.generate(
+              DateTime.monthsPerYear,
+              (int index) {
+                final Duration gameMonthTotalTime =
+                    gameTotalTimeGrouped[index + 1] ?? const Duration();
+                return _preparePercentageForChart(
+                  gameMonthTotalTime.inMinutes / totalTime.inMinutes,
+                );
+              },
+            ),
+          )
+          .toList(growable: false),
+      colours: colours,
+      hideValueLabels: true,
+      measureFormatter: _formatPercentageMeasureForChart,
+      onTap: (int domainIndex) => onMonthTap(domainIndex + 1),
     );
   }
 
-  SizedBox _buildTotalPlayedByRatingBarChart(
+  Widget _buildTotalRatedByRatingBarChart(
     BuildContext context,
-    Map<int, int> totalPlayedByRating,
-    int totalPlayed,
+    Map<int, int> totalRatedByRating,
+    int totalRated,
     void Function(int rating) onRatingTap,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsHistogram<int>(
-        id: 'playedByRating',
-        domainLabels: List<String>.generate(
-          10,
-          (int i) => i == 0
-              ? AppLocalizations.of(context)!.noRatingShortString
-              : '${i + 1}',
-          growable: false,
-        ),
-        // First normalise entries
-        values: List<int>.generate(10, (int rating) {
-          final int ratingTotalPlayed = totalPlayedByRating[rating] ?? 0;
-          return ratingTotalPlayed;
-        }).toList(growable: false),
-        onDomainTap: onRatingTap,
+    return StatisticsHistogram<int>(
+      id: 'ratedByRating',
+      domainLabels: List<String>.generate(
+        10,
+        (int i) => '${i + 1}',
+        growable: false,
       ),
+      // First normalise entries
+      values: List<int>.generate(10, (int index) {
+        final int ratingTotalRated = totalRatedByRating[index + 1] ?? 0;
+        return ratingTotalRated;
+      }).toList(growable: false),
+      onDomainTap: onRatingTap,
     );
   }
 
-  SizedBox _buildTotalFinishedByMonthBarChart(
+  Widget _buildTotalFinishedByMonthBarChart(
     BuildContext context,
     Map<int, int> totalFinishedGrouped,
     int totalFinished,
     void Function(int month) onMonthTap,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsHistogram<int>(
-        id: 'finishedByMonth',
-        domainLabels: AppLocalizationsUtils.monthsAbbr(),
-        // First normalise entries
-        values: List<int>.generate(DateTime.monthsPerYear, (int index) {
-          final int monthTotalFinished = totalFinishedGrouped[index + 1] ?? 0;
-          return monthTotalFinished;
-        }).toList(growable: false),
-        onDomainTap: (int domainIndex) => onMonthTap(domainIndex + 1),
-      ),
+    return StatisticsHistogram<int>(
+      id: 'finishedByMonth',
+      domainLabels: AppLocalizationsUtils.monthsAbbr(),
+      // First normalise entries
+      values: List<int>.generate(DateTime.monthsPerYear, (int index) {
+        final int monthTotalFinished = totalFinishedGrouped[index + 1] ?? 0;
+        return monthTotalFinished;
+      }).toList(growable: false),
+      onDomainTap: (int domainIndex) => onMonthTap(domainIndex + 1),
     );
   }
 
-  SizedBox _buildGameTotalTimeByMonthBarChart(
+  Widget _buildGameTotalTimeByMonthBarChart(
     BuildContext context,
     Color colour,
     Map<int, Duration> gameTotalTimeGrouped,
     Duration totalTime,
   ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: StatisticsHistogram<int>(
-        id: 'gamePlayTimeByMonth',
-        domainLabels: AppLocalizationsUtils.monthsAbbr(),
-        // First normalise entries
-        values: List<int>.generate(DateTime.monthsPerYear, (int index) {
-          final Duration gameMonthTotalTime =
-              gameTotalTimeGrouped[index + 1] ?? const Duration();
-          return gameMonthTotalTime.inMinutes;
-        }).toList(growable: false),
-        colour: colour,
-        valueFormatter: (int minutes) =>
-            _formatDurationValueForChart(context, minutes),
-        measureFormatter: (num? minutes) =>
-            _formatDurationMeasureForChart(context, minutes),
-      ),
+    return StatisticsHistogram<int>(
+      id: 'gamePlayTimeByMonth',
+      domainLabels: AppLocalizationsUtils.monthsAbbr(),
+      // First normalise entries
+      values: List<int>.generate(DateTime.monthsPerYear, (int index) {
+        final Duration gameMonthTotalTime =
+            gameTotalTimeGrouped[index + 1] ?? const Duration();
+        return gameMonthTotalTime.inMinutes;
+      }).toList(growable: false),
+      colour: colour,
+      valueFormatter: (int minutes) =>
+          _formatDurationValueForChart(context, minutes),
+      measureFormatter: (num? minutes) =>
+          _formatDurationMeasureForChart(context, minutes),
     );
   }
 
@@ -1633,28 +1620,28 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
-  void _onPlayedRatingTap(
+  void _onRatedRatingTap(
     BuildContext context,
     Map<String, Color> gamesColour,
     int rating,
-    int ratingTotalPlayed,
-    int totalPlayed,
+    int ratingTotalRated,
+    int totalRated,
     List<GamePlayedReviewDTO> games,
     List<GameFinishedReviewDTO> finishedGames,
     Duration totalTime,
   ) async {
-    final List<GamePlayedReviewDTO> releasedTypeGames = games
+    final List<GamePlayedReviewDTO> ratingGames = games
         .where((GamePlayedReviewDTO game) => game.rating == rating)
         .toList(growable: false);
     // Sort by oldest release year
-    releasedTypeGames.sort(
+    ratingGames.sort(
       (GamePlayedReviewDTO a, GamePlayedReviewDTO b) =>
           a.releaseYear != null && b.releaseYear != null
               ? a.releaseYear!.compareTo(b.releaseYear!)
               : 0,
     );
 
-    if (releasedTypeGames.isEmpty) {
+    if (ratingGames.isEmpty) {
       return;
     }
 
@@ -1667,19 +1654,19 @@ class _ReviewYearBody extends StatelessWidget {
         widgets.add(
           ListTile(
             title: Text(
-              '${AppLocalizations.of(context)!.percentagePlayedString(
+              '${AppLocalizations.of(context)!.percentageRatedString(
                 _formatPercentageForCard(
-                  ratingTotalPlayed / totalPlayed,
+                  ratingTotalRated / totalRated,
                 ),
               )} · ${AppLocalizations.of(context)!.totalRatedString(
-                ratingTotalPlayed,
+                ratingTotalRated,
               )}',
               textAlign: TextAlign.center,
             ),
           ),
         );
         widgets.addAll(
-          releasedTypeGames.map((GamePlayedReviewDTO game) {
+          ratingGames.map((GamePlayedReviewDTO game) {
             final GameFinishedReviewDTO? finishedGame =
                 _getFinishedGame(finishedGames, game.id);
 
@@ -1699,9 +1686,7 @@ class _ReviewYearBody extends StatelessWidget {
               color: Colors.grey,
               child: ListHeader(
                 icon: GameTheme.ratingIcon,
-                text: rating == 0
-                    ? AppLocalizations.of(context)!.noRatingString
-                    : AppLocalizations.of(context)!.ratedWithString('$rating'),
+                text: AppLocalizations.of(context)!.ratedWithString('$rating'),
               ),
             ),
             Expanded(
@@ -1858,6 +1843,7 @@ class _ReviewYearBody extends StatelessWidget {
             _buildGameLongestStreak(context, game),
             const ListDivider(),
             _buildChartWithTitle(
+              context,
               AppLocalizations.of(context)!.playTimeByMonthString,
               _buildGameTotalTimeByMonthBarChart(
                 context,
