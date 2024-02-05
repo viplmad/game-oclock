@@ -133,6 +133,7 @@ class AppLocalizationsUtils {
         return AppLocalizations.of(context)!.notImplementedYetString;
       case ErrorCode.forbidden:
         return AppLocalizations.of(context)!.forbiddenAccessString;
+      case ErrorCode.unauthorized:
       case ErrorCode.authInvalidRequest:
       case ErrorCode.authInvalidGrant:
       case ErrorCode.authUnsupportedGrantType:

@@ -2,7 +2,7 @@ import 'package:game_oclock_client/api.dart'
     show
         ApiClient,
         ApiException,
-        AuthInvalidGrantTokenException,
+        UnauthorizedApiException,
         OAuth,
         TokenResponse;
 
@@ -37,7 +37,7 @@ class GameOClockService {
     try {
       await userService.getCurrentUser();
     } on ApiException catch (e) {
-      if (e is AuthInvalidGrantTokenException) {
+      if (e is UnauthorizedApiException) {
         return loginService.refreshToken(refreshToken);
       }
     }
