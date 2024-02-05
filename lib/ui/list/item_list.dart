@@ -274,7 +274,7 @@ abstract class ItemList<
       },
       child: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<K>(context).add(ReloadItemList());
+          BlocProvider.of<K>(context).add(const ReloadItemList());
         },
         child: BlocBuilder<K, ItemListState>(
           builder: (BuildContext context, ItemListState state) {
@@ -293,7 +293,7 @@ abstract class ItemList<
               return ItemError(
                 title: AppLocalizations.of(context)!.somethingWentWrongString,
                 onRetryTap: () =>
-                    BlocProvider.of<K>(context).add(ReloadItemList()),
+                    BlocProvider.of<K>(context).add(const ReloadItemList()),
               );
             }
 
@@ -447,7 +447,7 @@ abstract class ItemListBody<T extends PrimaryModel,
         arguments: DetailArguments<T>(
           item: item,
           onChange: () {
-            BlocProvider.of<K>(context).add(ReloadItemList());
+            BlocProvider.of<K>(context).add(const ReloadItemList());
           },
         ),
       );

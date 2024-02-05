@@ -71,6 +71,10 @@ abstract class ItemListManagerBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemListManagerState> emit,
   ) {
     emit(ItemListNotLoaded(event.error, event.errorDescription));
+
+    emit(
+      ItemListManagerInitialised(),
+    );
   }
 
   Future<T> _create(AddItem<N> event) {

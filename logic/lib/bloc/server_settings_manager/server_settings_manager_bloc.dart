@@ -62,7 +62,6 @@ class ServerSettingsManagerBloc
   ) {
     emit(ServerSettingsNotLoaded(event.error, event.errorDescription));
 
-    // TODO Check others missing initialised
     emit(
       ServerSettingsManagerInitialised(),
     );

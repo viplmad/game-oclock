@@ -1,9 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:game_oclock_client/api.dart' show PrimaryModel;
-
-import 'package:logic/model/model.dart' show ListStyle;
-
 abstract class ItemListEvent extends Equatable {
   const ItemListEvent();
 
@@ -13,30 +9,17 @@ abstract class ItemListEvent extends Equatable {
 
 class LoadItemList extends ItemListEvent {}
 
-class ReloadItemList extends ItemListEvent {}
+class ReloadItemList extends ItemListEvent {
+  const ReloadItemList({this.silent = false});
 
-class UpdateItemList<T extends PrimaryModel> extends ItemListEvent {
-  const UpdateItemList(
-    this.items,
-    this.viewIndex,
-    this.page,
-    this.style,
-  );
-
-  final List<T> items;
-  final int viewIndex;
-  final int page;
-  final ListStyle style;
+  final bool silent;
 
   @override
-  List<Object> get props => <Object>[items, viewIndex, page, style];
+  List<Object> get props => <Object>[silent];
 
   @override
-  String toString() => 'UpdateItemList { '
-      'items: $items, '
-      'viewIndex: $viewIndex, '
-      'page: $page, '
-      'style: $style'
+  String toString() => 'ReloadItemList { '
+      'silent: $silent'
       ' }';
 }
 

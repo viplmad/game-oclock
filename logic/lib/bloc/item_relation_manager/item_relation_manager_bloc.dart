@@ -70,6 +70,10 @@ abstract class ItemRelationManagerBloc<W extends PrimaryModel, N extends Object>
     Emitter<ItemRelationManagerState> emit,
   ) {
     emit(ItemRelationNotLoaded(event.error, event.errorDescription));
+
+    emit(
+      ItemRelationManagerInitialised(),
+    );
   }
 
   @protected

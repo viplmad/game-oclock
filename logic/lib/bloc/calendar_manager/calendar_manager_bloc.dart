@@ -13,5 +13,9 @@ class CalendarManagerBloc
     Emitter<CalendarManagerState> emit,
   ) {
     emit(CalendarNotLoaded(event.error, event.errorDescription));
+
+    emit(
+      CalendarManagerInitialised(),
+    );
   }
 }

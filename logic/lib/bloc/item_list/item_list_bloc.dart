@@ -20,7 +20,6 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
   }) : super(ItemListLoading()) {
     on<LoadItemList>(_mapLoadToState);
     on<ReloadItemList>(_mapReloadToState);
-    on<UpdateItemList<T>>(_mapUpdateListToState);
     on<UpdateView>(_mapUpdateViewToState);
     on<UpdatePage>(_mapUpdatePageToState);
     on<UpdateStyle>(_mapUpdateStyleToState);
@@ -50,9 +49,11 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
       final int viewIndex = (state as ItemListLoaded<T>).viewIndex;
       final ListStyle style = (state as ItemListLoaded<T>).style;
 
-      emit(
-        ItemListLoading(),
-      );
+      if (!event.silent) {
+        emit(
+          ItemListLoading(),
+        );
+      }
 
       try {
         final List<T> items = await getAllWithView(viewIndex);
@@ -88,20 +89,6 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
     } catch (e) {
       _handleError(e, emit);
     }
-  }
-
-  void _mapUpdateListToState(
-    UpdateItemList<T> event,
-    Emitter<ItemListState> emit,
-  ) {
-    emit(
-      ItemListLoaded<T>(
-        event.items,
-        event.viewIndex,
-        event.page,
-        event.style,
-      ),
-    );
   }
 
   void _mapUpdateViewToState(
@@ -198,11 +185,11 @@ abstract class ItemListBloc<T extends PrimaryModel, N extends Object,
   }
 
   void _mapAddedToEvent(ItemAdded<T> managerState) {
-    add(ReloadItemList());
+    add(const ReloadItemList(silent: true));
   }
 
   void _mapDeletedToEvent(ItemDeleted<T> managerState) {
-    add(ReloadItemList());
+    add(const ReloadItemList(silent: true));
   }
 
   @override

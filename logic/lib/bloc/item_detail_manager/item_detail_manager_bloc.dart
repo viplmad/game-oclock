@@ -133,6 +133,10 @@ abstract class ItemDetailManagerBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemDetailManagerState> emit,
   ) {
     emit(ItemDetailNotLoaded(event.error, event.errorDescription));
+
+    emit(
+      ItemDetailManagerInitialised(),
+    );
   }
 
   void _handleError(Object e, Emitter<ItemDetailManagerState> emit) {

@@ -12,5 +12,9 @@ class ReviewManagerBloc extends Bloc<ReviewManagerEvent, ReviewManagerState> {
     Emitter<ReviewManagerState> emit,
   ) {
     emit(ReviewNotLoaded(event.error, event.errorDescription));
+
+    emit(
+      ReviewManagerInitialised(),
+    );
   }
 }
