@@ -111,7 +111,7 @@ class _YearPicker extends StatefulWidget {
     required this.initialDate,
     required this.selectedDate,
     required this.onChanged,
-  })  : assert(!firstDate.isAfter(lastDate));
+  }) : assert(!firstDate.isAfter(lastDate));
 
   /// The earliest date the user is permitted to pick.
   final DateTime firstDate;

@@ -61,7 +61,8 @@ class GameWishlistedList extends StatelessWidget {
 
 class _GameWishlistedAppBar
     extends ItemAppBar<GameDTO, GameWishlistedListBloc> {
-  const _GameWishlistedAppBar() : super(
+  const _GameWishlistedAppBar()
+      : super(
           themeColor: GameTheme.primaryColour,
           gridAllowed: GameTheme.hasImage,
           searchRouteName: gameWishlistedSearchRoute,
@@ -82,7 +83,8 @@ class _GameWishlistedAppBar
 
 class _GameWishlistedFAB
     extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
-  const _GameWishlistedFAB() : super(
+  const _GameWishlistedFAB()
+      : super(
           themeColor: GameTheme.secondaryColour,
         );
 
@@ -96,7 +98,8 @@ class _GameWishlistedFAB
 
 class _GameWishlistedList
     extends ItemList<GameDTO, GameWishlistedListBloc, GameListManagerBloc> {
-  const _GameWishlistedList() : super(
+  const _GameWishlistedList()
+      : super(
           detailRouteName: gameDetailRoute,
         );
 

@@ -54,7 +54,8 @@ class TagList extends StatelessWidget {
 }
 
 class _TagAppBar extends ItemAppBar<TagDTO, TagListBloc> {
-  const _TagAppBar() : super(
+  const _TagAppBar()
+      : super(
           themeColor: TagTheme.primaryColour,
           gridAllowed: TagTheme.hasImage,
           searchRouteName: tagSearchRoute,
@@ -74,7 +75,8 @@ class _TagAppBar extends ItemAppBar<TagDTO, TagListBloc> {
 }
 
 class _TagFAB extends ItemFAB<TagDTO, NewTagDTO, TagListManagerBloc> {
-  const _TagFAB() : super(
+  const _TagFAB()
+      : super(
           themeColor: TagTheme.secondaryColour,
         );
 
@@ -87,7 +89,8 @@ class _TagFAB extends ItemFAB<TagDTO, NewTagDTO, TagListManagerBloc> {
 }
 
 class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
-  const _TagList() : super(
+  const _TagList()
+      : super(
           detailRouteName: tagDetailRoute,
         );
 
