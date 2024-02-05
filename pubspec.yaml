@@ -1,6 +1,6 @@
 name: game_oclock
 description: A simple game collection manager.
-version: 3.3.3+404
+version: 3.3.4+408
 publish_to: none
 
 environment:
