@@ -262,7 +262,7 @@ class _RelationList extends StatelessWidget {
                 text: headerText,
                 trailingWidget: IconButton(
                   icon: const Icon(Icons.refresh),
-                  tooltip: AppLocalizations.of(context)!.retryString,
+                  tooltip: AppLocalizations.of(context)!.reloadString,
                   onPressed: reload,
                 ),
               ),

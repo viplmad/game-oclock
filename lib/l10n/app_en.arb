@@ -4,6 +4,7 @@
   "connectString": "Connect",
   "failedConnectionString": "Failed connection",
   "retryString": "Retry",
+  "reloadString": "Reload",
   "changeRepositoryString": "Change connection settings",
   "changeStartGameViewString": "Change start Game View",
   "startGameViewString": "Start Game View",

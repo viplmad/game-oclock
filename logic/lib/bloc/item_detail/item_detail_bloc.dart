@@ -44,9 +44,11 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
     Emitter<ItemDetailState> emit,
   ) async {
     if (state is ItemLoaded<T>) {
-      emit(
-        ItemLoading(),
-      );
+      if (!event.silent) {
+        emit(
+          ItemLoading(),
+        );
+      }
 
       await _mapAnyLoadToState(emit);
     } else if (state is! ItemLoading) {
@@ -85,11 +87,11 @@ abstract class ItemDetailBloc<T extends PrimaryModel, N extends Object,
   }
 
   void _mapFieldUpdatedToEvent(ItemFieldUpdated event) {
-    add(ReloadItem());
+    add(const ReloadItem(silent: true));
   }
 
   void _mapImageUpdatedToEvent(ItemImageUpdated event) {
-    add(ReloadItem());
+    add(const ReloadItem(silent: true));
   }
 
   @override

@@ -9,4 +9,16 @@ abstract class ItemDetailEvent extends Equatable {
 
 class LoadItem extends ItemDetailEvent {}
 
-class ReloadItem extends ItemDetailEvent {}
+class ReloadItem extends ItemDetailEvent {
+  const ReloadItem({this.silent = false});
+
+  final bool silent;
+
+  @override
+  List<Object> get props => <Object>[silent];
+
+  @override
+  String toString() => 'ReloadItem { '
+      'silent: $silent'
+      ' }';
+}

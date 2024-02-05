@@ -4,6 +4,7 @@
   "connectString": "Conectar",
   "failedConnectionString": "Conexión fallida",
   "retryString": "Reintentar",
+  "reloadString": "Recargar",
   "changeRepositoryString": "Cambiar ajustes de conexión",
   "changeStartGameViewString": "Cambiar vista de juegos inicial",
   "startGameViewString": "Vista de juegos inicial",

@@ -193,7 +193,7 @@ abstract class ItemDetailBody<
   }
 
   void reloadItem(BuildContext context) {
-    BlocProvider.of<K>(context).add(ReloadItem());
+    BlocProvider.of<K>(context).add(const ReloadItem());
     reloadExtraFields(context);
   }
 
