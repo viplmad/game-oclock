@@ -19,11 +19,11 @@ import '../theme/theme.dart' show GameTheme;
 
 class GameTotalPlayTimeField extends StatelessWidget {
   const GameTotalPlayTimeField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.relationTypeName,
     this.skeletonOrder = 0,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final String relationTypeName;

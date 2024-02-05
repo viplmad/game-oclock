@@ -27,10 +27,10 @@ class SkeletonUtils {
 
 class SkeletonItemCard extends StatefulWidget {
   const SkeletonItemCard({
-    Key? key,
+    super.key,
     required this.hasImage,
     this.order = 0,
-  }) : super(key: key);
+  });
 
   final bool hasImage;
   final int order;
@@ -117,12 +117,12 @@ class _SkeletonItemCardState extends State<SkeletonItemCard>
 
 class Skeleton extends StatefulWidget {
   const Skeleton({
-    Key? key,
+    super.key,
     this.width,
     this.height,
     this.order = 0,
     this.omitRounding = false,
-  }) : super(key: key);
+  });
 
   final double? width;
   final double? height;

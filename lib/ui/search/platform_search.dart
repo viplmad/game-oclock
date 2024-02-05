@@ -15,10 +15,9 @@ import 'search.dart';
 class PlatformSearch extends ItemSearch<PlatformDTO, NewPlatformDTO,
     PlatformSearchBloc, PlatformListManagerBloc> {
   const PlatformSearch({
-    Key? key,
+    super.key,
     required super.onTapReturn,
   }) : super(
-          key: key,
           detailRouteName: platformDetailRoute,
         );
 
@@ -56,10 +55,9 @@ class PlatformSearch extends ItemSearch<PlatformDTO, NewPlatformDTO,
 class _PlatformSearchBody extends ItemSearchBody<PlatformDTO, NewPlatformDTO,
     PlatformSearchBloc, PlatformListManagerBloc> {
   const _PlatformSearchBody({
-    Key? key,
     required super.onTap,
     super.allowNewButton = false,
-  }) : super(key: key);
+  });
 
   @override
   String typeName(BuildContext context) =>

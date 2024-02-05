@@ -27,10 +27,10 @@ import 'calendar_utils.dart';
 
 class SingleGameCalendar extends StatelessWidget {
   const SingleGameCalendar({
-    Key? key,
+    super.key,
     required this.itemId,
     this.onChange,
-  }) : super(key: key);
+  });
 
   final String itemId;
   final void Function()? onChange;
@@ -254,9 +254,8 @@ class SingleGameCalendar extends StatelessWidget {
 // ignore: must_be_immutable
 class _SingleGameCalendarBody extends StatelessWidget {
   _SingleGameCalendarBody({
-    Key? key,
     required this.onChange,
-  }) : super(key: key);
+  });
 
   final void Function()? onChange;
 

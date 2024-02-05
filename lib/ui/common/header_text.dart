@@ -6,11 +6,11 @@ import 'skeleton.dart';
 
 class ListHeader extends StatelessWidget {
   const ListHeader({
-    Key? key,
+    super.key,
     this.icon,
     required this.text,
     this.trailingWidget,
-  }) : super(key: key);
+  });
 
   final IconData? icon;
   final String text;
@@ -43,8 +43,8 @@ class ListHeader extends StatelessWidget {
 
 class ListHeaderSkeleton extends StatelessWidget {
   const ListHeaderSkeleton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +62,8 @@ class ListHeaderSkeleton extends StatelessWidget {
 class HeaderText extends StatelessWidget {
   const HeaderText(
     this.data, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String data;
 
@@ -81,8 +81,8 @@ class HeaderText extends StatelessWidget {
 class BodyText extends StatelessWidget {
   const BodyText(
     this.data, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String data;
 
@@ -99,13 +99,13 @@ class BodyText extends StatelessWidget {
 
 class ExtendedFieldListTile extends StatelessWidget {
   const ExtendedFieldListTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     this.center = false,
     this.onTap,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget subtitle;
@@ -145,13 +145,13 @@ class ExtendedFieldListTile extends StatelessWidget {
 
 class FieldListTile extends StatelessWidget {
   const FieldListTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     this.trailing,
     this.onTap,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget subtitle;

@@ -12,11 +12,10 @@ import 'relation.dart';
 class TagGameRelationList extends ItemRelationList<GameDTO, TagGameRelationBloc,
     TagGameRelationManagerBloc> {
   const TagGameRelationList({
-    Key? key,
+    super.key,
     required super.relationName,
     required super.relationTypeName,
   }) : super(
-          key: key,
           limitHeight: false,
           relationIcon: GameTheme.primaryIcon,
           hasImage: GameTheme.hasImage,

@@ -13,8 +13,8 @@ import 'theme/theme.dart' show AppTheme;
 
 class Connectpage extends StatelessWidget {
   const Connectpage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,7 @@ class Connectpage extends StatelessWidget {
 }
 
 class _ConnectpageBody extends StatelessWidget {
-  const _ConnectpageBody({
-    Key? key,
-  }) : super(key: key);
+  const _ConnectpageBody();
 
   @override
   Widget build(BuildContext context) {

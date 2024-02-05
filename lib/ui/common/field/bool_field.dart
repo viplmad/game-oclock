@@ -4,12 +4,12 @@ import '../header_text.dart';
 
 class BoolField extends StatelessWidget {
   const BoolField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     this.editable = true,
     this.update,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final bool? value;

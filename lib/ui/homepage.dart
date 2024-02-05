@@ -26,8 +26,8 @@ import 'route_constants.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +105,7 @@ class Homepage extends StatelessWidget {
 }
 
 class _HomepageBar extends StatelessWidget {
-  const _HomepageBar({
-    Key? key,
-  }) : super(key: key);
+  const _HomepageBar();
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +158,8 @@ class _HomepageBar extends StatelessWidget {
 
 class _HomepageAppBar extends StatelessWidget implements PreferredSizeWidget {
   const _HomepageAppBar({
-    Key? key,
     required this.tab,
-  }) : super(key: key);
+  });
 
   final MainTab tab;
 
@@ -183,9 +180,7 @@ class _HomepageAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _HomepageDrawer extends StatelessWidget {
-  const _HomepageDrawer({
-    Key? key,
-  }) : super(key: key);
+  const _HomepageDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -363,9 +358,8 @@ class _HomepageDrawer extends StatelessWidget {
 
 class _HomepageFAB extends StatelessWidget {
   const _HomepageFAB({
-    Key? key,
     required this.tab,
-  }) : super(key: key);
+  });
 
   final MainTab tab;
 
@@ -384,9 +378,8 @@ class _HomepageFAB extends StatelessWidget {
 
 class _HomepageBody extends StatelessWidget {
   const _HomepageBody({
-    Key? key,
     required this.tab,
-  }) : super(key: key);
+  });
 
   final MainTab tab;
 

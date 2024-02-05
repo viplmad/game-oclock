@@ -20,10 +20,10 @@ import 'finish_date_list.dart';
 class DLCDetail
     extends ItemDetail<DLCDTO, NewDLCDTO, DLCDetailBloc, DLCDetailManagerBloc> {
   const DLCDetail({
-    Key? key,
+    super.key,
     required super.item,
     super.onChange,
-  }) : super(key: key);
+  });
 
   @override
   DLCDetailBloc detailBlocBuilder(
@@ -128,10 +128,8 @@ class DLCDetail
 class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
     DLCDetailManagerBloc> {
   _DLCDetailBody({
-    Key? key,
     super.onChange,
   }) : super(
-          key: key,
           hasImage: DLCTheme.hasImage,
         );
 
@@ -212,9 +210,9 @@ class _DLCDetailBody extends ItemDetailBody<DLCDTO, NewDLCDTO, DLCDetailBloc,
 class DLCFinishList
     extends FinishList<DLCFinishRelationBloc, DLCFinishRelationManagerBloc> {
   const DLCFinishList({
-    Key? key,
+    super.key,
     required super.fieldName,
     required super.relationTypeName,
     super.skeletonOrder,
-  }) : super(key: key);
+  });
 }

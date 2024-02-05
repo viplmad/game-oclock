@@ -16,11 +16,10 @@ import 'relation.dart';
 class PlatformGameRelationList extends ItemRelationList<GameAvailableDTO,
     PlatformGameRelationBloc, PlatformGameRelationManagerBloc> {
   const PlatformGameRelationList({
-    Key? key,
+    super.key,
     required super.relationName,
     required super.relationTypeName,
   }) : super(
-          key: key,
           relationIcon: GameTheme.primaryIcon,
           hasImage: GameTheme.hasImage,
           detailRouteName: gameDetailRoute,
@@ -62,11 +61,10 @@ class PlatformGameRelationList extends ItemRelationList<GameAvailableDTO,
 class PlatformDLCRelationList extends ItemRelationList<DLCAvailableDTO,
     PlatformDLCRelationBloc, PlatformDLCRelationManagerBloc> {
   const PlatformDLCRelationList({
-    Key? key,
+    super.key,
     required super.relationName,
     required super.relationTypeName,
   }) : super(
-          key: key,
           relationIcon: DLCTheme.primaryIcon,
           hasImage: DLCTheme.hasImage,
           detailRouteName: dlcDetailRoute,

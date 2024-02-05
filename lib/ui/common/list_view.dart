@@ -12,13 +12,13 @@ const EdgeInsets _listItemPadding = EdgeInsets.all(4.0);
 
 class ItemListBuilder extends StatelessWidget {
   const ItemListBuilder({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.itemBuilder,
     this.emptyTitle = '',
     this.controller,
     this.canBeDragged = false,
-  }) : super(key: key);
+  });
 
   final int itemCount;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -55,13 +55,13 @@ class ItemListBuilder extends StatelessWidget {
 
 class ItemGridBuilder extends StatelessWidget {
   const ItemGridBuilder({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.itemBuilder,
     this.emptyTitle = '',
     this.controller,
     this.canBeDragged = false,
-  }) : super(key: key);
+  });
 
   final int itemCount;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -101,11 +101,11 @@ class ItemGridBuilder extends StatelessWidget {
 
 class ItemSliverCardSectionBuilder extends StatelessWidget {
   const ItemSliverCardSectionBuilder({
-    Key? key,
+    super.key,
     required this.title,
     required this.itemCount,
     required this.itemBuilder,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -137,11 +137,11 @@ class ItemSliverCardSectionBuilder extends StatelessWidget {
 
 class ItemSliverGridSectionBuilder extends StatelessWidget {
   const ItemSliverGridSectionBuilder({
-    Key? key,
+    super.key,
     required this.title,
     required this.itemCount,
     required this.itemBuilder,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -206,11 +206,11 @@ class _ItemSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 class ItemError extends StatelessWidget {
   const ItemError({
-    Key? key,
+    super.key,
     required this.title,
     required this.onRetryTap,
     this.additionalWidgets = const <Widget>[],
-  }) : super(key: key);
+  });
 
   final String title;
   final void Function() onRetryTap;
@@ -245,10 +245,10 @@ class ItemError extends StatelessWidget {
 
 class ListEmpty extends StatelessWidget {
   const ListEmpty({
-    Key? key,
+    super.key,
     required this.emptyTitle,
     this.canBeDragged = false,
-  }) : super(key: key);
+  });
 
   final String emptyTitle;
   final bool canBeDragged;
@@ -284,11 +284,11 @@ class ListDivider extends StatelessWidget {
 
 class SkeletonItemList extends StatelessWidget {
   const SkeletonItemList({
-    Key? key,
+    super.key,
     this.single = false,
     this.canBeDragged = false,
     required this.itemHasImage,
-  }) : super(key: key);
+  });
 
   final bool single;
   final bool canBeDragged;

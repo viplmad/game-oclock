@@ -19,10 +19,10 @@ import 'item_detail.dart';
 class GameTagDetail
     extends ItemDetail<TagDTO, NewTagDTO, TagDetailBloc, TagDetailManagerBloc> {
   const GameTagDetail({
-    Key? key,
+    super.key,
     required super.item,
     super.onChange,
-  }) : super(key: key);
+  });
 
   @override
   TagDetailBloc detailBlocBuilder(
@@ -88,11 +88,9 @@ class GameTagDetail
 class _GameTagDetailBody extends ItemDetailBody<TagDTO, NewTagDTO,
     TagDetailBloc, TagDetailManagerBloc> {
   _GameTagDetailBody({
-    Key? key,
     required this.itemId,
     super.onChange,
   }) : super(
-          key: key,
           hasImage: TagTheme.hasImage,
         );
 

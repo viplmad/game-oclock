@@ -15,9 +15,8 @@ import 'list.dart';
 
 class DLCAppBar extends ItemAppBar<DLCDTO, DLCListBloc> {
   const DLCAppBar({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: DLCTheme.primaryColour,
           gridAllowed: DLCTheme.hasImage,
           searchRouteName: dlcSearchRoute,
@@ -38,9 +37,8 @@ class DLCAppBar extends ItemAppBar<DLCDTO, DLCListBloc> {
 
 class DLCFAB extends ItemFAB<DLCDTO, NewDLCDTO, DLCListManagerBloc> {
   const DLCFAB({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: DLCTheme.secondaryColour,
         );
 
@@ -54,9 +52,8 @@ class DLCFAB extends ItemFAB<DLCDTO, NewDLCDTO, DLCListManagerBloc> {
 
 class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
   const DLCList({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           detailRouteName: dlcDetailRoute,
         );
 
@@ -85,14 +82,12 @@ class DLCList extends ItemList<DLCDTO, DLCListBloc, DLCListManagerBloc> {
 
 class _DLCListBody extends ItemListBody<DLCDTO, DLCListBloc> {
   const _DLCListBody({
-    Key? key,
     required super.items,
     required super.viewIndex,
     required super.onDelete,
     required super.style,
     required super.scrollController,
   }) : super(
-          key: key,
           detailRouteName: dlcDetailRoute,
         );
 

@@ -4,13 +4,13 @@ import 'generic_field.dart';
 
 class TimeField extends StatelessWidget {
   const TimeField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     this.editable = true,
     this.onLongPress,
     this.update,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final TimeOfDay? value;

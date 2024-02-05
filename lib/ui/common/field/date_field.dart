@@ -7,7 +7,7 @@ import 'generic_field.dart';
 
 class DateField extends StatelessWidget {
   const DateField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     this.editable = true,
@@ -15,7 +15,7 @@ class DateField extends StatelessWidget {
     this.lastDate,
     this.onLongPress,
     this.update,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final DateTime? value;

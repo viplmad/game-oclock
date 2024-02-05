@@ -21,11 +21,11 @@ class FinishList<K extends Bloc<ItemRelationEvent, ItemRelationState>,
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
     extends StatelessWidget {
   const FinishList({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.relationTypeName,
     this.skeletonOrder = 0,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final String relationTypeName;

@@ -20,10 +20,10 @@ import 'item_detail.dart';
 class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
     PlatformDetailBloc, PlatformDetailManagerBloc> {
   const PlatformDetail({
-    Key? key,
+    super.key,
     required super.item,
     super.onChange,
-  }) : super(key: key);
+  });
 
   @override
   PlatformDetailBloc detailBlocBuilder(
@@ -108,10 +108,8 @@ class PlatformDetail extends ItemDetail<PlatformDTO, NewPlatformDTO,
 class _PlatformDetailBody extends ItemDetailBody<PlatformDTO, NewPlatformDTO,
     PlatformDetailBloc, PlatformDetailManagerBloc> {
   _PlatformDetailBody({
-    Key? key,
     super.onChange,
   }) : super(
-          key: key,
           hasImage: PlatformTheme.hasImage,
         );
 

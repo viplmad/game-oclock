@@ -10,12 +10,12 @@ import '../skeleton.dart';
 
 class RatingField extends StatelessWidget {
   const RatingField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     this.editable = true,
     this.update,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final int? value;
@@ -50,10 +50,10 @@ class RatingField extends StatelessWidget {
 
 class SkeletonRatingField extends StatelessWidget {
   const SkeletonRatingField({
-    Key? key,
+    super.key,
     required this.fieldName,
     this.order = 0,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final int order;

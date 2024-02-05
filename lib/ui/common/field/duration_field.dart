@@ -8,12 +8,12 @@ import 'generic_field.dart';
 
 class DurationField extends StatelessWidget {
   const DurationField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     this.editable = true,
     this.update,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final Duration? value;

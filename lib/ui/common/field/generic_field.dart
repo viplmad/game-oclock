@@ -7,7 +7,7 @@ import '../skeleton.dart';
 
 class GenericField<K> extends StatelessWidget {
   const GenericField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     required this.shownValue,
@@ -16,7 +16,7 @@ class GenericField<K> extends StatelessWidget {
     this.onLongPress,
     this.update,
     this.extended = false,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final K? value;
@@ -58,11 +58,11 @@ class GenericField<K> extends StatelessWidget {
 
 class SkeletonGenericField extends StatelessWidget {
   const SkeletonGenericField({
-    Key? key,
+    super.key,
     this.fieldName,
     this.extended = false,
     this.order = 0,
-  }) : super(key: key);
+  });
 
   final String? fieldName;
   final bool extended;

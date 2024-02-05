@@ -24,7 +24,7 @@ abstract class ItemRelationList<
         S extends Bloc<ItemRelationManagerEvent, ItemRelationManagerState>>
     extends StatelessWidget {
   const ItemRelationList({
-    Key? key,
+    super.key,
     required this.relationIcon,
     required this.relationName,
     required this.relationTypeName,
@@ -33,7 +33,7 @@ abstract class ItemRelationList<
     required this.hasImage,
     required this.detailRouteName,
     required this.searchRouteName,
-  }) : super(key: key);
+  });
 
   final IconData relationIcon;
   final String relationName;
@@ -229,13 +229,12 @@ abstract class ItemRelationList<
 
 class _RelationList extends StatelessWidget {
   const _RelationList({
-    Key? key,
     required this.headerIcon,
     required this.headerText,
     required this.relationList,
     this.linkWidget,
     required this.reload,
-  }) : super(key: key);
+  });
 
   final IconData headerIcon;
   final String headerText;
@@ -281,11 +280,11 @@ class _RelationList extends StatelessWidget {
 
 class _LinkButton<W extends PrimaryModel> extends StatelessWidget {
   const _LinkButton({
-    Key? key,
+    super.key,
     required this.typeName,
     required this.onSearch,
     required this.updateAdd,
-  }) : super(key: key);
+  });
 
   final String typeName;
   final Future<W?> Function() onSearch;

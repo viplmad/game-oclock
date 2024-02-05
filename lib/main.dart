@@ -15,8 +15,8 @@ void main() => runApp(const GameOClock());
 
 class GameOClock extends StatelessWidget {
   const GameOClock({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -23,10 +23,10 @@ abstract class ItemSearch<
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
   const ItemSearch({
-    Key? key,
+    super.key,
     required this.onTapReturn,
     this.detailRouteName = '',
-  }) : super(key: key);
+  });
 
   final bool onTapReturn;
   final String detailRouteName;
@@ -91,10 +91,10 @@ abstract class ItemSearchBody<
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatefulWidget {
   const ItemSearchBody({
-    Key? key,
+    super.key,
     required this.onTap,
     this.allowNewButton = false,
-  }) : super(key: key);
+  });
 
   final void Function()? Function(BuildContext, T) onTap;
   final bool allowNewButton;

@@ -21,8 +21,8 @@ import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 class GameLogAssistant extends StatelessWidget {
   const GameLogAssistant({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +89,7 @@ class GameLogAssistant extends StatelessWidget {
 }
 
 class _GameLogAssistantBody extends StatelessWidget {
-  const _GameLogAssistantBody({
-    Key? key,
-  }) : super(key: key);
+  const _GameLogAssistantBody();
 
   @override
   Widget build(BuildContext context) {

@@ -22,8 +22,8 @@ import 'list.dart';
 
 class GameWishlistedList extends StatelessWidget {
   const GameWishlistedList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +61,7 @@ class GameWishlistedList extends StatelessWidget {
 
 class _GameWishlistedAppBar
     extends ItemAppBar<GameDTO, GameWishlistedListBloc> {
-  const _GameWishlistedAppBar({
-    Key? key,
-  }) : super(
-          key: key,
+  const _GameWishlistedAppBar() : super(
           themeColor: GameTheme.primaryColour,
           gridAllowed: GameTheme.hasImage,
           searchRouteName: gameWishlistedSearchRoute,
@@ -85,10 +82,7 @@ class _GameWishlistedAppBar
 
 class _GameWishlistedFAB
     extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
-  const _GameWishlistedFAB({
-    Key? key,
-  }) : super(
-          key: key,
+  const _GameWishlistedFAB() : super(
           themeColor: GameTheme.secondaryColour,
         );
 
@@ -102,10 +96,7 @@ class _GameWishlistedFAB
 
 class _GameWishlistedList
     extends ItemList<GameDTO, GameWishlistedListBloc, GameListManagerBloc> {
-  const _GameWishlistedList({
-    Key? key,
-  }) : super(
-          key: key,
+  const _GameWishlistedList() : super(
           detailRouteName: gameDetailRoute,
         );
 
@@ -134,14 +125,12 @@ class _GameWishlistedList
 class _GameWishlistedListBody
     extends ItemListBody<GameDTO, GameWishlistedListBloc> {
   const _GameWishlistedListBody({
-    Key? key,
     required super.items,
     required super.viewIndex,
     required super.onDelete,
     required super.style,
     required super.scrollController,
   }) : super(
-          key: key,
           detailRouteName: gameDetailRoute,
         );
 
@@ -210,13 +199,13 @@ class _GameWishlistedListBody
 
 class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
   const ItemSliverCardSection({
-    Key? key,
+    super.key,
     required this.title,
     required this.items,
     required this.itemBuilder,
     required this.onDismiss,
     required this.confirmDelete,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<T> items;
@@ -255,13 +244,13 @@ class ItemSliverCardSection<T extends PrimaryModel> extends StatelessWidget {
 
 class ItemSliverGridSection<T extends PrimaryModel> extends StatelessWidget {
   const ItemSliverGridSection({
-    Key? key,
+    super.key,
     required this.title,
     required this.items,
     required this.itemBuilder,
     required this.onDismiss,
     required this.confirmDelete,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<T> items;

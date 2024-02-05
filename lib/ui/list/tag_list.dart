@@ -16,8 +16,8 @@ import 'list.dart';
 
 class TagList extends StatelessWidget {
   const TagList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,7 @@ class TagList extends StatelessWidget {
 }
 
 class _TagAppBar extends ItemAppBar<TagDTO, TagListBloc> {
-  const _TagAppBar({
-    Key? key,
-  }) : super(
-          key: key,
+  const _TagAppBar() : super(
           themeColor: TagTheme.primaryColour,
           gridAllowed: TagTheme.hasImage,
           searchRouteName: tagSearchRoute,
@@ -77,10 +74,7 @@ class _TagAppBar extends ItemAppBar<TagDTO, TagListBloc> {
 }
 
 class _TagFAB extends ItemFAB<TagDTO, NewTagDTO, TagListManagerBloc> {
-  const _TagFAB({
-    Key? key,
-  }) : super(
-          key: key,
+  const _TagFAB() : super(
           themeColor: TagTheme.secondaryColour,
         );
 
@@ -93,10 +87,7 @@ class _TagFAB extends ItemFAB<TagDTO, NewTagDTO, TagListManagerBloc> {
 }
 
 class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
-  const _TagList({
-    Key? key,
-  }) : super(
-          key: key,
+  const _TagList() : super(
           detailRouteName: tagDetailRoute,
         );
 
@@ -124,14 +115,12 @@ class _TagList extends ItemList<TagDTO, TagListBloc, TagListManagerBloc> {
 
 class _GameTagListBody extends ItemListBody<TagDTO, TagListBloc> {
   const _GameTagListBody({
-    Key? key,
     required super.items,
     required super.viewIndex,
     required super.onDelete,
     required super.style,
     required super.scrollController,
   }) : super(
-          key: key,
           detailRouteName: tagDetailRoute,
         );
 

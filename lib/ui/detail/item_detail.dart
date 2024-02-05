@@ -28,10 +28,10 @@ abstract class ItemDetail<
         S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>>
     extends StatelessWidget {
   const ItemDetail({
-    Key? key,
+    super.key,
     required this.item,
     this.onChange,
-  }) : super(key: key);
+  });
 
   final PrimaryModel item;
   final void Function()? onChange;
@@ -82,10 +82,10 @@ abstract class ItemDetailBody<
         S extends Bloc<ItemDetailManagerEvent, ItemDetailManagerState>>
     extends StatelessWidget {
   ItemDetailBody({
-    Key? key,
+    super.key,
     required this.onChange,
     required this.hasImage,
-  }) : super(key: key);
+  });
 
   final void Function()? onChange;
   final bool hasImage;

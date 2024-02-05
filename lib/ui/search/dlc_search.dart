@@ -15,10 +15,9 @@ import 'search.dart';
 class DLCSearch
     extends ItemSearch<DLCDTO, NewDLCDTO, DLCSearchBloc, DLCListManagerBloc> {
   const DLCSearch({
-    Key? key,
+    super.key,
     required super.onTapReturn,
   }) : super(
-          key: key,
           detailRouteName: dlcDetailRoute,
         );
 
@@ -56,10 +55,9 @@ class DLCSearch
 class _DLCSearchBody extends ItemSearchBody<DLCDTO, NewDLCDTO, DLCSearchBloc,
     DLCListManagerBloc> {
   const _DLCSearchBody({
-    Key? key,
     required super.onTap,
     super.allowNewButton = false,
-  }) : super(key: key);
+  });
 
   @override
   String typeName(BuildContext context) =>

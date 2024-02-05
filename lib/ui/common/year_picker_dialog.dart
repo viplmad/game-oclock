@@ -7,9 +7,9 @@ import 'package:game_oclock/ui/utils/shape_utils.dart';
 
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({
-    Key? key,
+    super.key,
     this.year,
-  }) : super(key: key);
+  });
 
   final int? year;
 
@@ -106,14 +106,12 @@ class _YearPicker extends StatefulWidget {
   /// The [currentDate, [firstDate], [lastDate], [selectedDate], and [onChanged]
   /// arguments must be non-null. The [lastDate] must be after the [firstDate].
   _YearPicker({
-    Key? key,
     required this.firstDate,
     required this.lastDate,
     required this.initialDate,
     required this.selectedDate,
     required this.onChanged,
-  })  : assert(!firstDate.isAfter(lastDate)),
-        super(key: key);
+  })  : assert(!firstDate.isAfter(lastDate));
 
   /// The earliest date the user is permitted to pick.
   final DateTime firstDate;

@@ -23,8 +23,8 @@ import 'calendar_utils.dart';
 
 class MultiGameCalendar extends StatelessWidget {
   const MultiGameCalendar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +126,7 @@ class MultiGameCalendar extends StatelessWidget {
 }
 
 class _MultiGameCalendarBody extends StatelessWidget {
-  const _MultiGameCalendarBody({
-    Key? key,
-  }) : super(key: key);
+  const _MultiGameCalendarBody();
 
   @override
   Widget build(BuildContext context) {

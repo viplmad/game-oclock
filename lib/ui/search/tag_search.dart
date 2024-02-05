@@ -15,10 +15,9 @@ import 'search.dart';
 class GameTagSearch
     extends ItemSearch<TagDTO, NewTagDTO, TagSearchBloc, TagListManagerBloc> {
   const GameTagSearch({
-    Key? key,
+    super.key,
     required super.onTapReturn,
   }) : super(
-          key: key,
           detailRouteName: tagDetailRoute,
         );
 
@@ -56,10 +55,9 @@ class GameTagSearch
 class _GameTagSearchBody extends ItemSearchBody<TagDTO, NewTagDTO,
     TagSearchBloc, TagListManagerBloc> {
   const _GameTagSearchBody({
-    Key? key,
     required super.onTap,
     super.allowNewButton = false,
-  }) : super(key: key);
+  });
 
   @override
   String typeName(BuildContext context) =>

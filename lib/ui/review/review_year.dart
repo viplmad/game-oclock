@@ -43,9 +43,9 @@ const List<Icon> topIcons = <Icon>[
 
 class ReviewYear extends StatelessWidget {
   const ReviewYear({
-    Key? key,
+    super.key,
     this.year,
-  }) : super(key: key);
+  });
 
   final int? year;
 
@@ -118,9 +118,7 @@ class ReviewYear extends StatelessWidget {
 }
 
 class _ReviewYearBody extends StatelessWidget {
-  const _ReviewYearBody({
-    Key? key,
-  }) : super(key: key);
+  const _ReviewYearBody();
 
   @override
   Widget build(BuildContext context) {

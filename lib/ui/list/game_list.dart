@@ -15,9 +15,8 @@ import 'list.dart';
 
 class GameAppBar extends ItemAppBar<GameDTO, GameListBloc> {
   const GameAppBar({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: GameTheme.primaryColour,
           gridAllowed: GameTheme.hasImage,
           searchRouteName: gameSearchRoute,
@@ -39,9 +38,8 @@ class GameAppBar extends ItemAppBar<GameDTO, GameListBloc> {
 
 class GameFAB extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
   const GameFAB({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: GameTheme.secondaryColour,
         );
 
@@ -56,9 +54,8 @@ class GameFAB extends ItemFAB<GameDTO, NewGameDTO, GameListManagerBloc> {
 
 class GameList extends ItemList<GameDTO, GameListBloc, GameListManagerBloc> {
   const GameList({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           detailRouteName: gameDetailRoute,
         );
 
@@ -87,14 +84,12 @@ class GameList extends ItemList<GameDTO, GameListBloc, GameListManagerBloc> {
 
 class _GameListBody extends ItemListBody<GameDTO, GameListBloc> {
   const _GameListBody({
-    Key? key,
     required super.items,
     required super.viewIndex,
     required super.onDelete,
     required super.style,
     required super.scrollController,
   }) : super(
-          key: key,
           detailRouteName: gameDetailRoute,
         );
 

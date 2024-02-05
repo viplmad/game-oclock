@@ -24,10 +24,10 @@ import 'finish_date_list.dart';
 class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
     GameDetailManagerBloc> {
   const GameDetail({
-    Key? key,
+    super.key,
     required super.item,
     super.onChange,
-  }) : super(key: key);
+  });
 
   @override
   GameDetailBloc detailBlocBuilder(
@@ -173,11 +173,9 @@ class GameDetail extends ItemDetail<GameDTO, NewGameDTO, GameDetailBloc,
 class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
     GameDetailBloc, GameDetailManagerBloc> {
   _GameDetailBody({
-    Key? key,
     required this.itemId,
     super.onChange,
   }) : super(
-          key: key,
           hasImage: GameTheme.hasImage,
         );
 
@@ -393,9 +391,9 @@ class _GameDetailBody extends ItemDetailBody<GameDTO, NewGameDTO,
 class GameFinishDateList
     extends FinishList<GameFinishRelationBloc, GameFinishRelationManagerBloc> {
   const GameFinishDateList({
-    Key? key,
+    super.key,
     required super.fieldName,
     required super.relationTypeName,
     super.skeletonOrder,
-  }) : super(key: key);
+  });
 }

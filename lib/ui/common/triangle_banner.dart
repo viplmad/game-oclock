@@ -23,7 +23,7 @@ enum TriangleBannerLocation {
 
 class TriangleBanner extends StatelessWidget {
   const TriangleBanner({
-    Key? key,
+    super.key,
     required this.child,
     required this.message,
     this.textDirection,
@@ -33,7 +33,7 @@ class TriangleBanner extends StatelessWidget {
     this.color = _kColor,
     this.textStyle = _kTextStyle,
     this.size,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final String message;

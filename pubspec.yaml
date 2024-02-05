@@ -1,10 +1,10 @@
 name: game_oclock
 description: A simple game collection manager.
-version: 3.3.4+408
+version: 3.3.4+409
 publish_to: none
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.16.0'
 
 dependencies:
@@ -33,9 +33,9 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   duration_picker: ^1.0.1
   community_charts_flutter: ^1.0.1
-  package_info_plus: ^4.0.0
+  package_info_plus: ^5.0.1
 
-# Back-end
+  # Back-end
   logic:
     path: ./logic
   game_oclock_client:
@@ -44,7 +44,7 @@ dependencies:
       ref: main
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^3.0.1
   flutter_launcher_icons: ^0.13.0
   flutter_test:
     sdk: flutter
@@ -53,9 +53,9 @@ flutter_icons:
   android: true
   ios: true
   min_sdk_android: 28
-  image_path: "assets/images/icon.png"
-  adaptive_icon_background: "assets/images/icon_background.png"
-  adaptive_icon_foreground: "assets/images/icon_foreground.png"
+  image_path: 'assets/images/icon.png'
+  adaptive_icon_background: 'assets/images/icon_background.png'
+  adaptive_icon_foreground: 'assets/images/icon_foreground.png'
 
 flutter:
   uses-material-design: true

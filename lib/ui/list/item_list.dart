@@ -23,13 +23,13 @@ abstract class ItemAppBar<T extends PrimaryModel,
         K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget
     implements PreferredSizeWidget {
   const ItemAppBar({
-    Key? key,
+    super.key,
     required this.themeColor,
     required this.gridAllowed,
     required this.searchRouteName,
     required this.detailRouteName,
     this.calendarRouteName = '',
-  }) : super(key: key);
+  });
 
   final Color themeColor;
   final bool gridAllowed;
@@ -164,9 +164,9 @@ abstract class ItemFAB<T extends PrimaryModel, N extends Object,
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
   const ItemFAB({
-    Key? key,
+    super.key,
     required this.themeColor,
-  }) : super(key: key);
+  });
 
   final Color themeColor;
 
@@ -195,9 +195,9 @@ abstract class ItemList<
         S extends Bloc<ItemListManagerEvent, ItemListManagerState>>
     extends StatelessWidget {
   const ItemList({
-    Key? key,
+    super.key,
     this.detailRouteName = '',
-  }) : super(key: key);
+  });
 
   final String detailRouteName;
 
@@ -343,14 +343,14 @@ abstract class ItemList<
 abstract class ItemListBody<T extends PrimaryModel,
     K extends Bloc<ItemListEvent, ItemListState>> extends StatelessWidget {
   const ItemListBody({
-    Key? key,
+    super.key,
     required this.items,
     required this.viewIndex,
     required this.onDelete,
     required this.style,
     required this.scrollController,
     required this.detailRouteName,
-  }) : super(key: key);
+  });
 
   final List<T> items;
   final int viewIndex;
@@ -464,14 +464,14 @@ abstract class ItemListBody<T extends PrimaryModel,
 
 class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
   const ItemCardView({
-    Key? key,
+    super.key,
     required this.items,
     required this.itemBuilder,
     required this.emptyTitle,
     required this.onDismiss,
     required this.confirmDelete,
     required this.scrollController,
-  }) : super(key: key);
+  });
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;
@@ -512,14 +512,14 @@ class ItemCardView<T extends PrimaryModel> extends StatelessWidget {
 
 class ItemGridView<T extends PrimaryModel> extends StatelessWidget {
   const ItemGridView({
-    Key? key,
+    super.key,
     required this.items,
     required this.itemBuilder,
     required this.emptyTitle,
     required this.onDismiss,
     required this.confirmDelete,
     required this.scrollController,
-  }) : super(key: key);
+  });
 
   final List<T> items;
   final Widget Function(BuildContext, T) itemBuilder;

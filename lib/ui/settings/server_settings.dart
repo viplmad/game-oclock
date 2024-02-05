@@ -29,8 +29,8 @@ class ServerConnectionFormData {
 
 class ServerSettings extends StatelessWidget {
   const ServerSettings({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +109,9 @@ class ServerSettings extends StatelessWidget {
 
 class _ServerSettingsBody extends StatelessWidget {
   const _ServerSettingsBody({
-    Key? key,
     required this.formKey,
     required this.formData,
-  }) : super(key: key);
+  });
 
   final Key formKey;
   final ServerConnectionFormData formData;
@@ -214,11 +213,11 @@ class _ServerSettingsBody extends StatelessWidget {
 
 class ServerConnectionForm extends _TextForm {
   const ServerConnectionForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.formData,
     required this.connection,
-  }) : super(key: key);
+  });
 
   final Key formKey;
   final ServerConnectionFormData formData;
@@ -261,8 +260,8 @@ class ServerConnectionForm extends _TextForm {
 
 abstract class _TextForm extends StatelessWidget {
   const _TextForm({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   Widget textFormField({
     required String labelText,
@@ -300,14 +299,13 @@ abstract class _TextForm extends StatelessWidget {
 
 class _ShowHideTextFormField extends StatefulWidget {
   const _ShowHideTextFormField({
-    Key? key,
     required this.labelText,
     required this.initialValue,
     this.allowObscureText = false,
     required this.onSaved,
     this.keyboardType,
     this.inputFormatters,
-  }) : super(key: key);
+  });
 
   final String initialValue;
   final String labelText;

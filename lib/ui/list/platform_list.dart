@@ -14,9 +14,8 @@ import 'list.dart';
 
 class PlatformAppBar extends ItemAppBar<PlatformDTO, PlatformListBloc> {
   const PlatformAppBar({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: PlatformTheme.primaryColour,
           gridAllowed: PlatformTheme.hasImage,
           searchRouteName: platformSearchRoute,
@@ -38,9 +37,8 @@ class PlatformAppBar extends ItemAppBar<PlatformDTO, PlatformListBloc> {
 class PlatformFAB
     extends ItemFAB<PlatformDTO, NewPlatformDTO, PlatformListManagerBloc> {
   const PlatformFAB({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           themeColor: PlatformTheme.primaryColour, // Keep primary, both black
         );
 
@@ -55,9 +53,8 @@ class PlatformFAB
 class PlatformList
     extends ItemList<PlatformDTO, PlatformListBloc, PlatformListManagerBloc> {
   const PlatformList({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           detailRouteName: platformDetailRoute,
         );
 
@@ -86,14 +83,12 @@ class PlatformList
 
 class _PlatformListBody extends ItemListBody<PlatformDTO, PlatformListBloc> {
   const _PlatformListBody({
-    Key? key,
     required super.items,
     required super.viewIndex,
     required super.onDelete,
     required super.style,
     required super.scrollController,
   }) : super(
-          key: key,
           detailRouteName: platformDetailRoute,
         );
 

@@ -8,7 +8,7 @@ import 'generic_field.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.fieldName,
     required this.value,
     required this.shownValue,
@@ -17,7 +17,7 @@ class CustomTextField extends StatelessWidget {
     this.update,
     this.isLongText = false,
     this.isMultiline = false,
-  }) : super(key: key);
+  });
 
   final String fieldName;
   final String? value;

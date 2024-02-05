@@ -7,7 +7,7 @@ import 'package:game_oclock/ui/theme/theme.dart' show AppTheme;
 
 class StatisticsHistogram<N extends num> extends StatelessWidget {
   const StatisticsHistogram({
-    Key? key,
+    super.key,
     required this.id,
     required this.domainLabels,
     required this.values,
@@ -18,7 +18,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
     this.valueFormatter,
     this.measureFormatter,
     this.onDomainTap,
-  }) : super(key: key);
+  });
 
   final String id;
   final List<String> domainLabels;
@@ -50,7 +50,7 @@ class StatisticsHistogram<N extends num> extends StatelessWidget {
 
 class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
   const StatisticsStackedHistogram({
-    Key? key,
+    super.key,
     required this.id,
     required this.domainLabels,
     required this.stackedValues,
@@ -61,7 +61,7 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
     this.valueFormatter,
     this.measureFormatter,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final String id;
   final List<String> domainLabels;
@@ -170,14 +170,14 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
 
 class StatisticsPieChart<N extends num> extends StatelessWidget {
   const StatisticsPieChart({
-    Key? key,
+    super.key,
     required this.id,
     required this.domainLabels,
     required this.values,
     this.colours = const <Color>[],
     this.valueFormatter,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final String id;
   final List<String> domainLabels;
