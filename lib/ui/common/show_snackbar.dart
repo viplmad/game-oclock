@@ -9,6 +9,8 @@ import 'package:game_oclock/ui/common/copy_to_clipboard.dart';
 import 'package:game_oclock/ui/common/header_text.dart';
 import 'package:game_oclock/ui/utils/app_localizations_utils.dart';
 
+import '../route_constants.dart';
+
 void showSnackBar(
   BuildContext context, {
   required String message,
@@ -33,18 +35,38 @@ void showApiErrorSnackbar(
   required String name,
   required ErrorCode error,
   required String errorDescription,
-}) {
+}) async {
+  bool showMore = true;
+
+  if (error == ErrorCode.authInvalidGrant ||
+      error == ErrorCode.authInvalidRequest ||
+      error == ErrorCode.authUnsupportedGrantType ||
+      error == ErrorCode.unauthorized) {
+    // When unauthorized -> navigate to server settings page
+    // Remove previous routes so we can't go to a homepage of old login
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      serverSettingsRoute,
+      // Remove all the routes
+      (_) => false,
+    );
+    // Avoid showing more if context moved
+    showMore = false;
+  }
+
   final String message = AppLocalizationsUtils.getErrorMessage(context, error);
   final String title = '$name - $message';
   showSnackBar(
     context,
     message: title,
-    snackBarAction: _apiErrorSnackBarAction(
-      context,
-      label: MaterialLocalizations.of(context).moreButtonTooltip,
-      title: title,
-      content: errorDescription,
-    ),
+    snackBarAction: showMore
+        ? _apiErrorSnackBarAction(
+            context,
+            label: MaterialLocalizations.of(context).moreButtonTooltip,
+            title: title,
+            content: errorDescription,
+          )
+        : null,
   );
 }
 

@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-
-import 'package:game_oclock_client/api.dart' show ErrorCode, TokenResponse;
+import 'package:game_oclock_client/api.dart';
 
 import 'package:logic/model/model.dart' show ServerConnection;
 import 'package:logic/service/service.dart' show GameOClockService;
-import 'package:logic/bloc/bloc_utils.dart';
 import 'package:logic/preferences/shared_preferences_state.dart';
 
 import 'connection.dart';
@@ -28,40 +26,27 @@ class ConnectionBloc extends Bloc<ConnectionEvent, ConnectState> {
         NonexistentConnection(),
       );
     } else {
-      try {
-        final ServerConnection connection =
-            (await SharedPreferencesState.retrieveActiveServer())!;
+      final ServerConnection connection =
+          (await SharedPreferencesState.retrieveActiveServer())!;
 
-        collectionService.connect(connection);
-        final TokenResponse? refreshTokenResponse = await collectionService
-            .testAuth(connection.tokenResponse.refreshToken);
-        // If token was expired -> refresh token used and returned new token response
-        if (refreshTokenResponse != null) {
+      collectionService.init(
+        connection.host,
+        connection.tokenResponse,
+        onTokenRefresh: (TokenResponse tokenResponse) async {
+          final ServerConnection connection =
+              (await SharedPreferencesState.retrieveActiveServer())!;
+
           final ServerConnection newConnection =
-              connection.withToken(refreshTokenResponse);
+              connection.withToken(tokenResponse);
 
-          // Save new token
+          // Save connection with new token
           await SharedPreferencesState.setActiveServer(newConnection);
+        },
+      );
 
-          // Set connection with new token
-          collectionService.connect(newConnection);
-        }
-
-        emit(
-          Connected(),
-        );
-      } catch (e) {
-        _handleError(e, emit);
-      }
+      emit(
+        Connected(),
+      );
     }
-  }
-
-  void _handleError(Object e, Emitter<ConnectState> emit) {
-    BlocUtils.handleError(
-      e,
-      emit,
-      (ErrorCode error, String errorDescription) =>
-          FailedConnection(error, errorDescription),
-    );
   }
 }

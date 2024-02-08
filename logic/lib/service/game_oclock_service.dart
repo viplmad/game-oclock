@@ -1,19 +1,11 @@
 import 'package:game_oclock_client/api.dart'
-    show
-        ApiClient,
-        ApiException,
-        UnauthorizedApiException,
-        OAuth,
-        TokenResponse;
-
-import 'package:logic/model/model.dart' show ServerConnection;
+    show ApiClient, OAuth, TokenResponse;
 
 import 'service.dart';
 
 class GameOClockService {
   GameOClockService();
 
-  late LoginService loginService;
   late UserService userService;
   late GameService gameService;
   late GameFinishService gameFinishService;
@@ -33,31 +25,40 @@ class GameOClockService {
     return loginService.login(username, password);
   }
 
-  Future<TokenResponse?> testAuth(String refreshToken) async {
-    try {
-      await userService.getCurrentUser();
-    } on ApiException catch (e) {
-      if (e is UnauthorizedApiException) {
-        return loginService.refreshToken(refreshToken);
-      }
-    }
-
-    return null;
+  Future<TokenResponse> refresh(
+    String host,
+    String refreshToken,
+  ) {
+    final ApiClient apiClient = ApiClient(basePath: host);
+    final LoginService loginService = LoginService(apiClient);
+    return loginService.refreshToken(refreshToken);
   }
 
-  void connect(ServerConnection connection) {
+  void init(
+    String host,
+    TokenResponse tokenResponse, {
+    required Future<void> Function(TokenResponse) onTokenRefresh,
+  }) {
     final ApiClient apiClient = ApiClient(
-      basePath: connection.host,
+      basePath: host,
       authentication: OAuth(
-        accessToken: connection.tokenResponse.accessToken,
+        accessToken: tokenResponse.accessToken,
+        refreshToken: tokenResponse.refreshToken,
+        refresh: (String refreshToken) async {
+          final TokenResponse tokenResponse = await refresh(host, refreshToken);
+
+          await onTokenRefresh(tokenResponse);
+
+          // Set connection with new token
+          return (tokenResponse.accessToken, tokenResponse.refreshToken);
+        },
       ),
     );
 
-    _connect(apiClient);
+    _init(apiClient);
   }
 
-  void _connect(ApiClient apiClient) {
-    loginService = LoginService(apiClient);
+  void _init(ApiClient apiClient) {
     userService = UserService(apiClient);
     gameService = GameService(apiClient);
     gameFinishService = GameFinishService(apiClient);

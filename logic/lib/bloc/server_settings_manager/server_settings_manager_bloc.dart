@@ -42,6 +42,7 @@ class ServerSettingsManagerBloc
         username: username,
         tokenResponse: loginResponse,
       );
+      // Save connection
       await SharedPreferencesState.setActiveServer(fullConnection);
 
       emit(
