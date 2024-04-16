@@ -33,7 +33,7 @@ class DismissibleItem extends StatelessWidget {
           menuController.open(position: details.localPosition),
       child: MenuAnchor(
         controller: menuController,
-        anchorTapClosesMenu: true,
+        consumeOutsideTap: true,
         menuChildren: <Widget>[
           MenuItemButton(
             leadingIcon: Icon(dismissIcon),
