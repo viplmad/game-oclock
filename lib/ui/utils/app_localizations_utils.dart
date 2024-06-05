@@ -74,6 +74,10 @@ class AppLocalizationsUtils {
     return DateFormat.MMMM().format(date);
   }
 
+  static String formatDayMonth(DateTime date) {
+    return DateFormat.MMMMd().format(date);
+  }
+
   static String formatDate(DateTime date) {
     return DateFormat('d/M/y').format(date); // Fix date format because I can ;)
   }

@@ -3,8 +3,8 @@ version: 3.0.0
 publish_to: none
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.19.5'
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
 
 dependencies:
   flutter:
@@ -17,7 +17,7 @@ dependencies:
   equatable: ^2.0.0
 
   # Package Info
-  package_info_plus: ^7.0.0
+  package_info_plus: ^8.0.0
 
   # Encrypted shared preferences
   encrypted_shared_preferences: ^3.0.0
@@ -27,9 +27,9 @@ dependencies:
   game_oclock_client:
     git:
       url: https://github.com/viplmad/game-oclock-client-dart.git
-      ref: v1.3.7+67
+      ref: v1.4.0+70
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
