@@ -1172,7 +1172,7 @@ class _ReviewYearBody extends StatelessWidget {
         '20',
         '21',
         '22',
-        '23'
+        '23',
       ],
       // First normalise entries
       values: List<int>.generate(24, (int index) {
