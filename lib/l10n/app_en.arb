@@ -148,6 +148,8 @@
   "gamesPlayedByReleaseYearString": "Games played by release year",
   "gamesFinishedByReleaseYearString": "Games finished by release year",
   "playTimeByMonthString": "Play Time by month",
+  "playTimeByWeekdayString": "Play Time by weekday",
+  "playTimeByHourString": "Play Time by time of day",
   "gamesPlayedByRatingString": "Games played by rating",
   "gamesFinishedByMonthString": "Games finished by month",
   "playedInString": "Played in {month}",

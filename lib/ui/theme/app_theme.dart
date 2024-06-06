@@ -39,7 +39,7 @@ class AppTheme {
         primarySwatch: _primarySwatch,
       ).copyWith(
         secondary: _secondaryColour,
-        background: _defaultBackgroundColor(brightness),
+        surface: _defaultBackgroundColor(brightness),
       ),
       cardTheme: CardTheme(
         surfaceTintColor: _defaultSurfaceTintColor(brightness),
@@ -50,7 +50,7 @@ class AppTheme {
       ),
       menuTheme: MenuThemeData(
         style: MenuStyle(
-          surfaceTintColor: MaterialStatePropertyAll<Color?>(
+          surfaceTintColor: WidgetStatePropertyAll<Color?>(
             _defaultSurfaceTintColor(brightness),
           ),
         ),

@@ -282,6 +282,19 @@ class ListDivider extends StatelessWidget {
   }
 }
 
+class MiniDivider extends StatelessWidget {
+  const MiniDivider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 2.0,
+    );
+  }
+}
+
 class SkeletonItemList extends StatelessWidget {
   const SkeletonItemList({
     super.key,

@@ -64,8 +64,9 @@ class GameTheme {
   static const IconData sessionIcon = Icons.schedule;
   static const IconData finishedIcon = Icons.emoji_events_outlined;
   static const IconData ratingIcon = Icons.star_outline;
-  static const IconData longestSessionIcon = Icons.timelapse;
-  static const IconData longestStreakIcon = Icons.browse_gallery_outlined;
+  static const IconData longestSessionIcon = Icons.weekend_outlined;
+  static const IconData longestStreakIcon =
+      Icons.local_fire_department_outlined;
   static const IconData firstPlayedIcon = Icons.fiber_new_outlined;
   static const IconData notFirstPlayedIcon = Icons.history;
   static const IconData firstFinishedIcon = finishedIcon;
@@ -263,7 +264,7 @@ class GameTheme {
         hasImage: GameTheme.hasImage,
         imageURL: item.coverUrl,
         onTap: onTap(context, item),
-        additionalWidgets: additionalWidgets,
+        postAdditionalWidgets: additionalWidgets,
       ),
     );
   }

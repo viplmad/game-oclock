@@ -248,6 +248,9 @@ class _ReviewYearBody extends StatelessWidget {
                   playedData.totalTime,
                 ),
               );
+              widgets.add(
+                const MiniDivider(),
+              );
               widgets.addAll(
                 _buildLastSessionCard(
                   context,
@@ -257,6 +260,9 @@ class _ReviewYearBody extends StatelessWidget {
                   finishedGames,
                   playedData.totalTime,
                 ),
+              );
+              widgets.add(
+                const ListDivider(),
               );
               widgets.addAll(
                 _buildTopGames(
@@ -305,6 +311,20 @@ class _ReviewYearBody extends StatelessWidget {
                   playedData.totalTimeByMonth,
                   games,
                   finishedGames,
+                  playedData.totalTime,
+                ),
+              );
+              widgets.add(
+                _buildTotalTimeByWeekdayChart(
+                  context,
+                  playedData.totalTimeByWeekday,
+                  playedData.totalTime,
+                ),
+              );
+              widgets.add(
+                _buildTotalTimeByHourChart(
+                  context,
+                  playedData.totalTimeByHour,
                   playedData.totalTime,
                 ),
               );
@@ -417,7 +437,7 @@ class _ReviewYearBody extends StatelessWidget {
       context,
       gamesColour,
       AppLocalizations.of(context)!
-          .lastSessionOfYear(lastSession.startDatetime),
+          .lastSessionOfYear(lastSession.startDatetime.year),
       lastSession,
       games,
       finishedGames,
@@ -441,7 +461,10 @@ class _ReviewYearBody extends StatelessWidget {
         _getFinishedGame(finishedGames, gameId);
 
     return <Widget>[
-      Text(title),
+      Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Text(title),
+      ),
       _buildGameCard(
         context,
         gamesColour[game.id]!,
@@ -815,6 +838,32 @@ class _ReviewYearBody extends StatelessWidget {
     );
   }
 
+  Widget _buildTotalTimeByWeekdayChart(
+    BuildContext context,
+    Map<int, Duration> totalTimeByWeekday,
+    Duration totalTime,
+  ) {
+    return _buildChartCard(
+      context,
+      Icons.calendar_month_outlined,
+      AppLocalizations.of(context)!.playTimeByWeekdayString,
+      _buildTotalTimeByWeekdayLineChart(context, totalTimeByWeekday, totalTime),
+    );
+  }
+
+  Widget _buildTotalTimeByHourChart(
+    BuildContext context,
+    Map<int, Duration> totalTimeByHour,
+    Duration totalTime,
+  ) {
+    return _buildChartCard(
+      context,
+      Icons.calendar_month_outlined,
+      AppLocalizations.of(context)!.playTimeByHourString,
+      _buildTotalTimeByHourLineChart(context, totalTimeByHour, totalTime),
+    );
+  }
+
   Widget _buildTotalRatedByRatingChart(
     BuildContext context,
     Map<String, Color> gamesColour,
@@ -1068,6 +1117,73 @@ class _ReviewYearBody extends StatelessWidget {
       hideValueLabels: true,
       measureFormatter: _formatPercentageMeasureForChart,
       onTap: (int domainIndex) => onMonthTap(domainIndex + 1),
+    );
+  }
+
+  Widget _buildTotalTimeByWeekdayLineChart(
+    BuildContext context,
+    Map<int, Duration> totalTimeByWeekday,
+    Duration totalTime,
+  ) {
+    return StatisticsLineChart(
+      id: 'playTimeByWeekday',
+      domainLabels: AppLocalizationsUtils.daysOfWeekAbbr(),
+      // First normalise entries
+      values: List<int>.generate(DateTime.daysPerWeek, (int index) {
+        final Duration weekdayTotalTime =
+            totalTimeByWeekday[index + 1] ?? const Duration();
+        return _preparePercentageForChart(
+          weekdayTotalTime.inMinutes / totalTime.inMinutes,
+        );
+      }).toList(growable: false),
+      hideValueLabels: true,
+      measureFormatter: _formatPercentageMeasureForChart,
+    );
+  }
+
+  Widget _buildTotalTimeByHourLineChart(
+    BuildContext context,
+    Map<int, Duration> totalTimeByHour,
+    Duration totalTime,
+  ) {
+    return StatisticsLineChart(
+      id: 'playTimeByHour',
+      domainLabels: const <String>[
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '16',
+        '17',
+        '18',
+        '19',
+        '20',
+        '21',
+        '22',
+        '23'
+      ],
+      // First normalise entries
+      values: List<int>.generate(24, (int index) {
+        final Duration hourTotalTime =
+            totalTimeByHour[index + 1] ?? const Duration();
+        return _preparePercentageForChart(
+          hourTotalTime.inMinutes / totalTime.inMinutes,
+        );
+      }).toList(growable: false),
+      hideValueLabels: true,
+      measureFormatter: _formatPercentageMeasureForChart,
     );
   }
 
@@ -1396,6 +1512,10 @@ class _ReviewYearBody extends StatelessWidget {
 
       widgets.add(topIcons.elementAt(index));
       widgets.add(topGameCard);
+
+      if (index < topGames.length - 1) {
+        widgets.add(const MiniDivider());
+      }
     }
 
     return widgets;

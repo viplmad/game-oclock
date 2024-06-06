@@ -168,6 +168,111 @@ class StatisticsStackedHistogram<N extends num> extends StatelessWidget {
   }
 }
 
+class StatisticsLineChart extends StatelessWidget {
+  const StatisticsLineChart({
+    super.key,
+    required this.id,
+    required this.domainLabels,
+    required this.values,
+    this.colour,
+    this.vertical = true,
+    this.hideDomainLabels = false,
+    this.hideValueLabels = false,
+    this.valueFormatter,
+    this.measureFormatter,
+    this.onDomainTap,
+  });
+
+  final String id;
+  final List<String> domainLabels;
+  final List<int> values;
+  final Color? colour;
+  final bool vertical;
+  final bool hideDomainLabels;
+  final bool hideValueLabels;
+  final String Function(int)? valueFormatter;
+  final String Function(num?)? measureFormatter;
+  final void Function(int)? onDomainTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final String Function(int) labelAccessor = hideValueLabels
+        ? (_) => ''
+        : valueFormatter ?? (int value) => value.toString();
+
+    final List<charts.Series<_SeriesElement<int>, int>> seriesList =
+        <charts.Series<_SeriesElement<int>, int>>[];
+
+    final Color finalColour = colour ?? Theme.of(context).primaryColor;
+    final charts.Color seriesColour =
+        charts.ColorUtil.fromDartColor(finalColour);
+    final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
+      AppTheme.defaultThemeTextColor(context),
+    );
+
+    final List<_SeriesElement<int>> data = <_SeriesElement<int>>[];
+
+    for (int index = 0; index < domainLabels.length; index++) {
+      final String currentLabel = domainLabels.elementAt(index);
+      final int currentValue = values.elementAt(index);
+
+      final _SeriesElement<int> seriesElement =
+          _SeriesElement<int>(index, currentLabel, currentValue);
+      data.add(seriesElement);
+    }
+
+    final charts.Series<_SeriesElement<int>, int> series =
+        charts.Series<_SeriesElement<int>, int>(
+      id: id,
+      colorFn: (_, __) => seriesColour,
+      domainFn: (_SeriesElement<int> element, _) => element.index,
+      measureFn: (_SeriesElement<int> element, _) => element.value,
+      data: data,
+      labelAccessorFn: (_SeriesElement<int> element, _) =>
+          element.value > 0 ? labelAccessor(element.value) : '',
+      outsideLabelStyleAccessorFn: (_, __) =>
+          charts.TextStyleSpec(color: outsideTextColour),
+    );
+
+    seriesList.add(series);
+
+    final charts.TextStyleSpec textStyleSpec = charts.TextStyleSpec(
+      color: charts.ColorUtil.fromDartColor(
+        AppTheme.defaultThemeTextColor(context),
+      ),
+    );
+
+    return charts.LineChart(
+      seriesList,
+      animate: true,
+      defaultRenderer: charts.LineRendererConfig<num>(includePoints: true),
+      domainAxis: hideDomainLabels
+          ? const charts.NumericAxisSpec(
+              renderSpec: charts.NoneRenderSpec<num>(),
+            )
+          : charts.NumericAxisSpec(
+              renderSpec: charts.GridlineRendererSpec<num>(
+                labelStyle: textStyleSpec,
+              ),
+              tickFormatterSpec: charts.BasicNumericTickFormatterSpec(
+                // WTF ??
+                (num? measure) => (measure?.toInt() ?? 0) < domainLabels.length
+                    ? domainLabels.elementAt(measure?.toInt() ?? 0)
+                    : '',
+              ),
+            ),
+      primaryMeasureAxis: charts.NumericAxisSpec(
+        renderSpec: charts.GridlineRendererSpec<num>(
+          labelStyle: textStyleSpec,
+        ),
+        tickFormatterSpec: measureFormatter != null
+            ? charts.BasicNumericTickFormatterSpec(measureFormatter)
+            : null,
+      ),
+    );
+  }
+}
+
 class StatisticsPieChart<N extends num> extends StatelessWidget {
   const StatisticsPieChart({
     super.key,
@@ -262,4 +367,12 @@ class _SeriesElement<N extends num> {
   final int index;
   final String domainLabel;
   final N value;
+}
+
+/// Sample linear data type.
+class LinearSales {
+  final int year;
+  final int sales;
+
+  LinearSales(this.year, this.sales);
 }

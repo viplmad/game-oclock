@@ -148,6 +148,8 @@
   "gamesPlayedByReleaseYearString": "Juegos por año de lanzamiento",
   "gamesFinishedByReleaseYearString": "Juegos terminados por año de lanzamiento",
   "playTimeByMonthString": "Tiempo de juego por mes",
+  "playTimeByWeekdayString": "Tiempo de juego por día de la semana",
+  "playTimeByHourString": "Tiempo de juego por hora",
   "gamesPlayedByRatingString": "Juegos por puntuación",
   "gamesFinishedByMonthString": "Juegos terminados por mes",
   "playedInString": "Jugado en {month}",

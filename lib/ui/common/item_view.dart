@@ -73,7 +73,8 @@ class ItemCard extends StatelessWidget {
     this.trailing,
     required this.hasImage,
     this.imageURL,
-    this.additionalWidgets = const <Widget>[],
+    this.preAdditionalWidgets = const <Widget>[],
+    this.postAdditionalWidgets = const <Widget>[],
     required this.onTap,
   });
 
@@ -82,7 +83,8 @@ class ItemCard extends StatelessWidget {
   final Widget? trailing;
   final bool hasImage;
   final String? imageURL;
-  final List<Widget> additionalWidgets;
+  final List<Widget> preAdditionalWidgets;
+  final List<Widget> postAdditionalWidgets;
   final void Function()? onTap;
 
   @override
@@ -94,18 +96,21 @@ class ItemCard extends StatelessWidget {
       hasImage: hasImage,
       imageURL: imageURL,
     );
+    final bool hasAdditionalWidgets =
+        preAdditionalWidgets.isNotEmpty || postAdditionalWidgets.isNotEmpty;
 
     return CardWithTap(
       onTap: onTap,
-      child: additionalWidgets.isEmpty
-          ? itemListTile
-          : Column(
+      child: hasAdditionalWidgets
+          ? Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                ...preAdditionalWidgets,
                 itemListTile,
-                ...additionalWidgets,
+                ...postAdditionalWidgets,
               ],
-            ),
+            )
+          : itemListTile,
     );
   }
 }
