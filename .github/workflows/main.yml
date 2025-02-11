@@ -6,33 +6,33 @@ on:
     branches: [ main ]
 
 jobs:
-  #analysis:
-  #  name: Analysis
-  #  # This job will run on ubuntu virtual machine
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v4.1.1
+  analysis:
+    name: Analysis
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.1
 
-  #  - name: Setup flutter environment
-  #    uses: subosito/flutter-action@v2.12.0
-  #    with:
-  #      channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+    - name: Setup flutter environment
+      uses: subosito/flutter-action@v2.12.0
+      with:
+        channel: 'stable' # 'dev', 'alpha', default to: 'stable'
 
-  #  - name: Get dependencies
-  #    run: flutter pub get
+    - name: Get dependencies
+      run: flutter pub get
 
-  #  - name: Analyse ui library
-  #    run: flutter analyze
+    - name: Analyse ui library
+      run: flutter analyze
 
-  #  - name: Analyse logic library
-  #    run: |
-  #      cd ./logic
-  #      flutter analyze
+    - name: Analyse logic library
+      run: |
+        cd ./logic
+        flutter analyze
 
   sonar:
     name: Sonar
-  #  needs: analysis
+    needs: analysis
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +48,7 @@ jobs:
 
   build:
     name: Build
-  #  needs: analysis
+    needs: analysis
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
     steps:
