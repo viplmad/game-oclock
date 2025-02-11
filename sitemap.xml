@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://viplmad.github.io/game-oclock/</loc>
+         <lastmod>2025-02-11</lastmod>
+    </url>
+    <url>
+         <loc>https://viplmad.github.io/game-oclock/dev/</loc>
+         <lastmod>2025-02-11</lastmod>
+    </url>
+    <url>
+         <loc>https://viplmad.github.io/game-oclock/openapi/</loc>
+         <lastmod>2025-02-11</lastmod>
+    </url>
+    <url>
+         <loc>https://viplmad.github.io/game-oclock/quickstart/</loc>
+         <lastmod>2025-02-11</lastmod>
+    </url>
+</urlset>
