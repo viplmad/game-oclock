@@ -9,15 +9,11 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
-analyzer:
-  exclude: [build/**, lib/**/navigation_destination_background.dart]
-
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
   # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at
-  # https://dart-lang.github.io/linter/lints/index.html.
+  # and their documentation is published at https://dart.dev/lints.
   #
   # Instead of disabling a lint rule for the entire project in the
   # section below, it can also be suppressed for a single line of code
@@ -27,25 +23,23 @@ linter:
   rules:
     - prefer_single_quotes
     - prefer_final_locals
-    - prefer_final_in_for_each
-    - avoid_type_to_string
-    - always_declare_return_types
-    - annotate_overrides
     - prefer_final_fields
-    #- prefer_final_parameters
+    - prefer_final_parameters
+    - prefer_final_in_for_each
+    - annotate_overrides
     - avoid_print
-    - always_specify_types
     - avoid_positional_boolean_parameters
     - prefer_const_constructors
-    - no_runtimeType_toString
     - avoid_renaming_method_parameters
     - sized_box_for_whitespace
     - require_trailing_commas
     - discarded_futures
     - unnecessary_to_list_in_spreads
-    # Uncomment when dart 2.19.0 comes out
-    #- combinators_ordering
-    #- use_string_in_part_of_directives
+    - combinators_ordering
+    - use_string_in_part_of_directives
+    - avoid_type_to_string
+    - no_runtimeType_toString
+    - always_declare_return_types
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

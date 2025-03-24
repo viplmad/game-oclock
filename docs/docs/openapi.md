@@ -1,1 +1,0 @@
-<swagger-ui src="https://raw.githubusercontent.com/viplmad/game-oclock-client-dart/main/public-api.json"/>
