@@ -1,9 +1,16 @@
 import 'dart:ui';
 
-sealed class LayoutTierEvent {}
+import 'package:equatable/equatable.dart';
+
+sealed class LayoutTierEvent extends Equatable {
+  const LayoutTierEvent();
+}
 
 final class LayoutContextChanged extends LayoutTierEvent {
   final Size size;
 
-  LayoutContextChanged({required this.size});
+  const LayoutContextChanged({required this.size});
+
+  @override
+  List<Object?> get props => [size];
 }

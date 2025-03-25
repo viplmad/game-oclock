@@ -7,12 +7,13 @@ final class FormGroup {
     return forms.map((final key, final val) => MapEntry(key, val.getValue()));
   }
 
-  FormControl getControl(final String name) {
+  FormControl<T> getControl<T>(final String name) {
     final control = forms[name];
     if (control == null) {
-      throw Error(); // Should catch while testing
+      throw Error(); // Should be caught while testing
     }
-    return control;
+    return control
+        as FormControl<T>; // Casting errors should be caught while testing
   }
 }
 
@@ -21,7 +22,7 @@ final class FormControl<T> {
 
   FormControl();
 
-  void onSave(final T value) {
+  void onSave(final T? value) {
     this._value = value;
   }
 

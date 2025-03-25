@@ -13,7 +13,7 @@ import 'form.dart'
         FormStateSubmitSuccess,
         FormSubmitted;
 
-abstract class FormBloc extends Bloc<FormEvent, FormState2> {
+class FormBloc extends Bloc<FormEvent, FormState2> {
   FormBloc({required final FormGroup formGroup})
     : super(
         FormStateInitial(
@@ -36,8 +36,9 @@ abstract class FormBloc extends Bloc<FormEvent, FormState2> {
     if (valid) {
       formKey.currentState!.save();
       final Map<String, dynamic> values = formGroup.getValues();
-      await submitValues(values);
-      emit(FormStateSubmitSuccess(key: formKey, group: formGroup));
+      emit(
+        FormStateSubmitSuccess(data: values, key: formKey, group: formGroup),
+      );
     } else {
       emit(
         FormStateSubmitFailure(
@@ -51,6 +52,4 @@ abstract class FormBloc extends Bloc<FormEvent, FormState2> {
       );
     }
   }
-
-  Future<void> submitValues(final Map<String, dynamic> values);
 }

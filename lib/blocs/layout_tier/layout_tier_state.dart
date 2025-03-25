@@ -1,13 +1,22 @@
-sealed class LayoutTierState {}
+import 'package:equatable/equatable.dart';
+import 'package:game_oclock/models/models.dart' show LayoutTier;
 
-final class LayoutTierInitital extends LayoutTierState {}
+sealed class LayoutTierState extends Equatable {
+  const LayoutTierState();
+}
 
-final class LayoutTierCompact extends LayoutTierState {}
+final class LayoutTierInitital extends LayoutTierState {
+  const LayoutTierInitital();
 
-final class LayoutTierMedium extends LayoutTierState {}
+  @override
+  List<Object?> get props => [];
+}
 
-final class LayoutTierExpanded extends LayoutTierState {}
+final class LayoutTierChange extends LayoutTierState {
+  final LayoutTier tier;
 
-final class LayoutTierLarge extends LayoutTierState {}
+  const LayoutTierChange({required this.tier});
 
-final class LayoutTierExtraLarge extends LayoutTierState {}
+  @override
+  List<Object?> get props => [tier];
+}

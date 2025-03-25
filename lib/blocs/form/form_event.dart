@@ -1,3 +1,12 @@
-sealed class FormEvent {}
+import 'package:equatable/equatable.dart';
 
-final class FormSubmitted extends FormEvent {}
+sealed class FormEvent extends Equatable {
+  const FormEvent();
+}
+
+final class FormSubmitted extends FormEvent {
+  const FormSubmitted();
+
+  @override
+  List<Object?> get props => [];
+}

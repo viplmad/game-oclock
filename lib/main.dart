@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/blocs.dart'
+import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionFinal,
         ActionInProgress,
         ActionStarted,
         ActionState,
-        CounterFormBloc,
+        Counter,
+        CounterCreateBloc,
+        CounterGetBloc,
         CounterProducerBloc,
+        FormBloc,
         FormState2,
         FormStateSubmitInProgress,
+        FormStateSubmitSuccess,
         FormSubmitted,
         LayoutContextChanged,
         LayoutTierBloc,
         LayoutTierState;
-import 'models/models.dart' show FormControl, FormGroup;
+import 'package:game_oclock/models/models.dart' show FormControl, FormGroup;
 
 void main() {
   runApp(const MyApp());
@@ -55,18 +59,21 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => CounterProducerBloc()),
           BlocProvider(create: (_) => LayoutTierBloc()),
+          BlocProvider(create: (_) => CounterGetBloc()),
           BlocProvider(
             create:
-                (_) => CounterFormBloc(
+                (_) => FormBloc(
                   formGroup: FormGroup(
                     forms: <String, FormControl<dynamic>>{
-                      'count': FormControl(),
+                      'name': FormControl<String>(),
+                      'data': FormControl<int>(),
                     },
                   ),
                 ),
           ),
+          BlocProvider(create: (_) => CounterCreateBloc()),
         ],
-        child: const SelectionArea(
+        child: SelectionArea(
           child: MyHomePage(title: 'Flutter Demo Home Page'),
         ),
       ),
@@ -75,7 +82,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -88,12 +95,17 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController dataController = TextEditingController();
+
   @override
   Widget build(final BuildContext context) {
     final mediaQuerySize = MediaQuery.sizeOf(context);
     context.read<LayoutTierBloc>().add(
       LayoutContextChanged(size: mediaQuerySize),
     );
+    context.read<CounterGetBloc>().add(ActionStarted(data: 'get'));
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -117,9 +129,24 @@ class MyHomePage extends StatelessWidget {
               print('This layout is a $state');
             },
           ),
-          BlocListener<CounterFormBloc, FormState2>(
+          BlocListener<FormBloc, FormState2>(
             listener: (final context, final state) {
-              final snackBar = SnackBar(content: Text('This form is a $state'));
+              print('This form is a $state');
+              if (state is FormStateSubmitSuccess) {
+                context.read<CounterCreateBloc>().add(
+                  ActionStarted(
+                    data: Counter(
+                      name: state.data['name'],
+                      data: state.data['data'],
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<CounterCreateBloc, ActionState<void>>(
+            listener: (final context, final state) {
+              final snackBar = SnackBar(content: Text('Data created $state'));
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             },
@@ -162,25 +189,63 @@ class MyHomePage extends StatelessWidget {
                 },
               ),
               const Text('Test text field'),
-              BlocBuilder<CounterFormBloc, FormState2>(
-                builder: (final context, final state) {
-                  return Form(
-                    key: state.key,
-                    child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                          readOnly: state is FormStateSubmitInProgress,
-                          onSaved: state.group.getControl('count').onSave,
-                          // The validator receives the text that the user has entered.
-                          validator: (final value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
+              BlocBuilder<CounterGetBloc, ActionState<Counter>>(
+                builder: (final context, final getState) {
+                  Counter? counter;
+                  bool skeleton = false;
+                  if (getState is ActionFinal<Counter>) {
+                    counter = getState.data;
+                  }
+                  if (getState is ActionInProgress<Counter>) {
+                    skeleton = true;
+                    counter = getState.data;
+                  }
+
+                  nameController.value = nameController.value.copyWith(
+                    text: counter?.name,
+                  );
+                  dataController.value = dataController.value.copyWith(
+                    text: counter == null ? null : '${counter.data}',
+                  );
+
+                  return BlocBuilder<FormBloc, FormState2>(
+                    builder: (final context, final formState) {
+                      final readOnly = formState is FormStateSubmitInProgress;
+                      return Form(
+                        key: formState.key,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              controller: nameController,
+                              readOnly: readOnly,
+                              onSaved:
+                                  formState.group
+                                      .getControl<String>('name')
+                                      .onSave,
+                              // The validator receives the text that the user has entered.
+                              validator: (final value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              controller: dataController,
+                              readOnly: readOnly,
+                              onSaved:
+                                  (final newValue) => formState.group
+                                      .getControl<int>('data')
+                                      .onSave(
+                                        newValue == null
+                                            ? null
+                                            : int.tryParse(newValue),
+                                      ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               ),
@@ -198,7 +263,7 @@ class MyHomePage extends StatelessWidget {
                       context.read<CounterProducerBloc>().add(
                         ActionStarted.empty(),
                       );
-                      context.read<CounterFormBloc>().add(FormSubmitted());
+                      context.read<FormBloc>().add(const FormSubmitted());
                     },
             tooltip: 'Increment',
             child:

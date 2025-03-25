@@ -38,3 +38,43 @@ class CounterFunctionBloc extends FunctionActionBloc<String, int> {
     return ActionSuccess(data: (int.tryParse(event) ?? lastData ?? 0) + 1);
   }
 }
+
+class Counter {
+  final String name;
+  final int data;
+
+  const Counter({required this.name, required this.data});
+}
+
+class CounterGetBloc extends FunctionActionBloc<String, Counter> {
+  @override
+  Future<ActionState<Counter>> doAction(
+    final String event,
+    final Counter? lastData,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ActionSuccess(data: Counter(name: event, data: 0));
+  }
+}
+
+class CounterCreateBloc extends ConsumerActionBloc<Counter> {
+  @override
+  Future<ActionState<void>> doAction(
+    final Counter event,
+    final void lastData,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ActionSuccess.empty();
+  }
+}
+
+class CounterUpdateBloc extends ConsumerActionBloc<Counter> {
+  @override
+  Future<ActionState<void>> doAction(
+    final Counter event,
+    final void lastData,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ActionSuccess.empty();
+  }
+}
