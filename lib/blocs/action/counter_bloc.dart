@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'action.dart'
     show
         ActionState,
@@ -44,6 +46,13 @@ class Counter {
   final int data;
 
   const Counter({required this.name, required this.data});
+}
+
+class CounterFormData {
+  final TextEditingController name;
+  final TextEditingController data;
+
+  CounterFormData({required this.name, required this.data});
 }
 
 class CounterGetBloc extends FunctionActionBloc<String, Counter> {

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, FormGroup, errorCodeInvalidForm;
+    show ErrorDTO, errorCodeInvalidForm;
 
 import 'form.dart'
     show
@@ -13,10 +13,10 @@ import 'form.dart'
         FormStateSubmitSuccess,
         FormSubmitted;
 
-class FormBloc extends Bloc<FormEvent, FormState2> {
-  FormBloc({required final FormGroup formGroup})
+abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
+  FormBloc({required final D formGroup})
     : super(
-        FormStateInitial(
+        FormStateInitial<D, T>(
           key: widgets.GlobalKey<widgets.FormState>(),
           group: formGroup,
         ),
@@ -30,18 +30,22 @@ class FormBloc extends Bloc<FormEvent, FormState2> {
     final formKey = state.key;
     final formGroup = state.group;
 
-    emit(FormStateSubmitInProgress(key: formKey, group: formGroup));
+    emit(FormStateSubmitInProgress<D, T>(key: formKey, group: formGroup));
     final valid =
         formKey.currentState != null ? formKey.currentState!.validate() : false;
     if (valid) {
       formKey.currentState!.save();
-      final Map<String, dynamic> values = formGroup.getValues();
+      final data = fromDynamicMap(formGroup);
       emit(
-        FormStateSubmitSuccess(data: values, key: formKey, group: formGroup),
+        FormStateSubmitSuccess<D, T>(
+          data: data,
+          key: formKey,
+          group: formGroup,
+        ),
       );
     } else {
       emit(
-        FormStateSubmitFailure(
+        FormStateSubmitFailure<D, T>(
           error: ErrorDTO(
             code: errorCodeInvalidForm,
             message: formKey.currentState.toString(),
@@ -52,4 +56,6 @@ class FormBloc extends Bloc<FormEvent, FormState2> {
       );
     }
   }
+
+  T fromDynamicMap(final D values);
 }

@@ -4,12 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 
 import 'layout_tier.dart'
-    show
-        LayoutContextChanged,
-        LayoutTierChange,
-        LayoutTierEvent,
-        LayoutTierInitital,
-        LayoutTierState;
+    show LayoutContextChanged, LayoutTierEvent, LayoutTierState;
 
 // https://m3.material.io/foundations/layout/applying-layout/window-size-classes
 const compactBreakpointWidth = 600;
@@ -18,7 +13,7 @@ const expandedBreakpointWidth = 1200;
 const largeBreakpointWidth = 1600;
 
 class LayoutTierBloc extends Bloc<LayoutTierEvent, LayoutTierState> {
-  LayoutTierBloc() : super(const LayoutTierInitital()) {
+  LayoutTierBloc() : super(const LayoutTierState(tier: LayoutTier.compact)) {
     on<LayoutContextChanged>(
       (final event, final emit) async =>
           await onContextChanged(event.size, emit),
@@ -45,6 +40,6 @@ class LayoutTierBloc extends Bloc<LayoutTierEvent, LayoutTierState> {
     } else {
       tier = LayoutTier.extraLarge;
     }
-    emit(LayoutTierChange(tier: tier));
+    emit(LayoutTierState(tier: tier));
   }
 }
