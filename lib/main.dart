@@ -12,7 +12,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutTierBloc,
         LayoutTierState;
 import 'package:game_oclock/components/create_edit_form.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier;
 
 void main() {
   runApp(const MyApp());
@@ -100,12 +99,7 @@ class MyHomePage extends StatelessWidget {
                 onPressed:
                     () async => showDialog(
                       context: context,
-                      builder:
-                          (final context) =>
-                              context.read<LayoutTierBloc>().state.tier ==
-                                      LayoutTier.compact
-                                  ? const Dialog.fullscreen(child: CreateForm())
-                                  : const Dialog(child: CreateForm()),
+                      builder: (final context) => const CreateForm(),
                     ),
               ),
             ],
