@@ -55,10 +55,15 @@ class CreateEditForm extends StatelessWidget {
         builder: (final context, final layoutState) {
           final fullscreen = layoutState.tier == LayoutTier.compact;
 
-          final scaffold = buildCreateScaffold(context, fullscreen);
+          final form = buildCreateForm(context, fullscreen: fullscreen);
           return fullscreen
-              ? Dialog.fullscreen(child: scaffold)
-              : Dialog(child: scaffold);
+              ? Dialog.fullscreen(child: form)
+              : Dialog(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 560.0),
+                  child: form,
+                ),
+              );
         },
       );
     } else {
@@ -158,131 +163,180 @@ class CreateEditForm extends StatelessWidget {
     }
   }
 
-  Widget buildCreateScaffold(
-    final BuildContext context,
-    final bool fullscreen,
-  ) {
-    final saveButton =
-        BlocBuilder<CounterFormBloc, FormState2<CounterFormData, Counter>>(
-          builder: (final context, final formState) {
-            return BlocBuilder<CounterCreateBloc, ActionState<void>>(
-              builder: (final context, final createState) {
-                final loading =
-                    formState is FormStateSubmitInProgress ||
-                    createState is ActionInProgress;
-                return TextButton.icon(
-                  icon: loading ? const CircularProgressIndicator() : null,
-                  label: const Text('Save'),
-                  onPressed:
-                      loading
-                          ? null
-                          : () {
-                            context.read<CounterFormBloc>().add(
-                              const FormSubmitted(),
-                            );
-                          },
-                );
-              },
-            );
+  Widget buildCreateForm(
+    final BuildContext context, {
+    required final bool fullscreen,
+  }) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+          listener: (final context, final state) {
+            if (state is FormStateSubmitSuccess<CounterFormData, Counter>) {
+              context.read<CounterCreateBloc>().add(
+                ActionStarted(data: state.data),
+              );
+            }
           },
-        );
+        ),
+        BlocListener<CounterCreateBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            final snackBar = SnackBar(content: Text('Data created $state'));
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },
+        ),
+      ],
+      child: BlocBuilder<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+        builder: (final context, final formState) {
+          return BlocBuilder<CounterCreateBloc, ActionState<void>>(
+            builder: (final context, final createState) {
+              final loading =
+                  formState is FormStateSubmitInProgress ||
+                  createState is ActionInProgress;
 
-    return Scaffold(
-      appBar: buildAppBar(context, fullscreen, saveButton),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<CounterFormBloc, FormState2<CounterFormData, Counter>>(
-            listener: (final context, final state) {
-              print('This form is a $state');
-              if (state is FormStateSubmitSuccess<CounterFormData, Counter>) {
-                context.read<CounterCreateBloc>().add(
-                  ActionStarted(data: state.data),
-                );
-              }
+              return FullForm(
+                title: title,
+                formKey: formState.key,
+                fullscreen: fullscreen,
+                onClose: () => Navigator.of(context).pop(),
+                formFieldsContainer: buildFormFieldsContainer(
+                  formGroup: formState.group,
+                  readOnly: loading,
+                ),
+                onSubmit:
+                    loading
+                        ? null
+                        : () {
+                          context.read<CounterFormBloc>().add(
+                            const FormSubmitted(),
+                          );
+                        },
+              );
             },
-          ),
-          BlocListener<CounterCreateBloc, ActionState<void>>(
-            listener: (final context, final state) {
-              final snackBar = SnackBar(content: Text('Data created $state'));
-              ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            },
-          ),
-        ],
-        child:
-            BlocBuilder<CounterFormBloc, FormState2<CounterFormData, Counter>>(
-              builder: (final context, final formState) {
-                return BlocBuilder<CounterCreateBloc, ActionState<void>>(
-                  builder: (final context, final createState) {
-                    final readOnly =
-                        formState is FormStateSubmitInProgress ||
-                        createState is ActionInProgress;
-                    final form = buildForm(formState, readOnly);
+          );
+        },
+      ),
+    );
+  }
 
-                    return fullscreen
-                        ? form
-                        : Column(
-                          children: [
-                            Flexible(child: form),
-                            OverflowBar(
-                              alignment: MainAxisAlignment.end,
-                              spacing: 16 / 2,
-                              overflowAlignment: OverflowBarAlignment.end,
-                              overflowDirection: VerticalDirection.down,
-                              overflowSpacing: 0,
-                              children: [saveButton],
-                            ),
-                          ],
-                        );
-                  },
-                );
-              },
+  Widget buildFormFieldsContainer({
+    required final CounterFormData formGroup,
+    required final bool readOnly,
+  }) {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: formGroup.name,
+          readOnly: readOnly,
+          validator: (final value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+        ),
+        TextFormField(controller: formGroup.data, readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+        TextFormField(readOnly: readOnly),
+      ],
+    );
+  }
+}
+
+/// https://m3.material.io/components/dialogs/guidelines#9d723c7a-03d1-4e7c-95af-a20ed4b66533
+class FullForm extends StatelessWidget {
+  const FullForm({
+    super.key,
+    required this.title,
+    required this.formKey,
+    required this.fullscreen,
+    required this.onClose,
+    required this.formFieldsContainer,
+    this.onSubmit,
+  });
+
+  final String title;
+  final Key formKey;
+  final bool fullscreen;
+  final VoidCallback onClose;
+  final Widget formFieldsContainer;
+  final VoidCallback? onSubmit;
+
+  @override
+  Widget build(final BuildContext context) {
+    final saveButton = TextButton.icon(
+      icon: onSubmit == null ? const CircularProgressIndicator() : null,
+      label: const Text('Save'), // TODO i18n
+      onPressed: onSubmit,
+    );
+
+    final form = Form(key: formKey, child: formFieldsContainer);
+
+    return fullscreen
+        ? Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: 'Close', // TODO i18n
+              onPressed: onClose,
             ),
-      ),
-    );
-  }
-
-  AppBar buildAppBar(
-    final BuildContext context,
-    final bool fullscreen,
-    final Widget saveButton,
-  ) {
-    return AppBar(
-      title: Text(title),
-      automaticallyImplyLeading: false,
-      leading:
-          fullscreen
-              ? IconButton(
-                icon: const Icon(Icons.close),
-                tooltip: 'Close',
-                onPressed: () => Navigator.of(context).pop(),
-              )
-              : null,
-      actions: fullscreen ? [saveButton] : null,
-    );
-  }
-
-  Form buildForm(
-    final FormState2<CounterFormData, Counter> formState,
-    final bool readOnly,
-  ) {
-    return Form(
-      key: formState.key,
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-            controller: formState.group.name,
-            readOnly: readOnly,
-            validator: (final value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+            actions: [saveButton],
           ),
-          TextFormField(controller: formState.group.data, readOnly: readOnly),
-        ],
-      ),
-    );
+          body: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 24.0,
+              left: 24.0,
+              right: 24.0,
+            ),
+            child: SingleChildScrollView(child: form),
+          ),
+        )
+        : Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DefaultTextStyle(
+                style:
+                    DialogTheme.of(context).titleTextStyle ??
+                    Theme.of(context).textTheme.headlineSmall!,
+                textAlign: TextAlign.start,
+                child: Text(title),
+              ),
+              const SizedBox(height: 16.0),
+              Flexible(child: SingleChildScrollView(child: form)),
+              const SizedBox(height: 24.0),
+              OverflowBar(
+                alignment: MainAxisAlignment.end,
+                spacing: 16 / 2,
+                overflowAlignment: OverflowBarAlignment.end,
+                overflowDirection: VerticalDirection.down,
+                overflowSpacing: 0,
+                children: [
+                  TextButton(
+                    onPressed: onClose,
+                    child: const Text('Cancel'), // TODO i18n
+                  ),
+                  saveButton,
+                ],
+              ),
+            ],
+          ),
+        );
   }
 }
