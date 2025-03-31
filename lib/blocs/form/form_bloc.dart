@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, errorCodeInvalidForm;
+    show ErrorDTO, FormData, errorCodeInvalidForm;
 
 import 'form.dart'
     show
@@ -12,9 +12,11 @@ import 'form.dart'
         FormStateSubmitFailure,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
-        FormSubmitted;
+        FormSubmitted,
+        FormValuesUpdated;
 
-abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
+abstract class FormBloc<D extends FormData<T>, T>
+    extends Bloc<FormEvent<T>, FormState2<D, T>> {
   FormBloc({required final D formGroup})
     : super(
         FormStateInitial<D, T>(
@@ -23,10 +25,16 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
           dirty: false,
         ),
       ) {
-    on<FormSubmitted>(
+    on<FormSubmitted<T>>(
       (final event, final emit) async => await onSubmitted(emit),
     );
-    on<FormDirtied>((final event, final emit) async => await onDirtied(emit));
+    on<FormDirtied<T>>(
+      (final event, final emit) async => await onDirtied(emit),
+    );
+    on<FormValuesUpdated<T>>(
+      (final event, final emit) async =>
+          await onValuesUpdated(event.values, emit),
+    );
   }
 
   Future<void> onSubmitted(final Emitter<FormState2> emit) async {
@@ -82,6 +90,21 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
     final formGroup = state.group;
 
     emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: true));
+  }
+
+  Future<void> onValuesUpdated(
+    final T? values,
+    final Emitter<FormState2> emit,
+  ) async {
+    if (state is FormStateSubmitInProgress) {
+      return;
+    }
+
+    final formKey = state.key;
+    final formGroup = state.group;
+
+    formGroup.setValues(values);
+    emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: false));
   }
 
   T fromDynamicMap(final D values);

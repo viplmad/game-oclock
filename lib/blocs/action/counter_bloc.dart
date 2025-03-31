@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:game_oclock/models/models.dart' show FormData;
 
 import 'action.dart'
     show
@@ -48,11 +49,19 @@ class Counter {
   const Counter({required this.name, required this.data});
 }
 
-class CounterFormData {
+class CounterFormData extends FormData<Counter> {
   final TextEditingController name;
   final TextEditingController data;
 
   CounterFormData({required this.name, required this.data});
+
+  @override
+  void setValues(final Counter? counter) {
+    name.value = name.value.copyWith(text: counter?.name);
+    data.value = data.value.copyWith(
+      text: counter == null ? null : '${counter.data}',
+    );
+  }
 }
 
 class CounterGetBloc extends FunctionActionBloc<String, Counter> {
