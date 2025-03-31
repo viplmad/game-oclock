@@ -9,8 +9,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionState,
         CounterProducerBloc,
         LayoutContextChanged,
-        LayoutTierBloc,
-        LayoutTierState;
+        LayoutTierBloc;
 import 'package:game_oclock/components/create_edit_form.dart';
 
 void main() {
@@ -65,45 +64,36 @@ class MyHomePage extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: Text(title),
       ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<LayoutTierBloc, LayoutTierState>(
-            listener: (final context, final state) {
-              print('This layout is a $state');
-            },
-          ),
-        ],
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text('You have pushed the button this many times:'),
-              BlocBuilder<CounterProducerBloc, ActionState<int>>(
-                builder: (final context, final state) {
-                  int counter = 0;
-                  if (state is ActionFinal<int>) {
-                    counter = state.data;
-                  }
-                  if (state is ActionInProgress<int>) {
-                    counter = state.data ?? counter;
-                  }
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            BlocBuilder<CounterProducerBloc, ActionState<int>>(
+              builder: (final context, final state) {
+                int counter = 0;
+                if (state is ActionFinal<int>) {
+                  counter = state.data;
+                }
+                if (state is ActionInProgress<int>) {
+                  counter = state.data ?? counter;
+                }
 
-                  return Text(
-                    '$counter',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  );
-                },
-              ),
-              TextButton.icon(
-                label: const Text('Open form'),
-                onPressed:
-                    () async => showDialog(
-                      context: context,
-                      builder: (final context) => const CreateForm(),
-                    ),
-              ),
-            ],
-          ),
+                return Text(
+                  '$counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
+            TextButton.icon(
+              label: const Text('Open form'),
+              onPressed:
+                  () async => showDialog(
+                    context: context,
+                    builder: (final context) => const CreateForm(),
+                  ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: BlocBuilder<CounterProducerBloc, ActionState<int>>(

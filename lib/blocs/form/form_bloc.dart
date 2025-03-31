@@ -26,7 +26,7 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
     on<FormSubmitted>(
       (final event, final emit) async => await onSubmitted(emit),
     );
-    on<FormDirtied>((event, emit) async => await onDirtied(emit));
+    on<FormDirtied>((final event, final emit) async => await onDirtied(emit));
   }
 
   Future<void> onSubmitted(final Emitter<FormState2> emit) async {
