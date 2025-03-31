@@ -5,6 +5,7 @@ import 'package:game_oclock/models/models.dart'
 
 import 'form.dart'
     show
+        FormDirtied,
         FormEvent,
         FormState2,
         FormStateInitial,
@@ -19,18 +20,31 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
         FormStateInitial<D, T>(
           key: widgets.GlobalKey<widgets.FormState>(),
           group: formGroup,
+          dirty: false,
         ),
       ) {
     on<FormSubmitted>(
       (final event, final emit) async => await onSubmitted(emit),
     );
+    on<FormDirtied>((event, emit) async => await onDirtied(emit));
   }
 
   Future<void> onSubmitted(final Emitter<FormState2> emit) async {
+    if (state is FormStateSubmitInProgress) {
+      return;
+    }
+
     final formKey = state.key;
     final formGroup = state.group;
+    final dirty = state.dirty;
 
-    emit(FormStateSubmitInProgress<D, T>(key: formKey, group: formGroup));
+    emit(
+      FormStateSubmitInProgress<D, T>(
+        key: formKey,
+        group: formGroup,
+        dirty: dirty,
+      ),
+    );
     final valid =
         formKey.currentState != null ? formKey.currentState!.validate() : false;
     if (valid) {
@@ -41,6 +55,7 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
           data: data,
           key: formKey,
           group: formGroup,
+          dirty: false,
         ),
       );
     } else {
@@ -52,9 +67,21 @@ abstract class FormBloc<D, T> extends Bloc<FormEvent, FormState2<D, T>> {
           ),
           key: formKey,
           group: formGroup,
+          dirty: dirty,
         ),
       );
     }
+  }
+
+  Future<void> onDirtied(final Emitter<FormState2> emit) async {
+    if (state is FormStateSubmitInProgress) {
+      return;
+    }
+
+    final formKey = state.key;
+    final formGroup = state.group;
+
+    emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: true));
   }
 
   T fromDynamicMap(final D values);

@@ -10,3 +10,10 @@ final class FormSubmitted extends FormEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class FormDirtied extends FormEvent {
+  const FormDirtied();
+
+  @override
+  List<Object?> get props => [];
+}

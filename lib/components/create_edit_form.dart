@@ -11,6 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         CounterFormBloc,
         CounterFormData,
         CounterGetBloc,
+        FormDirtied,
         FormState2,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
@@ -190,7 +191,7 @@ class CreateEditForm extends StatelessWidget {
         builder: (final context, final formState) {
           return BlocBuilder<CounterCreateBloc, ActionState<void>>(
             builder: (final context, final createState) {
-              final loading =
+              final inProgress =
                   formState is FormStateSubmitInProgress ||
                   createState is ActionInProgress;
 
@@ -198,13 +199,17 @@ class CreateEditForm extends StatelessWidget {
                 title: title,
                 formKey: formState.key,
                 fullscreen: fullscreen,
-                onClose: () => Navigator.of(context).pop(),
                 formFieldsContainer: buildFormFieldsContainer(
                   formGroup: formState.group,
-                  readOnly: loading,
+                  readOnly: inProgress,
                 ),
+                dirty: formState.dirty,
+                onChanged:
+                    () => context.read<CounterFormBloc>().add(
+                      const FormDirtied(),
+                    ),
                 onSubmit:
-                    loading
+                    inProgress
                         ? null
                         : () {
                           context.read<CounterFormBloc>().add(
@@ -263,27 +268,49 @@ class FullForm extends StatelessWidget {
     required this.title,
     required this.formKey,
     required this.fullscreen,
-    required this.onClose,
+    required this.dirty,
     required this.formFieldsContainer,
+    required this.onChanged,
     this.onSubmit,
   });
 
   final String title;
   final Key formKey;
   final bool fullscreen;
-  final VoidCallback onClose;
+  final bool dirty;
   final Widget formFieldsContainer;
+  final VoidCallback onChanged;
   final VoidCallback? onSubmit;
 
   @override
   Widget build(final BuildContext context) {
+    final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
-      icon: onSubmit == null ? const CircularProgressIndicator() : null,
+      icon: inProgress ? const CircularProgressIndicator() : null,
       label: const Text('Save'), // TODO i18n
       onPressed: onSubmit,
     );
 
-    final form = Form(key: formKey, child: formFieldsContainer);
+    final form = Form(
+      key: formKey,
+      canPop: false,
+      onPopInvokedWithResult: (final didPop, final result) async {
+        if (didPop) {
+          return;
+        }
+        if (inProgress) {
+          return;
+        }
+
+        final bool shouldPop =
+            dirty ? await _showBackDialog(context) ?? false : true;
+        if (context.mounted && shouldPop) {
+          Navigator.pop(context);
+        }
+      },
+      onChanged: onChanged,
+      child: formFieldsContainer,
+    );
 
     return fullscreen
         ? Scaffold(
@@ -293,7 +320,8 @@ class FullForm extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.close),
               tooltip: 'Close', // TODO i18n
-              onPressed: onClose,
+              onPressed:
+                  inProgress ? null : () async => Navigator.maybePop(context),
             ),
             actions: [saveButton],
           ),
@@ -329,7 +357,10 @@ class FullForm extends StatelessWidget {
                 overflowSpacing: 0,
                 children: [
                   TextButton(
-                    onPressed: onClose,
+                    onPressed:
+                        inProgress
+                            ? null
+                            : () async => Navigator.maybePop(context),
                     child: const Text('Cancel'), // TODO i18n
                   ),
                   saveButton,
@@ -338,5 +369,39 @@ class FullForm extends StatelessWidget {
             ],
           ),
         );
+  }
+
+  Future<bool?> _showBackDialog(final BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (final context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'), // TODO i18n
+          content: const Text(
+            'Are you sure you want to leave this page?',
+          ), // TODO i18n
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Stay'), // TODO i18n
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Discard'), // TODO i18n
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
