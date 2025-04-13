@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart'
-    show FilterDTO, PageResultDTO, SearchDTO, SortDTO;
+    show FilterDTO, SearchDTO, SortDTO;
 
 import 'list.dart'
     show
@@ -53,7 +53,6 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
       final lastSearch = (state as ListFinal<S>).search;
       emit(ListLoadInProgress<S>(data: lastData, search: lastSearch));
 
-      // TODO add to previousitems (big list)
       emit(
         await loadList(
           lastSearch.copyWith(filter: filter, sort: sort, page: 0),
@@ -81,9 +80,9 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     }
   }
 
-  Future<ListState<S>> loadList(
+  Future<ListFinal<S>> loadList(
     final SearchDTO search,
-    final PageResultDTO<S>? lastData,
+    final List<S>? lastData,
     final SearchDTO? lastSearch,
   );
 }

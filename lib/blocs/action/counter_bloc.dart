@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:game_oclock/models/models.dart' show FormData;
 
 import 'action.dart'
     show
-        ActionState,
+        ActionFinal,
         ActionSuccess,
         ConsumerActionBloc,
         FunctionActionBloc,
@@ -11,7 +12,7 @@ import 'action.dart'
 
 class CounterProducerBloc extends ProducerActionBloc<int> {
   @override
-  Future<ActionState<int>> doAction(
+  Future<ActionFinal<int>> doAction(
     final void event,
     final int? lastData,
   ) async {
@@ -22,7 +23,7 @@ class CounterProducerBloc extends ProducerActionBloc<int> {
 
 class CounterConsumerBloc extends ConsumerActionBloc<String> {
   @override
-  Future<ActionState<void>> doAction(
+  Future<ActionFinal<void>> doAction(
     final String event,
     final void lastData,
   ) async {
@@ -33,7 +34,7 @@ class CounterConsumerBloc extends ConsumerActionBloc<String> {
 
 class CounterFunctionBloc extends FunctionActionBloc<String, int> {
   @override
-  Future<ActionState<int>> doAction(
+  Future<ActionFinal<int>> doAction(
     final String event,
     final int? lastData,
   ) async {
@@ -42,11 +43,14 @@ class CounterFunctionBloc extends FunctionActionBloc<String, int> {
   }
 }
 
-class Counter {
+class Counter extends Equatable {
   final String name;
   final int data;
 
   const Counter({required this.name, required this.data});
+
+  @override
+  List<Object?> get props => [name];
 }
 
 class CounterFormData extends FormData<Counter> {
@@ -66,7 +70,7 @@ class CounterFormData extends FormData<Counter> {
 
 class CounterGetBloc extends FunctionActionBloc<String, Counter> {
   @override
-  Future<ActionState<Counter>> doAction(
+  Future<ActionFinal<Counter>> doAction(
     final String event,
     final Counter? lastData,
   ) async {
@@ -77,7 +81,18 @@ class CounterGetBloc extends FunctionActionBloc<String, Counter> {
 
 class CounterCreateBloc extends ConsumerActionBloc<Counter> {
   @override
-  Future<ActionState<void>> doAction(
+  Future<ActionFinal<void>> doAction(
+    final Counter event,
+    final void lastData,
+  ) async {
+    await Future.delayed(const Duration(seconds: 5));
+    return ActionSuccess.empty();
+  }
+}
+
+class CounterUpdateBloc extends ConsumerActionBloc<Counter> {
+  @override
+  Future<ActionFinal<void>> doAction(
     final Counter event,
     final void lastData,
   ) async {
@@ -86,13 +101,12 @@ class CounterCreateBloc extends ConsumerActionBloc<Counter> {
   }
 }
 
-class CounterUpdateBloc extends ConsumerActionBloc<Counter> {
+class CounterSelectBloc extends FunctionActionBloc<Counter?, Counter?> {
   @override
-  Future<ActionState<void>> doAction(
-    final Counter event,
-    final void lastData,
+  Future<ActionFinal<Counter?>> doAction(
+    final Counter? event,
+    final Counter? lastData,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess.empty();
+    return ActionSuccess(data: event);
   }
 }

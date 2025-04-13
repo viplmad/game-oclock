@@ -361,9 +361,7 @@ class FullForm extends StatelessWidget {
           appBar: AppBar(
             title: Text(title),
             automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: const Icon(Icons.close),
-              tooltip: 'Close', // TODO i18n
+            leading: CloseButton(
               onPressed:
                   inProgress ? null : () async => Navigator.maybePop(context),
             ),

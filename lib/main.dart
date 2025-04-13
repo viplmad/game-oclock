@@ -10,8 +10,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         CounterProducerBloc,
         LayoutContextChanged,
         LayoutTierBloc;
+import 'package:game_oclock/components/counter_list.dart' show CounterList;
 import 'package:game_oclock/components/create_edit_form.dart'
     show CreateForm, EditForm;
+import 'package:game_oclock/pages/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,20 +83,40 @@ class MyHomePage extends StatelessWidget {
                 );
               },
             ),
-            TextButton.icon(
-              label: const Text('Open create form'),
+            TextButton(
+              child: const Text('Open create form'),
               onPressed:
                   () async => showDialog(
                     context: context,
                     builder: (final context) => const CreateForm(),
                   ),
             ),
-            TextButton.icon(
-              label: const Text('Open edit form'),
+            TextButton(
+              child: const Text('Open edit form'),
               onPressed:
                   () async => showDialog(
                     context: context,
                     builder: (final context) => const EditForm(),
+                  ),
+            ),
+            TextButton(
+              child: const Text('Open list'),
+              onPressed:
+                  () async => showDialog(
+                    context: context,
+                    builder:
+                        (final context) =>
+                            const Dialog.fullscreen(child: CounterList()),
+                  ),
+            ),
+            TextButton(
+              child: const Text('Open home'),
+              onPressed:
+                  () async => showDialog(
+                    context: context,
+                    builder:
+                        (final context) =>
+                            const Dialog.fullscreen(child: HomePageStarter()),
                   ),
             ),
           ],

@@ -33,7 +33,7 @@ abstract class FunctionActionBloc<E, S>
     }
   }
 
-  Future<ActionState<S>> doAction(final E event, final S? lastData);
+  Future<ActionFinal<S>> doAction(final E event, final S? lastData);
 }
 
 abstract class ProducerActionBloc<S> extends FunctionActionBloc<void, S> {}
