@@ -10,7 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         CounterProducerBloc,
         LayoutContextChanged,
         LayoutTierBloc;
-import 'package:game_oclock/components/counter_list.dart' show CounterList;
+import 'package:game_oclock/components/grid_list.dart' show CounterList;
 import 'package:game_oclock/components/create_edit_form.dart'
     show CreateForm, EditForm;
 import 'package:game_oclock/pages/home.dart';
@@ -97,16 +97,6 @@ class MyHomePage extends StatelessWidget {
                   () async => showDialog(
                     context: context,
                     builder: (final context) => const EditForm(),
-                  ),
-            ),
-            TextButton(
-              child: const Text('Open list'),
-              onPressed:
-                  () async => showDialog(
-                    context: context,
-                    builder:
-                        (final context) =>
-                            const Dialog.fullscreen(child: CounterList()),
                   ),
             ),
             TextButton(
