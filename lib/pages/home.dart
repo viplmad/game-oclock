@@ -5,13 +5,14 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/list_detail_layout.dart';
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
+import 'package:game_oclock/models/list_filter.dart';
 import 'package:game_oclock/models/models.dart' show SearchDTO;
 
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
 
-class HomePageStarter extends StatelessWidget {
-  const HomePageStarter({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(final BuildContext context) {
@@ -24,11 +25,17 @@ class HomePageStarter extends StatelessWidget {
         ),
         BlocProvider(
           create:
-              (_) => CounterListBloc()..add(ListLoaded(search: SearchDTO())),
+              (_) =>
+                  CounterListBloc()..add(
+                    ListLoaded(
+                      search: ListSearch(name: 'default', search: SearchDTO()),
+                    ),
+                  ),
         ),
       ],
-      child: ListDetailLayout<Counter, CounterSelectBloc, CounterListBloc>(
+      child: ListDetailLayoutBuilder<Counter, CounterSelectBloc, CounterListBloc>(
         title: 'Counters',
+        filterSpace: 'counter',
         actions: [],
         fabIcon: const Icon(Icons.add),
         fabLabel: 'Add',

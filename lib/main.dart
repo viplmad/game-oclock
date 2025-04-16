@@ -10,7 +10,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         CounterProducerBloc,
         LayoutContextChanged,
         LayoutTierBloc;
-import 'package:game_oclock/components/grid_list.dart' show CounterList;
 import 'package:game_oclock/components/create_edit_form.dart'
     show CreateForm, EditForm;
 import 'package:game_oclock/pages/home.dart';
@@ -106,7 +105,7 @@ class MyHomePage extends StatelessWidget {
                     context: context,
                     builder:
                         (final context) =>
-                            const Dialog.fullscreen(child: HomePageStarter()),
+                            const Dialog.fullscreen(child: HomePage()),
                   ),
             ),
           ],

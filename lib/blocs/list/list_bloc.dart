@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/models/models.dart'
-    show FilterDTO, SearchDTO, SortDTO;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 
 import 'list.dart'
     show
         ListEvent,
-        ListFilterChanged,
         ListFinal,
         ListInitial,
         ListLoadInProgress,
         ListLoaded,
         ListPageIncremented,
+        ListQuicksearchChanged,
+        ListSearchChanged,
         ListState;
 
 abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
@@ -18,9 +18,13 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     on<ListLoaded>(
       (final event, final emit) async => await onListLoaded(event.search, emit),
     );
-    on<ListFilterChanged>(
+    on<ListQuicksearchChanged>(
       (final event, final emit) async =>
-          await onListFilterChanged(event.filter, event.sort, emit),
+          await onListQuickfilterChanged(event.quicksearch, emit),
+    );
+    on<ListSearchChanged>(
+      (final event, final emit) async =>
+          await onListFilterChanged(event.search, emit),
     );
     on<ListPageIncremented>(
       (final event, final emit) async => await onListPageIncremented(emit),
@@ -28,35 +32,86 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<void> onListLoaded(
-    final SearchDTO search,
+    final ListSearch search,
     final Emitter<ListState<S>> emit,
   ) async {
     if (state is ListInitial<S>) {
-      emit(ListLoadInProgress<S>(data: null, search: null));
-      emit(await loadList(search, null, null));
+      emit(ListLoadInProgress<S>(data: null, quicksearch: null, search: null));
+      emit(await loadList(null, search, null, null, null));
     } else if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
-      emit(ListLoadInProgress<S>(data: lastData, search: lastSearch));
+      emit(
+        ListLoadInProgress<S>(
+          data: lastData,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
 
-      emit(await loadList(search, lastData, lastSearch));
+      emit(
+        await loadList(
+          lastQuicksearch,
+          search,
+          lastData,
+          lastQuicksearch,
+          lastSearch,
+        ),
+      );
     }
   }
 
-  Future<void> onListFilterChanged(
-    final List<FilterDTO>? filter,
-    final List<SortDTO>? sort,
+  Future<void> onListQuickfilterChanged(
+    final String? quicksearch,
     final Emitter<ListState<S>> emit,
   ) async {
     if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
-      emit(ListLoadInProgress<S>(data: lastData, search: lastSearch));
+      emit(
+        ListLoadInProgress<S>(
+          data: null,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
 
       emit(
         await loadList(
-          lastSearch.copyWith(filter: filter, sort: sort, page: 0),
+          quicksearch,
+          lastSearch.copyWith(page: 0),
           lastData,
+          lastQuicksearch,
+          lastSearch,
+        ),
+      );
+    }
+  }
+
+  Future<void> onListFilterChanged(
+    final ListSearch search,
+    final Emitter<ListState<S>> emit,
+  ) async {
+    if (state is ListFinal<S>) {
+      final lastData = (state as ListFinal<S>).data;
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
+      final lastSearch = (state as ListFinal<S>).search;
+      emit(
+        ListLoadInProgress<S>(
+          data: null,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
+
+      emit(
+        await loadList(
+          lastQuicksearch,
+          search.copyWith(page: 0),
+          lastData,
+          lastQuicksearch,
           lastSearch,
         ),
       );
@@ -66,14 +121,23 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   Future<void> onListPageIncremented(final Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
-      emit(ListLoadInProgress<S>(data: lastData, search: lastSearch));
+      emit(
+        ListLoadInProgress<S>(
+          data: lastData,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
 
-      final nextPage = (lastSearch.page ?? 0) + 1;
+      final nextPage = (lastSearch.search.page ?? 0) + 1;
       emit(
         await loadList(
+          lastQuicksearch,
           lastSearch.copyWith(page: nextPage),
           lastData,
+          lastQuicksearch,
           lastSearch,
         ),
       );
@@ -81,8 +145,10 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<ListFinal<S>> loadList(
-    final SearchDTO search,
+    final String? quicksearch,
+    final ListSearch search,
     final List<S>? lastData,
-    final SearchDTO? lastSearch,
+    final String? lastQuicksearch,
+    final ListSearch? lastSearch,
   );
 }

@@ -8,21 +8,23 @@ import 'package:game_oclock/blocs/blocs.dart'
         FunctionActionBloc,
         LayoutTierBloc,
         LayoutTierState,
-        ListLoadBloc;
+        ListLoadBloc,
+        ListQuicksearchChanged;
 import 'package:game_oclock/components/combine_latest_bloc_listener.dart'
     show CombineLatestBlocListener;
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 
 import 'grid_list.dart';
 
-class ListDetailLayout<
+class ListDetailLayoutBuilder<
   T,
   SB extends FunctionActionBloc<T?, T?>,
   LB extends ListLoadBloc<T>
 >
     extends StatelessWidget {
-  ListDetailLayout({
+  ListDetailLayoutBuilder({
     super.key,
+    required this.filterSpace,
     required this.title,
     required this.mainDestinations,
     required this.secondaryDestinations,
@@ -35,6 +37,7 @@ class ListDetailLayout<
   });
 
   final String title;
+  final String filterSpace;
   final List<NavigationDestination> mainDestinations;
   final List<NavigationDestination> secondaryDestinations;
   final List<Widget> actions;
@@ -59,8 +62,24 @@ class ListDetailLayout<
         return Scaffold(
           appBar: AppBar(
             title: Text(title),
-            actions: actions,
-            // TODO actions search
+            actions: [
+              SearchAnchor(
+                builder: (final context, final controller) {
+                  return IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      controller.openView();
+                    },
+                  );
+                },
+                suggestionsBuilder:
+                    (final context, final controller) => List.empty(),
+                viewOnChanged: // TODO not called
+                    (final value) => context.read<LB>().add(
+                      ListQuicksearchChanged(quicksearch: value),
+                    ),
+              ),
+            ],
           ),
           body: CombineLatestBlocListener<
             LayoutTierBloc,
@@ -88,10 +107,26 @@ class ListDetailLayout<
                     context: context,
                     builder: (final context) {
                       return Dialog.fullscreen(
-                        child: detail(
-                          context,
-                          selectedData: selectedData,
-                          selectBloc: selectBloc,
+                        child: PopScope(
+                          canPop: false,
+                          onPopInvokedWithResult: (
+                            final didPop,
+                            final result,
+                          ) async {
+                            if (didPop) {
+                              return;
+                            }
+
+                            if (context.mounted) {
+                              selectBloc.add(ActionStarted(data: null));
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: detail(
+                            context,
+                            selectedData: selectedData,
+                            selectBloc: selectBloc,
+                          ),
                         ),
                       );
                     },
@@ -110,7 +145,7 @@ class ListDetailLayout<
                         ? (selectState as ActionFinal<T?>).data
                         : null;
                 if (layoutTier == LayoutTier.compact) {
-                  return list(selectedData: selectedData);
+                  return list(context, selectedData: selectedData);
                 } else if (layoutTier == LayoutTier.medium ||
                     layoutTier == LayoutTier.expanded) {
                   return Row(
@@ -121,7 +156,7 @@ class ListDetailLayout<
                           children: [
                             Flexible(
                               flex: 4,
-                              child: list(selectedData: selectedData),
+                              child: list(context, selectedData: selectedData),
                             ),
                             Flexible(
                               flex: 2,
@@ -145,7 +180,7 @@ class ListDetailLayout<
                           children: [
                             Flexible(
                               flex: 4,
-                              child: list(selectedData: selectedData),
+                              child: list(context, selectedData: selectedData),
                             ),
                             Flexible(
                               flex: 2,
@@ -254,8 +289,9 @@ class ListDetailLayout<
     );
   }
 
-  Widget list({required final T? selectedData}) {
-    return GridList<T, LB>(
+  Widget list(final BuildContext context, {required final T? selectedData}) {
+    return GridListBuilder<T, LB>(
+      space: filterSpace,
       itemBuilder:
           (final context, final data) => listItemBuilder(
             context,

@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters, prefer_final_parameters, discarded_futures
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';

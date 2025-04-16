@@ -1,13 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_oclock/models/models.dart'
-    show FilterDTO, SearchDTO, SortDTO;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 
 sealed class ListEvent extends Equatable {
   const ListEvent();
 }
 
 final class ListLoaded extends ListEvent {
-  final SearchDTO search;
+  final ListSearch search;
 
   const ListLoaded({required this.search});
 
@@ -15,14 +14,22 @@ final class ListLoaded extends ListEvent {
   List<Object?> get props => [search];
 }
 
-final class ListFilterChanged extends ListEvent {
-  final List<FilterDTO>? filter;
-  final List<SortDTO>? sort;
+final class ListQuicksearchChanged extends ListEvent {
+  final String? quicksearch;
 
-  const ListFilterChanged({required this.filter, required this.sort});
+  const ListQuicksearchChanged({required this.quicksearch});
 
   @override
-  List<Object?> get props => [filter, sort];
+  List<Object?> get props => [quicksearch];
+}
+
+final class ListSearchChanged extends ListEvent {
+  final ListSearch search;
+
+  const ListSearchChanged({required this.search});
+
+  @override
+  List<Object?> get props => [search];
 }
 
 final class ListPageIncremented extends ListEvent {

@@ -1,5 +1,27 @@
 import 'package:flutter/material.dart';
 
+class ListItemTile extends StatelessWidget {
+  const ListItemTile({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.onTap,
+  });
+
+  final String title;
+  final String? subtitle;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: subtitle == null ? null : Text(subtitle!),
+      onTap: onTap,
+    );
+  }
+}
+
 class ListItemGrid extends StatelessWidget {
   const ListItemGrid({
     super.key,
@@ -10,7 +32,7 @@ class ListItemGrid extends StatelessWidget {
 
   final String title;
   final String? imageURL;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(final BuildContext context) {
