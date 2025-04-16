@@ -33,27 +33,30 @@ class HomePage extends StatelessWidget {
                   ),
         ),
       ],
-      child: ListDetailLayoutBuilder<Counter, CounterSelectBloc, CounterListBloc>(
-        title: 'Counters',
-        filterSpace: 'counter',
-        actions: [],
-        fabIcon: const Icon(Icons.add),
-        fabLabel: 'Add',
-        fabOnPressed: () => {},
-        detailBuilder:
-            (final context, final data, final onClosed) => Detail(
-              title: data.name,
-              onBackPressed: onClosed,
-              content: SingleChildScrollView(child: Text(data.data.toString())),
-            ),
-        listItemBuilder:
-            (final context, final data, final onPressed) => ListItemGrid(
-              title: '${data.name} ${data.data}',
-              onTap: onPressed,
-            ),
-        mainDestinations: mainDestinations,
-        secondaryDestinations: secondaryDestinations,
-      ),
+      child:
+          ListDetailLayoutBuilder<Counter, CounterSelectBloc, CounterListBloc>(
+            title: 'Counters',
+            filterSpace: 'counter',
+            actions: [],
+            fabIcon: const Icon(Icons.add),
+            fabLabel: 'Add',
+            fabOnPressed: () => {},
+            detailBuilder:
+                (final context, final data, final onClosed) => Detail(
+                  title: data.name,
+                  onBackPressed: onClosed,
+                  content: SingleChildScrollView(
+                    child: Text(data.data.toString()),
+                  ),
+                ),
+            listItemBuilder:
+                (final context, final data, final onPressed) => ListItemGrid(
+                  title: '${data.name} ${data.data}',
+                  onTap: onPressed,
+                ),
+            mainDestinations: mainDestinations,
+            secondaryDestinations: secondaryDestinations,
+          ),
     );
   }
 }

@@ -26,10 +26,7 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
     final data = PageResultDTO(
       data: List.generate(size, (final index) {
         final finalIndex = (page * size) + index;
-        return ListSearch(
-          name: 'search $finalIndex',
-          search: SearchDTO(),
-        );
+        return ListSearch(name: 'search $finalIndex', search: SearchDTO());
       }),
       page: page,
       size: size,
