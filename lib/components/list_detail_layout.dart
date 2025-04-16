@@ -23,9 +23,10 @@ class ListDetailLayout<
     extends StatelessWidget {
   ListDetailLayout({
     super.key,
+    required this.title,
     required this.mainDestinations,
     required this.secondaryDestinations,
-    required this.title,
+    required this.actions,
     required this.fabLabel,
     required this.fabIcon,
     required this.fabOnPressed,
@@ -36,6 +37,7 @@ class ListDetailLayout<
   final String title;
   final List<NavigationDestination> mainDestinations;
   final List<NavigationDestination> secondaryDestinations;
+  final List<Widget> actions;
 
   final String fabLabel;
   final Icon fabIcon;
@@ -57,6 +59,7 @@ class ListDetailLayout<
         return Scaffold(
           appBar: AppBar(
             title: Text(title),
+            actions: actions,
             // TODO actions search
           ),
           body: CombineLatestBlocListener<
