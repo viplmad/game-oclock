@@ -32,12 +32,19 @@ class CounterListBloc extends ListLoadBloc<Counter> {
       size: size,
     );
 
+    List<Counter> finalData;
+    if (page == 0) {
+      finalData = data.data;
+    } else {
+      finalData = List.of(
+        lastData == null ? data.data : [...lastData, ...data.data],
+        growable: false,
+      );
+    }
+
     if (Random.secure().nextBool()) {
       return ListLoadSuccess<Counter>(
-        data: List.of(
-          lastData == null ? data.data : [...lastData, ...data.data],
-          growable: false,
-        ),
+        data: finalData,
         quicksearch: quicksearch,
         search: search,
       );
