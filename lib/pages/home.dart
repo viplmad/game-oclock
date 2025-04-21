@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show Counter, CounterListBloc, CounterSelectBloc, ListLoaded;
+import 'package:game_oclock/components/create_edit_form.dart'
+    show CreateForm, EditForm;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/list_detail_layout.dart';
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
@@ -43,13 +45,22 @@ class HomePage extends StatelessWidget {
         actions: [],
         fabIcon: const Icon(Icons.add),
         fabLabel: 'Add',
-        fabOnPressed: () => {},
+        fabOnPressed:
+            () async => showDialog(
+              context: context,
+              builder: (final context) => const CreateForm(),
+            ),
         detailBuilder:
             (final context, final data, final onClosed) => Detail(
               title: data.name,
               imageUrl:
                   'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
               onBackPressed: onClosed,
+              onEditPressed:
+                  () async => showDialog(
+                    context: context,
+                    builder: (final context) => const EditForm(),
+                  ),
               content: SingleChildScrollView(child: Text(data.data.toString())),
             ),
         listItemBuilder:

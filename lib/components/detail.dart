@@ -7,12 +7,14 @@ class Detail extends StatelessWidget {
     required this.title,
     required this.imageUrl,
     required this.onBackPressed,
+    required this.onEditPressed,
     required this.content,
   });
 
   final String title;
   final String imageUrl;
   final VoidCallback onBackPressed;
+  final VoidCallback onEditPressed;
   final Widget content;
 
   @override
@@ -47,6 +49,13 @@ class Detail extends StatelessWidget {
         snap: false,
         automaticallyImplyLeading: false,
         leading: BackButton(onPressed: onBackPressed),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            tooltip: 'Edit',
+            onPressed: onEditPressed,
+          ),
+        ],
         bottom: const PreferredSize(
           preferredSize: Size(double.maxFinite, 1.0),
           child: SizedBox(),
