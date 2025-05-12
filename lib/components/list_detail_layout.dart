@@ -10,8 +10,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutTierState,
         ListLoadBloc,
         ListQuicksearchChanged;
-import 'package:game_oclock/components/combine_latest_bloc_listener.dart'
-    show CombineLatestBlocListener;
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 
 import 'grid_list.dart';
@@ -51,173 +49,133 @@ class ListDetailLayoutBuilder<
   final Widget Function(BuildContext context, T data, VoidCallback onPressed)
   listItemBuilder;
 
-  bool dialogMounted = false;
-
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<LayoutTierBloc, LayoutTierState>(
       builder: (final context, final layoutState) {
         final layoutTier = layoutState.tier;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            actions: [
-              SearchAnchor(
-                builder: (final context, final controller) {
-                  return IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      controller.openView();
-                    },
-                  );
-                },
-                suggestionsBuilder:
-                    (final context, final controller) => List.empty(),
-                viewOnChanged: // TODO not called
-                    (final value) => context.read<LB>().add(
-                      ListQuicksearchChanged(quicksearch: value),
-                    ),
-              ),
-            ],
-          ),
-          body: CombineLatestBlocListener<
-            LayoutTierBloc,
-            LayoutTierState,
-            SB,
-            ActionState<T?>
-          >(
-            // ignore: prefer_final_parameters
-            listenWhen: (_, __, ___, final current) => current is ActionFinal,
-            listener: (
-              final context,
-              final layoutState,
-              final selectState,
-            ) async {
-              final layoutTier = layoutState.tier;
-              final selectedData =
-                  (selectState is ActionFinal)
-                      ? (selectState as ActionFinal<T?>).data
-                      : null;
-              if (layoutTier == LayoutTier.compact) {
-                if (selectedData != null) {
-                  final selectBloc = context.read<SB>();
-                  dialogMounted = true;
-                  showDialog(
-                    context: context,
-                    builder: (final context) {
-                      return Dialog.fullscreen(
-                        child: PopScope(
-                          canPop: false,
-                          onPopInvokedWithResult: (
-                            final didPop,
-                            final result,
-                          ) async {
-                            if (didPop) {
-                              return;
-                            }
+        return BlocBuilder<SB, ActionState<T?>>(
+          builder: (final context, final selectState) {
+            final selectedData =
+                (selectState is ActionFinal)
+                    ? (selectState as ActionFinal<T?>).data
+                    : null;
+            if (layoutTier == LayoutTier.compact) {
+              if (selectedData != null) {
+                return detail(
+                  context,
+                  selectedData: selectedData,
+                  selectBloc: context.read<SB>(),
+                );
+              }
+            }
 
-                            if (context.mounted) {
-                              selectBloc.add(ActionStarted(data: null));
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: detail(
-                            context,
-                            selectedData: selectedData,
-                            selectBloc: selectBloc,
-                          ),
-                        ),
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(title),
+                actions: [
+                  SearchAnchor(
+                    builder: (final context, final controller) {
+                      return IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          controller.openView();
+                        },
                       );
                     },
-                  ).whenComplete(() => dialogMounted = false);
-                } else {
-                  dismountDetailDialog(context);
-                }
-              } else {
-                dismountDetailDialog(context);
-              }
-            },
-            child: BlocBuilder<SB, ActionState<T?>>(
-              builder: (final context, final selectState) {
-                final selectedData =
-                    (selectState is ActionFinal)
-                        ? (selectState as ActionFinal<T?>).data
-                        : null;
-                if (layoutTier == LayoutTier.compact) {
-                  return list(context, selectedData: selectedData);
-                } else if (layoutTier == LayoutTier.medium ||
-                    layoutTier == LayoutTier.expanded) {
-                  return Row(
-                    children: [
-                      navigationRail(extended: false),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 4,
-                              child: list(context, selectedData: selectedData),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              child: detail(
-                                context,
-                                selectedData: selectedData,
-                                selectBloc: context.read<SB>(),
-                              ),
-                            ),
-                          ],
+                    suggestionsBuilder:
+                        (final context, final controller) => List.empty(),
+                    viewOnChanged: // TODO not called
+                        (final value) => context.read<LB>().add(
+                          ListQuicksearchChanged(quicksearch: value),
                         ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Row(
-                    children: [
-                      navigationRail(extended: true),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 4,
-                              child: list(context, selectedData: selectedData),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              child: detail(
-                                context,
-                                selectedData: selectedData,
-                                selectBloc: context.read<SB>(),
+                  ),
+                ],
+              ),
+              body: BlocBuilder<SB, ActionState<T?>>(
+                builder: (final context, final selectState) {
+                  final selectedData =
+                      (selectState is ActionFinal)
+                          ? (selectState as ActionFinal<T?>).data
+                          : null;
+                  if (layoutTier == LayoutTier.compact) {
+                    return list(context, selectedData: selectedData);
+                  } else if (layoutTier == LayoutTier.medium ||
+                      layoutTier == LayoutTier.expanded) {
+                    return Row(
+                      children: [
+                        navigationRail(extended: false),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 4,
+                                child: list(
+                                  context,
+                                  selectedData: selectedData,
+                                ),
                               ),
-                            ),
-                          ],
+                              Flexible(
+                                flex: 2,
+                                child: detail(
+                                  context,
+                                  selectedData: selectedData,
+                                  selectBloc: context.read<SB>(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-              },
-            ),
-          ),
-          bottomNavigationBar:
-              layoutTier == LayoutTier.compact ? navigationBar() : null,
-          drawer:
-              layoutTier == LayoutTier.compact ||
-                      layoutTier == LayoutTier.medium ||
-                      layoutTier == LayoutTier.expanded
-                  ? navigationDrawer()
-                  : null,
-          floatingActionButton:
-              layoutTier == LayoutTier.compact ? fab(extended: false) : null,
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      children: [
+                        navigationRail(extended: true),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 4,
+                                child: list(
+                                  context,
+                                  selectedData: selectedData,
+                                ),
+                              ),
+                              Flexible(
+                                flex: 2,
+                                child: detail(
+                                  context,
+                                  selectedData: selectedData,
+                                  selectBloc: context.read<SB>(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+              bottomNavigationBar:
+                  layoutTier == LayoutTier.compact ? navigationBar() : null,
+              drawer:
+                  layoutTier == LayoutTier.compact ||
+                          layoutTier == LayoutTier.medium ||
+                          layoutTier == LayoutTier.expanded
+                      ? navigationDrawer()
+                      : null,
+              floatingActionButton:
+                  layoutTier == LayoutTier.compact
+                      ? fab(extended: false)
+                      : null,
+            );
+          },
         );
       },
     );
-  }
-
-  void dismountDetailDialog(final BuildContext context) async {
-    if (dialogMounted) {
-      Navigator.maybePop(context);
-    }
   }
 
   FloatingActionButton fab({required final bool extended}) {

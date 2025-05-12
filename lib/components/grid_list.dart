@@ -74,13 +74,9 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
           context: context,
           builder: (final context) => FilterListPage(space: space),
         ).then((final selectedFilter) {
-          listBloc.add(
-            ListSearchChanged(
-              search:
-                  selectedFilter ??
-                  ListSearch(name: 'default', search: SearchDTO()),
-            ),
-          );
+          if (selectedFilter != null) {
+            listBloc.add(ListSearchChanged(search: selectedFilter));
+          }
         });
       },
     );

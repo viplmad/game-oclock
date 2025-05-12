@@ -61,7 +61,40 @@ class HomePage extends StatelessWidget {
                     context: context,
                     builder: (final context) => const EditForm(),
                   ),
-              content: SingleChildScrollView(child: Text(data.data.toString())),
+              content: Column(
+                children: [
+                  Flexible(
+                    flex: 3,
+                    child: Column(children: [Text(data.data.toString())]),
+                  ),
+                  const Flexible(
+                    flex: 2,
+                    child: DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          TabBar(
+                            tabs: [
+                              Tab(icon: Icon(Icons.directions_car)),
+                              Tab(icon: Icon(Icons.directions_transit)),
+                              Tab(icon: Icon(Icons.directions_bike)),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                Icon(Icons.directions_car),
+                                Icon(Icons.directions_transit),
+                                Icon(Icons.directions_bike),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
         listItemBuilder:
             (final context, final data, final onPressed) => ListItemGrid(
