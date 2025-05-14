@@ -20,7 +20,7 @@ class ListDetailLayoutBuilder<
   LB extends ListLoadBloc<T>
 >
     extends StatelessWidget {
-  ListDetailLayoutBuilder({
+  const ListDetailLayoutBuilder({
     super.key,
     required this.filterSpace,
     required this.title,

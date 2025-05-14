@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:game_oclock/blocs/blocs.dart'
-    show CounterProducerBloc, LayoutContextChanged, LayoutTierBloc;
-import 'package:game_oclock/pages/home.dart';
+    show LayoutTierBloc;
+import 'package:game_oclock/pages/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return BlocProvider(
       create: (_) => LayoutTierBloc(),
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
           snackBarTheme: const SnackBarThemeData(
@@ -24,29 +23,8 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: BlocProvider(
-          create: (_) => CounterProducerBloc(),
-          child: const SelectionArea(
-            child: MyHomePage(title: 'Flutter Demo Home Page'),
-          ),
-        ),
+        routerConfig: routerConfig,
       ),
     );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(final BuildContext context) {
-    final mediaQuerySize = MediaQuery.sizeOf(context);
-    context.read<LayoutTierBloc>().add(
-      LayoutContextChanged(size: mediaQuerySize),
-    );
-
-    return const HomePage();
   }
 }
