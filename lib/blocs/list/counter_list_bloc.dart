@@ -42,7 +42,7 @@ class CounterListBloc extends ListLoadBloc<Counter> {
       );
     }
 
-    if (Random.secure().nextBool()) {
+    if (true) {
       return ListLoadSuccess<Counter>(
         data: finalData,
         quicksearch: quicksearch,

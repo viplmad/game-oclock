@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show LayoutTierBloc;
 import 'package:game_oclock/pages/routes.dart';
 
 void main() {
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 
