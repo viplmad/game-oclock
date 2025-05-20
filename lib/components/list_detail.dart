@@ -8,9 +8,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         FunctionActionBloc,
         LayoutTierBloc,
         LayoutTierState,
-        ListLoadBloc;
+        ListLoadBloc,
+        MinimizedLayoutBloc;
 import 'package:game_oclock/models/models.dart' show LayoutTier;
-import 'package:go_router/go_router.dart';
 
 import 'grid_list.dart';
 
@@ -125,17 +125,6 @@ class ListDetailBuilder<
     required final T? data,
   }) {
     selectBloc.add(ActionStarted(data: data));
-
-    final currentUri = GoRouterState.of(context).uri;
-    final Map<String, dynamic> queryParams = Map.from(
-      currentUri.queryParameters,
-    );
-    if (data == null) {
-      queryParams.remove('data');
-    } else {
-      queryParams['data'] = data.hashCode.toString();
-    }
-    final newUri = Uri(path: currentUri.path, queryParameters: queryParams);
-    GoRouter.of(context).go(newUri.toString());
+    context.read<MinimizedLayoutBloc>().add(ActionStarted(data: data != null));
   }
 }

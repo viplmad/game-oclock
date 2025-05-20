@@ -2,6 +2,7 @@ export 'error.dart';
 export 'layout_tier.dart';
 export 'form_data.dart';
 export 'list_filter.dart';
+export 'nav_destination.dart';
 
 export 'order_type.dart';
 export 'search.dart';

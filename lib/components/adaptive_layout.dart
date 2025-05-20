@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show LayoutTierBloc, LayoutTierState;
-import 'package:game_oclock/models/models.dart' show LayoutTier;
+    show
+        ActionFinal,
+        ActionState,
+        LayoutTierBloc,
+        LayoutTierState,
+        MinimizedLayoutBloc;
+import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
+import 'package:go_router/go_router.dart';
 
 class AdaptiveLayoutBuilder extends StatelessWidget {
   const AdaptiveLayoutBuilder({
     super.key,
     required this.title,
-    required this.minimized,
+    required this.selectedPath,
     required this.mainDestinations,
     required this.secondaryDestinations,
     required this.actions,
@@ -19,9 +25,9 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
   });
 
   final String title;
-  final bool minimized;
-  final List<NavigationDestination> mainDestinations;
-  final List<NavigationDestination> secondaryDestinations;
+  final String selectedPath;
+  final List<NavDestination> mainDestinations;
+  final List<NavDestination> secondaryDestinations;
   final List<Widget> actions;
   final String fabLabel;
   final Icon fabIcon;
@@ -34,39 +40,67 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
       builder: (final context, final layoutState) {
         final layoutTier = layoutState.tier;
 
-        return layoutTier == LayoutTier.compact && minimized
-            ? Scaffold(body: child)
-            : Scaffold(
-              appBar: AppBar(title: Text(title), actions: actions),
-              body: body(layoutTier: layoutTier),
-              bottomNavigationBar:
-                  layoutTier == LayoutTier.compact ? navigationBar() : null,
-              drawer:
-                  layoutTier == LayoutTier.compact ||
-                          layoutTier == LayoutTier.medium ||
-                          layoutTier == LayoutTier.expanded
-                      ? navigationDrawer()
-                      : null,
-              floatingActionButton:
-                  layoutTier == LayoutTier.compact
-                      ? fab(extended: false)
-                      : null,
-            );
+        return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
+          builder: (final context, final minimizedState) {
+            final minimized =
+                (minimizedState is ActionFinal)
+                    ? (minimizedState as ActionFinal<bool>).data
+                    : false;
+
+            return layoutTier == LayoutTier.compact && minimized
+                ? Scaffold(body: child)
+                : Scaffold(
+                  appBar: AppBar(title: Text(title), actions: actions),
+                  body: body(
+                    context,
+                    selectedPath: selectedPath,
+                    layoutTier: layoutTier,
+                  ),
+                  bottomNavigationBar:
+                      layoutTier == LayoutTier.compact
+                          ? navigationBar(context, selectedPath: selectedPath)
+                          : null,
+                  drawer:
+                      layoutTier == LayoutTier.compact ||
+                              layoutTier == LayoutTier.medium ||
+                              layoutTier == LayoutTier.expanded
+                          ? navigationDrawer(
+                            context,
+                            selectedPath: selectedPath,
+                          )
+                          : null,
+                  floatingActionButton:
+                      layoutTier == LayoutTier.compact
+                          ? fab(extended: false)
+                          : null,
+                );
+          },
+        );
       },
     );
   }
 
-  Widget body({required final LayoutTier layoutTier}) {
+  Widget body(
+    final BuildContext context, {
+    required final String selectedPath,
+    required final LayoutTier layoutTier,
+  }) {
     if (layoutTier == LayoutTier.compact) {
       return child;
     } else if (layoutTier == LayoutTier.medium ||
         layoutTier == LayoutTier.expanded) {
       return Row(
-        children: [navigationRail(extended: false), Expanded(child: child)],
+        children: [
+          navigationRail(context, selectedPath: selectedPath, extended: false),
+          Expanded(child: child),
+        ],
       );
     } else {
       return Row(
-        children: [navigationRail(extended: true), Expanded(child: child)],
+        children: [
+          navigationRail(context, selectedPath: selectedPath, extended: true),
+          Expanded(child: child),
+        ],
       );
     }
   }
@@ -85,9 +119,21 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
         );
   }
 
-  NavigationDrawer navigationDrawer() {
+  NavigationDrawer navigationDrawer(
+    final BuildContext context, {
+    required final String selectedPath,
+  }) {
+    final destinations = [...mainDestinations, ...secondaryDestinations];
     return NavigationDrawer(
-      children: [...mainDestinations, ...secondaryDestinations] // TODO group
+      selectedIndex: _selectedIndex(
+        selectedPath: selectedPath,
+        destinations: destinations,
+      ),
+      onDestinationSelected: _goToSelectedPathCallback(
+        context,
+        destinations: destinations,
+      ),
+      children: destinations // TODO group
           .map(
             (final dest) => NavigationDrawerDestination(
               icon: dest.icon,
@@ -98,12 +144,18 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
     );
   }
 
-  NavigationRail navigationRail({required final bool extended}) {
+  NavigationRail navigationRail(
+    final BuildContext context, {
+    required final String selectedPath,
+    required final bool extended,
+  }) {
+    final destinations =
+        (extended
+            ? [...mainDestinations, ...secondaryDestinations]
+            : mainDestinations);
     return NavigationRail(
       leading: fab(extended: extended),
-      destinations: (extended
-              ? [...mainDestinations, ...secondaryDestinations] // TODO group
-              : mainDestinations)
+      destinations: destinations // TODO group
           .map(
             (final dest) => NavigationRailDestination(
               icon: dest.icon,
@@ -112,11 +164,58 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
           )
           .toList(growable: false),
       extended: extended,
-      selectedIndex: 0,
+      selectedIndex: _selectedIndex(
+        selectedPath: selectedPath,
+        destinations: destinations,
+      ),
+      onDestinationSelected: _goToSelectedPathCallback(
+        context,
+        destinations: destinations,
+      ),
     );
   }
 
-  NavigationBar navigationBar() {
-    return NavigationBar(destinations: mainDestinations);
+  NavigationBar navigationBar(
+    final BuildContext context, {
+    required final String selectedPath,
+  }) {
+    return NavigationBar(
+      destinations: mainDestinations
+          .map(
+            (final dest) =>
+                NavigationDestination(icon: dest.icon, label: dest.label),
+          )
+          .toList(growable: false),
+      selectedIndex:
+          _selectedIndex(
+            selectedPath: selectedPath,
+            destinations: mainDestinations,
+          ) ??
+          0,
+      onDestinationSelected: _goToSelectedPathCallback(
+        context,
+        destinations: mainDestinations,
+      ),
+    );
+  }
+
+  static ValueChanged<int> _goToSelectedPathCallback(
+    final BuildContext context, {
+    required final List<NavDestination> destinations,
+  }) {
+    return (final selectedIndex) {
+      final selectedDest = destinations.elementAt(selectedIndex);
+      GoRouter.of(context).go(selectedDest.path);
+    };
+  }
+
+  static int? _selectedIndex({
+    required final String selectedPath,
+    required final List<NavDestination> destinations,
+  }) {
+    final destinationIndex = destinations.indexWhere(
+      (final dest) => selectedPath.startsWith(dest.path),
+    );
+    return destinationIndex >= 0 ? destinationIndex : null;
   }
 }

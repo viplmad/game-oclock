@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show LayoutTierBloc;
+    show ActionStarted, LayoutTierBloc, MinimizedLayoutBloc;
 import 'package:game_oclock/pages/routes.dart';
 
 void main() {
@@ -15,8 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocProvider(
-      create: (_) => LayoutTierBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => LayoutTierBloc()),
+        BlocProvider(
+          create: (_) => MinimizedLayoutBloc()..add(ActionStarted(data: false)),
+        ),
+      ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
