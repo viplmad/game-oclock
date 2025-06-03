@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show Counter, CounterListBloc, CounterSelectBloc, ListLoaded;
-import 'package:game_oclock/components/create_edit_form.dart' show EditForm;
 import 'package:game_oclock/components/detail.dart' show Detail;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/pages/counter_form.dart' show CounterEditForm;
 
-class CounterListDetail extends StatelessWidget {
-  const CounterListDetail({super.key});
+class CounterListPage extends StatelessWidget {
+  const CounterListPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
@@ -41,7 +41,7 @@ class CounterListDetail extends StatelessWidget {
               onEditPressed:
                   () async => showDialog(
                     context: context,
-                    builder: (final context) => const EditForm(),
+                    builder: (final context) => const CounterEditForm(),
                   ),
               content: Column(
                 children: [

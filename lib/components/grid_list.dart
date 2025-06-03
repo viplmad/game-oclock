@@ -10,7 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListPageIncremented,
         ListSearchChanged,
         ListState;
-import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 import 'package:game_oclock/pages/filters_list.dart';
 
 import 'list_item.dart';

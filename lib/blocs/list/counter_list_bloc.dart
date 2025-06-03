@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:game_oclock/blocs/list/list_state.dart';
 import 'package:game_oclock/models/models.dart'
     show ErrorDTO, ListSearch, PageResultDTO;
@@ -50,7 +48,7 @@ class CounterListBloc extends ListLoadBloc<Counter> {
       );
     } else {
       return ListLoadFailure<Counter>(
-        error: ErrorDTO(code: 'code', message: 'message'),
+        error: const ErrorDTO(code: 'code', message: 'message'),
         data: lastData ?? List.empty(growable: false),
         quicksearch: quicksearch,
         search: search,

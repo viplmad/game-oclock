@@ -8,16 +8,28 @@ import 'package:game_oclock/blocs/blocs.dart'
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/adaptive_layout.dart'
     show AdaptiveLayoutBuilder;
-import 'package:game_oclock/components/create_edit_form.dart' show CreateForm;
-import 'package:game_oclock/pages/counter_list_detail.dart';
+import 'package:game_oclock/pages/counter_form.dart' show CounterCreateForm;
+import 'package:game_oclock/pages/counter_list.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
+import 'package:game_oclock/pages/login.dart' show LoginPage;
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
 final routerConfig = GoRouter(
-  initialLocation: '/a',
+  initialLocation: '/login',
   routes: [
+    GoRoute(
+      path: '/login',
+      builder: (final BuildContext context, final GoRouterState state) {
+        final mediaQuerySize = MediaQuery.sizeOf(context);
+        context.read<LayoutTierBloc>().add(
+          LayoutContextChanged(size: mediaQuerySize),
+        );
+
+        return const LoginPage();
+      },
+    ),
     ShellRoute(
       builder: (final context, final state, final child) {
         final mediaQuerySize = MediaQuery.sizeOf(context);
@@ -33,7 +45,7 @@ final routerConfig = GoRouter(
           fabOnPressed:
               () async => showDialog(
                 context: context,
-                builder: (final context) => const CreateForm(),
+                builder: (final context) => const CounterCreateForm(),
               ),
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,
@@ -46,7 +58,7 @@ final routerConfig = GoRouter(
           path: '/a',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
           /*routes: <RouteBase>[
             GoRoute(
@@ -61,35 +73,35 @@ final routerConfig = GoRouter(
           path: '/b',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
         ),
         GoRoute(
           path: '/c',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
         ),
         GoRoute(
           path: '/x',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
         ),
         GoRoute(
           path: '/y',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
         ),
         GoRoute(
           path: '/z',
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListDetail();
+            return const CounterListPage();
           },
         ),
       ],

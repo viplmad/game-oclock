@@ -7,76 +7,41 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionInProgress,
         ActionStarted,
         ActionState,
-        Counter,
-        CounterCreateBloc,
-        CounterFormBloc,
-        CounterFormData,
-        CounterGetBloc,
-        CounterUpdateBloc,
+        ConsumerActionBloc,
+        FormBloc,
         FormDirtied,
         FormState2,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValuesUpdated,
+        FunctionActionBloc,
         LayoutTierBloc,
         LayoutTierState;
-import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 
-class CreateForm extends StatelessWidget {
-  const CreateForm({super.key});
-
-  @override
-  Widget build(final BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create:
-              (_) => CounterFormBloc(
-                formGroup: CounterFormData(
-                  name: TextEditingController(),
-                  data: TextEditingController(),
-                ),
-              ),
-        ),
-        BlocProvider(create: (_) => CounterCreateBloc()),
-      ],
-      child: const CreateEditForm(title: 'Creating', create: true),
-    );
-  }
-}
-
-class EditForm extends StatelessWidget {
-  const EditForm({super.key});
-
-  @override
-  Widget build(final BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create:
-              (_) => CounterFormBloc(
-                formGroup: CounterFormData(
-                  name: TextEditingController(),
-                  data: TextEditingController(),
-                ),
-              ),
-        ),
-        BlocProvider(create: (_) => CounterUpdateBloc()),
-        BlocProvider(
-          create: (_) => CounterGetBloc()..add(ActionStarted(data: 'get')),
-        ),
-      ],
-      child: const CreateEditForm(title: 'Editing', create: false),
-    );
-  }
-}
-
-class CreateEditForm extends StatelessWidget {
-  const CreateEditForm({super.key, required this.title, required this.create});
+class CreateEditFormBuilder<
+  T,
+  D extends FormData<T>,
+  FB extends FormBloc<D, T>,
+  GB extends FunctionActionBloc<String, T?>,
+  CB extends ConsumerActionBloc<T>,
+  UB extends ConsumerActionBloc<T>
+>
+    extends StatelessWidget {
+  const CreateEditFormBuilder({
+    super.key,
+    required this.title,
+    required this.create,
+    required this.fieldsBuilder,
+  });
 
   final bool create;
   final String title;
+
+  // ignore: avoid_positional_boolean_parameters
+  final Widget Function(BuildContext context, D formGroup, bool readOnly)
+  fieldsBuilder;
 
   @override
   Widget build(final BuildContext context) {
@@ -121,16 +86,14 @@ class CreateEditForm extends StatelessWidget {
   }) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+        BlocListener<FB, FormState2<D, T>>(
           listener: (final context, final state) {
-            if (state is FormStateSubmitSuccess<CounterFormData, Counter>) {
-              context.read<CounterCreateBloc>().add(
-                ActionStarted(data: state.data),
-              );
+            if (state is FormStateSubmitSuccess<D, T>) {
+              context.read<CB>().add(ActionStarted(data: state.data));
             }
           },
         ),
-        BlocListener<CounterCreateBloc, ActionState<void>>(
+        BlocListener<CB, ActionState<void>>(
           listener: (final context, final state) {
             final snackBar = SnackBar(content: Text('Data created $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
@@ -139,9 +102,9 @@ class CreateEditForm extends StatelessWidget {
           },
         ),
       ],
-      child: BlocBuilder<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+      child: BlocBuilder<FB, FormState2<D, T>>(
         builder: (final context, final formState) {
-          return BlocBuilder<CounterCreateBloc, ActionState<void>>(
+          return BlocBuilder<CB, ActionState<void>>(
             builder: (final context, final createState) {
               final inProgress =
                   formState is FormStateSubmitInProgress ||
@@ -151,22 +114,18 @@ class CreateEditForm extends StatelessWidget {
                 title: title,
                 formKey: formState.key,
                 fullscreen: fullscreen,
-                formFieldsContainer: buildFormFieldsContainer(
-                  formGroup: formState.group,
-                  readOnly: inProgress,
+                formFieldsContainer: fieldsBuilder(
+                  context,
+                  formState.group,
+                  inProgress,
                 ),
                 dirty: formState.dirty,
-                onChanged:
-                    () => context.read<CounterFormBloc>().add(
-                      const FormDirtied(),
-                    ),
+                onChanged: () => context.read<FB>().add(const FormDirtied()),
                 onSubmit:
                     inProgress
                         ? null
                         : () {
-                          context.read<CounterFormBloc>().add(
-                            const FormSubmitted(),
-                          );
+                          context.read<FB>().add(const FormSubmitted());
                         },
               );
             },
@@ -182,16 +141,14 @@ class CreateEditForm extends StatelessWidget {
   }) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+        BlocListener<FB, FormState2<D, T>>(
           listener: (final context, final state) {
-            if (state is FormStateSubmitSuccess<CounterFormData, Counter>) {
-              context.read<CounterUpdateBloc>().add(
-                ActionStarted(data: state.data),
-              );
+            if (state is FormStateSubmitSuccess<D, T>) {
+              context.read<UB>().add(ActionStarted(data: state.data));
             }
           },
         ),
-        BlocListener<CounterUpdateBloc, ActionState<void>>(
+        BlocListener<UB, ActionState<void>>(
           listener: (final context, final state) {
             final snackBar = SnackBar(content: Text('Data updated $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
@@ -199,28 +156,27 @@ class CreateEditForm extends StatelessWidget {
             // TODO possibly clear dirty now
           },
         ),
-        BlocListener<CounterGetBloc, ActionState<Counter>>(
+        BlocListener<GB, ActionState<T?>>(
           listener: (final context, final state) {
-            Counter? counter;
-            if (state is ActionFinal<Counter>) {
-              counter = state.data;
-              context.read<CounterFormBloc>().add(
-                FormValuesUpdated(values: counter),
-              );
+            if (state is ActionFinal<T?>) {
+              final T? data = state.data;
+              if (data != null) {
+                context.read<FB>().add(FormValuesUpdated(values: data));
+              }
             }
           },
         ),
       ],
-      child: BlocBuilder<CounterFormBloc, FormState2<CounterFormData, Counter>>(
+      child: BlocBuilder<FB, FormState2<D, T>>(
         builder: (final context, final formState) {
-          return BlocBuilder<CounterGetBloc, ActionState<Counter>>(
+          return BlocBuilder<GB, ActionState<T?>>(
             builder: (final context, final getState) {
               bool skeleton = false; // TODO
-              if (getState is ActionInProgress<Counter>) {
+              if (getState is ActionInProgress<T>) {
                 skeleton = true; // TODO only if initial load?
               }
 
-              return BlocBuilder<CounterUpdateBloc, ActionState<void>>(
+              return BlocBuilder<UB, ActionState<void>>(
                 builder: (final context, final createState) {
                   final inProgress =
                       getState is ActionInProgress ||
@@ -231,22 +187,19 @@ class CreateEditForm extends StatelessWidget {
                     title: title,
                     formKey: formState.key,
                     fullscreen: fullscreen,
-                    formFieldsContainer: buildFormFieldsContainer(
-                      formGroup: formState.group,
-                      readOnly: inProgress,
+                    formFieldsContainer: fieldsBuilder(
+                      context,
+                      formState.group,
+                      inProgress,
                     ),
                     dirty: formState.dirty,
                     onChanged:
-                        () => context.read<CounterFormBloc>().add(
-                          const FormDirtied(),
-                        ),
+                        () => context.read<FB>().add(const FormDirtied()),
                     onSubmit: // TODO possibly disallow submit if not dirty
                         inProgress
                             ? null
                             : () {
-                              context.read<CounterFormBloc>().add(
-                                const FormSubmitted(),
-                              );
+                              context.read<FB>().add(const FormSubmitted());
                             },
                   );
                 },
@@ -255,42 +208,6 @@ class CreateEditForm extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  Widget buildFormFieldsContainer({
-    required final CounterFormData formGroup,
-    required final bool readOnly,
-  }) {
-    return Column(
-      children: <Widget>[
-        TextFormField(
-          controller: formGroup.name,
-          readOnly: readOnly,
-          validator: (final value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter some text';
-            }
-            return null;
-          },
-        ),
-        TextFormField(controller: formGroup.data, readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-        TextFormField(readOnly: readOnly),
-      ],
     );
   }
 }

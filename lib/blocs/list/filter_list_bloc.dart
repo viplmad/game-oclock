@@ -43,7 +43,7 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
       );
     } else {
       return ListLoadFailure<ListSearch>(
-        error: ErrorDTO(code: 'code', message: 'message'),
+        error: const ErrorDTO(code: 'code', message: 'message'),
         data: lastData ?? List.empty(growable: false),
         quicksearch: quicksearch,
         search: search,
