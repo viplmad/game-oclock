@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, ListSearch, PageResultDTO, SearchDTO;
+    show ListSearch, PageResultDTO, SearchDTO;
 
-import 'list.dart'
-    show ListFinal, ListLoadBloc, ListLoadFailure, ListLoadSuccess;
+import 'list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
 class SearchListBloc extends ListLoadBloc<ListSearch> {
   SearchListBloc({required this.space});
@@ -32,22 +29,13 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
       size: size,
     );
 
-    if (Random.secure().nextBool()) {
-      return ListLoadSuccess<ListSearch>(
-        data: List.of(
-          lastData == null ? data.data : [...lastData, ...data.data],
-          growable: false,
-        ),
-        quicksearch: quicksearch,
-        search: search,
-      );
-    } else {
-      return ListLoadFailure<ListSearch>(
-        error: const ErrorDTO(code: 'code', message: 'message'),
-        data: lastData ?? List.empty(growable: false),
-        quicksearch: quicksearch,
-        search: search,
-      );
-    }
+    return ListLoadSuccess<ListSearch>(
+      data: List.of(
+        lastData == null ? data.data : [...lastData, ...data.data],
+        growable: false,
+      ),
+      quicksearch: quicksearch,
+      search: search,
+    );
   }
 }

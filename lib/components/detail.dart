@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/icons.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
@@ -51,7 +52,7 @@ class Detail extends StatelessWidget {
         leading: BackButton(onPressed: onBackPressed),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(CommonIcons.edit),
             tooltip: 'Edit',
             onPressed: onEditPressed,
           ),

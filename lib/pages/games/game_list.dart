@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show Counter, CounterListBloc, CounterSelectBloc, ListLoaded;
+    show ListLoaded, UserGameListBloc, UserGameSelectBloc;
 import 'package:game_oclock/components/detail.dart' show Detail;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
-import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
-import 'package:game_oclock/pages/counter_form.dart' show CounterEditForm;
+import 'package:game_oclock/models/models.dart'
+    show ListSearch, SearchDTO, UserGame;
+import 'package:game_oclock/pages/games/game_form.dart' show UserGameEditForm;
 
-class CounterListPage extends StatelessWidget {
-  const CounterListPage({super.key});
+class UserGameListPage extends StatelessWidget {
+  const UserGameListPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
@@ -17,38 +18,34 @@ class CounterListPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) {
-            return CounterSelectBloc();
+            return UserGameSelectBloc();
           },
         ),
         BlocProvider(
           create:
               (_) =>
-                  CounterListBloc()..add(
+                  UserGameListBloc()..add(
                     ListLoaded(
                       search: ListSearch(name: 'default', search: SearchDTO()),
                     ),
                   ),
         ),
       ],
-      child: ListDetailBuilder<Counter, CounterSelectBloc, CounterListBloc>(
-        filterSpace: 'counter',
+      child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
+        filterSpace: 'game',
         detailBuilder:
             (final context, final data, final onClosed) => Detail(
-              title: data.name,
-              imageUrl:
-                  'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
+              title: data.title,
+              imageUrl: data.coverUrl,
               onBackPressed: onClosed,
               onEditPressed:
                   () async => showDialog(
                     context: context,
-                    builder: (final context) => const CounterEditForm(),
+                    builder: (final context) => const UserGameEditForm(),
                   ),
               content: Column(
                 children: [
-                  Flexible(
-                    flex: 3,
-                    child: Column(children: [Text(data.data.toString())]),
-                  ),
+                  Flexible(flex: 3, child: Column(children: [Text(data.id)])),
                   const Flexible(
                     flex: 2,
                     child: DefaultTabController(
@@ -80,7 +77,8 @@ class CounterListPage extends StatelessWidget {
             ),
         listItemBuilder:
             (final context, final data, final onPressed) => ListItemGrid(
-              title: '${data.name} ${data.data}',
+              title:
+                  '${data.title}${data.edition.isNotEmpty ? ' - ${data.edition}' : ''}',
               onTap: onPressed,
             ),
       ),

@@ -1,16 +1,16 @@
 import 'package:game_oclock/blocs/list/list_state.dart';
+import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, ListSearch, PageResultDTO;
+    show ErrorDTO, ListSearch, PageResultDTO, UserGame;
 
-import '../action/action.dart' show Counter;
 import 'list_bloc.dart' show ListLoadBloc;
 
-class CounterListBloc extends ListLoadBloc<Counter> {
+class UserGameListBloc extends ListLoadBloc<UserGame> {
   @override
-  Future<ListFinal<Counter>> loadList(
+  Future<ListFinal<UserGame>> loadList(
     final String? quicksearch,
     final ListSearch search,
-    final List<Counter>? lastData,
+    final List<UserGame>? lastData,
     final String? lastQuicksearch,
     final ListSearch? lastSearch,
   ) async {
@@ -21,16 +21,13 @@ class CounterListBloc extends ListLoadBloc<Counter> {
     final data = PageResultDTO(
       data: List.generate(size, (final index) {
         final finalIndex = (page * size) + index;
-        return Counter(
-          name: 'name ($quicksearch) $finalIndex',
-          data: finalIndex,
-        );
+        return mockUserGame(); // TODO
       }),
       page: page,
       size: size,
     );
 
-    List<Counter> finalData;
+    List<UserGame> finalData;
     if (page == 0) {
       finalData = data.data;
     } else {
@@ -41,13 +38,13 @@ class CounterListBloc extends ListLoadBloc<Counter> {
     }
 
     if (true) {
-      return ListLoadSuccess<Counter>(
+      return ListLoadSuccess<UserGame>(
         data: finalData,
         quicksearch: quicksearch,
         search: search,
       );
     } else {
-      return ListLoadFailure<Counter>(
+      return ListLoadFailure<UserGame>(
         error: const ErrorDTO(code: 'code', message: 'message'),
         data: lastData ?? List.empty(growable: false),
         quicksearch: quicksearch,

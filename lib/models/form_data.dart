@@ -1,3 +1,3 @@
 abstract class FormData<T> {
-  void setValues(final T? counter);
+  void setValues(final T? data);
 }

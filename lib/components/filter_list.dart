@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/components/grid_list.dart';
 import 'package:game_oclock/blocs/blocs.dart' show ListLoaded, SearchListBloc;
+import 'package:game_oclock/components/grid_list.dart';
 import 'package:game_oclock/components/list_item.dart' show ListItemTile;
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
 

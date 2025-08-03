@@ -19,7 +19,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginFormData,
         LoginGetBloc,
         LoginSaveBloc;
+import 'package:game_oclock/components/show_hide_text_form_field.dart'
+    show ShowHideTextFormField;
+import 'package:game_oclock/constants/form_validators.dart';
+import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -96,6 +101,7 @@ class LoginBuilder extends StatelessWidget {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             // TODO possibly clear dirty now
+            GoRouter.of(context).go(CommonPaths.gamesPath);
           },
         ),
         BlocListener<LoginGetBloc, ActionState<Login?>>(
@@ -167,18 +173,26 @@ class LoginBuilder extends StatelessWidget {
           controller: formGroup.host,
           readOnly: readOnly,
           validator: notEmptyValidator,
+          decoration: const InputDecoration(
+            labelText: 'Host', // TODO
+          ),
         ),
-        TextFormField(controller: formGroup.username, readOnly: readOnly),
-        TextFormField(controller: formGroup.password, readOnly: readOnly),
+        TextFormField(
+          controller: formGroup.username,
+          readOnly: readOnly,
+          validator: notEmptyValidator,
+          decoration: const InputDecoration(
+            labelText: 'Username', // TODO
+          ),
+        ),
+        ShowHideTextFormField(
+          controller: formGroup.password,
+          readOnly: readOnly,
+          validator: notEmptyValidator,
+          labelText: 'Password', // TODO
+        ),
       ],
     );
-  }
-
-  String? notEmptyValidator(final value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter some text';
-    }
-    return null;
   }
 }
 

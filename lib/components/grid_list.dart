@@ -10,9 +10,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListPageIncremented,
         ListSearchChanged,
         ListState;
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
-import 'package:game_oclock/pages/filters_list.dart';
 
+import 'filter_list.dart';
 import 'list_item.dart';
 
 class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
@@ -67,7 +68,7 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
   }) {
     return ListTile(
       title: Text(filter == null ? '-' : filter.name),
-      trailing: const Icon(Icons.arrow_drop_down),
+      trailing: const Icon(CommonIcons.down),
       onTap: () async {
         final listBloc = context.read<LB>();
         showModalBottomSheet<ListSearch>(

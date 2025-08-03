@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutTierState,
         ListLoadBloc,
         ListQuicksearchChanged;
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 
 import 'grid_list.dart';
@@ -78,7 +79,7 @@ class ListDetailLayoutBuilder<
                   SearchAnchor(
                     builder: (final context, final controller) {
                       return IconButton(
-                        icon: const Icon(Icons.search),
+                        icon: const Icon(CommonIcons.search),
                         onPressed: () {
                           controller.openView();
                         },

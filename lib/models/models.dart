@@ -12,3 +12,4 @@ export 'operator_type.dart';
 export 'chain_operator_type.dart';
 export 'page_result.dart';
 export 'search_value.dart';
+export 'game.dart';

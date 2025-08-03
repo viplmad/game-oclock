@@ -8,19 +8,21 @@ import 'package:game_oclock/blocs/blocs.dart'
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/adaptive_layout.dart'
     show AdaptiveLayoutBuilder;
-import 'package:game_oclock/pages/counter_form.dart' show CounterCreateForm;
-import 'package:game_oclock/pages/counter_list.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
-import 'package:game_oclock/pages/login.dart' show LoginPage;
+import 'package:game_oclock/pages/games/game_form.dart' show UserGameCreateForm;
+import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
+import 'package:game_oclock/pages/login/login.dart' show LoginPage;
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
 final routerConfig = GoRouter(
-  initialLocation: '/login',
+  initialLocation: CommonPaths.loginPath,
   routes: [
     GoRoute(
-      path: '/login',
+      path: CommonPaths.loginPath,
       builder: (final BuildContext context, final GoRouterState state) {
         final mediaQuerySize = MediaQuery.sizeOf(context);
         context.read<LayoutTierBloc>().add(
@@ -38,14 +40,14 @@ final routerConfig = GoRouter(
         );
 
         return AdaptiveLayoutBuilder(
-          title: 'Counters',
+          title: 'Counters', // TODO
           actions: [],
-          fabIcon: const Icon(Icons.add),
+          fabIcon: const Icon(CommonIcons.add),
           fabLabel: 'Add',
           fabOnPressed:
               () async => showDialog(
                 context: context,
-                builder: (final context) => const CounterCreateForm(),
+                builder: (final context) => const UserGameCreateForm(),
               ),
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,
@@ -55,10 +57,10 @@ final routerConfig = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/a',
+          path: CommonPaths.gamesPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListPage();
+            return const UserGameListPage();
           },
           /*routes: <RouteBase>[
             GoRoute(
@@ -70,38 +72,31 @@ final routerConfig = GoRouter(
           ],*/
         ),
         GoRoute(
-          path: '/b',
+          path: CommonPaths.locationsPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListPage();
+            return const UserGameListPage();
           },
         ),
         GoRoute(
-          path: '/c',
+          path: CommonPaths.devicesPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
-            return const CounterListPage();
+            return const UserGameListPage();
           },
         ),
         GoRoute(
-          path: '/x',
+          path: CommonPaths.tagsPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListPage();
+            return const UserGameListPage();
           },
         ),
         GoRoute(
-          path: '/y',
+          path: CommonPaths.usersPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListPage();
-          },
-        ),
-        GoRoute(
-          path: '/z',
-          builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
-            return const CounterListPage();
+            return const UserGameListPage();
           },
         ),
       ],
