@@ -21,7 +21,7 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
     final data = PageResultDTO(
       data: List.generate(size, (final index) {
         final finalIndex = (page * size) + index;
-        return mockUserGame(); // TODO
+        return mockUserGame(title: 'title ($quicksearch) $finalIndex');
       }),
       page: page,
       size: size,

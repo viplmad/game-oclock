@@ -1,5 +1,5 @@
-import 'package:game_oclock/models/models.dart'
-    show ListSearch, PageResultDTO, SearchDTO;
+import 'package:game_oclock/mocks.dart';
+import 'package:game_oclock/models/models.dart' show ListSearch, PageResultDTO;
 
 import 'list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
@@ -23,7 +23,7 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
     final data = PageResultDTO(
       data: List.generate(size, (final index) {
         final finalIndex = (page * size) + index;
-        return ListSearch(name: 'search $finalIndex', search: SearchDTO());
+        return mockSearch(name: 'search $finalIndex');
       }),
       page: page,
       size: size,

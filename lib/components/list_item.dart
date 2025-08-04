@@ -5,12 +5,16 @@ class ListItemTile extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.imageURL,
     this.onTap,
+    this.trailing,
   });
 
   final String title;
   final String? subtitle;
+  final String? imageURL; // TODO
   final VoidCallback? onTap;
+  final Widget? trailing;
 
   @override
   Widget build(final BuildContext context) {
@@ -18,6 +22,7 @@ class ListItemTile extends StatelessWidget {
       title: Text(title),
       subtitle: subtitle == null ? null : Text(subtitle!),
       onTap: onTap,
+      trailing: trailing,
     );
   }
 }
@@ -72,7 +77,7 @@ class _ListItemGridTile extends StatelessWidget {
                   style: const TextStyle(fontSize: 18.0, color: Colors.white),
                 ),
               )
-              : null,
+              : null, // TODO
       child: Container(color: Colors.black87),
     );
   }

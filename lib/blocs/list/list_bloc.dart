@@ -20,11 +20,11 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     );
     on<ListQuicksearchChanged>(
       (final event, final emit) async =>
-          await onListQuickfilterChanged(event.quicksearch, emit),
+          await onListQuicksearchChanged(event.quicksearch, emit),
     );
     on<ListSearchChanged>(
       (final event, final emit) async =>
-          await onListFilterChanged(event.search, emit),
+          await onListSearchChanged(event.search, emit),
     );
     on<ListPageIncremented>(
       (final event, final emit) async => await onListPageIncremented(emit),
@@ -62,7 +62,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     }
   }
 
-  Future<void> onListQuickfilterChanged(
+  Future<void> onListQuicksearchChanged(
     final String? quicksearch,
     final Emitter<ListState<S>> emit,
   ) async {
@@ -90,7 +90,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     }
   }
 
-  Future<void> onListFilterChanged(
+  Future<void> onListSearchChanged(
     final ListSearch search,
     final Emitter<ListState<S>> emit,
   ) async {

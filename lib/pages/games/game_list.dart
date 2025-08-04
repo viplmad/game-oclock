@@ -32,7 +32,7 @@ class UserGameListPage extends StatelessWidget {
         ),
       ],
       child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
-        filterSpace: 'game',
+        searchSpace: 'game',
         detailBuilder:
             (final context, final data, final onClosed) => Detail(
               title: data.title,
@@ -41,7 +41,7 @@ class UserGameListPage extends StatelessWidget {
               onEditPressed:
                   () async => showDialog(
                     context: context,
-                    builder: (final context) => const UserGameEditForm(),
+                    builder: (final context) => UserGameEditForm(id: data.id),
                   ),
               content: Column(
                 children: [

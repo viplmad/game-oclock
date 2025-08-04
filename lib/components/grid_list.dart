@@ -13,8 +13,8 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
 
-import 'filter_list.dart';
 import 'list_item.dart';
+import 'search_list.dart';
 
 class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
   const GridListBuilder({
@@ -41,14 +41,14 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
           );
         }
 
-        ListSearch? currentFilter;
+        ListSearch? currentSearch;
         if (state is ListFinal<T>) {
-          currentFilter = state.search;
+          currentSearch = state.search;
         }
 
         return Column(
           children: [
-            filterTile(context, filter: currentFilter),
+            searchTile(context, search: currentSearch),
             Expanded(
               child: list(
                 context,
@@ -62,21 +62,21 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
     );
   }
 
-  ListTile filterTile(
+  ListTile searchTile(
     final BuildContext context, {
-    required final ListSearch? filter,
+    required final ListSearch? search,
   }) {
     return ListTile(
-      title: Text(filter == null ? '-' : filter.name),
+      title: Text(search == null ? '-' : search.name),
       trailing: const Icon(CommonIcons.down),
       onTap: () async {
         final listBloc = context.read<LB>();
         showModalBottomSheet<ListSearch>(
           context: context,
-          builder: (final context) => FilterListPage(space: space),
-        ).then((final selectedFilter) {
-          if (selectedFilter != null) {
-            listBloc.add(ListSearchChanged(search: selectedFilter));
+          builder: (final context) => SearchListPage(space: space),
+        ).then((final selectedSearch) {
+          if (selectedSearch != null) {
+            listBloc.add(ListSearchChanged(search: selectedSearch));
           }
         });
       },

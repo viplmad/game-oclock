@@ -46,7 +46,9 @@ class UserGameCreateForm extends StatelessWidget {
 }
 
 class UserGameEditForm extends StatelessWidget {
-  const UserGameEditForm({super.key});
+  const UserGameEditForm({super.key, required this.id});
+
+  final String id;
 
   @override
   Widget build(final BuildContext context) {
@@ -66,7 +68,7 @@ class UserGameEditForm extends StatelessWidget {
         ),
         BlocProvider(create: (_) => UserGameUpdateBloc()),
         BlocProvider(
-          create: (_) => UserGameGetBloc()..add(ActionStarted(data: 'get')),
+          create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
         ),
       ],
       child: const CreateEditFormBuilder<

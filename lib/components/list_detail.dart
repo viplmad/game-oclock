@@ -22,12 +22,12 @@ class ListDetailBuilder<
     extends StatelessWidget {
   const ListDetailBuilder({
     super.key,
-    required this.filterSpace,
+    required this.searchSpace,
     required this.detailBuilder,
     required this.listItemBuilder,
   });
 
-  final String filterSpace;
+  final String searchSpace;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
@@ -102,7 +102,7 @@ class ListDetailBuilder<
 
   Widget list(final BuildContext context, {required final T? selectedData}) {
     return GridListBuilder<T, LB>(
-      space: filterSpace,
+      space: searchSpace,
       itemBuilder:
           (final context, final data) => listItemBuilder(
             context,

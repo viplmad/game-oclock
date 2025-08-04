@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/mocks.dart';
+import 'package:game_oclock/models/models.dart' show ListSearch;
 
 import 'action.dart'
     show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
@@ -14,9 +15,7 @@ class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {
     final ListSearch? lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess(
-      data: ListSearch(name: space + event, search: SearchDTO()),
-    );
+    return ActionSuccess(data: mockSearch(name: space + event, filters: 3));
   }
 }
 
