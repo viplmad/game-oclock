@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        FilterFormData,
         SearchCreateBloc,
         SearchFormBloc,
         SearchFormData,
         SearchGetBloc,
         SearchUpdateBloc;
 import 'package:game_oclock/constants/form_validators.dart';
-import 'package:game_oclock/models/models.dart' show FilterDTO, ListSearch;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 
 import 'create_edit_form.dart';
 import 'list_item.dart';
@@ -100,13 +101,30 @@ Widget _fieldsBuilder(
           labelText: 'Name', // TODO
         ),
       ),
-      ReorderableTileList<FilterDTO>(
+      ReorderableTileList<FilterFormData>(
         controller: ScrollController(), // TODO
         items: formGroup.filters,
         itemBuilder:
-            (final context, final data) => ListItemTile(
-              title: '${data.field}${data.operator_.value}${data.value}',
-              subtitle: data.chainOperator?.value ?? '',
+            (final context, final data) => ListTile(
+              // TODO Missing operator
+              // TODO Missing chainOperator
+              // TODO Dismissible
+              title: TextFormField(
+                controller: data.field,
+                readOnly: readOnly,
+                validator: notEmptyValidator,
+                decoration: const InputDecoration(
+                  labelText: 'Field', // TODO
+                ),
+              ),
+              subtitle: TextFormField(
+                controller: data.value,
+                readOnly: readOnly,
+                validator: notEmptyValidator,
+                decoration: const InputDecoration(
+                  labelText: 'Value', // TODO
+                ),
+              ),
             ),
       ),
     ],

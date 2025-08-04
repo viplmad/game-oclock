@@ -6,7 +6,7 @@ import 'form.dart' show FormBloc;
 
 class SearchFormData extends FormData<ListSearch> {
   final TextEditingController name;
-  final List<FilterDTO> filters; // TODO
+  final List<FilterFormData> filters; // TODO
 
   SearchFormData({required this.name, required this.filters});
 
@@ -16,8 +16,41 @@ class SearchFormData extends FormData<ListSearch> {
 
     filters.clear();
     if (search?.search.filter != null) {
-      filters.addAll(search!.search.filter!);
+      filters.addAll(
+        search!.search.filter!.map(
+          (final filter) => FilterFormData(
+            field: TextEditingController(),
+            operator: TextEditingController(),
+            value: TextEditingController(),
+            chainOperator: TextEditingController(),
+          )..setValues(filter),
+        ),
+      );
     }
+  }
+}
+
+class FilterFormData extends FormData<FilterDTO> {
+  final TextEditingController field;
+  final TextEditingController operator;
+  final TextEditingController value;
+  final TextEditingController chainOperator;
+
+  FilterFormData({
+    required this.field,
+    required this.operator,
+    required this.value,
+    required this.chainOperator,
+  });
+
+  @override
+  void setValues(final FilterDTO? filter) {
+    field.value = field.value.copyWith(text: filter?.field);
+    operator.value = operator.value.copyWith(text: filter?.operator_.value);
+    value.value = value.value.copyWith(text: filter?.value.value); // TODO
+    chainOperator.value = chainOperator.value.copyWith(
+      text: filter?.chainOperator?.value,
+    );
   }
 }
 
