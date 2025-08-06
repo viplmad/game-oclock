@@ -32,7 +32,7 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
   UserGameFormBloc({required super.formGroup});
 
   @override
-  UserGame fromDynamicMap(final UserGameFormData values) {
+  UserGame fromData(final UserGameFormData values) {
     return UserGame(
       id: 'kalmdkamsd',
       externalId: 'epic',

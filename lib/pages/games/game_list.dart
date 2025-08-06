@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListLoaded, UserGameListBloc, UserGameSelectBloc;
+    show ListLoaded, ListReloaded, UserGameListBloc, UserGameSelectBloc;
 import 'package:game_oclock/components/detail.dart' show Detail;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
@@ -16,11 +16,7 @@ class UserGameListPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) {
-            return UserGameSelectBloc();
-          },
-        ),
+        BlocProvider(create: (_) => UserGameSelectBloc()),
         BlocProvider(
           create:
               (_) =>
@@ -39,10 +35,16 @@ class UserGameListPage extends StatelessWidget {
               imageUrl: data.coverUrl,
               onBackPressed: onClosed,
               onEditPressed:
-                  () async => showDialog(
+                  () async => showDialog<bool>(
                     context: context,
                     builder: (final context) => UserGameEditForm(id: data.id),
-                  ),
+                  ).then((final bool? success) {
+                    if (success != null && success) {
+                      context.read<UserGameListBloc>().add(
+                        const ListReloaded(),
+                      );
+                    }
+                  }),
               content: Column(
                 children: [
                   Flexible(flex: 3, child: Column(children: [Text(data.id)])),

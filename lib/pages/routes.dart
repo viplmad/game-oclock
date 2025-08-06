@@ -62,10 +62,14 @@ final routerConfig = GoRouter(
           fabIcon: const Icon(CommonIcons.add),
           fabLabel: 'Add',
           fabOnPressed:
-              () async => showDialog(
+              () async => showDialog<bool>(
                 context: context,
                 builder: (final context) => const UserGameCreateForm(),
-              ),
+              ).then((final bool? success) {
+                if (success != null && success) {
+                  // TODO refresh list
+                }
+              }),
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,
           secondaryDestinations: secondaryDestinations,

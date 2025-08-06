@@ -54,6 +54,7 @@ class CreateEditFormBuilder<
           return fullscreen
               ? Dialog.fullscreen(child: form)
               : Dialog(
+                // TODO min width
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 560.0),
                   child: form,
@@ -70,6 +71,7 @@ class CreateEditFormBuilder<
           return fullscreen
               ? Dialog.fullscreen(child: form)
               : Dialog(
+                // TODO min width
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 560.0),
                   child: form,
@@ -98,6 +100,7 @@ class CreateEditFormBuilder<
             final snackBar = SnackBar(content: Text('Data created $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
         ),
@@ -153,6 +156,7 @@ class CreateEditFormBuilder<
             final snackBar = SnackBar(content: Text('Data updated $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
         ),

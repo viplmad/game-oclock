@@ -57,7 +57,7 @@ abstract class FormBloc<D extends FormData<T>, T>
         formKey.currentState != null ? formKey.currentState!.validate() : false;
     if (valid) {
       formKey.currentState!.save();
-      final data = fromDynamicMap(formGroup);
+      final data = fromData(formGroup);
       emit(
         FormStateSubmitSuccess<D, T>(
           data: data,
@@ -107,5 +107,5 @@ abstract class FormBloc<D extends FormData<T>, T>
     emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: false));
   }
 
-  T fromDynamicMap(final D values);
+  T fromData(final D values);
 }

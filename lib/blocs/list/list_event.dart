@@ -14,6 +14,13 @@ final class ListLoaded extends ListEvent {
   List<Object?> get props => [search];
 }
 
+final class ListReloaded extends ListEvent {
+  const ListReloaded();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class ListQuicksearchChanged extends ListEvent {
   final String? quicksearch;
 

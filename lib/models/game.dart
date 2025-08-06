@@ -1,4 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+
+List<DropdownMenuEntry<String>> gameFields = List.unmodifiable([
+  const DropdownMenuEntry<String>(value: 'id', label: 'Id'),
+  const DropdownMenuEntry<String>(value: 'title', label: 'Title'),
+  const DropdownMenuEntry<String>(value: 'edition', label: 'Edition'),
+]);
 
 class Game extends Equatable {
   final String id;

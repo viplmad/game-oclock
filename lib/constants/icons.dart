@@ -7,6 +7,7 @@ class CommonIcons {
   static const IconData hide = Icons.visibility;
   static const IconData add = Icons.add;
   static const IconData edit = Icons.edit;
+  static const IconData delete = Icons.delete;
   static const IconData search = Icons.search;
   static const IconData down = Icons.arrow_drop_down;
 

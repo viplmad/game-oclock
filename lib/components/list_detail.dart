@@ -104,7 +104,7 @@ class ListDetailBuilder<
     return GridListBuilder<T, LB>(
       space: searchSpace,
       itemBuilder:
-          (final context, final data) => listItemBuilder(
+          (final context, final data, final index) => listItemBuilder(
             context,
             data,
             () => select(
