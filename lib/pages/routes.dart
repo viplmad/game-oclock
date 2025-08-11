@@ -12,6 +12,8 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
+import 'package:game_oclock/pages/games/game_detail.dart'
+    show UserGameDetailsPage;
 import 'package:game_oclock/pages/games/game_form.dart' show UserGameCreateForm;
 import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
 import 'package:game_oclock/pages/login/login.dart' show LoginPage;
@@ -80,43 +82,56 @@ final routerConfig = GoRouter(
         GoRoute(
           path: CommonPaths.gamesPath,
           builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
             return const UserGameListPage();
           },
-          /*routes: <RouteBase>[
-            GoRoute(
-              path: 'details',
-              builder: (BuildContext context, GoRouterState state) {
-                return const DetailsScreen(label: 'A');
-              },
-            ),
-          ],*/
         ),
+        GoRoute(
+          path: CommonPaths.gamePath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final String id = state.pathParameters[CommonPaths.idPathParam]!;
+            return UserGameDetailsPage(id: id);
+          },
+        ),
+
         GoRoute(
           path: CommonPaths.locationsPath,
           builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
             return const UserGameListPage();
           },
         ),
         GoRoute(
           path: CommonPaths.devicesPath,
           builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: false));
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
             return const UserGameListPage();
           },
         ),
         GoRoute(
           path: CommonPaths.tagsPath,
           builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
             return const UserGameListPage();
           },
         ),
         GoRoute(
           path: CommonPaths.usersPath,
           builder: (final BuildContext context, final GoRouterState state) {
-            context.read<MinimizedLayoutBloc>().add(ActionStarted(data: true));
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
             return const UserGameListPage();
           },
         ),

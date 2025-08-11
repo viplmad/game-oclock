@@ -6,43 +6,43 @@ import 'action.dart'
 
 class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {
   @override
-  Future<ActionFinal<UserGame>> doAction(
+  Future<ActionFinal<UserGame, String>> doAction(
     final String event,
     final UserGame? lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess(data: mockUserGame());
+    return ActionSuccess(data: mockUserGame(), event: event);
   }
 }
 
 class UserGameCreateBloc extends ConsumerActionBloc<UserGame> {
   @override
-  Future<ActionFinal<void>> doAction(
+  Future<ActionFinal<void, UserGame>> doAction(
     final UserGame event,
     final void lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 5));
-    return ActionSuccess.empty();
+    return ActionSuccess.empty(event);
   }
 }
 
 class UserGameUpdateBloc extends ConsumerActionBloc<UserGame> {
   @override
-  Future<ActionFinal<void>> doAction(
+  Future<ActionFinal<void, UserGame>> doAction(
     final UserGame event,
     final void lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess.empty();
+    return ActionSuccess.empty(event);
   }
 }
 
 class UserGameSelectBloc extends FunctionActionBloc<UserGame?, UserGame?> {
   @override
-  Future<ActionFinal<UserGame?>> doAction(
+  Future<ActionFinal<UserGame?, UserGame?>> doAction(
     final UserGame? event,
     final UserGame? lastData,
   ) async {
-    return ActionSuccess(data: event);
+    return ActionSuccess(data: event, event: event);
   }
 }

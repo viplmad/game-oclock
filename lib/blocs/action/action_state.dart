@@ -24,28 +24,34 @@ final class ActionInProgress<T> extends ActionState<T> {
   List<Object?> get props => [data];
 }
 
-sealed class ActionFinal<T> extends ActionState<T> {
+sealed class ActionFinal<T, K> extends ActionState<T> {
   final T data;
+  final K event;
 
-  const ActionFinal({required this.data});
+  const ActionFinal({required this.data, required this.event});
 
   @override
   List<Object?> get props => [data];
 }
 
-final class ActionSuccess<T> extends ActionFinal<T> {
-  const ActionSuccess({required super.data});
+final class ActionSuccess<T, K> extends ActionFinal<T, K> {
+  const ActionSuccess({required super.data, required super.event});
+  static ActionSuccess<void, S> empty<S>(final S event) =>
   // ignore: void_checks
-  static ActionSuccess<void> empty() => const ActionSuccess<void>(data: '');
+  ActionSuccess<void, S>(data: '', event: event);
 }
 
-final class ActionFailure<T> extends ActionFinal<T> {
+final class ActionFailure<T, K> extends ActionFinal<T, K> {
   final ErrorDTO error;
 
-  const ActionFailure({required this.error, required super.data});
-  static ActionFailure<void> empty(final ErrorDTO error) =>
+  const ActionFailure({
+    required this.error,
+    required super.data,
+    required super.event,
+  });
+  static ActionFailure<void, S> empty<S>(final ErrorDTO error, final S event) =>
   // ignore: void_checks
-  ActionFailure<void>(data: '', error: error);
+  ActionFailure<void, S>(data: '', event: event, error: error);
 
   @override
   List<Object?> get props => [error, ...super.props];

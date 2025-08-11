@@ -10,12 +10,15 @@ class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<ListSearch>> doAction(
+  Future<ActionFinal<ListSearch, String>> doAction(
     final String event,
     final ListSearch? lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess(data: mockSearch(name: space + event, filters: 3));
+    return ActionSuccess(
+      data: mockSearch(name: space + event, filters: 3),
+      event: event,
+    );
   }
 }
 
@@ -25,12 +28,12 @@ class SearchCreateBloc extends ConsumerActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<void>> doAction(
+  Future<ActionFinal<void, ListSearch>> doAction(
     final ListSearch event,
     final void lastData,
   ) async {
     await Future.delayed(const Duration(seconds: 5));
-    return ActionSuccess.empty();
+    return ActionSuccess.empty(event);
   }
 }
 
@@ -40,12 +43,12 @@ class SearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<void>> doAction(
+  Future<ActionFinal<void, ListSearch>> doAction(
     final ListSearch event,
     final void lastData,
   ) async {
     print('${event.search.filter}');
     await Future.delayed(const Duration(seconds: 1));
-    return ActionSuccess.empty();
+    return ActionSuccess.empty(event);
   }
 }

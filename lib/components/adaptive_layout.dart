@@ -44,8 +44,9 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
           builder: (final context, final minimizedState) {
             final minimized =
                 (minimizedState is ActionFinal)
-                    ? (minimizedState as ActionFinal<bool>).data
+                    ? (minimizedState as ActionFinal<bool, bool>).data
                     : false;
+            print('min $minimized $layoutTier');
 
             return layoutTier == LayoutTier.compact && minimized
                 ? Scaffold(body: child)

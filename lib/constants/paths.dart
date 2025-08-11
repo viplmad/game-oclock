@@ -8,4 +8,9 @@ class CommonPaths {
   static const String devicesPath = '/devices';
   static const String tagsPath = '/tags';
   static const String usersPath = '/users';
+
+  static const String gamePath = gamesPath + _idPathParamPath;
+  static const String _idPathParamPath = '/:id';
+
+  static const String idPathParam = 'id';
 }

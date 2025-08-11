@@ -162,7 +162,7 @@ class CreateEditFormBuilder<
         ),
         BlocListener<GB, ActionState<T?>>(
           listener: (final context, final state) {
-            if (state is ActionFinal<T?>) {
+            if (state is ActionFinal<T?, String>) {
               final T? data = state.data;
               if (data != null) {
                 context.read<FB>().add(FormValuesUpdated(values: data));

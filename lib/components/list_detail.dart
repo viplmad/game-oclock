@@ -44,7 +44,7 @@ class ListDetailBuilder<
           builder: (final context, final selectState) {
             final selectedData =
                 (selectState is ActionFinal)
-                    ? (selectState as ActionFinal<T?>).data
+                    ? (selectState as ActionFinal<T?, T?>).data
                     : null;
             if (layoutTier == LayoutTier.compact) {
               if (selectedData != null) {

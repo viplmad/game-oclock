@@ -44,7 +44,7 @@ class LoginPage extends StatelessWidget {
         ),
         BlocProvider(create: (_) => LoginSaveBloc()),
         BlocProvider(
-          create: (_) => LoginGetBloc()..add(ActionStarted(data: 'get')),
+          create: (_) => LoginGetBloc()..add(const ActionStarted(data: 'get')),
         ),
       ],
       child: const LoginBuilder(),
@@ -106,7 +106,7 @@ class LoginBuilder extends StatelessWidget {
         BlocListener<LoginGetBloc, ActionState<Login?>>(
           listener: (final context, final state) {
             Login? login;
-            if (state is ActionFinal<Login?>) {
+            if (state is ActionFinal<Login?, String>) {
               login = state.data;
               if (login != null) {
                 context.read<LoginFormBloc>().add(

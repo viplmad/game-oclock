@@ -120,8 +120,8 @@ abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
     if (state is ListFinal<T>) {
       if (state is ListLoadFailure<T>) {
         trailing = ListItemGrid(
-          title: 'Error - Tap to refresh',
-          onTap: () => {context.read<LB>().add(const ListReloaded())},
+          title: 'Error - Tap to refresh', // TODO
+          onTap: () => context.read<LB>().add(const ListReloaded()),
         );
       }
       items = state.data;

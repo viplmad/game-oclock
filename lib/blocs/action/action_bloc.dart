@@ -6,6 +6,7 @@ import 'action.dart'
         ActionFinal,
         ActionInProgress,
         ActionInitial,
+        ActionRestarted,
         ActionStarted,
         ActionState;
 
@@ -16,6 +17,9 @@ abstract class FunctionActionBloc<E, S>
       (final event, final emit) async =>
           await onActionStarted(event.data, emit),
     );
+    on<ActionRestarted<E>>(
+      (final event, final emit) async => await onActionRestarted(emit),
+    );
   }
 
   Future<void> onActionStarted(
@@ -25,15 +29,22 @@ abstract class FunctionActionBloc<E, S>
     if (state is ActionInitial<S>) {
       emit(ActionInProgress<S>(data: null));
       emit(await doAction(event, null));
-    } else if (state is ActionFinal<S>) {
-      final lastData = (state as ActionFinal<S>).data;
+    } else if (state is ActionFinal<S, E>) {
+      final lastData = (state as ActionFinal<S, E>).data;
       emit(ActionInProgress<S>(data: lastData));
 
       emit(await doAction(event, lastData));
     }
   }
 
-  Future<ActionFinal<S>> doAction(final E event, final S? lastData);
+  Future<void> onActionRestarted(final Emitter<ActionState<S>> emit) async {
+    if (state is ActionFinal<S, E>) {
+      final lastEvent = (state as ActionFinal<S, E>).event;
+      onActionStarted(lastEvent, emit);
+    }
+  }
+
+  Future<ActionFinal<S, E>> doAction(final E event, final S? lastData);
 }
 
 abstract class ProducerActionBloc<S> extends FunctionActionBloc<void, S> {}

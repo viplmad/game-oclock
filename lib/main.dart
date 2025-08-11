@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => LayoutTierBloc()),
         BlocProvider(
-          create: (_) => MinimizedLayoutBloc()..add(ActionStarted(data: false)),
+          create:
+              (_) =>
+                  MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
         ),
       ],
       child: MaterialApp.router(

@@ -69,6 +69,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   Future<void> onListReloaded(final Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
       final lastSearch = (state as ListFinal<S>).search;
+      // TODO Missing quicksearch
       onListLoaded(lastSearch, emit);
     }
   }
