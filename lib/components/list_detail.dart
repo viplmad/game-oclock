@@ -105,7 +105,7 @@ class ListDetailBuilder<
   }
 
   Widget list(final BuildContext context, {required final T? selectedData}) {
-    return Scaffold(
+    return Scaffold( // TODO drawer compact ?
       appBar: AppBar(
         title: Text(title),
         actions: [
