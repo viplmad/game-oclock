@@ -11,28 +11,26 @@ import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
 import 'package:go_router/go_router.dart';
 
 class AdaptiveLayoutBuilder extends StatelessWidget {
-  const AdaptiveLayoutBuilder({
+  AdaptiveLayoutBuilder({
     super.key,
-    required this.title,
     required this.selectedPath,
     required this.mainDestinations,
     required this.secondaryDestinations,
-    required this.actions,
     required this.fabLabel,
     required this.fabIcon,
     required this.fabOnPressed,
     required this.child,
   });
 
-  final String title;
   final String selectedPath;
   final List<NavDestination> mainDestinations;
   final List<NavDestination> secondaryDestinations;
-  final List<Widget> actions;
   final String fabLabel;
   final Icon fabIcon;
   final VoidCallback fabOnPressed;
   final Widget child;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(final BuildContext context) {
@@ -46,12 +44,10 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
                 (minimizedState is ActionFinal)
                     ? (minimizedState as ActionFinal<bool, bool>).data
                     : false;
-            print('min $minimized $layoutTier');
-
             return layoutTier == LayoutTier.compact && minimized
                 ? Scaffold(body: child)
                 : Scaffold(
-                  appBar: AppBar(title: Text(title), actions: actions),
+                  key: scaffoldKey,
                   body: body(
                     context,
                     selectedPath: selectedPath,
@@ -155,7 +151,18 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
             ? [...mainDestinations, ...secondaryDestinations]
             : mainDestinations);
     return NavigationRail(
-      leading: fab(extended: extended),
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          extended
+              ? IconButton(icon: const Icon(Icons.menu_open), onPressed: () {})
+              : IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => scaffoldKey.currentState?.openDrawer(),
+              ),
+          fab(extended: extended),
+        ],
+      ),
       destinations: destinations // TODO group
           .map(
             (final dest) => NavigationRailDestination(

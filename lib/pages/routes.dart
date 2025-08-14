@@ -42,25 +42,6 @@ final routerConfig = GoRouter(
         );
 
         return AdaptiveLayoutBuilder(
-          title: 'Counters', // TODO
-          actions: [
-            SearchAnchor(
-              builder: (final context, final controller) {
-                return IconButton(
-                  icon: const Icon(CommonIcons.search),
-                  onPressed: () {
-                    controller.openView();
-                  },
-                );
-              },
-              suggestionsBuilder:
-                  (final context, final controller) => List.empty(),
-              /*viewOnChanged: // TODO not called
-                  (final value) => context.read<LB>().add(
-                    ListQuicksearchChanged(quicksearch: value),
-                  ),*/
-            ),
-          ],
           fabIcon: const Icon(CommonIcons.add),
           fabLabel: 'Add',
           fabOnPressed:
