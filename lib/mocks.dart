@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:game_oclock/models/models.dart'
     show
         FilterDTO,
@@ -13,7 +15,7 @@ import 'package:game_oclock/models/models.dart'
 
 UserGame mockUserGame({final String? title}) {
   return UserGame(
-    id: 'lkdasmdlknuhiuahfksdjfha',
+    id: Random().nextInt(1000).toString(),
     externalId: 'steam',
     title: title ?? 'title',
     edition: '',
@@ -29,12 +31,12 @@ UserGame mockUserGame({final String? title}) {
 }
 
 Tag mockTag({final String? name}) {
-  return Tag(id: '12839127u3', name: name ?? 'name');
+  return Tag(id: Random().nextInt(1000).toString(), name: name ?? 'name');
 }
 
 GameAvailable mockGameAvailable({final String? name}) {
   return GameAvailable(
-    id: 'askdnaskldas',
+    id: Random().nextInt(1000).toString(),
     name: name ?? 'name',
     date: DateTime.now(),
   );

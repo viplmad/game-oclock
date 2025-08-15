@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListLoaded, ListReloaded, UserGameListBloc, UserGameSelectBloc;
-import 'package:game_oclock/components/detail.dart' show Detail;
+    show
+        ListLoaded,
+        ListReloaded,
+        UserGameAvailableListBloc,
+        UserGameListBloc,
+        UserGameSelectBloc,
+        UserGameTagListBloc;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame;
-import 'package:go_router/go_router.dart';
 
-import 'game_form.dart';
+import 'game_detail.dart';
 
 class UserGameListPage extends StatelessWidget {
   const UserGameListPage({super.key});
@@ -28,57 +32,19 @@ class UserGameListPage extends StatelessWidget {
                     ),
                   ),
         ),
+        BlocProvider(create: (_) => UserGameAvailableListBloc()), // TODO reload on selection change
+        BlocProvider(create: (_) => UserGameTagListBloc()),
       ],
       child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
         title: 'Games', // TODO i18n
         searchSpace: 'game',
         detailBuilder:
-            (final context, final data, final onClosed) => Detail(
-              title: data.title,
-              imageUrl: data.coverUrl,
+            (final context, final data, final onClosed) => UserGameDetail(
+              data: data,
               onBackPressed: onClosed,
-              onEditPressed:
-                  () async => showDialog<bool>(
-                    context: context,
-                    builder: (final context) => UserGameEditForm(id: data.id),
-                  ).then((final bool? success) {
-                    if (success != null && success && context.mounted) {
-                      context.read<UserGameListBloc>().add(
-                        const ListReloaded(),
-                      );
-                    }
-                  }),
-              content: Column(
-                children: [
-                  Flexible(flex: 3, child: Column(children: [Text(data.id)])),
-                  const Flexible(
-                    flex: 2,
-                    child: DefaultTabController(
-                      length: 3,
-                      child: Column(
-                        children: [
-                          TabBar(
-                            tabs: [
-                              Tab(icon: Icon(Icons.directions_car)),
-                              Tab(icon: Icon(Icons.directions_transit)),
-                              Tab(icon: Icon(Icons.directions_bike)),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                Icon(Icons.directions_car),
-                                Icon(Icons.directions_transit),
-                                Icon(Icons.directions_bike),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              onEditSucceeded: (final context) {
+                context.read<UserGameListBloc>().add(const ListReloaded());
+              },
             ),
         listItemBuilder:
             (final context, final data, final onPressed) => ListItemGrid(

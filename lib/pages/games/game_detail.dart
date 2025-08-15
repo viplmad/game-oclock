@@ -82,76 +82,13 @@ class UserGameDetailsPage extends StatelessWidget {
                 return const Center(); // TODO
               }
 
-              return Detail(
-                title: data.title,
-                imageUrl: data.coverUrl,
+              return UserGameDetail(
+                data: data,
                 onBackPressed:
                     () => GoRouter.of(context).go(CommonPaths.gamesPath),
-                onEditPressed:
-                    () async => showDialog<bool>(
-                      context: context,
-                      builder: (final context) => UserGameEditForm(id: data.id),
-                    ).then((final bool? success) {
-                      if (success != null && success && context.mounted) {
-                        context.read<UserGameGetBloc>().add(
-                          const ActionRestarted(),
-                        );
-                      }
-                    }),
-                content: Column(
-                  children: [
-                    Flexible(flex: 3, child: Column(children: [Text(data.id)])),
-                    Flexible(
-                      flex: 2,
-                      child: DefaultTabController(
-                        length: 3,
-                        child: Column(
-                          children: [
-                            TabBar(
-                              onTap:
-                                  (final value) =>
-                                      loadRelationList(context, value),
-                              tabs: const [
-                                Tab(
-                                  icon: Icon(CommonIcons.locations),
-                                  text: 'Locations',
-                                ),
-                                Tab(icon: Icon(CommonIcons.tags), text: 'Tags'),
-                              ],
-                            ),
-                            Expanded(
-                              child: TabBarView(
-                                children: [
-                                  GridListBuilder<
-                                    GameAvailable,
-                                    UserGameAvailableListBloc
-                                  >(
-                                    space: '', // TODO ?
-                                    itemBuilder:
-                                        (
-                                          final context,
-                                          final data,
-                                          final index,
-                                        ) => ListItemTile(title: data.name),
-                                  ),
-                                  GridListBuilder<Tag, UserGameTagListBloc>(
-                                    space: '', // TODO ?
-                                    itemBuilder:
-                                        (
-                                          final context,
-                                          final data,
-                                          final index,
-                                        ) => ListItemTile(title: data.name),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                onEditSucceeded: (final context) {
+                  context.read<UserGameGetBloc>().add(const ActionRestarted());
+                },
               );
             },
           );
@@ -159,9 +96,83 @@ class UserGameDetailsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class UserGameDetail extends StatelessWidget {
+  const UserGameDetail({
+    super.key,
+    required this.data,
+    required this.onBackPressed,
+    required this.onEditSucceeded,
+  });
+
+  final UserGame data;
+  final VoidCallback onBackPressed;
+  final void Function(BuildContext context) onEditSucceeded;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Detail(
+      title: data.title,
+      imageUrl: data.coverUrl,
+      onBackPressed: onBackPressed,
+      onEditPressed:
+          () async => showDialog<bool>(
+            context: context,
+            builder: (final context) => UserGameEditForm(id: data.id),
+          ).then((final bool? success) {
+            if (success != null && success && context.mounted) {
+              onEditSucceeded(context);
+            }
+          }),
+      content: Column(
+        children: [
+          Flexible(flex: 3, child: Column(children: [Text(data.id)])),
+          Flexible(
+            flex: 2,
+            child: DefaultTabController(
+              length: 3,
+              child: Column(
+                children: [
+                  TabBar(
+                    onTap: (final value) => loadRelationList(context, value),
+                    tabs: const [
+                      Tab(icon: Icon(CommonIcons.locations), text: 'Locations'),
+                      Tab(icon: Icon(CommonIcons.tags), text: 'Tags'),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        GridListBuilder<
+                          GameAvailable,
+                          UserGameAvailableListBloc
+                        >(
+                          space: '', // TODO ?
+                          itemBuilder:
+                              (final context, final data, final index) =>
+                                  ListItemTile(title: data.name),
+                        ),
+                        GridListBuilder<Tag, UserGameTagListBloc>(
+                          space: '', // TODO ?
+                          itemBuilder:
+                              (final context, final data, final index) =>
+                                  ListItemTile(title: data.name),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   void loadRelationList(final BuildContext context, final int index) {
-    if (index == 0) {
+    if (index == 0) { // TODO constants
       loadOnlyInitial<UserGameAvailableListBloc>(context);
     } else if (index == 1) {
       loadOnlyInitial<UserGameTagListBloc>(context);
