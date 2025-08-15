@@ -6,15 +6,13 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutContextChanged,
         LayoutTierBloc,
         MinimizedLayoutBloc;
-import 'package:game_oclock/components/adaptive_layout.dart'
-    show AdaptiveLayoutBuilder;
-import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/components/main_layout.dart'
+    show MainLayoutBuilder;
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
 import 'package:game_oclock/pages/games/game_detail.dart'
     show UserGameDetailsPage;
-import 'package:game_oclock/pages/games/game_form.dart' show UserGameCreateForm;
 import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
 import 'package:game_oclock/pages/login/login.dart' show LoginPage;
 import 'package:go_router/go_router.dart';
@@ -41,18 +39,7 @@ final routerConfig = GoRouter(
           LayoutContextChanged(size: mediaQuerySize),
         );
 
-        return AdaptiveLayoutBuilder(
-          fabIcon: const Icon(CommonIcons.add),
-          fabLabel: 'Add',
-          fabOnPressed:
-              () async => showDialog<bool>(
-                context: context,
-                builder: (final context) => const UserGameCreateForm(),
-              ).then((final bool? success) {
-                if (success != null && success) {
-                  // TODO refresh list
-                }
-              }),
+        return MainLayoutBuilder(
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,
           secondaryDestinations: secondaryDestinations,

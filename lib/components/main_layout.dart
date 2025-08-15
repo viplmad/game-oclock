@@ -7,27 +7,22 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutTierBloc,
         LayoutTierState,
         MinimizedLayoutBloc;
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
 import 'package:go_router/go_router.dart';
 
-class AdaptiveLayoutBuilder extends StatelessWidget {
-  AdaptiveLayoutBuilder({
+class MainLayoutBuilder extends StatelessWidget {
+  MainLayoutBuilder({
     super.key,
     required this.selectedPath,
     required this.mainDestinations,
     required this.secondaryDestinations,
-    required this.fabLabel,
-    required this.fabIcon,
-    required this.fabOnPressed,
     required this.child,
   });
 
   final String selectedPath;
   final List<NavDestination> mainDestinations;
   final List<NavDestination> secondaryDestinations;
-  final String fabLabel;
-  final Icon fabIcon;
-  final VoidCallback fabOnPressed;
   final Widget child;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -66,10 +61,6 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
                             selectedPath: selectedPath,
                           )
                           : null,
-                  floatingActionButton:
-                      layoutTier == LayoutTier.compact
-                          ? fab(extended: false)
-                          : null,
                 );
           },
         );
@@ -102,18 +93,11 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
     }
   }
 
-  FloatingActionButton fab({required final bool extended}) {
-    return extended
-        ? FloatingActionButton.extended(
-          label: Text(fabLabel),
-          icon: fabIcon,
-          onPressed: fabOnPressed,
-        )
-        : FloatingActionButton(
-          tooltip: fabLabel,
-          onPressed: fabOnPressed,
-          child: fabIcon,
-        );
+  IconButton drawerButton() {
+    return IconButton(
+      icon: const Icon(CommonIcons.drawer),
+      onPressed: () => scaffoldKey.currentState?.openDrawer(),
+    );
   }
 
   NavigationDrawer navigationDrawer(
@@ -151,18 +135,10 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
             ? [...mainDestinations, ...secondaryDestinations]
             : mainDestinations);
     return NavigationRail(
-      leading: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+      leading:
           extended
               ? IconButton(icon: const Icon(Icons.menu_open), onPressed: () {})
-              : IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => scaffoldKey.currentState?.openDrawer(),
-              ),
-          fab(extended: extended),
-        ],
-      ),
+              : drawerButton(),
       destinations: destinations // TODO group
           .map(
             (final dest) => NavigationRailDestination(
@@ -183,27 +159,32 @@ class AdaptiveLayoutBuilder extends StatelessWidget {
     );
   }
 
-  NavigationBar navigationBar(
+  Widget navigationBar(
     final BuildContext context, {
     required final String selectedPath,
   }) {
-    return NavigationBar(
-      destinations: mainDestinations
-          .map(
-            (final dest) =>
-                NavigationDestination(icon: dest.icon, label: dest.label),
-          )
-          .toList(growable: false),
-      selectedIndex:
-          _selectedIndex(
-            selectedPath: selectedPath,
+    return Stack(
+      children: [
+        NavigationBar(
+          destinations: mainDestinations
+              .map(
+                (final dest) =>
+                    NavigationDestination(icon: dest.icon, label: dest.label),
+              )
+              .toList(growable: false),
+          selectedIndex:
+              _selectedIndex(
+                selectedPath: selectedPath,
+                destinations: mainDestinations,
+              ) ??
+              0,
+          onDestinationSelected: _goToSelectedPathCallback(
+            context,
             destinations: mainDestinations,
-          ) ??
-          0,
-      onDestinationSelected: _goToSelectedPathCallback(
-        context,
-        destinations: mainDestinations,
-      ),
+          ),
+        ),
+        Positioned(left: 10, top: 20, child: drawerButton()),
+      ],
     );
   }
 

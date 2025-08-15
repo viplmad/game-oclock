@@ -105,7 +105,7 @@ class ListDetailBuilder<
   }
 
   Widget list(final BuildContext context, {required final T? selectedData}) {
-    return Scaffold( // TODO drawer compact ?
+    return Scaffold(
       appBar: AppBar(
         title: Text(title),
         actions: [
@@ -120,10 +120,11 @@ class ListDetailBuilder<
             },
             suggestionsBuilder:
                 (final context, final controller) => List.empty(),
-            /*viewOnChanged: // TODO not called
+            viewOnChanged: // TODO not called when clear
                 (final value) => context.read<LB>().add(
                   ListQuicksearchChanged(quicksearch: value),
-                ),*/
+                ),
+            isFullScreen: false,
           ),
         ],
       ),

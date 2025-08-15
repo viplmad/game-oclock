@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:rxdart/rxdart.dart';
 
 import 'list.dart'
     show
@@ -14,6 +15,12 @@ import 'list.dart'
         ListSearchChanged,
         ListState;
 
+// TODO move
+EventTransformer<T> debounce<T>(final Duration duration) {
+  return (final events, final mapper) =>
+      events.debounceTime(duration).flatMap(mapper);
+}
+
 abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   ListLoadBloc() : super(ListInitial<S>()) {
     on<ListLoaded>(
@@ -25,6 +32,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     on<ListQuicksearchChanged>(
       (final event, final emit) async =>
           await onListQuicksearchChanged(event.quicksearch, emit),
+      transformer: debounce(const Duration(milliseconds: 300)),
     );
     on<ListSearchChanged>(
       (final event, final emit) async =>

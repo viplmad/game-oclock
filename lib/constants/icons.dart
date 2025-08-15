@@ -10,6 +10,8 @@ class CommonIcons {
   static const IconData delete = Icons.delete;
   static const IconData search = Icons.search;
   static const IconData down = Icons.arrow_drop_down;
+  static const IconData drawer = Icons.menu;
+  static const IconData drawerOpen = Icons.menu_open;
 
   static const IconData games = Icons.videogame_asset;
   static const IconData wishlists = Icons.shopping_bag;
