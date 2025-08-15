@@ -1,7 +1,7 @@
 import 'package:game_oclock/blocs/list/list_state.dart';
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, ListSearch, PageResultDTO, UserGame;
+    show GameAvailable, ListSearch, Tag, UserGame;
 
 import 'list_bloc.dart' show ListLoadBloc;
 
@@ -16,40 +16,72 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
   ) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final page = search.search.page ?? 0;
-    final size = search.search.size ?? 50;
-    final data = PageResultDTO(
-      data: List.generate(size, (final index) {
-        final finalIndex = (page * size) + index;
-        return mockUserGame(title: 'title ($quicksearch) $finalIndex');
-      }),
-      page: page,
-      size: size,
+    final page = mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder:
+          (final index) => mockUserGame(title: 'title ($quicksearch) $index'),
     );
+    final data = mergePageData(search: search, page: page, lastData: lastData);
 
-    List<UserGame> finalData;
-    if (page == 0) {
-      finalData = data.data;
-    } else {
-      finalData = List.of(
-        lastData == null ? data.data : [...lastData, ...data.data],
-        growable: false,
-      );
-    }
+    return ListLoadSuccess<UserGame>(
+      data: data,
+      quicksearch: quicksearch,
+      search: search,
+    );
+  }
+}
 
-    if (true) {
-      return ListLoadSuccess<UserGame>(
-        data: finalData,
-        quicksearch: quicksearch,
-        search: search,
-      );
-    } else {
-      return ListLoadFailure<UserGame>(
-        error: const ErrorDTO(code: 'code', message: 'message'),
-        data: lastData ?? List.empty(growable: false),
-        quicksearch: quicksearch,
-        search: search,
-      );
-    }
+class UserGameTagListBloc extends ListLoadBloc<Tag> {
+  @override
+  Future<ListFinal<Tag>> loadList(
+    final String? quicksearch,
+    final ListSearch search,
+    final List<Tag>? lastData,
+    final String? lastQuicksearch,
+    final ListSearch? lastSearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final page = mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) => mockTag(name: 'name ($quicksearch) $index'),
+    );
+    final data = mergePageData(search: search, page: page, lastData: lastData);
+
+    return ListLoadSuccess<Tag>(
+      data: data,
+      quicksearch: quicksearch,
+      search: search,
+    );
+  }
+}
+
+class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
+  @override
+  Future<ListFinal<GameAvailable>> loadList(
+    final String? quicksearch,
+    final ListSearch search,
+    final List<GameAvailable>? lastData,
+    final String? lastQuicksearch,
+    final ListSearch? lastSearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final page = mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder:
+          (final index) =>
+              mockGameAvailable(name: 'name ($quicksearch) $index'),
+    );
+    final data = mergePageData(search: search, page: page, lastData: lastData);
+
+    return ListLoadSuccess<GameAvailable>(
+      data: data,
+      quicksearch: quicksearch,
+      search: search,
+    );
   }
 }

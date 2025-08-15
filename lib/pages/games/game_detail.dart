@@ -10,11 +10,20 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionState,
         LayoutTierBloc,
         LayoutTierState,
-        UserGameGetBloc;
+        ListInitial,
+        ListLoadBloc,
+        ListLoaded,
+        UserGameAvailableListBloc,
+        UserGameGetBloc,
+        UserGameTagListBloc;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
+import 'package:game_oclock/components/grid_list.dart';
+import 'package:game_oclock/components/list_item.dart';
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart' show UserGame;
+import 'package:game_oclock/models/models.dart'
+    show GameAvailable, ListSearch, SearchDTO, Tag, UserGame;
 import 'package:game_oclock/pages/games/game_form.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,6 +39,19 @@ class UserGameDetailsPage extends StatelessWidget {
         BlocProvider(
           create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
         ),
+        BlocProvider(
+          create:
+              (_) =>
+                  UserGameAvailableListBloc()..add(
+                    ListLoaded(
+                      search: ListSearch(
+                        name: 'default',
+                        search: SearchDTO(),
+                      ), // TODO unify selected index tab load
+                    ),
+                  ),
+        ),
+        BlocProvider(create: (_) => UserGameTagListBloc()),
       ],
       child: BlocBuilder<LayoutTierBloc, LayoutTierState>(
         builder: (final context, final layoutState) {
@@ -79,25 +101,48 @@ class UserGameDetailsPage extends StatelessWidget {
                 content: Column(
                   children: [
                     Flexible(flex: 3, child: Column(children: [Text(data.id)])),
-                    const Flexible(
+                    Flexible(
                       flex: 2,
                       child: DefaultTabController(
                         length: 3,
                         child: Column(
                           children: [
                             TabBar(
-                              tabs: [
-                                Tab(icon: Icon(Icons.directions_car)),
-                                Tab(icon: Icon(Icons.directions_transit)),
-                                Tab(icon: Icon(Icons.directions_bike)),
+                              onTap:
+                                  (final value) =>
+                                      loadRelationList(context, value),
+                              tabs: const [
+                                Tab(
+                                  icon: Icon(CommonIcons.locations),
+                                  text: 'Locations',
+                                ),
+                                Tab(icon: Icon(CommonIcons.tags), text: 'Tags'),
                               ],
                             ),
                             Expanded(
                               child: TabBarView(
                                 children: [
-                                  Icon(Icons.directions_car),
-                                  Icon(Icons.directions_transit),
-                                  Icon(Icons.directions_bike),
+                                  GridListBuilder<
+                                    GameAvailable,
+                                    UserGameAvailableListBloc
+                                  >(
+                                    space: '', // TODO ?
+                                    itemBuilder:
+                                        (
+                                          final context,
+                                          final data,
+                                          final index,
+                                        ) => ListItemTile(title: data.name),
+                                  ),
+                                  GridListBuilder<Tag, UserGameTagListBloc>(
+                                    space: '', // TODO ?
+                                    itemBuilder:
+                                        (
+                                          final context,
+                                          final data,
+                                          final index,
+                                        ) => ListItemTile(title: data.name),
+                                  ),
                                 ],
                               ),
                             ),
@@ -113,5 +158,22 @@ class UserGameDetailsPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void loadRelationList(final BuildContext context, final int index) {
+    if (index == 0) {
+      loadOnlyInitial<UserGameAvailableListBloc>(context);
+    } else if (index == 1) {
+      loadOnlyInitial<UserGameTagListBloc>(context);
+    }
+  }
+
+  void loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
+    final lb = context.read<LB>();
+    if (lb.state is ListInitial) {
+      lb.add(
+        ListLoaded(search: ListSearch(name: 'default', search: SearchDTO())),
+      );
+    }
   }
 }

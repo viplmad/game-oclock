@@ -137,7 +137,10 @@ class MainLayoutBuilder extends StatelessWidget {
     return NavigationRail(
       leading:
           extended
-              ? IconButton(icon: const Icon(Icons.menu_open), onPressed: () {})
+              ? IconButton(
+                icon: const Icon(CommonIcons.drawerOpen),
+                onPressed: () {},
+              )
               : drawerButton(),
       destinations: destinations // TODO group
           .map(

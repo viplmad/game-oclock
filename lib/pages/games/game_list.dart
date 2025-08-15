@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListLoaded, UserGameListBloc, UserGameSelectBloc;
+    show ListLoaded, ListReloaded, UserGameListBloc, UserGameSelectBloc;
 import 'package:game_oclock/components/detail.dart' show Detail;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame;
 import 'package:go_router/go_router.dart';
+
+import 'game_form.dart';
 
 class UserGameListPage extends StatelessWidget {
   const UserGameListPage({super.key});
@@ -35,8 +37,8 @@ class UserGameListPage extends StatelessWidget {
               title: data.title,
               imageUrl: data.coverUrl,
               onBackPressed: onClosed,
-              onEditPressed: () => GoRouter.of(context).go('/games/${data.id}'),
-              /*() async => showDialog<bool>( TODO restore
+              onEditPressed:
+                  () async => showDialog<bool>(
                     context: context,
                     builder: (final context) => UserGameEditForm(id: data.id),
                   ).then((final bool? success) {
@@ -45,7 +47,7 @@ class UserGameListPage extends StatelessWidget {
                         const ListReloaded(),
                       );
                     }
-                  }),*/
+                  }),
               content: Column(
                 children: [
                   Flexible(flex: 3, child: Column(children: [Text(data.id)])),
