@@ -47,7 +47,6 @@ class SearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
     final ListSearch event,
     final void lastData,
   ) async {
-    print('${event.search.filter}');
     await Future.delayed(const Duration(seconds: 1));
     return ActionSuccess.empty(event);
   }

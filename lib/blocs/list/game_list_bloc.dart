@@ -33,6 +33,10 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
 }
 
 class UserGameTagListBloc extends ListLoadBloc<Tag> {
+  UserGameTagListBloc({required this.gameId});
+
+  final String gameId;
+
   @override
   Future<ListFinal<Tag>> loadList(
     final String? quicksearch,
@@ -46,7 +50,8 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
     final page = mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder: (final index) => mockTag(name: 'name ($quicksearch) $index'),
+      builder:
+          (final index) => mockTag(name: 'name $gameId ($quicksearch) $index'),
     );
     final data = mergePageData(search: search, page: page, lastData: lastData);
 
@@ -59,6 +64,10 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
 }
 
 class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
+  UserGameAvailableListBloc({required this.gameId});
+
+  final String gameId;
+
   @override
   Future<ListFinal<GameAvailable>> loadList(
     final String? quicksearch,
@@ -74,7 +83,7 @@ class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
       quicksearch: quicksearch,
       builder:
           (final index) =>
-              mockGameAvailable(name: 'name ($quicksearch) $index'),
+              mockGameAvailable(name: 'name $gameId ($quicksearch) $index'),
     );
     final data = mergePageData(search: search, page: page, lastData: lastData);
 

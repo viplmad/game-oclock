@@ -40,7 +40,7 @@ class SearchListPage extends StatelessWidget {
                           (final context) =>
                               SearchEditForm(space: space, name: data.name),
                     ).then((final bool? success) {
-                      if (success != null && success) {
+                      if (success != null && success && context.mounted) {
                         context.read<SearchListBloc>().add(
                           const ListReloaded(),
                         );

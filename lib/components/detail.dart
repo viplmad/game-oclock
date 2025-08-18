@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:game_oclock/constants/icons.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
@@ -8,26 +7,20 @@ class Detail extends StatelessWidget {
     required this.title,
     required this.imageUrl,
     required this.onBackPressed,
-    required this.onEditPressed,
-    required this.content,
+    required this.child,
+    this.actions,
   });
 
   final String title;
   final String imageUrl;
   final VoidCallback onBackPressed;
-  final VoidCallback onEditPressed;
-  final Widget content;
+  final Widget child;
+  final List<Widget>? actions;
 
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: _appBarBuilder,
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 24.0, left: 24.0, right: 24.0),
-          child: content,
-        ),
-      ),
+      body: NestedScrollView(headerSliverBuilder: _appBarBuilder, body: child),
     );
   }
 
@@ -50,13 +43,7 @@ class Detail extends StatelessWidget {
         snap: false,
         automaticallyImplyLeading: false,
         leading: BackButton(onPressed: onBackPressed),
-        actions: [
-          IconButton(
-            icon: const Icon(CommonIcons.edit),
-            tooltip: 'Edit',
-            onPressed: onEditPressed,
-          ),
-        ],
+        actions: actions,
         bottom: const PreferredSize(
           preferredSize: Size(double.maxFinite, 1.0),
           child: SizedBox(),

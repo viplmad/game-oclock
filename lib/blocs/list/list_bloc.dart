@@ -10,6 +10,7 @@ import 'list.dart'
         ListLoadInProgress,
         ListLoaded,
         ListPageIncremented,
+        ListPageReloaded,
         ListQuicksearchChanged,
         ListReloaded,
         ListSearchChanged,
@@ -28,6 +29,9 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     );
     on<ListReloaded>(
       (final event, final emit) async => await onListReloaded(emit),
+    );
+    on<ListPageReloaded>(
+      (final event, final emit) async => await onListPageReloaded(emit),
     );
     on<ListQuicksearchChanged>(
       (final event, final emit) async =>
@@ -76,9 +80,32 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
 
   Future<void> onListReloaded(final Emitter<ListState<S>> emit) async {
     if (state is ListFinal<S>) {
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
-      // TODO Missing quicksearch
-      onListLoaded(lastSearch, emit);
+
+      emit(
+        ListLoadInProgress<S>(
+          data: null,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
+      emit(
+        await loadList(
+          lastQuicksearch,
+          lastSearch,
+          null,
+          lastQuicksearch,
+          lastSearch,
+        ),
+      );
+    }
+  }
+
+  Future<void> onListPageReloaded(final Emitter<ListState<S>> emit) async {
+    if (state is ListFinal<S>) {
+      final lastSearch = (state as ListFinal<S>).search;
+      await onListLoaded(lastSearch, emit);
     }
   }
 

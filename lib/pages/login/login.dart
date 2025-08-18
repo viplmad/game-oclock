@@ -135,10 +135,6 @@ class LoginBuilder extends StatelessWidget {
 
                   return SimpleForm(
                     formKey: formState.key,
-                    formFieldsContainer: buildFormFieldsContainer(
-                      formGroup: formState.group,
-                      readOnly: inProgress,
-                    ),
                     dirty: formState.dirty,
                     onChanged:
                         () => context.read<LoginFormBloc>().add(
@@ -152,6 +148,10 @@ class LoginBuilder extends StatelessWidget {
                                 const FormSubmitted(),
                               );
                             },
+                    child: buildFormFieldsContainer(
+                      formGroup: formState.group,
+                      readOnly: inProgress,
+                    ),
                   );
                 },
               );
@@ -200,14 +200,14 @@ class SimpleForm extends StatelessWidget {
     super.key,
     required this.formKey,
     required this.dirty,
-    required this.formFieldsContainer,
+    required this.child,
     required this.onChanged,
     this.onSubmit,
   });
 
   final Key formKey;
   final bool dirty;
-  final Widget formFieldsContainer;
+  final Widget child;
   final VoidCallback onChanged;
   final VoidCallback? onSubmit;
 
@@ -223,7 +223,7 @@ class SimpleForm extends StatelessWidget {
     final form = Form(
       key: formKey,
       onChanged: inProgress ? null : onChanged,
-      child: formFieldsContainer,
+      child: child,
     );
     return Padding(
       padding: const EdgeInsets.all(24.0),

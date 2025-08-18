@@ -40,7 +40,7 @@ abstract class FunctionActionBloc<E, S>
   Future<void> onActionRestarted(final Emitter<ActionState<S>> emit) async {
     if (state is ActionFinal<S, E>) {
       final lastEvent = (state as ActionFinal<S, E>).event;
-      onActionStarted(lastEvent, emit);
+      await onActionStarted(lastEvent, emit);
     }
   }
 

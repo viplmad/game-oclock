@@ -44,41 +44,54 @@ class ListDetailBuilder<
       builder: (final context, final layoutState) {
         final layoutTier = layoutState.tier;
 
-        return BlocBuilder<SB, ActionState<T?>>(
-          builder: (final context, final selectState) {
+        return BlocListener<SB, ActionState<T?>>(
+          listener: (final context, final selectState) {
             final selectedData =
                 (selectState is ActionFinal)
                     ? (selectState as ActionFinal<T?, T?>).data
                     : null;
-            if (layoutTier == LayoutTier.compact) {
-              if (selectedData != null) {
-                return detail(
-                  context,
-                  selectedData: selectedData,
-                  selectBloc: context.read<SB>(),
-                );
-              } else {
-                return list(context, selectedData: selectedData);
-              }
-            } else {
-              return Row(
-                children: [
-                  Flexible(
-                    flex: 4,
-                    child: list(context, selectedData: selectedData),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: detail(
-                      context,
-                      selectedData: selectedData,
-                      selectBloc: context.read<SB>(),
-                    ),
-                  ),
-                ],
-              );
-            }
+
+            // Allow minimized if selected
+            context.read<MinimizedLayoutBloc>().add(
+              ActionStarted(data: selectedData != null),
+            );
           },
+          child: BlocBuilder<SB, ActionState<T?>>(
+            builder: (final context, final selectState) {
+              final selectedData =
+                  (selectState is ActionFinal)
+                      ? (selectState as ActionFinal<T?, T?>).data
+                      : null;
+              if (layoutTier == LayoutTier.compact) {
+                if (selectedData != null) {
+                  return detail(
+                    context,
+                    selectedData: selectedData,
+                    selectBloc: context.read<SB>(),
+                  );
+                } else {
+                  return list(context, selectedData: selectedData);
+                }
+              } else {
+                return Row(
+                  children: [
+                    Flexible(
+                      flex: 4,
+                      child: list(context, selectedData: selectedData),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: detail(
+                        context,
+                        selectedData: selectedData,
+                        selectBloc: context.read<SB>(),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
         );
       },
     );
@@ -153,6 +166,5 @@ class ListDetailBuilder<
     required final T? data,
   }) {
     selectBloc.add(ActionStarted(data: data));
-    context.read<MinimizedLayoutBloc>().add(ActionStarted(data: data != null));
   }
 }

@@ -37,6 +37,17 @@ class UserGameUpdateBloc extends ConsumerActionBloc<UserGame> {
   }
 }
 
+class UserGameDeleteBloc extends ConsumerActionBloc<UserGame> {
+  @override
+  Future<ActionFinal<void, UserGame>> doAction(
+    final UserGame event,
+    final void lastData,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ActionSuccess.empty(event);
+  }
+}
+
 class UserGameSelectBloc extends FunctionActionBloc<UserGame?, UserGame?> {
   @override
   Future<ActionFinal<UserGame?, UserGame?>> doAction(

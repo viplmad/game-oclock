@@ -7,7 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadFailure,
         ListLoadInProgress,
         ListPageIncremented,
-        ListReloaded,
+        ListPageReloaded,
         ListSearchChanged,
         ListState;
 import 'package:game_oclock/constants/icons.dart';
@@ -121,7 +121,7 @@ abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
       if (state is ListLoadFailure<T>) {
         trailing = ListItemGrid(
           title: 'Error - Tap to refresh', // TODO
-          onTap: () => context.read<LB>().add(const ListReloaded()),
+          onTap: () => context.read<LB>().add(const ListPageReloaded()),
         );
       }
       items = state.data;

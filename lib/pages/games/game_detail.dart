@@ -14,6 +14,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListLoaded,
         UserGameAvailableListBloc,
+        UserGameDeleteBloc,
         UserGameGetBloc,
         UserGameTagListBloc;
 import 'package:game_oclock/components/detail.dart';
@@ -39,19 +40,9 @@ class UserGameDetailsPage extends StatelessWidget {
         BlocProvider(
           create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
         ),
-        BlocProvider(
-          create:
-              (_) =>
-                  UserGameAvailableListBloc()..add(
-                    ListLoaded(
-                      search: ListSearch(
-                        name: 'default',
-                        search: SearchDTO(),
-                      ), // TODO unify selected index tab load
-                    ),
-                  ),
-        ),
-        BlocProvider(create: (_) => UserGameTagListBloc()),
+        BlocProvider(create: (_) => UserGameDeleteBloc()),
+        BlocProvider(create: (_) => UserGameAvailableListBloc(gameId: id)),
+        BlocProvider(create: (_) => UserGameTagListBloc(gameId: id)),
       ],
       child: BlocBuilder<LayoutTierBloc, LayoutTierState>(
         builder: (final context, final layoutState) {
@@ -86,9 +77,13 @@ class UserGameDetailsPage extends StatelessWidget {
                 data: data,
                 onBackPressed:
                     () => GoRouter.of(context).go(CommonPaths.gamesPath),
-                onEditSucceeded: (final context) {
-                  context.read<UserGameGetBloc>().add(const ActionRestarted());
-                },
+                onEditSucceeded:
+                    (final context) => context.read<UserGameGetBloc>().add(
+                      const ActionRestarted(),
+                    ),
+                onDeleteSucceeded:
+                    (final context) =>
+                        GoRouter.of(context).go(CommonPaths.gamesPath),
               );
             },
           );
@@ -104,11 +99,13 @@ class UserGameDetail extends StatelessWidget {
     required this.data,
     required this.onBackPressed,
     required this.onEditSucceeded,
+    required this.onDeleteSucceeded,
   });
 
   final UserGame data;
   final VoidCallback onBackPressed;
   final void Function(BuildContext context) onEditSucceeded;
+  final void Function(BuildContext context) onDeleteSucceeded;
 
   @override
   Widget build(final BuildContext context) {
@@ -116,65 +113,93 @@ class UserGameDetail extends StatelessWidget {
       title: data.title,
       imageUrl: data.coverUrl,
       onBackPressed: onBackPressed,
-      onEditPressed:
-          () async => showDialog<bool>(
-            context: context,
-            builder: (final context) => UserGameEditForm(id: data.id),
-          ).then((final bool? success) {
-            if (success != null && success && context.mounted) {
-              onEditSucceeded(context);
-            }
-          }),
-      content: Column(
-        children: [
-          Flexible(flex: 3, child: Column(children: [Text(data.id)])),
-          Flexible(
-            flex: 2,
-            child: DefaultTabController(
-              length: 3,
-              child: Column(
+      actions: [
+        IconButton(
+          // TODO hide if coming from detail
+          icon: const Icon(CommonIcons.view),
+          tooltip: 'View',
+          onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
+        ),
+        IconButton(
+          icon: const Icon(CommonIcons.edit),
+          tooltip: 'Edit',
+          onPressed:
+              () async => showDialog<bool>(
+                context: context,
+                builder: (final context) => UserGameEditForm(id: data.id),
+              ).then((final bool? success) {
+                if (success != null && success && context.mounted) {
+                  onEditSucceeded(context);
+                }
+              }),
+        ),
+        IconButton(
+          icon: const Icon(CommonIcons.delete),
+          tooltip: 'Delete',
+          onPressed: () async {
+            return showDialog<bool>(
+              context: context,
+              builder: (final context) => confirmDelete(context, data),
+            ).then((final bool? success) {
+              if (success != null && success && context.mounted) {
+                context.read<UserGameDeleteBloc>().add(
+                  ActionStarted(data: data),
+                );
+                onDeleteSucceeded(context); // TODO listen to bloc + snackbar
+              }
+            });
+          },
+        ),
+      ],
+      child: DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            TabBar(
+              onTap: (final value) => loadRelationList(context, value),
+              tabs: const [
+                Tab(icon: Icon(CommonIcons.detail), text: 'Detail'),
+                Tab(icon: Icon(CommonIcons.locations), text: 'Locations'),
+                Tab(icon: Icon(CommonIcons.tags), text: 'Tags'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
                 children: [
-                  TabBar(
-                    onTap: (final value) => loadRelationList(context, value),
-                    tabs: const [
-                      Tab(icon: Icon(CommonIcons.locations), text: 'Locations'),
-                      Tab(icon: Icon(CommonIcons.tags), text: 'Tags'),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        GridListBuilder<
-                          GameAvailable,
-                          UserGameAvailableListBloc
-                        >(
-                          space: '', // TODO ?
-                          itemBuilder:
-                              (final context, final data, final index) =>
-                                  ListItemTile(title: data.name),
-                        ),
-                        GridListBuilder<Tag, UserGameTagListBloc>(
-                          space: '', // TODO ?
-                          itemBuilder:
-                              (final context, final data, final index) =>
-                                  ListItemTile(title: data.name),
-                        ),
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 24.0,
+                      left: 24.0,
+                      right: 24.0,
                     ),
+                    child: Column(children: [Text(data.id)]), // TODO
+                  ),
+                  GridListBuilder<GameAvailable, UserGameAvailableListBloc>(
+                    space: '', // TODO ?
+                    itemBuilder:
+                        (final context, final data, final index) =>
+                            ListItemTile(title: data.name),
+                  ),
+                  GridListBuilder<Tag, UserGameTagListBloc>(
+                    space: '', // TODO ?
+                    itemBuilder:
+                        (final context, final data, final index) =>
+                            ListItemTile(title: data.name),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   void loadRelationList(final BuildContext context, final int index) {
-    if (index == 0) { // TODO constants
+    if (index == 1) {
+      // TODO constants
       loadOnlyInitial<UserGameAvailableListBloc>(context);
-    } else if (index == 1) {
+    } else if (index == 2) {
       loadOnlyInitial<UserGameTagListBloc>(context);
     }
   }
@@ -186,5 +211,27 @@ class UserGameDetail extends StatelessWidget {
         ListLoaded(search: ListSearch(name: 'default', search: SearchDTO())),
       );
     }
+  }
+
+  Widget confirmDelete(final BuildContext context, final UserGame data) {
+    return AlertDialog(
+      title: const Text(
+        'Delete?',
+      ), // TODO HeaderText(AppLocalizations.of(context)!.deleteString),
+      content: ListTile(
+        title: Text('${data.title} will be deleted.'), // TODO i18n
+        subtitle: const Text('This action cannot be undone.'), // TODO i18n
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          onPressed: () async => await Navigator.maybePop(context),
+        ),
+        TextButton(
+          onPressed: () async => await Navigator.maybePop(context, true),
+          child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
+        ),
+      ],
+    );
   }
 }

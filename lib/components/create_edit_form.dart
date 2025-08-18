@@ -96,11 +96,11 @@ class CreateEditFormBuilder<
           },
         ),
         BlocListener<CB, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (final context, final state) async {
             final snackBar = SnackBar(content: Text('Data created $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context, true);
+            await Navigator.maybePop(context, true);
             // TODO possibly clear dirty now
           },
         ),
@@ -117,11 +117,6 @@ class CreateEditFormBuilder<
                 title: title,
                 formKey: formState.key,
                 fullscreen: fullscreen,
-                formFieldsContainer: fieldsBuilder(
-                  context,
-                  formState.group,
-                  inProgress,
-                ),
                 dirty: formState.dirty,
                 onChanged: () => context.read<FB>().add(const FormDirtied()),
                 onSubmit:
@@ -130,6 +125,7 @@ class CreateEditFormBuilder<
                         : () {
                           context.read<FB>().add(const FormSubmitted());
                         },
+                child: fieldsBuilder(context, formState.group, inProgress),
               );
             },
           );
@@ -152,11 +148,11 @@ class CreateEditFormBuilder<
           },
         ),
         BlocListener<UB, ActionState<void>>(
-          listener: (final context, final state) {
+          listener: (final context, final state) async {
             final snackBar = SnackBar(content: Text('Data updated $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context, true);
+            await Navigator.maybePop(context, true);
             // TODO possibly clear dirty now
           },
         ),
@@ -191,11 +187,6 @@ class CreateEditFormBuilder<
                     title: title,
                     formKey: formState.key,
                     fullscreen: fullscreen,
-                    formFieldsContainer: fieldsBuilder(
-                      context,
-                      formState.group,
-                      inProgress,
-                    ),
                     dirty: formState.dirty,
                     onChanged:
                         () => context.read<FB>().add(const FormDirtied()),
@@ -205,6 +196,7 @@ class CreateEditFormBuilder<
                             : () {
                               context.read<FB>().add(const FormSubmitted());
                             },
+                    child: fieldsBuilder(context, formState.group, inProgress),
                   );
                 },
               );
@@ -224,7 +216,7 @@ class FullForm extends StatelessWidget {
     required this.formKey,
     required this.fullscreen,
     required this.dirty,
-    required this.formFieldsContainer,
+    required this.child,
     required this.onChanged,
     this.onSubmit,
   });
@@ -233,7 +225,7 @@ class FullForm extends StatelessWidget {
   final Key formKey;
   final bool fullscreen;
   final bool dirty;
-  final Widget formFieldsContainer;
+  final Widget child;
   final VoidCallback onChanged;
   final VoidCallback? onSubmit;
 
@@ -260,11 +252,11 @@ class FullForm extends StatelessWidget {
         final bool shouldPop =
             dirty ? await _showBackDialog(context) ?? false : true;
         if (context.mounted && shouldPop) {
-          Navigator.pop(context);
+          await Navigator.maybePop(context);
         }
       },
       onChanged: inProgress ? null : onChanged,
-      child: formFieldsContainer,
+      child: child,
     );
 
     final modifiedChip =
@@ -284,7 +276,9 @@ class FullForm extends StatelessWidget {
             automaticallyImplyLeading: false,
             leading: CloseButton(
               onPressed:
-                  inProgress ? null : () async => Navigator.maybePop(context),
+                  inProgress
+                      ? null
+                      : () async => await Navigator.maybePop(context),
             ),
             actions: [modifiedChip, const SizedBox(width: 16.0), saveButton],
           ),
@@ -329,7 +323,8 @@ class FullForm extends StatelessWidget {
                           onPressed:
                               inProgress
                                   ? null
-                                  : () async => Navigator.maybePop(context),
+                                  : () async =>
+                                      await Navigator.maybePop(context),
                           child: const Text('Cancel'), // TODO i18n
                         ),
                         saveButton,
