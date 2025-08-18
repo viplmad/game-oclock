@@ -75,11 +75,11 @@ class ListDetailBuilder<
               } else {
                 return Row(
                   children: [
-                    Flexible(
+                    Expanded(
                       flex: 4,
                       child: list(context, selectedData: selectedData),
                     ),
-                    Flexible(
+                    Expanded(
                       flex: 2,
                       child: detail(
                         context,

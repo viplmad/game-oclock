@@ -51,6 +51,7 @@ class UserGameListPage extends StatelessWidget {
             ],
             child: UserGameDetail(
               data: data,
+              extended: false,
               onBackPressed: onClosed,
               onEditSucceeded: (final context) {
                 context.read<UserGameListBloc>().add(const ListReloaded());

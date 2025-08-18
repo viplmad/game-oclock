@@ -73,8 +73,8 @@ class LoginBuilder extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Flexible(flex: 1, child: FlutterLogo()),
-                      Flexible(flex: 1, child: buildForm(context)),
+                      const Expanded(flex: 1, child: FlutterLogo()),
+                      Expanded(flex: 1, child: buildForm(context)),
                     ],
                   ),
         );
@@ -229,6 +229,7 @@ class SimpleForm extends StatelessWidget {
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SingleChildScrollView(child: form),
           const SizedBox(height: 24.0),

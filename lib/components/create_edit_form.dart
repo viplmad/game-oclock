@@ -96,11 +96,11 @@ class CreateEditFormBuilder<
           },
         ),
         BlocListener<CB, ActionState<void>>(
-          listener: (final context, final state) async {
+          listener: (final context, final state) {
             final snackBar = SnackBar(content: Text('Data created $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            await Navigator.maybePop(context, true);
+            Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
         ),
@@ -148,11 +148,11 @@ class CreateEditFormBuilder<
           },
         ),
         BlocListener<UB, ActionState<void>>(
-          listener: (final context, final state) async {
+          listener: (final context, final state) {
             final snackBar = SnackBar(content: Text('Data updated $state'));
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            await Navigator.maybePop(context, true);
+            Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
         ),
@@ -252,7 +252,7 @@ class FullForm extends StatelessWidget {
         final bool shouldPop =
             dirty ? await _showBackDialog(context) ?? false : true;
         if (context.mounted && shouldPop) {
-          await Navigator.maybePop(context);
+          Navigator.pop(context);
         }
       },
       onChanged: inProgress ? null : onChanged,
@@ -353,18 +353,14 @@ class FullForm extends StatelessWidget {
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Stay'), // TODO i18n
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
+              onPressed: () async => await Navigator.maybePop(context, false),
             ),
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Discard'), // TODO i18n
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
+              onPressed: () async => await Navigator.maybePop(context, true),
             ),
           ],
         );

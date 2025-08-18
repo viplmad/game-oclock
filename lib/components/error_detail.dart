@@ -4,7 +4,7 @@ class DetailError extends StatelessWidget {
   const DetailError({super.key, required this.title, required this.onRetryTap});
 
   final String title;
-  final void Function() onRetryTap;
+  final VoidCallback onRetryTap;
 
   @override
   Widget build(final BuildContext context) {

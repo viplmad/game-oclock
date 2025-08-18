@@ -80,6 +80,7 @@ class MainLayoutBuilder extends StatelessWidget {
       return Row(
         children: [
           navigationRail(context, selectedPath: selectedPath, extended: false),
+          const VerticalDivider(width: 1.0),
           Expanded(child: child),
         ],
       );
@@ -87,6 +88,7 @@ class MainLayoutBuilder extends StatelessWidget {
       return Row(
         children: [
           navigationRail(context, selectedPath: selectedPath, extended: true),
+          const VerticalDivider(width: 1.0),
           Expanded(child: child),
         ],
       );
