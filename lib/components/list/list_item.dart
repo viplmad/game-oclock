@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ListItemTile extends StatelessWidget {
-  const ListItemTile({
+class TileListItem extends StatelessWidget {
+  const TileListItem({
     super.key,
     required this.title,
     this.subtitle,
@@ -27,8 +27,8 @@ class ListItemTile extends StatelessWidget {
   }
 }
 
-class ListItemGrid extends StatelessWidget {
-  const ListItemGrid({
+class GridListItem extends StatelessWidget {
+  const GridListItem({
     super.key,
     required this.title,
     this.imageURL,

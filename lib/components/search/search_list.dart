@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show ListLoaded, ListReloaded, SearchListBloc;
-import 'package:game_oclock/components/grid_list.dart';
-import 'package:game_oclock/components/list_item.dart' show ListItemTile;
+import 'package:game_oclock/components/list/grid_list.dart';
+import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
 
@@ -26,7 +26,7 @@ class SearchListPage extends StatelessWidget {
       child: GridListBuilder<ListSearch, SearchListBloc>(
         space: '', // Empty space because search cannot be filtered
         itemBuilder:
-            (final context, final data, final index) => ListItemTile(
+            (final context, final data, final index) => TileListItem(
               title: data.name,
               onTap: () {
                 Navigator.pop(context, data);

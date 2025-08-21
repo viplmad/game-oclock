@@ -23,6 +23,11 @@ final List<NavDestination> mainDestinations = List.unmodifiable([
 
 final List<NavDestination> secondaryDestinations = List.unmodifiable([
   const NavDestination(
+    icon: Icon(CommonIcons.calendar),
+    label: 'Calendar',
+    path: CommonPaths.calendarPath,
+  ),
+  const NavDestination(
     icon: Icon(CommonIcons.tags),
     label: 'Tags',
     path: CommonPaths.tagsPath,

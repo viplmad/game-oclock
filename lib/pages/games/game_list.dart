@@ -10,8 +10,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameListBloc,
         UserGameSelectBloc,
         UserGameTagListBloc;
+import 'package:game_oclock/components/list/list_item.dart' show GridListItem;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
-import 'package:game_oclock/components/list_item.dart' show ListItemGrid;
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame;
 
@@ -66,7 +66,7 @@ class UserGameListPage extends StatelessWidget {
           );
         },
         listItemBuilder:
-            (final context, final data, final onPressed) => ListItemGrid(
+            (final context, final data, final onPressed) => GridListItem(
               title:
                   '${data.title}${data.edition.isNotEmpty ? ' - ${data.edition}' : ''}',
               onTap: onPressed,

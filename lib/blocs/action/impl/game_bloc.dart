@@ -1,7 +1,7 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
 
-import 'action.dart'
+import '../action.dart'
     show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
 
 class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {

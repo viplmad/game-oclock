@@ -54,7 +54,7 @@ abstract class FormBloc<D extends FormData<T>, T>
       ),
     );
     final valid =
-        formKey.currentState != null ? formKey.currentState!.validate() : false;
+        formKey.currentState == null ? false : formKey.currentState!.validate();
     if (valid) {
       formKey.currentState!.save();
       final data = fromData(formGroup);

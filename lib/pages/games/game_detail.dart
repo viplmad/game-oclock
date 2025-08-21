@@ -19,8 +19,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameTagListBloc;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
-import 'package:game_oclock/components/grid_list.dart';
-import 'package:game_oclock/components/list_item.dart';
+import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
+import 'package:game_oclock/components/list/tile_list.dart'
+    show TileListBuilder;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
@@ -136,11 +137,11 @@ class UserGameDetail extends StatelessWidget {
         onTap:
             (final context) =>
                 _loadOnlyInitial<UserGameAvailableListBloc>(context),
-        child: GridListBuilder<GameAvailable, UserGameAvailableListBloc>(
+        child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
           space: '', // TODO ?
           itemBuilder:
               (final context, final data, final index) =>
-                  ListItemTile(title: data.name),
+                  TileListItem(title: data.name),
         ),
       ),
       TabDestination(
@@ -148,11 +149,11 @@ class UserGameDetail extends StatelessWidget {
         label: 'Tags',
         onTap:
             (final context) => _loadOnlyInitial<UserGameTagListBloc>(context),
-        child: GridListBuilder<Tag, UserGameTagListBloc>(
+        child: TileListBuilder<Tag, UserGameTagListBloc>(
           space: '', // TODO ?
           itemBuilder:
               (final context, final data, final index) =>
-                  ListItemTile(title: data.name),
+                  TileListItem(title: data.name),
         ),
       ),
     ]);

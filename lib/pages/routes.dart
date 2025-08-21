@@ -6,9 +6,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutContextChanged,
         LayoutTierBloc,
         MinimizedLayoutBloc;
-import 'package:game_oclock/components/main_layout.dart'
-    show MainLayoutBuilder;
+import 'package:game_oclock/components/main_layout.dart' show MainLayoutBuilder;
 import 'package:game_oclock/constants/paths.dart';
+import 'package:game_oclock/pages/calendar/multi_calendar.dart'
+    show MultiCalendarPage;
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
 import 'package:game_oclock/pages/games/game_detail.dart'
@@ -89,7 +90,7 @@ final routerConfig = GoRouter(
           path: CommonPaths.tagsPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(
-              const ActionStarted(data: true),
+              const ActionStarted(data: false),
             );
             return const UserGameListPage();
           },
@@ -98,9 +99,19 @@ final routerConfig = GoRouter(
           path: CommonPaths.usersPath,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(
-              const ActionStarted(data: true),
+              const ActionStarted(data: false),
             );
             return const UserGameListPage();
+          },
+        ),
+
+        GoRoute(
+          path: CommonPaths.calendarPath,
+          builder: (final context, final state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
+            return const MultiCalendarPage();
           },
         ),
       ],

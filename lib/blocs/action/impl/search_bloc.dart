@@ -1,7 +1,7 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
 
-import 'action.dart'
+import '../action.dart'
     show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
 
 class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {

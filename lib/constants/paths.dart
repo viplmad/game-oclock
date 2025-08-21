@@ -9,8 +9,10 @@ class CommonPaths {
   static const String tagsPath = '/tags';
   static const String usersPath = '/users';
 
-  static const String gamePath = gamesPath + _idPathParamPath;
+  static const String calendarPath = '/calendar';
+
   static const String _idPathParamPath = '/:id';
+  static const String gamePath = gamesPath + _idPathParamPath;
 
   static const String idPathParam = 'id';
 }

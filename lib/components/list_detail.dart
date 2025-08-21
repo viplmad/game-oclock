@@ -14,7 +14,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 
-import 'grid_list.dart';
+import 'list/grid_list.dart';
 
 class ListDetailBuilder<
   T,
@@ -63,25 +63,25 @@ class ListDetailBuilder<
                       ? (selectState as ActionFinal<T?, T?>).data
                       : null;
               if (layoutTier == LayoutTier.compact) {
-                if (selectedData != null) {
-                  return detail(
+                if (selectedData == null) {
+                  return _list(context, selectedData: selectedData);
+                } else {
+                  return _detail(
                     context,
                     selectedData: selectedData,
                     selectBloc: context.read<SB>(),
                   );
-                } else {
-                  return list(context, selectedData: selectedData);
                 }
               } else {
                 return Row(
                   children: [
                     Expanded(
                       flex: 4,
-                      child: list(context, selectedData: selectedData),
+                      child: _list(context, selectedData: selectedData),
                     ),
                     Expanded(
                       flex: 2,
-                      child: detail(
+                      child: _detail(
                         context,
                         selectedData: selectedData,
                         selectBloc: context.read<SB>(),
@@ -97,27 +97,27 @@ class ListDetailBuilder<
     );
   }
 
-  Widget detail(
+  Widget _detail(
     final BuildContext context, {
     required final T? selectedData,
     required final SB selectBloc,
   }) {
     return selectedData == null
-        ? emptyDetail()
+        ? _emptyDetail()
         : detailBuilder(
           context,
           selectedData,
-          () => select(context, selectBloc: selectBloc, data: null),
+          () => _select(context, selectBloc: selectBloc, data: null),
         );
   }
 
-  Widget emptyDetail() {
+  Widget _emptyDetail() {
     return const Center(
       child: Text('Select something first'), // TODO i18n
     );
   }
 
-  Widget list(final BuildContext context, {required final T? selectedData}) {
+  Widget _list(final BuildContext context, {required final T? selectedData}) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -147,7 +147,7 @@ class ListDetailBuilder<
             (final context, final data, final index) => listItemBuilder(
               context,
               data,
-              () => select(
+              () => _select(
                 context,
                 selectBloc: context.read<SB>(),
                 data:
@@ -160,7 +160,7 @@ class ListDetailBuilder<
     );
   }
 
-  void select(
+  void _select(
     final BuildContext context, {
     required final SB selectBloc,
     required final T? data,

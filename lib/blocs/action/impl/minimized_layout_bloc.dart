@@ -1,4 +1,4 @@
-import 'action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
+import '../action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
 
 class MinimizedLayoutBloc extends FunctionActionBloc<bool, bool> {
   @override

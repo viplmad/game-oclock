@@ -10,41 +10,15 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListPageReloaded,
         ListSearchChanged,
         ListState;
+import 'package:game_oclock/components/search/search_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
 
 import 'list_item.dart';
-import 'search_list.dart';
 
-class GridListBuilder<T, LB extends ListLoadBloc<T>>
-    extends ListBuilder<T, LB> {
-  const GridListBuilder({
-    super.key,
-    required super.space,
-    required super.itemBuilder,
-  });
-
-  @override
-  Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
-    itemBuilder,
-    final Widget? trailing,
-    required final ScrollController controller,
-  }) {
-    return GridList(
-      items: items,
-      itemBuilder: itemBuilder,
-      trailing: trailing,
-      controller: controller,
-    );
-  }
-}
-
-// TODO Move
-abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
+abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
-  const ListBuilder({
+  const PaginatedListBuilder({
     super.key,
     required this.space,
     required this.itemBuilder,
@@ -77,10 +51,13 @@ abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
           children: [
             searchTile(context, search: currentSearch),
             Expanded(
-              child: list(
-                context,
-                state: state,
-                scrollController: scrollController,
+              child: Scrollbar(
+                controller: scrollController,
+                child: list(
+                  context,
+                  state: state,
+                  scrollController: scrollController,
+                ),
               ),
             ),
           ],
@@ -119,7 +96,7 @@ abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
     Widget? trailing;
     if (state is ListFinal<T>) {
       if (state is ListLoadFailure<T>) {
-        trailing = ListItemGrid(
+        trailing = GridListItem(
           title: 'Error - Tap to refresh', // TODO
           onTap: () => context.read<LB>().add(const ListPageReloaded()),
         );
@@ -160,44 +137,4 @@ abstract class ListBuilder<T, LB extends ListLoadBloc<T>>
     final Widget? trailing,
     required final ScrollController controller,
   });
-}
-
-class GridList<T> extends StatelessWidget {
-  const GridList({
-    super.key,
-    required this.items,
-    required this.itemBuilder,
-    this.trailing,
-    required this.controller,
-  });
-
-  final List<T> items;
-  final Widget Function(BuildContext context, T item, int index) itemBuilder;
-  final Widget? trailing;
-  final ScrollController controller;
-
-  @override
-  Widget build(final BuildContext context) {
-    final count = items.length + (trailing == null ? 0 : 1);
-    return GridView.builder(
-      shrinkWrap: true,
-      itemCount: count,
-      controller: controller,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 1.85, // Steam header aspect ratio
-        crossAxisCount: (MediaQuery.sizeOf(context).width / 400).ceil(),
-      ),
-      itemBuilder: (final BuildContext context, final int index) {
-        Widget itemWidget;
-        if (index == count - 1 && trailing != null) {
-          itemWidget = trailing!;
-        } else {
-          final T item = items.elementAt(index);
-          itemWidget = itemBuilder(context, item, index);
-        }
-
-        return Padding(padding: const EdgeInsets.all(4.0), child: itemWidget);
-      },
-    );
-  }
 }

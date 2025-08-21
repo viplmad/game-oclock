@@ -3,7 +3,7 @@ import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
     show GameAvailable, ListSearch, Tag, UserGame;
 
-import 'list_bloc.dart' show ListLoadBloc;
+import '../list.dart' show ListLoadBloc;
 
 class UserGameListBloc extends ListLoadBloc<UserGame> {
   @override

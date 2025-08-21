@@ -21,4 +21,6 @@ class CommonIcons {
   static const IconData locations = Icons.shelves;
   static const IconData devices = Icons.devices;
   static const IconData tags = Icons.sell;
+
+  static const IconData calendar = Icons.calendar_month;
 }
