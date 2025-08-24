@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        CalendarDayFocusBloc,
         CalendarDaySelectBloc,
         GameLogListBloc,
         GameLogSelectBloc,
@@ -22,6 +23,12 @@ class MultiCalendarPage extends StatelessWidget {
           create:
               (_) =>
                   CalendarDaySelectBloc()
+                    ..add(ActionStarted(data: DateTime.now())),
+        ),
+        BlocProvider(
+          create:
+              (_) =>
+                  CalendarDayFocusBloc()
                     ..add(ActionStarted(data: DateTime.now())),
         ),
         BlocProvider(create: (_) => GameLogSelectBloc()),

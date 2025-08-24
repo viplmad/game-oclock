@@ -62,6 +62,7 @@ class ListDetailBuilder<
                   (selectState is ActionFinal)
                       ? (selectState as ActionFinal<T?, T?>).data
                       : null;
+
               if (layoutTier == LayoutTier.compact) {
                 if (selectedData == null) {
                   return _list(context, selectedData: selectedData);

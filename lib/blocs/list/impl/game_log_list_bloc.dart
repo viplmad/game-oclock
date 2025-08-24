@@ -18,7 +18,7 @@ class GameLogListBloc extends ListLoadBloc<DateTime> {
     final data = PageResultDTO(
       data: List.generate(size, (final index) {
         final finalIndex = (page * size) + index;
-        return DateTime.now().subtract(Duration(days: finalIndex));
+        return DateTime.now().subtract(Duration(hours: finalIndex));
       }),
       page: page,
       size: size,
@@ -28,7 +28,7 @@ class GameLogListBloc extends ListLoadBloc<DateTime> {
       data: List.of(
         lastData == null ? data.data : [...lastData, ...data.data],
         growable: false,
-      ),
+      )..sort((final a, final b) => a.compareTo(b)), // Sort to simplify computation on UI
       quicksearch: quicksearch,
       search: search,
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart'
+    show SliverStickyHeader;
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ListFinal,
@@ -11,17 +13,69 @@ import 'package:game_oclock/blocs/blocs.dart'
 
 import 'list_item.dart';
 
-class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
+class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
+    extends StickyListBuilder<K, T, LB> {
+  const StickyTopListBuilder({
+    super.key,
+    required super.groupTransformer,
+    required super.headerBuilder,
+    required super.itemBuilder,
+    super.controller,
+  });
+
+  @override
+  Widget listView({
+    required final List<T> items,
+    required final Widget Function(BuildContext context, T item, int index)
+    itemBuilder,
+    required final ScrollController controller,
+  }) {
+    return StickyTopHeaderList(
+      items: groupTransformer(items),
+      headerBuilder: headerBuilder,
+      itemBuilder: itemBuilder,
+      controller: controller,
+    );
+  }
+}
+
+class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
+    extends StickyListBuilder<K, T, LB> {
+  const StickySideListBuilder({
+    super.key,
+    required super.groupTransformer,
+    required super.headerBuilder,
+    required super.itemBuilder,
+    super.controller,
+  });
+
+  @override
+  Widget listView({
+    required final List<T> items,
+    required final Widget Function(BuildContext context, T item, int index)
+    itemBuilder,
+    required final ScrollController controller,
+  }) {
+    return StickySideHeaderList(
+      items: groupTransformer(items),
+      headerBuilder: headerBuilder,
+      itemBuilder: itemBuilder,
+      controller: controller,
+    );
+  }
+}
+
+abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const StickyListBuilder({
     super.key,
-    required this.titleTransformer,
     required this.groupTransformer,
+    required this.headerBuilder,
     required this.itemBuilder,
     this.controller,
   });
 
-  final String Function(K key) titleTransformer;
+  final Widget Function(K key) headerBuilder;
   final Map<K, List<T>> Function(List<T> items) groupTransformer;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ScrollController? controller;
@@ -71,27 +125,52 @@ class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
     required final Widget Function(BuildContext context, T item, int index)
     itemBuilder,
     required final ScrollController controller,
-  }) {
-    return StickyList(
-      items: groupTransformer(items),
-      titleTransformer: titleTransformer,
-      itemBuilder: itemBuilder,
-      controller: controller,
-    );
-  }
+  });
 }
 
-class StickyList<K, T> extends StatelessWidget {
-  const StickyList({
+class StickyTopHeaderList<K, T> extends StatelessWidget {
+  const StickyTopHeaderList({
     super.key,
     required this.items,
-    required this.titleTransformer,
+    required this.headerBuilder,
     required this.itemBuilder,
     required this.controller,
   });
 
   final Map<K, List<T>> items;
-  final String Function(K key) titleTransformer;
+  final Widget Function(K key) headerBuilder;
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final ScrollController controller;
+
+  @override
+  Widget build(final BuildContext context) {
+    return CustomScrollView(
+      shrinkWrap: true,
+      controller: controller,
+      slivers: items.entries
+          .map((final entry) {
+            return SliverTopGroup<T>(
+              items: entry.value,
+              header: headerBuilder(entry.key),
+              itemBuilder: itemBuilder,
+            );
+          })
+          .toList(growable: false),
+    );
+  }
+}
+
+class StickySideHeaderList<K, T> extends StatelessWidget {
+  const StickySideHeaderList({
+    super.key,
+    required this.items,
+    required this.headerBuilder,
+    required this.itemBuilder,
+    required this.controller,
+  });
+
+  final Map<K, List<T>> items;
+  final Widget Function(K key) headerBuilder;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ScrollController controller;
 
@@ -104,10 +183,7 @@ class StickyList<K, T> extends StatelessWidget {
           .map((final entry) {
             return SliverSideGroup<T>(
               items: entry.value,
-              header: SliverSideHeader(
-                title: titleTransformer(entry.key),
-                backgroundColor: Colors.grey[800],
-              ),
+              header: headerBuilder(entry.key),
               itemBuilder: itemBuilder,
             );
           })
@@ -116,8 +192,8 @@ class StickyList<K, T> extends StatelessWidget {
   }
 }
 
-class SliverVerticalGroup<T> extends StatelessWidget {
-  const SliverVerticalGroup({
+class SliverTopGroup<T> extends StatelessWidget {
+  const SliverTopGroup({
     super.key,
     required this.items,
     required this.header,
@@ -125,7 +201,7 @@ class SliverVerticalGroup<T> extends StatelessWidget {
   });
 
   final List<T> items;
-  final SliverPersistentHeaderDelegate header;
+  final Widget header;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
   @override
@@ -133,7 +209,10 @@ class SliverVerticalGroup<T> extends StatelessWidget {
     final count = items.length;
     return SliverMainAxisGroup(
       slivers: <Widget>[
-        SliverPersistentHeader(pinned: true, delegate: header),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverHeader(child: header),
+        ),
         SliverList.builder(
           itemCount: count,
           itemBuilder: (final BuildContext context, final int index) {
@@ -160,42 +239,38 @@ class SliverSideGroup<T> extends StatelessWidget {
   });
 
   final List<T> items;
-  final SliverPersistentHeaderDelegate header;
+  final Widget header;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
   @override
   Widget build(final BuildContext context) {
     final count = items.length;
-    return SliverMainAxisGroup(
-      slivers: <Widget>[
-        SliverPersistentHeader(pinned: true, delegate: header, floating: true),
-        SliverList.builder(
+    return SliverStickyHeader(
+      overlapsContent: true,
+      header: header,
+      sliver: SliverPadding(
+        padding: const EdgeInsets.only(left: 60),
+        sliver: SliverList.builder(
           itemCount: count,
           itemBuilder: (final BuildContext context, final int index) {
             final T item = items.elementAt(index);
             final Widget itemWidget = itemBuilder(context, item, index);
 
             return Padding(
-              padding: const EdgeInsets.only(
-                left: 48.0,
-                top: 4.0,
-                right: 4.0,
-                bottom: 4.0,
-              ),
+              padding: const EdgeInsets.all(4.0),
               child: itemWidget,
             );
           },
         ),
-      ],
+      ),
     );
   }
 }
 
-class SliverVerticalHeader extends SliverPersistentHeaderDelegate {
-  SliverVerticalHeader({required this.title, this.backgroundColor});
+class SliverHeader extends SliverPersistentHeaderDelegate {
+  SliverHeader({required this.child});
 
-  final String title;
-  final Color? backgroundColor;
+  final Widget child;
 
   @override
   Widget build(
@@ -203,60 +278,7 @@ class SliverVerticalHeader extends SliverPersistentHeaderDelegate {
     final double shrinkOffset,
     final bool overlapsContent,
   ) {
-    return Container(
-      color: backgroundColor,
-      child: ListTile(
-        title: Text(
-          title,
-          style: DefaultTextStyle.of(
-            context,
-          ).style.copyWith(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => minExtent;
-
-  @override
-  double get minExtent => 40.0;
-
-  @override
-  bool shouldRebuild(
-    covariant final SliverPersistentHeaderDelegate oldDelegate,
-  ) => false;
-}
-
-class SliverSideHeader extends SliverPersistentHeaderDelegate {
-  SliverSideHeader({required this.title, this.backgroundColor});
-
-  final String title;
-  final Color? backgroundColor;
-
-  @override
-  Widget build(
-    final BuildContext context,
-    final double shrinkOffset,
-    final bool overlapsContent,
-  ) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: SizedBox(
-        height: 44.0,
-        width: 44.0,
-        child: CircleAvatar(
-          backgroundColor: backgroundColor,
-          foregroundColor: Colors.white,
-          child: Text(
-            title,
-            style: DefaultTextStyle.of(
-              context,
-            ).style.copyWith(color: Colors.white),
-          ),
-        ),
-      ),
-    );
+    return child;
   }
 
   @override
