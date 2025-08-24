@@ -11,29 +11,28 @@ import 'package:game_oclock/blocs/blocs.dart'
 
 import 'list_item.dart';
 
-class StickyListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
+class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
+    extends StatelessWidget {
   const StickyListBuilder({
     super.key,
+    required this.titleTransformer,
     required this.groupTransformer,
-    required this.headerBuilder,
     required this.itemBuilder,
+    this.controller,
   });
 
-  final Map<String, List<T>> Function(List<T> items) groupTransformer;
-  final SliverPersistentHeaderDelegate Function(
-    BuildContext contex,
-    String title,
-  )
-  headerBuilder;
+  final String Function(K key) titleTransformer;
+  final Map<K, List<T>> Function(List<T> items) groupTransformer;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final ScrollController? controller;
 
   @override
   Widget build(final BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+    final ScrollController controller = this.controller ?? ScrollController();
 
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
-        return list(context, state: state, scrollController: scrollController);
+        return list(context, state: state, controller: controller);
       },
     );
   }
@@ -41,7 +40,7 @@ class StickyListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
   Widget list(
     final BuildContext context, {
     required final ListState<T> state,
-    required final ScrollController scrollController,
+    required final ScrollController controller,
   }) {
     List<T> items = [];
     if (state is ListFinal<T>) {
@@ -63,7 +62,7 @@ class StickyListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
     return listView(
       items: items,
       itemBuilder: itemBuilder,
-      controller: scrollController,
+      controller: controller,
     );
   }
 
@@ -75,28 +74,24 @@ class StickyListBuilder<T, LB extends ListLoadBloc<T>> extends StatelessWidget {
   }) {
     return StickyList(
       items: groupTransformer(items),
-      headerBuilder: headerBuilder,
+      titleTransformer: titleTransformer,
       itemBuilder: itemBuilder,
       controller: controller,
     );
   }
 }
 
-class StickyList<T> extends StatelessWidget {
+class StickyList<K, T> extends StatelessWidget {
   const StickyList({
     super.key,
     required this.items,
-    required this.headerBuilder,
+    required this.titleTransformer,
     required this.itemBuilder,
     required this.controller,
   });
 
-  final Map<String, List<T>> items;
-  final SliverPersistentHeaderDelegate Function(
-    BuildContext context,
-    String title,
-  )
-  headerBuilder;
+  final Map<K, List<T>> items;
+  final String Function(K key) titleTransformer;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ScrollController controller;
 
@@ -107,9 +102,12 @@ class StickyList<T> extends StatelessWidget {
       controller: controller,
       slivers: items.entries
           .map((final entry) {
-            return SliverVerticalGroup<T>(
+            return SliverSideGroup<T>(
               items: entry.value,
-              header: headerBuilder(context, entry.key),
+              header: SliverSideHeader(
+                title: titleTransformer(entry.key),
+                backgroundColor: Colors.grey[800],
+              ),
               itemBuilder: itemBuilder,
             );
           })
@@ -153,8 +151,48 @@ class SliverVerticalGroup<T> extends StatelessWidget {
   }
 }
 
-class ListTileSliverHeader extends SliverPersistentHeaderDelegate {
-  ListTileSliverHeader({required this.title, this.backgroundColor});
+class SliverSideGroup<T> extends StatelessWidget {
+  const SliverSideGroup({
+    super.key,
+    required this.items,
+    required this.header,
+    required this.itemBuilder,
+  });
+
+  final List<T> items;
+  final SliverPersistentHeaderDelegate header;
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    final count = items.length;
+    return SliverMainAxisGroup(
+      slivers: <Widget>[
+        SliverPersistentHeader(pinned: true, delegate: header, floating: true),
+        SliverList.builder(
+          itemCount: count,
+          itemBuilder: (final BuildContext context, final int index) {
+            final T item = items.elementAt(index);
+            final Widget itemWidget = itemBuilder(context, item, index);
+
+            return Padding(
+              padding: const EdgeInsets.only(
+                left: 48.0,
+                top: 4.0,
+                right: 4.0,
+                bottom: 4.0,
+              ),
+              child: itemWidget,
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class SliverVerticalHeader extends SliverPersistentHeaderDelegate {
+  SliverVerticalHeader({required this.title, this.backgroundColor});
 
   final String title;
   final Color? backgroundColor;
@@ -167,7 +205,57 @@ class ListTileSliverHeader extends SliverPersistentHeaderDelegate {
   ) {
     return Container(
       color: backgroundColor,
-      child: ListTile(title: Text(title)),
+      child: ListTile(
+        title: Text(
+          title,
+          style: DefaultTextStyle.of(
+            context,
+          ).style.copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => minExtent;
+
+  @override
+  double get minExtent => 40.0;
+
+  @override
+  bool shouldRebuild(
+    covariant final SliverPersistentHeaderDelegate oldDelegate,
+  ) => false;
+}
+
+class SliverSideHeader extends SliverPersistentHeaderDelegate {
+  SliverSideHeader({required this.title, this.backgroundColor});
+
+  final String title;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(
+    final BuildContext context,
+    final double shrinkOffset,
+    final bool overlapsContent,
+  ) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SizedBox(
+        height: 44.0,
+        width: 44.0,
+        child: CircleAvatar(
+          backgroundColor: backgroundColor,
+          foregroundColor: Colors.white,
+          child: Text(
+            title,
+            style: DefaultTextStyle.of(
+              context,
+            ).style.copyWith(color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 

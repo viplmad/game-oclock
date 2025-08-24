@@ -29,17 +29,13 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget build(final BuildContext context) {
-    final ScrollController scrollController = ScrollController();
-    scrollController.addListener(paginateListener(context, scrollController));
+    final ScrollController controller = ScrollController();
+    controller.addListener(paginateListener(context, controller));
 
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
         if (space.isEmpty) {
-          return list(
-            context,
-            state: state,
-            scrollController: scrollController,
-          );
+          return list(context, state: state, controller: controller);
         }
 
         ListSearch? currentSearch;
@@ -52,12 +48,8 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
             searchTile(context, search: currentSearch),
             Expanded(
               child: Scrollbar(
-                controller: scrollController,
-                child: list(
-                  context,
-                  state: state,
-                  scrollController: scrollController,
-                ),
+                controller: controller,
+                child: list(context, state: state, controller: controller),
               ),
             ),
           ],
@@ -90,7 +82,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
   Widget list(
     final BuildContext context, {
     required final ListState<T> state,
-    required final ScrollController scrollController,
+    required final ScrollController controller,
   }) {
     List<T> items = [];
     Widget? trailing;
@@ -114,7 +106,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
       items: items,
       itemBuilder: itemBuilder,
       trailing: trailing,
-      controller: scrollController,
+      controller: controller,
     );
   }
 

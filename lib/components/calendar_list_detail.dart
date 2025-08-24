@@ -9,11 +9,15 @@ import 'package:game_oclock/blocs/blocs.dart'
         FunctionActionBloc,
         LayoutTierBloc,
         LayoutTierState,
-        ListLoadBloc;
+        ListFinal,
+        ListLoadBloc,
+        ListState;
 import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
-    show ListTileSliverHeader, StickyListBuilder;
+    show StickyListBuilder;
 import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:game_oclock/utils/date_time_extension.dart';
+import 'package:game_oclock/utils/list_extension.dart';
 
 class CalendarListDetailBuilder<
   T,
@@ -24,14 +28,14 @@ class CalendarListDetailBuilder<
   const CalendarListDetailBuilder({
     super.key,
     required this.title,
-    required this.keyGetter,
+    required this.dateGetter,
     required this.detailBuilder,
     required this.listItemBuilder,
   });
 
   final String title;
 
-  final String Function(T data) keyGetter;
+  final DateTime Function(T data) dateGetter;
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
   final Widget Function(BuildContext context, T data, VoidCallback onPressed)
@@ -39,74 +43,115 @@ class CalendarListDetailBuilder<
 
   @override
   Widget build(final BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+
     return BlocBuilder<LayoutTierBloc, LayoutTierState>(
       builder: (final context, final layoutState) {
         final layoutTier = layoutState.tier;
 
-        return BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
-          builder: (final context, final selectDayState) {
+        return BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
+          listener: (final context, final selectDayState) async {
             final DateTime selectedDay =
                 (selectDayState is ActionFinal)
                     ? (selectDayState as ActionFinal<DateTime, DateTime>).data
                     : DateTime.now();
 
-            return BlocBuilder<SB, ActionState<T?>>(
-              builder: (final context, final selectState) {
-                final selectedData =
-                    (selectState is ActionFinal)
-                        ? (selectState as ActionFinal<T?, T?>).data
-                        : null;
-
-                if (layoutTier == LayoutTier.compact) {
-                  if (selectedData == null) {
-                    return _list(context, selectedData: selectedData);
-                  } else {
-                    return _detail(
-                      context,
-                      selectedData: selectedData,
-                      selectBloc: context.read<SB>(),
-                    );
-                  }
-                } else {
-                  if (selectedData == null) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: _calendar(context, selectedDay: selectedDay),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: _list(context, selectedData: selectedData),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: _calendar(context, selectedDay: selectedDay),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: _list(context, selectedData: selectedData),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: _detail(
-                            context,
-                            selectedData: selectedData,
-                            selectBloc: context.read<SB>(),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                }
-              },
-            );
+            final ListState<T> listState = context.read<LB>().state;
+            if (listState is ListFinal<T>) {
+              final List<T> data = listState.data;
+              data.sort(
+                (final a, final b) => dateGetter(a).compareTo(dateGetter(b)),
+              );
+              final int indexOf = data.indexWhere(
+                (final element) => dateGetter(element).isSameDay(selectedDay),
+              );
+              await scrollController.animateTo(
+                indexOf * 60.0, // TODO
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeInCubic,
+              );
+            }
           },
+          child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
+            builder: (final context, final selectDayState) {
+              final DateTime selectedDay =
+                  (selectDayState is ActionFinal)
+                      ? (selectDayState as ActionFinal<DateTime, DateTime>).data
+                      : DateTime.now();
+
+              return BlocBuilder<SB, ActionState<T?>>(
+                builder: (final context, final selectState) {
+                  final selectedData =
+                      (selectState is ActionFinal)
+                          ? (selectState as ActionFinal<T?, T?>).data
+                          : null;
+
+                  if (layoutTier == LayoutTier.compact) {
+                    if (selectedData == null) {
+                      // TODO hidden calendar
+                      return _list(
+                        context,
+                        selectedData: selectedData,
+                        scrollController: scrollController,
+                      );
+                    } else {
+                      return _detail(
+                        context,
+                        selectedData: selectedData,
+                        selectBloc: context.read<SB>(),
+                      );
+                    }
+                  } else {
+                    if (selectedData == null) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: _calendar(context, selectedDay: selectedDay),
+                          ),
+                          const VerticalDivider(width: 1.0),
+                          Expanded(
+                            flex: 4,
+                            child: _list(
+                              context,
+                              selectedData: selectedData,
+                              scrollController: scrollController,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: _calendar(context, selectedDay: selectedDay),
+                          ),
+                          const VerticalDivider(width: 1.0),
+                          Expanded(
+                            flex: 2,
+                            child: _list(
+                              context,
+                              selectedData: selectedData,
+                              scrollController: scrollController,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: _detail(
+                              context,
+                              selectedData: selectedData,
+                              selectBloc: context.read<SB>(),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  }
+                },
+              );
+            },
+          ),
         );
       },
     );
@@ -141,23 +186,15 @@ class CalendarListDetailBuilder<
     );
   }
 
-  static Map<String, List<T>> groupBy<T>(
-    final Iterable<T> items,
-    final String Function(T item) keyGetter,
-  ) {
-    final map = <String, List<T>>{};
-    for (final item in items) {
-      (map[keyGetter(item)] ??= []).add(item);
-    }
-    return map;
-  }
-
-  Widget _list(final BuildContext context, {required final T? selectedData}) {
-    return StickyListBuilder<T, LB>(
-      groupTransformer:
-          (final items) => groupBy(items, (final item) => keyGetter(item)),
-      headerBuilder:
-          (final context, final title) => ListTileSliverHeader(title: title),
+  Widget _list(
+    final BuildContext context, {
+    required final T? selectedData,
+    required final ScrollController? scrollController,
+  }) {
+    return StickyListBuilder<DateTime, T, LB>(
+      controller: scrollController,
+      groupTransformer: _groupByDate,
+      titleTransformer: (final date) => date.toIso8601String(),
       itemBuilder:
           (final context, final data, final index) => listItemBuilder(
             context,
@@ -173,6 +210,9 @@ class CalendarListDetailBuilder<
           ),
     );
   }
+
+  Map<DateTime, List<T>> _groupByDate(final List<T> items) =>
+      items.orderedGroupBy((final item) => dateGetter(item).normalizeDate());
 
   void _select(
     final BuildContext context, {

@@ -41,7 +41,7 @@ class MultiCalendarPage extends StatelessWidget {
         GameLogListBloc
       >(
         title: 'Calendar', // TODO i18n
-        keyGetter: (final data) => data.day.toString(),
+        dateGetter: (final data) => data,
         detailBuilder:
             (final context, final data, final onClosed) =>
                 Center(child: Text(data.toIso8601String())),
