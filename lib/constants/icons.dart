@@ -14,6 +14,8 @@ class CommonIcons {
   static const IconData drawerOpen = Icons.menu_open;
   static const IconData detail = Icons.info;
   static const IconData view = Icons.visibility;
+  static const IconData left = Icons.chevron_left;
+  static const IconData right = Icons.chevron_right;
 
   static const IconData games = Icons.videogame_asset;
   static const IconData wishlists = Icons.shopping_bag;

@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
+import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/list_extension.dart';
@@ -29,12 +30,16 @@ class CalendarListDetailBuilder<
   const CalendarListDetailBuilder({
     super.key,
     required this.title,
+    required this.firstDay,
+    required this.lastDay,
     required this.dateGetter,
     required this.detailBuilder,
     required this.listItemBuilder,
   });
 
   final String title;
+  final DateTime firstDay;
+  final DateTime lastDay;
 
   final DateTime Function(T data) dateGetter;
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
@@ -68,7 +73,10 @@ class CalendarListDetailBuilder<
                     duration: const Duration(seconds: 1),
                     curve: Curves.easeInCubic,
                   );
-                } // TODO else notify?
+                } else {
+                  // TODO else notify?
+                  showSnackBar(context, message: 'No logs on that day');
+                }
               }
             }
           },
@@ -96,11 +104,32 @@ class CalendarListDetailBuilder<
 
                       if (layoutTier == LayoutTier.compact) {
                         if (selectedData == null) {
-                          // TODO hidden calendar
-                          return _list(
-                            context,
-                            selectedData: selectedData,
-                            scrollController: scrollController,
+                          return Scaffold(
+                            appBar: AppBar(title: Text(title)),
+                            body: Column(
+                              children: [
+                                ExpansionTile(
+                                  title: _calendarHeader(
+                                    context,
+                                    focusedDay: focusedDay,
+                                  ),
+                                  children: [
+                                    _calendar(
+                                      context,
+                                      selectedDay: selectedDay,
+                                      focusedDay: focusedDay,
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: _list(
+                                    context,
+                                    selectedData: selectedData,
+                                    scrollController: scrollController,
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         } else {
                           return _detail(
@@ -110,48 +139,37 @@ class CalendarListDetailBuilder<
                           );
                         }
                       } else {
-                        if (selectedData == null) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: _calendar(
-                                  context,
-                                  selectedDay: selectedDay,
-                                  focusedDay: focusedDay,
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Scaffold(
+                                appBar: AppBar(title: Text(title)),
+                                body: Column(
+                                  children: [
+                                    _calendarHeader(
+                                      context,
+                                      focusedDay: focusedDay,
+                                    ),
+                                    _calendar(
+                                      context,
+                                      selectedDay: selectedDay,
+                                      focusedDay: focusedDay,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const VerticalDivider(width: 1.0),
-                              Expanded(
-                                flex: 4,
-                                child: _list(
-                                  context,
-                                  selectedData: selectedData,
-                                  scrollController: scrollController,
-                                ),
+                            ),
+                            const VerticalDivider(width: 1.0),
+                            Expanded(
+                              flex: selectedData == null ? 4 : 2,
+                              child: _list(
+                                context,
+                                selectedData: selectedData,
+                                scrollController: scrollController,
                               ),
-                            ],
-                          );
-                        } else {
-                          return Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: _calendar(
-                                  context,
-                                  selectedDay: selectedDay,
-                                  focusedDay: focusedDay,
-                                ),
-                              ),
-                              const VerticalDivider(width: 1.0),
-                              Expanded(
-                                flex: 2,
-                                child: _list(
-                                  context,
-                                  selectedData: selectedData,
-                                  scrollController: scrollController,
-                                ),
-                              ),
+                            ),
+                            if (selectedData != null)
                               Expanded(
                                 flex: 2,
                                 child: _detail(
@@ -160,9 +178,8 @@ class CalendarListDetailBuilder<
                                   selectBloc: context.read<SB>(),
                                 ),
                               ),
-                            ],
-                          );
-                        }
+                          ],
+                        );
                       }
                     },
                   );
@@ -175,6 +192,18 @@ class CalendarListDetailBuilder<
     );
   }
 
+  Widget _calendarHeader(
+    final BuildContext context, {
+    required final DateTime focusedDay,
+  }) {
+    return LogCalendarHeader(
+      firstDay: firstDay,
+      lastDay: lastDay,
+      focusedDay: focusedDay,
+      onPageChanged: (final value) => onCalendarPageChanged(context, value),
+    );
+  }
+
   Widget _calendar(
     final BuildContext context, {
     required final DateTime selectedDay,
@@ -182,19 +211,20 @@ class CalendarListDetailBuilder<
   }) {
     return LogCalendar(
       logDays: Set.unmodifiable([]),
-      firstDay: DateTime(1970),
-      lastDay: DateTime.now(),
+      firstDay: firstDay,
+      lastDay: lastDay,
       focusedDay: focusedDay,
       selectedDay: selectedDay,
       onDaySelected:
           (final value) => context.read<CalendarDaySelectBloc>().add(
             ActionStarted(data: value),
           ),
-      onPageChanged:
-          (final value) => context.read<CalendarDayFocusBloc>().add(
-            ActionStarted(data: value),
-          ),
+      onPageChanged: (final value) => onCalendarPageChanged(context, value),
     );
+  }
+
+  void onCalendarPageChanged(final BuildContext context, final DateTime date) {
+    context.read<CalendarDayFocusBloc>().add(ActionStarted(data: date));
   }
 
   Widget _detail(

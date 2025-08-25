@@ -1,6 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+class LogCalendarHeader extends StatelessWidget {
+  const LogCalendarHeader({
+    super.key,
+    required this.firstDay,
+    required this.lastDay,
+    required this.focusedDay,
+    required this.onPageChanged,
+  });
+
+  final DateTime firstDay;
+  final DateTime lastDay;
+  final DateTime focusedDay;
+  final ValueChanged<DateTime> onPageChanged;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListTile(
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(CommonIcons.left),
+            onPressed: () {
+              final prevMonth = focusedDay.atFirstDayOfPreviousMonth();
+              if (prevMonth.isAfter(firstDay) ||
+                  prevMonth.isInSameMonthAndYearOf(firstDay)) {
+                onPageChanged(
+                  prevMonth.isInSameMonthAndYearOf(firstDay)
+                      ? firstDay
+                      : prevMonth,
+                );
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(CommonIcons.right),
+            onPressed: () {
+              final nextMonth = focusedDay.atFirstDayOfNextMonth();
+              if (nextMonth.isBefore(lastDay) ||
+                  nextMonth.isInSameMonthAndYearOf(lastDay)) {
+                onPageChanged(
+                  nextMonth.isInSameMonthAndYearOf(lastDay)
+                      ? lastDay
+                      : nextMonth,
+                );
+              }
+            },
+          ),
+        ],
+      ),
+      title: Text('${focusedDay.month}-${focusedDay.year}'), // TODO
+    );
+  }
+}
 
 class LogCalendar extends StatelessWidget {
   const LogCalendar({
@@ -12,7 +68,7 @@ class LogCalendar extends StatelessWidget {
     required this.focusedDay,
     required this.selectedDay,
     required this.onDaySelected,
-    this.onPageChanged,
+    required this.onPageChanged,
   });
 
   final Set<DateTime> logDays;
@@ -22,7 +78,7 @@ class LogCalendar extends StatelessWidget {
   final DateTime focusedDay;
   final DateTime selectedDay;
   final ValueChanged<DateTime> onDaySelected;
-  final ValueChanged<DateTime>? onPageChanged;
+  final ValueChanged<DateTime> onPageChanged;
 
   static const BoxShape shape = BoxShape.circle;
   static const Color todayColour = Colors.red;
@@ -61,15 +117,9 @@ class LogCalendar extends StatelessWidget {
       weekendDays: const <int>[DateTime.saturday, DateTime.sunday], // TODO
       pageJumpingEnabled: true,
       availableGestures: AvailableGestures.horizontalSwipe,
-      availableCalendarFormats: const <CalendarFormat, String>{
-        CalendarFormat.month: '',
-      },
+      headerVisible: false,
       onPageChanged: onPageChanged,
       rowHeight: 65.0,
-      headerStyle: const HeaderStyle(
-        titleCentered: true,
-        formatButtonVisible: false,
-      ),
       calendarStyle: CalendarStyle(
         isTodayHighlighted: true,
         outsideDaysVisible: false,

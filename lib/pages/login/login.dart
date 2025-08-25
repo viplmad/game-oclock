@@ -96,9 +96,6 @@ class LoginBuilder extends StatelessWidget {
         ),
         BlocListener<LoginSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            final snackBar = SnackBar(content: Text('Data updated $state'));
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             // TODO possibly clear dirty now
             GoRouter.of(context).go(CommonPaths.gamesPath);
           },

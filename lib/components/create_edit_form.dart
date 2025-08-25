@@ -18,6 +18,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         FunctionActionBloc,
         LayoutTierBloc,
         LayoutTierState;
+import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 
 class CreateEditFormBuilder<
@@ -97,9 +98,7 @@ class CreateEditFormBuilder<
         ),
         BlocListener<CB, ActionState<void>>(
           listener: (final context, final state) {
-            final snackBar = SnackBar(content: Text('Data created $state'));
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            showSnackBar(context, message: 'Data created $state');
             Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
@@ -149,9 +148,7 @@ class CreateEditFormBuilder<
         ),
         BlocListener<UB, ActionState<void>>(
           listener: (final context, final state) {
-            final snackBar = SnackBar(content: Text('Data updated $state'));
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            showSnackBar(context, message: 'Data updated $state');
             Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
