@@ -15,14 +15,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         LayoutTierBloc,
         LayoutTierState,
         LoginFormBloc,
-        LoginFormData,
         LoginGetBloc,
         LoginSaveBloc;
 import 'package:game_oclock/components/show_hide_text_form_field.dart'
     show ShowHideTextFormField;
 import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier, Login;
+import 'package:game_oclock/models/models.dart'
+    show LayoutTier, Login, LoginFormData;
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {

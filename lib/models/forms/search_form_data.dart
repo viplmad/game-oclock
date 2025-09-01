@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart'
-    show
-        ChainOperatorType,
-        FilterDTO,
-        FormData,
-        ListSearch,
-        OperatorType,
-        SearchDTO,
-        SearchValue;
-
-import 'form.dart' show FormBloc;
+    show FilterDTO, FormData, ListSearch;
 
 class SearchFormData extends FormData<ListSearch> {
   final TextEditingController name;
@@ -57,32 +48,6 @@ class FilterFormData extends FormData<FilterDTO> {
     value.value = value.value.copyWith(text: filter?.value.value); // TODO list
     chainOperator.value = chainOperator.value.copyWith(
       text: filter?.chainOperator?.value,
-    );
-  }
-}
-
-class SearchFormBloc extends FormBloc<SearchFormData, ListSearch> {
-  SearchFormBloc({required super.formGroup});
-
-  @override
-  ListSearch fromData(final SearchFormData values) {
-    return ListSearch(
-      name: values.name.value.text,
-      search: SearchDTO(
-        filter: values.filters
-            .map(
-              (final filterValues) => FilterDTO(
-                field: filterValues.field.value.text,
-                operator_:
-                    OperatorType.fromJson(filterValues.operator.value.text)!,
-                value: SearchValue(value: filterValues.value.value.text),
-                chainOperator: ChainOperatorType.fromJson(
-                  filterValues.chainOperator.value.text,
-                ),
-              ),
-            )
-            .toList(growable: false),
-      ),
     );
   }
 }

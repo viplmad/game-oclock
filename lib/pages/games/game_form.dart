@@ -5,12 +5,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         UserGameCreateBloc,
         UserGameFormBloc,
-        UserGameFormData,
         UserGameGetBloc,
         UserGameUpdateBloc;
 import 'package:game_oclock/components/create_edit_form.dart';
 import 'package:game_oclock/constants/form_validators.dart';
-import 'package:game_oclock/models/models.dart' show UserGame;
+import 'package:game_oclock/models/models.dart' show UserGame, UserGameFormData;
 
 class UserGameCreateForm extends StatelessWidget {
   const UserGameCreateForm({super.key});

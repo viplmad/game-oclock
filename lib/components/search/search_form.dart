@@ -3,13 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        FilterFormData,
         FilterFormDataListBloc,
         ListLoaded,
         ListReloaded,
         SearchCreateBloc,
         SearchFormBloc,
-        SearchFormData,
         SearchGetBloc,
         SearchUpdateBloc;
 import 'package:game_oclock/components/create_edit_form.dart';
@@ -17,7 +15,13 @@ import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show ListSearch, SearchDTO, gameFields, operatorsMenuEntries;
+    show
+        FilterFormData,
+        ListSearch,
+        SearchDTO,
+        SearchFormData,
+        gameFields,
+        operatorsMenuEntries;
 
 class SearchCreateForm extends StatelessWidget {
   const SearchCreateForm({super.key, required this.space});

@@ -1,8 +1,9 @@
-import 'package:game_oclock/blocs/form/search_form_bloc.dart';
 import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch, PageResultDTO;
+import 'package:game_oclock/models/models.dart'
+    show FilterFormData, ListSearch, PageResultDTO;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess, ListReloaded;
+import '../list.dart'
+    show ListFinal, ListLoadBloc, ListLoadSuccess, ListReloaded;
 
 class SearchListBloc extends ListLoadBloc<ListSearch> {
   SearchListBloc({required this.space});
