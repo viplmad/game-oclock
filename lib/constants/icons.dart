@@ -25,4 +25,5 @@ class CommonIcons {
   static const IconData tags = Icons.sell;
 
   static const IconData calendar = Icons.calendar_month;
+  static const IconData review = Icons.cake;
 }

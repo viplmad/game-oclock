@@ -6,4 +6,5 @@ export 'impl/game_bloc.dart';
 export 'impl/game_log_bloc.dart';
 export 'impl/login_bloc.dart';
 export 'impl/minimized_layout_bloc.dart';
+export 'impl/review_bloc.dart.dart';
 export 'impl/search_bloc.dart';

@@ -45,6 +45,7 @@ dependencies:
   go_router: ^16.2.1
   table_calendar: ^3.2.0
   flutter_sticky_header: ^0.8.0
+  community_charts_flutter: ^1.0.4
 
 dev_dependencies:
   flutter_test:

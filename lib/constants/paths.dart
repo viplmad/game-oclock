@@ -10,6 +10,7 @@ class CommonPaths {
   static const String usersPath = '/users';
 
   static const String calendarPath = '/calendar';
+  static const String reviewPath = '/review';
 
   static const String _idPathParamPath = '/:id';
   static const String gamePath = gamesPath + _idPathParamPath;

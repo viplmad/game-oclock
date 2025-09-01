@@ -8,6 +8,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadInProgress,
         ListPageIncremented,
         ListPageReloaded,
+        ListReloaded,
         ListSearchChanged,
         ListState;
 import 'package:game_oclock/components/search/search_list.dart';
@@ -34,8 +35,13 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
 
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
+        final listView = Scrollbar(
+          controller: controller,
+          child: list(context, state: state, controller: controller),
+        );
+
         if (space.isEmpty) {
-          return list(context, state: state, controller: controller);
+          return listView;
         }
 
         ListSearch? currentSearch;
@@ -46,12 +52,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
         return Column(
           children: [
             searchTile(context, search: currentSearch),
-            Expanded(
-              child: Scrollbar(
-                controller: controller,
-                child: list(context, state: state, controller: controller),
-              ),
-            ),
+            Expanded(child: listView),
           ],
         );
       },
@@ -102,11 +103,14 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
       trailing = const Center(child: CircularProgressIndicator());
     }
 
-    return listView(
-      items: items,
-      itemBuilder: itemBuilder,
-      trailing: trailing,
-      controller: controller,
+    return RefreshIndicator(
+      onRefresh: () async => context.read<LB>().add(const ListReloaded()),
+      child: listView(
+        items: items,
+        itemBuilder: itemBuilder,
+        trailing: trailing,
+        controller: controller,
+      ),
     );
   }
 

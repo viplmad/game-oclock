@@ -86,7 +86,9 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
 
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
-        return list(context, state: state, controller: controller);
+        return Scrollbar(
+          child: list(context, state: state, controller: controller),
+        );
       },
     );
   }

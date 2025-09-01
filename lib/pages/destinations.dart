@@ -28,6 +28,11 @@ final List<NavDestination> secondaryDestinations = List.unmodifiable([
     path: CommonPaths.calendarPath,
   ),
   const NavDestination(
+    icon: Icon(CommonIcons.review),
+    label: 'Year in Review',
+    path: CommonPaths.reviewPath,
+  ),
+  const NavDestination(
     icon: Icon(CommonIcons.tags),
     label: 'Tags',
     path: CommonPaths.tagsPath,

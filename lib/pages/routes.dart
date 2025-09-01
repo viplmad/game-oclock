@@ -12,6 +12,7 @@ import 'package:game_oclock/pages/games/game_detail.dart'
     show UserGameDetailsPage;
 import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
 import 'package:game_oclock/pages/login/login.dart' show LoginPage;
+import 'package:game_oclock/pages/review/review.dart' show ReviewPage;
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -98,6 +99,16 @@ final routerConfig = GoRouter(
               const ActionStarted(data: false),
             );
             return const MultiCalendarPage();
+          },
+        ),
+
+        GoRoute(
+          path: CommonPaths.reviewPath,
+          builder: (final context, final state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
+            return const ReviewPage();
           },
         ),
       ],
