@@ -8,8 +8,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionRestarted,
         ActionStarted,
         ActionState,
-        LayoutTierBloc,
-        LayoutTierState,
         ListInitial,
         ListLoadBloc,
         ListLoaded,
@@ -34,6 +32,7 @@ import 'package:game_oclock/models/models.dart'
         Tag,
         UserGame;
 import 'package:game_oclock/pages/games/game_form.dart';
+import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:go_router/go_router.dart';
 
 class UserGameDetailsPage extends StatelessWidget {
@@ -43,6 +42,8 @@ class UserGameDetailsPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final layoutTier = layoutTierFromContext(context);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -52,49 +53,42 @@ class UserGameDetailsPage extends StatelessWidget {
         BlocProvider(create: (_) => UserGameAvailableListBloc(gameId: id)),
         BlocProvider(create: (_) => UserGameTagListBloc(gameId: id)),
       ],
-      child: BlocBuilder<LayoutTierBloc, LayoutTierState>(
-        builder: (final context, final layoutState) {
-          final layoutTier = layoutState.tier;
-
-          return BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
-            builder: (final context, final state) {
-              UserGame data;
-              if (state is ActionFinal<UserGame, String>) {
-                if (state is ActionFailure<UserGame, String>) {
-                  return Center(
-                    child: DetailError(
-                      title: 'Error - Tap to refresh',
-                      onRetryTap:
-                          () => context.read<UserGameGetBloc>().add(
-                            const ActionRestarted(),
-                          ),
-                    ),
-                  );
-                }
-                data = state.data;
-              } else if (state is ActionInProgress<UserGame>) {
-                if (state.data == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                data = state.data!;
-              } else {
-                return const Center(); // TODO
-              }
-
-              return UserGameDetail(
-                data: data,
-                extended: layoutTier != LayoutTier.compact,
-                onBackPressed:
-                    () => GoRouter.of(context).go(CommonPaths.gamesPath),
-                onEditSucceeded:
-                    (final context) => context.read<UserGameGetBloc>().add(
-                      const ActionRestarted(),
-                    ),
-                onDeleteSucceeded:
-                    (final context) =>
-                        GoRouter.of(context).go(CommonPaths.gamesPath),
+      child: BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
+        builder: (final context, final state) {
+          UserGame data;
+          if (state is ActionFinal<UserGame, String>) {
+            if (state is ActionFailure<UserGame, String>) {
+              return Center(
+                child: DetailError(
+                  title: 'Error - Tap to refresh',
+                  onRetryTap:
+                      () => context.read<UserGameGetBloc>().add(
+                        const ActionRestarted(),
+                      ),
+                ),
               );
-            },
+            }
+            data = state.data;
+          } else if (state is ActionInProgress<UserGame>) {
+            if (state.data == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            data = state.data!;
+          } else {
+            return const Center(); // TODO
+          }
+
+          return UserGameDetail(
+            data: data,
+            extended: layoutTier != LayoutTier.compact,
+            onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
+            onEditSucceeded:
+                (final context) => context.read<UserGameGetBloc>().add(
+                  const ActionRestarted(),
+                ),
+            onDeleteSucceeded:
+                (final context) =>
+                    GoRouter.of(context).go(CommonPaths.gamesPath),
           );
         },
       ),

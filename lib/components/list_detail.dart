@@ -6,13 +6,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         FunctionActionBloc,
-        LayoutTierBloc,
-        LayoutTierState,
         ListLoadBloc,
         ListQuicksearchChanged,
         MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:game_oclock/utils/layout_tier_utils.dart';
 
 import 'list/grid_list.dart';
 
@@ -40,61 +39,57 @@ class ListDetailBuilder<
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<LayoutTierBloc, LayoutTierState>(
-      builder: (final context, final layoutState) {
-        final layoutTier = layoutState.tier;
+    final layoutTier = layoutTierFromContext(context);
 
-        return BlocListener<SB, ActionState<T?>>(
-          listener: (final context, final selectState) {
-            final selectedData =
-                (selectState is ActionFinal)
-                    ? (selectState as ActionFinal<T?, T?>).data
-                    : null;
+    return BlocListener<SB, ActionState<T?>>(
+      listener: (final context, final selectState) {
+        final selectedData =
+            (selectState is ActionFinal)
+                ? (selectState as ActionFinal<T?, T?>).data
+                : null;
 
-            // Allow minimized if selected
-            context.read<MinimizedLayoutBloc>().add(
-              ActionStarted(data: selectedData != null),
-            );
-          },
-          child: BlocBuilder<SB, ActionState<T?>>(
-            builder: (final context, final selectState) {
-              final selectedData =
-                  (selectState is ActionFinal)
-                      ? (selectState as ActionFinal<T?, T?>).data
-                      : null;
+        // Allow minimized if selected
+        context.read<MinimizedLayoutBloc>().add(
+          ActionStarted(data: selectedData != null),
+        );
+      },
+      child: BlocBuilder<SB, ActionState<T?>>(
+        builder: (final context, final selectState) {
+          final selectedData =
+              (selectState is ActionFinal)
+                  ? (selectState as ActionFinal<T?, T?>).data
+                  : null;
 
-              if (layoutTier == LayoutTier.compact) {
-                if (selectedData == null) {
-                  return _list(context, selectedData: selectedData);
-                } else {
-                  return _detail(
+          if (layoutTier == LayoutTier.compact) {
+            if (selectedData == null) {
+              return _list(context, selectedData: selectedData);
+            } else {
+              return _detail(
+                context,
+                selectedData: selectedData,
+                selectBloc: context.read<SB>(),
+              );
+            }
+          } else {
+            return Row(
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: _list(context, selectedData: selectedData),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: _detail(
                     context,
                     selectedData: selectedData,
                     selectBloc: context.read<SB>(),
-                  );
-                }
-              } else {
-                return Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: _list(context, selectedData: selectedData),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: _detail(
-                        context,
-                        selectedData: selectedData,
-                        selectBloc: context.read<SB>(),
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
-          ),
-        );
-      },
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 

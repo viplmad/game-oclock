@@ -15,11 +15,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValuesUpdated,
-        FunctionActionBloc,
-        LayoutTierBloc,
-        LayoutTierState;
+        FunctionActionBloc;
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
+import 'package:game_oclock/utils/layout_tier_utils.dart';
 
 class CreateEditFormBuilder<
   T,
@@ -46,40 +45,31 @@ class CreateEditFormBuilder<
 
   @override
   Widget build(final BuildContext context) {
+    final layoutTier = layoutTierFromContext(context);
+    final fullscreen = layoutTier == LayoutTier.compact;
+
     if (create) {
-      return BlocBuilder<LayoutTierBloc, LayoutTierState>(
-        builder: (final context, final layoutState) {
-          final fullscreen = layoutState.tier == LayoutTier.compact;
-
-          final form = buildCreateForm(context, fullscreen: fullscreen);
-          return fullscreen
-              ? Dialog.fullscreen(child: form)
-              : Dialog(
-                // TODO min width
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 560.0),
-                  child: form,
-                ),
-              );
-        },
-      );
+      final form = buildCreateForm(context, fullscreen: fullscreen);
+      return fullscreen
+          ? Dialog.fullscreen(child: form)
+          : Dialog(
+            // TODO min width
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560.0),
+              child: form,
+            ),
+          );
     } else {
-      return BlocBuilder<LayoutTierBloc, LayoutTierState>(
-        builder: (final context, final layoutState) {
-          final fullscreen = layoutState.tier == LayoutTier.compact;
-
-          final form = buildEditForm(context, fullscreen: fullscreen);
-          return fullscreen
-              ? Dialog.fullscreen(child: form)
-              : Dialog(
-                // TODO min width
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 560.0),
-                  child: form,
-                ),
-              );
-        },
-      );
+      final form = buildEditForm(context, fullscreen: fullscreen);
+      return fullscreen
+          ? Dialog.fullscreen(child: form)
+          : Dialog(
+            // TODO min width
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560.0),
+              child: form,
+            ),
+          );
     }
   }
 

@@ -12,8 +12,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValuesUpdated,
-        LayoutTierBloc,
-        LayoutTierState,
         LoginFormBloc,
         LoginGetBloc,
         LoginSaveBloc;
@@ -23,6 +21,7 @@ import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData;
+import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {
@@ -57,28 +56,24 @@ class LoginBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<LayoutTierBloc, LayoutTierState>(
-      builder: (final context, final layoutState) {
-        final layoutTier = layoutState.tier;
+    final layoutTier = layoutTierFromContext(context);
 
-        return Scaffold(
-          body:
-              layoutTier == LayoutTier.compact
-                  ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [const FlutterLogo(), buildForm(context)],
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Expanded(flex: 1, child: FlutterLogo()),
-                      Expanded(flex: 1, child: buildForm(context)),
-                    ],
-                  ),
-        );
-      },
+    return Scaffold(
+      body:
+          layoutTier == LayoutTier.compact
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [const FlutterLogo(), buildForm(context)],
+              )
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Expanded(flex: 1, child: FlutterLogo()),
+                  Expanded(flex: 1, child: buildForm(context)),
+                ],
+              ),
     );
   }
 

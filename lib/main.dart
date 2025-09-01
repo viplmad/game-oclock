@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionStarted, LayoutTierBloc, MinimizedLayoutBloc;
+    show ActionStarted, MinimizedLayoutBloc;
 import 'package:game_oclock/pages/routes.dart';
 
 void main() {
@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => LayoutTierBloc()),
         BlocProvider(
           create:
               (_) =>

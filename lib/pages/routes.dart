@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show
-        ActionStarted,
-        LayoutContextChanged,
-        LayoutTierBloc,
-        MinimizedLayoutBloc;
+    show ActionStarted, MinimizedLayoutBloc;
 import 'package:game_oclock/components/main_layout.dart' show MainLayoutBuilder;
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/pages/calendar/multi_calendar.dart'
@@ -25,21 +21,11 @@ final routerConfig = GoRouter(
     GoRoute(
       path: CommonPaths.loginPath,
       builder: (final BuildContext context, final GoRouterState state) {
-        final mediaQuerySize = MediaQuery.sizeOf(context);
-        context.read<LayoutTierBloc>().add(
-          LayoutContextChanged(size: mediaQuerySize),
-        );
-
         return const LoginPage();
       },
     ),
     ShellRoute(
       builder: (final context, final state, final child) {
-        final mediaQuerySize = MediaQuery.sizeOf(context);
-        context.read<LayoutTierBloc>().add(
-          LayoutContextChanged(size: mediaQuerySize),
-        );
-
         return MainLayoutBuilder(
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,

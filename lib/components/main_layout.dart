@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show
-        ActionFinal,
-        ActionState,
-        LayoutTierBloc,
-        LayoutTierState,
-        MinimizedLayoutBloc;
+    show ActionFinal, ActionState, MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
+import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:go_router/go_router.dart';
 
 class MainLayoutBuilder extends StatelessWidget {
@@ -29,41 +25,34 @@ class MainLayoutBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<LayoutTierBloc, LayoutTierState>(
-      builder: (final context, final layoutState) {
-        final layoutTier = layoutState.tier;
+    final layoutTier = layoutTierFromContext(context);
 
-        return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
-          builder: (final context, final minimizedState) {
-            final minimized =
-                (minimizedState is ActionFinal)
-                    ? (minimizedState as ActionFinal<bool, bool>).data
-                    : false;
-            return layoutTier == LayoutTier.compact && minimized
-                ? Scaffold(body: child)
-                : Scaffold(
-                  key: scaffoldKey,
-                  body: body(
-                    context,
-                    selectedPath: selectedPath,
-                    layoutTier: layoutTier,
-                  ),
-                  bottomNavigationBar:
-                      layoutTier == LayoutTier.compact
-                          ? navigationBar(context, selectedPath: selectedPath)
-                          : null,
-                  drawer:
-                      layoutTier == LayoutTier.compact ||
-                              layoutTier == LayoutTier.medium ||
-                              layoutTier == LayoutTier.expanded
-                          ? navigationDrawer(
-                            context,
-                            selectedPath: selectedPath,
-                          )
-                          : null,
-                );
-          },
-        );
+    return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
+      builder: (final context, final minimizedState) {
+        final minimized =
+            (minimizedState is ActionFinal)
+                ? (minimizedState as ActionFinal<bool, bool>).data
+                : false;
+        return layoutTier == LayoutTier.compact && minimized
+            ? Scaffold(body: child)
+            : Scaffold(
+              key: scaffoldKey,
+              body: body(
+                context,
+                selectedPath: selectedPath,
+                layoutTier: layoutTier,
+              ),
+              bottomNavigationBar:
+                  layoutTier == LayoutTier.compact
+                      ? navigationBar(context, selectedPath: selectedPath)
+                      : null,
+              drawer:
+                  layoutTier == LayoutTier.compact ||
+                          layoutTier == LayoutTier.medium ||
+                          layoutTier == LayoutTier.expanded
+                      ? navigationDrawer(context, selectedPath: selectedPath)
+                      : null,
+            );
       },
     );
   }
