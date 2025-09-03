@@ -108,7 +108,7 @@ class MainLayoutBuilder extends StatelessWidget {
               .map(
                 (final dest) => NavigationDrawerDestination(
                   icon: dest.icon,
-                  label: Text(dest.label),
+                  label: Text(dest.labelBuilder(context)),
                 ),
               )
               .toList(growable: false),
@@ -135,7 +135,7 @@ class MainLayoutBuilder extends StatelessWidget {
               .map(
                 (final dest) => NavigationRailDestination(
                   icon: dest.icon,
-                  label: Text(dest.label),
+                  label: Text(dest.labelBuilder(context)),
                 ),
               )
               .toList(growable: false),
@@ -160,8 +160,10 @@ class MainLayoutBuilder extends StatelessWidget {
         NavigationBar(
           destinations: mainDestinations
               .map(
-                (final dest) =>
-                    NavigationDestination(icon: dest.icon, label: dest.label),
+                (final dest) => NavigationDestination(
+                  icon: dest.icon,
+                  label: dest.labelBuilder(context),
+                ),
               )
               .toList(growable: false),
           selectedIndex:

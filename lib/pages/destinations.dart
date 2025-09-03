@@ -2,44 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart' show NavDestination;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 final List<NavDestination> mainDestinations = List.unmodifiable([
-  const NavDestination(
-    icon: Icon(CommonIcons.games),
-    label: 'Games',
+  NavDestination(
+    icon: const Icon(CommonIcons.games),
+    labelBuilder: (final context) => context.localize().gamesTitle,
     path: CommonPaths.gamesPath,
   ),
-  const NavDestination(
-    icon: Icon(CommonIcons.locations),
-    label: 'Locations',
+  NavDestination(
+    icon: const Icon(CommonIcons.locations),
+    labelBuilder: (final context) => context.localize().locationsTitle,
     path: CommonPaths.locationsPath,
   ),
-  const NavDestination(
-    icon: Icon(CommonIcons.devices),
-    label: 'Devices',
+  NavDestination(
+    icon: const Icon(CommonIcons.devices),
+    labelBuilder: (final context) => context.localize().devicesTitle,
     path: CommonPaths.devicesPath,
   ),
 ]);
 
 final List<NavDestination> secondaryDestinations = List.unmodifiable([
-  const NavDestination(
-    icon: Icon(CommonIcons.calendar),
-    label: 'Calendar',
+  NavDestination(
+    icon: const Icon(CommonIcons.calendar),
+    labelBuilder: (final context) => context.localize().calendarTitle,
     path: CommonPaths.calendarPath,
   ),
-  const NavDestination(
-    icon: Icon(CommonIcons.review),
-    label: 'Year in Review',
+  NavDestination(
+    icon: const Icon(CommonIcons.review),
+    labelBuilder: (final context) => context.localize().yearInReviewTitle,
     path: CommonPaths.reviewPath,
   ),
-  const NavDestination(
-    icon: Icon(CommonIcons.tags),
-    label: 'Tags',
+  NavDestination(
+    icon: const Icon(CommonIcons.tags),
+    labelBuilder: (final context) => context.localize().tagsTitle,
     path: CommonPaths.tagsPath,
   ),
-  const NavDestination(
-    icon: Icon(CommonIcons.devices),
-    label: 'Users',
+  NavDestination(
+    icon: const Icon(CommonIcons.devices),
+    labelBuilder: (final context) => context.localize().usersTitle,
     path: CommonPaths.usersPath,
   ),
 ]);

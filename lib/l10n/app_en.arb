@@ -2,5 +2,12 @@
   "errorListPageLoadTitle": "Error loading page.",
   "errorPageLoadTitle": "Loading error.",
   "retryLabel": "Retry",
-  "emptyListLabel": "Empty"
+  "emptyListLabel": "Empty",
+  "gamesTitle": "Games",
+  "locationsTitle": "Locations",
+  "devicesTitle": "Devices",
+  "calendarTitle": "Calendar",
+  "yearInReviewTitle": "Year in Review",
+  "tagsTitle": "Tags",
+  "usersTitle": "Users"
 }

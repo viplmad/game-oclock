@@ -19,4 +19,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emptyListLabel => 'Empty';
+
+  @override
+  String get gamesTitle => 'Games';
+
+  @override
+  String get locationsTitle => 'Locations';
+
+  @override
+  String get devicesTitle => 'Devices';
+
+  @override
+  String get calendarTitle => 'Calendar';
+
+  @override
+  String get yearInReviewTitle => 'Year in Review';
+
+  @override
+  String get tagsTitle => 'Tags';
+
+  @override
+  String get usersTitle => 'Users';
 }

@@ -117,6 +117,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Empty'**
   String get emptyListLabel;
+
+  /// No description provided for @gamesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get gamesTitle;
+
+  /// No description provided for @locationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Locations'**
+  String get locationsTitle;
+
+  /// No description provided for @devicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devicesTitle;
+
+  /// No description provided for @calendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendarTitle;
+
+  /// No description provided for @yearInReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Year in Review'**
+  String get yearInReviewTitle;
+
+  /// No description provided for @tagsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tagsTitle;
+
+  /// No description provided for @usersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get usersTitle;
 }
 
 class _AppLocalizationsDelegate
