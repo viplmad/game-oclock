@@ -17,37 +17,33 @@ class SearchListPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocProvider(
-      create:
-          (_) => SearchListBloc(space: space)..add(
-            ListLoaded(
-              search: ListSearch(name: 'default', search: SearchDTO()),
-            ),
+      create: (_) => SearchListBloc(space: space)
+        ..add(
+          ListLoaded(
+            search: ListSearch(name: 'default', search: SearchDTO()),
           ),
+        ),
       child: GridListBuilder<ListSearch, SearchListBloc>(
         space: '', // Empty space because search cannot be filtered
-        itemBuilder:
-            (final context, final data, final index) => TileListItem(
-              title: data.name,
-              onTap: () {
-                Navigator.pop(context, data);
-              },
-              trailing: IconButton(
-                icon: const Icon(CommonIcons.edit),
-                onPressed:
-                    () async => showDialog<bool>(
-                      context: context,
-                      builder:
-                          (final context) =>
-                              SearchEditForm(space: space, name: data.name),
-                    ).then((final bool? success) {
-                      if (success != null && success && context.mounted) {
-                        context.read<SearchListBloc>().add(
-                          const ListReloaded(),
-                        );
-                      }
-                    }),
-              ),
-            ),
+        itemBuilder: (final context, final data, final index) => TileListItem(
+          title: data.name,
+          onTap: () {
+            Navigator.pop(context, data);
+          },
+          trailing: IconButton(
+            icon: const Icon(CommonIcons.edit),
+            onPressed: () async =>
+                showDialog<bool>(
+                  context: context,
+                  builder: (final context) =>
+                      SearchEditForm(space: space, name: data.name),
+                ).then((final bool? success) {
+                  if (success != null && success && context.mounted) {
+                    context.read<SearchListBloc>().add(const ListReloaded());
+                  }
+                }),
+          ),
+        ),
       ),
     );
   }

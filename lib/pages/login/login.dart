@@ -32,14 +32,13 @@ class LoginPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) => LoginFormBloc(
-                formGroup: LoginFormData(
-                  host: TextEditingController(),
-                  username: TextEditingController(),
-                  password: TextEditingController(),
-                ),
-              ),
+          create: (_) => LoginFormBloc(
+            formGroup: LoginFormData(
+              host: TextEditingController(),
+              username: TextEditingController(),
+              password: TextEditingController(),
+            ),
+          ),
         ),
         BlocProvider(create: (_) => LoginSaveBloc()),
         BlocProvider(
@@ -59,21 +58,20 @@ class LoginBuilder extends StatelessWidget {
     final layoutTier = layoutTierFromContext(context);
 
     return Scaffold(
-      body:
-          layoutTier == LayoutTier.compact
-              ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [const FlutterLogo(), buildForm(context)],
-              )
-              : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Expanded(flex: 1, child: FlutterLogo()),
-                  Expanded(flex: 1, child: buildForm(context)),
-                ],
-              ),
+      body: layoutTier == LayoutTier.compact
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [const FlutterLogo(), buildForm(context)],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(flex: 1, child: FlutterLogo()),
+                Expanded(flex: 1, child: buildForm(context)),
+              ],
+            ),
     );
   }
 
@@ -128,18 +126,16 @@ class LoginBuilder extends StatelessWidget {
                   return SimpleForm(
                     formKey: formState.key,
                     dirty: formState.dirty,
-                    onChanged:
-                        () => context.read<LoginFormBloc>().add(
-                          const FormDirtied(),
-                        ),
+                    onChanged: () =>
+                        context.read<LoginFormBloc>().add(const FormDirtied()),
                     onSubmit: // TODO possibly disallow submit if not dirty
-                        inProgress
-                            ? null
-                            : () {
-                              context.read<LoginFormBloc>().add(
-                                const FormSubmitted(),
-                              );
-                            },
+                    inProgress
+                        ? null
+                        : () {
+                            context.read<LoginFormBloc>().add(
+                              const FormSubmitted(),
+                            );
+                          },
                     child: buildFormFieldsContainer(
                       formGroup: formState.group,
                       readOnly: inProgress,

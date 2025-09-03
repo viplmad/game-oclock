@@ -19,27 +19,27 @@ class UserGameCreateForm extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) => UserGameFormBloc(
-                formGroup: UserGameFormData(
-                  title: TextEditingController(),
-                  edition: TextEditingController(),
-                  status: TextEditingController(),
-                  rating: TextEditingController(),
-                  notes: TextEditingController(),
-                ),
-              ),
+          create: (_) => UserGameFormBloc(
+            formGroup: UserGameFormData(
+              title: TextEditingController(),
+              edition: TextEditingController(),
+              status: TextEditingController(),
+              rating: TextEditingController(),
+              notes: TextEditingController(),
+            ),
+          ),
         ),
         BlocProvider(create: (_) => UserGameCreateBloc()),
       ],
-      child: const CreateEditFormBuilder<
-        UserGame,
-        UserGameFormData,
-        UserGameFormBloc,
-        UserGameGetBloc,
-        UserGameCreateBloc,
-        UserGameUpdateBloc
-      >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
+      child:
+          const CreateEditFormBuilder<
+            UserGame,
+            UserGameFormData,
+            UserGameFormBloc,
+            UserGameGetBloc,
+            UserGameCreateBloc,
+            UserGameUpdateBloc
+          >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
     );
   }
 }
@@ -54,30 +54,30 @@ class UserGameEditForm extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) => UserGameFormBloc(
-                formGroup: UserGameFormData(
-                  title: TextEditingController(),
-                  edition: TextEditingController(),
-                  status: TextEditingController(),
-                  rating: TextEditingController(),
-                  notes: TextEditingController(),
-                ),
-              ),
+          create: (_) => UserGameFormBloc(
+            formGroup: UserGameFormData(
+              title: TextEditingController(),
+              edition: TextEditingController(),
+              status: TextEditingController(),
+              rating: TextEditingController(),
+              notes: TextEditingController(),
+            ),
+          ),
         ),
         BlocProvider(create: (_) => UserGameUpdateBloc()),
         BlocProvider(
           create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
         ),
       ],
-      child: const CreateEditFormBuilder<
-        UserGame,
-        UserGameFormData,
-        UserGameFormBloc,
-        UserGameGetBloc,
-        UserGameCreateBloc,
-        UserGameUpdateBloc
-      >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
+      child:
+          const CreateEditFormBuilder<
+            UserGame,
+            UserGameFormData,
+            UserGameFormBloc,
+            UserGameGetBloc,
+            UserGameCreateBloc,
+            UserGameUpdateBloc
+          >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
     );
   }
 }

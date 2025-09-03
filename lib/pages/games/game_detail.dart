@@ -61,10 +61,9 @@ class UserGameDetailsPage extends StatelessWidget {
               return Center(
                 child: DetailError(
                   title: 'Error - Tap to refresh',
-                  onRetryTap:
-                      () => context.read<UserGameGetBloc>().add(
-                        const ActionRestarted(),
-                      ),
+                  onRetryTap: () => context.read<UserGameGetBloc>().add(
+                    const ActionRestarted(),
+                  ),
                 ),
               );
             }
@@ -82,13 +81,10 @@ class UserGameDetailsPage extends StatelessWidget {
             data: data,
             extended: layoutTier != LayoutTier.compact,
             onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
-            onEditSucceeded:
-                (final context) => context.read<UserGameGetBloc>().add(
-                  const ActionRestarted(),
-                ),
-            onDeleteSucceeded:
-                (final context) =>
-                    GoRouter.of(context).go(CommonPaths.gamesPath),
+            onEditSucceeded: (final context) =>
+                context.read<UserGameGetBloc>().add(const ActionRestarted()),
+            onDeleteSucceeded: (final context) =>
+                GoRouter.of(context).go(CommonPaths.gamesPath),
           );
         },
       ),
@@ -128,26 +124,23 @@ class UserGameDetail extends StatelessWidget {
       TabDestination(
         icon: const Icon(CommonIcons.locations),
         label: 'Locations',
-        onTap:
-            (final context) =>
-                _loadOnlyInitial<UserGameAvailableListBloc>(context),
+        onTap: (final context) =>
+            _loadOnlyInitial<UserGameAvailableListBloc>(context),
         child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
           space: '', // TODO ?
-          itemBuilder:
-              (final context, final data, final index) =>
-                  TileListItem(title: data.name),
+          itemBuilder: (final context, final data, final index) =>
+              TileListItem(title: data.name),
         ),
       ),
       TabDestination(
         icon: const Icon(CommonIcons.tags),
         label: 'Tags',
-        onTap:
-            (final context) => _loadOnlyInitial<UserGameTagListBloc>(context),
+        onTap: (final context) =>
+            _loadOnlyInitial<UserGameTagListBloc>(context),
         child: TileListBuilder<Tag, UserGameTagListBloc>(
           space: '', // TODO ?
-          itemBuilder:
-              (final context, final data, final index) =>
-                  TileListItem(title: data.name),
+          itemBuilder: (final context, final data, final index) =>
+              TileListItem(title: data.name),
         ),
       ),
     ]);
@@ -160,16 +153,16 @@ class UserGameDetail extends StatelessWidget {
         extended
             ? Container()
             : IconButton(
-              // TODO hide if coming from detail
-              icon: const Icon(CommonIcons.view),
-              tooltip: 'View',
-              onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
-            ),
+                // TODO hide if coming from detail
+                icon: const Icon(CommonIcons.view),
+                tooltip: 'View',
+                onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
+              ),
         IconButton(
           icon: const Icon(CommonIcons.edit),
           tooltip: 'Edit',
-          onPressed:
-              () async => showDialog<bool>(
+          onPressed: () async =>
+              showDialog<bool>(
                 context: context,
                 builder: (final context) => UserGameEditForm(id: data.id),
               ).then((final bool? success) {
@@ -196,23 +189,19 @@ class UserGameDetail extends StatelessWidget {
           },
         ),
       ],
-      child:
-          extended
-              ? Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(flex: 2, child: _info()),
-                  const VerticalDivider(width: 1.0),
-                  Expanded(
-                    flex: 4,
-                    child: _tabs(
-                      context,
-                      destinations: destinations.sublist(1),
-                    ),
-                  ),
-                ],
-              )
-              : _tabs(context, destinations: destinations),
+      child: extended
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 2, child: _info()),
+                const VerticalDivider(width: 1.0),
+                Expanded(
+                  flex: 4,
+                  child: _tabs(context, destinations: destinations.sublist(1)),
+                ),
+              ],
+            )
+          : _tabs(context, destinations: destinations),
     );
   }
 
@@ -232,8 +221,8 @@ class UserGameDetail extends StatelessWidget {
       child: Column(
         children: [
           TabBar(
-            onTap:
-                (final index) => destinations.elementAt(index).onTap(context),
+            onTap: (final index) =>
+                destinations.elementAt(index).onTap(context),
             tabs: destinations
                 .map((final dest) => Tab(icon: dest.icon, text: dest.label))
                 .toList(growable: false),
@@ -254,7 +243,9 @@ class UserGameDetail extends StatelessWidget {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
       lb.add(
-        ListLoaded(search: ListSearch(name: 'default', search: SearchDTO())),
+        ListLoaded(
+          search: ListSearch(name: 'default', search: SearchDTO()),
+        ),
       );
     }
   }

@@ -20,44 +20,38 @@ class MultiCalendarPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) =>
-                  CalendarDaySelectBloc()
-                    ..add(ActionStarted(data: DateTime.now())),
+          create: (_) =>
+              CalendarDaySelectBloc()..add(ActionStarted(data: DateTime.now())),
         ),
         BlocProvider(
-          create:
-              (_) =>
-                  CalendarDayFocusBloc()
-                    ..add(ActionStarted(data: DateTime.now())),
+          create: (_) =>
+              CalendarDayFocusBloc()..add(ActionStarted(data: DateTime.now())),
         ),
         BlocProvider(create: (_) => GameLogSelectBloc()),
         BlocProvider(
-          create:
-              (_) =>
-                  GameLogListBloc()..add(
-                    ListLoaded(
-                      search: ListSearch(name: 'default', search: SearchDTO()),
-                    ),
-                  ),
+          create: (_) => GameLogListBloc()
+            ..add(
+              ListLoaded(
+                search: ListSearch(name: 'default', search: SearchDTO()),
+              ),
+            ),
         ),
       ],
-      child: CalendarListDetailBuilder<
-        DateTime,
-        GameLogSelectBloc,
-        GameLogListBloc
-      >(
-        title: 'Calendar', // TODO i18n
-        firstDay: DateTime(1970),
-        lastDay: DateTime.now(),
-        dateGetter: (final data) => data,
-        detailBuilder:
-            (final context, final data, final onClosed) =>
+      child:
+          CalendarListDetailBuilder<
+            DateTime,
+            GameLogSelectBloc,
+            GameLogListBloc
+          >(
+            title: 'Calendar', // TODO i18n
+            firstDay: DateTime(1970),
+            lastDay: DateTime.now(),
+            dateGetter: (final data) => data,
+            detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.toIso8601String())),
-        listItemBuilder:
-            (final context, final data, final onPressed) =>
+            listItemBuilder: (final context, final data, final onPressed) =>
                 TileListItem(title: data.toIso8601String(), onTap: onPressed),
-      ),
+          ),
     );
   }
 }

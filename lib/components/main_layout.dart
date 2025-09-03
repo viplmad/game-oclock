@@ -29,30 +29,28 @@ class MainLayoutBuilder extends StatelessWidget {
 
     return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
       builder: (final context, final minimizedState) {
-        final minimized =
-            (minimizedState is ActionFinal)
-                ? (minimizedState as ActionFinal<bool, bool>).data
-                : false;
+        final minimized = (minimizedState is ActionFinal)
+            ? (minimizedState as ActionFinal<bool, bool>).data
+            : false;
         return layoutTier == LayoutTier.compact && minimized
             ? Scaffold(body: child)
             : Scaffold(
-              key: scaffoldKey,
-              body: body(
-                context,
-                selectedPath: selectedPath,
-                layoutTier: layoutTier,
-              ),
-              bottomNavigationBar:
-                  layoutTier == LayoutTier.compact
-                      ? navigationBar(context, selectedPath: selectedPath)
-                      : null,
-              drawer:
-                  layoutTier == LayoutTier.compact ||
-                          layoutTier == LayoutTier.medium ||
-                          layoutTier == LayoutTier.expanded
-                      ? navigationDrawer(context, selectedPath: selectedPath)
-                      : null,
-            );
+                key: scaffoldKey,
+                body: body(
+                  context,
+                  selectedPath: selectedPath,
+                  layoutTier: layoutTier,
+                ),
+                bottomNavigationBar: layoutTier == LayoutTier.compact
+                    ? navigationBar(context, selectedPath: selectedPath)
+                    : null,
+                drawer:
+                    layoutTier == LayoutTier.compact ||
+                        layoutTier == LayoutTier.medium ||
+                        layoutTier == LayoutTier.expanded
+                    ? navigationDrawer(context, selectedPath: selectedPath)
+                    : null,
+              );
       },
     );
   }
@@ -105,14 +103,15 @@ class MainLayoutBuilder extends StatelessWidget {
         context,
         destinations: destinations,
       ),
-      children: destinations // TODO group
-          .map(
-            (final dest) => NavigationDrawerDestination(
-              icon: dest.icon,
-              label: Text(dest.label),
-            ),
-          )
-          .toList(growable: false),
+      children:
+          destinations // TODO group
+              .map(
+                (final dest) => NavigationDrawerDestination(
+                  icon: dest.icon,
+                  label: Text(dest.label),
+                ),
+              )
+              .toList(growable: false),
     );
   }
 
@@ -121,26 +120,25 @@ class MainLayoutBuilder extends StatelessWidget {
     required final String selectedPath,
     required final bool extended,
   }) {
-    final destinations =
-        (extended
-            ? [...mainDestinations, ...secondaryDestinations]
-            : mainDestinations);
+    final destinations = (extended
+        ? [...mainDestinations, ...secondaryDestinations]
+        : mainDestinations);
     return NavigationRail(
-      leading:
-          extended
-              ? IconButton(
-                icon: const Icon(CommonIcons.drawerOpen),
-                onPressed: () {},
+      leading: extended
+          ? IconButton(
+              icon: const Icon(CommonIcons.drawerOpen),
+              onPressed: () {},
+            )
+          : drawerButton(),
+      destinations:
+          destinations // TODO group
+              .map(
+                (final dest) => NavigationRailDestination(
+                  icon: dest.icon,
+                  label: Text(dest.label),
+                ),
               )
-              : drawerButton(),
-      destinations: destinations // TODO group
-          .map(
-            (final dest) => NavigationRailDestination(
-              icon: dest.icon,
-              label: Text(dest.label),
-            ),
-          )
-          .toList(growable: false),
+              .toList(growable: false),
       extended: extended,
       selectedIndex: _selectedIndex(
         selectedPath: selectedPath,

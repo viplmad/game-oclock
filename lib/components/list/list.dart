@@ -6,6 +6,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListLoadFailure,
         ListLoadInProgress,
+        ListLoadSuccess,
         ListPageIncremented,
         ListPageReloaded,
         ListReloaded,
@@ -14,6 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/search/search_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'list_item.dart';
 
@@ -88,9 +90,27 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     List<T> items = [];
     Widget? trailing;
     if (state is ListFinal<T>) {
+      if (state is ListLoadSuccess<T> && state.data.isEmpty) {
+        return Center(child: Text(context.localize().emptyListLabel));
+      }
       if (state is ListLoadFailure<T>) {
-        trailing = GridListItem(
-          title: 'Error - Tap to refresh', // TODO
+        if (state.data.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(context.localize().errorPageLoadTitle),
+                OutlinedButton.icon(
+                  icon: const Icon(CommonIcons.reload),
+                  label: Text(context.localize().retryLabel),
+                  onPressed: () => context.read<LB>().add(const ListReloaded()),
+                ),
+              ],
+            ),
+          );
+        }
+        trailing = GridListErrorItem(
+          title: context.localize().errorListPageLoadTitle,
           onTap: () => context.read<LB>().add(const ListPageReloaded()),
         );
       }

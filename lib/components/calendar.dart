@@ -101,8 +101,8 @@ class LogCalendar extends StatelessWidget {
       selectedDayPredicate: (final DateTime day) {
         return day.isSameDay(selectedDay);
       },
-      onDaySelected:
-          (final DateTime newSelectedDay, _) => onDaySelected(newSelectedDay),
+      onDaySelected: (final DateTime newSelectedDay, _) =>
+          onDaySelected(newSelectedDay),
       eventLoader: (final DateTime day) {
         return logDays
             .where((final DateTime logDay) => day.isSameDay(logDay))

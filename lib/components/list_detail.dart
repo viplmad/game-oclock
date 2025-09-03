@@ -8,6 +8,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         FunctionActionBloc,
         ListLoadBloc,
         ListQuicksearchChanged,
+        ListReloaded,
         MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
@@ -43,10 +44,9 @@ class ListDetailBuilder<
 
     return BlocListener<SB, ActionState<T?>>(
       listener: (final context, final selectState) {
-        final selectedData =
-            (selectState is ActionFinal)
-                ? (selectState as ActionFinal<T?, T?>).data
-                : null;
+        final selectedData = (selectState is ActionFinal)
+            ? (selectState as ActionFinal<T?, T?>).data
+            : null;
 
         // Allow minimized if selected
         context.read<MinimizedLayoutBloc>().add(
@@ -55,10 +55,9 @@ class ListDetailBuilder<
       },
       child: BlocBuilder<SB, ActionState<T?>>(
         builder: (final context, final selectState) {
-          final selectedData =
-              (selectState is ActionFinal)
-                  ? (selectState as ActionFinal<T?, T?>).data
-                  : null;
+          final selectedData = (selectState is ActionFinal)
+              ? (selectState as ActionFinal<T?, T?>).data
+              : null;
 
           if (layoutTier == LayoutTier.compact) {
             if (selectedData == null) {
@@ -101,10 +100,10 @@ class ListDetailBuilder<
     return selectedData == null
         ? _emptyDetail()
         : detailBuilder(
-          context,
-          selectedData,
-          () => _select(context, selectBloc: selectBloc, data: null),
-        );
+            context,
+            selectedData,
+            () => _select(context, selectBloc: selectBloc, data: null),
+          );
   }
 
   Widget _emptyDetail() {
@@ -118,6 +117,10 @@ class ListDetailBuilder<
       appBar: AppBar(
         title: Text(title),
         actions: [
+          IconButton(
+            icon: const Icon(CommonIcons.reload),
+            onPressed: () => context.read<LB>().add(const ListReloaded()),
+          ),
           SearchAnchor(
             builder: (final context, final controller) {
               return IconButton(
@@ -127,29 +130,28 @@ class ListDetailBuilder<
                 },
               );
             },
-            suggestionsBuilder:
-                (final context, final controller) => List.empty(),
+            suggestionsBuilder: (final context, final controller) =>
+                List.empty(),
             viewOnChanged: // TODO not called when clear
-                (final value) => context.read<LB>().add(
-                  ListQuicksearchChanged(quicksearch: value),
-                ),
+            (final value) => context.read<LB>().add(
+              ListQuicksearchChanged(quicksearch: value),
+            ),
             isFullScreen: false,
           ),
         ],
       ),
       body: GridListBuilder<T, LB>(
         space: searchSpace,
-        itemBuilder:
-            (final context, final data, final index) => listItemBuilder(
+        itemBuilder: (final context, final data, final index) =>
+            listItemBuilder(
               context,
               data,
               () => _select(
                 context,
                 selectBloc: context.read<SB>(),
-                data:
-                    data == selectedData
-                        ? null // Remove selection if pressed on the same one
-                        : data,
+                data: data == selectedData
+                    ? null // Remove selection if pressed on the same one
+                    : data,
               ),
             ),
       ),

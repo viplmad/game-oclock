@@ -53,23 +53,23 @@ class CreateEditFormBuilder<
       return fullscreen
           ? Dialog.fullscreen(child: form)
           : Dialog(
-            // TODO min width
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 560.0),
-              child: form,
-            ),
-          );
+              // TODO min width
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 560.0),
+                child: form,
+              ),
+            );
     } else {
       final form = buildEditForm(context, fullscreen: fullscreen);
       return fullscreen
           ? Dialog.fullscreen(child: form)
           : Dialog(
-            // TODO min width
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 560.0),
-              child: form,
-            ),
-          );
+              // TODO min width
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 560.0),
+                child: form,
+              ),
+            );
     }
   }
 
@@ -108,12 +108,11 @@ class CreateEditFormBuilder<
                 fullscreen: fullscreen,
                 dirty: formState.dirty,
                 onChanged: () => context.read<FB>().add(const FormDirtied()),
-                onSubmit:
-                    inProgress
-                        ? null
-                        : () {
-                          context.read<FB>().add(const FormSubmitted());
-                        },
+                onSubmit: inProgress
+                    ? null
+                    : () {
+                        context.read<FB>().add(const FormSubmitted());
+                      },
                 child: fieldsBuilder(context, formState.group, inProgress),
               );
             },
@@ -175,14 +174,14 @@ class CreateEditFormBuilder<
                     formKey: formState.key,
                     fullscreen: fullscreen,
                     dirty: formState.dirty,
-                    onChanged:
-                        () => context.read<FB>().add(const FormDirtied()),
+                    onChanged: () =>
+                        context.read<FB>().add(const FormDirtied()),
                     onSubmit: // TODO possibly disallow submit if not dirty
-                        inProgress
-                            ? null
-                            : () {
-                              context.read<FB>().add(const FormSubmitted());
-                            },
+                    inProgress
+                        ? null
+                        : () {
+                            context.read<FB>().add(const FormSubmitted());
+                          },
                     child: fieldsBuilder(context, formState.group, inProgress),
                   );
                 },
@@ -236,8 +235,9 @@ class FullForm extends StatelessWidget {
           return;
         }
 
-        final bool shouldPop =
-            dirty ? await _showBackDialog(context) ?? false : true;
+        final bool shouldPop = dirty
+            ? await _showBackDialog(context) ?? false
+            : true;
         if (context.mounted && shouldPop) {
           Navigator.pop(context);
         }
@@ -246,83 +246,79 @@ class FullForm extends StatelessWidget {
       child: child,
     );
 
-    final modifiedChip =
-        dirty
-            ? IgnorePointer(
-              child: ActionChip(
-                label: const Text('Modified'),
-                onPressed: () => {},
-              ),
-            )
-            : const SizedBox();
+    final modifiedChip = dirty
+        ? IgnorePointer(
+            child: ActionChip(
+              label: const Text('Modified'),
+              onPressed: () => {},
+            ),
+          )
+        : const SizedBox();
 
     return fullscreen
         ? Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            automaticallyImplyLeading: false,
-            leading: CloseButton(
-              onPressed:
-                  inProgress
-                      ? null
-                      : () async => await Navigator.maybePop(context),
+            appBar: AppBar(
+              title: Text(title),
+              automaticallyImplyLeading: false,
+              leading: CloseButton(
+                onPressed: inProgress
+                    ? null
+                    : () async => await Navigator.maybePop(context),
+              ),
+              actions: [modifiedChip, const SizedBox(width: 16.0), saveButton],
             ),
-            actions: [modifiedChip, const SizedBox(width: 16.0), saveButton],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.only(
-              bottom: 24.0,
-              left: 24.0,
-              right: 24.0,
+            body: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 24.0,
+                left: 24.0,
+                right: 24.0,
+              ),
+              child: SingleChildScrollView(child: form),
             ),
-            child: SingleChildScrollView(child: form),
-          ),
-        )
+          )
         : Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              DefaultTextStyle(
-                style:
-                    DialogTheme.of(context).titleTextStyle ??
-                    Theme.of(context).textTheme.headlineSmall!,
-                textAlign: TextAlign.start,
-                child: Text(title),
-              ),
-              const SizedBox(height: 16.0),
-              Flexible(child: SingleChildScrollView(child: form)),
-              const SizedBox(height: 24.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  modifiedChip,
-                  Expanded(
-                    child: OverflowBar(
-                      alignment: MainAxisAlignment.end,
-                      spacing: 16 / 2,
-                      overflowAlignment: OverflowBarAlignment.end,
-                      overflowDirection: VerticalDirection.down,
-                      overflowSpacing: 0,
-                      children: [
-                        TextButton(
-                          onPressed:
-                              inProgress
-                                  ? null
-                                  : () async =>
-                                      await Navigator.maybePop(context),
-                          child: const Text('Cancel'), // TODO i18n
-                        ),
-                        saveButton,
-                      ],
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DefaultTextStyle(
+                  style:
+                      DialogTheme.of(context).titleTextStyle ??
+                      Theme.of(context).textTheme.headlineSmall!,
+                  textAlign: TextAlign.start,
+                  child: Text(title),
+                ),
+                const SizedBox(height: 16.0),
+                Flexible(child: SingleChildScrollView(child: form)),
+                const SizedBox(height: 24.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    modifiedChip,
+                    Expanded(
+                      child: OverflowBar(
+                        alignment: MainAxisAlignment.end,
+                        spacing: 16 / 2,
+                        overflowAlignment: OverflowBarAlignment.end,
+                        overflowDirection: VerticalDirection.down,
+                        overflowSpacing: 0,
+                        children: [
+                          TextButton(
+                            onPressed: inProgress
+                                ? null
+                                : () async => await Navigator.maybePop(context),
+                            child: const Text('Cancel'), // TODO i18n
+                          ),
+                          saveButton,
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+                  ],
+                ),
+              ],
+            ),
+          );
   }
 
   Future<bool?> _showBackDialog(final BuildContext context) {

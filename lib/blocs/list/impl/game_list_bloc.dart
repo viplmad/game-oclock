@@ -19,8 +19,8 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
     final page = mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder:
-          (final index) => mockUserGame(title: 'title ($quicksearch) $index'),
+      builder: (final index) =>
+          mockUserGame(title: 'title ($quicksearch) $index'),
     );
     final data = mergePageData(search: search, page: page, lastData: lastData);
 
@@ -50,8 +50,8 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
     final page = mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder:
-          (final index) => mockTag(name: 'name $gameId ($quicksearch) $index'),
+      builder: (final index) =>
+          mockTag(name: 'name $gameId ($quicksearch) $index'),
     );
     final data = mergePageData(search: search, page: page, lastData: lastData);
 
@@ -81,9 +81,8 @@ class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
     final page = mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder:
-          (final index) =>
-              mockGameAvailable(name: 'name $gameId ($quicksearch) $index'),
+      builder: (final index) =>
+          mockGameAvailable(name: 'name $gameId ($quicksearch) $index'),
     );
     final data = mergePageData(search: search, page: page, lastData: lastData);
 

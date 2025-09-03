@@ -8,8 +8,8 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
   @override
   UserGame fromData(final UserGameFormData values) {
     return UserGame(
-      id: 'kalmdkamsd',
-      externalId: 'epic',
+      id: 'kalmdkamsd', // TODO
+      externalId: 'epic', // TODO
       title: values.title.value.text,
       edition: values.edition.value.text,
       releaseDate: DateTime.now(),

@@ -51,18 +51,16 @@ class Detail extends StatelessWidget {
         flexibleSpace: FlexibleSpaceBar(
           title: Text(title),
           collapseMode: CollapseMode.parallax,
-          background:
-              imageUrl.isEmpty
-                  ? const SizedBox()
-                  : CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.cover,
-                    useOldImageOnUrlChange: true,
-                    progressIndicatorBuilder:
-                        (_, __, ___) =>
-                            const CircularProgressIndicator(), // TODO skeleton
-                    errorWidget: (_, __, ___) => Container(color: Colors.grey),
-                  ),
+          background: imageUrl.isEmpty
+              ? const SizedBox()
+              : CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  useOldImageOnUrlChange: true,
+                  progressIndicatorBuilder: (_, __, ___) =>
+                      const CircularProgressIndicator(), // TODO skeleton
+                  errorWidget: (_, __, ___) => Container(color: Colors.grey),
+                ),
         ),
       ),
     ];

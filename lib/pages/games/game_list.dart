@@ -26,13 +26,12 @@ class UserGameListPage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => UserGameSelectBloc()),
         BlocProvider(
-          create:
-              (_) =>
-                  UserGameListBloc()..add(
-                    ListLoaded(
-                      search: ListSearch(name: 'default', search: SearchDTO()),
-                    ),
-                  ),
+          create: (_) => UserGameListBloc()
+            ..add(
+              ListLoaded(
+                search: ListSearch(name: 'default', search: SearchDTO()),
+              ),
+            ),
         ),
         BlocProvider(create: (_) => UserGameDeleteBloc()),
       ],
@@ -65,8 +64,8 @@ class UserGameListPage extends StatelessWidget {
             ),
           );
         },
-        listItemBuilder:
-            (final context, final data, final onPressed) => GridListItem(
+        listItemBuilder: (final context, final data, final onPressed) =>
+            GridListItem(
               title:
                   '${data.title}${data.edition.isNotEmpty ? ' - ${data.edition}' : ''}',
               onTap: onPressed,

@@ -22,8 +22,9 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch> {
             .map(
               (final filterValues) => FilterDTO(
                 field: filterValues.field.value.text,
-                operator_:
-                    OperatorType.fromJson(filterValues.operator.value.text)!,
+                operator_: OperatorType.fromJson(
+                  filterValues.operator.value.text,
+                )!,
                 value: SearchValue(value: filterValues.value.value.text),
                 chainOperator: ChainOperatorType.fromJson(
                   filterValues.chainOperator.value.text,

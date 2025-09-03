@@ -78,24 +78,21 @@ class CalendarListDetailBuilder<
       },
       child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
         builder: (final context, final selectDayState) {
-          final DateTime selectedDay =
-              (selectDayState is ActionFinal)
-                  ? (selectDayState as ActionFinal<DateTime, DateTime>).data
-                  : DateTime.now();
+          final DateTime selectedDay = (selectDayState is ActionFinal)
+              ? (selectDayState as ActionFinal<DateTime, DateTime>).data
+              : DateTime.now();
 
           return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
             builder: (final context, final focusDayState) {
-              final DateTime focusedDay =
-                  (focusDayState is ActionFinal)
-                      ? (focusDayState as ActionFinal<DateTime, DateTime>).data
-                      : DateTime.now();
+              final DateTime focusedDay = (focusDayState is ActionFinal)
+                  ? (focusDayState as ActionFinal<DateTime, DateTime>).data
+                  : DateTime.now();
 
               return BlocBuilder<SB, ActionState<T?>>(
                 builder: (final context, final selectState) {
-                  final selectedData =
-                      (selectState is ActionFinal)
-                          ? (selectState as ActionFinal<T?, T?>).data
-                          : null;
+                  final selectedData = (selectState is ActionFinal)
+                      ? (selectState as ActionFinal<T?, T?>).data
+                      : null;
 
                   if (layoutTier == LayoutTier.compact) {
                     if (selectedData == null) {
@@ -208,10 +205,8 @@ class CalendarListDetailBuilder<
       lastDay: lastDay,
       focusedDay: focusedDay,
       selectedDay: selectedDay,
-      onDaySelected:
-          (final value) => context.read<CalendarDaySelectBloc>().add(
-            ActionStarted(data: value),
-          ),
+      onDaySelected: (final value) =>
+          context.read<CalendarDaySelectBloc>().add(ActionStarted(data: value)),
       onPageChanged: (final value) => onCalendarPageChanged(context, value),
     );
   }
@@ -262,19 +257,17 @@ class CalendarListDetailBuilder<
           ),
         );
       },
-      itemBuilder:
-          (final context, final data, final index) => listItemBuilder(
-            context,
-            data,
-            () => _select(
-              context,
-              selectBloc: context.read<SB>(),
-              data:
-                  data == selectedData
-                      ? null // Remove selection if pressed on the same one
-                      : data,
-            ),
-          ),
+      itemBuilder: (final context, final data, final index) => listItemBuilder(
+        context,
+        data,
+        () => _select(
+          context,
+          selectBloc: context.read<SB>(),
+          data: data == selectedData
+              ? null // Remove selection if pressed on the same one
+              : data,
+        ),
+      ),
     );
   }
 

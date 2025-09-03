@@ -25,10 +25,13 @@ class GameLogListBloc extends ListLoadBloc<DateTime> {
     );
 
     return ListLoadSuccess<DateTime>(
-      data: List.of(
-        lastData == null ? data.data : [...lastData, ...data.data],
-        growable: false,
-      )..sort((final a, final b) => a.compareTo(b)), // Sort to simplify computation on UI
+      data:
+          List.of(
+            lastData == null ? data.data : [...lastData, ...data.data],
+            growable: false,
+          )..sort(
+            (final a, final b) => a.compareTo(b),
+          ), // Sort to simplify computation on UI
       quicksearch: quicksearch,
       search: search,
     );

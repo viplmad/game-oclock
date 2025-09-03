@@ -31,10 +31,9 @@ class _ShowHideTextFormFieldState extends State<ShowHideTextFormField> {
       decoration: InputDecoration(
         labelText: widget.labelText,
         suffixIcon: IconButton(
-          tooltip:
-              obscureText
-                  ? 'Show' //TODO AppLocalizations.of(context)!.showString
-                  : 'Hide', //TODO AppLocalizations.of(context)!.hideString
+          tooltip: obscureText
+              ? 'Show' //TODO AppLocalizations.of(context)!.showString
+              : 'Hide', //TODO AppLocalizations.of(context)!.hideString
           icon: Icon(obscureText ? CommonIcons.show : CommonIcons.hide),
           onPressed: () {
             setState(() {

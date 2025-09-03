@@ -34,32 +34,32 @@ class SearchCreateForm extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) => SearchFormBloc(
-                formGroup: SearchFormData(
-                  name: TextEditingController(),
-                  filters: mutableFilters,
-                ),
-              ),
+          create: (_) => SearchFormBloc(
+            formGroup: SearchFormData(
+              name: TextEditingController(),
+              filters: mutableFilters,
+            ),
+          ),
         ),
         BlocProvider(create: (_) => SearchCreateBloc(space: space)),
         BlocProvider(
-          create:
-              (_) => FilterFormDataListBloc(data: mutableFilters)..add(
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
+          create: (_) => FilterFormDataListBloc(data: mutableFilters)
+            ..add(
+              ListLoaded(
+                search: ListSearch(name: 'default', search: SearchDTO()),
               ),
+            ),
         ),
       ],
-      child: const CreateEditFormBuilder<
-        ListSearch,
-        SearchFormData,
-        SearchFormBloc,
-        SearchGetBloc,
-        SearchCreateBloc,
-        SearchUpdateBloc
-      >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
+      child:
+          const CreateEditFormBuilder<
+            ListSearch,
+            SearchFormData,
+            SearchFormBloc,
+            SearchGetBloc,
+            SearchCreateBloc,
+            SearchUpdateBloc
+          >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
     );
   }
 }
@@ -87,27 +87,27 @@ class SearchEditForm extends StatelessWidget {
         ),
         BlocProvider(create: (_) => SearchUpdateBloc(space: space)),
         BlocProvider(
-          create:
-              (_) =>
-                  SearchGetBloc(space: space)..add(ActionStarted(data: name)),
+          create: (_) =>
+              SearchGetBloc(space: space)..add(ActionStarted(data: name)),
         ),
         BlocProvider(
-          create:
-              (_) => FilterFormDataListBloc(data: mutableFilters)..add(
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
+          create: (_) => FilterFormDataListBloc(data: mutableFilters)
+            ..add(
+              ListLoaded(
+                search: ListSearch(name: 'default', search: SearchDTO()),
               ),
+            ),
         ),
       ],
-      child: const CreateEditFormBuilder<
-        ListSearch,
-        SearchFormData,
-        SearchFormBloc,
-        SearchGetBloc,
-        SearchCreateBloc,
-        SearchUpdateBloc
-      >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
+      child:
+          const CreateEditFormBuilder<
+            ListSearch,
+            SearchFormData,
+            SearchFormBloc,
+            SearchGetBloc,
+            SearchCreateBloc,
+            SearchUpdateBloc
+          >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
     );
   }
 }
@@ -137,48 +137,47 @@ Widget _fieldsBuilder(
             newIndex,
           );
         },
-        itemBuilder:
-            (final context, final data, final index) => ListTile(
-              // TODO Missing chainOperator
-              title: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: DropdownMenu<String>(
-                      controller: data.field,
-                      enableFilter: true,
-                      requestFocusOnTap: true,
-                      label: const Text('Field'), // TODO
-                      dropdownMenuEntries: gameFields,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: DropdownMenu<String>(
-                      controller: data.operator,
-                      enableFilter: true,
-                      requestFocusOnTap: true,
-                      label: const Text('Operator'), // TODO
-                      dropdownMenuEntries: operatorsMenuEntries,
-                    ),
-                  ),
-                ],
-              ),
-              subtitle: TextFormField(
-                controller: data.value,
-                readOnly: readOnly,
-                validator: notEmptyValidator,
-                decoration: const InputDecoration(
-                  labelText: 'Value', // TODO
+        itemBuilder: (final context, final data, final index) => ListTile(
+          // TODO Missing chainOperator
+          title: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: DropdownMenu<String>(
+                  controller: data.field,
+                  enableFilter: true,
+                  requestFocusOnTap: true,
+                  label: const Text('Field'), // TODO
+                  dropdownMenuEntries: gameFields,
                 ),
               ),
-              trailing: IconButton(
-                icon: const Icon(CommonIcons.delete),
-                onPressed: () {
-                  context.read<FilterFormDataListBloc>().removeElement(index);
-                },
+              Expanded(
+                flex: 1,
+                child: DropdownMenu<String>(
+                  controller: data.operator,
+                  enableFilter: true,
+                  requestFocusOnTap: true,
+                  label: const Text('Operator'), // TODO
+                  dropdownMenuEntries: operatorsMenuEntries,
+                ),
               ),
+            ],
+          ),
+          subtitle: TextFormField(
+            controller: data.value,
+            readOnly: readOnly,
+            validator: notEmptyValidator,
+            decoration: const InputDecoration(
+              labelText: 'Value', // TODO
             ),
+          ),
+          trailing: IconButton(
+            icon: const Icon(CommonIcons.delete),
+            onPressed: () {
+              context.read<FilterFormDataListBloc>().removeElement(index);
+            },
+          ),
+        ),
       ),
       TextButton.icon(
         label: const Text('Add'),

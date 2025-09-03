@@ -3,34 +3,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show ActionStarted, MinimizedLayoutBloc;
+import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/pages/routes.dart';
 
 void main() {
   usePathUrlStrategy();
-  runApp(const MyApp());
+  runApp(const GameOClockApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GameOClockApp extends StatelessWidget {
+  const GameOClockApp({super.key});
 
   @override
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (_) =>
-                  MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
+          create: (_) =>
+              MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
         ),
       ],
       child: MaterialApp.router(
-        title: 'Flutter Demo',
+        title: 'Game o\'Clock',
         theme: ThemeData(
           snackBarTheme: const SnackBarThemeData(
             behavior: SnackBarBehavior.floating,
           ),
           useMaterial3: true,
         ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: routerConfig,
       ),
     );
