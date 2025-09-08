@@ -22,6 +22,7 @@ import 'package:game_oclock/models/models.dart'
         SearchFormData,
         gameFields,
         operatorsMenuEntries;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class SearchCreateForm extends StatelessWidget {
   const SearchCreateForm({super.key, required this.space});
@@ -52,14 +53,18 @@ class SearchCreateForm extends StatelessWidget {
         ),
       ],
       child:
-          const CreateEditFormBuilder<
+          CreateEditFormBuilder<
             ListSearch,
             SearchFormData,
             SearchFormBloc,
             SearchGetBloc,
             SearchCreateBloc,
             SearchUpdateBloc
-          >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
+          >(
+            title: context.localize().creatingTitle,
+            create: true,
+            fieldsBuilder: _fieldsBuilder,
+          ),
     );
   }
 }
@@ -100,14 +105,18 @@ class SearchEditForm extends StatelessWidget {
         ),
       ],
       child:
-          const CreateEditFormBuilder<
+          CreateEditFormBuilder<
             ListSearch,
             SearchFormData,
             SearchFormBloc,
             SearchGetBloc,
             SearchCreateBloc,
             SearchUpdateBloc
-          >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
+          >(
+            title: context.localize().editingTitle,
+            create: false,
+            fieldsBuilder: _fieldsBuilder,
+          ),
     );
   }
 }
@@ -124,9 +133,7 @@ Widget _fieldsBuilder(
         controller: formGroup.name,
         readOnly: readOnly,
         validator: notEmptyValidator,
-        decoration: const InputDecoration(
-          labelText: 'Name', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().nameLabel),
       ),
       ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
         // TODO readonly
@@ -147,8 +154,15 @@ Widget _fieldsBuilder(
                   controller: data.field,
                   enableFilter: true,
                   requestFocusOnTap: true,
-                  label: const Text('Field'), // TODO
-                  dropdownMenuEntries: gameFields,
+                  label: Text(context.localize().fieldLabel),
+                  dropdownMenuEntries: gameFields
+                      .map(
+                        (final field) => DropdownMenuEntry<String>(
+                          value: field.value,
+                          label: field.labelBuilder(context),
+                        ),
+                      )
+                      .toList(growable: false),
                 ),
               ),
               Expanded(
@@ -157,8 +171,15 @@ Widget _fieldsBuilder(
                   controller: data.operator,
                   enableFilter: true,
                   requestFocusOnTap: true,
-                  label: const Text('Operator'), // TODO
-                  dropdownMenuEntries: operatorsMenuEntries,
+                  label: Text(context.localize().operatorLabel),
+                  dropdownMenuEntries: operatorsMenuEntries
+                      .map(
+                        (final field) => DropdownMenuEntry<String>(
+                          value: field.value,
+                          label: field.labelBuilder(context),
+                        ),
+                      )
+                      .toList(growable: false),
                 ),
               ),
             ],
@@ -167,8 +188,8 @@ Widget _fieldsBuilder(
             controller: data.value,
             readOnly: readOnly,
             validator: notEmptyValidator,
-            decoration: const InputDecoration(
-              labelText: 'Value', // TODO
+            decoration: InputDecoration(
+              labelText: context.localize().valueLabel,
             ),
           ),
           trailing: IconButton(
@@ -180,7 +201,7 @@ Widget _fieldsBuilder(
         ),
       ),
       TextButton.icon(
-        label: const Text('Add'),
+        label: Text(context.localize().addLabel),
         icon: const Icon(CommonIcons.add),
         onPressed: () {
           context.read<FilterFormDataListBloc>().addElement(

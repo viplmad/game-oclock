@@ -29,42 +29,33 @@ class TileListItem extends StatelessWidget {
   }
 }
 
-class GridListErrorItem extends StatelessWidget {
-  const GridListErrorItem({
+class TileListErrorItem extends StatelessWidget {
+  const TileListErrorItem({
     super.key,
     required this.title,
-    required this.onTap,
+    required this.onRetryTap,
   });
 
   final String title;
-  final VoidCallback? onTap;
+  final VoidCallback? onRetryTap;
 
   @override
   Widget build(final BuildContext context) {
-    return GridTile(
-      child: Container(
-        color: Colors.black87,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 18.0, color: Colors.white),
-              ),
-              OutlinedButton.icon(
-                icon: const Icon(CommonIcons.reload),
-                label: Text(
-                  context.localize().retryLabel,
-                  maxLines: 1,
-                  style: const TextStyle(fontSize: 18.0, color: Colors.white),
-                ),
-                onPressed: onTap,
-              ),
-            ],
-          ),
+    return ListTile(
+      title: Text(
+        title,
+        maxLines: 1,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 18.0, color: Colors.white),
+      ),
+      trailing: OutlinedButton.icon(
+        icon: const Icon(CommonIcons.reload),
+        label: Text(
+          context.localize().retryLabel,
+          maxLines: 1,
+          style: const TextStyle(fontSize: 18.0, color: Colors.white),
         ),
+        onPressed: onRetryTap,
       ),
     );
   }
@@ -96,6 +87,47 @@ class GridListItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class GridListErrorItem extends StatelessWidget {
+  const GridListErrorItem({
+    super.key,
+    required this.title,
+    required this.onRetryTap,
+  });
+
+  final String title;
+  final VoidCallback? onRetryTap;
+
+  @override
+  Widget build(final BuildContext context) {
+    return GridTile(
+      child: Container(
+        color: Colors.black87,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                maxLines: 1,
+                style: const TextStyle(fontSize: 18.0, color: Colors.white),
+              ),
+              OutlinedButton.icon(
+                icon: const Icon(CommonIcons.reload),
+                label: Text(
+                  context.localize().retryLabel,
+                  maxLines: 1,
+                  style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                ),
+                onPressed: onRetryTap,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -33,6 +33,7 @@ import 'package:game_oclock/models/models.dart'
         UserGame;
 import 'package:game_oclock/pages/games/game_form.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class UserGameDetailsPage extends StatelessWidget {
@@ -60,7 +61,7 @@ class UserGameDetailsPage extends StatelessWidget {
             if (state is ActionFailure<UserGame, String>) {
               return Center(
                 child: DetailError(
-                  title: 'Error - Tap to refresh',
+                  title: context.localize().errorDetailLoadTitle,
                   onRetryTap: () => context.read<UserGameGetBloc>().add(
                     const ActionRestarted(),
                   ),
@@ -114,36 +115,37 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<UserGameAvailableListBloc>(context);
     }
 
-    final List<TabDestination> destinations = List.unmodifiable([
-      TabDestination(
-        icon: const Icon(CommonIcons.detail),
-        label: 'Detail',
-        onTap: (_) {},
-        child: _info(),
-      ),
-      TabDestination(
-        icon: const Icon(CommonIcons.locations),
-        label: 'Locations',
-        onTap: (final context) =>
-            _loadOnlyInitial<UserGameAvailableListBloc>(context),
-        child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
-          space: '', // TODO ?
-          itemBuilder: (final context, final data, final index) =>
-              TileListItem(title: data.name),
-        ),
-      ),
-      TabDestination(
-        icon: const Icon(CommonIcons.tags),
-        label: 'Tags',
-        onTap: (final context) =>
-            _loadOnlyInitial<UserGameTagListBloc>(context),
-        child: TileListBuilder<Tag, UserGameTagListBloc>(
-          space: '', // TODO ?
-          itemBuilder: (final context, final data, final index) =>
-              TileListItem(title: data.name),
-        ),
-      ),
-    ]);
+    final List<TabDestination> destinations =
+        List.unmodifiable(<TabDestination>[
+          TabDestination(
+            icon: const Icon(CommonIcons.detail),
+            labelBuilder: (final context) => context.localize().detailLabel,
+            onTap: (_) {},
+            child: _info(),
+          ),
+          TabDestination(
+            icon: const Icon(CommonIcons.locations),
+            labelBuilder: (final context) => context.localize().locationsTitle,
+            onTap: (final context) =>
+                _loadOnlyInitial<UserGameAvailableListBloc>(context),
+            child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
+              space: '', // TODO ?
+              itemBuilder: (final context, final data, final index) =>
+                  TileListItem(title: data.name),
+            ),
+          ),
+          TabDestination(
+            icon: const Icon(CommonIcons.tags),
+            labelBuilder: (final context) => context.localize().tagsTitle,
+            onTap: (final context) =>
+                _loadOnlyInitial<UserGameTagListBloc>(context),
+            child: TileListBuilder<Tag, UserGameTagListBloc>(
+              space: '', // TODO ?
+              itemBuilder: (final context, final data, final index) =>
+                  TileListItem(title: data.name),
+            ),
+          ),
+        ]);
 
     return Detail(
       title: data.title,
@@ -155,12 +157,12 @@ class UserGameDetail extends StatelessWidget {
             : IconButton(
                 // TODO hide if coming from detail
                 icon: const Icon(CommonIcons.view),
-                tooltip: 'View',
+                tooltip: context.localize().viewLabel,
                 onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
               ),
         IconButton(
           icon: const Icon(CommonIcons.edit),
-          tooltip: 'Edit',
+          tooltip: context.localize().editLabel,
           onPressed: () async =>
               showDialog<bool>(
                 context: context,
@@ -173,7 +175,7 @@ class UserGameDetail extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(CommonIcons.delete),
-          tooltip: 'Delete',
+          tooltip: context.localize().deleteLabel,
           onPressed: () async {
             return showDialog<bool>(
               context: context,
@@ -224,7 +226,10 @@ class UserGameDetail extends StatelessWidget {
             onTap: (final index) =>
                 destinations.elementAt(index).onTap(context),
             tabs: destinations
-                .map((final dest) => Tab(icon: dest.icon, text: dest.label))
+                .map(
+                  (final dest) =>
+                      Tab(icon: dest.icon, text: dest.labelBuilder(context)),
+                )
                 .toList(growable: false),
           ),
           Expanded(
@@ -252,12 +257,12 @@ class UserGameDetail extends StatelessWidget {
 
   Widget _confirmDelete(final BuildContext context, final UserGame data) {
     return AlertDialog(
-      title: const Text(
-        'Delete?',
+      title: Text(
+        context.localize().deleteDialogTitle,
       ), // TODO HeaderText(AppLocalizations.of(context)!.deleteString),
       content: ListTile(
-        title: Text('${data.title} will be deleted.'), // TODO i18n
-        subtitle: const Text('This action cannot be undone.'), // TODO i18n
+        title: Text(context.localize().deleteDialogDataTitle(data.title)),
+        subtitle: Text(context.localize().deleteDialogSubtitle),
       ),
       actions: <Widget>[
         TextButton(

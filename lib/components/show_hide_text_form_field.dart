@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class ShowHideTextFormField extends StatefulWidget {
   const ShowHideTextFormField({
@@ -32,8 +33,8 @@ class _ShowHideTextFormFieldState extends State<ShowHideTextFormField> {
         labelText: widget.labelText,
         suffixIcon: IconButton(
           tooltip: obscureText
-              ? 'Show' //TODO AppLocalizations.of(context)!.showString
-              : 'Hide', //TODO AppLocalizations.of(context)!.hideString
+              ? context.localize().showLabel
+              : context.localize().hideLabel,
           icon: Icon(obscureText ? CommonIcons.show : CommonIcons.hide),
           onPressed: () {
             setState(() {

@@ -17,8 +17,6 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-import 'list_item.dart';
-
 abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const PaginatedListBuilder({
@@ -109,9 +107,9 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
             ),
           );
         }
-        trailing = GridListErrorItem(
-          title: context.localize().errorListPageLoadTitle,
-          onTap: () => context.read<LB>().add(const ListPageReloaded()),
+        trailing = errorItemBuilder(
+          context,
+          () => context.read<LB>().add(const ListPageReloaded()),
         );
       }
       items = state.data;
@@ -153,4 +151,6 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     final Widget? trailing,
     required final ScrollController controller,
   });
+
+  Widget errorItemBuilder(final BuildContext context, final VoidCallback onTap);
 }

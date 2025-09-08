@@ -11,6 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/calendar_list_detail.dart';
 import 'package:game_oclock/components/list/list_item.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class MultiCalendarPage extends StatelessWidget {
   const MultiCalendarPage({super.key});
@@ -43,7 +44,7 @@ class MultiCalendarPage extends StatelessWidget {
             GameLogSelectBloc,
             GameLogListBloc
           >(
-            title: 'Calendar', // TODO i18n
+            title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
             dateGetter: (final data) => data,

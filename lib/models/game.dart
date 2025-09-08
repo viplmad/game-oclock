@@ -1,10 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
-List<DropdownMenuEntry<String>> gameFields = List.unmodifiable([
-  const DropdownMenuEntry<String>(value: 'id', label: 'Id'),
-  const DropdownMenuEntry<String>(value: 'title', label: 'Title'),
-  const DropdownMenuEntry<String>(value: 'edition', label: 'Edition'),
+import 'nav_destination.dart';
+
+List<DropdownField> gameFields = List.unmodifiable(<DropdownField>[
+  DropdownField(
+    value: 'id',
+    labelBuilder: (final context) => context.localize().idLabel,
+  ),
+  DropdownField(
+    value: 'title',
+    labelBuilder: (final context) => context.localize().titleLabel,
+  ),
+  DropdownField(
+    value: 'edition',
+    labelBuilder: (final context) => context.localize().editionLabel,
+  ),
 ]);
 
 class Game extends Equatable {

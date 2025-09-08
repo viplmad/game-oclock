@@ -22,6 +22,7 @@ import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {
@@ -136,10 +137,7 @@ class LoginBuilder extends StatelessWidget {
                               const FormSubmitted(),
                             );
                           },
-                    child: buildFormFieldsContainer(
-                      formGroup: formState.group,
-                      readOnly: inProgress,
-                    ),
+                    child: _fieldsBuilder(context, formState.group, inProgress),
                   );
                 },
               );
@@ -149,38 +147,37 @@ class LoginBuilder extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget buildFormFieldsContainer({
-    required final LoginFormData formGroup,
-    required final bool readOnly,
-  }) {
-    return Column(
-      children: <Widget>[
-        TextFormField(
-          controller: formGroup.host,
-          readOnly: readOnly,
-          validator: notEmptyValidator,
-          decoration: const InputDecoration(
-            labelText: 'Host', // TODO
-          ),
+Widget _fieldsBuilder(
+  final BuildContext context,
+  final LoginFormData formGroup,
+  final bool readOnly,
+) {
+  return Column(
+    children: <Widget>[
+      TextFormField(
+        controller: formGroup.host,
+        readOnly: readOnly,
+        validator: notEmptyValidator,
+        decoration: InputDecoration(labelText: context.localize().hostLabel),
+      ),
+      TextFormField(
+        controller: formGroup.username,
+        readOnly: readOnly,
+        validator: notEmptyValidator,
+        decoration: InputDecoration(
+          labelText: context.localize().usernameLabel,
         ),
-        TextFormField(
-          controller: formGroup.username,
-          readOnly: readOnly,
-          validator: notEmptyValidator,
-          decoration: const InputDecoration(
-            labelText: 'Username', // TODO
-          ),
-        ),
-        ShowHideTextFormField(
-          controller: formGroup.password,
-          readOnly: readOnly,
-          validator: notEmptyValidator,
-          labelText: 'Password', // TODO
-        ),
-      ],
-    );
-  }
+      ),
+      ShowHideTextFormField(
+        controller: formGroup.password,
+        readOnly: readOnly,
+        validator: notEmptyValidator,
+        labelText: context.localize().passwordLabel,
+      ),
+    ],
+  );
 }
 
 class SimpleForm extends StatelessWidget {

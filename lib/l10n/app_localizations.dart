@@ -100,6 +100,12 @@ abstract class AppLocalizations {
   /// **'Error loading page.'**
   String get errorListPageLoadTitle;
 
+  /// No description provided for @errorDetailLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading detail.'**
+  String get errorDetailLoadTitle;
+
   /// No description provided for @errorPageLoadTitle.
   ///
   /// In en, this message translates to:
@@ -159,6 +165,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Users'**
   String get usersTitle;
+
+  /// No description provided for @creatingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating'**
+  String get creatingTitle;
+
+  /// No description provided for @editingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing'**
+  String get editingTitle;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// No description provided for @fieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Field'**
+  String get fieldLabel;
+
+  /// No description provided for @operatorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get operatorLabel;
+
+  /// No description provided for @valueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get valueLabel;
+
+  /// No description provided for @idLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Id'**
+  String get idLabel;
+
+  /// No description provided for @titleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get titleLabel;
+
+  /// No description provided for @editionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Edition'**
+  String get editionLabel;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// No description provided for @ratingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get ratingLabel;
+
+  /// No description provided for @notesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesLabel;
+
+  /// No description provided for @hostLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get hostLabel;
+
+  /// No description provided for @usernameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get usernameLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @detailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Detail'**
+  String get detailLabel;
+
+  /// No description provided for @addLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addLabel;
+
+  /// No description provided for @editLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editLabel;
+
+  /// No description provided for @deleteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteLabel;
+
+  /// No description provided for @viewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get viewLabel;
+
+  /// No description provided for @emptySessionsOnSelectedDayMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions on selected day'**
+  String get emptySessionsOnSelectedDayMessage;
+
+  /// No description provided for @showLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get showLabel;
+
+  /// No description provided for @hideLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideLabel;
+
+  /// No description provided for @equalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Equal'**
+  String get equalLabel;
+
+  /// No description provided for @notEqualLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Not equal'**
+  String get notEqualLabel;
+
+  /// No description provided for @greaterThanLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Greater than'**
+  String get greaterThanLabel;
+
+  /// No description provided for @greaterThanEqualLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Greater than or equal'**
+  String get greaterThanEqualLabel;
+
+  /// No description provided for @lessThanLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Less than'**
+  String get lessThanLabel;
+
+  /// No description provided for @lessThanEqualLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Less than or equal'**
+  String get lessThanEqualLabel;
+
+  /// No description provided for @startsWithLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts with'**
+  String get startsWithLabel;
+
+  /// No description provided for @notStartsWithLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Does not start with'**
+  String get notStartsWithLabel;
+
+  /// No description provided for @endsWithLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends with'**
+  String get endsWithLabel;
+
+  /// No description provided for @notEndsWithLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Does not end with'**
+  String get notEndsWithLabel;
+
+  /// No description provided for @containsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Contains'**
+  String get containsLabel;
+
+  /// No description provided for @notContainsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Does not contain'**
+  String get notContainsLabel;
+
+  /// No description provided for @deleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete?'**
+  String get deleteDialogTitle;
+
+  /// No description provided for @deleteDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get deleteDialogSubtitle;
+
+  /// No description provided for @deleteDialogDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{data} will be deleted.'**
+  String deleteDialogDataTitle(Object data);
+
+  /// No description provided for @gameEditionDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} - {edition}'**
+  String gameEditionDataTitle(Object edition, Object title);
 }
 
 class _AppLocalizationsDelegate

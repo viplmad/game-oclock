@@ -8,10 +8,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListLoadFailure,
         ListLoadInProgress,
-        ListPageReloaded,
+        ListLoadSuccess,
+        ListReloaded,
         ListState;
-
-import 'list_item.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
@@ -100,10 +101,22 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
   }) {
     List<T> items = [];
     if (state is ListFinal<T>) {
+      if (state is ListLoadSuccess<T> && state.data.isEmpty) {
+        return Center(child: Text(context.localize().emptyListLabel));
+      }
       if (state is ListLoadFailure<T>) {
-        return TileListItem(
-          title: 'Error - Tap to refresh', // TODO
-          onTap: () => context.read<LB>().add(const ListPageReloaded()),
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(context.localize().errorPageLoadTitle),
+              OutlinedButton.icon(
+                icon: const Icon(CommonIcons.reload),
+                label: Text(context.localize().retryLabel),
+                onPressed: () => context.read<LB>().add(const ListReloaded()),
+              ),
+            ],
+          ),
         );
       }
       items = state.data;
@@ -112,7 +125,6 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
         return const Center(child: CircularProgressIndicator());
       }
       items = state.data!;
-      //trailing = const Center(child: CircularProgressIndicator());
     }
 
     return listView(

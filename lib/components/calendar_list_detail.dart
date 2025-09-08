@@ -19,6 +19,7 @@ import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/list_extension.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class CalendarListDetailBuilder<
   T,
@@ -70,8 +71,7 @@ class CalendarListDetailBuilder<
                 curve: Curves.easeInCubic,
               );
             } else {
-              // TODO else notify?
-              showSnackBar(context, message: 'No logs on that day');
+              showSnackBar(context, message: context.localize().emptySessionsOnSelectedDayMessage);
             }
           }
         }

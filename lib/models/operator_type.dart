@@ -1,26 +1,55 @@
-import 'package:flutter/material.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
-List<DropdownMenuEntry<String>> operatorsMenuEntries = List.unmodifiable([
-  const DropdownMenuEntry<String>(value: 'Eq', label: 'Equal'),
-  const DropdownMenuEntry<String>(value: 'NotEq', label: 'Not equal'),
-  const DropdownMenuEntry<String>(value: 'Gt', label: 'Greater than'),
-  const DropdownMenuEntry<String>(value: 'Gte', label: 'Greater than or equal'),
-  const DropdownMenuEntry<String>(value: 'Lt', label: 'Less than'),
-  const DropdownMenuEntry<String>(value: 'Lte', label: 'Less than or equal'),
-  const DropdownMenuEntry<String>(value: 'StartsWith', label: 'Starts with'),
-  const DropdownMenuEntry<String>(
+import 'nav_destination.dart';
+
+List<DropdownField> operatorsMenuEntries = List.unmodifiable(<DropdownField>[
+  DropdownField(
+    value: 'Eq',
+    labelBuilder: (final context) => context.localize().equalLabel,
+  ),
+  DropdownField(
+    value: 'NotEq',
+    labelBuilder: (final context) => context.localize().notEqualLabel,
+  ),
+  DropdownField(
+    value: 'Gt',
+    labelBuilder: (final context) => context.localize().greaterThanLabel,
+  ),
+  DropdownField(
+    value: 'Gte',
+    labelBuilder: (final context) => context.localize().greaterThanEqualLabel,
+  ),
+  DropdownField(
+    value: 'Lt',
+    labelBuilder: (final context) => context.localize().lessThanLabel,
+  ),
+  DropdownField(
+    value: 'Lte',
+    labelBuilder: (final context) => context.localize().lessThanEqualLabel,
+  ),
+  DropdownField(
+    value: 'StartsWith',
+    labelBuilder: (final context) => context.localize().startsWithLabel,
+  ),
+  DropdownField(
     value: 'NotStartsWith',
-    label: 'Does not start with',
+    labelBuilder: (final context) => context.localize().notStartsWithLabel,
   ),
-  const DropdownMenuEntry<String>(value: 'EndsWith', label: 'Ends with'),
-  const DropdownMenuEntry<String>(
+  DropdownField(
+    value: 'EndsWith',
+    labelBuilder: (final context) => context.localize().endsWithLabel,
+  ),
+  DropdownField(
     value: 'NotEndsWith',
-    label: 'Does not end with',
+    labelBuilder: (final context) => context.localize().notEndsWithLabel,
   ),
-  const DropdownMenuEntry<String>(value: 'Contains', label: 'Contains'),
-  const DropdownMenuEntry<String>(
+  DropdownField(
+    value: 'Contains',
+    labelBuilder: (final context) => context.localize().containsLabel,
+  ),
+  DropdownField(
     value: 'NotContains',
-    label: 'Does not contain',
+    labelBuilder: (final context) => context.localize().notContainsLabel,
   ),
 ]);
 

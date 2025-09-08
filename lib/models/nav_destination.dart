@@ -14,14 +14,21 @@ final class NavDestination {
 
 final class TabDestination {
   final Widget icon;
-  final String label;
+  final String Function(BuildContext context) labelBuilder;
   final ValueChanged<BuildContext> onTap;
   final Widget child;
 
   const TabDestination({
     required this.icon,
-    required this.label,
+    required this.labelBuilder,
     required this.onTap,
     required this.child,
   });
+}
+
+final class DropdownField {
+  final String value;
+  final String Function(BuildContext context) labelBuilder;
+
+  const DropdownField({required this.value, required this.labelBuilder});
 }

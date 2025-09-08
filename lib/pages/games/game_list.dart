@@ -14,6 +14,7 @@ import 'package:game_oclock/components/list/list_item.dart' show GridListItem;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
 
@@ -36,7 +37,7 @@ class UserGameListPage extends StatelessWidget {
         BlocProvider(create: (_) => UserGameDeleteBloc()),
       ],
       child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
-        title: 'Games', // TODO i18n
+        title: context.localize().gamesTitle,
         searchSpace: 'game',
         detailBuilder: (final context, final data, final onClosed) {
           return MultiBlocProvider(
@@ -66,8 +67,12 @@ class UserGameListPage extends StatelessWidget {
         },
         listItemBuilder: (final context, final data, final onPressed) =>
             GridListItem(
-              title:
-                  '${data.title}${data.edition.isNotEmpty ? ' - ${data.edition}' : ''}',
+              title: data.edition.isEmpty
+                  ? data.title
+                  : context.localize().gameEditionDataTitle(
+                      data.edition, // TODO order
+                      data.title,
+                    ),
               onTap: onPressed,
             ),
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart' show ListLoadBloc;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'list.dart';
+import 'list_item.dart';
 
 class TileListBuilder<T, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
@@ -26,10 +28,21 @@ class TileListBuilder<T, LB extends ListLoadBloc<T>>
       controller: controller,
     );
   }
+
+  @override
+  Widget errorItemBuilder(
+    final BuildContext context,
+    final VoidCallback onTap,
+  ) {
+    return TileListErrorItem(
+      title: context.localize().errorListPageLoadTitle,
+      onRetryTap: onTap,
+    );
+  }
 }
 
 class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
-    extends PaginatedListBuilder<T, LB> {
+    extends TileListBuilder<T, LB> {
   const ReorderableListBuilder({
     super.key,
     required super.space,

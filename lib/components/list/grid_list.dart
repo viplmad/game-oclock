@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart' show ListLoadBloc;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'list.dart';
+import 'list_item.dart';
 
 class GridListBuilder<T, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
@@ -24,6 +26,17 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>>
       itemBuilder: itemBuilder,
       trailing: trailing,
       controller: controller,
+    );
+  }
+
+  @override
+  Widget errorItemBuilder(
+    final BuildContext context,
+    final VoidCallback onTap,
+  ) {
+    return GridListErrorItem(
+      title: context.localize().errorListPageLoadTitle,
+      onRetryTap: onTap,
     );
   }
 }

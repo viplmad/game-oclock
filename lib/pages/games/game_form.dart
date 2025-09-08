@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/create_edit_form.dart';
 import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/models/models.dart' show UserGame, UserGameFormData;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameCreateForm extends StatelessWidget {
   const UserGameCreateForm({super.key});
@@ -32,14 +33,18 @@ class UserGameCreateForm extends StatelessWidget {
         BlocProvider(create: (_) => UserGameCreateBloc()),
       ],
       child:
-          const CreateEditFormBuilder<
+          CreateEditFormBuilder<
             UserGame,
             UserGameFormData,
             UserGameFormBloc,
             UserGameGetBloc,
             UserGameCreateBloc,
             UserGameUpdateBloc
-          >(title: 'Creating', create: true, fieldsBuilder: _fieldsBuilder),
+          >(
+            title: context.localize().creatingTitle,
+            create: true,
+            fieldsBuilder: _fieldsBuilder,
+          ),
     );
   }
 }
@@ -70,14 +75,18 @@ class UserGameEditForm extends StatelessWidget {
         ),
       ],
       child:
-          const CreateEditFormBuilder<
+          CreateEditFormBuilder<
             UserGame,
             UserGameFormData,
             UserGameFormBloc,
             UserGameGetBloc,
             UserGameCreateBloc,
             UserGameUpdateBloc
-          >(title: 'Editing', create: false, fieldsBuilder: _fieldsBuilder),
+          >(
+            title: context.localize().editingTitle,
+            create: false,
+            fieldsBuilder: _fieldsBuilder,
+          ),
     );
   }
 }
@@ -93,37 +102,27 @@ Widget _fieldsBuilder(
         controller: formGroup.title,
         readOnly: readOnly,
         validator: notEmptyValidator,
-        decoration: const InputDecoration(
-          labelText: 'Title', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().titleLabel),
       ),
       TextFormField(
         controller: formGroup.edition,
         readOnly: readOnly,
-        decoration: const InputDecoration(
-          labelText: 'Edition', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().editionLabel),
       ),
       TextFormField(
         controller: formGroup.status,
         readOnly: readOnly,
-        decoration: const InputDecoration(
-          labelText: 'Status', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().statusLabel),
       ),
       TextFormField(
         controller: formGroup.rating,
         readOnly: readOnly,
-        decoration: const InputDecoration(
-          labelText: 'Rating', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().ratingLabel),
       ),
       TextFormField(
         controller: formGroup.notes,
         readOnly: readOnly,
-        decoration: const InputDecoration(
-          labelText: 'Notes', // TODO
-        ),
+        decoration: InputDecoration(labelText: context.localize().notesLabel),
       ),
     ],
   );
