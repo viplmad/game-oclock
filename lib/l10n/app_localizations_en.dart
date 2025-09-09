@@ -90,6 +90,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordLabel => 'Password';
 
   @override
+  String get loginLabel => 'Login';
+
+  @override
   String get detailLabel => 'Detail';
 
   @override
@@ -105,6 +108,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewLabel => 'View';
 
   @override
+  String get saveLabel => 'Save';
+
+  @override
+  String get cancelLabel => 'Cancel';
+
+  @override
+  String get reloadLabel => 'Reload';
+
+  @override
+  String get searchLabel => 'Search';
+
+  @override
+  String get openLabel => 'Open';
+
+  @override
+  String get modifiedLabel => 'Modified';
+
+  @override
+  String get stayLabel => 'Stay';
+
+  @override
+  String get discardChangesLabel => 'Discard changes';
+
+  @override
   String get emptySessionsOnSelectedDayMessage => 'No sessions on selected day';
 
   @override
@@ -112,6 +139,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hideLabel => 'Hide';
+
+  @override
+  String get previousMonth => 'Previous month';
+
+  @override
+  String get nextMonth => 'Next month';
 
   @override
   String get equalLabel => 'Equal';
@@ -150,6 +183,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notContainsLabel => 'Does not contain';
 
   @override
+  String get listStyleTileLabel => 'Tile';
+
+  @override
+  String get listStyleGridLabel => 'Grid';
+
+  @override
+  String get emptyListDetailLabel => 'Select something first';
+
+  @override
+  String get notEmptyValidationError => 'Please enter some text';
+
+  @override
   String get deleteDialogTitle => 'Delete?';
 
   @override
@@ -161,7 +206,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String gameEditionDataTitle(Object edition, Object title) {
-    return '$title - $edition';
+  String get leaveDirtyFormConfirmationDialogTitle =>
+      'Are you sure you want to leave?';
+
+  @override
+  String get leaveDirtyFormConfirmationDialogSubtitle =>
+      'There are unsaved changes.';
+
+  @override
+  String gameEditionDataTitle(Object aTitle, Object bEdition) {
+    return '$aTitle - $bEdition';
   }
 }

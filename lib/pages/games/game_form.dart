@@ -101,7 +101,7 @@ Widget _fieldsBuilder(
       TextFormField(
         controller: formGroup.title,
         readOnly: readOnly,
-        validator: notEmptyValidator,
+        validator: (final value) => notEmptyValidator(context, value),
         decoration: InputDecoration(labelText: context.localize().titleLabel),
       ),
       TextFormField(

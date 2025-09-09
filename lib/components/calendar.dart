@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/date_time_extension.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class LogCalendarHeader extends StatelessWidget {
@@ -25,6 +26,7 @@ class LogCalendarHeader extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(CommonIcons.left),
+            tooltip: context.localize().previousMonth,
             onPressed: () {
               final prevMonth = focusedDay.atFirstDayOfPreviousMonth();
               if (prevMonth.isAfter(firstDay) ||
@@ -39,6 +41,7 @@ class LogCalendarHeader extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(CommonIcons.right),
+            tooltip: context.localize().nextMonth,
             onPressed: () {
               final nextMonth = focusedDay.atFirstDayOfNextMonth();
               if (nextMonth.isBefore(lastDay) ||
@@ -53,7 +56,7 @@ class LogCalendarHeader extends StatelessWidget {
           ),
         ],
       ),
-      title: Text('${focusedDay.month}-${focusedDay.year}'), // TODO
+      title: Text(context.localize().monthYear(focusedDay)),
     );
   }
 }
@@ -69,6 +72,8 @@ class LogCalendar extends StatelessWidget {
     required this.selectedDay,
     required this.onDaySelected,
     required this.onPageChanged,
+    required this.startingDayOfWeek,
+    required this.weekendDays,
   });
 
   final Set<DateTime> logDays;
@@ -79,6 +84,8 @@ class LogCalendar extends StatelessWidget {
   final DateTime selectedDay;
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<DateTime> onPageChanged;
+  final int startingDayOfWeek;
+  final List<int> weekendDays;
 
   static const BoxShape shape = BoxShape.circle;
   static const Color todayColour = Colors.red;
@@ -113,8 +120,8 @@ class LogCalendar extends StatelessWidget {
               return finishes.any((DateTime finish) => day.isSameDay(finish));
             }
           : null,*/
-      startingDayOfWeek: StartingDayOfWeek.monday, // TODO
-      weekendDays: const <int>[DateTime.saturday, DateTime.sunday], // TODO
+      startingDayOfWeek: _intToStartingDayOfWeek(startingDayOfWeek),
+      weekendDays: weekendDays,
       pageJumpingEnabled: true,
       availableGestures: AvailableGestures.horizontalSwipe,
       headerVisible: false,
@@ -164,4 +171,17 @@ class LogCalendar extends StatelessWidget {
       ),
     );
   }
+}
+
+StartingDayOfWeek _intToStartingDayOfWeek(final int dayOfWeek) {
+  return switch (dayOfWeek) {
+    DateTime.monday => StartingDayOfWeek.monday,
+    DateTime.tuesday => StartingDayOfWeek.tuesday,
+    DateTime.wednesday => StartingDayOfWeek.wednesday,
+    DateTime.thursday => StartingDayOfWeek.thursday,
+    DateTime.friday => StartingDayOfWeek.friday,
+    DateTime.saturday => StartingDayOfWeek.saturday,
+    DateTime.sunday => StartingDayOfWeek.sunday,
+    _ => StartingDayOfWeek.monday,
+  };
 }

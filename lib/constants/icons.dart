@@ -17,6 +17,8 @@ class CommonIcons {
   static const IconData left = Icons.chevron_left;
   static const IconData right = Icons.chevron_right;
   static const IconData reload = Icons.refresh;
+  static const IconData listStyleTile = Icons.list;
+  static const IconData listStyleGrid = Icons.grid_on;
 
   static const IconData games = Icons.videogame_asset;
   static const IconData wishlists = Icons.shopping_bag;

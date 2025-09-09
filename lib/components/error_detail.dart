@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class DetailError extends StatelessWidget {
   const DetailError({super.key, required this.title, required this.onRetryTap});
@@ -15,9 +17,14 @@ class DetailError extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Center(child: Text(title)),
-          ElevatedButton(
+          OutlinedButton.icon(
+            icon: const Icon(CommonIcons.reload),
+            label: Text(
+              context.localize().retryLabel,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 18.0, color: Colors.white),
+            ),
             onPressed: onRetryTap,
-            child: const Text('Error - Tap to refresh'), // TODO
           ),
         ],
       ),

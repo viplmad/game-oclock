@@ -17,8 +17,8 @@ final class ActionInProgress<T> extends ActionState<T> {
 
   const ActionInProgress({required this.data});
   static ActionInProgress<void> empty() =>
-  // ignore: void_checks
-  const ActionInProgress<void>(data: '');
+      // ignore: void_checks
+      const ActionInProgress<void>(data: '');
 
   @override
   List<Object?> get props => [data];
@@ -37,8 +37,8 @@ sealed class ActionFinal<T, K> extends ActionState<T> {
 final class ActionSuccess<T, K> extends ActionFinal<T, K> {
   const ActionSuccess({required super.data, required super.event});
   static ActionSuccess<void, S> empty<S>(final S event) =>
-  // ignore: void_checks
-  ActionSuccess<void, S>(data: '', event: event);
+      // ignore: void_checks
+      ActionSuccess<void, S>(data: '', event: event);
 }
 
 final class ActionFailure<T, K> extends ActionFinal<T, K> {
@@ -50,8 +50,8 @@ final class ActionFailure<T, K> extends ActionFinal<T, K> {
     required super.event,
   });
   static ActionFailure<void, S> empty<S>(final ErrorDTO error, final S event) =>
-  // ignore: void_checks
-  ActionFailure<void, S>(data: '', event: event, error: error);
+      // ignore: void_checks
+      ActionFailure<void, S>(data: '', event: event, error: error);
 
   @override
   List<Object?> get props => [error, ...super.props];

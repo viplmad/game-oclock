@@ -7,6 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionState,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
+        DateLocaleConfigBloc,
         FunctionActionBloc,
         ListFinal,
         ListLoadBloc,
@@ -15,7 +16,8 @@ import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
 import 'package:game_oclock/components/show_snackbar.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:game_oclock/models/models.dart'
+    show DateLocaleConfig, LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/list_extension.dart';
@@ -71,108 +73,123 @@ class CalendarListDetailBuilder<
                 curve: Curves.easeInCubic,
               );
             } else {
-              showSnackBar(context, message: context.localize().emptySessionsOnSelectedDayMessage);
+              showSnackBar(
+                context,
+                message: context.localize().emptySessionsOnSelectedDayMessage,
+              );
             }
           }
         }
       },
-      child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
-        builder: (final context, final selectDayState) {
-          final DateTime selectedDay = (selectDayState is ActionFinal)
-              ? (selectDayState as ActionFinal<DateTime, DateTime>).data
-              : DateTime.now();
+      child: BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
+        builder: (final context, final dateConfigState) {
+          final dateConfig = (dateConfigState is ActionFinal)
+              ? (dateConfigState
+                        as ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+                    .data
+              : DateLocaleConfig.def();
 
-          return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
-            builder: (final context, final focusDayState) {
-              final DateTime focusedDay = (focusDayState is ActionFinal)
-                  ? (focusDayState as ActionFinal<DateTime, DateTime>).data
+          return BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
+            builder: (final context, final selectDayState) {
+              final DateTime selectedDay = (selectDayState is ActionFinal)
+                  ? (selectDayState as ActionFinal<DateTime, DateTime>).data
                   : DateTime.now();
 
-              return BlocBuilder<SB, ActionState<T?>>(
-                builder: (final context, final selectState) {
-                  final selectedData = (selectState is ActionFinal)
-                      ? (selectState as ActionFinal<T?, T?>).data
-                      : null;
+              return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
+                builder: (final context, final focusDayState) {
+                  final DateTime focusedDay = (focusDayState is ActionFinal)
+                      ? (focusDayState as ActionFinal<DateTime, DateTime>).data
+                      : DateTime.now();
 
-                  if (layoutTier == LayoutTier.compact) {
-                    if (selectedData == null) {
-                      return Scaffold(
-                        appBar: AppBar(title: Text(title)),
-                        body: Column(
-                          children: [
-                            ExpansionTile(
-                              title: _calendarHeader(
-                                context,
-                                focusedDay: focusedDay,
-                              ),
+                  return BlocBuilder<SB, ActionState<T?>>(
+                    builder: (final context, final selectState) {
+                      final selectedData = (selectState is ActionFinal)
+                          ? (selectState as ActionFinal<T?, T?>).data
+                          : null;
+
+                      if (layoutTier == LayoutTier.compact) {
+                        if (selectedData == null) {
+                          return Scaffold(
+                            appBar: AppBar(title: Text(title)),
+                            body: Column(
                               children: [
-                                _calendar(
-                                  context,
-                                  selectedDay: selectedDay,
-                                  focusedDay: focusedDay,
+                                ExpansionTile(
+                                  title: _calendarHeader(
+                                    context,
+                                    focusedDay: focusedDay,
+                                  ),
+                                  children: [
+                                    _calendar(
+                                      context,
+                                      selectedDay: selectedDay,
+                                      focusedDay: focusedDay,
+                                      dateConfig: dateConfig,
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: _list(
+                                    context,
+                                    selectedData: selectedData,
+                                    scrollController: scrollController,
+                                  ),
                                 ),
                               ],
                             ),
+                          );
+                        } else {
+                          return _detail(
+                            context,
+                            selectedData: selectedData,
+                            selectBloc: context.read<SB>(),
+                          );
+                        }
+                      } else {
+                        return Row(
+                          children: [
                             Expanded(
+                              flex: 2,
+                              child: Scaffold(
+                                appBar: AppBar(title: Text(title)),
+                                body: Column(
+                                  children: [
+                                    _calendarHeader(
+                                      context,
+                                      focusedDay: focusedDay,
+                                    ),
+                                    _calendar(
+                                      context,
+                                      selectedDay: selectedDay,
+                                      focusedDay: focusedDay,
+                                      dateConfig: dateConfig,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const VerticalDivider(width: 1.0),
+                            Expanded(
+                              flex: selectedData == null ? 4 : 2,
                               child: _list(
                                 context,
                                 selectedData: selectedData,
                                 scrollController: scrollController,
                               ),
                             ),
+                            if (selectedData != null)
+                              Expanded(
+                                flex: 2,
+                                child: _detail(
+                                  context,
+                                  selectedData: selectedData,
+                                  selectBloc: context.read<SB>(),
+                                ),
+                              ),
                           ],
-                        ),
-                      );
-                    } else {
-                      return _detail(
-                        context,
-                        selectedData: selectedData,
-                        selectBloc: context.read<SB>(),
-                      );
-                    }
-                  } else {
-                    return Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Scaffold(
-                            appBar: AppBar(title: Text(title)),
-                            body: Column(
-                              children: [
-                                _calendarHeader(
-                                  context,
-                                  focusedDay: focusedDay,
-                                ),
-                                _calendar(
-                                  context,
-                                  selectedDay: selectedDay,
-                                  focusedDay: focusedDay,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const VerticalDivider(width: 1.0),
-                        Expanded(
-                          flex: selectedData == null ? 4 : 2,
-                          child: _list(
-                            context,
-                            selectedData: selectedData,
-                            scrollController: scrollController,
-                          ),
-                        ),
-                        if (selectedData != null)
-                          Expanded(
-                            flex: 2,
-                            child: _detail(
-                              context,
-                              selectedData: selectedData,
-                              selectBloc: context.read<SB>(),
-                            ),
-                          ),
-                      ],
-                    );
-                  }
+                        );
+                      }
+                    },
+                  );
                 },
               );
             },
@@ -198,6 +215,7 @@ class CalendarListDetailBuilder<
     final BuildContext context, {
     required final DateTime selectedDay,
     required final DateTime focusedDay,
+    required final DateLocaleConfig dateConfig,
   }) {
     return LogCalendar(
       logDays: Set.unmodifiable([]),
@@ -208,6 +226,8 @@ class CalendarListDetailBuilder<
       onDaySelected: (final value) =>
           context.read<CalendarDaySelectBloc>().add(ActionStarted(data: value)),
       onPageChanged: (final value) => onCalendarPageChanged(context, value),
+      startingDayOfWeek: dateConfig.startingDayOfWeek,
+      weekendDays: dateConfig.weekendDays,
     );
   }
 
@@ -247,7 +267,7 @@ class CalendarListDetailBuilder<
                 backgroundColor: Colors.grey[800],
                 foregroundColor: Colors.white,
                 child: Text(
-                  date.day.toString(), // TODO
+                  context.localize().day(date),
                   style: DefaultTextStyle.of(
                     context,
                   ).style.copyWith(color: Colors.white),

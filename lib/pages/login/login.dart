@@ -43,7 +43,8 @@ class LoginPage extends StatelessWidget {
         ),
         BlocProvider(create: (_) => LoginSaveBloc()),
         BlocProvider(
-          create: (_) => LoginGetBloc()..add(const ActionStarted(data: 'get')),
+          create: (_) =>
+              LoginGetBloc()..add(const ActionStarted(data: 'get')), // TODO
         ),
       ],
       child: const LoginBuilder(),
@@ -159,13 +160,13 @@ Widget _fieldsBuilder(
       TextFormField(
         controller: formGroup.host,
         readOnly: readOnly,
-        validator: notEmptyValidator,
+        validator: (final value) => notEmptyValidator(context, value),
         decoration: InputDecoration(labelText: context.localize().hostLabel),
       ),
       TextFormField(
         controller: formGroup.username,
         readOnly: readOnly,
-        validator: notEmptyValidator,
+        validator: (final value) => notEmptyValidator(context, value),
         decoration: InputDecoration(
           labelText: context.localize().usernameLabel,
         ),
@@ -173,7 +174,7 @@ Widget _fieldsBuilder(
       ShowHideTextFormField(
         controller: formGroup.password,
         readOnly: readOnly,
-        validator: notEmptyValidator,
+        validator: (final value) => notEmptyValidator(context, value),
         labelText: context.localize().passwordLabel,
       ),
     ],
@@ -201,7 +202,7 @@ class SimpleForm extends StatelessWidget {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
       icon: inProgress ? const CircularProgressIndicator() : null,
-      label: const Text('Login'), // TODO i18n
+      label: Text(context.localize().loginLabel),
       onPressed: onSubmit,
     );
 

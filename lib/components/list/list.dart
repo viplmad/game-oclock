@@ -64,7 +64,8 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     required final ListSearch? search,
   }) {
     return ListTile(
-      title: Text(search == null ? '-' : search.name),
+      // TODO filter chips
+      title: Text(search == null ? '-' : search.name), // TODO empty search
       trailing: const Icon(CommonIcons.down),
       onTap: () async {
         final listBloc = context.read<LB>();

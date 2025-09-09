@@ -5,15 +5,17 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ListLoaded,
         ListReloaded,
+        ListStyleBloc,
         UserGameAvailableListBloc,
         UserGameDeleteBloc,
         UserGameListBloc,
         UserGameSelectBloc,
         UserGameTagListBloc;
-import 'package:game_oclock/components/list/list_item.dart' show GridListItem;
+import 'package:game_oclock/components/list/list_item.dart'
+    show GridListItem, TileListItem;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/models/models.dart'
-    show ListSearch, SearchDTO, UserGame;
+    show ListSearch, ListStyle, SearchDTO, UserGame;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
@@ -35,6 +37,14 @@ class UserGameListPage extends StatelessWidget {
             ),
         ),
         BlocProvider(create: (_) => UserGameDeleteBloc()),
+        BlocProvider(
+          create: (_) => ListStyleBloc()
+            ..add(
+              const ActionStarted(
+                data: ListStyle.grid,
+              ), // TODO get from localstorage
+            ),
+        ),
       ],
       child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
         title: context.localize().gamesTitle,
@@ -65,16 +75,27 @@ class UserGameListPage extends StatelessWidget {
             ),
           );
         },
-        listItemBuilder: (final context, final data, final onPressed) =>
-            GridListItem(
-              title: data.edition.isEmpty
-                  ? data.title
-                  : context.localize().gameEditionDataTitle(
-                      data.edition, // TODO order
-                      data.title,
-                    ),
-              onTap: onPressed,
-            ),
+        listItemBuilder:
+            (final context, final style, final data, final onPressed) =>
+                style == ListStyle.grid
+                ? GridListItem(
+                    title: data.edition.isEmpty
+                        ? data.title
+                        : context.localize().gameEditionDataTitle(
+                            data.title,
+                            data.edition,
+                          ),
+                    onTap: onPressed,
+                  )
+                : TileListItem(
+                    title: data.edition.isEmpty
+                        ? data.title
+                        : context.localize().gameEditionDataTitle(
+                            data.title,
+                            data.edition,
+                          ),
+                    onTap: onPressed,
+                  ),
       ),
     );
   }

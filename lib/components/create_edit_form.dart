@@ -19,6 +19,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class CreateEditFormBuilder<
   T,
@@ -88,7 +89,7 @@ class CreateEditFormBuilder<
         ),
         BlocListener<CB, ActionState<void>>(
           listener: (final context, final state) {
-            showSnackBar(context, message: 'Data created $state');
+            showSnackBar(context, message: 'Data created $state'); // TODO i18n
             Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
@@ -137,7 +138,7 @@ class CreateEditFormBuilder<
         ),
         BlocListener<UB, ActionState<void>>(
           listener: (final context, final state) {
-            showSnackBar(context, message: 'Data updated $state');
+            showSnackBar(context, message: 'Data updated $state'); // TODO i18n
             Navigator.pop(context, true);
             // TODO possibly clear dirty now
           },
@@ -220,7 +221,7 @@ class FullForm extends StatelessWidget {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
       icon: inProgress ? const CircularProgressIndicator() : null,
-      label: const Text('Save'), // TODO i18n
+      label: Text(context.localize().saveLabel),
       onPressed: onSubmit,
     );
 
@@ -236,7 +237,7 @@ class FullForm extends StatelessWidget {
         }
 
         final bool shouldPop = dirty
-            ? await _showBackDialog(context) ?? false
+            ? await _showLeaveConfirmationDialog(context) ?? false
             : true;
         if (context.mounted && shouldPop) {
           Navigator.pop(context);
@@ -249,7 +250,7 @@ class FullForm extends StatelessWidget {
     final modifiedChip = dirty
         ? IgnorePointer(
             child: ActionChip(
-              label: const Text('Modified'),
+              label: Text(context.localize().modifiedLabel),
               onPressed: () => {},
             ),
           )
@@ -308,7 +309,7 @@ class FullForm extends StatelessWidget {
                             onPressed: inProgress
                                 ? null
                                 : () async => await Navigator.maybePop(context),
-                            child: const Text('Cancel'), // TODO i18n
+                            child: Text(context.localize().cancelLabel),
                           ),
                           saveButton,
                         ],
@@ -321,28 +322,28 @@ class FullForm extends StatelessWidget {
           );
   }
 
-  Future<bool?> _showBackDialog(final BuildContext context) {
+  Future<bool?> _showLeaveConfirmationDialog(final BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (final context) {
         return AlertDialog(
-          title: const Text('Are you sure?'), // TODO i18n
-          content: const Text(
-            'Are you sure you want to leave this page?',
-          ), // TODO i18n
+          title: Text(context.localize().leaveDirtyFormConfirmationDialogTitle),
+          content: Text(
+            context.localize().leaveDirtyFormConfirmationDialogSubtitle,
+          ),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Stay'), // TODO i18n
+              child: Text(context.localize().stayLabel),
               onPressed: () async => await Navigator.maybePop(context, false),
             ),
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Discard'), // TODO i18n
+              child: Text(context.localize().discardChangesLabel),
               onPressed: () async => await Navigator.maybePop(context, true),
             ),
           ],

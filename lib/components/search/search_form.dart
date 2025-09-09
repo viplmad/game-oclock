@@ -132,7 +132,7 @@ Widget _fieldsBuilder(
       TextFormField(
         controller: formGroup.name,
         readOnly: readOnly,
-        validator: notEmptyValidator,
+        validator: (final value) => notEmptyValidator(context, value),
         decoration: InputDecoration(labelText: context.localize().nameLabel),
       ),
       ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
@@ -187,13 +187,14 @@ Widget _fieldsBuilder(
           subtitle: TextFormField(
             controller: data.value,
             readOnly: readOnly,
-            validator: notEmptyValidator,
+            validator: (final value) => notEmptyValidator(context, value),
             decoration: InputDecoration(
               labelText: context.localize().valueLabel,
             ),
           ),
           trailing: IconButton(
             icon: const Icon(CommonIcons.delete),
+            tooltip: context.localize().deleteLabel,
             onPressed: () {
               context.read<FilterFormDataListBloc>().removeElement(index);
             },

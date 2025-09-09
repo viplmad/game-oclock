@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionStarted, MinimizedLayoutBloc;
+    show ActionStarted, DateLocaleConfigBloc, MinimizedLayoutBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/pages/routes.dart';
 
@@ -22,6 +22,7 @@ class GameOClockApp extends StatelessWidget {
           create: (_) =>
               MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
         ),
+        BlocProvider(create: (_) => DateLocaleConfigBloc()),
       ],
       child: MaterialApp.router(
         title: 'Game o\'Clock',

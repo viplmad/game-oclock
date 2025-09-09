@@ -256,6 +256,12 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// No description provided for @loginLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginLabel;
+
   /// No description provided for @detailLabel.
   ///
   /// In en, this message translates to:
@@ -286,6 +292,54 @@ abstract class AppLocalizations {
   /// **'View'**
   String get viewLabel;
 
+  /// No description provided for @saveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveLabel;
+
+  /// No description provided for @cancelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelLabel;
+
+  /// No description provided for @reloadLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload'**
+  String get reloadLabel;
+
+  /// No description provided for @searchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchLabel;
+
+  /// No description provided for @openLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openLabel;
+
+  /// No description provided for @modifiedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified'**
+  String get modifiedLabel;
+
+  /// No description provided for @stayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay'**
+  String get stayLabel;
+
+  /// No description provided for @discardChangesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes'**
+  String get discardChangesLabel;
+
   /// No description provided for @emptySessionsOnSelectedDayMessage.
   ///
   /// In en, this message translates to:
@@ -303,6 +357,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide'**
   String get hideLabel;
+
+  /// No description provided for @previousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get previousMonth;
+
+  /// No description provided for @nextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get nextMonth;
 
   /// No description provided for @equalLabel.
   ///
@@ -376,6 +442,30 @@ abstract class AppLocalizations {
   /// **'Does not contain'**
   String get notContainsLabel;
 
+  /// No description provided for @listStyleTileLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile'**
+  String get listStyleTileLabel;
+
+  /// No description provided for @listStyleGridLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid'**
+  String get listStyleGridLabel;
+
+  /// No description provided for @emptyListDetailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select something first'**
+  String get emptyListDetailLabel;
+
+  /// No description provided for @notEmptyValidationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter some text'**
+  String get notEmptyValidationError;
+
   /// No description provided for @deleteDialogTitle.
   ///
   /// In en, this message translates to:
@@ -394,11 +484,23 @@ abstract class AppLocalizations {
   /// **'{data} will be deleted.'**
   String deleteDialogDataTitle(Object data);
 
+  /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave?'**
+  String get leaveDirtyFormConfirmationDialogTitle;
+
+  /// No description provided for @leaveDirtyFormConfirmationDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'There are unsaved changes.'**
+  String get leaveDirtyFormConfirmationDialogSubtitle;
+
   /// No description provided for @gameEditionDataTitle.
   ///
   /// In en, this message translates to:
-  /// **'{title} - {edition}'**
-  String gameEditionDataTitle(Object edition, Object title);
+  /// **'{aTitle} - {bEdition}'**
+  String gameEditionDataTitle(Object aTitle, Object bEdition);
 }
 
 class _AppLocalizationsDelegate

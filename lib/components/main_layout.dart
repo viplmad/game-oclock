@@ -5,6 +5,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class MainLayoutBuilder extends StatelessWidget {
@@ -82,9 +83,10 @@ class MainLayoutBuilder extends StatelessWidget {
     }
   }
 
-  IconButton drawerButton() {
+  IconButton drawerButton(final BuildContext context) {
     return IconButton(
       icon: const Icon(CommonIcons.drawer),
+      tooltip: context.localize().openLabel,
       onPressed: () => scaffoldKey.currentState?.openDrawer(),
     );
   }
@@ -127,9 +129,10 @@ class MainLayoutBuilder extends StatelessWidget {
       leading: extended
           ? IconButton(
               icon: const Icon(CommonIcons.drawerOpen),
+              // no tooltip
               onPressed: () {},
             )
-          : drawerButton(),
+          : drawerButton(context),
       destinations:
           destinations // TODO group
               .map(
@@ -177,7 +180,7 @@ class MainLayoutBuilder extends StatelessWidget {
             destinations: mainDestinations,
           ),
         ),
-        Positioned(left: 10, top: 20, child: drawerButton()),
+        Positioned(left: 10, top: 20, child: drawerButton(context)),
       ],
     );
   }

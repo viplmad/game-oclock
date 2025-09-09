@@ -1,0 +1,1 @@
+enum ListStyle { tile, grid }
