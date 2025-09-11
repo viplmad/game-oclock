@@ -1,6 +1,7 @@
 export 'chain_operator_type.dart';
 export 'date_locale_config.dart';
 export 'error.dart';
+export 'external_game.dart';
 export 'filter.dart';
 export 'form_data.dart';
 export 'forms/login_form_data.dart';

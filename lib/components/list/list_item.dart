@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+
+const double _imageWidth = 100;
+const double _imageHeight = 56;
 
 class TileListItem extends StatelessWidget {
   const TileListItem({
@@ -14,17 +18,19 @@ class TileListItem extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final String? imageURL; // TODO
+  final String? imageURL;
   final VoidCallback? onTap;
   final Widget? trailing;
+  final bool hasImage = true;
 
   @override
   Widget build(final BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: subtitle == null ? null : Text(subtitle!),
-      onTap: onTap,
+    return _ListItemListTile(
+      title: title,
+      subtitle: subtitle,
       trailing: trailing,
+      imageURL: imageURL,
+      onTap: onTap,
     );
   }
 }
@@ -75,6 +81,7 @@ class GridListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    print('$title');
     return Stack(
       children: <Widget>[
         Positioned.fill(
@@ -132,6 +139,49 @@ class GridListErrorItem extends StatelessWidget {
   }
 }
 
+class _ListItemListTile extends StatelessWidget {
+  const _ListItemListTile({
+    required this.title,
+    this.subtitle,
+    this.imageURL,
+    this.onTap,
+    this.trailing,
+  });
+
+  final String title;
+  final String? subtitle;
+  final String? imageURL;
+  final VoidCallback? onTap;
+  final Widget? trailing;
+  final bool hasImage = true;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListTile(
+      leading: hasImage
+          ? ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: _imageWidth,
+                minHeight: _imageHeight,
+                maxWidth: _imageWidth,
+                maxHeight: 80,
+              ),
+              child: CachedImage(
+                imageURL: imageURL ?? '',
+                fit: BoxFit.scaleDown,
+                backgroundColour: Colors.white,
+                applyGradient: false,
+              ),
+            )
+          : null,
+      title: Text(title),
+      subtitle: subtitle == null ? null : Text(subtitle!),
+      trailing: trailing,
+      onTap: onTap,
+    );
+  }
+}
+
 class _ListItemGridTile extends StatelessWidget {
   const _ListItemGridTile({required this.title, this.imageURL});
 
@@ -141,18 +191,62 @@ class _ListItemGridTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return GridTile(
-      footer: imageURL == null
-          ? Container(
-              color: Colors.black87.withAlpha(128),
-              child: Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 18.0, color: Colors.white),
-              ),
-            )
-          : null, // TODO
-      child: Container(color: Colors.black87),
+      footer: Container(
+        color: Colors.black87.withAlpha(128),
+        child: Text(
+          title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 18.0, color: Colors.white),
+        ),
+      ),
+      child: CachedImage(
+        imageURL: imageURL ?? '',
+        fit: BoxFit.cover,
+        backgroundColour: Colors.black87,
+        applyGradient: false,
+      ),
+    );
+  }
+}
+
+class CachedImage extends StatelessWidget {
+  const CachedImage({
+    super.key,
+    required this.imageURL,
+    required this.fit,
+    required this.backgroundColour,
+    this.applyGradient = false,
+  });
+
+  final String imageURL;
+  final BoxFit fit;
+  final Color backgroundColour;
+  final bool applyGradient;
+
+  @override
+  Widget build(final BuildContext context) {
+    return imageURL.isNotEmpty
+        ? applyGradient
+              ? _getGradientImage()
+              : _getCachedImage()
+        : const SizedBox();
+  }
+
+  Widget _getGradientImage() {
+    return Container(
+      color: Colors.black87,
+      child: Opacity(opacity: 0.75, child: _getCachedImage()),
+    );
+  }
+
+  CachedNetworkImage _getCachedImage() {
+    return CachedNetworkImage(
+      imageUrl: imageURL,
+      fit: fit,
+      useOldImageOnUrlChange: true,
+      //progressIndicatorBuilder: (_, __, ___) => const Skeleton(omitRounding: true), // TODO
+      errorWidget: (_, __, ___) => Container(color: backgroundColour),
     );
   }
 }

@@ -31,10 +31,12 @@ class ListDetailBuilder<
     required this.searchSpace,
     required this.detailBuilder,
     required this.listItemBuilder,
+    this.floatingActionButton,
   });
 
   final String title;
   final String searchSpace;
+  final FloatingActionButton? floatingActionButton;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
@@ -219,6 +221,7 @@ class ListDetailBuilder<
                     ),
                   ),
             ),
+      floatingActionButton: floatingActionButton,
     );
   }
 
