@@ -1,6 +1,5 @@
 import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show FilterFormData, ListSearch, PageResultDTO;
+import 'package:game_oclock/models/models.dart' show FilterFormData, ListSearch;
 
 import '../list.dart'
     show ListFinal, ListLoadBloc, ListLoadSuccess, ListReloaded;
@@ -20,24 +19,17 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
   ) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final page = search.search.page ?? 0;
-    final size = search.search.size ?? 50; // TODO Set in bloc?
-    final data = PageResultDTO(
-      data: List.generate(size, (final index) {
-        final finalIndex = (page * size) + index;
-        return mockSearch(name: 'search $finalIndex');
-      }),
-      page: page,
-      size: size,
-    );
+    // TODO fetch from local storage
+    final data = List.generate(50, (final index) {
+      final finalIndex = index;
+      return mockSearch(name: 'search $finalIndex');
+    });
 
     return ListLoadSuccess<ListSearch>(
-      data: List.of(
-        lastData == null ? data.data : [...lastData, ...data.data],
-        growable: false,
-      ),
+      data: List.unmodifiable(data),
       quicksearch: quicksearch,
       search: search,
+      total: data.length, // Everything has been "fetched"
     );
   }
 }
@@ -64,6 +56,7 @@ abstract class LocalEditableListBloc<S> extends ListLoadBloc<S> {
       data: List.unmodifiable(data),
       quicksearch: quicksearch,
       search: search,
+      total: data.length, // Everything has been "fetched"
     );
   }
 

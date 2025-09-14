@@ -29,11 +29,13 @@ final class ListLoadInProgress<T> extends ListState<T> {
 
 sealed class ListFinal<T> extends ListState<T> {
   final List<T> data;
+  final int total;
   final String? quicksearch;
   final ListSearch search;
 
   const ListFinal({
     required this.data,
+    required this.total,
     required this.quicksearch,
     required this.search,
   });
@@ -45,6 +47,7 @@ sealed class ListFinal<T> extends ListState<T> {
 final class ListLoadSuccess<T> extends ListFinal<T> {
   const ListLoadSuccess({
     required super.data,
+    required super.total,
     required super.quicksearch,
     required super.search,
   });
@@ -56,6 +59,7 @@ final class ListLoadFailure<T> extends ListFinal<T> {
   const ListLoadFailure({
     required this.error,
     required super.data,
+    required super.total,
     required super.quicksearch,
     required super.search,
   });

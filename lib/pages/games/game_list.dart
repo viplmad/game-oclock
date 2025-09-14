@@ -5,7 +5,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ExternalGameListBloc,
         ListLoaded,
-        ListQuicksearchChanged,
         ListReloaded,
         ListStyleBloc,
         UserGameAvailableListBloc,
@@ -15,11 +14,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameTagListBloc;
 import 'package:game_oclock/components/list/list_item.dart'
     show GridListItem, TileListItem;
-import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show ExternalGame, ListSearch, ListStyle, SearchDTO, UserGame;
+    show ListSearch, ListStyle, SearchDTO, UserGame;
+import 'package:game_oclock/pages/games/external_game_select.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
@@ -55,23 +54,31 @@ class UserGameListPage extends StatelessWidget {
         searchSpace: 'game',
         floatingActionButton: FloatingActionButton(
           tooltip: context.localize().addLabel,
+          /*onPressed: () async =>
+              showDialog<bool>(
+                context: context,
+                builder: (final context) => UserGameEditForm(id: data.id),
+              ).then((final bool? success) {
+                if (success != null && success && context.mounted) {
+                  onEditSucceeded(context);
+                }
+              }),*/
           onPressed: () {
             showDialog<bool>(
               context: context,
               builder: (final context) {
-                final read =
-                    ExternalGameListBloc(
-                      igdbService: RepositoryProvider.of(context),
-                    )..add(
-                      ListLoaded(
-                        search: ListSearch(
-                          name: 'default',
-                          search: SearchDTO(),
+                return BlocProvider(
+                  create: (_) =>
+                      ExternalGameListBloc(
+                        igdbService: RepositoryProvider.of(context),
+                      )..add(
+                        ListLoaded(
+                          search: ListSearch(
+                            name: 'default',
+                            search: SearchDTO(),
+                          ),
                         ),
                       ),
-                    );
-                return BlocProvider(
-                  create: (_) => read,
                   child: Dialog(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 560.0),
@@ -88,64 +95,9 @@ class UserGameListPage extends StatelessWidget {
                               child: Text('Search external'),
                             ),
                             const SizedBox(height: 16.0),
-                            Flexible(
+                            const Flexible(
                               child: SingleChildScrollView(
-                                child: Autocomplete<String>(
-                                  optionsBuilder:
-                                      (final textEditingValue) async {
-                                        read.add(
-                                          ListQuicksearchChanged(
-                                            quicksearch: textEditingValue.text,
-                                          ),
-                                        );
-                                        return [''];
-                                      },
-                                  optionsViewBuilder:
-                                      (
-                                        final context,
-                                        final onSelected,
-                                        final options,
-                                      ) => Align(
-                                        alignment:
-                                            AlignmentDirectional.topStart,
-                                        child: Material(
-                                          elevation: 4.0,
-                                          child: ConstrainedBox(
-                                            constraints: const BoxConstraints(
-                                              maxHeight: 200.0,
-                                            ),
-                                            child:
-                                                TileListBuilder<
-                                                  ExternalGame,
-                                                  ExternalGameListBloc
-                                                >(
-                                                  space: '',
-                                                  itemBuilder:
-                                                      (
-                                                        final context,
-                                                        final item,
-                                                        final index,
-                                                      ) => TileListItem(
-                                                        title: item.title,
-                                                        subtitle: item
-                                                            .releaseDate
-                                                            ?.toIso8601String(),
-                                                        imageURL: item.coverUrl,
-                                                        trailing: const Icon(
-                                                          Icons.cloud,
-                                                        ), // TODO icon of external source
-                                                        onTap: () => onSelected(
-                                                          item.title,
-                                                        ),
-                                                      ),
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                  onSelected: (final String selection) {
-                                    print('You just selected $selection');
-                                  },
-                                ),
+                                child: ExternalGameSelectBuilder(),
                               ),
                             ),
                             const SizedBox(height: 24.0),

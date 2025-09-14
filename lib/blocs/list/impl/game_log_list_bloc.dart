@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show ListSearch, PageResultDTO;
+import 'package:game_oclock/mocks.dart';
+import 'package:game_oclock/models/models.dart' show ListSearch;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
@@ -13,27 +14,21 @@ class GameLogListBloc extends ListLoadBloc<DateTime> {
   ) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final page = search.search.page ?? 0;
-    final size = search.search.size ?? 50; // TODO Set in bloc?
-    final data = PageResultDTO(
-      data: List.generate(size, (final index) {
-        final finalIndex = (page * size) + index;
-        return DateTime.now().subtract(Duration(hours: finalIndex));
-      }),
-      page: page,
-      size: size,
+    final page = mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) => DateTime.now().subtract(Duration(hours: index)),
     );
+    final data = mergePageData(search: search, page: page, lastData: lastData);
 
     return ListLoadSuccess<DateTime>(
-      data:
-          List.of(
-            lastData == null ? data.data : [...lastData, ...data.data],
-            growable: false,
-          )..sort(
-            (final a, final b) => a.compareTo(b),
-          ), // Sort to simplify computation on UI
+      data: data
+        ..sort(
+          (final a, final b) => a.compareTo(b),
+        ), // Sort to simplify computation on UI
       quicksearch: quicksearch,
       search: search,
+      total: 500,
     );
   }
 }

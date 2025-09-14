@@ -19,6 +19,7 @@ class ExternalGameListBloc extends ListLoadBloc<ExternalGame> {
     if (quicksearch == null || quicksearch.isEmpty) {
       return ListLoadSuccess<ExternalGame>(
         data: [],
+        total: 0,
         quicksearch: quicksearch,
         search: search,
       );
@@ -27,6 +28,7 @@ class ExternalGameListBloc extends ListLoadBloc<ExternalGame> {
 
     return ListLoadSuccess<ExternalGame>(
       data: data,
+      total: data.length, // Avoid searching more data
       quicksearch: quicksearch,
       search: search,
     );

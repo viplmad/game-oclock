@@ -164,6 +164,12 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
       final lastData = (state as ListFinal<S>).data;
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
+
+      final total = (state as ListFinal<S>).total;
+      if (lastData.length >= total) {
+        return; // No more data left to fetch
+      }
+
       emit(
         ListLoadInProgress<S>(
           data: lastData,

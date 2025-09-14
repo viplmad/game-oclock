@@ -1,7 +1,7 @@
 import 'package:game_oclock/blocs/list/list_state.dart';
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show GameAvailable, ListSearch, Tag, UserGame;
+    show GameAvailable, ListSearch, SearchDTO, Tag, UserGame;
 
 import '../list.dart' show ListLoadBloc;
 
@@ -17,15 +17,17 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
     await Future.delayed(const Duration(seconds: 1));
 
     final page = mockPageResult(
-      search: search,
+      search: ListSearch(name: '', search: SearchDTO()), // search,
       quicksearch: quicksearch,
       builder: (final index) =>
           mockUserGame(title: 'title ($quicksearch) $index'),
     );
-    final data = mergePageData(search: search, page: page, lastData: lastData);
+    final data = page
+        .data; // mergePageData(search: search, page: page, lastData: lastData);
 
     return ListLoadSuccess<UserGame>(
       data: data,
+      total: 50,
       quicksearch: quicksearch,
       search: search,
     );
@@ -57,6 +59,7 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
 
     return ListLoadSuccess<Tag>(
       data: data,
+      total: 500,
       quicksearch: quicksearch,
       search: search,
     );
@@ -88,6 +91,7 @@ class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
 
     return ListLoadSuccess<GameAvailable>(
       data: data,
+      total: 500,
       quicksearch: quicksearch,
       search: search,
     );

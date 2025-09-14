@@ -81,7 +81,6 @@ class GridListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    print('$title');
     return Stack(
       children: <Widget>[
         Positioned.fill(
