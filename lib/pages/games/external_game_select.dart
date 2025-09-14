@@ -7,9 +7,16 @@ import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/models/models.dart' show ExternalGame;
 
 class ExternalGameSelectBuilder extends StatelessWidget {
-  const ExternalGameSelectBuilder({super.key, required this.controller});
+  const ExternalGameSelectBuilder({
+    super.key,
+    required this.controller,
+    this.validator,
+    this.decoration,
+  });
 
   final TextEditingController controller;
+  final FormFieldValidator<String>? validator;
+  final InputDecoration? decoration;
 
   @override
   Widget build(final BuildContext context) {
@@ -20,6 +27,23 @@ class ExternalGameSelectBuilder extends StatelessWidget {
         );
         return ['']; // Using BlocBuilder to refreh data
       },
+      fieldViewBuilder:
+          (
+            final context,
+            final textEditingController,
+            final focusNode,
+            final onFieldSubmitted,
+          ) {
+            return TextFormField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              validator: validator,
+              decoration: decoration,
+              onFieldSubmitted: (final String value) {
+                onFieldSubmitted();
+              },
+            );
+          },
       optionsViewBuilder: (final context, final onSelected, final options) =>
           Align(
             alignment: AlignmentDirectional.topStart,

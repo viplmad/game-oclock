@@ -99,7 +99,11 @@ Widget _fieldsCreateBuilder(
 ) {
   return Column(
     children: <Widget>[
-      ExternalGameSelectBuilder(controller: formGroup.title),
+      ExternalGameSelectBuilder(
+        controller: formGroup.title,
+        validator: (final value) => notEmptyValidator(context, value),
+        decoration: InputDecoration(labelText: context.localize().titleLabel),
+      ),
       TextFormField(
         controller: formGroup.edition,
         decoration: InputDecoration(labelText: context.localize().editionLabel),
