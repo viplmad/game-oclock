@@ -7,7 +7,9 @@ import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/models/models.dart' show ExternalGame;
 
 class ExternalGameSelectBuilder extends StatelessWidget {
-  const ExternalGameSelectBuilder({super.key});
+  const ExternalGameSelectBuilder({super.key, required this.controller});
+
+  final TextEditingController controller;
 
   @override
   Widget build(final BuildContext context) {
@@ -41,6 +43,9 @@ class ExternalGameSelectBuilder extends StatelessWidget {
               ),
             ),
           ),
+      onSelected: (final option) {
+        controller.value = controller.value.copyWith(text: option);
+      },
     );
   }
 }

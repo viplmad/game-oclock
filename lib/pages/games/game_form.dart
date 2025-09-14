@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/create_edit_form.dart';
 import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/models/models.dart' show UserGame, UserGameFormData;
+import 'package:game_oclock/pages/games/external_game_select.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameCreateForm extends StatelessWidget {
@@ -43,7 +44,8 @@ class UserGameCreateForm extends StatelessWidget {
           >(
             title: context.localize().creatingTitle,
             create: true,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: (final context, final formGroup, _) =>
+                _fieldsCreateBuilder(context, formGroup),
           ),
     );
   }
@@ -85,13 +87,32 @@ class UserGameEditForm extends StatelessWidget {
           >(
             title: context.localize().editingTitle,
             create: false,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: _fieldsEditBuilder,
           ),
     );
   }
 }
 
-Widget _fieldsBuilder(
+Widget _fieldsCreateBuilder(
+  final BuildContext context,
+  final UserGameFormData formGroup,
+) {
+  return Column(
+    children: <Widget>[
+      ExternalGameSelectBuilder(controller: formGroup.title),
+      TextFormField(
+        controller: formGroup.edition,
+        decoration: InputDecoration(labelText: context.localize().editionLabel),
+      ),
+      TextFormField(
+        controller: formGroup.status,
+        decoration: InputDecoration(labelText: context.localize().statusLabel),
+      ),
+    ],
+  );
+}
+
+Widget _fieldsEditBuilder(
   final BuildContext context,
   final UserGameFormData formGroup,
   final bool readOnly,
