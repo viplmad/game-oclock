@@ -27,7 +27,7 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
   final bool hideValueLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
-  final void Function(int)? onDomainTap;
+  final ValueChanged<int>? onDomainTap;
 
   @override
   Widget build(final context) {
@@ -70,7 +70,7 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
   final bool hideValueLabels;
   final String Function(N)? valueFormatter;
   final String Function(num?)? measureFormatter;
-  final void Function(int)? onTap;
+  final ValueChanged<int>? onTap;
 
   @override
   Widget build(final context) {

@@ -20,7 +20,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
   final SplayTreeMap<String, N> values;
   final List<Color> colours;
   final String Function(String, N)? valueFormatter;
-  final void Function(int)? onTap;
+  final ValueChanged<int>? onTap;
 
   @override
   Widget build(final context) {

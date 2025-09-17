@@ -166,6 +166,18 @@ abstract class AppLocalizations {
   /// **'Users'**
   String get usersTitle;
 
+  /// No description provided for @gameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get gameLabel;
+
+  /// No description provided for @tagLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get tagLabel;
+
   /// No description provided for @creatingTitle.
   ///
   /// In en, this message translates to:

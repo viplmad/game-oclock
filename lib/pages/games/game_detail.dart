@@ -11,13 +11,13 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListInitial,
         ListLoadBloc,
         ListLoaded,
+        ListReloaded,
         UserGameAvailableListBloc,
         UserGameDeleteBloc,
         UserGameGetBloc,
         UserGameTagListBloc;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
-import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
 import 'package:game_oclock/constants/icons.dart';
@@ -31,7 +31,10 @@ import 'package:game_oclock/models/models.dart'
         TabDestination,
         Tag,
         UserGame;
+import 'package:game_oclock/pages/games/new_game_tag_form.dart';
+import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/pages/games/game_form.dart';
+import 'package:game_oclock/shared/list_item/tag_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -115,37 +118,63 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<UserGameAvailableListBloc>(context);
     }
 
-    final List<TabDestination> destinations =
-        List.unmodifiable(<TabDestination>[
-          TabDestination(
-            icon: const Icon(CommonIcons.detail),
-            labelBuilder: (final context) => context.localize().detailLabel,
-            onTap: (_) {},
-            child: _info(),
+    final List<TabDestination> destinations = List.unmodifiable(
+      <TabDestination>[
+        TabDestination(
+          icon: const Icon(CommonIcons.detail),
+          labelBuilder: (final context) => context.localize().detailLabel,
+          onTap: (_) {},
+          child: _info(),
+        ),
+        TabDestination(
+          icon: const Icon(CommonIcons.locations),
+          labelBuilder: (final context) => context.localize().locationsTitle,
+          onTap: (final context) =>
+              _loadOnlyInitial<UserGameAvailableListBloc>(context),
+          child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
+            space: '', // TODO ?
+            itemBuilder: (final context, final data, final index) =>
+                GameAvailableTileListItem(data: data),
           ),
-          TabDestination(
-            icon: const Icon(CommonIcons.locations),
-            labelBuilder: (final context) => context.localize().locationsTitle,
-            onTap: (final context) =>
-                _loadOnlyInitial<UserGameAvailableListBloc>(context),
-            child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
-              space: '', // TODO ?
-              itemBuilder: (final context, final data, final index) =>
-                  TileListItem(title: data.name),
-            ),
+        ),
+        TabDestination(
+          icon: const Icon(CommonIcons.tags),
+          labelBuilder: (final context) => context.localize().tagsTitle,
+          onTap: (final context) =>
+              _loadOnlyInitial<UserGameTagListBloc>(context),
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton.icon(
+                  label: Text('Link tag'), // TODO i18n
+                  icon: const Icon(CommonIcons.link),
+                  onPressed: () async =>
+                      showDialog<bool>(
+                        context: context,
+                        builder: (final context) =>
+                            GameTagCreateForm(gameId: data.id),
+                      ).then((final bool? success) {
+                        if (success != null && success && context.mounted) {
+                          context.read<UserGameTagListBloc>().add(
+                            const ListReloaded(),
+                          );
+                        }
+                      }),
+                ),
+              ),
+              Expanded(
+                child: TileListBuilder<Tag, UserGameTagListBloc>(
+                  space: '', // TODO ?
+                  itemBuilder: (final context, final data, final index) =>
+                      TagTileListItem(data: data),
+                ),
+              ),
+            ],
           ),
-          TabDestination(
-            icon: const Icon(CommonIcons.tags),
-            labelBuilder: (final context) => context.localize().tagsTitle,
-            onTap: (final context) =>
-                _loadOnlyInitial<UserGameTagListBloc>(context),
-            child: TileListBuilder<Tag, UserGameTagListBloc>(
-              space: '', // TODO ?
-              itemBuilder: (final context, final data, final index) =>
-                  TileListItem(title: data.name),
-            ),
-          ),
-        ]);
+        ),
+      ],
+    );
 
     return Detail(
       title: data.title,

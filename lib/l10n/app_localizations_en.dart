@@ -45,6 +45,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usersTitle => 'Users';
 
   @override
+  String get gameLabel => 'Game';
+
+  @override
+  String get tagLabel => 'Tag';
+
+  @override
   String get creatingTitle => 'Creating';
 
   @override

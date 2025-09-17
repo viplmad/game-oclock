@@ -26,7 +26,7 @@ class ReviewPage extends StatelessWidget {
     required final Widget Function(
       BuildContext context,
       T data,
-      VoidCallback onPressed,
+      VoidCallback onTap,
     )
     listItemBuilder,
   }) {

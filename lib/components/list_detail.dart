@@ -44,7 +44,7 @@ class ListDetailBuilder<
     BuildContext context,
     ListStyle style,
     T data,
-    VoidCallback onPressed,
+    VoidCallback onTap,
   )
   listItemBuilder;
 

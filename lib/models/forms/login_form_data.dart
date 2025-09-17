@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, Login;
+import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 class LoginFormData extends FormData<Login> {
   final TextEditingController host;
@@ -14,8 +15,8 @@ class LoginFormData extends FormData<Login> {
 
   @override
   void setValues(final Login? login) {
-    host.value = host.value.copyWith(text: login?.host);
-    username.value = username.value.copyWith(text: login?.username);
-    password.value = password.value.copyWith(text: login?.password);
+    host.setValue(login?.host);
+    username.setValue(login?.username);
+    password.setValue(login?.password);
   }
 }

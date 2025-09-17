@@ -28,7 +28,7 @@ class StatisticsLineChart extends StatelessWidget {
   final bool hideValueLabels;
   final String Function(int)? valueFormatter;
   final String Function(num?)? measureFormatter;
-  final void Function(int)? onDomainTap;
+  final ValueChanged<int>? onDomainTap;
 
   @override
   Widget build(final context) {

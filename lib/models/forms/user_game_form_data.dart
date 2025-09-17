@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, UserGame;
+import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 class UserGameFormData extends FormData<UserGame> {
   final TextEditingController title;
@@ -18,10 +19,10 @@ class UserGameFormData extends FormData<UserGame> {
 
   @override
   void setValues(final UserGame? userGame) {
-    title.value = title.value.copyWith(text: userGame?.title);
-    edition.value = edition.value.copyWith(text: userGame?.edition);
-    status.value = status.value.copyWith(text: userGame?.status);
-    rating.value = rating.value.copyWith(text: userGame?.rating.toString());
-    notes.value = notes.value.copyWith(text: userGame?.notes);
+    title.setValue(userGame?.title);
+    edition.setValue(userGame?.edition);
+    status.setValue(userGame?.status);
+    rating.setValue(userGame?.rating.toString());
+    notes.setValue(userGame?.notes);
   }
 }

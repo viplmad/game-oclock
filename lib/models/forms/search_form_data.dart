@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart'
     show FilterDTO, FormData, ListSearch;
+import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 class SearchFormData extends FormData<ListSearch> {
   final TextEditingController name;
@@ -10,7 +11,7 @@ class SearchFormData extends FormData<ListSearch> {
 
   @override
   void setValues(final ListSearch? search) {
-    name.value = name.value.copyWith(text: search?.name);
+    name.setValue(search?.name);
 
     filters.clear();
     if (search?.search.filter != null) {
@@ -43,11 +44,9 @@ class FilterFormData extends FormData<FilterDTO> {
 
   @override
   void setValues(final FilterDTO? filter) {
-    field.value = field.value.copyWith(text: filter?.field);
-    operator.value = operator.value.copyWith(text: filter?.operator_.value);
-    value.value = value.value.copyWith(text: filter?.value.value); // TODO list
-    chainOperator.value = chainOperator.value.copyWith(
-      text: filter?.chainOperator?.value,
-    );
+    field.setValue(filter?.field);
+    operator.setValue(filter?.operator_.value);
+    value.setValue(filter?.value.value); // TODO list
+    chainOperator.setValue(filter?.chainOperator?.value);
   }
 }

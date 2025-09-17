@@ -21,23 +21,19 @@ import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-class CreateEditFormBuilder<
+class CreateFormBuilder<
   T,
   D extends FormData<T>,
   FB extends FormBloc<D, T>,
-  GB extends FunctionActionBloc<String, T?>,
-  CB extends ConsumerActionBloc<T>,
-  UB extends ConsumerActionBloc<T>
+  CB extends ConsumerActionBloc<T>
 >
     extends StatelessWidget {
-  const CreateEditFormBuilder({
+  const CreateFormBuilder({
     super.key,
     required this.title,
-    required this.create,
     required this.fieldsBuilder,
   });
 
-  final bool create;
   final String title;
 
   // ignore: avoid_positional_boolean_parameters
@@ -49,29 +45,16 @@ class CreateEditFormBuilder<
     final layoutTier = layoutTierFromContext(context);
     final fullscreen = layoutTier == LayoutTier.compact;
 
-    if (create) {
-      final form = buildCreateForm(context, fullscreen: fullscreen);
-      return fullscreen
-          ? Dialog.fullscreen(child: form)
-          : Dialog(
-              // TODO min width
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560.0),
-                child: form,
-              ),
-            );
-    } else {
-      final form = buildEditForm(context, fullscreen: fullscreen);
-      return fullscreen
-          ? Dialog.fullscreen(child: form)
-          : Dialog(
-              // TODO min width
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560.0),
-                child: form,
-              ),
-            );
-    }
+    final form = buildCreateForm(context, fullscreen: fullscreen);
+    return fullscreen
+        ? Dialog.fullscreen(child: form)
+        : Dialog(
+            // TODO min width
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560.0),
+              child: form,
+            ),
+          );
   }
 
   Widget buildCreateForm(
@@ -121,6 +104,44 @@ class CreateEditFormBuilder<
         },
       ),
     );
+  }
+}
+
+class EditFormBuilder<
+  T,
+  D extends FormData<T>,
+  FB extends FormBloc<D, T>,
+  GB extends FunctionActionBloc<String, T?>,
+  UB extends ConsumerActionBloc<T>
+>
+    extends StatelessWidget {
+  const EditFormBuilder({
+    super.key,
+    required this.title,
+    required this.fieldsBuilder,
+  });
+
+  final String title;
+
+  // ignore: avoid_positional_boolean_parameters
+  final Widget Function(BuildContext context, D formGroup, bool readOnly)
+  fieldsBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    final layoutTier = layoutTierFromContext(context);
+    final fullscreen = layoutTier == LayoutTier.compact;
+
+    final form = buildEditForm(context, fullscreen: fullscreen);
+    return fullscreen
+        ? Dialog.fullscreen(child: form)
+        : Dialog(
+            // TODO min width
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560.0),
+              child: form,
+            ),
+          );
   }
 
   Widget buildEditForm(

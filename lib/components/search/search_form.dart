@@ -53,16 +53,13 @@ class SearchCreateForm extends StatelessWidget {
         ),
       ],
       child:
-          CreateEditFormBuilder<
+          CreateFormBuilder<
             ListSearch,
             SearchFormData,
             SearchFormBloc,
-            SearchGetBloc,
-            SearchCreateBloc,
-            SearchUpdateBloc
+            SearchCreateBloc
           >(
             title: context.localize().creatingTitle,
-            create: true,
             fieldsBuilder: _fieldsBuilder,
           ),
     );
@@ -105,16 +102,14 @@ class SearchEditForm extends StatelessWidget {
         ),
       ],
       child:
-          CreateEditFormBuilder<
+          EditFormBuilder<
             ListSearch,
             SearchFormData,
             SearchFormBloc,
             SearchGetBloc,
-            SearchCreateBloc,
             SearchUpdateBloc
           >(
             title: context.localize().editingTitle,
-            create: false,
             fieldsBuilder: _fieldsBuilder,
           ),
     );

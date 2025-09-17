@@ -4,6 +4,7 @@ export 'action_state.dart';
 export 'impl/calendar_bloc.dart';
 export 'impl/game_bloc.dart';
 export 'impl/game_log_bloc.dart';
+export 'impl/game_tag_bloc.dart';
 export 'impl/list_style_bloc.dart';
 export 'impl/login_bloc.dart';
 export 'impl/minimized_layout_bloc.dart';

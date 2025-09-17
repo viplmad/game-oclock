@@ -46,7 +46,7 @@ class CalendarListDetailBuilder<
   final DateTime Function(T data) dateGetter;
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
-  final Widget Function(BuildContext context, T data, VoidCallback onPressed)
+  final Widget Function(BuildContext context, T data, VoidCallback onTap)
   listItemBuilder;
 
   @override

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        ExternalGameListBloc,
         ListLoaded,
         ListReloaded,
         ListStyleBloc,
@@ -12,13 +11,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameListBloc,
         UserGameSelectBloc,
         UserGameTagListBloc;
-import 'package:game_oclock/components/list/list_item.dart'
-    show GridListItem, TileListItem;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, ListStyle, SearchDTO, UserGame;
 import 'package:game_oclock/pages/games/game_form.dart';
+import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
@@ -57,20 +55,7 @@ class UserGameListPage extends StatelessWidget {
           onPressed: () async =>
               showDialog<bool>(
                 context: context,
-                builder: (final context) => BlocProvider(
-                  create: (_) =>
-                      ExternalGameListBloc(
-                        igdbService: RepositoryProvider.of(context),
-                      )..add(
-                        ListLoaded(
-                          search: ListSearch(
-                            name: 'default',
-                            search: SearchDTO(),
-                          ),
-                        ),
-                      ),
-                  child: const UserGameCreateForm(),
-                ),
+                builder: (final context) => const UserGameCreateForm(),
               ).then((final bool? success) {
                 if (success != null && success && context.mounted) {
                   context.read<UserGameListBloc>().add(const ListReloaded());
@@ -106,28 +91,10 @@ class UserGameListPage extends StatelessWidget {
           );
         },
         listItemBuilder:
-            (final context, final style, final data, final onPressed) =>
+            (final context, final style, final data, final onTap) =>
                 style == ListStyle.grid
-                ? GridListItem(
-                    title: data.edition.isEmpty
-                        ? data.title
-                        : context.localize().gameEditionDataTitle(
-                            data.title,
-                            data.edition,
-                          ),
-                    imageURL: data.coverUrl,
-                    onTap: onPressed,
-                  )
-                : TileListItem(
-                    title: data.edition.isEmpty
-                        ? data.title
-                        : context.localize().gameEditionDataTitle(
-                            data.title,
-                            data.edition,
-                          ),
-                    imageURL: data.coverUrl,
-                    onTap: onPressed,
-                  ),
+                ? UserGameGridListItem(data: data, onTap: onTap)
+                : UserGameTileListItem(data: data, onTap: onTap),
       ),
     );
   }

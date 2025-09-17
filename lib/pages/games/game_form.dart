@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        ExternalGameListBloc,
+        ListLoaded,
         UserGameCreateBloc,
         UserGameFormBloc,
         UserGameGetBloc,
         UserGameUpdateBloc;
 import 'package:game_oclock/components/create_edit_form.dart';
 import 'package:game_oclock/constants/form_validators.dart';
-import 'package:game_oclock/models/models.dart' show UserGame, UserGameFormData;
-import 'package:game_oclock/pages/games/external_game_select.dart';
+import 'package:game_oclock/models/models.dart'
+    show ListSearch, SearchDTO, UserGame, UserGameFormData;
+import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameCreateForm extends StatelessWidget {
@@ -32,18 +35,25 @@ class UserGameCreateForm extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (_) => UserGameCreateBloc()),
+        BlocProvider(
+          create: (_) =>
+              ExternalGameListBloc(igdbService: RepositoryProvider.of(context))
+                ..add(
+                  // Requires search to be loaded
+                  ListLoaded(
+                    search: ListSearch(name: 'default', search: SearchDTO()),
+                  ),
+                ),
+        ),
       ],
       child:
-          CreateEditFormBuilder<
+          CreateFormBuilder<
             UserGame,
             UserGameFormData,
             UserGameFormBloc,
-            UserGameGetBloc,
-            UserGameCreateBloc,
-            UserGameUpdateBloc
+            UserGameCreateBloc
           >(
             title: context.localize().creatingTitle,
-            create: true,
             fieldsBuilder: (final context, final formGroup, _) =>
                 _fieldsCreateBuilder(context, formGroup),
           ),
@@ -77,16 +87,14 @@ class UserGameEditForm extends StatelessWidget {
         ),
       ],
       child:
-          CreateEditFormBuilder<
+          EditFormBuilder<
             UserGame,
             UserGameFormData,
             UserGameFormBloc,
             UserGameGetBloc,
-            UserGameCreateBloc,
             UserGameUpdateBloc
           >(
             title: context.localize().editingTitle,
-            create: false,
             fieldsBuilder: _fieldsEditBuilder,
           ),
     );
@@ -99,7 +107,7 @@ Widget _fieldsCreateBuilder(
 ) {
   return Column(
     children: <Widget>[
-      ExternalGameSelectBuilder(
+      ExternalGameSelectorBuilder(
         controller: formGroup.title,
         validator: (final value) => notEmptyValidator(context, value),
         decoration: InputDecoration(labelText: context.localize().titleLabel),
