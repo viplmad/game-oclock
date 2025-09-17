@@ -58,11 +58,6 @@ Widget _fieldsCreateBuilder(
 ) {
   return Column(
     children: <Widget>[
-      TextFormField(
-        readOnly: true,
-        controller: formGroup.gameId,
-        decoration: InputDecoration(labelText: context.localize().gameLabel),
-      ),
       TagSelectorBuilder(
         controller: formGroup.tagId,
         validator: (final value) => notEmptyValidator(context, value),

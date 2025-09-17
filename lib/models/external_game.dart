@@ -15,8 +15,8 @@ class ExternalGame extends Equatable {
     required this.title,
     required this.coverUrl,
     required this.releaseDate,
-    required this.genres,
-    required this.series,
+    this.genres = const [],
+    this.series = const [],
   });
 
   @override

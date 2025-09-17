@@ -5,7 +5,10 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
-class SingleAutocompleteSelectorBuilder<T, LB extends ListLoadBloc<T>>
+class SingleAutocompleteSelectorBuilder<
+  T extends Object,
+  LB extends ListLoadBloc<T>
+>
     extends StatelessWidget {
   const SingleAutocompleteSelectorBuilder({
     super.key,
@@ -14,6 +17,8 @@ class SingleAutocompleteSelectorBuilder<T, LB extends ListLoadBloc<T>>
     this.decoration,
     required this.itemBuilder,
     required this.keyGetter,
+    this.displayString,
+    required this.mockItem, // TODO remove
   });
 
   final TextEditingController controller;
@@ -27,15 +32,17 @@ class SingleAutocompleteSelectorBuilder<T, LB extends ListLoadBloc<T>>
   )
   itemBuilder;
   final String Function(T item) keyGetter;
+  final String Function(T item)? displayString;
+  final T mockItem;
 
   @override
   Widget build(final BuildContext context) {
-    return Autocomplete<String>(
+    return Autocomplete<T>(
       optionsBuilder: (final textEditingValue) async {
         context.read<LB>().add(
           ListQuicksearchChanged(quicksearch: textEditingValue.text),
         );
-        return ['']; // Using BlocBuilder to refreh data
+        return [mockItem]; // Using BlocBuilder to refreh data
       },
       fieldViewBuilder:
           (
@@ -54,6 +61,7 @@ class SingleAutocompleteSelectorBuilder<T, LB extends ListLoadBloc<T>>
               },
             );
           },
+      displayStringForOption: displayString ?? keyGetter,
       optionsViewBuilder: (final context, final onSelected, final options) =>
           Align(
             alignment: AlignmentDirectional.topStart,
@@ -64,18 +72,13 @@ class SingleAutocompleteSelectorBuilder<T, LB extends ListLoadBloc<T>>
                 child: TileListBuilder<T, LB>(
                   space: '', // Avoid extra filtering
                   itemBuilder: (final context, final item, final index) =>
-                      itemBuilder(
-                        context,
-                        item,
-                        index,
-                        () => onSelected(keyGetter(item)),
-                      ),
+                      itemBuilder(context, item, index, () => onSelected(item)),
                 ),
               ),
             ),
           ),
       onSelected: (final option) {
-        controller.setValue(option);
+        controller.setValue(keyGetter(option));
       },
     );
   }

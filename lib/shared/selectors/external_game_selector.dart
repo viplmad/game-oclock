@@ -28,6 +28,13 @@ class ExternalGameSelectorBuilder extends StatelessWidget {
       itemBuilder: (final context, final item, final index, final onSelected) =>
           ExternalGameTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.title,
+      mockItem: ExternalGame(
+        externalSource: '',
+        externalId: '',
+        title: '',
+        coverUrl: '',
+        releaseDate: DateTime.now(),
+      ),
     );
   }
 }
