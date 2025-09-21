@@ -27,7 +27,7 @@ class CreateFormBuilder<
   FB extends FormBloc<D, T>,
   CB extends ConsumerActionBloc<T>
 >
-    extends StatelessWidget {
+    extends _FormBuilder {
   const CreateFormBuilder({
     super.key,
     required this.title,
@@ -41,23 +41,7 @@ class CreateFormBuilder<
   fieldsBuilder;
 
   @override
-  Widget build(final BuildContext context) {
-    final layoutTier = layoutTierFromContext(context);
-    final fullscreen = layoutTier == LayoutTier.compact;
-
-    final form = buildCreateForm(context, fullscreen: fullscreen);
-    return fullscreen
-        ? Dialog.fullscreen(child: form)
-        : Dialog(
-            // TODO min width
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 560.0),
-              child: form,
-            ),
-          );
-  }
-
-  Widget buildCreateForm(
+  Widget buildForm(
     final BuildContext context, {
     required final bool fullscreen,
   }) {
@@ -114,7 +98,7 @@ class EditFormBuilder<
   GB extends FunctionActionBloc<String, T?>,
   UB extends ConsumerActionBloc<T>
 >
-    extends StatelessWidget {
+    extends _FormBuilder {
   const EditFormBuilder({
     super.key,
     required this.title,
@@ -128,23 +112,7 @@ class EditFormBuilder<
   fieldsBuilder;
 
   @override
-  Widget build(final BuildContext context) {
-    final layoutTier = layoutTierFromContext(context);
-    final fullscreen = layoutTier == LayoutTier.compact;
-
-    final form = buildEditForm(context, fullscreen: fullscreen);
-    return fullscreen
-        ? Dialog.fullscreen(child: form)
-        : Dialog(
-            // TODO min width
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 560.0),
-              child: form,
-            ),
-          );
-  }
-
-  Widget buildEditForm(
+  Widget buildForm(
     final BuildContext context, {
     required final bool fullscreen,
   }) {
@@ -214,6 +182,31 @@ class EditFormBuilder<
       ),
     );
   }
+}
+
+abstract class _FormBuilder extends StatelessWidget {
+  const _FormBuilder({super.key});
+
+  @override
+  Widget build(final BuildContext context) {
+    final layoutTier = layoutTierFromContext(context);
+    final fullscreen = layoutTier == LayoutTier.compact;
+
+    final form = buildForm(context, fullscreen: fullscreen);
+    return fullscreen
+        ? Dialog.fullscreen(child: form)
+        : Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560.0),
+              child: form,
+            ),
+          );
+  }
+
+  Widget buildForm(
+    final BuildContext context, {
+    required final bool fullscreen,
+  });
 }
 
 /// https://m3.material.io/components/dialogs/guidelines#9d723c7a-03d1-4e7c-95af-a20ed4b66533
@@ -302,6 +295,7 @@ class FullForm extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 DefaultTextStyle(
                   style:

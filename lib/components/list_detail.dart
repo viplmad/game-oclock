@@ -11,6 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListReloaded,
         ListStyleBloc,
         MinimizedLayoutBloc;
+import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -54,8 +55,8 @@ class ListDetailBuilder<
 
     return BlocListener<SB, ActionState<T?>>(
       listener: (final context, final selectState) {
-        final selectedData = (selectState is ActionFinal)
-            ? (selectState as ActionFinal<T?, T?>).data
+        final selectedData = (selectState is ActionFinal<T?, T?>)
+            ? selectState.data
             : null;
 
         // Allow minimized if selected
@@ -65,14 +66,15 @@ class ListDetailBuilder<
       },
       child: BlocBuilder<ListStyleBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
-          final selectedStyle = (listStyleState is ActionFinal)
-              ? (listStyleState as ActionFinal<ListStyle, ListStyle>).data
+          final selectedStyle =
+              (listStyleState is ActionFinal<ListStyle, ListStyle>)
+              ? listStyleState.data
               : ListStyle.tile;
 
           return BlocBuilder<SB, ActionState<T?>>(
             builder: (final context, final selectState) {
-              final selectedData = (selectState is ActionFinal)
-                  ? (selectState as ActionFinal<T?, T?>).data
+              final selectedData = (selectState is ActionFinal<T?, T?>)
+                  ? selectState.data
                   : null;
 
               if (layoutTier == LayoutTier.compact) {
@@ -190,37 +192,38 @@ class ListDetailBuilder<
           ),
         ],
       ),
-      body: selectedStyle == ListStyle.grid
-          ? GridListBuilder<T, LB>(
-              space: searchSpace,
-              itemBuilder: (final context, final data, final index) =>
-                  listItemBuilder(
-                    context,
-                    ListStyle.grid,
-                    data,
-                    () => _selectRemoveIfSame(
+      body: ListToolbar(
+        toolbars: [ListFilterToolbarBuilder<T, LB>(space: searchSpace)],
+        child: selectedStyle == ListStyle.grid
+            ? GridListBuilder<T, LB>(
+                itemBuilder: (final context, final data, final index) =>
+                    listItemBuilder(
                       context,
-                      selectBloc: context.read<SB>(),
-                      data: data,
-                      selectedData: selectedData,
+                      ListStyle.grid,
+                      data,
+                      () => _selectRemoveIfSame(
+                        context,
+                        selectBloc: context.read<SB>(),
+                        data: data,
+                        selectedData: selectedData,
+                      ),
                     ),
-                  ),
-            )
-          : TileListBuilder<T, LB>(
-              space: searchSpace,
-              itemBuilder: (final context, final data, final index) =>
-                  listItemBuilder(
-                    context,
-                    ListStyle.tile,
-                    data,
-                    () => _selectRemoveIfSame(
+              )
+            : TileListBuilder<T, LB>(
+                itemBuilder: (final context, final data, final index) =>
+                    listItemBuilder(
                       context,
-                      selectBloc: context.read<SB>(),
-                      data: data,
-                      selectedData: selectedData,
+                      ListStyle.tile,
+                      data,
+                      () => _selectRemoveIfSame(
+                        context,
+                        selectBloc: context.read<SB>(),
+                        data: data,
+                        selectedData: selectedData,
+                      ),
                     ),
-                  ),
-            ),
+              ),
+      ),
       floatingActionButton: floatingActionButton,
     );
   }

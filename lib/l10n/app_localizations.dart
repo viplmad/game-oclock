@@ -513,6 +513,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{aTitle} - {bEdition}'**
   String gameEditionDataTitle(Object aTitle, Object bEdition);
+
+  /// No description provided for @createNewDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new: \"{data}\"'**
+  String createNewDataLabel(Object data);
 }
 
 class _AppLocalizationsDelegate

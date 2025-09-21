@@ -7,11 +7,7 @@ import 'list_item.dart';
 
 class GridListBuilder<T, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
-  const GridListBuilder({
-    super.key,
-    required super.space,
-    required super.itemBuilder,
-  });
+  const GridListBuilder({super.key, required super.itemBuilder});
 
   @override
   Widget listView({

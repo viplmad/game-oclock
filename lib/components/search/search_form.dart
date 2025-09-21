@@ -132,7 +132,6 @@ Widget _fieldsBuilder(
       ),
       ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
         // TODO readonly
-        space: '', // Empty space because filter is not allowed
         onReorder: (final oldIndex, final newIndex) {
           context.read<FilterFormDataListBloc>().replaceElement(
             oldIndex,

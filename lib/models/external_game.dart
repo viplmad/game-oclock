@@ -4,6 +4,7 @@ class ExternalGame extends Equatable {
   final String externalSource;
   final String externalId;
   final String title;
+  final String? edition;
   final String? coverUrl;
   final DateTime? releaseDate;
   final List<String> genres;
@@ -13,6 +14,7 @@ class ExternalGame extends Equatable {
     required this.externalSource,
     required this.externalId,
     required this.title,
+    required this.edition,
     required this.coverUrl,
     required this.releaseDate,
     this.genres = const [],

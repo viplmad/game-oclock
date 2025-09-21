@@ -12,7 +12,7 @@ class ExternalGameTileListItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TileListItem(
       title: data.title,
-      subtitle: data.releaseDate?.toIso8601String(),
+      subtitle: '${data.edition} - ${data.releaseDate?.year}', // TODO i18n
       imageURL: data.coverUrl,
       trailing: const Icon(Icons.cloud), // TODO icon of external source
       onTap: onTap,

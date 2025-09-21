@@ -68,5 +68,6 @@
   "deleteDialogDataTitle": "{data} will be deleted.",
   "leaveDirtyFormConfirmationDialogTitle": "Are you sure you want to leave?",
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
-  "gameEditionDataTitle": "{aTitle} - {bEdition}"
+  "gameEditionDataTitle": "{aTitle} - {bEdition}",
+  "createNewDataLabel": "Create new: \"{data}\""
 }

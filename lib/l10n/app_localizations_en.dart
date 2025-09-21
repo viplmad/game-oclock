@@ -223,4 +223,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String gameEditionDataTitle(Object aTitle, Object bEdition) {
     return '$aTitle - $bEdition';
   }
+
+  @override
+  String createNewDataLabel(Object data) {
+    return 'Create new: \"$data\"';
+  }
 }

@@ -7,11 +7,7 @@ import 'list_item.dart';
 
 class TileListBuilder<T, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
-  const TileListBuilder({
-    super.key,
-    required super.space,
-    required super.itemBuilder,
-  });
+  const TileListBuilder({super.key, required super.itemBuilder});
 
   @override
   Widget listView({
@@ -45,7 +41,6 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
     extends TileListBuilder<T, LB> {
   const ReorderableListBuilder({
     super.key,
-    required super.space,
     required super.itemBuilder,
     required this.onReorder,
   });

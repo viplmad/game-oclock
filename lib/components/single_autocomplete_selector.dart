@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListFinal, ListLoadBloc, ListQuicksearchChanged;
+    show
+        ActionFailure,
+        ActionInProgress,
+        ActionStarted,
+        ActionState,
+        ActionSuccess,
+        ConsumerActionBloc,
+        ListFinal,
+        ListLoadBloc,
+        ListLoadInProgress,
+        ListQuicksearchChanged,
+        ListState;
+import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
+import 'package:game_oclock/components/show_snackbar.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 class SingleAutocompleteSelectorBuilder<
@@ -18,6 +33,7 @@ class SingleAutocompleteSelectorBuilder<
     required this.itemBuilder,
     required this.keyGetter,
     this.displayString,
+    this.newConfig,
   });
 
   final TextEditingController controller;
@@ -32,6 +48,7 @@ class SingleAutocompleteSelectorBuilder<
   itemBuilder;
   final String Function(T item) keyGetter;
   final String Function(T item)? displayString;
+  final AutocompleteNewConfig<T, ConsumerActionBloc<T>>? newConfig;
 
   @override
   Widget build(final BuildContext context) {
@@ -57,7 +74,7 @@ class SingleAutocompleteSelectorBuilder<
             final focusNode,
             final onFieldSubmitted,
           ) {
-            return TextFormField(
+            return TextFormField( // TODO exclude from Form onChanged
               controller: textEditingController,
               focusNode: focusNode,
               validator: validator,
@@ -75,10 +92,20 @@ class SingleAutocompleteSelectorBuilder<
               elevation: 4.0,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 200.0),
-                child: TileListBuilder<T, LB>(
-                  space: '', // Avoid extra filtering
-                  itemBuilder: (final context, final item, final index) =>
-                      itemBuilder(context, item, index, () => onSelected(item)),
+                child: ListToolbar(
+                  toolbars: [
+                    if (newConfig != null)
+                      newConfig!.buildListButton<LB>(onSelected: onSelected),
+                  ],
+                  child: TileListBuilder<T, LB>(
+                    itemBuilder: (final context, final item, final index) =>
+                        itemBuilder(
+                          context,
+                          item,
+                          index,
+                          () => onSelected(item),
+                        ),
+                  ),
                 ),
               ),
             ),
@@ -86,6 +113,59 @@ class SingleAutocompleteSelectorBuilder<
       onSelected: (final option) {
         controller.setValue(keyGetter(option));
       },
+    );
+  }
+}
+
+final class AutocompleteNewConfig<
+  T extends Object,
+  CB extends ConsumerActionBloc<T>
+> {
+  final T Function(String quicksearch) newBuilder;
+
+  const AutocompleteNewConfig({required this.newBuilder});
+
+  Widget buildListButton<LB extends ListLoadBloc<T>>({
+    required final AutocompleteOnSelected<T> onSelected,
+  }) {
+    return BlocListener<CB, ActionState<void>>(
+      listener: (final context, final state) {
+        if (state is ActionSuccess<void, T>) {
+          showSnackBar(context, message: 'Data created $state'); // TODO i18n
+          onSelected(state.event);
+        } else if (state is ActionFailure<void, T>) {
+          showSnackBar(context, message: 'Error creating $state'); // TODO i18n
+        }
+      },
+      child: BlocBuilder<LB, ListState<T>>(
+        builder: (final context, final listState) {
+          final quicksearch = (listState is ListFinal<T>)
+              ? listState.quicksearch ?? ''
+              : (listState is ListLoadInProgress<T>)
+              ? listState.quicksearch ?? ''
+              : '';
+
+          return BlocBuilder<CB, ActionState<void>>(
+            builder: (final context, final createState) {
+              final inProgress = createState is ActionInProgress;
+
+              return ListButtonToolbar(
+                label: context.localize().createNewDataLabel(quicksearch),
+                icon: inProgress
+                    ? const CircularProgressIndicator()
+                    : const Icon(CommonIcons.add),
+                onTap: inProgress
+                    ? null
+                    : () {
+                        context.read<CB>().add(
+                          ActionStarted(data: newBuilder(quicksearch)),
+                        );
+                      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

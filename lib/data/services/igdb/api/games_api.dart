@@ -10,6 +10,7 @@ class GamesApi extends BaseApi {
   Future<Response> getGamesWithHttpInfo({String? search, int? size}) async {
     final fields = List.unmodifiable(<String>[
       'name',
+      'version_title',
       'cover.url',
       'first_release_date',
       'genres.name',

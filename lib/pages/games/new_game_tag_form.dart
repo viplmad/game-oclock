@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show GameTagCreateBloc, GameTagFormBloc, ListLoaded, TagListBloc;
+    show
+        GameTagCreateBloc,
+        GameTagFormBloc,
+        ListLoaded,
+        TagCreateBloc,
+        TagListBloc;
 import 'package:game_oclock/components/create_edit_form.dart';
 import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/models/models.dart'
@@ -36,6 +41,7 @@ class GameTagCreateForm extends StatelessWidget {
               ),
             ),
         ),
+        BlocProvider(create: (_) => TagCreateBloc()),
       ],
       child:
           CreateFormBuilder<

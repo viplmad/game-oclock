@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show TagListBloc;
+import 'package:game_oclock/blocs/blocs.dart' show TagCreateBloc, TagListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
@@ -26,6 +26,9 @@ class TagSelectorBuilder extends StatelessWidget {
           TagTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
+      newConfig: AutocompleteNewConfig<Tag, TagCreateBloc>(
+        newBuilder: (final quicksearch) => Tag(id: '', name: quicksearch),
+      ),
     );
   }
 }

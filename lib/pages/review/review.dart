@@ -33,7 +33,6 @@ class ReviewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: GridListBuilder<T, LB>(
-        space: '',
         itemBuilder: (final context, final data, final index) =>
             listItemBuilder(
               context,

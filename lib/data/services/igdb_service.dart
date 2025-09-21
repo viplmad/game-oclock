@@ -38,6 +38,7 @@ class IGDBService {
             externalSource: 'igdb',
             externalId: game.id.toString(),
             title: game.name,
+            edition: game.versionTitle,
             coverUrl: game.cover?.url,
             releaseDate: game.firstReleaseDate,
             genres: game.genres
