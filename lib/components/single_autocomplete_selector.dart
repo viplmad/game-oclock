@@ -152,7 +152,7 @@ final class AutocompleteNewConfig<
               return ListButtonToolbar(
                 label: context.localize().createNewDataLabel(quicksearch),
                 icon: inProgress
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator() // TODO too big
                     : const Icon(CommonIcons.add),
                 onTap: inProgress
                     ? null
