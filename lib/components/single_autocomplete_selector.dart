@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListLoadBloc, ListQuicksearchChanged;
+    show ListFinal, ListLoadBloc, ListQuicksearchChanged;
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
@@ -18,7 +18,6 @@ class SingleAutocompleteSelectorBuilder<
     required this.itemBuilder,
     required this.keyGetter,
     this.displayString,
-    required this.mockItem, // TODO remove
   });
 
   final TextEditingController controller;
@@ -33,16 +32,23 @@ class SingleAutocompleteSelectorBuilder<
   itemBuilder;
   final String Function(T item) keyGetter;
   final String Function(T item)? displayString;
-  final T mockItem;
 
   @override
   Widget build(final BuildContext context) {
     return Autocomplete<T>(
       optionsBuilder: (final textEditingValue) async {
-        context.read<LB>().add(
+        final loadBloc = context.read<LB>();
+        loadBloc.add(
           ListQuicksearchChanged(quicksearch: textEditingValue.text),
         );
-        return [mockItem]; // Using BlocBuilder to refreh data
+
+        final listState =
+            await loadBloc.stream.firstWhere(
+                  (final loadState) => loadState is ListFinal<T>,
+                )
+                as ListFinal<T>;
+
+        return listState.data; // Using BlocBuilder to refreh data
       },
       fieldViewBuilder:
           (

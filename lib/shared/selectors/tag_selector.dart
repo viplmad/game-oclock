@@ -26,7 +26,6 @@ class TagSelectorBuilder extends StatelessWidget {
           TagTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
-      mockItem: const Tag(id: '', name: ''),
     );
   }
 }
