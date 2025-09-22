@@ -78,7 +78,7 @@ class SimpleSelectFormField extends StatelessWidget {
       enableFilter: true,
       requestFocusOnTap: true,
       label: FormFieldLabel(text: label, required: required),
-      errorText: 'malo malo',
+      // TODO required validator errorText: 'malo malo',
       dropdownMenuEntries: options
           .map(
             (final field) => DropdownMenuEntry<String>(
