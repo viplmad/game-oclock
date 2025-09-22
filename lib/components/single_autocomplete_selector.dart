@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadInProgress,
         ListQuicksearchChanged,
         ListState;
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
@@ -28,8 +29,10 @@ class SingleAutocompleteSelectorBuilder<
   const SingleAutocompleteSelectorBuilder({
     super.key,
     required this.controller,
+    required this.label,
+    this.required = false,
+    this.readOnly = false,
     this.validator,
-    this.decoration,
     required this.itemBuilder,
     required this.keyGetter,
     this.displayString,
@@ -37,8 +40,10 @@ class SingleAutocompleteSelectorBuilder<
   });
 
   final TextEditingController controller;
+  final String label;
+  final bool required;
+  final bool readOnly;
   final FormFieldValidator<String>? validator;
-  final InputDecoration? decoration;
   final Widget Function(
     BuildContext context,
     T item,
@@ -73,17 +78,22 @@ class SingleAutocompleteSelectorBuilder<
             final textEditingController,
             final focusNode,
             final onFieldSubmitted,
-          ) {
-            return TextFormField( // TODO exclude from Form onChanged
+          ) => Form(
+            // Scoped to an independent form
+            key: GlobalKey<FormState>(),
+            child: SimpleTextFormField(
               controller: textEditingController,
-              focusNode: focusNode,
+              label: label,
+              required: required,
+              readOnly: readOnly,
               validator: validator,
-              decoration: decoration,
+              //
+              focusNode: focusNode,
               onFieldSubmitted: (final String value) {
                 onFieldSubmitted();
               },
-            );
-          },
+            ),
+          ),
       displayStringForOption: displayString ?? keyGetter,
       optionsViewBuilder: (final context, final onSelected, final options) =>
           Align(

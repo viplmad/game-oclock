@@ -15,9 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginFormBloc,
         LoginGetBloc,
         LoginSaveBloc;
-import 'package:game_oclock/components/show_hide_text_form_field.dart'
-    show ShowHideTextFormField;
-import 'package:game_oclock/constants/form_validators.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData;
@@ -157,25 +155,23 @@ Widget _fieldsBuilder(
 ) {
   return Column(
     children: <Widget>[
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.host,
+        label: context.localize().hostLabel,
+        required: true,
         readOnly: readOnly,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(labelText: context.localize().hostLabel),
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.username,
+        label: context.localize().usernameLabel,
+        required: true,
         readOnly: readOnly,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(
-          labelText: context.localize().usernameLabel,
-        ),
       ),
-      ShowHideTextFormField(
+      SimpleObscuredTextFormField(
         controller: formGroup.password,
+        label: context.localize().passwordLabel,
+        required: true,
         readOnly: readOnly,
-        validator: (final value) => notEmptyValidator(context, value),
-        labelText: context.localize().passwordLabel,
       ),
     ],
   );

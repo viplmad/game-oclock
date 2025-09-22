@@ -2,7 +2,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField> operatorsMenuEntries = List.unmodifiable(<DropdownField>[
+List<DropdownField> operatorOptions = List.unmodifiable(<DropdownField>[
   DropdownField(
     value: 'Eq',
     labelBuilder: (final context) => context.localize().equalLabel,

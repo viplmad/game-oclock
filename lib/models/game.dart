@@ -3,7 +3,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField> gameFields = List.unmodifiable(<DropdownField>[
+List<DropdownField> gameFieldOptions = List.unmodifiable(<DropdownField>[
   DropdownField(
     value: 'id',
     labelBuilder: (final context) => context.localize().idLabel,

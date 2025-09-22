@@ -7,8 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoaded,
         TagCreateBloc,
         TagListBloc;
-import 'package:game_oclock/components/create_edit_form.dart';
-import 'package:game_oclock/constants/form_validators.dart';
+import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/models/models.dart'
     show GameTag, GameTagFormData, ListSearch, SearchDTO;
 import 'package:game_oclock/shared/selectors/tag_selector.dart';
@@ -66,8 +65,8 @@ Widget _fieldsCreateBuilder(
     children: <Widget>[
       TagSelectorBuilder(
         controller: formGroup.tagId,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(labelText: context.localize().tagLabel),
+        label: context.localize().tagLabel,
+        required: true,
       ),
     ],
   );

@@ -9,8 +9,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameFormBloc,
         UserGameGetBloc,
         UserGameUpdateBloc;
-import 'package:game_oclock/components/create_edit_form.dart';
-import 'package:game_oclock/constants/form_validators.dart';
+import 'package:game_oclock/components/forms/create_edit_form.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame, UserGameFormData;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
@@ -109,16 +109,16 @@ Widget _fieldsCreateBuilder(
     children: <Widget>[
       ExternalGameSelectorBuilder(
         controller: formGroup.title,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(labelText: context.localize().titleLabel),
+        label: context.localize().titleLabel,
+        required: true,
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.edition,
-        decoration: InputDecoration(labelText: context.localize().editionLabel),
+        label: context.localize().editionLabel,
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.status,
-        decoration: InputDecoration(labelText: context.localize().statusLabel),
+        label: context.localize().statusLabel,
       ),
     ],
   );
@@ -131,31 +131,31 @@ Widget _fieldsEditBuilder(
 ) {
   return Column(
     children: <Widget>[
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.title,
+        label: context.localize().titleLabel,
+        required: true,
         readOnly: readOnly,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(labelText: context.localize().titleLabel),
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.edition,
+        label: context.localize().editionLabel,
         readOnly: readOnly,
-        decoration: InputDecoration(labelText: context.localize().editionLabel),
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.status,
+        label: context.localize().statusLabel,
         readOnly: readOnly,
-        decoration: InputDecoration(labelText: context.localize().statusLabel),
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.rating,
+        label: context.localize().ratingLabel,
         readOnly: readOnly,
-        decoration: InputDecoration(labelText: context.localize().ratingLabel),
       ),
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.notes,
+        label: context.localize().notesLabel,
         readOnly: readOnly,
-        decoration: InputDecoration(labelText: context.localize().notesLabel),
       ),
     ],
   );

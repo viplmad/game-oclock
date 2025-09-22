@@ -10,9 +10,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         SearchFormBloc,
         SearchGetBloc,
         SearchUpdateBloc;
-import 'package:game_oclock/components/create_edit_form.dart';
+import 'package:game_oclock/components/forms/create_edit_form.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
-import 'package:game_oclock/constants/form_validators.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show
@@ -20,8 +20,8 @@ import 'package:game_oclock/models/models.dart'
         ListSearch,
         SearchDTO,
         SearchFormData,
-        gameFields,
-        operatorsMenuEntries;
+        gameFieldOptions,
+        operatorOptions;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class SearchCreateForm extends StatelessWidget {
@@ -124,11 +124,11 @@ Widget _fieldsBuilder(
   context.read<FilterFormDataListBloc>().add(const ListReloaded());
   return Column(
     children: <Widget>[
-      TextFormField(
+      SimpleTextFormField(
         controller: formGroup.name,
+        required: true,
         readOnly: readOnly,
-        validator: (final value) => notEmptyValidator(context, value),
-        decoration: InputDecoration(labelText: context.localize().nameLabel),
+        label: context.localize().nameLabel,
       ),
       ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
         // TODO readonly
@@ -144,47 +144,29 @@ Widget _fieldsBuilder(
             children: [
               Expanded(
                 flex: 2,
-                child: DropdownMenu<String>(
+                child: SimpleSelectFormField(
                   controller: data.field,
-                  enableFilter: true,
-                  requestFocusOnTap: true,
-                  label: Text(context.localize().fieldLabel),
-                  dropdownMenuEntries: gameFields
-                      .map(
-                        (final field) => DropdownMenuEntry<String>(
-                          value: field.value,
-                          label: field.labelBuilder(context),
-                        ),
-                      )
-                      .toList(growable: false),
+                  label: context.localize().fieldLabel,
+                  required: true,
+                  options: gameFieldOptions,
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: DropdownMenu<String>(
+                child: SimpleSelectFormField(
                   controller: data.operator,
-                  enableFilter: true,
-                  requestFocusOnTap: true,
-                  label: Text(context.localize().operatorLabel),
-                  dropdownMenuEntries: operatorsMenuEntries
-                      .map(
-                        (final field) => DropdownMenuEntry<String>(
-                          value: field.value,
-                          label: field.labelBuilder(context),
-                        ),
-                      )
-                      .toList(growable: false),
+                  label: context.localize().operatorLabel,
+                  required: true,
+                  options: operatorOptions,
                 ),
               ),
             ],
           ),
-          subtitle: TextFormField(
+          subtitle: SimpleTextFormField(
             controller: data.value,
+            required: true,
             readOnly: readOnly,
-            validator: (final value) => notEmptyValidator(context, value),
-            decoration: InputDecoration(
-              labelText: context.localize().valueLabel,
-            ),
+            label: context.localize().valueLabel,
           ),
           trailing: IconButton(
             icon: const Icon(CommonIcons.delete),
