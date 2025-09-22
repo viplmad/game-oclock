@@ -12,7 +12,10 @@ class SimpleTextFormField extends StatelessWidget {
     this.required = false,
     this.readOnly = false,
     this.validator,
+    this.maxLines = 1,
+    this.obscureText = false,
     //
+    this.suffixIcon,
     this.focusNode,
     this.onFieldSubmitted,
   });
@@ -22,6 +25,9 @@ class SimpleTextFormField extends StatelessWidget {
   final bool required;
   final bool readOnly;
   final FormFieldValidator<String>? validator;
+  final bool obscureText;
+  final int maxLines;
+  final Widget? suffixIcon;
   final FocusNode? focusNode;
   final ValueChanged<String>? onFieldSubmitted;
 
@@ -32,12 +38,15 @@ class SimpleTextFormField extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         label: FormFieldLabel(text: label, required: required),
+        suffixIcon: suffixIcon,
       ),
       validator:
           validator ??
           (required
               ? (final value) => notEmptyValidator(context, value)
               : null),
+      maxLines: maxLines,
+      obscureText: obscureText,
       //
       focusNode: focusNode,
       onFieldSubmitted: onFieldSubmitted,
@@ -69,6 +78,7 @@ class SimpleSelectFormField extends StatelessWidget {
       enableFilter: true,
       requestFocusOnTap: true,
       label: FormFieldLabel(text: label, required: required),
+      errorText: 'malo malo',
       dropdownMenuEntries: options
           .map(
             (final field) => DropdownMenuEntry<String>(
@@ -108,26 +118,25 @@ class _SimpleObscuredTextFormFieldState
 
   @override
   Widget build(final BuildContext context) {
-    return TextFormField(
+    return SimpleTextFormField(
+      controller: widget.controller,
+      label: widget.label,
+      required: widget.required,
+      readOnly: widget.readOnly,
+      validator: widget.validator,
+      suffixIcon: IconButton(
+        tooltip: obscureText
+            ? context.localize().showLabel
+            : context.localize().hideLabel,
+        icon: Icon(obscureText ? CommonIcons.show : CommonIcons.hide),
+        onPressed: () {
+          setState(() {
+            obscureText = !obscureText;
+          });
+        },
+      ),
       obscureText: obscureText,
       maxLines: 1,
-      readOnly: widget.readOnly,
-      controller: widget.controller,
-      decoration: InputDecoration(
-        label: FormFieldLabel(text: widget.label, required: widget.required),
-        suffixIcon: IconButton(
-          tooltip: obscureText
-              ? context.localize().showLabel
-              : context.localize().hideLabel,
-          icon: Icon(obscureText ? CommonIcons.show : CommonIcons.hide),
-          onPressed: () {
-            setState(() {
-              obscureText = !obscureText;
-            });
-          },
-        ),
-      ),
-      validator: widget.validator,
     );
   }
 }
@@ -147,7 +156,7 @@ class FormFieldLabel extends StatelessWidget {
             ? <InlineSpan>[
                 const TextSpan(
                   text: '*',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Colors.red), // TODO theme
                 ),
               ]
             : null,
