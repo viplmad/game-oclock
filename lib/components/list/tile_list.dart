@@ -43,9 +43,11 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
     super.key,
     required super.itemBuilder,
     required this.onReorder,
+    this.readOnly = false,
   });
 
   final ReorderCallback onReorder;
+  final bool readOnly;
 
   @override
   Widget listView({
@@ -61,6 +63,7 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
       onReorder: onReorder,
       trailing: trailing,
       controller: controller,
+      readOnly: readOnly,
     );
   }
 }
@@ -111,6 +114,7 @@ class ReorderableTileList<T> extends StatelessWidget {
     required this.onReorder,
     this.trailing,
     required this.controller,
+    this.readOnly = false,
   });
 
   final List<T> items;
@@ -118,11 +122,13 @@ class ReorderableTileList<T> extends StatelessWidget {
   final ReorderCallback onReorder;
   final Widget? trailing;
   final ScrollController controller;
+  final bool readOnly;
 
   @override
   Widget build(final BuildContext context) {
     final count = items.length + (trailing == null ? 0 : 1);
     return ReorderableListView.builder(
+      buildDefaultDragHandles: !readOnly,
       shrinkWrap: true,
       onReorder: onReorder,
       itemCount: count,

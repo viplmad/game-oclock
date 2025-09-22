@@ -131,7 +131,7 @@ Widget _fieldsBuilder(
         label: context.localize().nameLabel,
       ),
       ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
-        // TODO readonly
+        readOnly: readOnly,
         onReorder: (final oldIndex, final newIndex) {
           context.read<FilterFormDataListBloc>().replaceElement(
             oldIndex,

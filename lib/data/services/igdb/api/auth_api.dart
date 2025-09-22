@@ -18,9 +18,9 @@ class AuthApi extends BaseApi {
   ///
   /// * [String] username:
   Future<Response> tokenWithHttpInfo(
-    String grantType,
-    String clientId,
-    String clientSecret,
+    final String grantType,
+    final String clientId,
+    final String clientSecret,
   ) async {
     // ignore: prefer_const_declarations
     final path = r'/token';
@@ -59,9 +59,9 @@ class AuthApi extends BaseApi {
   ///
   /// * [String] username:
   Future<TokenResponse> token(
-    String grantType,
-    String clientId,
-    String clientSecret,
+    final String grantType,
+    final String clientId,
+    final String clientSecret,
   ) async {
     final response = await tokenWithHttpInfo(grantType, clientId, clientSecret);
     await checkResponse(response);
