@@ -141,6 +141,8 @@ class _SimpleObscuredTextFormFieldState
   }
 }
 
+const requiredSuffix = TextSpan(text: '*');
+
 class FormFieldLabel extends StatelessWidget {
   const FormFieldLabel({super.key, required this.text, this.required = false});
 
@@ -150,17 +152,7 @@ class FormFieldLabel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Text.rich(
-      TextSpan(
-        text: text,
-        children: required
-            ? <InlineSpan>[
-                const TextSpan(
-                  text: '*',
-                  style: TextStyle(color: Colors.red), // TODO theme
-                ),
-              ]
-            : null,
-      ),
+      TextSpan(text: text, children: required ? [requiredSuffix] : null),
     );
   }
 }

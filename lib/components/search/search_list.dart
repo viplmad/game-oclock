@@ -26,6 +26,8 @@ class SearchListPage extends StatelessWidget {
         ),
       // TODO create button
       child: GridListBuilder<ListSearch, SearchListBloc>(
+        itemAspectRatio: 3.5,
+        columns: (MediaQuery.sizeOf(context).width / 600).ceil(),
         itemBuilder: (final context, final data, final index) =>
             SearchGridListItem(space: space, data: data),
       ),
@@ -46,7 +48,8 @@ class SearchGridListItem extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return TileListItem(
-      title: data.name,
+      hasImage: false,
+      title: 'data.name',
       onTap: () {
         Navigator.pop(context, data);
       },

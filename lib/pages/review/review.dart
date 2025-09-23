@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionStarted, ListLoadBloc, ReviewYearSelectBloc;
+    show ActionStarted, ReviewYearSelectBloc;
 import 'package:game_oclock/components/list/grid_list.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class ReviewPage extends StatelessWidget {
   const ReviewPage({super.key});
@@ -17,34 +18,78 @@ class ReviewPage extends StatelessWidget {
                 ..add(ActionStarted(data: DateTime.now().year)),
         ),
       ],
-      child: Center(),
+      child: ReviewBuilder(title: context.localize().yearInReviewTitle),
     );
   }
+}
 
-  Widget main<T, LB extends ListLoadBloc<T>, SB>({
-    required final String title,
-    required final Widget Function(
-      BuildContext context,
-      T data,
-      VoidCallback onTap,
-    )
-    listItemBuilder,
-  }) {
+class ReviewBuilder extends StatelessWidget {
+  const ReviewBuilder({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: GridListBuilder<T, LB>(
-        itemBuilder: (final context, final data, final index) =>
-            listItemBuilder(
-              context,
-              data,
-              () {} /*_select(
-                context,
-                selectBloc: context.read<SB>(),
-                data: data == selectedData
-                    ? null // Remove selection if pressed on the same one
-                    : data,
-              )*/,
+      body: SingleChildScrollView(
+        child: Column(
+          /*
+          summaryPlayed             summaryFinished           summaryTime
+          summaryDevices            longestSession            longestStreak
+          chartPlayedByReleaseYear  chartPlayedByReleaseYear  chartPlayedByGenre
+          top1                      top1                      top2
+          top3                      top4                      top5
+          chartPlayedByRating       chartFinishedByMonth      chartPlayTimeByMonth
+          chartPlayTimeByDayOfMonth chartPlayTimeByWeek       chartPlayTimeByWeekday
+          chartPlayTimeByHour       chartPlayedByDevice       chartPlayTimeByDevice
+        */
+          children: [
+            CenteredGridList(
+              items: [1, 2, 3, 4, 5, 6],
+              itemBuilder: (final context, final item, final index) =>
+                  Container(
+                    color: Colors.red,
+                    child: Center(child: Text('$item')),
+                  ),
+              itemAspectRatio: 1.5,
+              columns: (MediaQuery.sizeOf(context).width / 500).ceil(),
             ),
+            const Divider(), // TODO
+            CenteredGridList(
+              items: [11, 12, 13],
+              itemBuilder: (final context, final item, final index) =>
+                  Container(
+                    color: Colors.red,
+                    child: Center(child: Text('$item')),
+                  ),
+              itemAspectRatio: 2,
+              columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
+            ),
+            const Divider(), // TODO
+            CenteredGridList(
+              items: [21, 22, 23, 24, 25],
+              itemBuilder: (final context, final item, final index) =>
+                  Container(
+                    color: Colors.red,
+                    child: Center(child: Text('$item')),
+                  ),
+              itemAspectRatio: 2,
+              columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
+            ),
+            const Divider(), // TODO
+            CenteredGridList(
+              items: [31, 32, 33, 34, 35, 36, 37, 38, 39],
+              itemBuilder: (final context, final item, final index) =>
+                  Container(
+                    color: Colors.red,
+                    child: Center(child: Text('$item')),
+                  ),
+              itemAspectRatio: 2,
+              columns: (MediaQuery.sizeOf(context).width / 500).ceil(),
+            ),
+          ],
+        ),
       ),
     );
   }

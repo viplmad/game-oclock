@@ -18,10 +18,10 @@ class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
   const StickyTopListBuilder({
     super.key,
-    required super.groupTransformer,
-    required super.headerBuilder,
     required super.itemBuilder,
     super.controller,
+    required super.groupTransformer,
+    required super.headerBuilder,
   });
 
   @override
@@ -44,10 +44,10 @@ class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
   const StickySideListBuilder({
     super.key,
-    required super.groupTransformer,
-    required super.headerBuilder,
     required super.itemBuilder,
     super.controller,
+    required super.groupTransformer,
+    required super.headerBuilder,
   });
 
   @override
@@ -70,16 +70,16 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const StickyListBuilder({
     super.key,
-    required this.groupTransformer,
-    required this.headerBuilder,
     required this.itemBuilder,
     this.controller,
+    required this.groupTransformer,
+    required this.headerBuilder,
   });
 
-  final Widget Function(K key) headerBuilder;
-  final Map<K, List<T>> Function(List<T> items) groupTransformer;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ScrollController? controller;
+  final Widget Function(K key) headerBuilder;
+  final Map<K, List<T>> Function(List<T> items) groupTransformer;
 
   @override
   Widget build(final BuildContext context) {
@@ -148,13 +148,13 @@ class StickyTopHeaderList<K, T> extends StatelessWidget {
     required this.items,
     required this.headerBuilder,
     required this.itemBuilder,
-    required this.controller,
+    this.controller,
   });
 
   final Map<K, List<T>> items;
   final Widget Function(K key) headerBuilder;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
-  final ScrollController controller;
+  final ScrollController? controller;
 
   @override
   Widget build(final BuildContext context) {
@@ -180,13 +180,13 @@ class StickySideHeaderList<K, T> extends StatelessWidget {
     required this.items,
     required this.headerBuilder,
     required this.itemBuilder,
-    required this.controller,
+    this.controller,
   });
 
   final Map<K, List<T>> items;
   final Widget Function(K key) headerBuilder;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
-  final ScrollController controller;
+  final ScrollController? controller;
 
   @override
   Widget build(final BuildContext context) {
@@ -221,6 +221,7 @@ class SliverTopGroup<T> extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final count = items.length;
+
     return SliverMainAxisGroup(
       slivers: <Widget>[
         SliverPersistentHeader(
@@ -229,7 +230,7 @@ class SliverTopGroup<T> extends StatelessWidget {
         ),
         SliverList.builder(
           itemCount: count,
-          itemBuilder: (final BuildContext context, final int index) {
+          itemBuilder: (final context, final index) {
             final T item = items.elementAt(index);
             final Widget itemWidget = itemBuilder(context, item, index);
 
@@ -259,6 +260,7 @@ class SliverSideGroup<T> extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final count = items.length;
+
     return SliverStickyHeader(
       overlapsContent: true,
       header: header,
@@ -266,7 +268,7 @@ class SliverSideGroup<T> extends StatelessWidget {
         padding: const EdgeInsets.only(left: 60),
         sliver: SliverList.builder(
           itemCount: count,
-          itemBuilder: (final BuildContext context, final int index) {
+          itemBuilder: (final context, final index) {
             final T item = items.elementAt(index);
             final Widget itemWidget = itemBuilder(context, item, index);
 

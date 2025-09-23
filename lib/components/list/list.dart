@@ -19,13 +19,18 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
-  const PaginatedListBuilder({super.key, required this.itemBuilder});
+  const PaginatedListBuilder({
+    super.key,
+    required this.itemBuilder,
+    this.controller,
+  });
 
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final ScrollController? controller;
 
   @override
   Widget build(final BuildContext context) {
-    final ScrollController controller = ScrollController();
+    final ScrollController controller = this.controller ?? ScrollController();
     controller.addListener(paginateListener(context, controller));
 
     return BlocBuilder<LB, ListState<T>>(

@@ -14,6 +14,7 @@ class TileListItem extends StatelessWidget {
     this.imageURL,
     this.onTap,
     this.trailing,
+    this.hasImage = true,
   });
 
   final String title;
@@ -21,7 +22,7 @@ class TileListItem extends StatelessWidget {
   final String? imageURL;
   final VoidCallback? onTap;
   final Widget? trailing;
-  final bool hasImage = true;
+  final bool hasImage;
 
   @override
   Widget build(final BuildContext context) {
@@ -31,6 +32,7 @@ class TileListItem extends StatelessWidget {
       trailing: trailing,
       imageURL: imageURL,
       onTap: onTap,
+      hasImage: hasImage,
     );
   }
 }
@@ -145,6 +147,7 @@ class _ListItemListTile extends StatelessWidget {
     this.imageURL,
     this.onTap,
     this.trailing,
+    this.hasImage = true,
   });
 
   final String title;
@@ -152,7 +155,7 @@ class _ListItemListTile extends StatelessWidget {
   final String? imageURL;
   final VoidCallback? onTap;
   final Widget? trailing;
-  final bool hasImage = true;
+  final bool hasImage;
 
   @override
   Widget build(final BuildContext context) {

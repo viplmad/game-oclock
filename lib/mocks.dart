@@ -11,6 +11,7 @@ import 'package:game_oclock/models/models.dart'
         SearchDTO,
         SearchValue,
         Tag,
+        User,
         UserGame;
 
 UserGame mockUserGame({final String? title}) {
@@ -40,6 +41,10 @@ GameAvailable mockGameAvailable({final String? name}) {
     name: name ?? 'name',
     date: DateTime.now(),
   );
+}
+
+User mockUser() {
+  return User(id: Random().nextInt(1000).toString(), username: 'username');
 }
 
 Login mockLogin() {

@@ -196,6 +196,8 @@ class ListDetailBuilder<
         toolbars: [ListFilterToolbarBuilder<T, LB>(space: searchSpace)],
         child: selectedStyle == ListStyle.grid
             ? GridListBuilder<T, LB>(
+                itemAspectRatio: 1.85, // Steam header aspect ratio
+                columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
                 itemBuilder: (final context, final data, final index) =>
                     listItemBuilder(
                       context,

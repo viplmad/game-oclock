@@ -74,13 +74,13 @@ class TileList<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.trailing,
-    required this.controller,
+    this.controller,
   });
 
   final List<T> items;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? trailing;
-  final ScrollController controller;
+  final ScrollController? controller;
 
   @override
   Widget build(final BuildContext context) {
@@ -91,7 +91,7 @@ class TileList<T> extends StatelessWidget {
       shrinkWrap: true,
       itemCount: count,
       controller: controller,
-      itemBuilder: (final BuildContext context, final int index) {
+      itemBuilder: (final context, final index) {
         Widget itemWidget;
         if (index == count - 1 && trailing != null) {
           itemWidget = trailing!;
@@ -113,7 +113,7 @@ class ReorderableTileList<T> extends StatelessWidget {
     required this.itemBuilder,
     required this.onReorder,
     this.trailing,
-    required this.controller,
+    this.controller,
     this.readOnly = false,
   });
 
@@ -121,19 +121,20 @@ class ReorderableTileList<T> extends StatelessWidget {
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ReorderCallback onReorder;
   final Widget? trailing;
-  final ScrollController controller;
+  final ScrollController? controller;
   final bool readOnly;
 
   @override
   Widget build(final BuildContext context) {
     final count = items.length + (trailing == null ? 0 : 1);
+
     return ReorderableListView.builder(
       buildDefaultDragHandles: !readOnly,
       shrinkWrap: true,
       onReorder: onReorder,
       itemCount: count,
       scrollController: controller,
-      itemBuilder: (final BuildContext context, final int index) {
+      itemBuilder: (final context, final index) {
         Widget itemWidget;
         if (index == count - 1 && trailing != null) {
           itemWidget = trailing!;
