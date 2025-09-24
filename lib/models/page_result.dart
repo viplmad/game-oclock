@@ -1,9 +1,9 @@
 class PageResultDTO<T> {
   PageResultDTO({this.data = const [], this.page = 0, this.size = 0});
 
-  List<T> data;
+  final List<T> data;
 
-  int page;
+  final int page;
 
-  int size;
+  final int size;
 }

@@ -30,14 +30,17 @@ class UserGameListPage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => UserGameSelectBloc()),
         BlocProvider(
-          create: (_) => UserGameListBloc()
-            ..add(
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
+          create: (_) =>
+              UserGameListBloc(service: RepositoryProvider.of(context))..add(
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
               ),
-            ),
         ),
-        BlocProvider(create: (_) => UserGameDeleteBloc()),
+        BlocProvider(
+          create: (_) =>
+              UserGameDeleteBloc(service: RepositoryProvider.of(context)),
+        ),
         BlocProvider(
           create: (_) => ListStyleBloc()
             ..add(
@@ -70,9 +73,17 @@ class UserGameListPage extends StatelessWidget {
             key: Key(data.id),
             providers: [
               BlocProvider(
-                create: (_) => UserGameAvailableListBloc(gameId: data.id),
+                create: (_) => UserGameAvailableListBloc(
+                  gameId: data.id,
+                  service: RepositoryProvider.of(context),
+                ),
               ),
-              BlocProvider(create: (_) => UserGameTagListBloc(gameId: data.id)),
+              BlocProvider(
+                create: (_) => UserGameTagListBloc(
+                  gameId: data.id,
+                  service: RepositoryProvider.of(context),
+                ),
+              ),
             ],
             child: UserGameDetail(
               data: data,

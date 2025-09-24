@@ -34,7 +34,10 @@ class UserGameCreateForm extends StatelessWidget {
             ),
           ),
         ),
-        BlocProvider(create: (_) => UserGameCreateBloc()),
+        BlocProvider(
+          create: (_) =>
+              UserGameCreateBloc(service: RepositoryProvider.of(context)),
+        ),
         BlocProvider(
           create: (_) =>
               ExternalGameListBloc(igdbService: RepositoryProvider.of(context))
@@ -81,9 +84,14 @@ class UserGameEditForm extends StatelessWidget {
             ),
           ),
         ),
-        BlocProvider(create: (_) => UserGameUpdateBloc()),
         BlocProvider(
-          create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
+          create: (_) =>
+              UserGameUpdateBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameGetBloc(service: RepositoryProvider.of(context))
+                ..add(ActionStarted(data: id)),
         ),
       ],
       child:

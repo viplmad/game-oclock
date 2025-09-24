@@ -2,10 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionStarted, DateLocaleConfigBloc, MinimizedLayoutBloc;
-import 'package:game_oclock/data/services/igdb_service.dart';
+    show
+        ActionStarted,
+        CurrentUserGetBloc,
+        DateLocaleConfigBloc,
+        MinimizedLayoutBloc,
+        SavedLoginResponseGetBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/pages/routes.dart';
+import 'package:game_oclock/services/services.dart'
+    show
+        AuthService,
+        GameLogService,
+        GameService,
+        IGDBService,
+        LoginService,
+        SearchService,
+        TagService,
+        UserService;
 
 void main() {
   usePathUrlStrategy();
@@ -30,14 +44,30 @@ class GameOClockApp extends StatelessWidget {
       );
     }
 
+    final authService = AuthService();
+    final userService = UserService();
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<IGDBService>(
           create: (_) => IGDBService(igdbClientId, igdbClientSecret),
         ),
+        RepositoryProvider<AuthService>(create: (_) => authService),
+        RepositoryProvider<UserService>(create: (_) => userService),
+        RepositoryProvider<LoginService>(create: (_) => LoginService()),
+        RepositoryProvider<GameService>(create: (_) => GameService()),
+        RepositoryProvider<TagService>(create: (_) => TagService()),
+        RepositoryProvider<GameLogService>(create: (_) => GameLogService()),
+        RepositoryProvider<SearchService>(create: (_) => SearchService()),
       ],
       child: MultiBlocProvider(
         providers: [
+          // Data
+          BlocProvider(
+            create: (_) => SavedLoginResponseGetBloc(service: authService),
+          ),
+          BlocProvider(create: (_) => CurrentUserGetBloc(service: userService)),
+          // Config
           BlocProvider(
             create: (_) =>
                 MinimizedLayoutBloc()..add(const ActionStarted(data: false)),

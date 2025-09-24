@@ -36,7 +36,10 @@ sealed class ActionFinal<T, K> extends ActionState<T> {
 
 final class ActionSuccess<T, K> extends ActionFinal<T, K> {
   const ActionSuccess({required super.data, required super.event});
-  static ActionSuccess<void, S> empty<S>(final S event) =>
+  static ActionSuccess<S, void> producer<S>(final S data) =>
+      // ignore: void_checks
+      ActionSuccess<S, void>(data: data, event: '');
+  static ActionSuccess<void, S> consumer<S>(final S event) =>
       // ignore: void_checks
       ActionSuccess<void, S>(data: '', event: event);
 }
@@ -49,7 +52,16 @@ final class ActionFailure<T, K> extends ActionFinal<T, K> {
     required super.data,
     required super.event,
   });
-  static ActionFailure<void, S> empty<S>(final ErrorDTO error, final S event) =>
+  static ActionFailure<S, void> producer<S>(
+    final ErrorDTO error,
+    final S data,
+  ) =>
+      // ignore: void_checks
+      ActionFailure(data: data, event: '', error: error);
+  static ActionFailure<void, S> consumer<S>(
+    final ErrorDTO error,
+    final S event,
+  ) =>
       // ignore: void_checks
       ActionFailure<void, S>(data: '', event: event, error: error);
 

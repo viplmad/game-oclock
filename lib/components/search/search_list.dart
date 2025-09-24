@@ -18,12 +18,13 @@ class SearchListPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocProvider(
-      create: (_) => SearchListBloc(space: space)
-        ..add(
-          ListLoaded(
-            search: ListSearch(name: 'default', search: SearchDTO()),
-          ),
-        ),
+      create: (_) =>
+          SearchListBloc(space: space, service: RepositoryProvider.of(context))
+            ..add(
+              ListLoaded(
+                search: ListSearch(name: 'default', search: SearchDTO()),
+              ),
+            ),
       // TODO create button
       child: GridListBuilder<ListSearch, SearchListBloc>(
         itemAspectRatio: 3.5,
@@ -49,7 +50,7 @@ class SearchGridListItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TileListItem(
       hasImage: false,
-      title: 'data.name',
+      title: data.name,
       onTap: () {
         Navigator.pop(context, data);
       },

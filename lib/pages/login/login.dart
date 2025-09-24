@@ -13,12 +13,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormSubmitted,
         FormValuesUpdated,
         LoginFormBloc,
-        LoginGetBloc,
-        LoginSaveBloc;
+        LoginSaveBloc,
+        SavedLoginResponseGetBloc;
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, Login, LoginFormData;
+    show LayoutTier, Login, LoginFormData, SavedLoginResponse;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -39,10 +39,11 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ),
-        BlocProvider(create: (_) => LoginSaveBloc()),
         BlocProvider(
-          create: (_) =>
-              LoginGetBloc()..add(const ActionStarted(data: 'get')), // TODO
+          create: (_) => LoginSaveBloc(
+            service: RepositoryProvider.of(context),
+            authService: RepositoryProvider.of(context),
+          ),
         ),
       ],
       child: const LoginBuilder(),
@@ -93,26 +94,36 @@ class LoginBuilder extends StatelessWidget {
             GoRouter.of(context).go(CommonPaths.gamesPath);
           },
         ),
-        BlocListener<LoginGetBloc, ActionState<Login?>>(
+        BlocListener<
+          SavedLoginResponseGetBloc,
+          ActionState<SavedLoginResponse>
+        >(
           listener: (final context, final state) {
-            Login? login;
-            if (state is ActionFinal<Login?, String>) {
-              login = state.data;
-              if (login != null) {
-                context.read<LoginFormBloc>().add(
-                  FormValuesUpdated(values: login),
-                );
-              }
+            SavedLoginResponse savedLogin;
+            if (state is ActionFinal<SavedLoginResponse, void>) {
+              savedLogin = state.data;
+              context.read<LoginFormBloc>().add(
+                FormValuesUpdated(
+                  values: Login(
+                    host: savedLogin.host,
+                    username: savedLogin.username,
+                    password: '',
+                  ),
+                ),
+              );
             }
           },
         ),
       ],
       child: BlocBuilder<LoginFormBloc, FormState2<LoginFormData, Login>>(
         builder: (final context, final formState) {
-          return BlocBuilder<LoginGetBloc, ActionState<Login?>>(
+          return BlocBuilder<
+            SavedLoginResponseGetBloc,
+            ActionState<SavedLoginResponse>
+          >(
             builder: (final context, final getState) {
               bool skeleton = false; // TODO
-              if (getState is ActionInProgress<Login?>) {
+              if (getState is ActionInProgress<SavedLoginResponse>) {
                 skeleton = true; // TODO only if initial load?
               }
 

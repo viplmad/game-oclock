@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionStarted, MinimizedLayoutBloc;
+    show
+        ActionFailure,
+        ActionFinal,
+        ActionStarted,
+        CurrentUserGetBloc,
+        MinimizedLayoutBloc,
+        SavedLoginResponseGetBloc;
 import 'package:game_oclock/components/main_layout.dart' show MainLayoutBuilder;
 import 'package:game_oclock/constants/paths.dart';
+import 'package:game_oclock/models/models.dart';
 import 'package:game_oclock/pages/calendar/multi_calendar.dart'
     show MultiCalendarPage;
 import 'package:game_oclock/pages/destinations.dart'
@@ -18,6 +25,35 @@ import 'package:go_router/go_router.dart';
 // GoRouter configuration
 final routerConfig = GoRouter(
   initialLocation: CommonPaths.loginPath,
+  redirect: (final context, final state) async {
+    final savedLoginBloc = context.read<SavedLoginResponseGetBloc>();
+    final currentUserBloc = context.read<CurrentUserGetBloc>();
+
+    savedLoginBloc.add(ActionStarted.empty());
+    final savedLoginState =
+        await savedLoginBloc.stream.firstWhere(
+              (final actionState) =>
+                  actionState is ActionFinal<SavedLoginResponse, void>,
+            )
+            as ActionFinal<SavedLoginResponse, void>;
+    if (savedLoginState is ActionFailure<SavedLoginResponse, void>) {
+      return CommonPaths.loginPath;
+    }
+
+    currentUserBloc.add(ActionStarted.empty());
+    final currentUserState =
+        await currentUserBloc.stream.firstWhere(
+              (final actionState) => actionState is ActionFinal<User, void>,
+            )
+            as ActionFinal<User, void>;
+    if (currentUserState is ActionFailure<User, void>) {
+      return CommonPaths.loginPath;
+    }
+
+    return state.uri.path == CommonPaths.loginPath
+        ? CommonPaths.gamesPath // TODO redirectUrl pathparam
+        : null;
+  },
   routes: [
     GoRoute(
       path: CommonPaths.loginPath,

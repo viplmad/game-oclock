@@ -1,32 +1,35 @@
-import 'package:game_oclock/blocs/list/list_state.dart';
-import 'package:game_oclock/mocks.dart';
+import 'package:game_oclock/blocs/bloc_utils.dart';
 import 'package:game_oclock/models/models.dart'
     show GameAvailable, ListSearch, Tag, UserGame;
+import 'package:game_oclock/services/services.dart' show GameService;
 
-import '../list.dart' show ListLoadBloc;
+import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
 class UserGameListBloc extends ListLoadBloc<UserGame> {
+  UserGameListBloc({required this.service});
+
+  final GameService service;
+
   @override
   Future<ListFinal<UserGame>> loadList(
     final String? quicksearch,
     final ListSearch search,
     final List<UserGame>? lastData,
-    final String? lastQuicksearch,
-    final ListSearch? lastSearch,
+    final int? lastTotal,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final page = mockPageResult(
+    final data = mergePageData(
       search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockUserGame(title: 'title ($quicksearch) $index'),
+      page: await service.search(search.search, quicksearch),
+      lastData: lastData,
     );
-    final data = mergePageData(search: search, page: page, lastData: lastData);
-
+    final count = await mergeCount(
+      search: search,
+      countGetter: () => service.count(search.search, quicksearch),
+      lastTotal: lastTotal,
+    );
     return ListLoadSuccess<UserGame>(
       data: data,
-      total: 500,
+      total: count,
       quicksearch: quicksearch,
       search: search,
     );
@@ -34,8 +37,9 @@ class UserGameListBloc extends ListLoadBloc<UserGame> {
 }
 
 class UserGameTagListBloc extends ListLoadBloc<Tag> {
-  UserGameTagListBloc({required this.gameId});
+  UserGameTagListBloc({required this.service, required this.gameId});
 
+  final GameService service;
   final String gameId;
 
   @override
@@ -43,22 +47,21 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
     final String? quicksearch,
     final ListSearch search,
     final List<Tag>? lastData,
-    final String? lastQuicksearch,
-    final ListSearch? lastSearch,
+    final int? lastTotal,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final page = mockPageResult(
+    final data = mergePageData(
       search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockTag(name: 'name $gameId ($quicksearch) $index'),
+      page: await service.searchTags(gameId, search.search, quicksearch),
+      lastData: lastData,
     );
-    final data = mergePageData(search: search, page: page, lastData: lastData);
-
+    final count = await mergeCount(
+      search: search,
+      countGetter: () => service.countTags(gameId, search.search, quicksearch),
+      lastTotal: lastTotal,
+    );
     return ListLoadSuccess<Tag>(
       data: data,
-      total: 500,
+      total: count,
       quicksearch: quicksearch,
       search: search,
     );
@@ -66,8 +69,9 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
 }
 
 class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
-  UserGameAvailableListBloc({required this.gameId});
+  UserGameAvailableListBloc({required this.service, required this.gameId});
 
+  final GameService service;
   final String gameId;
 
   @override
@@ -75,22 +79,22 @@ class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
     final String? quicksearch,
     final ListSearch search,
     final List<GameAvailable>? lastData,
-    final String? lastQuicksearch,
-    final ListSearch? lastSearch,
+    final int? lastTotal,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final page = mockPageResult(
+    final data = mergePageData(
       search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockGameAvailable(name: 'name $gameId ($quicksearch) $index'),
+      page: await service.searchAvailable(gameId, search.search, quicksearch),
+      lastData: lastData,
     );
-    final data = mergePageData(search: search, page: page, lastData: lastData);
-
+    final count = await mergeCount(
+      search: search,
+      countGetter: () =>
+          service.countAvailable(gameId, search.search, quicksearch),
+      lastTotal: lastTotal,
+    );
     return ListLoadSuccess<GameAvailable>(
       data: data,
-      total: 500,
+      total: count,
       quicksearch: quicksearch,
       search: search,
     );

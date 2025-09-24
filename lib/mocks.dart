@@ -8,11 +8,13 @@ import 'package:game_oclock/models/models.dart'
         Login,
         OperatorType,
         PageResultDTO,
+        SavedLoginResponse,
         SearchDTO,
         SearchValue,
         Tag,
         User,
         UserGame;
+import 'package:game_oclock/models/token_response.dart';
 
 UserGame mockUserGame({final String? title}) {
   return UserGame(
@@ -55,13 +57,30 @@ Login mockLogin() {
   );
 }
 
+SavedLoginResponse mockSavedLoginResponse() {
+  return SavedLoginResponse(
+    host: 'http://localhost:8080',
+    username: 'viplmad2',
+    tokenResponse: mockTokenResponse(),
+  );
+}
+
+TokenResponse mockTokenResponse() {
+  return TokenResponse(
+    accessToken: 'eyj',
+    expiresIn: 3600,
+    refreshToken: 'MII',
+    tokenType: 'bearer',
+  );
+}
+
 PageResultDTO<T> mockPageResult<T>({
-  required final ListSearch search,
+  required final SearchDTO search,
   required final String? quicksearch,
   required final T Function(int) builder,
 }) {
-  final page = search.search.page ?? 0;
-  final size = search.search.size ?? 50;
+  final page = search.page ?? 0;
+  final size = search.size ?? 50;
   return PageResultDTO<T>(
     data: List.generate(size, (final index) {
       final finalIndex = (page * size) + index;
@@ -70,23 +89,6 @@ PageResultDTO<T> mockPageResult<T>({
     page: page,
     size: size,
   );
-}
-
-List<T> mergePageData<T>({
-  required final ListSearch search,
-  required final PageResultDTO<T> page,
-  required final List<T>? lastData,
-}) {
-  List<T> finalData;
-  if ((search.search.page ?? 0) == 0) {
-    finalData = page.data;
-  } else {
-    finalData = List.of(
-      lastData == null ? page.data : [...lastData, ...page.data],
-      growable: false,
-    );
-  }
-  return finalData;
 }
 
 ListSearch mockSearch({final String? name, final int filters = 0}) {

@@ -52,11 +52,26 @@ class UserGameDetailsPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => UserGameGetBloc()..add(ActionStarted(data: id)),
+          create: (_) =>
+              UserGameGetBloc(service: RepositoryProvider.of(context))
+                ..add(ActionStarted(data: id)),
         ),
-        BlocProvider(create: (_) => UserGameDeleteBloc()),
-        BlocProvider(create: (_) => UserGameAvailableListBloc(gameId: id)),
-        BlocProvider(create: (_) => UserGameTagListBloc(gameId: id)),
+        BlocProvider(
+          create: (_) =>
+              UserGameDeleteBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) => UserGameAvailableListBloc(
+            gameId: id,
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => UserGameTagListBloc(
+            gameId: id,
+            service: RepositoryProvider.of(context),
+          ),
+        ),
       ],
       child: BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
         builder: (final context, final state) {

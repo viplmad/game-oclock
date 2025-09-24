@@ -42,7 +42,12 @@ class SearchCreateForm extends StatelessWidget {
             ),
           ),
         ),
-        BlocProvider(create: (_) => SearchCreateBloc(space: space)),
+        BlocProvider(
+          create: (_) => SearchCreateBloc(
+            space: space,
+            service: RepositoryProvider.of(context),
+          ),
+        ),
         BlocProvider(
           create: (_) => FilterFormDataListBloc(data: mutableFilters)
             ..add(
@@ -87,10 +92,17 @@ class SearchEditForm extends StatelessWidget {
             );
           },
         ),
-        BlocProvider(create: (_) => SearchUpdateBloc(space: space)),
         BlocProvider(
-          create: (_) =>
-              SearchGetBloc(space: space)..add(ActionStarted(data: name)),
+          create: (_) => SearchUpdateBloc(
+            space: space,
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => SearchGetBloc(
+            space: space,
+            service: RepositoryProvider.of(context),
+          )..add(ActionStarted(data: name)),
         ),
         BlocProvider(
           create: (_) => FilterFormDataListBloc(data: mutableFilters)

@@ -1,11 +1,11 @@
-import 'package:game_oclock/data/services/igdb/api/auth_api.dart';
-import 'package:game_oclock/data/services/igdb/api/games_api.dart';
-import 'package:game_oclock/data/services/igdb/api_client.dart';
-import 'package:game_oclock/data/services/igdb/auth/api_key_auth.dart';
-import 'package:game_oclock/data/services/igdb/auth/authentication.dart';
-import 'package:game_oclock/data/services/igdb/auth/http_bearer_auth.dart';
-import 'package:game_oclock/data/services/igdb/auth/multiple_auth.dart';
 import 'package:game_oclock/models/models.dart' show ExternalGame;
+import 'package:game_oclock/services/igdb/api/auth_api.dart';
+import 'package:game_oclock/services/igdb/api/games_api.dart';
+import 'package:game_oclock/services/igdb/api_client.dart';
+import 'package:game_oclock/services/igdb/auth/api_key_auth.dart';
+import 'package:game_oclock/services/igdb/auth/authentication.dart';
+import 'package:game_oclock/services/igdb/auth/http_bearer_auth.dart';
+import 'package:game_oclock/services/igdb/auth/multiple_auth.dart';
 
 class IGDBService {
   IGDBService(final String clientId, final String clientSecret) {

@@ -30,17 +30,22 @@ class GameTagCreateForm extends StatelessWidget {
             ),
           ),
         ),
-        BlocProvider(create: (_) => GameTagCreateBloc()),
         BlocProvider(
-          create: (_) => TagListBloc()
-            ..add(
-              // Requires search to be loaded
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
-              ),
-            ),
+          create: (_) =>
+              GameTagCreateBloc(service: RepositoryProvider.of(context)),
         ),
-        BlocProvider(create: (_) => TagCreateBloc()),
+        BlocProvider(
+          create: (_) =>
+              TagListBloc(service: RepositoryProvider.of(context))..add(
+                // Requires search to be loaded
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
+              ),
+        ),
+        BlocProvider(
+          create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),
+        ),
       ],
       child:
           CreateFormBuilder<

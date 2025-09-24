@@ -1,30 +1,34 @@
-import 'package:game_oclock/blocs/list/list_state.dart';
-import 'package:game_oclock/mocks.dart';
+import 'package:game_oclock/blocs/bloc_utils.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch, Tag;
+import 'package:game_oclock/services/services.dart' show TagService;
 
-import '../list.dart' show ListLoadBloc;
+import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
 class TagListBloc extends ListLoadBloc<Tag> {
+  TagListBloc({required this.service});
+
+  final TagService service;
+
   @override
   Future<ListFinal<Tag>> loadList(
     final String? quicksearch,
     final ListSearch search,
     final List<Tag>? lastData,
-    final String? lastQuicksearch,
-    final ListSearch? lastSearch,
+    final int? lastTotal,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final page = mockPageResult(
+    final data = mergePageData(
       search: search,
-      quicksearch: quicksearch,
-      builder: (final index) => mockTag(name: 'name ($quicksearch) $index'),
+      page: await service.search(search.search, quicksearch),
+      lastData: lastData,
     );
-    final data = mergePageData(search: search, page: page, lastData: lastData);
-
+    final count = await mergeCount(
+      search: search,
+      countGetter: () => service.count(search.search, quicksearch),
+      lastTotal: lastTotal,
+    );
     return ListLoadSuccess<Tag>(
       data: data,
-      total: 500,
+      total: count,
       quicksearch: quicksearch,
       search: search,
     );

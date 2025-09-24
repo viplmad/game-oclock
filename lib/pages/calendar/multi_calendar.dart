@@ -30,12 +30,12 @@ class MultiCalendarPage extends StatelessWidget {
         ),
         BlocProvider(create: (_) => GameLogSelectBloc()),
         BlocProvider(
-          create: (_) => GameLogListBloc()
-            ..add(
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
+          create: (_) =>
+              GameLogListBloc(service: RepositoryProvider.of(context))..add(
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
               ),
-            ),
         ),
       ],
       child:
