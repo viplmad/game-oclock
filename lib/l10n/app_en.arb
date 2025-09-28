@@ -69,5 +69,6 @@
   "leaveDirtyFormConfirmationDialogTitle": "Are you sure you want to leave?",
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
   "gameEditionDataTitle": "{aTitle} - {bEdition}",
-  "createNewDataLabel": "Create new: \"{data}\""
+  "createNewDataLabel": "Create new: \"{data}\"",
+  "linkDataLabel": "Link {data}"
 }

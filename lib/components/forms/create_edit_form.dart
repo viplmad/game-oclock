@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormSubmitted,
         FormValuesUpdated,
         FunctionActionBloc;
+import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -234,7 +235,7 @@ class FullForm extends StatelessWidget {
   Widget build(final BuildContext context) {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
-      icon: inProgress ? const CircularProgressIndicator() : null,
+      icon: inProgress ? const ProgressButtonIcon() : null,
       label: Text(context.localize().saveLabel),
       onPressed: onSubmit,
     );

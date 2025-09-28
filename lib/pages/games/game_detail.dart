@@ -21,6 +21,7 @@ import 'package:game_oclock/components/error_detail.dart';
 import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
@@ -161,20 +162,18 @@ class UserGameDetail extends StatelessWidget {
           child: ListToolbar(
             toolbars: [
               ListButtonToolbar(
-                label: 'Link tag', // TODO i18n
+                label: context.localize().linkDataLabel(
+                  context.localize().tagLabel,
+                ),
                 icon: const Icon(CommonIcons.link),
-                onTap: () async =>
-                    showDialog<bool>(
-                      context: context,
-                      builder: (final context) =>
-                          GameTagCreateForm(gameId: data.id),
-                    ).then((final bool? success) {
-                      if (success != null && success && context.mounted) {
-                        context.read<UserGameTagListBloc>().add(
-                          const ListReloaded(),
-                        );
-                      }
-                    }),
+                onTap: () async => showFormDialog(
+                  context,
+                  builder: (final context) =>
+                      GameTagCreateForm(gameId: data.id),
+                  onSuccess: (final context) => context
+                      .read<UserGameTagListBloc>()
+                      .add(const ListReloaded()),
+                ),
               ),
             ],
             child: TileListBuilder<Tag, UserGameTagListBloc>(
@@ -202,31 +201,23 @@ class UserGameDetail extends StatelessWidget {
         IconButton(
           icon: const Icon(CommonIcons.edit),
           tooltip: context.localize().editLabel,
-          onPressed: () async =>
-              showDialog<bool>(
-                context: context,
-                builder: (final context) => UserGameEditForm(id: data.id),
-              ).then((final bool? success) {
-                if (success != null && success && context.mounted) {
-                  onEditSucceeded(context);
-                }
-              }),
+          onPressed: () async => showFormDialog(
+            context,
+            builder: (final context) => UserGameEditForm(id: data.id),
+            onSuccess: onEditSucceeded,
+          ),
         ),
         IconButton(
           icon: const Icon(CommonIcons.delete),
           tooltip: context.localize().deleteLabel,
-          onPressed: () async =>
-              showDialog<bool>(
-                context: context,
-                builder: (final context) => _confirmDelete(context, data),
-              ).then((final bool? success) {
-                if (success != null && success && context.mounted) {
-                  context.read<UserGameDeleteBloc>().add(
-                    ActionStarted(data: data),
-                  );
-                  onDeleteSucceeded(context); // TODO listen to bloc + snackbar
-                }
-              }),
+          onPressed: () async => showFormDialog(
+            context,
+            builder: (final context) => _confirmDelete(context, data),
+            onSuccess: (final context) {
+              context.read<UserGameDeleteBloc>().add(ActionStarted(data: data));
+              onDeleteSucceeded(context); // TODO listen to bloc + snackbar
+            },
+          ),
         ),
       ],
       child: extended

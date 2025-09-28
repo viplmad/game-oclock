@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginSaveBloc,
         SavedLoginResponseGetBloc;
 import 'package:game_oclock/components/forms/form_fields.dart';
+import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData, SavedLoginResponse;
@@ -208,7 +209,7 @@ class SimpleForm extends StatelessWidget {
   Widget build(final BuildContext context) {
     final inProgress = onSubmit == null;
     final saveButton = TextButton.icon(
-      icon: inProgress ? const CircularProgressIndicator() : null,
+      icon: inProgress ? const ProgressButtonIcon() : null,
       label: Text(context.localize().loginLabel),
       onPressed: onSubmit,
     );

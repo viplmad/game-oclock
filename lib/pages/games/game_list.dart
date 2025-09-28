@@ -12,6 +12,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameSelectBloc,
         UserGameTagListBloc;
 import 'package:game_oclock/components/list_detail.dart' show ListDetailBuilder;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, ListStyle, SearchDTO, UserGame;
@@ -55,16 +56,13 @@ class UserGameListPage extends StatelessWidget {
         searchSpace: 'game',
         floatingActionButton: FloatingActionButton(
           tooltip: context.localize().addLabel,
-          onPressed: () async =>
-              showDialog<bool>(
-                context: context,
-                builder: (final context) => const UserGameCreateForm(),
-              ).then((final bool? success) {
-                if (success != null && success && context.mounted) {
-                  context.read<UserGameListBloc>().add(const ListReloaded());
-                  // TODO select new?
-                }
-              }),
+          onPressed: () async => showFormDialog(
+            context,
+            builder: (final context) => const UserGameCreateForm(),
+            onSuccess: (final context) =>
+                // TODO select new?
+                context.read<UserGameListBloc>().add(const ListReloaded()),
+          ),
           child: const Icon(CommonIcons.add),
         ),
         detailBuilder: (final context, final data, final onClosed) {

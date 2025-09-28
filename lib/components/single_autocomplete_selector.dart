@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
+import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -162,7 +163,7 @@ final class AutocompleteNewConfig<
               return ListButtonToolbar(
                 label: context.localize().createNewDataLabel(quicksearch),
                 icon: inProgress
-                    ? const CircularProgressIndicator() // TODO too big
+                    ? const ProgressButtonIcon()
                     : const Icon(CommonIcons.add),
                 onTap: inProgress
                     ? null

@@ -519,6 +519,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create new: \"{data}\"'**
   String createNewDataLabel(Object data);
+
+  /// No description provided for @linkDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Link {data}'**
+  String linkDataLabel(Object data);
 }
 
 class _AppLocalizationsDelegate

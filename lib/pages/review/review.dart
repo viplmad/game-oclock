@@ -38,8 +38,8 @@ class ReviewBuilder extends StatelessWidget {
           summaryPlayed             summaryFinished           summaryTime
           summaryDevices            longestSession            longestStreak
           chartPlayedByReleaseYear  chartPlayedByReleaseYear  chartPlayedByGenre
-          top1                      top1                      top2
-          top3                      top4                      top5
+          top1                      top2                      top2
+          top4                      top5
           chartPlayedByRating       chartFinishedByMonth      chartPlayTimeByMonth
           chartPlayTimeByDayOfMonth chartPlayTimeByWeek       chartPlayTimeByWeekday
           chartPlayTimeByHour       chartPlayedByDevice       chartPlayTimeByDevice

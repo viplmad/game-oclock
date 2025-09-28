@@ -228,4 +228,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String createNewDataLabel(Object data) {
     return 'Create new: \"$data\"';
   }
+
+  @override
+  String linkDataLabel(Object data) {
+    return 'Link $data';
+  }
 }
