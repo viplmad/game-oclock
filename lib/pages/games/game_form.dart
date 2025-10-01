@@ -12,7 +12,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show ListSearch, SearchDTO, UserGame, UserGameFormData;
+    show ListSearch, SearchDTO, UserGame, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -124,9 +124,10 @@ Widget _fieldsCreateBuilder(
         controller: formGroup.edition,
         label: context.localize().editionLabel,
       ),
-      SimpleTextFormField(
+      SimpleChoiceFormField(
         controller: formGroup.status,
         label: context.localize().statusLabel,
+        options: gameStatusOptions,
       ),
     ],
   );

@@ -135,6 +135,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchLabel => 'Search';
 
   @override
+  String get lowPriorityLabel => 'Low Priority';
+
+  @override
+  String get nextUpLabel => 'Next Up';
+
+  @override
+  String get playingLabel => 'Playing';
+
+  @override
+  String get playedLabel => 'PLayed';
+
+  @override
   String get openLabel => 'Open';
 
   @override

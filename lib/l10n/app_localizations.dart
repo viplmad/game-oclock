@@ -346,6 +346,30 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get searchLabel;
 
+  /// No description provided for @lowPriorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Priority'**
+  String get lowPriorityLabel;
+
+  /// No description provided for @nextUpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Up'**
+  String get nextUpLabel;
+
+  /// No description provided for @playingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get playingLabel;
+
+  /// No description provided for @playedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'PLayed'**
+  String get playedLabel;
+
   /// No description provided for @openLabel.
   ///
   /// In en, this message translates to:
