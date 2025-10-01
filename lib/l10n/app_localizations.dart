@@ -346,6 +346,12 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get searchLabel;
 
+  /// No description provided for @wishlistLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlistLabel;
+
   /// No description provided for @lowPriorityLabel.
   ///
   /// In en, this message translates to:
@@ -367,7 +373,7 @@ abstract class AppLocalizations {
   /// No description provided for @playedLabel.
   ///
   /// In en, this message translates to:
-  /// **'PLayed'**
+  /// **'Played'**
   String get playedLabel;
 
   /// No description provided for @openLabel.

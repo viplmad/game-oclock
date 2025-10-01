@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show DropdownField;
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
-import 'label.dart';
-
-class SimpleChoiceFormField extends StatelessWidget {
+class SimpleChoiceFormField extends StatefulWidget {
   const SimpleChoiceFormField({
     super.key,
     required this.controller,
@@ -21,18 +19,24 @@ class SimpleChoiceFormField extends StatelessWidget {
   final List<DropdownField> options;
 
   @override
+  State<SimpleChoiceFormField> createState() => _SimpleChoiceFormFieldState();
+}
+
+class _SimpleChoiceFormFieldState extends State<SimpleChoiceFormField> {
+  @override
   Widget build(final BuildContext context) {
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      alignment: WrapAlignment.spaceAround,
-      children: options
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: widget.options
           .map(
             (final field) => ChoiceChip(
               label: Text(field.labelBuilder(context)),
-              selected: field.value == controller.text,
+              selected: field.value == widget.controller.text,
               onSelected: (final newChoice) {
                 if (newChoice) {
-                  controller.setValue(field.value);
+                  widget.controller.setValue(field.value);
+                  setState(() {});
                 }
               },
               selectedColor: field.color,

@@ -21,6 +21,11 @@ List<DropdownField> gameFieldOptions = List.unmodifiable(<DropdownField>[
 
 List<DropdownField> gameStatusOptions = List.unmodifiable(<DropdownField>[
   DropdownField(
+    value: 'wishlist',
+    labelBuilder: (final context) => context.localize().wishlistLabel,
+    color: Colors.yellow,
+  ),
+  DropdownField(
     value: 'lowPriorty',
     labelBuilder: (final context) => context.localize().lowPriorityLabel,
     color: Colors.grey,

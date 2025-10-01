@@ -135,6 +135,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchLabel => 'Search';
 
   @override
+  String get wishlistLabel => 'Wishlist';
+
+  @override
   String get lowPriorityLabel => 'Low Priority';
 
   @override
@@ -144,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playingLabel => 'Playing';
 
   @override
-  String get playedLabel => 'PLayed';
+  String get playedLabel => 'Played';
 
   @override
   String get openLabel => 'Open';
