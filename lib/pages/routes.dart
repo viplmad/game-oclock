@@ -51,7 +51,8 @@ final routerConfig = GoRouter(
     }
 
     return state.uri.path == CommonPaths.loginPath
-        ? CommonPaths.gamesPath // TODO redirectUrl pathparam
+        ? CommonPaths
+              .gamesPath // TODO redirectUrl pathparam
         : null;
   },
   routes: [

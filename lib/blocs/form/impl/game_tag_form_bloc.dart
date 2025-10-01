@@ -7,9 +7,6 @@ class GameTagFormBloc extends FormBloc<GameTagFormData, GameTag> {
 
   @override
   GameTag fromData(final GameTagFormData values) {
-    return GameTag(
-      gameId: values.gameId.value.text,
-      tagId: values.tagId.value.text,
-    );
+    return GameTag(gameId: values.gameId.text, tagId: values.tagId.text);
   }
 }

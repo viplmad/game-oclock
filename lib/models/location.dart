@@ -10,10 +10,10 @@ class Location extends Equatable {
   List<Object?> get props => [id];
 }
 
-class GameAvailable extends Location {
+class LocationWithDate extends Location {
   final DateTime date;
 
-  const GameAvailable({
+  const LocationWithDate({
     required super.id,
     required super.name,
     required this.date,

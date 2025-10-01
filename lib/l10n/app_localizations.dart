@@ -178,6 +178,12 @@ abstract class AppLocalizations {
   /// **'Tag'**
   String get tagLabel;
 
+  /// No description provided for @locationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get locationLabel;
+
   /// No description provided for @creatingTitle.
   ///
   /// In en, this message translates to:
@@ -250,6 +256,12 @@ abstract class AppLocalizations {
   /// **'Notes'**
   String get notesLabel;
 
+  /// No description provided for @dateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
   /// No description provided for @hostLabel.
   ///
   /// In en, this message translates to:
@@ -316,6 +328,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancelLabel;
 
+  /// No description provided for @clearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearLabel;
+
   /// No description provided for @reloadLabel.
   ///
   /// In en, this message translates to:
@@ -369,6 +387,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide'**
   String get hideLabel;
+
+  /// No description provided for @showDatePicker.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Date Picker'**
+  String get showDatePicker;
 
   /// No description provided for @previousMonth.
   ///

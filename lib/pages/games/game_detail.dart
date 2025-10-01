@@ -26,14 +26,15 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show
-        GameAvailable,
         LayoutTier,
         ListSearch,
+        LocationWithDate,
         SearchDTO,
         TabDestination,
         Tag,
         UserGame;
 import 'package:game_oclock/pages/games/game_form.dart';
+import 'package:game_oclock/pages/games/new_game_available_form.dart';
 import 'package:game_oclock/pages/games/new_game_tag_form.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
@@ -135,55 +136,37 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<UserGameAvailableListBloc>(context);
     }
 
-    final List<TabDestination> destinations = List.unmodifiable(
-      <TabDestination>[
-        TabDestination(
-          icon: const Icon(CommonIcons.detail),
-          labelBuilder: (final context) => context.localize().detailLabel,
-          onTap: (_) {},
-          child: _info(),
+    final List<TabDestination>
+    destinations = List.unmodifiable(<TabDestination>[
+      TabDestination(
+        icon: const Icon(CommonIcons.detail),
+        labelBuilder: (final context) => context.localize().detailLabel,
+        onTap: (_) {},
+        child: _info(),
+      ),
+      TabDestination(
+        icon: const Icon(CommonIcons.locations),
+        labelBuilder: (final context) => context.localize().locationsTitle,
+        onTap: (final context) =>
+            _loadOnlyInitial<UserGameAvailableListBloc>(context),
+        child: RelationListBuilder<LocationWithDate, UserGameAvailableListBloc>(
+          label: context.localize().locationLabel,
+          createFormBuilder: () => GameAvailableCreateForm(gameId: data.id),
+          itemBuilder: (final data) => GameAvailableTileListItem(data: data),
         ),
-        // TODO filtering?
-        TabDestination(
-          icon: const Icon(CommonIcons.locations),
-          labelBuilder: (final context) => context.localize().locationsTitle,
-          onTap: (final context) =>
-              _loadOnlyInitial<UserGameAvailableListBloc>(context),
-          child: TileListBuilder<GameAvailable, UserGameAvailableListBloc>(
-            itemBuilder: (final context, final data, final index) =>
-                GameAvailableTileListItem(data: data),
-          ),
+      ),
+      TabDestination(
+        icon: const Icon(CommonIcons.tags),
+        labelBuilder: (final context) => context.localize().tagsTitle,
+        onTap: (final context) =>
+            _loadOnlyInitial<UserGameTagListBloc>(context),
+        child: RelationListBuilder<Tag, UserGameTagListBloc>(
+          label: context.localize().tagLabel,
+          createFormBuilder: () => GameTagCreateForm(gameId: data.id),
+          itemBuilder: (final data) => TagTileListItem(data: data),
         ),
-        TabDestination(
-          icon: const Icon(CommonIcons.tags),
-          labelBuilder: (final context) => context.localize().tagsTitle,
-          onTap: (final context) =>
-              _loadOnlyInitial<UserGameTagListBloc>(context),
-          child: ListToolbar(
-            toolbars: [
-              ListButtonToolbar(
-                label: context.localize().linkDataLabel(
-                  context.localize().tagLabel,
-                ),
-                icon: const Icon(CommonIcons.link),
-                onTap: () async => showFormDialog(
-                  context,
-                  builder: (final context) =>
-                      GameTagCreateForm(gameId: data.id),
-                  onSuccess: (final context) => context
-                      .read<UserGameTagListBloc>()
-                      .add(const ListReloaded()),
-                ),
-              ),
-            ],
-            child: TileListBuilder<Tag, UserGameTagListBloc>(
-              itemBuilder: (final context, final data, final index) =>
-                  TagTileListItem(data: data),
-            ),
-          ),
-        ),
-      ],
-    );
+      ),
+    ]);
 
     return Detail(
       title: data.title,
@@ -303,6 +286,43 @@ class UserGameDetail extends StatelessWidget {
           child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
         ),
       ],
+    );
+  }
+}
+
+class RelationListBuilder<T, LB extends ListLoadBloc<T>>
+    extends StatelessWidget {
+  // TODO filtering?
+  const RelationListBuilder({
+    super.key,
+    required this.label,
+    required this.createFormBuilder,
+    required this.itemBuilder,
+  });
+
+  final String label;
+  final Widget Function() createFormBuilder;
+  final Widget Function(T data) itemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListToolbar(
+      toolbars: [
+        ListButtonToolbar(
+          label: context.localize().linkDataLabel(label),
+          icon: const Icon(CommonIcons.link),
+          onTap: () async => showFormDialog(
+            context,
+            builder: (final context) => createFormBuilder(),
+            onSuccess: (final context) =>
+                context.read<LB>().add(const ListReloaded()),
+          ),
+        ),
+      ],
+      child: TileListBuilder<T, LB>(
+        itemBuilder: (final context, final data, final index) =>
+            itemBuilder(data),
+      ),
     );
   }
 }

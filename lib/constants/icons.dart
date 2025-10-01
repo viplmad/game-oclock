@@ -19,6 +19,7 @@ class CommonIcons {
   static const IconData left = Icons.chevron_left;
   static const IconData right = Icons.chevron_right;
   static const IconData reload = Icons.refresh;
+  static const IconData clear = Icons.clear;
   static const IconData listStyleTile = Icons.list;
   static const IconData listStyleGrid = Icons.grid_on;
 
@@ -30,5 +31,6 @@ class CommonIcons {
   static const IconData tags = Icons.sell;
 
   static const IconData calendar = Icons.calendar_month;
+  static const IconData calendarPicker = Icons.calendar_today;
   static const IconData review = Icons.cake;
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/models/models.dart' show GameAvailable;
+import 'package:game_oclock/models/models.dart' show LocationWithDate;
 
 class GameAvailableTileListItem extends StatelessWidget {
   const GameAvailableTileListItem({super.key, required this.data, this.onTap});
 
-  final GameAvailable data;
+  final LocationWithDate data;
   final VoidCallback? onTap;
 
   @override

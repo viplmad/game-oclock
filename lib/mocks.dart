@@ -1,20 +1,6 @@
 import 'dart:math';
 
-import 'package:game_oclock/models/models.dart'
-    show
-        FilterDTO,
-        GameAvailable,
-        ListSearch,
-        Login,
-        OperatorType,
-        PageResultDTO,
-        SavedLoginResponse,
-        SearchDTO,
-        SearchValue,
-        Tag,
-        User,
-        UserGame;
-import 'package:game_oclock/models/token_response.dart';
+import 'package:game_oclock/models/models.dart';
 
 UserGame mockUserGame({final String? title}) {
   return UserGame(
@@ -37,8 +23,12 @@ Tag mockTag({final String? name}) {
   return Tag(id: Random().nextInt(1000).toString(), name: name ?? 'name');
 }
 
-GameAvailable mockGameAvailable({final String? name}) {
-  return GameAvailable(
+Location mockLocation({final String? name}) {
+  return Location(id: Random().nextInt(1000).toString(), name: name ?? 'name');
+}
+
+LocationWithDate mockLocationWithDate({final String? name}) {
+  return LocationWithDate(
     id: Random().nextInt(1000).toString(),
     name: name ?? 'name',
     date: DateTime.now(),

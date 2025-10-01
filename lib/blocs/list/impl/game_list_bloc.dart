@@ -1,6 +1,6 @@
 import 'package:game_oclock/blocs/bloc_utils.dart';
 import 'package:game_oclock/models/models.dart'
-    show GameAvailable, ListSearch, Tag, UserGame;
+    show ListSearch, LocationWithDate, Tag, UserGame;
 import 'package:game_oclock/services/services.dart' show GameService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
@@ -68,17 +68,17 @@ class UserGameTagListBloc extends ListLoadBloc<Tag> {
   }
 }
 
-class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
+class UserGameAvailableListBloc extends ListLoadBloc<LocationWithDate> {
   UserGameAvailableListBloc({required this.service, required this.gameId});
 
   final GameService service;
   final String gameId;
 
   @override
-  Future<ListFinal<GameAvailable>> loadList(
+  Future<ListFinal<LocationWithDate>> loadList(
     final String? quicksearch,
     final ListSearch search,
-    final List<GameAvailable>? lastData,
+    final List<LocationWithDate>? lastData,
     final int? lastTotal,
   ) async {
     final data = mergePageData(
@@ -92,7 +92,7 @@ class UserGameAvailableListBloc extends ListLoadBloc<GameAvailable> {
           service.countAvailable(gameId, search.search, quicksearch),
       lastTotal: lastTotal,
     );
-    return ListLoadSuccess<GameAvailable>(
+    return ListLoadSuccess<LocationWithDate>(
       data: data,
       total: count,
       quicksearch: quicksearch,

@@ -51,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tagLabel => 'Tag';
 
   @override
+  String get locationLabel => 'Location';
+
+  @override
   String get creatingTitle => 'Creating';
 
   @override
@@ -87,6 +90,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notesLabel => 'Notes';
 
   @override
+  String get dateLabel => 'Date';
+
+  @override
   String get hostLabel => 'Host';
 
   @override
@@ -120,6 +126,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelLabel => 'Cancel';
 
   @override
+  String get clearLabel => 'Clear';
+
+  @override
   String get reloadLabel => 'Reload';
 
   @override
@@ -145,6 +154,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hideLabel => 'Hide';
+
+  @override
+  String get showDatePicker => 'Show Date Picker';
 
   @override
   String get previousMonth => 'Previous month';

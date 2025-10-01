@@ -8,9 +8,9 @@ class LoginFormBloc extends FormBloc<LoginFormData, Login> {
   @override
   Login fromData(final LoginFormData values) {
     return Login(
-      host: values.host.value.text,
-      username: values.username.value.text,
-      password: values.password.value.text,
+      host: values.host.text,
+      username: values.username.text,
+      password: values.password.text,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension TextEditingControllerExtension on TextEditingController {
-  void setValue(final String? value) {
-    this.value = this.value.copyWith(text: value);
+  void setValue(final String? newValue) {
+    value = value.copyWith(text: newValue);
   }
 }

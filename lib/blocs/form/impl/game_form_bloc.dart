@@ -10,15 +10,15 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
     return UserGame(
       id: 'kalmdkamsd', // TODO
       externalId: 'epic', // TODO
-      title: values.title.value.text,
-      edition: values.edition.value.text,
+      title: values.title.text,
+      edition: values.edition.text,
       releaseDate: DateTime.now(),
       genres: [],
       series: [],
       coverUrl: '',
-      status: values.status.value.text,
-      rating: int.tryParse(values.rating.value.text) ?? 0,
-      notes: values.notes.value.text,
+      status: values.status.text,
+      rating: int.tryParse(values.rating.text) ?? 0,
+      notes: values.notes.text,
     );
   }
 }

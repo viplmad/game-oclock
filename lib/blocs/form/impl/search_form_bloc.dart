@@ -16,18 +16,16 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch> {
   @override
   ListSearch fromData(final SearchFormData values) {
     return ListSearch(
-      name: values.name.value.text,
+      name: values.name.text,
       search: SearchDTO(
         filter: values.filters
             .map(
               (final filterValues) => FilterDTO(
-                field: filterValues.field.value.text,
-                operator_: OperatorType.fromJson(
-                  filterValues.operator.value.text,
-                )!,
-                value: SearchValue(value: filterValues.value.value.text),
+                field: filterValues.field.text,
+                operator_: OperatorType.fromJson(filterValues.operator.text)!,
+                value: SearchValue(value: filterValues.value.text),
                 chainOperator: ChainOperatorType.fromJson(
-                  filterValues.chainOperator.value.text,
+                  filterValues.chainOperator.text,
                 ),
               ),
             )
