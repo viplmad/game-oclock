@@ -280,6 +280,12 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// No description provided for @adminLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator'**
+  String get adminLabel;
+
   /// No description provided for @loginLabel.
   ///
   /// In en, this message translates to:

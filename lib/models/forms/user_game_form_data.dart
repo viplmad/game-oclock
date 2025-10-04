@@ -22,7 +22,7 @@ class UserGameFormData extends FormData<UserGame> {
     title.setValue(userGame?.title);
     edition.setValue(userGame?.edition);
     status.setValue(userGame?.status);
-    rating.setValue(userGame?.rating.toString());
+    rating.setValue(userGame?.rating.toString()); // TODO
     notes.setValue(userGame?.notes);
   }
 }

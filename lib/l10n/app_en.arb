@@ -30,6 +30,7 @@
   "hostLabel": "Host",
   "usernameLabel": "Username",
   "passwordLabel": "Password",
+  "adminLabel": "Administrator",
   "loginLabel": "Login",
   "detailLabel": "Detail",
   "addLabel": "Add",

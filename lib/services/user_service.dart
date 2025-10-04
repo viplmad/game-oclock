@@ -20,8 +20,17 @@ class UserService {
     return 500;
   }
 
+  Future<User> get(final String id) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockUser();
+  }
+
   Future<void> create(final User user) async {
     await Future.delayed(const Duration(seconds: 5));
+  }
+
+  Future<void> update(final User user) async {
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   Future<User> getCurrent() async {

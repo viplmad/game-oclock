@@ -102,6 +102,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordLabel => 'Password';
 
   @override
+  String get adminLabel => 'Administrator';
+
+  @override
   String get loginLabel => 'Login';
 
   @override

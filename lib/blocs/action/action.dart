@@ -14,3 +14,4 @@ export 'impl/review_bloc.dart.dart';
 export 'impl/search_bloc.dart';
 export 'impl/settings_bloc.dart';
 export 'impl/tag_bloc.dart';
+export 'impl/user_bloc.dart';

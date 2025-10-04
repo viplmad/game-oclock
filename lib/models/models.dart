@@ -8,6 +8,7 @@ export 'forms/game_available_form_data.dart';
 export 'forms/game_tag_form_data.dart';
 export 'forms/login_form_data.dart';
 export 'forms/search_form_data.dart';
+export 'forms/user_form_data.dart';
 export 'forms/user_game_form_data.dart';
 export 'game.dart';
 export 'game_available.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/components/forms/fields/date.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show FormData, GameAvailable;
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 

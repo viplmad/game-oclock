@@ -19,7 +19,7 @@ class CommonIcons {
   static const IconData left = Icons.chevron_left;
   static const IconData right = Icons.chevron_right;
   static const IconData reload = Icons.refresh;
-  static const IconData clear = Icons.clear;
+  static const IconData clear = Icons.cancel_outlined;
   static const IconData listStyleTile = Icons.list;
   static const IconData listStyleGrid = Icons.grid_on;
 

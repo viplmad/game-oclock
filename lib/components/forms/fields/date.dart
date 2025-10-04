@@ -3,7 +3,7 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
-import 'label.dart';
+import 'common.dart';
 import 'text.dart';
 
 class SimpleDateFormField extends StatelessWidget {
