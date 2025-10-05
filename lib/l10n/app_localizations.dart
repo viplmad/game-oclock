@@ -442,6 +442,12 @@ abstract class AppLocalizations {
   /// **'Show Time Picker'**
   String get showTimePicker;
 
+  /// No description provided for @timeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeLabel;
+
   /// No description provided for @previousMonth.
   ///
   /// In en, this message translates to:
@@ -549,6 +555,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter some text'**
   String get notEmptyValidationError;
+
+  /// No description provided for @notEqualValidationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is not the same'**
+  String get notEqualValidationError;
 
   /// No description provided for @deleteDialogTitle.
   ///

@@ -1,5 +1,6 @@
 export 'fields/bool.dart';
 export 'fields/choice.dart';
+export 'fields/confirmation_text.dart';
 export 'fields/date.dart';
 export 'fields/date_time.dart';
 export 'fields/number.dart';

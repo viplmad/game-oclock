@@ -97,11 +97,11 @@ Widget _fieldsCreateBuilder(
         label: context.localize().usernameLabel,
         required: true,
       ),
-      SimpleTextFormField(
+      SimpleConfirmationTextFormField(
         controller: formGroup.password,
         label: context
             .localize()
-            .passwordLabel, // TODO obscure and confirmation
+            .passwordLabel,
         required: true,
       ),
       SimpleBoolFormField(

@@ -183,6 +183,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showTimePicker => 'Show Time Picker';
 
   @override
+  String get timeLabel => 'Time';
+
+  @override
   String get previousMonth => 'Previous month';
 
   @override
@@ -235,6 +238,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notEmptyValidationError => 'Please enter some text';
+
+  @override
+  String get notEqualValidationError => 'Password is not the same';
 
   @override
   String get deleteDialogTitle => 'Delete?';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'date.dart';
 import 'time.dart';
@@ -23,27 +24,25 @@ class SimpleDateTimeFormField extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final dateEditingController = DateTimeEditingController(
-      date: controller.value,
-    );
-    final timeEditingController = TimeEditingController(
+    final dateController = DateTimeEditingController(date: controller.value);
+    final timeController = TimeEditingController(
       time: controller.value == null
           ? null
           : TimeOfDay.fromDateTime(controller.value!),
     );
 
-    dateEditingController.addListener(() {
+    dateController.addListener(() {
       final date = (controller.value ?? DateTime.now()).copyWith(
-        day: dateEditingController.value?.day,
-        month: dateEditingController.value?.month,
-        year: dateEditingController.value?.year,
+        day: dateController.value?.day,
+        month: dateController.value?.month,
+        year: dateController.value?.year,
       );
       controller.setValue(date);
     });
-    timeEditingController.addListener(() {
+    timeController.addListener(() {
       final date = (controller.value ?? DateTime.now()).copyWith(
-        hour: timeEditingController.value?.hour,
-        minute: timeEditingController.value?.minute,
+        hour: timeController.value?.hour,
+        minute: timeController.value?.minute,
       );
       controller.setValue(date);
     });
@@ -53,7 +52,7 @@ class SimpleDateTimeFormField extends StatelessWidget {
         Expanded(
           flex: 4,
           child: SimpleDateFormField(
-            controller: dateEditingController,
+            controller: dateController,
             label: label,
             required: required,
             readOnly: readOnly,
@@ -64,8 +63,8 @@ class SimpleDateTimeFormField extends StatelessWidget {
         Expanded(
           flex: 2,
           child: SimpleTimeFormField(
-            controller: timeEditingController,
-            label: label,
+            controller: timeController,
+            label: context.localize().timeLabel,
             required: required,
             readOnly: readOnly,
           ),
