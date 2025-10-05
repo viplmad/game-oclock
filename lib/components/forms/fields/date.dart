@@ -49,7 +49,6 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
         ),
       ],
       onTap: () async => showPicker(),
-      maxLines: 1,
     );
   }
 

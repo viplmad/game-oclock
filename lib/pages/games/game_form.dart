@@ -138,6 +138,7 @@ Widget _fieldsCreateBuilder(
       SimpleTextFormField(
         controller: formGroup.notes,
         label: context.localize().notesLabel,
+        multiline: true,
       ),
     ],
   );
@@ -177,6 +178,7 @@ Widget _fieldsEditBuilder(
         controller: formGroup.notes,
         label: context.localize().notesLabel,
         readOnly: readOnly,
+        multiline: true,
       ),
     ],
   );

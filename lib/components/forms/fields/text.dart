@@ -14,7 +14,7 @@ class SimpleTextFormField extends StatefulWidget {
     this.readOnly = false,
     this.validator,
     this.hint,
-    this.maxLines = 1,
+    this.multiline = false,
     this.obscureText = false,
     //
     this.suffixIcons,
@@ -31,7 +31,7 @@ class SimpleTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final String? hint;
   final bool obscureText;
-  final int maxLines;
+  final bool multiline;
   final List<Widget>? suffixIcons;
   final VoidCallback? onClear;
   final FocusNode? focusNode;
@@ -75,7 +75,10 @@ class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
           (widget.required
               ? (final value) => notEmptyValidator(context, value)
               : null),
-      maxLines: widget.maxLines,
+      maxLines: widget.multiline ? null : 1,
+      keyboardType: widget.multiline
+          ? TextInputType.multiline
+          : TextInputType.text,
       obscureText: widget.obscureText,
       onChanged: (_) => setState(() {}),
       onTap: widget.onTap,
@@ -133,7 +136,6 @@ class _SimpleObscuredTextFormFieldState
         ),
       ],
       obscureText: obscureText,
-      maxLines: 1,
     );
   }
 }
