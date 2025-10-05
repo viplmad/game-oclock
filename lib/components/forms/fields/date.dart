@@ -32,6 +32,8 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
 
   @override
   Widget build(final BuildContext context) {
+    setTextValue(widget.controller.value);
+
     return SimpleTextFormField(
       controller: textController,
       label: widget.label,
@@ -52,10 +54,6 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   }
 
   Future<void> showPicker() {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(
-      context,
-    );
-
     return showDatePicker(
       context: context,
       initialDate: widget.controller.value ?? DateTime.now(),
@@ -64,12 +62,22 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
     ).then<void>((final value) {
       if (value != null) {
         widget.controller.setValue(value);
-
-        textController.setValue(localizations.formatCompactDate(value));
+        setTextValue(value);
 
         setState(() {});
       }
     });
+  }
+
+  void setTextValue(final DateTime? value) {
+    if (value == null) {
+      return;
+    }
+
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
+    textController.setValue(localizations.formatCompactDate(value));
   }
 }
 

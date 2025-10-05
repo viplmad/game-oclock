@@ -28,6 +28,8 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
 
   @override
   Widget build(final BuildContext context) {
+    setTextValue(widget.controller.value);
+
     return SimpleTextFormField(
       controller: textController,
       label: widget.label,
@@ -48,10 +50,6 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
   }
 
   Future<void> showPicker() {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(
-      context,
-    );
-
     return showTimePicker(
       context: context,
       initialTime: widget.controller.value ?? TimeOfDay.now(),
@@ -62,14 +60,24 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
     ).then<void>((final value) {
       if (value != null) {
         widget.controller.setValue(value);
-
-        textController.setValue(
-          localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true),
-        );
+        setTextValue(value);
 
         setState(() {});
       }
     });
+  }
+
+  void setTextValue(final TimeOfDay? value) {
+    if (value == null) {
+      return;
+    }
+
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
+    textController.setValue(
+      localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true),
+    );
   }
 }
 

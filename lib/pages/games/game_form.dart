@@ -117,12 +117,6 @@ Widget _fieldsCreateBuilder(
 ) {
   return Column(
     children: <Widget>[
-      SimpleDateTimeFormField(
-        controller: formGroup.releaseDate,
-        label: context.localize().releaseDateLabel,
-        firstDate: DateTime(1970),
-        lastDate: DateTime.now(),
-      ),
       ExternalGameSelectorBuilder(
         controller: formGroup.title,
         label: context.localize().titleLabel,
@@ -131,6 +125,12 @@ Widget _fieldsCreateBuilder(
       SimpleTextFormField(
         controller: formGroup.edition,
         label: context.localize().editionLabel,
+      ),
+      SimpleDateFormField(
+        controller: formGroup.releaseDate,
+        label: context.localize().releaseDateLabel,
+        firstDate: DateTime(1970),
+        lastDate: DateTime.now(),
       ),
       SimpleChoiceFormField(
         controller: formGroup.status,
@@ -169,6 +169,13 @@ Widget _fieldsEditBuilder(
         controller: formGroup.edition,
         label: context.localize().editionLabel,
         readOnly: readOnly,
+      ),
+      SimpleDateFormField(
+        controller: formGroup.releaseDate,
+        label: context.localize().releaseDateLabel,
+        readOnly: readOnly,
+        firstDate: DateTime(1970),
+        lastDate: DateTime.now(),
       ),
       SimpleChoiceFormField(
         controller: formGroup.status,
