@@ -3,10 +3,9 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
-import 'common.dart';
 import 'text.dart';
 
-class SimpleDateFormField extends StatelessWidget {
+class SimpleDateFormField extends StatefulWidget {
   const SimpleDateFormField({
     super.key,
     required this.controller,
@@ -25,54 +24,56 @@ class SimpleDateFormField extends StatelessWidget {
   final DateTime lastDate;
 
   @override
+  State<SimpleDateFormField> createState() => _SimpleDateFormFieldState();
+}
+
+class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
+  final textController = TextEditingController();
+  final calendarDelegate = const GregorianCalendarDelegate();
+
+  @override
   Widget build(final BuildContext context) {
-    final textController = TextEditingController();
-    final calendarDelegate = const GregorianCalendarDelegate();
+    return SimpleTextFormField(
+      controller: textController,
+      label: widget.label,
+      required: widget.required,
+      readOnly: false,
+      onClear: () {
+        widget.controller.clear();
+      },
+      suffixIcons: [
+        IconButton(
+          tooltip: context.localize().showDatePicker,
+          icon: const Icon(CommonIcons.calendarPicker),
+          onPressed: widget.readOnly ? null : () async => showPicker(),
+        ),
+      ],
+      onTap: () async => showPicker(),
+      maxLines: 1,
+    );
+  }
+
+  Future<void> showPicker() {
     final MaterialLocalizations localizations = MaterialLocalizations.of(
       context,
     );
 
-    return SimpleTextFormField(
-      controller: textController,
-      label: label,
-      required: required,
-      readOnly: true,
-      suffixIcons: [
-        ClearIconButton(
-          readOnly: readOnly,
-          onTap: () {
-            controller.clear();
+    return showDatePicker(
+      context: context,
+      firstDate: widget.firstDate,
+      lastDate: widget.lastDate,
+      calendarDelegate: calendarDelegate,
+    ).then<void>((final value) {
+      if (value != null) {
+        widget.controller.setValue(value);
 
-            textController.clear();
-            textController.clear();
-          },
-        ),
-        IconButton(
-          tooltip: context.localize().showDatePicker,
-          icon: const Icon(CommonIcons.calendarPicker),
-          onPressed: readOnly
-              ? null
-              : () async {
-                  return showDatePicker(
-                    context: context,
-                    firstDate: firstDate,
-                    lastDate: lastDate,
-                    calendarDelegate: calendarDelegate,
-                  ).then<void>((final value) {
-                    if (value != null) {
-                      controller.setValue(value);
+        textController.setValue(
+          calendarDelegate.formatCompactDate(value, localizations),
+        );
 
-                      final formatCompactDate = calendarDelegate
-                          .formatCompactDate(value, localizations);
-                      textController.setValue(formatCompactDate);
-                      textController.setValue(formatCompactDate);
-                    }
-                  });
-                },
-        ),
-      ],
-      maxLines: 1,
-    );
+        setState(() {});
+      }
+    });
   }
 }
 

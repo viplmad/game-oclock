@@ -5,9 +5,8 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'common.dart';
 
-class SimpleTextFormField extends StatelessWidget {
-  // TODO const
-  SimpleTextFormField({
+class SimpleTextFormField extends StatefulWidget {
+  const SimpleTextFormField({
     super.key,
     required this.controller,
     required this.label,
@@ -18,17 +17,12 @@ class SimpleTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.obscureText = false,
     //
-    final List<Widget>? suffixIcons,
+    this.suffixIcons,
+    this.onClear,
     this.focusNode,
     this.onFieldSubmitted,
-  }) : suffixIcons =
-           suffixIcons ??
-           [
-             ClearIconButton(
-               readOnly: readOnly,
-               onTap: () => controller.clear(),
-             ),
-           ];
+    this.onTap,
+  });
 
   final TextEditingController controller;
   final String label;
@@ -38,35 +32,56 @@ class SimpleTextFormField extends StatelessWidget {
   final String? hint;
   final bool obscureText;
   final int maxLines;
-  final List<Widget> suffixIcons;
+  final List<Widget>? suffixIcons;
+  final VoidCallback? onClear;
   final FocusNode? focusNode;
   final ValueChanged<String>? onFieldSubmitted;
+  final VoidCallback? onTap;
 
+  @override
+  State<SimpleTextFormField> createState() => _SimpleTextFormFieldState();
+}
+
+class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
   @override
   Widget build(final BuildContext context) {
     return TextFormField(
-      readOnly: readOnly,
-      controller: controller,
+      readOnly: widget.readOnly,
+      controller: widget.controller,
       decoration: InputDecoration(
-        label: FormFieldLabel(text: label, required: required),
-        hintText: hint,
-        suffixIcon: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: suffixIcons,
-        ),
+        label: FormFieldLabel(text: widget.label, required: widget.required),
+        hintText: widget.hint,
+        suffixIcon: widget.readOnly
+            ? null
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (widget.controller.text.isNotEmpty)
+                    ClearIconButton(
+                      onTap: () {
+                        widget.controller.clear();
+                        widget.onClear?.call();
+                        setState(() {});
+                      },
+                    ),
+                  ...?widget.suffixIcons,
+                ],
+              ),
         border: const OutlineInputBorder(),
       ),
       validator:
-          validator ??
-          (required
+          widget.validator ??
+          (widget.required
               ? (final value) => notEmptyValidator(context, value)
               : null),
-      maxLines: maxLines,
-      obscureText: obscureText,
+      maxLines: widget.maxLines,
+      obscureText: widget.obscureText,
+      onChanged: (_) => setState(() {}),
+      onTap: widget.onTap,
       //
-      focusNode: focusNode,
-      onFieldSubmitted: onFieldSubmitted,
+      focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onFieldSubmitted,
     );
   }
 }
@@ -105,10 +120,6 @@ class _SimpleObscuredTextFormFieldState
       readOnly: widget.readOnly,
       validator: widget.validator,
       suffixIcons: [
-        ClearIconButton(
-          readOnly: widget.readOnly,
-          onTap: () => widget.controller.clear(),
-        ),
         IconButton(
           tooltip: obscureText
               ? context.localize().showLabel

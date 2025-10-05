@@ -19,13 +19,8 @@ class FormFieldLabel extends StatelessWidget {
 }
 
 class ClearIconButton extends StatelessWidget {
-  const ClearIconButton({
-    super.key,
-    required this.readOnly,
-    required this.onTap,
-  });
+  const ClearIconButton({super.key, required this.onTap});
 
-  final bool readOnly;
   final VoidCallback onTap;
 
   @override
@@ -33,7 +28,7 @@ class ClearIconButton extends StatelessWidget {
     return IconButton(
       tooltip: context.localize().clearLabel,
       icon: const Icon(CommonIcons.clear),
-      onPressed: readOnly ? null : onTap,
+      onPressed: onTap,
     );
   }
 }

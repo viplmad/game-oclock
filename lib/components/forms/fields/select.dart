@@ -27,10 +27,9 @@ class SimpleSelectFormField extends StatelessWidget {
       enableFilter: true,
       requestFocusOnTap: true,
       label: FormFieldLabel(text: label, required: required),
-      trailingIcon: ClearIconButton(
-        readOnly: readOnly,
-        onTap: () => controller.clear(),
-      ),
+      /*trailingIcon: readOnly || controller.text.isEmpty
+          ? null
+          : ClearIconButton(onTap: () => controller.clear()),*/
       // TODO required validator errorText: 'malo malo',
       dropdownMenuEntries: options
           .map(
