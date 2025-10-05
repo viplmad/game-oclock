@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show FormData, UserGame;
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
@@ -6,7 +7,7 @@ class UserGameFormData extends FormData<UserGame> {
   final TextEditingController title;
   final TextEditingController edition;
   final TextEditingController status;
-  final TextEditingController rating;
+  final ScalarNumberEditingController rating;
   final TextEditingController notes;
 
   UserGameFormData({
@@ -22,7 +23,7 @@ class UserGameFormData extends FormData<UserGame> {
     title.setValue(userGame?.title);
     edition.setValue(userGame?.edition);
     status.setValue(userGame?.status);
-    rating.setValue(userGame?.rating.toString()); // TODO
+    rating.setValue(userGame?.rating);
     notes.setValue(userGame?.notes);
   }
 }

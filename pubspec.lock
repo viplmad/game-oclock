@@ -418,6 +418,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  smooth_star_rating:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: dev
+      resolved-ref: f6c95bcd6142d58cf21c7ad30c6ef116cc292dbf
+      url: "https://github.com/viplmad/smoothratingbar.git"
+    source: git
+    version: "1.1.1"
   source_span:
     dependency: transitive
     description:

@@ -29,7 +29,7 @@ class UserGameCreateForm extends StatelessWidget {
               title: TextEditingController(),
               edition: TextEditingController(),
               status: TextEditingController(),
-              rating: TextEditingController(),
+              rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
             ),
           ),
@@ -79,7 +79,7 @@ class UserGameEditForm extends StatelessWidget {
               title: TextEditingController(),
               edition: TextEditingController(),
               status: TextEditingController(),
-              rating: TextEditingController(),
+              rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
             ),
           ),
@@ -129,6 +129,16 @@ Widget _fieldsCreateBuilder(
         label: context.localize().statusLabel,
         options: gameStatusOptions,
       ),
+      SimpleRatingFormField(
+        controller: formGroup.rating,
+        label: context.localize().ratingLabel,
+        color: const Color(0xA0B71C1C),
+        borderColor: Colors.redAccent,
+      ),
+      SimpleTextFormField(
+        controller: formGroup.notes,
+        label: context.localize().notesLabel,
+      ),
     ],
   );
 }
@@ -151,15 +161,17 @@ Widget _fieldsEditBuilder(
         label: context.localize().editionLabel,
         readOnly: readOnly,
       ),
-      SimpleTextFormField(
+      SimpleChoiceFormField(
         controller: formGroup.status,
         label: context.localize().statusLabel,
-        readOnly: readOnly,
+        options: gameStatusOptions,
       ),
-      SimpleTextFormField(
+      SimpleRatingFormField(
         controller: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
+        color: const Color(0xA0B71C1C),
+        borderColor: Colors.redAccent,
       ),
       SimpleTextFormField(
         controller: formGroup.notes,

@@ -1,5 +1,5 @@
 name: game_oclock
-description: "A new Flutter project."
+description: 'A new Flutter project.'
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -49,6 +49,10 @@ dependencies:
   table_calendar: ^3.2.0
   flutter_sticky_header: ^0.8.0
   community_charts_flutter: ^1.0.4
+  smooth_star_rating:
+    git:
+      url: https://github.com/viplmad/smoothratingbar.git
+      ref: dev
   http: ^1.5.0
   retry: ^3.1.2
 
@@ -68,7 +72,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

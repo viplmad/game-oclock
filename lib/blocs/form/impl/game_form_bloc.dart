@@ -17,7 +17,7 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
       series: [],
       coverUrl: '',
       status: values.status.text,
-      rating: int.tryParse(values.rating.text) ?? 0,
+      rating: values.rating.value ?? 0,
       notes: values.notes.text,
     );
   }
