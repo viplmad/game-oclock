@@ -28,6 +28,7 @@ class UserGameCreateForm extends StatelessWidget {
             formGroup: UserGameFormData(
               title: TextEditingController(),
               edition: TextEditingController(),
+              releaseDate: DateTimeEditingController(),
               status: TextEditingController(),
               rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
@@ -78,6 +79,7 @@ class UserGameEditForm extends StatelessWidget {
             formGroup: UserGameFormData(
               title: TextEditingController(),
               edition: TextEditingController(),
+              releaseDate: DateTimeEditingController(),
               status: TextEditingController(),
               rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
@@ -115,6 +117,12 @@ Widget _fieldsCreateBuilder(
 ) {
   return Column(
     children: <Widget>[
+      SimpleDateTimeFormField(
+        controller: formGroup.releaseDate,
+        label: context.localize().releaseDateLabel,
+        firstDate: DateTime(1970),
+        lastDate: DateTime.now(),
+      ),
       ExternalGameSelectorBuilder(
         controller: formGroup.title,
         label: context.localize().titleLabel,

@@ -5,29 +5,25 @@ import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 import 'text.dart';
 
-class SimpleDateFormField extends StatefulWidget {
-  const SimpleDateFormField({
+class SimpleTimeFormField extends StatefulWidget {
+  const SimpleTimeFormField({
     super.key,
     required this.controller,
     required this.label,
     this.required = false,
     this.readOnly = false,
-    required this.firstDate,
-    required this.lastDate,
   });
 
-  final DateTimeEditingController controller;
+  final TimeEditingController controller;
   final String label;
   final bool required;
   final bool readOnly;
-  final DateTime firstDate;
-  final DateTime lastDate;
 
   @override
-  State<SimpleDateFormField> createState() => _SimpleDateFormFieldState();
+  State<SimpleTimeFormField> createState() => _SimpleTimeFormFieldState();
 }
 
-class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
+class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
   final textController = TextEditingController();
 
   @override
@@ -42,8 +38,8 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
       },
       suffixIcons: [
         IconButton(
-          tooltip: context.localize().showDatePicker,
-          icon: const Icon(CommonIcons.datePicker),
+          tooltip: context.localize().showTimePicker,
+          icon: const Icon(CommonIcons.timePicker),
           onPressed: widget.readOnly ? null : () async => showPicker(),
         ),
       ],
@@ -56,16 +52,20 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
       context,
     );
 
-    return showDatePicker(
+    return showTimePicker(
       context: context,
-      initialDate: widget.controller.value ?? DateTime.now(),
-      firstDate: widget.firstDate,
-      lastDate: widget.lastDate,
+      initialTime: widget.controller.value ?? TimeOfDay.now(),
+      builder: (final BuildContext context, final Widget? child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
     ).then<void>((final value) {
       if (value != null) {
         widget.controller.setValue(value);
 
-        textController.setValue(localizations.formatCompactDate(value));
+        textController.setValue(
+          localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true),
+        );
 
         setState(() {});
       }
@@ -73,14 +73,14 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   }
 }
 
-class DateTimeEditingController extends ValueNotifier<DateTime?> {
-  DateTimeEditingController({final DateTime? date}) : super(date);
+class TimeEditingController extends ValueNotifier<TimeOfDay?> {
+  TimeEditingController({final TimeOfDay? time}) : super(time);
 
   void clear() {
     value = null;
   }
 
-  void setValue(final DateTime? newValue) {
+  void setValue(final TimeOfDay? newValue) {
     value = newValue;
   }
 }

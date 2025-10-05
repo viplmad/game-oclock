@@ -81,6 +81,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editionLabel => 'Edition';
 
   @override
+  String get releaseDateLabel => 'Release Date';
+
+  @override
   String get statusLabel => 'Status';
 
   @override
@@ -175,6 +178,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showDatePicker => 'Show Date Picker';
+
+  @override
+  String get showTimePicker => 'Show Time Picker';
 
   @override
   String get previousMonth => 'Previous month';

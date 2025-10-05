@@ -238,6 +238,12 @@ abstract class AppLocalizations {
   /// **'Edition'**
   String get editionLabel;
 
+  /// No description provided for @releaseDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Date'**
+  String get releaseDateLabel;
+
   /// No description provided for @statusLabel.
   ///
   /// In en, this message translates to:
@@ -429,6 +435,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Date Picker'**
   String get showDatePicker;
+
+  /// No description provided for @showTimePicker.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Time Picker'**
+  String get showTimePicker;
 
   /// No description provided for @previousMonth.
   ///

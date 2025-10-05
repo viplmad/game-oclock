@@ -6,6 +6,7 @@ import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 class UserGameFormData extends FormData<UserGame> {
   final TextEditingController title;
   final TextEditingController edition;
+  final DateTimeEditingController releaseDate;
   final TextEditingController status;
   final ScalarNumberEditingController rating;
   final TextEditingController notes;
@@ -13,6 +14,7 @@ class UserGameFormData extends FormData<UserGame> {
   UserGameFormData({
     required this.title,
     required this.edition,
+    required this.releaseDate,
     required this.status,
     required this.rating,
     required this.notes,
@@ -22,6 +24,7 @@ class UserGameFormData extends FormData<UserGame> {
   void setValues(final UserGame? userGame) {
     title.setValue(userGame?.title);
     edition.setValue(userGame?.edition);
+    releaseDate.setValue(userGame?.releaseDate);
     status.setValue(userGame?.status);
     rating.setValue(userGame?.rating);
     notes.setValue(userGame?.notes);
