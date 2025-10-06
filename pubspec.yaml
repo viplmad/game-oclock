@@ -53,9 +53,9 @@ dependencies:
     git:
       url: https://github.com/viplmad/smoothratingbar.git
       ref: dev
+  duration_picker: ^1.2.0
   http: ^1.5.0
   retry: ^3.1.2
-  duration_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:
