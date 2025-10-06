@@ -18,7 +18,8 @@ class SimpleTextFormField extends StatefulWidget {
     this.obscureText = false,
     //
     this.suffixIcons,
-    this.onClear,
+    this.onCleared,
+    this.onChanged,
     this.focusNode,
     this.onFieldSubmitted,
     this.onTap,
@@ -33,7 +34,8 @@ class SimpleTextFormField extends StatefulWidget {
   final bool obscureText;
   final bool multiline;
   final List<Widget>? suffixIcons;
-  final VoidCallback? onClear;
+  final VoidCallback? onCleared;
+  final ValueChanged<String>? onChanged;
   final FocusNode? focusNode;
   final ValueChanged<String>? onFieldSubmitted;
   final VoidCallback? onTap;
@@ -61,7 +63,7 @@ class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
                     ClearIconButton(
                       onTap: () {
                         widget.controller.clear();
-                        widget.onClear?.call();
+                        widget.onCleared?.call();
                         setState(() {});
                       },
                     ),
@@ -70,17 +72,18 @@ class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
               ),
         border: const OutlineInputBorder(),
       ),
-      validator:
-          widget.validator ??
-          (widget.required
-              ? (final value) => notEmptyValidator(context, value)
-              : null),
+      validator: (final value) =>
+          (widget.required ? notEmptyValidator(context, value) : null) ??
+          widget.validator?.call(value),
       maxLines: widget.multiline ? null : 1,
       keyboardType: widget.multiline
           ? TextInputType.multiline
           : TextInputType.text,
       obscureText: widget.obscureText,
-      onChanged: (_) => setState(() {}),
+      onChanged: (final value) {
+        widget.onChanged?.call(value);
+        setState(() {});
+      },
       onTap: widget.onTap,
       //
       focusNode: widget.focusNode,

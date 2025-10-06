@@ -24,36 +24,25 @@ class SimpleConfirmationTextFormField extends StatelessWidget {
 
     return Row(
       children: [
-        SimpleObscuredTextFormField(
-          controller: controller,
-          label: label,
-          required: required,
-          readOnly: readOnly,
-          validator: (final value) =>
-              notEmptyValidator(context, value) ??
-              notEqualValidator(context, value, confirmationController.text),
+        Expanded(
+          child: SimpleObscuredTextFormField(
+            controller: controller,
+            label: label,
+            required: required,
+            readOnly: readOnly,
+          ),
         ),
-        SimpleObscuredTextFormField(
-          controller: confirmationController,
-          label: label,
-          required: required,
-          readOnly: readOnly,
-          validator: (final value) =>
-              notEmptyValidator(context, value) ??
-              notEqualValidator(context, value, controller.text),
+        Expanded(
+          child: SimpleObscuredTextFormField(
+            controller: confirmationController,
+            label: context.localize().confirmationLabel,
+            required: required,
+            readOnly: readOnly,
+            validator: (final value) =>
+                notEqualValidator(context, value, controller.text),
+          ),
         ),
       ],
     );
   }
-}
-
-String? notEqualValidator(
-  final BuildContext context,
-  final String? value,
-  final String? other,
-) {
-  if (value != other) {
-    return context.localize().notEqualValidationError;
-  }
-  return null;
 }

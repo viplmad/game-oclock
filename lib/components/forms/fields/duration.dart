@@ -1,3 +1,4 @@
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -5,29 +6,26 @@ import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 import 'text.dart';
 
-class SimpleDateFormField extends StatefulWidget {
-  const SimpleDateFormField({
+class SimpleDurationFormField extends StatefulWidget {
+  const SimpleDurationFormField({
     super.key,
     required this.controller,
     required this.label,
     this.required = false,
     this.readOnly = false,
-    required this.firstDate,
-    required this.lastDate,
   });
 
-  final DateTimeEditingController controller;
-  final String label;
+  final DurationEditingController controller;
   final bool required;
   final bool readOnly;
-  final DateTime firstDate;
-  final DateTime lastDate;
+  final String label;
 
   @override
-  State<SimpleDateFormField> createState() => _SimpleDateFormFieldState();
+  State<SimpleDurationFormField> createState() =>
+      _SimpleDurationFormFieldState();
 }
 
-class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
+class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
   late final TextEditingController textController;
 
   @override
@@ -51,8 +49,8 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
       },
       suffixIcons: [
         IconButton(
-          tooltip: context.localize().showDatePicker,
-          icon: const Icon(CommonIcons.datePicker),
+          tooltip: context.localize().showDurationPicker,
+          icon: const Icon(CommonIcons.durationPicker),
           onPressed: widget.readOnly ? null : () async => _showPicker(),
         ),
       ],
@@ -61,11 +59,9 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   }
 
   Future<void> _showPicker() {
-    return showDatePicker(
+    return showDurationPicker(
       context: context,
-      initialDate: widget.controller.value ?? DateTime.now(),
-      firstDate: widget.firstDate,
-      lastDate: widget.lastDate,
+      initialTime: widget.controller.value ?? Duration.zero,
     ).then<void>((final value) {
       if (value != null) {
         widget.controller.setValue(value);
@@ -76,26 +72,23 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
     });
   }
 
-  String? _buildTextValue(final DateTime? value) {
+  String? _buildTextValue(final Duration? value) {
     if (value == null) {
       return null;
     }
 
-    final MaterialLocalizations localizations = MaterialLocalizations.of(
-      context,
-    );
-    return localizations.formatCompactDate(value);
+    return context.localize().duration(value);
   }
 }
 
-class DateTimeEditingController extends ValueNotifier<DateTime?> {
-  DateTimeEditingController({final DateTime? date}) : super(date);
+class DurationEditingController extends ValueNotifier<Duration?> {
+  DurationEditingController({final Duration? duration}) : super(duration);
 
   void clear() {
     value = null;
   }
 
-  void setValue(final DateTime? newValue) {
+  void setValue(final Duration? newValue) {
     value = newValue;
   }
 }

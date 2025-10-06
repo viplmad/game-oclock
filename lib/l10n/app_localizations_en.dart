@@ -93,6 +93,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notesLabel => 'Notes';
 
   @override
+  String get genresLabel => 'Genres';
+
+  @override
+  String get seriesLabel => 'Series';
+
+  @override
   String get dateLabel => 'Date';
 
   @override
@@ -106,6 +112,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminLabel => 'Administrator';
+
+  @override
+  String get confirmationLabel => 'Confirmation';
 
   @override
   String get loginLabel => 'Login';
@@ -183,6 +192,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showTimePicker => 'Show Time Picker';
 
   @override
+  String get showDurationPicker => 'Show Duration Picker';
+
+  @override
   String get timeLabel => 'Time';
 
   @override
@@ -240,7 +252,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notEmptyValidationError => 'Please enter some text';
 
   @override
-  String get notEqualValidationError => 'Password is not the same';
+  String get notEqualValidationError => 'Confirmation does not match';
+
+  @override
+  String get someIsBlankValidationError => 'Blank entries not allowed';
 
   @override
   String get deleteDialogTitle => 'Delete?';
@@ -274,5 +289,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String linkDataLabel(Object data) {
     return 'Link $data';
+  }
+
+  @override
+  String hoursAbbr(num hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: 'hrs.',
+      one: 'hr.',
+    );
+    return '$hours $_temp0';
+  }
+
+  @override
+  String minutesAbbr(Object minutes) {
+    return '$minutes min.';
   }
 }

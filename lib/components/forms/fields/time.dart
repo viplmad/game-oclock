@@ -24,32 +24,39 @@ class SimpleTimeFormField extends StatefulWidget {
 }
 
 class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
-  final textController = TextEditingController();
+  late final TextEditingController textController;
+
+  @override
+  void initState() {
+    textController = TextEditingController(
+      text: _buildTextValue(widget.controller.value),
+    );
+
+    super.initState();
+  }
 
   @override
   Widget build(final BuildContext context) {
-    setTextValue(widget.controller.value);
-
     return SimpleTextFormField(
       controller: textController,
       label: widget.label,
       required: widget.required,
       readOnly: false,
-      onClear: () {
+      onCleared: () {
         widget.controller.clear();
       },
       suffixIcons: [
         IconButton(
           tooltip: context.localize().showTimePicker,
           icon: const Icon(CommonIcons.timePicker),
-          onPressed: widget.readOnly ? null : () async => showPicker(),
+          onPressed: widget.readOnly ? null : () async => _showPicker(),
         ),
       ],
-      onTap: () async => showPicker(),
+      onTap: widget.readOnly ? null : () async => _showPicker(),
     );
   }
 
-  Future<void> showPicker() {
+  Future<void> _showPicker() {
     return showTimePicker(
       context: context,
       initialTime: widget.controller.value ?? TimeOfDay.now(),
@@ -60,24 +67,22 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
     ).then<void>((final value) {
       if (value != null) {
         widget.controller.setValue(value);
-        setTextValue(value);
+        textController.setValue(_buildTextValue(value));
 
         setState(() {});
       }
     });
   }
 
-  void setTextValue(final TimeOfDay? value) {
+  String? _buildTextValue(final TimeOfDay? value) {
     if (value == null) {
-      return;
+      return null;
     }
 
     final MaterialLocalizations localizations = MaterialLocalizations.of(
       context,
     );
-    textController.setValue(
-      localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true),
-    );
+    return localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
   }
 }
 

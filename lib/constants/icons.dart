@@ -33,5 +33,6 @@ class CommonIcons {
   static const IconData calendar = Icons.calendar_month;
   static const IconData datePicker = Icons.calendar_today;
   static const IconData timePicker = Icons.schedule;
+  static const IconData durationPicker = Icons.timer;
   static const IconData review = Icons.cake;
 }

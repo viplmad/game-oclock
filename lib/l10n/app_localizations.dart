@@ -262,6 +262,18 @@ abstract class AppLocalizations {
   /// **'Notes'**
   String get notesLabel;
 
+  /// No description provided for @genresLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Genres'**
+  String get genresLabel;
+
+  /// No description provided for @seriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Series'**
+  String get seriesLabel;
+
   /// No description provided for @dateLabel.
   ///
   /// In en, this message translates to:
@@ -291,6 +303,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Administrator'**
   String get adminLabel;
+
+  /// No description provided for @confirmationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation'**
+  String get confirmationLabel;
 
   /// No description provided for @loginLabel.
   ///
@@ -442,6 +460,12 @@ abstract class AppLocalizations {
   /// **'Show Time Picker'**
   String get showTimePicker;
 
+  /// No description provided for @showDurationPicker.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Duration Picker'**
+  String get showDurationPicker;
+
   /// No description provided for @timeLabel.
   ///
   /// In en, this message translates to:
@@ -559,8 +583,14 @@ abstract class AppLocalizations {
   /// No description provided for @notEqualValidationError.
   ///
   /// In en, this message translates to:
-  /// **'Password is not the same'**
+  /// **'Confirmation does not match'**
   String get notEqualValidationError;
+
+  /// No description provided for @someIsBlankValidationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank entries not allowed'**
+  String get someIsBlankValidationError;
 
   /// No description provided for @deleteDialogTitle.
   ///
@@ -609,6 +639,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Link {data}'**
   String linkDataLabel(Object data);
+
+  /// No description provided for @hoursAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} {hours, plural, =1{hr.} other{hrs.}}'**
+  String hoursAbbr(num hours);
+
+  /// No description provided for @minutesAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min.'**
+  String minutesAbbr(Object minutes);
 }
 
 class _AppLocalizationsDelegate

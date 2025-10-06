@@ -51,60 +51,67 @@ class UserGameListPage extends StatelessWidget {
             ),
         ),
       ],
-      child: ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
-        title: context.localize().gamesTitle,
-        searchSpace: 'game',
-        floatingActionButton: FloatingActionButton(
-          tooltip: context.localize().addLabel,
-          onPressed: () async => showFormDialog(
-            context,
-            builder: (final context) => const UserGameCreateForm(),
-            onSuccess: (final context) =>
-                // TODO select new?
-                context.read<UserGameListBloc>().add(const ListReloaded()),
-          ),
-          child: const Icon(CommonIcons.add),
+      child: const _UserGameListDetailBuilder(),
+    );
+  }
+}
+
+class _UserGameListDetailBuilder extends StatelessWidget {
+  const _UserGameListDetailBuilder({super.key});
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
+      title: context.localize().gamesTitle,
+      searchSpace: 'game',
+      floatingActionButton: FloatingActionButton(
+        tooltip: context.localize().addLabel,
+        onPressed: () async => showFormDialog(
+          context,
+          builder: (final context) => const UserGameCreateForm(),
+          onSuccess: (final context) =>
+              context.read<UserGameListBloc>().add(const ListReloaded()),
         ),
-        detailBuilder: (final context, final data, final onClosed) {
-          return MultiBlocProvider(
-            // Recreate on selection change
-            key: Key(data.id),
-            providers: [
-              BlocProvider(
-                create: (_) => UserGameAvailableListBloc(
-                  gameId: data.id,
-                  service: RepositoryProvider.of(context),
-                ),
-              ),
-              BlocProvider(
-                create: (_) => UserGameTagListBloc(
-                  gameId: data.id,
-                  service: RepositoryProvider.of(context),
-                ),
-              ),
-            ],
-            child: UserGameDetail(
-              data: data,
-              extended: false,
-              onBackPressed: onClosed,
-              onEditSucceeded: (final context) {
-                context.read<UserGameListBloc>().add(const ListReloaded());
-              },
-              onDeleteSucceeded: (final context) {
-                context.read<UserGameListBloc>().add(const ListReloaded());
-                context.read<UserGameSelectBloc>().add(
-                  const ActionStarted(data: null),
-                );
-              },
-            ),
-          );
-        },
-        listItemBuilder:
-            (final context, final style, final data, final onTap) =>
-                style == ListStyle.grid
-                ? UserGameGridListItem(data: data, onTap: onTap)
-                : UserGameTileListItem(data: data, onTap: onTap),
+        child: const Icon(CommonIcons.add),
       ),
+      detailBuilder: (final context, final data, final onClosed) {
+        return MultiBlocProvider(
+          // Recreate on selection change
+          key: Key(data.id),
+          providers: [
+            BlocProvider(
+              create: (_) => UserGameAvailableListBloc(
+                gameId: data.id,
+                service: RepositoryProvider.of(context),
+              ),
+            ),
+            BlocProvider(
+              create: (_) => UserGameTagListBloc(
+                gameId: data.id,
+                service: RepositoryProvider.of(context),
+              ),
+            ),
+          ],
+          child: UserGameDetail(
+            data: data,
+            extended: false,
+            onBackPressed: onClosed,
+            onEditSucceeded: (final context) {
+              context.read<UserGameListBloc>().add(const ListReloaded());
+            },
+            onDeleteSucceeded: (final context) {
+              context.read<UserGameListBloc>().add(const ListReloaded());
+              context.read<UserGameSelectBloc>().add(
+                const ActionStarted(data: null),
+              );
+            },
+          ),
+        );
+      },
+      listItemBuilder: (final context, final style, final data, final onTap) =>
+          style == ListStyle.grid
+          ? UserGameGridListItem(data: data, onTap: onTap)
+          : UserGameTileListItem(data: data, onTap: onTap),
     );
   }
 }

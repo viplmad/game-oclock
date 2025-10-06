@@ -52,7 +52,7 @@ class Game extends Equatable {
   final String externalId;
   final String title;
   final String edition;
-  final DateTime releaseDate;
+  final DateTime? releaseDate;
   final List<String> genres;
   final List<String> series;
   final String coverUrl;

@@ -99,9 +99,7 @@ Widget _fieldsCreateBuilder(
       ),
       SimpleConfirmationTextFormField(
         controller: formGroup.password,
-        label: context
-            .localize()
-            .passwordLabel,
+        label: context.localize().passwordLabel,
         required: true,
       ),
       SimpleBoolFormField(

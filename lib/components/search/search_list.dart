@@ -4,6 +4,7 @@ import 'package:game_oclock/blocs/blocs.dart'
     show ListLoaded, ListReloaded, SearchListBloc;
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -57,16 +58,13 @@ class SearchGridListItem extends StatelessWidget {
       trailing: IconButton(
         icon: const Icon(CommonIcons.edit),
         tooltip: context.localize().editLabel,
-        onPressed: () async =>
-            showDialog<bool>(
-              context: context,
-              builder: (final context) =>
-                  SearchEditForm(space: space, name: data.name),
-            ).then((final bool? success) {
-              if (success != null && success && context.mounted) {
-                context.read<SearchListBloc>().add(const ListReloaded());
-              }
-            }),
+        onPressed: () async => showFormDialog(
+          context,
+          builder: (final context) =>
+              SearchEditForm(space: space, name: data.name),
+          onSuccess: (final context) =>
+              context.read<SearchListBloc>().add(const ListReloaded()),
+        ),
       ),
     );
   }

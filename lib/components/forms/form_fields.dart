@@ -3,6 +3,7 @@ export 'fields/choice.dart';
 export 'fields/confirmation_text.dart';
 export 'fields/date.dart';
 export 'fields/date_time.dart';
+export 'fields/duration.dart';
 export 'fields/number.dart';
 export 'fields/select.dart';
 export 'fields/text.dart';

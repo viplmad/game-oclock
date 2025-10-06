@@ -10,6 +10,8 @@ class UserGameFormData extends FormData<UserGame> {
   final TextEditingController status;
   final ScalarNumberEditingController rating;
   final TextEditingController notes;
+  final MultipleTextEditingController genres;
+  final MultipleTextEditingController series;
 
   UserGameFormData({
     required this.title,
@@ -18,6 +20,8 @@ class UserGameFormData extends FormData<UserGame> {
     required this.status,
     required this.rating,
     required this.notes,
+    required this.genres,
+    required this.series,
   });
 
   @override
@@ -28,5 +32,7 @@ class UserGameFormData extends FormData<UserGame> {
     status.setValue(userGame?.status);
     rating.setValue(userGame?.rating);
     notes.setValue(userGame?.notes);
+    genres.setValue(userGame?.genres);
+    series.setValue(userGame?.series);
   }
 }

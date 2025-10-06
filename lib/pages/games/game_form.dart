@@ -32,6 +32,8 @@ class UserGameCreateForm extends StatelessWidget {
               status: TextEditingController(),
               rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
+              genres: MultipleTextEditingController(),
+              series: MultipleTextEditingController(),
             ),
           ),
         ),
@@ -83,6 +85,8 @@ class UserGameEditForm extends StatelessWidget {
               status: TextEditingController(),
               rating: ScalarNumberEditingController(),
               notes: TextEditingController(),
+              genres: MultipleTextEditingController(),
+              series: MultipleTextEditingController(),
             ),
           ),
         ),
@@ -148,6 +152,14 @@ Widget _fieldsCreateBuilder(
         label: context.localize().notesLabel,
         multiline: true,
       ),
+      SimpleMultipleSelectFormField(
+        controller: formGroup.genres,
+        label: context.localize().genresLabel,
+      ),
+      SimpleMultipleSelectFormField(
+        controller: formGroup.series,
+        label: context.localize().seriesLabel,
+      ),
     ],
   );
 }
@@ -194,6 +206,16 @@ Widget _fieldsEditBuilder(
         label: context.localize().notesLabel,
         readOnly: readOnly,
         multiline: true,
+      ),
+      SimpleMultipleSelectFormField(
+        controller: formGroup.genres,
+        label: context.localize().genresLabel,
+        readOnly: readOnly,
+      ),
+      SimpleMultipleSelectFormField(
+        controller: formGroup.series,
+        label: context.localize().seriesLabel,
+        readOnly: readOnly,
       ),
     ],
   );
