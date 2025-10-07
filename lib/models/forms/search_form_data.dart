@@ -10,13 +10,13 @@ class SearchFormData extends FormData<ListSearch> {
   SearchFormData({required this.name, required this.filters});
 
   @override
-  void setValues(final ListSearch? search) {
-    name.setValue(search?.name);
+  void setValues(final ListSearch? data) {
+    name.setValue(data?.name);
 
     filters.clear();
-    if (search?.search.filter != null) {
+    if (data?.search.filter != null) {
       filters.addAll(
-        search!.search.filter!.map(
+        data!.search.filter!.map(
           (final filter) => FilterFormData(
             field: TextEditingController(),
             operator: TextEditingController(),
@@ -43,10 +43,10 @@ class FilterFormData extends FormData<FilterDTO> {
   });
 
   @override
-  void setValues(final FilterDTO? filter) {
-    field.setValue(filter?.field);
-    operator.setValue(filter?.operator_.value);
-    value.setValue(filter?.value.value); // TODO list
-    chainOperator.setValue(filter?.chainOperator?.value);
+  void setValues(final FilterDTO? data) {
+    field.setValue(data?.field);
+    operator.setValue(data?.operator_.value);
+    value.setValue(data?.value.value); // TODO list
+    chainOperator.setValue(data?.chainOperator?.value);
   }
 }

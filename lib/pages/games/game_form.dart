@@ -60,8 +60,7 @@ class UserGameCreateForm extends StatelessWidget {
             UserGameCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, _) =>
-                _fieldsCreateBuilder(context, formGroup),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -118,6 +117,7 @@ class UserGameEditForm extends StatelessWidget {
 Widget _fieldsCreateBuilder(
   final BuildContext context,
   final UserGameFormData formGroup,
+  final bool readOnly,
 ) {
   return Column(
     children: <Widget>[
@@ -125,40 +125,48 @@ Widget _fieldsCreateBuilder(
         controller: formGroup.title,
         label: context.localize().titleLabel,
         required: true,
+        readOnly: readOnly,
       ),
       SimpleTextFormField(
         controller: formGroup.edition,
         label: context.localize().editionLabel,
+        readOnly: readOnly,
       ),
       SimpleDateFormField(
         controller: formGroup.releaseDate,
         label: context.localize().releaseDateLabel,
+        readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),
       SimpleChoiceFormField(
         controller: formGroup.status,
         label: context.localize().statusLabel,
+        readOnly: readOnly,
         options: gameStatusOptions,
       ),
       SimpleRatingFormField(
         controller: formGroup.rating,
         label: context.localize().ratingLabel,
+        readOnly: readOnly,
         color: const Color(0xA0B71C1C),
         borderColor: Colors.redAccent,
       ),
       SimpleTextFormField(
         controller: formGroup.notes,
         label: context.localize().notesLabel,
+        readOnly: readOnly,
         multiline: true,
       ),
       SimpleMultipleSelectFormField(
         controller: formGroup.genres,
         label: context.localize().genresLabel,
+        readOnly: readOnly,
       ),
       SimpleMultipleSelectFormField(
         controller: formGroup.series,
         label: context.localize().seriesLabel,
+        readOnly: readOnly,
       ),
     ],
   );

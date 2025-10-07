@@ -3,6 +3,7 @@ export 'action_event.dart';
 export 'action_state.dart';
 export 'impl/auth_bloc.dart';
 export 'impl/calendar_bloc.dart';
+export 'impl/device_bloc.dart';
 export 'impl/game_available_bloc.dart';
 export 'impl/game_bloc.dart';
 export 'impl/game_log_bloc.dart';

@@ -15,9 +15,9 @@ class GameAvailableFormData extends FormData<GameAvailable> {
   });
 
   @override
-  void setValues(final GameAvailable? gameAvailable) {
-    gameId.setValue(gameAvailable?.gameId);
-    locationId.setValue(gameAvailable?.locationId);
-    date.setValue(gameAvailable?.date);
+  void setValues(final GameAvailable? data) {
+    gameId.setValue(data?.gameId);
+    locationId.setValue(data?.locationId);
+    date.setValue(data?.date);
   }
 }

@@ -298,6 +298,18 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// No description provided for @currentPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPasswordLabel;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPasswordLabel;
+
   /// No description provided for @adminLabel.
   ///
   /// In en, this message translates to:

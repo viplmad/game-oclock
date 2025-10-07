@@ -36,4 +36,11 @@ class UserService {
   Future<User> getCurrent() async {
     return mockUser();
   }
+
+  Future<void> changePassword(
+    final String currentPassword,
+    final String newPassword,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
 }

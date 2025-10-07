@@ -1,4 +1,4 @@
-import 'package:game_oclock/models/models.dart' show User;
+import 'package:game_oclock/models/models.dart' show User, UserChangePassword;
 import 'package:game_oclock/services/services.dart' show UserService;
 
 import '../action.dart'
@@ -45,6 +45,21 @@ class UserUpdateBloc extends ConsumerActionBloc<User> {
     final void lastData,
   ) async {
     await service.update(event);
+    return ActionSuccess.consumer(event);
+  }
+}
+
+class UserChangePasswordBloc extends ConsumerActionBloc<UserChangePassword> {
+  UserChangePasswordBloc({required this.service});
+
+  final UserService service;
+
+  @override
+  Future<ActionFinal<void, UserChangePassword>> doAction(
+    final UserChangePassword event,
+    final void lastData,
+  ) async {
+    await service.changePassword(event.currentPassword, event.newPassword);
     return ActionSuccess.consumer(event);
   }
 }

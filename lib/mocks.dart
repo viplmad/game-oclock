@@ -4,7 +4,7 @@ import 'package:game_oclock/models/models.dart';
 
 UserGame mockUserGame({final String? title}) {
   return UserGame(
-    id: Random().nextInt(1000).toString(),
+    id: mockId(),
     externalId: 'steam',
     title: title ?? 'title',
     edition: '',
@@ -20,24 +20,30 @@ UserGame mockUserGame({final String? title}) {
 }
 
 Tag mockTag({final String? name}) {
-  return Tag(id: Random().nextInt(1000).toString(), name: name ?? 'name');
+  return Tag(id: mockId(), name: name ?? 'name');
 }
 
 Location mockLocation({final String? name}) {
-  return Location(id: Random().nextInt(1000).toString(), name: name ?? 'name');
+  return Location(id: mockId(), name: name ?? 'name');
 }
 
 LocationWithDate mockLocationWithDate({final String? name}) {
   return LocationWithDate(
-    id: Random().nextInt(1000).toString(),
+    id: mockId(),
     name: name ?? 'name',
     date: DateTime.now(),
   );
 }
 
-User mockUser() {
-  return User(id: Random().nextInt(1000).toString(), username: 'username');
+Device mockDevice({final String? name}) {
+  return Device(id: mockId(), name: name ?? 'name');
 }
+
+User mockUser() {
+  return User(id: mockId(), username: 'username');
+}
+
+String mockId() => Random().nextInt(1000).toString();
 
 Login mockLogin() {
   return const Login(

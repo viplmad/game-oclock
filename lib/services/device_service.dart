@@ -1,9 +1,9 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, Tag;
+    show Device, PageResultDTO, SearchDTO;
 
-class TagService {
-  Future<PageResultDTO<Tag>> search(
+class DeviceService {
+  Future<PageResultDTO<Device>> search(
     final SearchDTO search,
     final String? quicksearch,
   ) async {
@@ -11,7 +11,8 @@ class TagService {
     return mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder: (final index) => mockTag(name: 'name ($quicksearch) $index'),
+      builder: (final index) =>
+          mockDevice(name: 'name ($quicksearch) $index'),
     );
   }
 
@@ -20,16 +21,16 @@ class TagService {
     return 500;
   }
 
-  Future<Tag> get(final String id) async {
+  Future<Device> get(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
-    return mockTag();
+    return mockDevice();
   }
 
-  Future<void> create(final Tag tag) async {
+  Future<void> create(final Device device) async {
     await Future.delayed(const Duration(seconds: 5));
   }
 
-  Future<void> update(final Tag tag) async {
+  Future<void> update(final Device device) async {
     await Future.delayed(const Duration(seconds: 1));
   }
 

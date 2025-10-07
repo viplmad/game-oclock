@@ -6,18 +6,33 @@ import 'package:game_oclock/blocs/blocs.dart'
         GameAvailableFormBloc,
         ListLoaded,
         LocationCreateBloc,
-        LocationListBloc;
+        LocationListBloc,
+        UserGameCreateBloc,
+        UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show GameAvailable, GameAvailableFormData, ListSearch, SearchDTO;
+import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/location_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameAvailableCreateForm extends StatelessWidget {
-  const GameAvailableCreateForm({super.key, required this.gameId});
+  const GameAvailableCreateForm.fixedGame({
+    final Key? key,
+    required final String gameId,
+  }) : this._(key: key, gameId: gameId);
 
-  final String gameId;
+  const GameAvailableCreateForm.fixedLocation({
+    final Key? key,
+    required final String locationId,
+  }) : this._(key: key, locationId: locationId);
+
+  const GameAvailableCreateForm._({super.key, this.gameId, this.locationId})
+    : assert(gameId != null || locationId != null);
+
+  final String? gameId;
+  final String? locationId;
 
   @override
   Widget build(final BuildContext context) {
@@ -27,7 +42,7 @@ class GameAvailableCreateForm extends StatelessWidget {
           create: (_) => GameAvailableFormBloc(
             formGroup: GameAvailableFormData(
               gameId: TextEditingController(text: gameId),
-              locationId: TextEditingController(),
+              locationId: TextEditingController(text: locationId),
               date: DateTimeEditingController(),
             ),
           ),
@@ -36,6 +51,21 @@ class GameAvailableCreateForm extends StatelessWidget {
           create: (_) =>
               GameAvailableCreateBloc(service: RepositoryProvider.of(context)),
         ),
+
+        BlocProvider(
+          create: (_) =>
+              UserGameListBloc(service: RepositoryProvider.of(context))..add(
+                // Requires search to be loaded
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
+              ),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameCreateBloc(service: RepositoryProvider.of(context)),
+        ),
+
         BlocProvider(
           create: (_) =>
               LocationListBloc(service: RepositoryProvider.of(context))..add(
@@ -58,8 +88,14 @@ class GameAvailableCreateForm extends StatelessWidget {
             GameAvailableCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, _) =>
-                _fieldsCreateBuilder(context, formGroup),
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(
+                  context,
+                  gameId,
+                  locationId,
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -67,19 +103,30 @@ class GameAvailableCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
+  final String? gameId,
+  final String? locationId,
   final GameAvailableFormData formGroup,
+  final bool readOnly,
 ) {
   return Column(
     children: <Widget>[
+      UserGameSelectorBuilder(
+        controller: formGroup.gameId,
+        label: context.localize().gameLabel,
+        required: true,
+        readOnly: readOnly || gameId != null,
+      ),
       LocationSelectorBuilder(
         controller: formGroup.locationId,
         label: context.localize().locationLabel,
         required: true,
+        readOnly: readOnly || locationId != null,
       ),
       SimpleDateFormField(
         controller: formGroup.date,
         label: context.localize().dateLabel,
         required: true,
+        readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),

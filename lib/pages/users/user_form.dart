@@ -9,7 +9,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart';
+import 'package:game_oclock/models/models.dart' show User, UserFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserCreateForm extends StatelessWidget {
@@ -36,8 +36,7 @@ class UserCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<User, UserFormData, UserFormBloc, UserCreateBloc>(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, _) =>
-                _fieldsCreateBuilder(context, formGroup),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -89,6 +88,7 @@ class UserEditForm extends StatelessWidget {
 Widget _fieldsCreateBuilder(
   final BuildContext context,
   final UserFormData formGroup,
+  final bool readOnly,
 ) {
   return Column(
     children: <Widget>[
@@ -96,15 +96,18 @@ Widget _fieldsCreateBuilder(
         controller: formGroup.username,
         label: context.localize().usernameLabel,
         required: true,
+        readOnly: readOnly,
       ),
       SimpleConfirmationTextFormField(
         controller: formGroup.password,
         label: context.localize().passwordLabel,
         required: true,
+        readOnly: readOnly,
       ),
       SimpleBoolFormField(
         controller: formGroup.admin,
         label: context.localize().adminLabel,
+        readOnly: readOnly,
       ),
     ],
   );

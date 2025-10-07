@@ -16,3 +16,13 @@ class User extends Equatable {
   @override
   List<Object?> get props => [id, username];
 }
+
+class UserChangePassword {
+  final String currentPassword;
+  final String newPassword;
+
+  const UserChangePassword({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+}

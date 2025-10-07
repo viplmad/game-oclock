@@ -1,13 +1,17 @@
 export 'chain_operator_type.dart';
 export 'date_locale_config.dart';
+export 'device.dart';
 export 'error.dart';
 export 'external_game.dart';
 export 'filter.dart';
 export 'form_data.dart';
+export 'forms/device_form_data.dart';
 export 'forms/game_available_form_data.dart';
 export 'forms/game_tag_form_data.dart';
+export 'forms/location_form_data.dart';
 export 'forms/login_form_data.dart';
 export 'forms/search_form_data.dart';
+export 'forms/tag_form_data.dart';
 export 'forms/user_form_data.dart';
 export 'forms/user_game_form_data.dart';
 export 'game.dart';

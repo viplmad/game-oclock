@@ -14,9 +14,9 @@ class LoginFormData extends FormData<Login> {
   });
 
   @override
-  void setValues(final Login? login) {
-    host.setValue(login?.host);
-    username.setValue(login?.username);
-    password.setValue(login?.password);
+  void setValues(final Login? data) {
+    host.setValue(data?.host);
+    username.setValue(data?.username);
+    password.setValue(data?.password);
   }
 }

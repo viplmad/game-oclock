@@ -25,14 +25,14 @@ class UserGameFormData extends FormData<UserGame> {
   });
 
   @override
-  void setValues(final UserGame? userGame) {
-    title.setValue(userGame?.title);
-    edition.setValue(userGame?.edition);
-    releaseDate.setValue(userGame?.releaseDate);
-    status.setValue(userGame?.status);
-    rating.setValue(userGame?.rating);
-    notes.setValue(userGame?.notes);
-    genres.setValue(userGame?.genres);
-    series.setValue(userGame?.series);
+  void setValues(final UserGame? data) {
+    title.setValue(data?.title);
+    edition.setValue(data?.edition);
+    releaseDate.setValue(data?.releaseDate);
+    status.setValue(data?.status);
+    rating.setValue(data?.rating);
+    notes.setValue(data?.notes);
+    genres.setValue(data?.genres);
+    series.setValue(data?.series);
   }
 }

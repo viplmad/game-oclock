@@ -9,8 +9,8 @@ class GameTagFormData extends FormData<GameTag> {
   GameTagFormData({required this.gameId, required this.tagId});
 
   @override
-  void setValues(final GameTag? gameTag) {
-    gameId.setValue(gameTag?.gameId);
-    tagId.setValue(gameTag?.tagId);
+  void setValues(final GameTag? data) {
+    gameId.setValue(data?.gameId);
+    tagId.setValue(data?.tagId);
   }
 }

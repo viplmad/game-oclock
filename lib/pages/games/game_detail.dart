@@ -33,9 +33,9 @@ import 'package:game_oclock/models/models.dart'
         TabDestination,
         Tag,
         UserGame;
+import 'package:game_oclock/pages/games/game_available_form.dart';
 import 'package:game_oclock/pages/games/game_form.dart';
-import 'package:game_oclock/pages/games/new_game_available_form.dart';
-import 'package:game_oclock/pages/games/new_game_tag_form.dart';
+import 'package:game_oclock/pages/games/game_tag_form.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -151,7 +151,8 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameAvailableListBloc>(context),
         child: RelationListBuilder<LocationWithDate, UserGameAvailableListBloc>(
           label: context.localize().locationLabel,
-          createFormBuilder: () => GameAvailableCreateForm(gameId: data.id),
+          createFormBuilder: () =>
+              GameAvailableCreateForm.fixedGame(gameId: data.id),
           itemBuilder: (final data) => GameAvailableTileListItem(data: data),
         ),
       ),
@@ -162,7 +163,7 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameTagListBloc>(context),
         child: RelationListBuilder<Tag, UserGameTagListBloc>(
           label: context.localize().tagLabel,
-          createFormBuilder: () => GameTagCreateForm(gameId: data.id),
+          createFormBuilder: () => GameTagCreateForm.fixedGame(gameId: data.id),
           itemBuilder: (final data) => TagTileListItem(data: data),
         ),
       ),

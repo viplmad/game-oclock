@@ -1,9 +1,12 @@
 export 'form_bloc.dart';
 export 'form_event.dart';
 export 'form_state.dart';
+export 'impl/device_form_bloc.dart';
 export 'impl/game_available_form_bloc.dart';
 export 'impl/game_form_bloc.dart';
 export 'impl/game_tag_form_bloc.dart';
+export 'impl/location_form_bloc.dart';
 export 'impl/login_form_bloc.dart';
 export 'impl/search_form_bloc.dart';
+export 'impl/tag_form_bloc.dart';
 export 'impl/user_form_bloc.dart';

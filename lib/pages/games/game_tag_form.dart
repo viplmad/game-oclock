@@ -6,17 +6,32 @@ import 'package:game_oclock/blocs/blocs.dart'
         GameTagFormBloc,
         ListLoaded,
         TagCreateBloc,
-        TagListBloc;
+        TagListBloc,
+        UserGameCreateBloc,
+        UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/models/models.dart'
     show GameTag, GameTagFormData, ListSearch, SearchDTO;
+import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/tag_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameTagCreateForm extends StatelessWidget {
-  const GameTagCreateForm({super.key, required this.gameId});
+  const GameTagCreateForm.fixedGame({
+    final Key? key,
+    required final String gameId,
+  }) : this._(key: key, gameId: gameId);
 
-  final String gameId;
+  const GameTagCreateForm.fixedTag({
+    final Key? key,
+    required final String tagId,
+  }) : this._(key: key, tagId: tagId);
+
+  const GameTagCreateForm._({super.key, this.gameId, this.tagId})
+    : assert(gameId != null || tagId != null);
+
+  final String? gameId;
+  final String? tagId;
 
   @override
   Widget build(final BuildContext context) {
@@ -26,7 +41,7 @@ class GameTagCreateForm extends StatelessWidget {
           create: (_) => GameTagFormBloc(
             formGroup: GameTagFormData(
               gameId: TextEditingController(text: gameId),
-              tagId: TextEditingController(),
+              tagId: TextEditingController(text: tagId),
             ),
           ),
         ),
@@ -34,6 +49,21 @@ class GameTagCreateForm extends StatelessWidget {
           create: (_) =>
               GameTagCreateBloc(service: RepositoryProvider.of(context)),
         ),
+
+        BlocProvider(
+          create: (_) =>
+              UserGameListBloc(service: RepositoryProvider.of(context))..add(
+                // Requires search to be loaded
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
+              ),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameCreateBloc(service: RepositoryProvider.of(context)),
+        ),
+
         BlocProvider(
           create: (_) =>
               TagListBloc(service: RepositoryProvider.of(context))..add(
@@ -55,8 +85,14 @@ class GameTagCreateForm extends StatelessWidget {
             GameTagCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, _) =>
-                _fieldsCreateBuilder(context, formGroup),
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(
+                  context,
+                  gameId,
+                  tagId,
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -64,14 +100,24 @@ class GameTagCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
+  final String? gameId,
+  final String? tagId,
   final GameTagFormData formGroup,
+  final bool readOnly,
 ) {
   return Column(
     children: <Widget>[
+      UserGameSelectorBuilder(
+        controller: formGroup.gameId,
+        label: context.localize().gameLabel,
+        required: true,
+        readOnly: readOnly || gameId != null,
+      ),
       TagSelectorBuilder(
         controller: formGroup.tagId,
         label: context.localize().tagLabel,
         required: true,
+        readOnly: readOnly || tagId != null,
       ),
     ],
   );

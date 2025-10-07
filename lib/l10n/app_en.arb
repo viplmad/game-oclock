@@ -33,6 +33,8 @@
   "hostLabel": "Host",
   "usernameLabel": "Username",
   "passwordLabel": "Password",
+  "currentPasswordLabel": "Current Password",
+  "newPasswordLabel": "New Password",
   "adminLabel": "Administrator",
   "confirmationLabel": "Confirmation",
   "loginLabel": "Login",
