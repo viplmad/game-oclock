@@ -39,6 +39,10 @@ Device mockDevice({final String? name}) {
   return Device(id: mockId(), name: name ?? 'name');
 }
 
+GamePlaythrough mockGamePlaythrough({final String? name}) {
+  return GamePlaythrough(id: mockId(), gameId: mockId(), name: name ?? 'name');
+}
+
 User mockUser() {
   return User(id: mockId(), username: 'username');
 }

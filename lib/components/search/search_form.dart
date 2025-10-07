@@ -134,7 +134,7 @@ Widget _fieldsBuilder(
   final bool readOnly,
 ) {
   context.read<FilterFormDataListBloc>().add(const ListReloaded());
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.name,

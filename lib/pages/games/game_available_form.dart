@@ -108,7 +108,7 @@ Widget _fieldsCreateBuilder(
   final GameAvailableFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       UserGameSelectorBuilder(
         controller: formGroup.gameId,

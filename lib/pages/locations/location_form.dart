@@ -87,7 +87,7 @@ Widget _fieldsBuilder(
   final LocationFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.name,

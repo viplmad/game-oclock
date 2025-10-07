@@ -15,6 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginFormBloc,
         LoginSaveBloc,
         SavedLoginResponseGetBloc;
+import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -165,7 +166,7 @@ Widget _fieldsBuilder(
   final LoginFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.host,

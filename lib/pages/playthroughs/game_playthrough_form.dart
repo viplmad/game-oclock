@@ -3,38 +3,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        DeviceCreateBloc,
-        DeviceFormBloc,
-        DeviceGetBloc,
-        DeviceUpdateBloc;
+        GamePlaythroughCreateBloc,
+        GamePlaythroughFormBloc,
+        GamePlaythroughGetBloc,
+        GamePlaythroughUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart' show Device, DeviceFormData;
+import 'package:game_oclock/models/models.dart'
+    show GamePlaythrough, GamePlaythroughFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-class DeviceCreateForm extends StatelessWidget {
-  const DeviceCreateForm({super.key});
+class GamePlaythroughCreateForm extends StatelessWidget {
+  const GamePlaythroughCreateForm({super.key});
 
   @override
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => DeviceFormBloc(
-            formGroup: DeviceFormData(name: TextEditingController()),
+          create: (_) => GamePlaythroughFormBloc(
+            formGroup: GamePlaythroughFormData(
+              gameId: TextEditingController(),
+              name: TextEditingController(),
+            ),
           ),
         ),
         BlocProvider(
-          create: (_) =>
-              DeviceCreateBloc(service: RepositoryProvider.of(context)),
+          create: (_) => GamePlaythroughCreateBloc(
+            service: RepositoryProvider.of(context),
+          ),
         ),
       ],
       child:
           CreateFormBuilder<
-            Device,
-            DeviceFormData,
-            DeviceFormBloc,
-            DeviceCreateBloc
+            GamePlaythrough,
+            GamePlaythroughFormData,
+            GamePlaythroughFormBloc,
+            GamePlaythroughCreateBloc
           >(
             title: context.localize().creatingTitle,
             fieldsBuilder: _fieldsBuilder,
@@ -43,8 +48,8 @@ class DeviceCreateForm extends StatelessWidget {
   }
 }
 
-class DeviceEditForm extends StatelessWidget {
-  const DeviceEditForm({super.key, required this.id});
+class GamePlaythroughEditForm extends StatelessWidget {
+  const GamePlaythroughEditForm({super.key, required this.id});
 
   final String id;
 
@@ -53,27 +58,31 @@ class DeviceEditForm extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => DeviceFormBloc(
-            formGroup: DeviceFormData(name: TextEditingController()),
+          create: (_) => GamePlaythroughFormBloc(
+            formGroup: GamePlaythroughFormData(
+              gameId: TextEditingController(),
+              name: TextEditingController(),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => GamePlaythroughUpdateBloc(
+            service: RepositoryProvider.of(context),
           ),
         ),
         BlocProvider(
           create: (_) =>
-              DeviceUpdateBloc(service: RepositoryProvider.of(context)),
-        ),
-        BlocProvider(
-          create: (_) =>
-              DeviceGetBloc(service: RepositoryProvider.of(context))
+              GamePlaythroughGetBloc(service: RepositoryProvider.of(context))
                 ..add(ActionStarted(data: id)),
         ),
       ],
       child:
           EditFormBuilder<
-            Device,
-            DeviceFormData,
-            DeviceFormBloc,
-            DeviceGetBloc,
-            DeviceUpdateBloc
+            GamePlaythrough,
+            GamePlaythroughFormData,
+            GamePlaythroughFormBloc,
+            GamePlaythroughGetBloc,
+            GamePlaythroughUpdateBloc
           >(
             title: context.localize().editingTitle,
             fieldsBuilder: _fieldsBuilder,
@@ -84,7 +93,7 @@ class DeviceEditForm extends StatelessWidget {
 
 Widget _fieldsBuilder(
   final BuildContext context,
-  final DeviceFormData formGroup,
+  final GamePlaythroughFormData formGroup,
   final bool readOnly,
 ) {
   return FormFieldsContainer(

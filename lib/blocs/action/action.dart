@@ -7,6 +7,7 @@ export 'impl/device_bloc.dart';
 export 'impl/game_available_bloc.dart';
 export 'impl/game_bloc.dart';
 export 'impl/game_log_bloc.dart';
+export 'impl/game_playthrough_bloc.dart';
 export 'impl/game_tag_bloc.dart';
 export 'impl/list_style_bloc.dart';
 export 'impl/location_bloc.dart';

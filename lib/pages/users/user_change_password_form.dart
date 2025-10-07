@@ -49,7 +49,7 @@ Widget _fieldsCreateBuilder(
   final UserChangePasswordFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleObscuredTextFormField(
         controller: formGroup.currentPassword,

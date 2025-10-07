@@ -119,7 +119,7 @@ Widget _fieldsCreateBuilder(
   final UserGameFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       ExternalGameSelectorBuilder(
         controller: formGroup.title,
@@ -177,7 +177,7 @@ Widget _fieldsEditBuilder(
   final UserGameFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.title,

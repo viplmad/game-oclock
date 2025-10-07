@@ -90,7 +90,7 @@ Widget _fieldsCreateBuilder(
   final UserFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.username,
@@ -118,7 +118,7 @@ Widget _fieldsEditBuilder(
   final UserFormData formGroup,
   final bool readOnly,
 ) {
-  return Column(
+  return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
         controller: formGroup.username,
