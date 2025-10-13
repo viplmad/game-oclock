@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 class CommonIcons {
   CommonIcons._();
 
@@ -38,7 +40,7 @@ class CommonIcons {
 
   static const externalSourceDefault = Icon(Icons.cloud);
   static const externalSourceIgdb = ImageIcon(
-    AssetImage('assets/icons/IgdbLogoBlack.png'),
-    size: 24.0,
+    AssetImage('assets/icons/IgdbLogoBlack_small.png'),
+    size: kIconSize,
   );
 }
