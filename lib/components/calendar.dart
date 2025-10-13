@@ -25,7 +25,7 @@ class LogCalendarHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(CommonIcons.left),
+            icon: CommonIcons.left,
             tooltip: context.localize().previousMonth,
             onPressed: () {
               final prevMonth = focusedDay.atFirstDayOfPreviousMonth();
@@ -40,7 +40,7 @@ class LogCalendarHeader extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(CommonIcons.right),
+            icon: CommonIcons.right,
             tooltip: context.localize().nextMonth,
             onPressed: () {
               final nextMonth = focusedDay.atFirstDayOfNextMonth();

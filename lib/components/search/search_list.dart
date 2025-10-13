@@ -56,7 +56,7 @@ class SearchGridListItem extends StatelessWidget {
         Navigator.pop(context, data);
       },
       trailing: IconButton(
-        icon: const Icon(CommonIcons.edit),
+        icon: CommonIcons.edit,
         tooltip: context.localize().editLabel,
         onPressed: () async => showFormDialog(
           context,

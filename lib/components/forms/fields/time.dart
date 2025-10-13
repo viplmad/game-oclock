@@ -48,7 +48,7 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
       suffixIcons: [
         IconButton(
           tooltip: context.localize().showTimePicker,
-          icon: const Icon(CommonIcons.timePicker),
+          icon: CommonIcons.timePicker,
           onPressed: widget.readOnly ? null : () async => _showPicker(),
         ),
       ],

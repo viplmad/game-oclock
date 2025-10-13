@@ -3,6 +3,7 @@ export 'date_locale_config.dart';
 export 'device.dart';
 export 'error.dart';
 export 'external_game.dart';
+export 'external_source.dart';
 export 'filter.dart';
 export 'form_data.dart';
 export 'forms/device_form_data.dart';

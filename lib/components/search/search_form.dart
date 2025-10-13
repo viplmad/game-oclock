@@ -181,7 +181,7 @@ Widget _fieldsBuilder(
             label: context.localize().valueLabel,
           ),
           trailing: IconButton(
-            icon: const Icon(CommonIcons.delete),
+            icon: CommonIcons.delete,
             tooltip: context.localize().deleteLabel,
             onPressed: () {
               context.read<FilterFormDataListBloc>().removeElement(index);
@@ -191,7 +191,7 @@ Widget _fieldsBuilder(
       ),
       TextButton.icon(
         label: Text(context.localize().addLabel),
-        icon: const Icon(CommonIcons.add),
+        icon: CommonIcons.add,
         onPressed: () {
           context.read<FilterFormDataListBloc>().addElement(
             FilterFormData(

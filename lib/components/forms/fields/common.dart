@@ -27,7 +27,7 @@ class ClearIconButton extends StatelessWidget {
   Widget build(final BuildContext context) {
     return IconButton(
       tooltip: context.localize().clearLabel,
-      icon: const Icon(CommonIcons.clear),
+      icon: CommonIcons.clear,
       onPressed: onTap,
     );
   }

@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show ExternalGame;
+import 'package:game_oclock/models/models.dart'
+    show ExternalGame, ExternalSource;
 import 'package:game_oclock/services/igdb/api/auth_api.dart';
 import 'package:game_oclock/services/igdb/api/games_api.dart';
 import 'package:game_oclock/services/igdb/api_client.dart';
@@ -33,9 +34,9 @@ class IGDBService {
   Future<List<ExternalGame>> search(final String search) async {
     final data = await _api.getGames(search: search, size: 10);
     return data
-        .map(
-          (final game) => ExternalGame(
-            externalSource: 'igdb',
+        .map((final game) {
+          return ExternalGame(
+            externalSource: ExternalSource.igdb,
             externalId: game.id.toString(),
             title: game.name,
             edition: game.versionTitle,
@@ -47,8 +48,8 @@ class IGDBService {
             series: game.collections
                 .map((final c) => c.name)
                 .toList(growable: false),
-          ),
-        )
+          );
+        })
         .toList(growable: false);
   }
 }

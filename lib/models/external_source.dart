@@ -1,0 +1,1 @@
+enum ExternalSource { igdb }

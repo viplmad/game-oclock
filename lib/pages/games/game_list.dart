@@ -72,7 +72,7 @@ class _UserGameListDetailBuilder extends StatelessWidget {
           onSuccess: (final context) =>
               context.read<UserGameListBloc>().add(const ListReloaded()),
         ),
-        child: const Icon(CommonIcons.add),
+        child: CommonIcons.add,
       ),
       detailBuilder: (final context, final data, final onClosed) {
         return MultiBlocProvider(

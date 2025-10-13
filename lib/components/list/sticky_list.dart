@@ -111,7 +111,7 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
             children: [
               Text(context.localize().errorPageLoadTitle),
               OutlinedButton.icon(
-                icon: const Icon(CommonIcons.reload),
+                icon: CommonIcons.reload,
                 label: Text(context.localize().retryLabel),
                 onPressed: () => context.read<LB>().add(const ListReloaded()),
               ),

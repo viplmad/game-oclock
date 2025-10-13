@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import 'external_source.dart';
+
 class ExternalGame extends Equatable {
-  final String externalSource;
+  final ExternalSource externalSource;
   final String externalId;
   final String title;
   final String? edition;

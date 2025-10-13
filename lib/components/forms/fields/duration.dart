@@ -50,7 +50,7 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
       suffixIcons: [
         IconButton(
           tooltip: context.localize().showDurationPicker,
-          icon: const Icon(CommonIcons.durationPicker),
+          icon: CommonIcons.durationPicker,
           onPressed: widget.readOnly ? null : () async => _showPicker(),
         ),
       ],

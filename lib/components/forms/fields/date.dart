@@ -52,7 +52,7 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
       suffixIcons: [
         IconButton(
           tooltip: context.localize().showDatePicker,
-          icon: const Icon(CommonIcons.datePicker),
+          icon: CommonIcons.datePicker,
           onPressed: widget.readOnly ? null : () async => _showPicker(),
         ),
       ],

@@ -19,7 +19,6 @@ import 'package:game_oclock/models/models.dart'
         SearchDTO,
         gameSessionFinishedOptions;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
-import 'package:game_oclock/shared/selectors/tag_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameSessionCreateForm extends StatelessWidget {

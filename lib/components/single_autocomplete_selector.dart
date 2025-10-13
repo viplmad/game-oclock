@@ -162,9 +162,7 @@ final class AutocompleteNewConfig<
 
               return ListButtonToolbar(
                 label: context.localize().createNewDataLabel(quicksearch),
-                icon: inProgress
-                    ? const ProgressButtonIcon()
-                    : const Icon(CommonIcons.add),
+                icon: inProgress ? const ProgressButtonIcon() : CommonIcons.add,
                 onTap: inProgress
                     ? null
                     : () {

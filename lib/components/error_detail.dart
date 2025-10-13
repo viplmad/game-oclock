@@ -18,7 +18,7 @@ class DetailError extends StatelessWidget {
         children: <Widget>[
           Center(child: Text(title)),
           OutlinedButton.icon(
-            icon: const Icon(CommonIcons.reload),
+            icon: CommonIcons.reload,
             label: Text(
               context.localize().retryLabel,
               maxLines: 1,

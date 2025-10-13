@@ -139,13 +139,13 @@ class UserGameDetail extends StatelessWidget {
     final List<TabDestination>
     destinations = List.unmodifiable(<TabDestination>[
       TabDestination(
-        icon: const Icon(CommonIcons.detail),
+        icon: CommonIcons.detail,
         labelBuilder: (final context) => context.localize().detailLabel,
         onTap: (_) {},
         child: _info(),
       ),
       TabDestination(
-        icon: const Icon(CommonIcons.locations),
+        icon: CommonIcons.locations,
         labelBuilder: (final context) => context.localize().locationsTitle,
         onTap: (final context) =>
             _loadOnlyInitial<UserGameAvailableListBloc>(context),
@@ -157,7 +157,7 @@ class UserGameDetail extends StatelessWidget {
         ),
       ),
       TabDestination(
-        icon: const Icon(CommonIcons.tags),
+        icon: CommonIcons.tags,
         labelBuilder: (final context) => context.localize().tagsTitle,
         onTap: (final context) =>
             _loadOnlyInitial<UserGameTagListBloc>(context),
@@ -178,12 +178,12 @@ class UserGameDetail extends StatelessWidget {
             ? Container()
             : IconButton(
                 // TODO hide if coming from detail
-                icon: const Icon(CommonIcons.view),
+                icon: CommonIcons.view,
                 tooltip: context.localize().viewLabel,
                 onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
               ),
         IconButton(
-          icon: const Icon(CommonIcons.edit),
+          icon: CommonIcons.edit,
           tooltip: context.localize().editLabel,
           onPressed: () async => showFormDialog(
             context,
@@ -192,7 +192,7 @@ class UserGameDetail extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(CommonIcons.delete),
+          icon: CommonIcons.delete,
           tooltip: context.localize().deleteLabel,
           onPressed: () async => showFormDialog(
             context,
@@ -311,7 +311,7 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
       toolbars: [
         ListButtonToolbar(
           label: context.localize().linkDataLabel(label),
-          icon: const Icon(CommonIcons.link),
+          icon: CommonIcons.link,
           onTap: () async => showFormDialog(
             context,
             builder: (final context) => createFormBuilder(),

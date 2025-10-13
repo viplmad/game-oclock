@@ -57,7 +57,7 @@ class TileListErrorItem extends StatelessWidget {
         style: const TextStyle(fontSize: 18.0, color: Colors.white),
       ),
       trailing: OutlinedButton.icon(
-        icon: const Icon(CommonIcons.reload),
+        icon: CommonIcons.reload,
         label: Text(
           context.localize().retryLabel,
           maxLines: 1,
@@ -124,7 +124,7 @@ class GridListErrorItem extends StatelessWidget {
                 style: const TextStyle(fontSize: 18.0, color: Colors.white),
               ),
               OutlinedButton.icon(
-                icon: const Icon(CommonIcons.reload),
+                icon: CommonIcons.reload,
                 label: Text(
                   context.localize().retryLabel,
                   maxLines: 1,

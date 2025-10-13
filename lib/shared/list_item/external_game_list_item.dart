@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/models/models.dart' show ExternalGame;
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/models/models.dart'
+    show ExternalGame, ExternalSource;
 
 class ExternalGameTileListItem extends StatelessWidget {
   const ExternalGameTileListItem({super.key, required this.data, this.onTap});
@@ -14,7 +16,9 @@ class ExternalGameTileListItem extends StatelessWidget {
       title: data.title,
       subtitle: '${data.edition} - ${data.releaseDate?.year}', // TODO i18n
       imageURL: data.coverUrl,
-      trailing: const Icon(Icons.cloud), // TODO icon of external source
+      trailing: data.externalSource == ExternalSource.igdb
+          ? CommonIcons.externalSourceIgdb
+          : CommonIcons.externalSourceDefault,
       onTap: onTap,
     );
   }

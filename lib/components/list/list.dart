@@ -60,7 +60,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
               children: [
                 Text(context.localize().errorPageLoadTitle),
                 OutlinedButton.icon(
-                  icon: const Icon(CommonIcons.reload),
+                  icon: CommonIcons.reload,
                   label: Text(context.localize().retryLabel),
                   onPressed: () => context.read<LB>().add(const ListReloaded()),
                 ),
@@ -183,7 +183,7 @@ class ListFilterToolbar extends StatelessWidget {
     return ListTile(
       // TODO filter chips
       title: Text(search == null ? '-' : search!.name), // TODO empty search
-      trailing: const Icon(CommonIcons.down),
+      trailing: CommonIcons.down,
       onTap: () async {
         showModalBottomSheet<ListSearch>(
           context: context,

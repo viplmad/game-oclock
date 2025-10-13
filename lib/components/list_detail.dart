@@ -152,12 +152,12 @@ class ListDetailBuilder<
               ButtonSegment<ListStyle>(
                 value: ListStyle.tile,
                 label: Text(context.localize().listStyleTileLabel),
-                icon: const Icon(CommonIcons.listStyleTile),
+                icon: CommonIcons.listStyleTile,
               ),
               ButtonSegment<ListStyle>(
                 value: ListStyle.grid,
                 label: Text(context.localize().listStyleGridLabel),
-                icon: const Icon(CommonIcons.listStyleGrid),
+                icon: CommonIcons.listStyleGrid,
               ),
             ],
             selected: {selectedStyle},
@@ -168,14 +168,14 @@ class ListDetailBuilder<
             },
           ),
           IconButton(
-            icon: const Icon(CommonIcons.reload),
+            icon: CommonIcons.reload,
             tooltip: context.localize().reloadLabel,
             onPressed: () => context.read<LB>().add(const ListReloaded()),
           ),
           SearchAnchor(
             builder: (final context, final controller) {
               return IconButton(
-                icon: const Icon(CommonIcons.search),
+                icon: CommonIcons.search,
                 tooltip: context.localize().searchLabel,
                 onPressed: () {
                   controller.openView();

@@ -130,7 +130,7 @@ class _SimpleObscuredTextFormFieldState
           tooltip: obscureText
               ? context.localize().showLabel
               : context.localize().hideLabel,
-          icon: Icon(obscureText ? CommonIcons.show : CommonIcons.hide),
+          icon: obscureText ? CommonIcons.show : CommonIcons.hide,
           onPressed: () {
             setState(() {
               obscureText = !obscureText;

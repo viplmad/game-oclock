@@ -85,7 +85,7 @@ class MainLayoutBuilder extends StatelessWidget {
 
   IconButton drawerButton(final BuildContext context) {
     return IconButton(
-      icon: const Icon(CommonIcons.drawer),
+      icon: CommonIcons.drawer,
       tooltip: context.localize().openLabel,
       onPressed: () => scaffoldKey.currentState?.openDrawer(),
     );
@@ -128,7 +128,7 @@ class MainLayoutBuilder extends StatelessWidget {
     return NavigationRail(
       leading: extended
           ? IconButton(
-              icon: const Icon(CommonIcons.drawerOpen),
+              icon: CommonIcons.drawerOpen,
               // no tooltip
               onPressed: () {},
             )
