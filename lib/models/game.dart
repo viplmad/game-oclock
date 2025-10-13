@@ -47,6 +47,20 @@ List<DropdownField> gameStatusOptions = List.unmodifiable(<DropdownField>[
   ),
 ]);
 
+List<DropdownField> gameSessionFinishedOptions =
+    List.unmodifiable(<DropdownField>[
+      DropdownField(
+        value: 'completed',
+        labelBuilder: (final context) => context.localize().completedLabel,
+        color: Colors.green,
+      ),
+      DropdownField(
+        value: 'retired',
+        labelBuilder: (final context) => context.localize().retiredLabel,
+        color: Colors.grey,
+      ),
+    ]);
+
 class Game extends Equatable {
   final String id;
   final String externalId;

@@ -5,6 +5,7 @@ export 'impl/device_form_bloc.dart';
 export 'impl/game_available_form_bloc.dart';
 export 'impl/game_form_bloc.dart';
 export 'impl/game_playthrough_form_bloc.dart';
+export 'impl/game_session_form_bloc.dart';
 export 'impl/game_tag_form_bloc.dart';
 export 'impl/location_form_bloc.dart';
 export 'impl/login_form_bloc.dart';

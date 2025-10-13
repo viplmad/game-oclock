@@ -280,6 +280,42 @@ abstract class AppLocalizations {
   /// **'Date'**
   String get dateLabel;
 
+  /// No description provided for @startDateTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startDateTimeLabel;
+
+  /// No description provided for @endDateTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get endDateTimeLabel;
+
+  /// No description provided for @deviceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get deviceLabel;
+
+  /// No description provided for @playthroughLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Playthrough'**
+  String get playthroughLabel;
+
+  /// No description provided for @startedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get startedLabel;
+
+  /// No description provided for @finishedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get finishedLabel;
+
   /// No description provided for @hostLabel.
   ///
   /// In en, this message translates to:
@@ -417,6 +453,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Played'**
   String get playedLabel;
+
+  /// No description provided for @completedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedLabel;
+
+  /// No description provided for @retiredLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Retired'**
+  String get retiredLabel;
 
   /// No description provided for @openLabel.
   ///

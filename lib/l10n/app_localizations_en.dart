@@ -102,6 +102,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dateLabel => 'Date';
 
   @override
+  String get startDateTimeLabel => 'Start';
+
+  @override
+  String get endDateTimeLabel => 'End';
+
+  @override
+  String get deviceLabel => 'Device';
+
+  @override
+  String get playthroughLabel => 'Playthrough';
+
+  @override
+  String get startedLabel => 'Started';
+
+  @override
+  String get finishedLabel => 'Finished';
+
+  @override
   String get hostLabel => 'Host';
 
   @override
@@ -169,6 +187,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playedLabel => 'Played';
+
+  @override
+  String get completedLabel => 'Completed';
+
+  @override
+  String get retiredLabel => 'Retired';
 
   @override
   String get openLabel => 'Open';

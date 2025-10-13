@@ -142,6 +142,7 @@ Widget _fieldsCreateBuilder(
       SimpleChoiceFormField(
         controller: formGroup.status,
         label: context.localize().statusLabel,
+        required: true,
         readOnly: readOnly,
         options: gameStatusOptions,
       ),
@@ -200,6 +201,8 @@ Widget _fieldsEditBuilder(
       SimpleChoiceFormField(
         controller: formGroup.status,
         label: context.localize().statusLabel,
+        required: true,
+        readOnly: readOnly,
         options: gameStatusOptions,
       ),
       SimpleRatingFormField(

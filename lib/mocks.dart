@@ -43,6 +43,18 @@ GamePlaythrough mockGamePlaythrough({final String? name}) {
   return GamePlaythrough(id: mockId(), gameId: mockId(), name: name ?? 'name');
 }
 
+GameSession mockGameSession({final String? name}) {
+  return GameSession(
+    gameId: mockId(),
+    start: DateTime.now(),
+    end: DateTime.now(),
+    deviceId: mockId(),
+    playthroughId: mockId(),
+    started: false,
+    finished: 'retired',
+  );
+}
+
 User mockUser() {
   return User(id: mockId(), username: 'username');
 }
