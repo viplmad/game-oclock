@@ -1,19 +1,19 @@
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch;
-import 'package:game_oclock/services/services.dart' show GameLogService;
+import 'package:game_oclock/models/models.dart' show ListSearch, Device;
+import 'package:game_oclock/services/services.dart' show DeviceService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
 
-class GameLogListBloc extends ListLoadBloc<DateTime> {
-  GameLogListBloc({required this.service});
+class DeviceListBloc extends ListLoadBloc<Device> {
+  DeviceListBloc({required this.service});
 
-  final GameLogService service;
+  final DeviceService service;
 
   @override
-  Future<ListFinal<DateTime>> loadList(
+  Future<ListFinal<Device>> loadList(
     final String? quicksearch,
     final ListSearch search,
-    final List<DateTime>? lastData,
+    final List<Device>? lastData,
     final int? lastTotal,
   ) async {
     final data = mergePageData(
@@ -26,11 +26,8 @@ class GameLogListBloc extends ListLoadBloc<DateTime> {
       countGetter: () => service.count(search.search, quicksearch),
       lastTotal: lastTotal,
     );
-    return ListLoadSuccess<DateTime>(
-      data: data
-        ..sort(
-          (final a, final b) => a.compareTo(b),
-        ), // Sort to simplify computation on UI
+    return ListLoadSuccess<Device>(
+      data: data,
       total: count,
       quicksearch: quicksearch,
       search: search,

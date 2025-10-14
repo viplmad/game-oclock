@@ -14,8 +14,8 @@ import 'package:game_oclock/pages/routes.dart';
 import 'package:game_oclock/services/services.dart'
     show
         AuthService,
-        GameLogService,
         GameService,
+        GameSessionService,
         IGDBService,
         LocationService,
         LoginService,
@@ -60,7 +60,9 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<GameService>(create: (_) => GameService()),
         RepositoryProvider<TagService>(create: (_) => TagService()),
         RepositoryProvider<LocationService>(create: (_) => LocationService()),
-        RepositoryProvider<GameLogService>(create: (_) => GameLogService()),
+        RepositoryProvider<GameSessionService>(
+          create: (_) => GameSessionService(),
+        ),
         RepositoryProvider<SearchService>(create: (_) => SearchService()),
       ],
       child: MultiBlocProvider(

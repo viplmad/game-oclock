@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class GameSession extends Equatable {
+class GameSession extends Equatable implements Comparable<GameSession> {
   final String gameId;
   final DateTime start;
   final DateTime end;
@@ -21,4 +21,9 @@ class GameSession extends Equatable {
 
   @override
   List<Object?> get props => [gameId, start, end];
+
+  @override
+  int compareTo(final GameSession other) {
+    return start.compareTo(other.start);
+  }
 }

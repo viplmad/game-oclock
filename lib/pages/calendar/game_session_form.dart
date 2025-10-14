@@ -18,13 +18,15 @@ import 'package:game_oclock/models/models.dart'
         ListSearch,
         SearchDTO,
         gameSessionFinishedOptions;
+import 'package:game_oclock/shared/selectors/device_selector.dart';
+import 'package:game_oclock/shared/selectors/game_playthrough_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameSessionCreateForm extends StatelessWidget {
-  const GameSessionCreateForm({super.key, this.gameId});
+  const GameSessionCreateForm({super.key, required this.gameId});
 
-  final String? gameId;
+  final String gameId;
 
   @override
   Widget build(final BuildContext context) {
@@ -92,7 +94,7 @@ class GameSessionCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
-  final String? gameId,
+  final String gameId,
   final GameSessionFormData formGroup,
   final bool readOnly,
 ) {
@@ -102,7 +104,7 @@ Widget _fieldsCreateBuilder(
         controller: formGroup.gameId,
         label: context.localize().gameLabel,
         required: true,
-        readOnly: readOnly || gameId != null,
+        readOnly: readOnly,
       ),
       SimpleDateTimeFormField(
         controller: formGroup.startDateTime,
@@ -120,17 +122,18 @@ Widget _fieldsCreateBuilder(
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ), // TODO Range date time form field
-      /*DeviceSelectorBuilder(
+      DeviceSelectorBuilder(
         controller: formGroup.deviceId,
         label: context.localize().deviceLabel,
         required: true,
         readOnly: readOnly,
       ),
       GamePlaythroughSelectorBuilder(
+        gameId: gameId,
         controller: formGroup.playthroughId,
         label: context.localize().playthroughLabel,
         readOnly: readOnly,
-      ),*/
+      ),
       SimpleBoolFormField(
         controller: formGroup.started,
         label: context.localize().startedLabel,

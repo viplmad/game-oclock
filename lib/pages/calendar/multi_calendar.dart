@@ -5,12 +5,13 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
-        GameLogListBloc,
-        GameLogSelectBloc,
-        ListLoaded;
+        GameSessionSelectBloc,
+        ListLoaded,
+        SessionListBloc;
 import 'package:game_oclock/components/calendar_list_detail.dart';
-import 'package:game_oclock/components/list/list_item.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/models/models.dart'
+    show GameSession, ListSearch, SearchDTO;
+import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class MultiCalendarPage extends StatelessWidget {
@@ -28,10 +29,10 @@ class MultiCalendarPage extends StatelessWidget {
           create: (_) =>
               CalendarDayFocusBloc()..add(ActionStarted(data: DateTime.now())),
         ),
-        BlocProvider(create: (_) => GameLogSelectBloc()),
+        BlocProvider(create: (_) => GameSessionSelectBloc()),
         BlocProvider(
           create: (_) =>
-              GameLogListBloc(service: RepositoryProvider.of(context))..add(
+              SessionListBloc(service: RepositoryProvider.of(context))..add(
                 ListLoaded(
                   search: ListSearch(name: 'default', search: SearchDTO()),
                 ),
@@ -40,18 +41,18 @@ class MultiCalendarPage extends StatelessWidget {
       ],
       child:
           CalendarListDetailBuilder<
-            DateTime,
-            GameLogSelectBloc,
-            GameLogListBloc
+            GameSession,
+            GameSessionSelectBloc,
+            SessionListBloc
           >(
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            dateGetter: (final data) => data,
+            dateGetter: (final data) => data.start,
             detailBuilder: (final context, final data, final onClosed) =>
-                Center(child: Text(data.toIso8601String())),
+                Center(child: Text(data.start.toIso8601String())),
             listItemBuilder: (final context, final data, final onTap) =>
-                TileListItem(title: data.toIso8601String(), onTap: onTap),
+                GameSessionTileListItem(data: data, onTap: onTap),
           ),
     );
   }

@@ -1,6 +1,5 @@
 export 'auth_service.dart';
 export 'device_service.dart';
-export 'game_log_service.dart';
 export 'game_playthrough_service.dart';
 export 'game_service.dart';
 export 'game_session_service.dart';

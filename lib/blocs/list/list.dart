@@ -1,6 +1,8 @@
+export 'impl/device_list_bloc.dart';
 export 'impl/external_game_list_bloc.dart';
 export 'impl/game_list_bloc.dart';
-export 'impl/game_log_list_bloc.dart';
+export 'impl/game_playthrough_list_bloc.dart';
+export 'impl/game_session_list_bloc.dart';
 export 'impl/location_list_bloc.dart';
 export 'impl/search_list_bloc.dart';
 export 'impl/tag_list_bloc.dart';
