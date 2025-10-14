@@ -101,6 +101,7 @@ class UserGameDetailsPage extends StatelessWidget {
 
           return UserGameDetail(
             data: data,
+            fromPage: true,
             extended: layoutTier != LayoutTier.compact,
             onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
             onEditSucceeded: (final context) =>
@@ -118,6 +119,7 @@ class UserGameDetail extends StatelessWidget {
   const UserGameDetail({
     super.key,
     required this.data,
+    this.fromPage = false,
     required this.extended,
     required this.onBackPressed,
     required this.onEditSucceeded,
@@ -126,6 +128,7 @@ class UserGameDetail extends StatelessWidget {
 
   final UserGame data;
   final VoidCallback onBackPressed;
+  final bool fromPage;
   final bool extended;
   final ValueChanged<BuildContext> onEditSucceeded;
   final ValueChanged<BuildContext> onDeleteSucceeded;
@@ -174,14 +177,20 @@ class UserGameDetail extends StatelessWidget {
       imageUrl: data.coverUrl,
       onBackPressed: onBackPressed,
       actions: [
-        extended
-            ? Container()
-            : IconButton(
-                // TODO hide if coming from detail
-                icon: CommonIcons.view,
-                tooltip: context.localize().viewLabel,
-                onPressed: () => GoRouter.of(context).go('/games/${data.id}'),
-              ),
+        IconButton(
+          icon: CommonIcons.calendar,
+          tooltip: context.localize().calendarLabel,
+          onPressed: () => GoRouter.of(
+            context,
+          ).go(CommonPaths.buildGameCalendarPath(data.id)),
+        ),
+        if (!fromPage)
+          IconButton(
+            icon: CommonIcons.view,
+            tooltip: context.localize().viewLabel,
+            onPressed: () =>
+                GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
+          ),
         IconButton(
           icon: CommonIcons.edit,
           tooltip: context.localize().editLabel,

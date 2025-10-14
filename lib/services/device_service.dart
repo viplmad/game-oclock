@@ -11,8 +11,7 @@ class DeviceService {
     return mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder: (final index) =>
-          mockDevice(name: 'name ($quicksearch) $index'),
+      builder: (final index) => mockDevice(name: 'name ($quicksearch) $index'),
     );
   }
 

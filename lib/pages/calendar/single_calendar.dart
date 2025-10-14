@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_oclock/blocs/blocs.dart'
+    show
+        ActionStarted,
+        CalendarDayFocusBloc,
+        CalendarDaySelectBloc,
+        GameSessionListBloc,
+        GameSessionSelectBloc,
+        ListLoaded;
+import 'package:game_oclock/components/calendar_list_detail.dart';
+import 'package:game_oclock/models/models.dart'
+    show GameSession, ListSearch, SearchDTO;
+import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
+
+class SingleCalendarPage extends StatelessWidget {
+  const SingleCalendarPage({super.key, required this.gameId});
+
+  final String gameId;
+
+  @override
+  Widget build(final BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              CalendarDaySelectBloc()..add(ActionStarted(data: DateTime.now())),
+        ),
+        BlocProvider(
+          create: (_) =>
+              CalendarDayFocusBloc()..add(ActionStarted(data: DateTime.now())),
+        ),
+        BlocProvider(create: (_) => GameSessionSelectBloc()),
+        BlocProvider(
+          create: (_) =>
+              GameSessionListBloc(
+                service: RepositoryProvider.of(context),
+                gameId: gameId,
+              )..add(
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
+              ),
+        ),
+      ],
+      child:
+          CalendarListDetailBuilder<
+            GameSession,
+            GameSessionSelectBloc,
+            GameSessionListBloc
+          >(
+            title: context.localize().calendarTitle,
+            firstDay: DateTime(1970),
+            lastDay: DateTime.now(),
+            dateGetter: (final data) => data.start,
+            detailBuilder: (final context, final data, final onClosed) =>
+                Center(child: Text(data.start.toIso8601String())),
+            listItemBuilder: (final context, final data, final onTap) =>
+                GameSessionTileListItem(data: data, onTap: onTap),
+          ),
+    );
+  }
+}

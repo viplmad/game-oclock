@@ -184,6 +184,12 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get locationLabel;
 
+  /// No description provided for @calendarLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendarLabel;
+
   /// No description provided for @creatingTitle.
   ///
   /// In en, this message translates to:

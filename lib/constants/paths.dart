@@ -12,8 +12,15 @@ class CommonPaths {
   static const String calendarPath = '/calendar';
   static const String reviewPath = '/review';
 
-  static const String _idPathParamPath = '/:id';
+  static const String _idPathParamPath = '/$_idPath';
   static const String gamePath = gamesPath + _idPathParamPath;
+  static const String gameCalendarPath = gamePath + calendarPath;
 
+  static const String _idPath = ':$idPathParam';
   static const String idPathParam = 'id';
+
+  static String buildGamePath(final String id) =>
+      gamePath.replaceFirst(_idPath, id);
+  static String buildGameCalendarPath(final String id) =>
+      gameCalendarPath.replaceFirst(_idPath, id);
 }

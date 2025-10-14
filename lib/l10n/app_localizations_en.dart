@@ -54,6 +54,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationLabel => 'Location';
 
   @override
+  String get calendarLabel => 'Calendar';
+
+  @override
   String get creatingTitle => 'Creating';
 
   @override

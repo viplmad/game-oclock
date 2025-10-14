@@ -13,6 +13,8 @@ import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart';
 import 'package:game_oclock/pages/calendar/multi_calendar.dart'
     show MultiCalendarPage;
+import 'package:game_oclock/pages/calendar/single_calendar.dart'
+    show SingleCalendarPage;
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
 import 'package:game_oclock/pages/games/game_detail.dart'
@@ -89,6 +91,16 @@ final routerConfig = GoRouter(
             );
             final String id = state.pathParameters[CommonPaths.idPathParam]!;
             return UserGameDetailsPage(id: id);
+          },
+        ),
+        GoRoute(
+          path: CommonPaths.gameCalendarPath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final String id = state.pathParameters[CommonPaths.idPathParam]!;
+            return SingleCalendarPage(gameId: id);
           },
         ),
 
