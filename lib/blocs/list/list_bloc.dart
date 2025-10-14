@@ -94,9 +94,13 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     final Emitter<ListState<S>> emit,
   ) async {
     if (state is ListFinal<S>) {
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
+      if (lastQuicksearch == quicksearch) {
+        return;
+      }
+
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
-      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       final lastSearch = (state as ListFinal<S>).search;
       emit(
         ListLoadInProgress<S>(

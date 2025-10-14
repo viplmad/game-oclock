@@ -17,6 +17,7 @@ import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
+import 'full_search_appp_bar.dart';
 import 'list/grid_list.dart';
 import 'list/tile_list.dart';
 
@@ -144,8 +145,10 @@ class ListDetailBuilder<
     required final ListStyle selectedStyle,
   }) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
+      appBar: FullSearchAppBar(
+        title: title,
+        onSearchChanged: (final value) =>
+            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
           SegmentedButton<ListStyle>(
             segments: <ButtonSegment<ListStyle>>[
@@ -171,24 +174,6 @@ class ListDetailBuilder<
             icon: CommonIcons.reload,
             tooltip: context.localize().reloadLabel,
             onPressed: () => context.read<LB>().add(const ListReloaded()),
-          ),
-          SearchAnchor(
-            builder: (final context, final controller) {
-              return IconButton(
-                icon: CommonIcons.search,
-                tooltip: context.localize().searchLabel,
-                onPressed: () {
-                  controller.openView();
-                },
-              );
-            },
-            suggestionsBuilder: (final context, final controller) =>
-                List.empty(),
-            viewOnChanged: // TODO not called when clear
-            (final value) => context.read<LB>().add(
-              ListQuicksearchChanged(quicksearch: value),
-            ),
-            isFullScreen: false,
           ),
         ],
       ),
