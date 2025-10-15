@@ -43,7 +43,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
 
     final series = charts.Series<SeriesElement<N>, String>(
       id: id,
-      colorFn: (final element, __) => charts.ColorUtil.fromDartColor(
+      colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
         colours.isEmpty
             ? Theme.of(context).primaryColor
             : colours.elementAt(element.index),
@@ -54,7 +54,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
       labelAccessorFn: (final element, _) => element.value > 0
           ? labelAccessor(element.domainLabel, element.value)
           : '',
-      outsideLabelStyleAccessorFn: (_, __) =>
+      outsideLabelStyleAccessorFn: (_, _) =>
           charts.TextStyleSpec(color: outsideTextColour),
     );
 

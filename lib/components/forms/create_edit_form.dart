@@ -148,7 +148,7 @@ class EditFormBuilder<
         builder: (final context, final formState) {
           return BlocBuilder<GB, ActionState<T?>>(
             builder: (final context, final getState) {
-              bool skeleton = false; // TODO
+              bool skeleton = false; // TODO skeleton
               if (getState is ActionInProgress<T>) {
                 skeleton = true; // TODO only if initial load?
               }
@@ -306,8 +306,8 @@ class FullForm extends StatelessWidget {
         : Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DefaultTextStyle(
                   style:

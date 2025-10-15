@@ -18,6 +18,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameTagListBloc;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
+import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
@@ -26,13 +27,15 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show
+        DateLocaleConfig,
         LayoutTier,
         ListSearch,
         LocationWithDate,
         SearchDTO,
         TabDestination,
         Tag,
-        UserGame;
+        UserGame,
+        gameStatusOptions;
 import 'package:game_oclock/pages/games/game_available_form.dart';
 import 'package:game_oclock/pages/games/game_form.dart';
 import 'package:game_oclock/pages/games/game_tag_form.dart';
@@ -139,13 +142,15 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<UserGameAvailableListBloc>(context);
     }
 
+    final dateConfig = DateLocaleConfig.def(); //TODO
+
     final List<TabDestination>
     destinations = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.detail,
         labelBuilder: (final context) => context.localize().detailLabel,
         onTap: (_) {},
-        child: _info(),
+        child: _info(context, dateConfig: dateConfig),
       ),
       TabDestination(
         icon: CommonIcons.locations,
@@ -217,7 +222,10 @@ class UserGameDetail extends StatelessWidget {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 2, child: _info()),
+                Expanded(
+                  flex: 2,
+                  child: _info(context, dateConfig: dateConfig),
+                ),
                 const VerticalDivider(width: 1.0),
                 Expanded(
                   flex: 4,
@@ -229,10 +237,49 @@ class UserGameDetail extends StatelessWidget {
     );
   }
 
-  Widget _info() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0, left: 24.0, right: 24.0),
-      child: Column(children: [Text(data.id)]), // TODO
+  Widget _info(
+    final BuildContext context, {
+    required final DateLocaleConfig dateConfig,
+  }) {
+    return SingleChildScrollView(
+      child: LabelsContainer(
+        children: [
+          TextLabel(label: context.localize().idLabel, value: data.id),
+          TextLabel(label: context.localize().titleLabel, value: data.title),
+          TextLabel(
+            label: context.localize().editionLabel,
+            value: data.edition,
+          ),
+          DateLabel(
+            label: context.localize().releaseDateLabel,
+            value: data.releaseDate,
+            dateConfig: dateConfig,
+          ),
+          ChoiceLabel(
+            label: context.localize().statusLabel,
+            value: data.status,
+            options: gameStatusOptions,
+          ),
+          RatingLabel(
+            label: context.localize().ratingLabel,
+            value: data.rating,
+            color: const Color(0xA0B71C1C),
+          ),
+          TextLabel(
+            label: context.localize().notesLabel,
+            value: data.notes,
+            multiline: true,
+          ),
+          MultipleTextLabel(
+            label: context.localize().genresLabel,
+            value: data.genres,
+          ),
+          MultipleTextLabel(
+            label: context.localize().seriesLabel,
+            value: data.series,
+          ),
+        ],
+      ),
     );
   }
 

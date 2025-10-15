@@ -24,6 +24,9 @@ class CommonIcons {
   static const clear = Icon(Icons.cancel_outlined);
   static const listStyleTile = Icon(Icons.list);
   static const listStyleGrid = Icon(Icons.grid_on);
+  static const yes = Icon(Icons.check);
+  static const no = Icon(Icons.close);
+  static Icon star(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);
   static const wishlists = Icon(Icons.shopping_bag);

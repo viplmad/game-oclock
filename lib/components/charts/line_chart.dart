@@ -54,13 +54,13 @@ class StatisticsLineChart extends StatelessWidget {
 
     final series = charts.Series<SeriesElement<int>, int>(
       id: id,
-      colorFn: (_, __) => seriesColour,
+      colorFn: (_, _) => seriesColour,
       domainFn: (final element, _) => element.index,
       measureFn: (final element, _) => element.value,
       data: data,
       labelAccessorFn: (final element, _) =>
           element.value > 0 ? labelAccessor(element.value) : '',
-      outsideLabelStyleAccessorFn: (_, __) =>
+      outsideLabelStyleAccessorFn: (_, _) =>
           charts.TextStyleSpec(color: outsideTextColour),
     );
 

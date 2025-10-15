@@ -1,5 +1,5 @@
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch, Device;
+import 'package:game_oclock/models/models.dart' show Device, ListSearch;
 import 'package:game_oclock/services/services.dart' show DeviceService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;

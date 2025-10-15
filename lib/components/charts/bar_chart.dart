@@ -104,13 +104,13 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
 
       final series = charts.Series<SeriesElement<N>, String>(
         id: valueIndex.toString(),
-        colorFn: (_, __) => seriesColour,
+        colorFn: (_, _) => seriesColour,
         domainFn: (final element, _) => element.domainLabel,
         measureFn: (final element, _) => element.value,
         data: data,
         labelAccessorFn: (final element, _) =>
             element.value > 0 ? labelAccessor(element.value) : '',
-        outsideLabelStyleAccessorFn: (_, __) =>
+        outsideLabelStyleAccessorFn: (_, _) =>
             charts.TextStyleSpec(color: outsideTextColour),
       );
 

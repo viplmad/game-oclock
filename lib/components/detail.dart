@@ -57,9 +57,9 @@ class Detail extends StatelessWidget {
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
                   useOldImageOnUrlChange: true,
-                  progressIndicatorBuilder: (_, __, ___) =>
+                  progressIndicatorBuilder: (_, _, _) =>
                       const CircularProgressIndicator(), // TODO skeleton
-                  errorWidget: (_, __, ___) => Container(color: Colors.grey),
+                  errorWidget: (_, _, _) => Container(color: Colors.grey),
                 ),
         ),
       ),
