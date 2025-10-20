@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormSubmitted,
         FormValuesUpdated,
         FunctionActionBloc;
+import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
@@ -274,12 +275,7 @@ class FullForm extends StatelessWidget {
     );
 
     final modifiedChip = dirty
-        ? IgnorePointer(
-            child: ActionChip(
-              label: Text(context.localize().modifiedLabel),
-              onPressed: () => {},
-            ),
-          )
+        ? LabelChip(label: context.localize().modifiedLabel)
         : const SizedBox();
 
     return fullscreen

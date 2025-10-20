@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -176,11 +177,7 @@ class ChoiceLabel extends StatelessWidget {
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       trailing: value == null
           ? const Text('-')
-          : ChoiceChip(
-              label: Text(option.labelBuilder(context)),
-              selected: true,
-              selectedColor: option.color,
-            ),
+          : LabelChip(label: option.labelBuilder(context), color: option.color),
     );
   }
 }
