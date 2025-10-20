@@ -622,6 +622,120 @@ abstract class AppLocalizations {
   /// **'Does not contain'**
   String get notContainsLabel;
 
+  /// No description provided for @andLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get andLabel;
+
+  /// No description provided for @orLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orLabel;
+
+  /// No description provided for @thenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'then'**
+  String get thenLabel;
+
+  /// No description provided for @nullLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'null'**
+  String get nullLabel;
+
+  /// No description provided for @quote.
+  ///
+  /// In en, this message translates to:
+  /// **'\'{data}\''**
+  String quote(Object data);
+
+  /// No description provided for @equalChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} = {bValue}'**
+  String equalChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @notEqualChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} != {bValue}'**
+  String notEqualChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @greaterThanChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} > {bValue}'**
+  String greaterThanChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @greaterThanEqualChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} >= {bValue}'**
+  String greaterThanEqualChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @lessThanChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} < {bValue}'**
+  String lessThanChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @lessThanEqualChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} <= {bValue}'**
+  String lessThanEqualChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @inChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} is in [{bValue}]'**
+  String inChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @notInChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} is not in [{bValue}]'**
+  String notInChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @startsWithChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} starts with {bValue}'**
+  String startsWithChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @notStartsWithChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} does not start with {bValue}'**
+  String notStartsWithChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @endsWithChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} ends with {bValue}'**
+  String endsWithChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @notEndsWithChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} does not start with {bValue}'**
+  String notEndsWithChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @containsChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} contains {bValue}'**
+  String containsChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @notContainsChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} does not contain {bValue}'**
+  String notContainsChipLabel(Object aField, Object bValue);
+
   /// No description provided for @listStyleTileLabel.
   ///
   /// In en, this message translates to:

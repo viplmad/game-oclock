@@ -4,9 +4,13 @@ import 'package:game_oclock/models/models.dart' show ListSearch;
 class SearchService {
   Future<List<ListSearch>> getAll(final String space) async {
     await Future.delayed(const Duration(seconds: 1));
-    return List.generate(50, (final index) {
+    return List.generate(5, (final index) {
       final finalIndex = index;
-      return mockSearch(name: 'search $space $finalIndex');
+      return mockSearch(
+        name: 'search $space $finalIndex',
+        filters: 2,
+        sorts: 1,
+      );
     });
   }
 

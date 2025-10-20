@@ -273,6 +273,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notContainsLabel => 'Does not contain';
 
   @override
+  String get andLabel => 'and';
+
+  @override
+  String get orLabel => 'or';
+
+  @override
+  String get thenLabel => 'then';
+
+  @override
+  String get nullLabel => 'null';
+
+  @override
+  String quote(Object data) {
+    return '\'$data\'';
+  }
+
+  @override
+  String equalChipLabel(Object aField, Object bValue) {
+    return '$aField = $bValue';
+  }
+
+  @override
+  String notEqualChipLabel(Object aField, Object bValue) {
+    return '$aField != $bValue';
+  }
+
+  @override
+  String greaterThanChipLabel(Object aField, Object bValue) {
+    return '$aField > $bValue';
+  }
+
+  @override
+  String greaterThanEqualChipLabel(Object aField, Object bValue) {
+    return '$aField >= $bValue';
+  }
+
+  @override
+  String lessThanChipLabel(Object aField, Object bValue) {
+    return '$aField < $bValue';
+  }
+
+  @override
+  String lessThanEqualChipLabel(Object aField, Object bValue) {
+    return '$aField <= $bValue';
+  }
+
+  @override
+  String inChipLabel(Object aField, Object bValue) {
+    return '$aField is in [$bValue]';
+  }
+
+  @override
+  String notInChipLabel(Object aField, Object bValue) {
+    return '$aField is not in [$bValue]';
+  }
+
+  @override
+  String startsWithChipLabel(Object aField, Object bValue) {
+    return '$aField starts with $bValue';
+  }
+
+  @override
+  String notStartsWithChipLabel(Object aField, Object bValue) {
+    return '$aField does not start with $bValue';
+  }
+
+  @override
+  String endsWithChipLabel(Object aField, Object bValue) {
+    return '$aField ends with $bValue';
+  }
+
+  @override
+  String notEndsWithChipLabel(Object aField, Object bValue) {
+    return '$aField does not start with $bValue';
+  }
+
+  @override
+  String containsChipLabel(Object aField, Object bValue) {
+    return '$aField contains $bValue';
+  }
+
+  @override
+  String notContainsChipLabel(Object aField, Object bValue) {
+    return '$aField does not contain $bValue';
+  }
+
+  @override
   String get listStyleTileLabel => 'Tile';
 
   @override

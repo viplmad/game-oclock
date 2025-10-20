@@ -26,6 +26,8 @@ class CommonIcons {
   static const listStyleGrid = Icon(Icons.grid_on);
   static const yes = Icon(Icons.check);
   static const no = Icon(Icons.close);
+  static const ascending = Icon(Icons.arrow_upward);
+  static const descending = Icon(Icons.arrow_downward);
   static Icon star(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);

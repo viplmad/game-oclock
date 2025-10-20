@@ -103,13 +103,21 @@ PageResultDTO<T> mockPageResult<T>({
   );
 }
 
-ListSearch mockSearch({final String? name, final int filters = 0}) {
+ListSearch mockSearch({
+  final String? name,
+  final int filters = 0,
+  final int sorts = 0,
+}) {
   return ListSearch(
     name: name ?? 'search',
     search: SearchDTO(
       filter: List.generate(
         filters,
         (final index) => mockFilterDTO(field: 'field$index'),
+      ),
+      sort: List.generate(
+        sorts,
+        (final index) => mockSortDTO(field: 'field$index'),
       ),
     ),
   );
@@ -121,4 +129,8 @@ FilterDTO mockFilterDTO({final String? field}) {
     operator_: OperatorType.eq,
     value: SearchValue(value: 'value'),
   );
+}
+
+SortDTO mockSortDTO({final String? field}) {
+  return SortDTO(field: field ?? 'field', order: OrderType.asc);
 }
