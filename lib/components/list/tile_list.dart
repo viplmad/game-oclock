@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart' show ListLoadBloc;
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'list.dart';
@@ -7,7 +8,13 @@ import 'list_item.dart';
 
 class TileListBuilder<T, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
-  const TileListBuilder({super.key, required super.itemBuilder});
+  const TileListBuilder({
+    super.key,
+    required super.itemBuilder,
+    this.borderRadius,
+  });
+
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget listView({
@@ -21,6 +28,7 @@ class TileListBuilder<T, LB extends ListLoadBloc<T>>
       items: items,
       itemBuilder: itemBuilder,
       trailing: trailing,
+      borderRadius: borderRadius,
       controller: controller,
     );
   }
@@ -35,6 +43,20 @@ class TileListBuilder<T, LB extends ListLoadBloc<T>>
       onRetryTap: onTap,
     );
   }
+
+  @override
+  Widget skeletonItemBuilder({final int order = 0}) {
+    return TileListSkeletonItem(order: order, hasImage: true,);
+  }
+
+  @override
+  Widget skeletonListView() {
+    return TileList(
+      items: List.filled(10, 0, growable: false),
+      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+      borderRadius: borderRadius,
+    );
+  }
 }
 
 class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
@@ -42,10 +64,12 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
   const ReorderableListBuilder({
     super.key,
     required super.itemBuilder,
+    this.borderRadius,
     required this.onReorder,
     this.readOnly = false,
   });
 
+  final BorderRadiusGeometry? borderRadius;
   final ReorderCallback onReorder;
   final bool readOnly;
 
@@ -62,6 +86,7 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
       itemBuilder: itemBuilder,
       onReorder: onReorder,
       trailing: trailing,
+      borderRadius: borderRadius,
       controller: controller,
       readOnly: readOnly,
     );
@@ -74,12 +99,14 @@ class TileList<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.trailing,
+    this.borderRadius,
     this.controller,
   });
 
   final List<T> items;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? trailing;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
 
   @override
@@ -100,7 +127,12 @@ class TileList<T> extends StatelessWidget {
           itemWidget = itemBuilder(context, item, index);
         }
 
-        return Padding(padding: const EdgeInsets.all(4.0), child: itemWidget);
+        return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: borderRadius == null
+              ? itemWidget
+              : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
+        );
       },
     );
   }
@@ -113,6 +145,7 @@ class ReorderableTileList<T> extends StatelessWidget {
     required this.itemBuilder,
     required this.onReorder,
     this.trailing,
+    this.borderRadius,
     this.controller,
     this.readOnly = false,
   });
@@ -121,6 +154,7 @@ class ReorderableTileList<T> extends StatelessWidget {
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final ReorderCallback onReorder;
   final Widget? trailing;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
   final bool readOnly;
 
@@ -146,7 +180,9 @@ class ReorderableTileList<T> extends StatelessWidget {
         return Padding(
           key: Key('${itemWidget.hashCode}'), // TODO
           padding: const EdgeInsets.all(4.0),
-          child: itemWidget,
+          child: borderRadius == null
+              ? itemWidget
+              : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
         );
       },
     );

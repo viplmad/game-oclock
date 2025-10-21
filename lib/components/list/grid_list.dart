@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart' show ListLoadBloc;
 import 'package:game_oclock/components/list/centered_list.dart';
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'list.dart';
@@ -11,10 +12,12 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>>
   const GridListBuilder({
     super.key,
     required super.itemBuilder,
+    this.borderRadius,
     required this.itemAspectRatio,
     required this.columns,
   });
 
+  final BorderRadiusGeometry? borderRadius;
   final double itemAspectRatio;
   final int columns;
 
@@ -30,6 +33,7 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>>
       items: items,
       itemBuilder: itemBuilder,
       trailing: trailing,
+      borderRadius: borderRadius,
       controller: controller,
       itemAspectRatio: itemAspectRatio,
       columns: columns,
@@ -46,6 +50,22 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>>
       onRetryTap: onTap,
     );
   }
+
+  @override
+  Widget skeletonItemBuilder({final int order = 0}) {
+    return GridListSkeletonItem(order: order);
+  }
+
+  @override
+  Widget skeletonListView() {
+    return GridList(
+      items: List.filled(10, 0, growable: false),
+      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+      borderRadius: borderRadius,
+      itemAspectRatio: itemAspectRatio,
+      columns: columns,
+    );
+  }
 }
 
 class GridList<T> extends StatelessWidget {
@@ -54,6 +74,7 @@ class GridList<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.trailing,
+    this.borderRadius,
     this.controller,
     required this.itemAspectRatio,
     required this.columns,
@@ -62,6 +83,7 @@ class GridList<T> extends StatelessWidget {
   final List<T> items;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? trailing;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
   final double itemAspectRatio;
   final int columns;
@@ -72,6 +94,7 @@ class GridList<T> extends StatelessWidget {
       items: items,
       itemBuilder: itemBuilder,
       trailing: trailing,
+      borderRadius: borderRadius,
       controller: controller,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         childAspectRatio: itemAspectRatio,
@@ -87,6 +110,7 @@ class CenteredGridList<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.trailing,
+    this.borderRadius,
     this.controller,
     required this.itemAspectRatio,
     required this.columns,
@@ -95,6 +119,7 @@ class CenteredGridList<T> extends StatelessWidget {
   final List<T> items;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? trailing;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
   final double itemAspectRatio;
   final int columns;
@@ -108,6 +133,7 @@ class CenteredGridList<T> extends StatelessWidget {
       items: items,
       itemBuilder: itemBuilder,
       trailing: trailing,
+      borderRadius: borderRadius,
       controller: controller,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCountAndCenteredLast(
         itemCount: count,
@@ -124,6 +150,7 @@ class _GridList<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.trailing,
+    this.borderRadius,
     this.controller,
     required this.gridDelegate,
   });
@@ -131,6 +158,7 @@ class _GridList<T> extends StatelessWidget {
   final List<T> items;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? trailing;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
   final SliverGridDelegate gridDelegate;
 
@@ -152,7 +180,12 @@ class _GridList<T> extends StatelessWidget {
           itemWidget = itemBuilder(context, item, index);
         }
 
-        return Padding(padding: const EdgeInsets.all(4.0), child: itemWidget);
+        return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: borderRadius == null
+              ? itemWidget
+              : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
+        );
       },
     );
   }

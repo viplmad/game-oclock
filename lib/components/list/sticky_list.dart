@@ -11,6 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadSuccess,
         ListReloaded,
         ListState;
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -19,10 +20,13 @@ class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
   const StickyTopListBuilder({
     super.key,
     required super.itemBuilder,
+    this.borderRadius,
     super.controller,
     required super.groupTransformer,
     required super.headerBuilder,
   });
+
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget listView({
@@ -35,7 +39,27 @@ class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
       items: groupTransformer(items),
       headerBuilder: headerBuilder,
       itemBuilder: itemBuilder,
+      borderRadius: borderRadius,
       controller: controller,
+    );
+  }
+
+  @override
+  Widget skeletonHeaderBuilder({final int order = 0}) {
+    return TileListSkeletonItem(order: order);
+  }
+
+  @override
+  Widget skeletonListView() {
+    return StickyTopHeaderList(
+      items: <int, List<int>>{
+        0: List.filled(3, 0, growable: false),
+        1: List.filled(3, 0, growable: false),
+        2: List.filled(3, 0, growable: false),
+      },
+      headerBuilder: (_) => skeletonHeaderBuilder(),
+      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+      borderRadius: borderRadius,
     );
   }
 }
@@ -45,10 +69,13 @@ class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
   const StickySideListBuilder({
     super.key,
     required super.itemBuilder,
+    this.borderRadius,
     super.controller,
     required super.groupTransformer,
     required super.headerBuilder,
   });
+
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget listView({
@@ -61,7 +88,27 @@ class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
       items: groupTransformer(items),
       headerBuilder: headerBuilder,
       itemBuilder: itemBuilder,
+      borderRadius: borderRadius,
       controller: controller,
+    );
+  }
+
+  @override
+  Widget skeletonHeaderBuilder({final int order = 0}) {
+    return SideHeaderSkeletonItem(order: order);
+  }
+
+  @override
+  Widget skeletonListView() {
+    return StickySideHeaderList(
+      items: <int, List<int>>{
+        0: List.filled(3, 0, growable: false),
+        1: List.filled(3, 0, growable: false),
+        2: List.filled(3, 0, growable: false),
+      },
+      headerBuilder: (_) => skeletonHeaderBuilder(),
+      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+      borderRadius: borderRadius,
     );
   }
 }
@@ -100,7 +147,12 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
     required final ScrollController controller,
   }) {
     List<T> items = [];
-    if (state is ListFinal<T>) {
+    if (state is ListLoadInProgress<T>) {
+      if (state.data == null || state.data!.isEmpty) {
+        return skeletonListView();
+      }
+      items = state.data!;
+    } else if (state is ListFinal<T>) {
       if (state is ListLoadSuccess<T> && state.data.isEmpty) {
         return Center(child: Text(context.localize().emptyListLabel));
       }
@@ -120,11 +172,6 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
         );
       }
       items = state.data;
-    } else if (state is ListLoadInProgress<T>) {
-      if (state.data == null || state.data!.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      items = state.data!;
     }
 
     return listView(
@@ -140,6 +187,13 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
     itemBuilder,
     required final ScrollController controller,
   });
+
+  Widget skeletonItemBuilder({final int order = 0}) {
+    return TileListSkeletonItem(order: order);
+  }
+
+  Widget skeletonHeaderBuilder({final int order = 0});
+  Widget skeletonListView();
 }
 
 class StickyTopHeaderList<K, T> extends StatelessWidget {
@@ -148,12 +202,14 @@ class StickyTopHeaderList<K, T> extends StatelessWidget {
     required this.items,
     required this.headerBuilder,
     required this.itemBuilder,
+    this.borderRadius,
     this.controller,
   });
 
   final Map<K, List<T>> items;
   final Widget Function(K key) headerBuilder;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
 
   @override
@@ -167,6 +223,7 @@ class StickyTopHeaderList<K, T> extends StatelessWidget {
               items: entry.value,
               header: headerBuilder(entry.key),
               itemBuilder: itemBuilder,
+              borderRadius: borderRadius,
             );
           })
           .toList(growable: false),
@@ -180,12 +237,14 @@ class StickySideHeaderList<K, T> extends StatelessWidget {
     required this.items,
     required this.headerBuilder,
     required this.itemBuilder,
+    this.borderRadius,
     this.controller,
   });
 
   final Map<K, List<T>> items;
   final Widget Function(K key) headerBuilder;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final BorderRadiusGeometry? borderRadius;
   final ScrollController? controller;
 
   @override
@@ -199,6 +258,7 @@ class StickySideHeaderList<K, T> extends StatelessWidget {
               items: entry.value,
               header: headerBuilder(entry.key),
               itemBuilder: itemBuilder,
+              borderRadius: borderRadius,
             );
           })
           .toList(growable: false),
@@ -212,11 +272,13 @@ class SliverTopGroup<T> extends StatelessWidget {
     required this.items,
     required this.header,
     required this.itemBuilder,
+    this.borderRadius,
   });
 
   final List<T> items;
   final Widget header;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(final BuildContext context) {
@@ -236,7 +298,9 @@ class SliverTopGroup<T> extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.all(4.0),
-              child: itemWidget,
+              child: borderRadius == null
+                  ? itemWidget
+                  : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
             );
           },
         ),
@@ -251,11 +315,13 @@ class SliverSideGroup<T> extends StatelessWidget {
     required this.items,
     required this.header,
     required this.itemBuilder,
+    this.borderRadius,
   });
 
   final List<T> items;
   final Widget header;
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(final BuildContext context) {
@@ -274,7 +340,9 @@ class SliverSideGroup<T> extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.all(4.0),
-              child: itemWidget,
+              child: borderRadius == null
+                  ? itemWidget
+                  : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
             );
           },
         ),

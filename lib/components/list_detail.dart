@@ -12,6 +12,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListStyleBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/list.dart';
+import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -181,6 +182,9 @@ class ListDetailBuilder<
         toolbars: [ListFilterToolbarBuilder<T, LB>(space: searchSpace)],
         child: selectedStyle == ListStyle.grid
             ? GridListBuilder<T, LB>(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(kCardBorderRadius),
+                ),
                 itemAspectRatio: 1.85, // Steam header aspect ratio
                 columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
                 itemBuilder: (final context, final data, final index) =>
@@ -197,6 +201,7 @@ class ListDetailBuilder<
                     ),
               )
             : TileListBuilder<T, LB>(
+                borderRadius: BorderRadius.zero,
                 itemBuilder: (final context, final data, final index) =>
                     listItemBuilder(
                       context,

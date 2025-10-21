@@ -16,6 +16,7 @@ import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
 import 'package:game_oclock/components/show_snackbar.dart';
+import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/models/models.dart'
     show DateLocaleConfig, LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
@@ -261,8 +262,8 @@ class CalendarListDetailBuilder<
           child: Align(
             alignment: Alignment.centerLeft,
             child: SizedBox(
-              height: 44.0,
-              width: 44.0,
+              width: kAvatarWidth,
+              height: kAvatarHeight,
               child: CircleAvatar(
                 backgroundColor: Colors.grey[800],
                 foregroundColor: Colors.white,

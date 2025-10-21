@@ -124,9 +124,10 @@ class LoginBuilder extends StatelessWidget {
             ActionState<SavedLoginResponse>
           >(
             builder: (final context, final getState) {
-              bool skeleton = false; // TODO skeleton
               if (getState is ActionInProgress<SavedLoginResponse>) {
-                skeleton = true; // TODO only if initial load?
+                return const Center(
+                  child: CircularProgressIndicator(),
+                ); // TODO skeleton
               }
 
               return BlocBuilder<LoginSaveBloc, ActionState<void>>(

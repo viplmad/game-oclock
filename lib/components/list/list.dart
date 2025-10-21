@@ -34,24 +34,30 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
   @override
   Widget build(final BuildContext context) {
     final ScrollController controller = this.controller ?? ScrollController();
-    controller.addListener(paginateListener(context, controller));
+    controller.addListener(_paginateListener(context, controller));
 
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) => Scrollbar(
         controller: controller,
-        child: list(context, state: state, controller: controller),
+        child: _list(context, state: state, controller: controller),
       ),
     );
   }
 
-  Widget list(
+  Widget _list(
     final BuildContext context, {
     required final ListState<T> state,
     required final ScrollController controller,
   }) {
     List<T> items = [];
     Widget? trailing;
-    if (state is ListFinal<T>) {
+    if (state is ListLoadInProgress<T>) {
+      if (state.data == null || state.data!.isEmpty) {
+        return skeletonListView();
+      }
+      items = state.data!;
+      trailing = skeletonItemBuilder();
+    } else if (state is ListFinal<T>) {
       if (state is ListLoadSuccess<T> && state.data.isEmpty) {
         return Center(child: Text(context.localize().emptyListLabel));
       }
@@ -77,12 +83,6 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
         );
       }
       items = state.data;
-    } else if (state is ListLoadInProgress<T>) {
-      if (state.data == null || state.data!.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      items = state.data!;
-      trailing = const Center(child: CircularProgressIndicator());
     }
 
     return RefreshIndicator(
@@ -96,7 +96,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     );
   }
 
-  VoidCallback paginateListener(
+  VoidCallback _paginateListener(
     final BuildContext context,
     final ScrollController scrollController,
   ) {
@@ -117,6 +117,8 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
   });
 
   Widget errorItemBuilder(final BuildContext context, final VoidCallback onTap);
+  Widget skeletonItemBuilder({final int order = 0});
+  Widget skeletonListView();
 }
 
 class ListToolbar extends StatelessWidget {
@@ -151,11 +153,13 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
   Widget build(final BuildContext context) {
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
-        ListSearch? currentSearch;
+        ListSearch currentSearch;
         if (state is ListLoadInProgress<T>) {
           return const ListTileSkeleton();
         } else if (state is ListFinal<T>) {
           currentSearch = state.search;
+        } else {
+          return const SizedBox();
         }
 
         return ListFilterToolbar(
@@ -179,25 +183,23 @@ class ListFilterToolbar extends StatelessWidget {
   }) : assert(space.length > 0);
 
   final String space;
-  final ListSearch? search;
+  final ListSearch search;
   final void Function(BuildContext context, ListSearch selectedSearch)
   onSearchChanged;
 
   @override
   Widget build(final BuildContext context) {
     return ListTile(
-      title: search == null
-          ? const Text('-')
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              spacing: 4.0,
-              children: [
-                Text(search!.name), // TODO empty search
-                ..._buildFilterChips(context, search!.search.filter ?? []),
-                ..._buildSortChips(context, search!.search.sort ?? []),
-              ],
-            ),
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        spacing: 4.0,
+        children: [
+          Text(search.name),
+          ..._buildFilterChips(context, search.search.filter ?? []),
+          ..._buildSortChips(context, search.search.sort ?? []),
+        ],
+      ),
       trailing: CommonIcons.down,
       onTap: () async {
         showModalBottomSheet<ListSearch>(

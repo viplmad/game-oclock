@@ -149,9 +149,10 @@ class EditFormBuilder<
         builder: (final context, final formState) {
           return BlocBuilder<GB, ActionState<T?>>(
             builder: (final context, final getState) {
-              bool skeleton = false; // TODO skeleton
               if (getState is ActionInProgress<T>) {
-                skeleton = true; // TODO only if initial load?
+                return const Center(
+                  child: CircularProgressIndicator(),
+                ); // TODO skeleton
               }
 
               return BlocBuilder<UB, ActionState<void>>(

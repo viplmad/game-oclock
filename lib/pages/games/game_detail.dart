@@ -82,7 +82,14 @@ class UserGameDetailsPage extends StatelessWidget {
       child: BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
         builder: (final context, final state) {
           UserGame data;
-          if (state is ActionFinal<UserGame, String>) {
+          if (state is ActionInProgress<UserGame>) {
+            if (state.data == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              ); // TODO skeleton
+            }
+            data = state.data!;
+          } else if (state is ActionFinal<UserGame, String>) {
             if (state is ActionFailure<UserGame, String>) {
               return Center(
                 child: DetailError(
@@ -94,13 +101,8 @@ class UserGameDetailsPage extends StatelessWidget {
               );
             }
             data = state.data;
-          } else if (state is ActionInProgress<UserGame>) {
-            if (state.data == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            data = state.data!;
           } else {
-            return const Center(); // TODO
+            return const SizedBox();
           }
 
           return UserGameDetail(

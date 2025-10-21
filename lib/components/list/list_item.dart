@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/cached_image.dart';
+import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-const double _imageWidth = 100;
-const double _imageHeight = 56;
+
 
 class TileListItem extends StatelessWidget {
   const TileListItem({
@@ -163,10 +163,10 @@ class _ListItemListTile extends StatelessWidget {
       leading: hasImage
           ? ConstrainedBox(
               constraints: const BoxConstraints(
-                minWidth: _imageWidth,
-                minHeight: _imageHeight,
-                maxWidth: _imageWidth,
-                maxHeight: 80,
+                minWidth: kTileImageMinWidth,
+                minHeight: kTileImageMinHeight,
+                maxWidth: kTileImageMinWidth,
+                maxHeight: kTileImageMinHeight,
               ),
               child: CachedImage(
                 imageURL: imageURL ?? '',

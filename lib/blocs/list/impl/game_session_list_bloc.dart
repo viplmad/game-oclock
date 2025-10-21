@@ -27,10 +27,7 @@ class SessionListBloc extends ListLoadBloc<GameSession> {
       lastTotal: lastTotal,
     );
     return ListLoadSuccess<GameSession>(
-      data: data
-        ..sort(
-          (final a, final b) => a.compareTo(b),
-        ), // Sort to simplify computation on UI
+      data: data,
       total: count,
       quicksearch: quicksearch,
       search: search,

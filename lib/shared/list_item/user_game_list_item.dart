@@ -5,7 +5,6 @@ import 'package:game_oclock/components/triangle_banner.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/shape_utils.dart';
 
 class UserGameGridListItem extends StatelessWidget {
   const UserGameGridListItem({super.key, required this.data, this.onTap});
@@ -23,7 +22,7 @@ class UserGameGridListItem extends StatelessWidget {
       onTap: onTap,
     );
 
-    return forceCardRound(_addRatingBanner(listItem, data));
+    return _addRatingBanner(listItem, data);
   }
 }
 
@@ -43,7 +42,7 @@ class UserGameTileListItem extends StatelessWidget {
       onTap: onTap,
     );
 
-    return forceRectangular(_addRatingBanner(listItem, data));
+    return _addRatingBanner(listItem, data);
   }
 }
 
