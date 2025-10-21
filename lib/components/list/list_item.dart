@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -242,13 +242,7 @@ class CachedImage extends StatelessWidget {
     );
   }
 
-  CachedNetworkImage _getCachedImage() {
-    return CachedNetworkImage(
-      imageUrl: imageURL,
-      fit: fit,
-      useOldImageOnUrlChange: true,
-      //progressIndicatorBuilder: (_, __, ___) => const Skeleton(omitRounding: true), // TODO
-      errorWidget: (_, __, ___) => Container(color: backgroundColour),
-    );
+  Widget _getCachedImage() {
+    return SimpleCachedNetworkImage(imageUrl: imageURL, fit: fit);
   }
 }

@@ -23,6 +23,7 @@ import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
 import 'package:game_oclock/components/show_form_dialog.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
@@ -263,7 +264,7 @@ class UserGameDetail extends StatelessWidget {
           RatingLabel(
             label: context.localize().ratingLabel,
             value: data.rating,
-            color: const Color(0xA0B71C1C),
+            color: CommonColors.ratingColor,
           ),
           TextLabel(
             label: context.localize().notesLabel,

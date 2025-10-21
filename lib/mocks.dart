@@ -14,7 +14,7 @@ UserGame mockUserGame({final String? title}) {
     coverUrl:
         'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
     status: 'played',
-    rating: 9,
+    rating: Random().nextInt(11),
     notes: 'cosas',
   );
 }

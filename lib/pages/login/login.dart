@@ -124,7 +124,7 @@ class LoginBuilder extends StatelessWidget {
             ActionState<SavedLoginResponse>
           >(
             builder: (final context, final getState) {
-              bool skeleton = false; // TODO
+              bool skeleton = false; // TODO skeleton
               if (getState is ActionInProgress<SavedLoginResponse>) {
                 skeleton = true; // TODO only if initial load?
               }

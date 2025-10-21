@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:game_oclock/components/cached_image.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
@@ -53,14 +53,7 @@ class Detail extends StatelessWidget {
           collapseMode: CollapseMode.parallax,
           background: imageUrl.isEmpty
               ? const SizedBox()
-              : CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  fit: BoxFit.cover,
-                  useOldImageOnUrlChange: true,
-                  progressIndicatorBuilder: (_, _, _) =>
-                      const CircularProgressIndicator(), // TODO skeleton
-                  errorWidget: (_, _, _) => Container(color: Colors.grey),
-                ),
+              : SimpleCachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
         ),
       ),
     ];

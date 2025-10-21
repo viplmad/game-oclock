@@ -11,6 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchDTO, UserGame, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
@@ -150,8 +151,7 @@ Widget _fieldsCreateBuilder(
         controller: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
-        color: const Color(0xA0B71C1C),
-        borderColor: Colors.redAccent,
+        color: CommonColors.ratingColor,
       ),
       SimpleTextFormField(
         controller: formGroup.notes,
@@ -209,8 +209,7 @@ Widget _fieldsEditBuilder(
         controller: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
-        color: const Color(0xA0B71C1C),
-        borderColor: Colors.redAccent,
+        color: CommonColors.ratingColor,
       ),
       SimpleTextFormField(
         controller: formGroup.notes,

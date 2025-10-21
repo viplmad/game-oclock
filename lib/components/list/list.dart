@@ -14,6 +14,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListState;
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/search/search_list.dart';
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show ChainOperatorType, FilterDTO, ListSearch, SearchValue, SortDTO;
@@ -151,7 +152,9 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
     return BlocBuilder<LB, ListState<T>>(
       builder: (final context, final state) {
         ListSearch? currentSearch;
-        if (state is ListFinal<T>) {
+        if (state is ListLoadInProgress<T>) {
+          return const ListTileSkeleton();
+        } else if (state is ListFinal<T>) {
           currentSearch = state.search;
         }
 
