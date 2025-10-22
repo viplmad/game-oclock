@@ -16,7 +16,7 @@ class SimpleChoiceFormField extends StatefulWidget {
   final bool required;
   final bool readOnly;
   final String label;
-  final List<DropdownField> options;
+  final List<DropdownField<String>> options;
 
   @override
   State<SimpleChoiceFormField> createState() => _SimpleChoiceFormFieldState();

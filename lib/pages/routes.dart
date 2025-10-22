@@ -22,6 +22,7 @@ import 'package:game_oclock/pages/games/game_detail.dart'
 import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
 import 'package:game_oclock/pages/login/login.dart' show LoginPage;
 import 'package:game_oclock/pages/review/review.dart' show ReviewPage;
+import 'package:game_oclock/pages/settings/settings.dart' show SettingsPage;
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -138,6 +139,15 @@ final routerConfig = GoRouter(
               const ActionStarted(data: false),
             );
             return const UserGameListPage();
+          },
+        ),
+        GoRoute(
+          path: CommonPaths.settingsPath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
+            return const SettingsPage();
           },
         ),
 

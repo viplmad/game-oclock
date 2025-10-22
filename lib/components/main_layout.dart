@@ -30,8 +30,8 @@ class MainLayoutBuilder extends StatelessWidget {
 
     return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
       builder: (final context, final minimizedState) {
-        final minimized = (minimizedState is ActionFinal)
-            ? (minimizedState as ActionFinal<bool, bool>).data
+        final minimized = (minimizedState is ActionFinal<bool, bool>)
+            ? minimizedState.data
             : false;
         return layoutTier == LayoutTier.compact && minimized
             ? Scaffold(body: child)

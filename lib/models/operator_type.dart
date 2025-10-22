@@ -2,56 +2,58 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField> operatorOptions = List.unmodifiable(<DropdownField>[
-  DropdownField(
-    value: 'Eq',
-    labelBuilder: (final context) => context.localize().equalLabel,
-  ),
-  DropdownField(
-    value: 'NotEq',
-    labelBuilder: (final context) => context.localize().notEqualLabel,
-  ),
-  DropdownField(
-    value: 'Gt',
-    labelBuilder: (final context) => context.localize().greaterThanLabel,
-  ),
-  DropdownField(
-    value: 'Gte',
-    labelBuilder: (final context) => context.localize().greaterThanEqualLabel,
-  ),
-  DropdownField(
-    value: 'Lt',
-    labelBuilder: (final context) => context.localize().lessThanLabel,
-  ),
-  DropdownField(
-    value: 'Lte',
-    labelBuilder: (final context) => context.localize().lessThanEqualLabel,
-  ),
-  DropdownField(
-    value: 'StartsWith',
-    labelBuilder: (final context) => context.localize().startsWithLabel,
-  ),
-  DropdownField(
-    value: 'NotStartsWith',
-    labelBuilder: (final context) => context.localize().notStartsWithLabel,
-  ),
-  DropdownField(
-    value: 'EndsWith',
-    labelBuilder: (final context) => context.localize().endsWithLabel,
-  ),
-  DropdownField(
-    value: 'NotEndsWith',
-    labelBuilder: (final context) => context.localize().notEndsWithLabel,
-  ),
-  DropdownField(
-    value: 'Contains',
-    labelBuilder: (final context) => context.localize().containsLabel,
-  ),
-  DropdownField(
-    value: 'NotContains',
-    labelBuilder: (final context) => context.localize().notContainsLabel,
-  ),
-]);
+List<DropdownField<String>> operatorOptions =
+    List.unmodifiable(<DropdownField<String>>[
+      DropdownField(
+        value: 'Eq',
+        labelBuilder: (final context) => context.localize().equalLabel,
+      ),
+      DropdownField(
+        value: 'NotEq',
+        labelBuilder: (final context) => context.localize().notEqualLabel,
+      ),
+      DropdownField(
+        value: 'Gt',
+        labelBuilder: (final context) => context.localize().greaterThanLabel,
+      ),
+      DropdownField(
+        value: 'Gte',
+        labelBuilder: (final context) =>
+            context.localize().greaterThanEqualLabel,
+      ),
+      DropdownField(
+        value: 'Lt',
+        labelBuilder: (final context) => context.localize().lessThanLabel,
+      ),
+      DropdownField(
+        value: 'Lte',
+        labelBuilder: (final context) => context.localize().lessThanEqualLabel,
+      ),
+      DropdownField(
+        value: 'StartsWith',
+        labelBuilder: (final context) => context.localize().startsWithLabel,
+      ),
+      DropdownField(
+        value: 'NotStartsWith',
+        labelBuilder: (final context) => context.localize().notStartsWithLabel,
+      ),
+      DropdownField(
+        value: 'EndsWith',
+        labelBuilder: (final context) => context.localize().endsWithLabel,
+      ),
+      DropdownField(
+        value: 'NotEndsWith',
+        labelBuilder: (final context) => context.localize().notEndsWithLabel,
+      ),
+      DropdownField(
+        value: 'Contains',
+        labelBuilder: (final context) => context.localize().containsLabel,
+      ),
+      DropdownField(
+        value: 'NotContains',
+        labelBuilder: (final context) => context.localize().notContainsLabel,
+      ),
+    ]);
 
 class OperatorType {
   /// Instantiate a new enum with the provided [value].

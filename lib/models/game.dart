@@ -4,51 +4,53 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField> gameFieldOptions = List.unmodifiable(<DropdownField>[
-  DropdownField(
-    value: 'id',
-    labelBuilder: (final context) => context.localize().idLabel,
-  ),
-  DropdownField(
-    value: 'title',
-    labelBuilder: (final context) => context.localize().titleLabel,
-  ),
-  DropdownField(
-    value: 'edition',
-    labelBuilder: (final context) => context.localize().editionLabel,
-  ),
-]);
+List<DropdownField<String>> gameFieldOptions =
+    List.unmodifiable(<DropdownField<String>>[
+      DropdownField(
+        value: 'id',
+        labelBuilder: (final context) => context.localize().idLabel,
+      ),
+      DropdownField(
+        value: 'title',
+        labelBuilder: (final context) => context.localize().titleLabel,
+      ),
+      DropdownField(
+        value: 'edition',
+        labelBuilder: (final context) => context.localize().editionLabel,
+      ),
+    ]);
 
-List<DropdownField> gameStatusOptions = List.unmodifiable(<DropdownField>[
-  DropdownField(
-    value: 'wishlist',
-    labelBuilder: (final context) => context.localize().wishlistLabel,
-    color: Colors.yellow,
-  ),
-  DropdownField(
-    value: 'lowPriorty',
-    labelBuilder: (final context) => context.localize().lowPriorityLabel,
-    color: Colors.grey,
-  ),
-  DropdownField(
-    value: 'nextUp',
-    labelBuilder: (final context) => context.localize().nextUpLabel,
-    color: Colors.red,
-  ),
-  DropdownField(
-    value: 'playing',
-    labelBuilder: (final context) => context.localize().playingLabel,
-    color: Colors.blue,
-  ),
-  DropdownField(
-    value: 'played',
-    labelBuilder: (final context) => context.localize().playedLabel,
-    color: Colors.green,
-  ),
-]);
+List<DropdownField<String>> gameStatusOptions =
+    List.unmodifiable(<DropdownField<String>>[
+      DropdownField(
+        value: 'wishlist',
+        labelBuilder: (final context) => context.localize().wishlistLabel,
+        color: Colors.yellow,
+      ),
+      DropdownField(
+        value: 'lowPriorty',
+        labelBuilder: (final context) => context.localize().lowPriorityLabel,
+        color: Colors.grey,
+      ),
+      DropdownField(
+        value: 'nextUp',
+        labelBuilder: (final context) => context.localize().nextUpLabel,
+        color: Colors.red,
+      ),
+      DropdownField(
+        value: 'playing',
+        labelBuilder: (final context) => context.localize().playingLabel,
+        color: Colors.blue,
+      ),
+      DropdownField(
+        value: 'played',
+        labelBuilder: (final context) => context.localize().playedLabel,
+        color: Colors.green,
+      ),
+    ]);
 
-List<DropdownField> gameSessionFinishedOptions =
-    List.unmodifiable(<DropdownField>[
+List<DropdownField<String>> gameSessionFinishedOptions =
+    List.unmodifiable(<DropdownField<String>>[
       DropdownField(
         value: 'completed',
         labelBuilder: (final context) => context.localize().completedLabel,

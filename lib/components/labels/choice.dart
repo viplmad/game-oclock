@@ -12,7 +12,7 @@ class ChoiceLabel extends StatelessWidget {
 
   final String label;
   final String? value;
-  final List<DropdownField> options;
+  final List<DropdownField<String>> options;
 
   @override
   Widget build(final BuildContext context) {

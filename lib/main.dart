@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFinal,
         ActionStarted,
+        ActionState,
         CurrentUserGetBloc,
         DateLocaleConfigBloc,
+        LocaleBloc,
         MinimizedLayoutBloc,
-        SavedLoginResponseGetBloc;
+        SavedLoginResponseGetBloc,
+        ThemeModeBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/pages/routes.dart';
 import 'package:game_oclock/services/services.dart'
@@ -78,27 +82,44 @@ class GameOClockApp extends StatelessWidget {
                 MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
           ),
           BlocProvider(create: (_) => DateLocaleConfigBloc()),
+          BlocProvider(create: (_) => ThemeModeBloc()),
+          BlocProvider(create: (_) => LocaleBloc()),
         ],
         child: _createApp(),
       ),
     );
   }
 
-  MaterialApp _createApp() {
-    return MaterialApp.router(
-      title: 'Game o\'Clock',
-      theme: ThemeData(
-        snackBarTheme: const SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-        ),
-        useMaterial3: true,
-      ),
-      localizationsDelegates: [
-        DurationPickerLocalizations.delegate, // TODO use instead of hoursabbr
-        ...AppLocalizations.localizationsDelegates,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: routerConfig,
+  Widget _createApp() {
+    return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode>>(
+      builder: (final context, final themeState) {
+        final themeMode = (themeState is ActionFinal<ThemeMode, ThemeMode>)
+            ? themeState.data
+            : null;
+
+        return BlocBuilder<LocaleBloc, ActionState<Locale>>(
+          builder: (final context, final localeState) {
+            final locale = (localeState is ActionFinal<Locale, Locale>)
+                ? localeState.data
+                : null;
+
+            return MaterialApp.router(
+              title: 'Game o\'Clock',
+              theme: ThemeData.light(),
+              darkTheme: ThemeData.dark(),
+              themeMode: themeMode,
+              locale: locale,
+              localizationsDelegates: [
+                DurationPickerLocalizations
+                    .delegate, // TODO use instead of hoursabbr
+                ...AppLocalizations.localizationsDelegates,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              routerConfig: routerConfig,
+            );
+          },
+        );
+      },
     );
   }
 }

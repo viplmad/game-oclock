@@ -36,6 +36,8 @@ class CommonIcons {
   static const locations = Icon(Icons.shelves);
   static const devices = Icon(Icons.devices);
   static const tags = Icon(Icons.sell);
+  static const users = Icon(Icons.group);
+  static const settings = Icon(Icons.settings);
 
   static const calendar = Icon(Icons.calendar_month);
   static const datePicker = Icon(Icons.calendar_today);

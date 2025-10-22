@@ -40,8 +40,13 @@ final List<NavDestination> secondaryDestinations =
         path: CommonPaths.tagsPath,
       ),
       NavDestination(
-        icon: CommonIcons.devices,
+        icon: CommonIcons.users,
         labelBuilder: (final context) => context.localize().usersTitle,
         path: CommonPaths.usersPath,
+      ),
+      NavDestination(
+        icon: CommonIcons.settings,
+        labelBuilder: (final context) => context.localize().settingsTitle,
+        path: CommonPaths.settingsPath,
       ),
     ]);

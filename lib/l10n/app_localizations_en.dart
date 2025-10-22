@@ -45,6 +45,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usersTitle => 'Users';
 
   @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get chooseThemeLabel => 'Choose theme';
+
+  @override
+  String get darkLabel => 'Dark';
+
+  @override
+  String get lightLabel => 'Light';
+
+  @override
+  String get systemDefaultLabel => 'System default';
+
+  @override
+  String get chooseLanguageLabel => 'Choose language';
+
+  @override
   String get gameLabel => 'Game';
 
   @override

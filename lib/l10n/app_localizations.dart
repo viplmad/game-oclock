@@ -166,6 +166,42 @@ abstract class AppLocalizations {
   /// **'Users'**
   String get usersTitle;
 
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @chooseThemeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose theme'**
+  String get chooseThemeLabel;
+
+  /// No description provided for @darkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get darkLabel;
+
+  /// No description provided for @lightLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get lightLabel;
+
+  /// No description provided for @systemDefaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get systemDefaultLabel;
+
+  /// No description provided for @chooseLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get chooseLanguageLabel;
+
   /// No description provided for @gameLabel.
   ///
   /// In en, this message translates to:

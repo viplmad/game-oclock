@@ -19,7 +19,7 @@ class SimpleSelectFormField extends StatelessWidget {
   final bool required;
   final bool readOnly;
   final String label;
-  final List<DropdownField> options;
+  final List<DropdownField<String>> options;
 
   @override
   Widget build(final BuildContext context) {

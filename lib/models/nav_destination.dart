@@ -26,8 +26,8 @@ final class TabDestination {
   });
 }
 
-final class DropdownField {
-  final String value;
+final class DropdownField<T> {
+  final T value;
   final String Function(BuildContext context) labelBuilder;
   final Color? color;
 

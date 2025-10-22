@@ -8,6 +8,7 @@ class CommonPaths {
   static const String devicesPath = '/devices';
   static const String tagsPath = '/tags';
   static const String usersPath = '/users';
+  static const String settingsPath = '/settings';
 
   static const String calendarPath = '/calendar';
   static const String reviewPath = '/review';

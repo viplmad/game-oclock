@@ -84,28 +84,30 @@ class CalendarListDetailBuilder<
       },
       child: BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
         builder: (final context, final dateConfigState) {
-          final dateConfig = (dateConfigState is ActionFinal)
-              ? (dateConfigState
-                        as ActionFinal<DateLocaleConfig, DateLocaleConfig>)
-                    .data
+          final dateConfig =
+              (dateConfigState
+                  is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+              ? dateConfigState.data
               : DateLocaleConfig.def();
 
           return BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
             builder: (final context, final selectDayState) {
-              final DateTime selectedDay = (selectDayState is ActionFinal)
-                  ? (selectDayState as ActionFinal<DateTime, DateTime>).data
+              final DateTime selectedDay =
+                  (selectDayState is ActionFinal<DateTime, DateTime>)
+                  ? selectDayState.data
                   : DateTime.now();
 
               return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
                 builder: (final context, final focusDayState) {
-                  final DateTime focusedDay = (focusDayState is ActionFinal)
-                      ? (focusDayState as ActionFinal<DateTime, DateTime>).data
+                  final DateTime focusedDay =
+                      (focusDayState is ActionFinal<DateTime, DateTime>)
+                      ? focusDayState.data
                       : DateTime.now();
 
                   return BlocBuilder<SB, ActionState<T?>>(
                     builder: (final context, final selectState) {
-                      final selectedData = (selectState is ActionFinal)
-                          ? (selectState as ActionFinal<T?, T?>).data
+                      final selectedData = (selectState is ActionFinal<T?, T?>)
+                          ? selectState.data
                           : null;
 
                       if (layoutTier == LayoutTier.compact) {
