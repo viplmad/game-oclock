@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameCreateBloc,
         UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
+import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show GameTag, GameTagFormData, ListSearch, SearchDTO;
 import 'package:game_oclock/shared/selectors/game_selector.dart';

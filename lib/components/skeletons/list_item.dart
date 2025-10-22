@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/components/skeletons/common.dart';
 import 'package:game_oclock/constants/constants.dart';
 
-import 'tile.dart';
+import 'text.dart';
 
 class TileListSkeletonItem extends StatelessWidget {
   const TileListSkeletonItem({
@@ -16,7 +16,20 @@ class TileListSkeletonItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return ListTileSkeleton(order: order, leading: hasImage);
+    return ListTile(
+      leading: hasImage
+          ? ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: kTileImageMinWidth,
+                minHeight: kTileImageMinHeight,
+                maxWidth: kTileImageMinWidth,
+                maxHeight: kTileImageMinHeight,
+              ),
+              child: Skeleton(order: order + 0),
+            )
+          : null,
+      title: TextSkeleton(width: 100.0, height: 14.0, order: order + 1),
+    );
   }
 }
 
@@ -27,7 +40,7 @@ class GridListSkeletonItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return GridTileSkeleton(order: order);
+    return GridTile(child: Skeleton(order: order));
   }
 }
 
@@ -48,7 +61,7 @@ class SideHeaderSkeletonItem extends StatelessWidget {
           child: CircleAvatar(
             backgroundColor: Colors.grey[800],
             foregroundColor: Colors.white,
-            child: RoundSkeleton(width: 20.0, height: 16.0, order: order + 1),
+            child: RoundSkeleton(width: 20.0, height: 16.0, order: order),
           ),
         ),
       ),

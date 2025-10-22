@@ -14,7 +14,7 @@ class SimpleCachedNetworkImage extends StatelessWidget {
       imageUrl: imageUrl,
       fit: fit,
       useOldImageOnUrlChange: true,
-      progressIndicatorBuilder: (_, _, _) => const Skeleton(),
+      progressIndicatorBuilder: (_, _, _) => const ImageSkeleton(),
       errorWidget: (_, _, _) => Container(color: Colors.grey),
     );
   }

@@ -1,3 +1,6 @@
-export 'common.dart';
+export 'detail.dart';
+export 'image.dart';
+export 'label.dart';
+export 'list.dart';
 export 'list_item.dart';
-export 'tile.dart';
+export 'text.dart';

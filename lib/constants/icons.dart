@@ -10,7 +10,7 @@ class CommonIcons {
   static const add = Icon(Icons.add);
   static const edit = Icon(Icons.edit);
   static const delete = Icon(Icons.delete);
-  static const link = Icon(Icons.link);
+  static const link = Icon(Icons.add_link);
   static const unlink = Icon(Icons.link_off);
   static const search = Icon(Icons.search);
   static const down = Icon(Icons.arrow_drop_down);

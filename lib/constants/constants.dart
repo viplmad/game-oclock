@@ -9,3 +9,5 @@ const kTileImageMaxHeight = 80.0;
 
 const kAvatarWidth = 44.0;
 const kAvatarHeight = 44.0;
+
+const kStatusbarHeight = 20.0;

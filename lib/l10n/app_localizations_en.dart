@@ -412,6 +412,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String totalDataLabel(Object data) {
+    return 'Total: $data';
+  }
+
+  @override
   String hoursAbbr(num hours) {
     String _temp0 = intl.Intl.pluralLogic(
       hours,

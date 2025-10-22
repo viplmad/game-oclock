@@ -46,14 +46,13 @@ class TileListBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget skeletonItemBuilder({final int order = 0}) {
-    return TileListSkeletonItem(order: order, hasImage: true,);
+    return TileListSkeletonItem(order: order, hasImage: true);
   }
 
   @override
   Widget skeletonListView() {
-    return TileList(
-      items: List.filled(10, 0, growable: false),
-      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+    return TileListSkeleton(
+      itemBuilder: (final index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
     );
   }

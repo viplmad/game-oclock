@@ -51,14 +51,9 @@ class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
 
   @override
   Widget skeletonListView() {
-    return StickyTopHeaderList(
-      items: <int, List<int>>{
-        0: List.filled(3, 0, growable: false),
-        1: List.filled(3, 0, growable: false),
-        2: List.filled(3, 0, growable: false),
-      },
-      headerBuilder: (_) => skeletonHeaderBuilder(),
-      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+    return StickyTopHeaderListSkeleton(
+      headerBuilder: () => skeletonHeaderBuilder(),
+      itemBuilder: (final index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
     );
   }
@@ -100,14 +95,9 @@ class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
 
   @override
   Widget skeletonListView() {
-    return StickySideHeaderList(
-      items: <int, List<int>>{
-        0: List.filled(3, 0, growable: false),
-        1: List.filled(3, 0, growable: false),
-        2: List.filled(3, 0, growable: false),
-      },
-      headerBuilder: (_) => skeletonHeaderBuilder(),
-      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+    return StickySideHeaderListSkeleton(
+      headerBuilder: () => skeletonHeaderBuilder(),
+      itemBuilder: (final index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
     );
   }

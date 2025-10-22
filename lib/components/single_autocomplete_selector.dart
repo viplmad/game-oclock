@@ -14,8 +14,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListQuicksearchChanged,
         ListState;
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
+import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/icons.dart';
@@ -103,11 +103,10 @@ class SingleAutocompleteSelectorBuilder<
               elevation: 4.0,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 200.0),
-                child: ListToolbar(
-                  toolbars: [
-                    if (newConfig != null)
-                      newConfig!.buildListButton<LB>(onSelected: onSelected),
-                  ],
+                child: ListLayout(
+                  toolbar: newConfig?.buildListButton<LB>(
+                    onSelected: onSelected,
+                  ),
                   child: TileListBuilder<T, LB>(
                     itemBuilder: (final context, final item, final index) =>
                         itemBuilder(

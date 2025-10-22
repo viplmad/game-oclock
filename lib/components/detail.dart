@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/components/cached_image.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
     super.key,
     required this.title,
-    required this.imageUrl,
+    this.image,
     required this.onBackPressed,
     required this.child,
     this.actions,
   });
 
-  final String title;
-  final String imageUrl;
+  final Widget title;
+  final Widget? image;
   final VoidCallback onBackPressed;
   final Widget child;
   final List<Widget>? actions;
@@ -49,11 +48,9 @@ class Detail extends StatelessWidget {
           child: SizedBox(),
         ),
         flexibleSpace: FlexibleSpaceBar(
-          title: Text(title),
+          title: title,
           collapseMode: CollapseMode.parallax,
-          background: imageUrl.isEmpty
-              ? const SizedBox()
-              : SimpleCachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
+          background: image ?? const SizedBox(),
         ),
       ),
     ];

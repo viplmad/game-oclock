@@ -11,14 +11,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListReloaded,
         ListStyleBloc,
         MinimizedLayoutBloc;
-import 'package:game_oclock/components/list/list.dart';
+import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-import 'full_search_appp_bar.dart';
+import 'full_search_app_bar.dart';
 import 'list/grid_list.dart';
 import 'list/tile_list.dart';
 
@@ -178,8 +178,9 @@ class ListDetailBuilder<
           ),
         ],
       ),
-      body: ListToolbar(
-        toolbars: [ListFilterToolbarBuilder<T, LB>(space: searchSpace)],
+      body: ListLayout(
+        toolbar: ListFilterToolbarBuilder<T, LB>(space: searchSpace),
+        statusbar: ListTotalStatusbarBuilder<T, LB>(),
         child: selectedStyle == ListStyle.grid
             ? GridListBuilder<T, LB>(
                 borderRadius: const BorderRadius.all(

@@ -4,8 +4,6 @@ import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-
-
 class TileListItem extends StatelessWidget {
   const TileListItem({
     super.key,

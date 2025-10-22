@@ -820,6 +820,12 @@ abstract class AppLocalizations {
   /// **'Link {data}'**
   String linkDataLabel(Object data);
 
+  /// No description provided for @totalDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {data}'**
+  String totalDataLabel(Object data);
+
   /// No description provided for @hoursAbbr.
   ///
   /// In en, this message translates to:

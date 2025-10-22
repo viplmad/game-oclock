@@ -15,7 +15,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginFormBloc,
         LoginSaveBloc,
         SavedLoginResponseGetBloc;
-import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -124,12 +123,6 @@ class LoginBuilder extends StatelessWidget {
             ActionState<SavedLoginResponse>
           >(
             builder: (final context, final getState) {
-              if (getState is ActionInProgress<SavedLoginResponse>) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                ); // TODO skeleton
-              }
-
               return BlocBuilder<LoginSaveBloc, ActionState<void>>(
                 builder: (final context, final saveState) {
                   final inProgress =

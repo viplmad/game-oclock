@@ -58,9 +58,8 @@ class GridListBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget skeletonListView() {
-    return GridList(
-      items: List.filled(10, 0, growable: false),
-      itemBuilder: (_, _, final index) => skeletonItemBuilder(order: index),
+    return GridListSkeleton(
+      itemBuilder: (final index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
       itemAspectRatio: itemAspectRatio,
       columns: columns,

@@ -11,18 +11,21 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListInitial,
         ListLoadBloc,
         ListLoaded,
+        ListQuicksearchChanged,
         ListReloaded,
         UserGameAvailableListBloc,
         UserGameDeleteBloc,
         UserGameGetBloc,
         UserGameTagListBloc;
+import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
-import 'package:game_oclock/components/list/list.dart';
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
+import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -81,12 +84,12 @@ class UserGameDetailsPage extends StatelessWidget {
       ],
       child: BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
         builder: (final context, final state) {
+          void onBackPressed() =>
+              GoRouter.of(context).go(CommonPaths.gamesPath);
           UserGame data;
           if (state is ActionInProgress<UserGame>) {
             if (state.data == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              ); // TODO skeleton
+              return DetailSkeleton(onBackPressed: onBackPressed);
             }
             data = state.data!;
           } else if (state is ActionFinal<UserGame, String>) {
@@ -109,7 +112,7 @@ class UserGameDetailsPage extends StatelessWidget {
             data: data,
             fromPage: true,
             extended: layoutTier != LayoutTier.compact,
-            onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
+            onBackPressed: onBackPressed,
             onEditSucceeded: (final context) =>
                 context.read<UserGameGetBloc>().add(const ActionRestarted()),
             onDeleteSucceeded: (final context) =>
@@ -181,8 +184,11 @@ class UserGameDetail extends StatelessWidget {
     ]);
 
     return Detail(
-      title: data.title,
-      imageUrl: data.coverUrl,
+      title: Text(data.title),
+      image: SimpleCachedNetworkImage(
+        imageUrl: data.coverUrl,
+        fit: BoxFit.cover,
+      ),
       onBackPressed: onBackPressed,
       actions: [
         IconButton(
@@ -366,19 +372,29 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget build(final BuildContext context) {
-    return ListToolbar(
-      toolbars: [
-        ListButtonToolbar(
-          label: context.localize().linkDataLabel(label),
-          icon: CommonIcons.link,
-          onTap: () async => showFormDialog(
-            context,
-            builder: (final context) => createFormBuilder(),
-            onSuccess: (final context) =>
-                context.read<LB>().add(const ListReloaded()),
+    return ListLayout(
+      toolbar: ListFullSearchToolbar(
+        onSearchChanged: (final value) =>
+            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
+        actions: [
+          IconButton(
+            icon: CommonIcons.link,
+            tooltip: context.localize().linkDataLabel(label),
+            onPressed: () async => showFormDialog(
+              context,
+              builder: (final context) => createFormBuilder(),
+              onSuccess: (final context) =>
+                  context.read<LB>().add(const ListReloaded()),
+            ),
           ),
-        ),
-      ],
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () => context.read<LB>().add(const ListReloaded()),
+          ),
+        ],
+      ),
+      statusbar: ListTotalStatusbarBuilder<T, LB>(),
       child: TileListBuilder<T, LB>(
         itemBuilder: (final context, final data, final index) =>
             itemBuilder(data),

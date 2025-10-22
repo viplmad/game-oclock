@@ -120,6 +120,7 @@
   "gameEditionDataTitle": "{aTitle} - {bEdition}",
   "createNewDataLabel": "Create new: \"{data}\"",
   "linkDataLabel": "Link {data}",
+  "totalDataLabel": "Total: {data}",
   "hoursAbbr": "{hours} {hours, plural, =1{hr.} other{hrs.}}",
   "minutesAbbr": "{minutes} min."
 }
