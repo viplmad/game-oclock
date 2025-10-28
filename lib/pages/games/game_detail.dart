@@ -31,7 +31,6 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show
-        DateLocaleConfig,
         LayoutTier,
         ListSearch,
         LocationWithDate,
@@ -148,15 +147,13 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<UserGameAvailableListBloc>(context);
     }
 
-    final dateConfig = DateLocaleConfig.def(); //TODO
-
     final List<TabDestination>
     destinations = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.detail,
         labelBuilder: (final context) => context.localize().detailLabel,
         onTap: (_) {},
-        child: _info(context, dateConfig: dateConfig),
+        child: _info(context),
       ),
       TabDestination(
         icon: CommonIcons.locations,
@@ -231,10 +228,7 @@ class UserGameDetail extends StatelessWidget {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: _info(context, dateConfig: dateConfig),
-                ),
+                Expanded(flex: 2, child: _info(context)),
                 const VerticalDivider(width: 1.0),
                 Expanded(
                   flex: 4,
@@ -246,10 +240,7 @@ class UserGameDetail extends StatelessWidget {
     );
   }
 
-  Widget _info(
-    final BuildContext context, {
-    required final DateLocaleConfig dateConfig,
-  }) {
+  Widget _info(final BuildContext context) {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
@@ -262,7 +253,6 @@ class UserGameDetail extends StatelessWidget {
           DateLabel(
             label: context.localize().releaseDateLabel,
             value: data.releaseDate,
-            dateConfig: dateConfig,
           ),
           ChoiceLabel(
             label: context.localize().statusLabel,

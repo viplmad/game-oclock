@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_oclock/blocs/blocs.dart'
+    show ActionFinal, ActionState, DateLocaleConfigBloc;
 import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -63,6 +67,54 @@ class LogCalendarHeader extends StatelessWidget {
 
 class LogCalendar extends StatelessWidget {
   const LogCalendar({
+    super.key,
+    required this.logDays,
+    // TODO List<DateTime>? finishes,
+    required this.firstDay,
+    required this.lastDay,
+    required this.focusedDay,
+    required this.selectedDay,
+    required this.onDaySelected,
+    required this.onPageChanged,
+  });
+
+  final Set<DateTime> logDays;
+
+  final DateTime firstDay;
+  final DateTime lastDay;
+  final DateTime focusedDay;
+  final DateTime selectedDay;
+  final ValueChanged<DateTime> onDaySelected;
+  final ValueChanged<DateTime> onPageChanged;
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
+      builder: (final context, final state) {
+        final dateConfig =
+            (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+            ? state.data
+            : DateLocaleConfig.def();
+
+        return _LogCalendar(
+          key: key,
+          logDays: logDays,
+          firstDay: firstDay,
+          lastDay: lastDay,
+          focusedDay: focusedDay,
+          selectedDay: selectedDay,
+          onDaySelected: onDaySelected,
+          onPageChanged: onPageChanged,
+          startingDayOfWeek: dateConfig.startingDayOfWeek,
+          weekendDays: dateConfig.weekendDays,
+        );
+      },
+    );
+  }
+}
+
+class _LogCalendar extends StatelessWidget {
+  const _LogCalendar({
     super.key,
     required this.logDays,
     // TODO List<DateTime>? finishes,

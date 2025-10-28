@@ -2,7 +2,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField<String>> operatorOptions =
+final List<DropdownField<String>> operatorOptions =
     List.unmodifiable(<DropdownField<String>>[
       DropdownField(
         value: 'Eq',

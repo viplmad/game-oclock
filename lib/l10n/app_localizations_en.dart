@@ -63,6 +63,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguageLabel => 'Choose language';
 
   @override
+  String get chooseStartingDayOfWeekLabel => 'Choose starting day of week';
+
+  @override
+  String get chooseTimeFormatLabel => 'Choose time format';
+
+  @override
+  String get chooseDateFormatLabel => 'Choose date format';
+
+  @override
   String get gameLabel => 'Game';
 
   @override

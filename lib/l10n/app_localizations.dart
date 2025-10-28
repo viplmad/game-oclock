@@ -202,6 +202,24 @@ abstract class AppLocalizations {
   /// **'Choose language'**
   String get chooseLanguageLabel;
 
+  /// No description provided for @chooseStartingDayOfWeekLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose starting day of week'**
+  String get chooseStartingDayOfWeekLabel;
+
+  /// No description provided for @chooseTimeFormatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose time format'**
+  String get chooseTimeFormatLabel;
+
+  /// No description provided for @chooseDateFormatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date format'**
+  String get chooseDateFormatLabel;
+
   /// No description provided for @gameLabel.
   ///
   /// In en, this message translates to:

@@ -4,7 +4,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-List<DropdownField<String>> gameFieldOptions =
+final List<DropdownField<String>> gameFieldOptions =
     List.unmodifiable(<DropdownField<String>>[
       DropdownField(
         value: 'id',
@@ -20,7 +20,7 @@ List<DropdownField<String>> gameFieldOptions =
       ),
     ]);
 
-List<DropdownField<String>> gameStatusOptions =
+final List<DropdownField<String>> gameStatusOptions =
     List.unmodifiable(<DropdownField<String>>[
       DropdownField(
         value: 'wishlist',
@@ -49,7 +49,7 @@ List<DropdownField<String>> gameStatusOptions =
       ),
     ]);
 
-List<DropdownField<String>> gameSessionFinishedOptions =
+final List<DropdownField<String>> gameSessionFinishedOptions =
     List.unmodifiable(<DropdownField<String>>[
       DropdownField(
         value: 'completed',

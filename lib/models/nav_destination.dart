@@ -27,13 +27,15 @@ final class TabDestination {
 }
 
 final class DropdownField<T> {
-  final T value;
+  final Widget? icon;
   final String Function(BuildContext context) labelBuilder;
+  final T value;
   final Color? color;
 
   const DropdownField({
-    required this.value,
+    this.icon,
     required this.labelBuilder,
+    required this.value,
     this.color,
   });
 }
