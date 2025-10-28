@@ -21,12 +21,7 @@ class TimeLabel extends StatelessWidget {
             ? state.data
             : DateLocaleConfig.def();
 
-        return _TimeLabel(
-          key: key,
-          label: label,
-          value: value,
-          dateConfig: dateConfig,
-        );
+        return _TimeLabel(label: label, value: value, dateConfig: dateConfig);
       },
     );
   }
@@ -34,7 +29,6 @@ class TimeLabel extends StatelessWidget {
 
 class _TimeLabel extends StatelessWidget {
   const _TimeLabel({
-    super.key,
     required this.label,
     required this.value,
     required this.dateConfig,

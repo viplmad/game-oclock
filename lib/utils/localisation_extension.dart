@@ -14,10 +14,6 @@ extension AppLocalizationsExtension on AppLocalizations {
     return DateFormat.d().format(date);
   }
 
-  String monthYear(final DateTime date) {
-    return DateFormat.yMMMM().format(date);
-  }
-
   String duration(final Duration duration) {
     if (duration.isZero()) {
       return '0';

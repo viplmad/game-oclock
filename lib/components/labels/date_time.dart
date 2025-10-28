@@ -22,7 +22,6 @@ class DateTimeLabel extends StatelessWidget {
             : DateLocaleConfig.def();
 
         return _DateTimeLabel(
-          key: key,
           label: label,
           value: value,
           dateConfig: dateConfig,
@@ -34,7 +33,6 @@ class DateTimeLabel extends StatelessWidget {
 
 class _DateTimeLabel extends StatelessWidget {
   const _DateTimeLabel({
-    super.key,
     required this.label,
     required this.value,
     required this.dateConfig,

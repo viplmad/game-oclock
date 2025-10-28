@@ -33,7 +33,6 @@ class SimpleTimeFormField extends StatelessWidget {
             : DateLocaleConfig.def();
 
         return _SimpleTimeFormField(
-          key: key,
           controller: controller,
           label: label,
           required: required,
@@ -47,7 +46,6 @@ class SimpleTimeFormField extends StatelessWidget {
 
 class _SimpleTimeFormField extends StatefulWidget {
   const _SimpleTimeFormField({
-    super.key,
     required this.controller,
     required this.label,
     this.required = false,

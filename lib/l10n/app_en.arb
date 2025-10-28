@@ -82,8 +82,6 @@
   "showTimePicker": "Show Time Picker",
   "showDurationPicker": "Show Duration Picker",
   "timeLabel": "Time",
-  "previousMonth": "Previous month",
-  "nextMonth": "Next month",
   "equalLabel": "Equal",
   "notEqualLabel": "Not equal",
   "greaterThanLabel": "Greater than",

@@ -57,7 +57,7 @@ class UserGameListPage extends StatelessWidget {
 }
 
 class _UserGameListDetailBuilder extends StatelessWidget {
-  const _UserGameListDetailBuilder({super.key});
+  const _UserGameListDetailBuilder();
 
   @override
   Widget build(final BuildContext context) {

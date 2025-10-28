@@ -258,12 +258,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeLabel => 'Time';
 
   @override
-  String get previousMonth => 'Previous month';
-
-  @override
-  String get nextMonth => 'Next month';
-
-  @override
   String get equalLabel => 'Equal';
 
   @override

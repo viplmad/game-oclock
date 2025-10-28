@@ -5,7 +5,6 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/utils/date_time_extension.dart';
-import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class LogCalendarHeader extends StatelessWidget {
@@ -30,7 +29,7 @@ class LogCalendarHeader extends StatelessWidget {
         children: [
           IconButton(
             icon: CommonIcons.left,
-            tooltip: context.localize().previousMonth,
+            tooltip: MaterialLocalizations.of(context).previousMonthTooltip,
             onPressed: () {
               final prevMonth = focusedDay.atFirstDayOfPreviousMonth();
               if (prevMonth.isAfter(firstDay) ||
@@ -45,7 +44,7 @@ class LogCalendarHeader extends StatelessWidget {
           ),
           IconButton(
             icon: CommonIcons.right,
-            tooltip: context.localize().nextMonth,
+            tooltip: MaterialLocalizations.of(context).nextMonthTooltip,
             onPressed: () {
               final nextMonth = focusedDay.atFirstDayOfNextMonth();
               if (nextMonth.isBefore(lastDay) ||
@@ -60,7 +59,9 @@ class LogCalendarHeader extends StatelessWidget {
           ),
         ],
       ),
-      title: Text(context.localize().monthYear(focusedDay)),
+      title: Text(
+        MaterialLocalizations.of(context).formatMonthYear(focusedDay),
+      ),
     );
   }
 }
@@ -97,7 +98,6 @@ class LogCalendar extends StatelessWidget {
             : DateLocaleConfig.def();
 
         return _LogCalendar(
-          key: key,
           logDays: logDays,
           firstDay: firstDay,
           lastDay: lastDay,
@@ -115,7 +115,6 @@ class LogCalendar extends StatelessWidget {
 
 class _LogCalendar extends StatelessWidget {
   const _LogCalendar({
-    super.key,
     required this.logDays,
     // TODO List<DateTime>? finishes,
     required this.firstDay,

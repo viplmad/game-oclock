@@ -592,18 +592,6 @@ abstract class AppLocalizations {
   /// **'Time'**
   String get timeLabel;
 
-  /// No description provided for @previousMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'Previous month'**
-  String get previousMonth;
-
-  /// No description provided for @nextMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'Next month'**
-  String get nextMonth;
-
   /// No description provided for @equalLabel.
   ///
   /// In en, this message translates to:
