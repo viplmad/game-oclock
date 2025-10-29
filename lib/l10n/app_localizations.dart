@@ -196,6 +196,12 @@ abstract class AppLocalizations {
   /// **'System default'**
   String get systemDefaultLabel;
 
+  /// No description provided for @systemDefaultLabelData.
+  ///
+  /// In en, this message translates to:
+  /// **'System default ({data})'**
+  String systemDefaultLabelData(Object data);
+
   /// No description provided for @chooseLanguageLabel.
   ///
   /// In en, this message translates to:

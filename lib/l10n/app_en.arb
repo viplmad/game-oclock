@@ -16,6 +16,7 @@
   "darkLabel": "Dark",
   "lightLabel": "Light",
   "systemDefaultLabel": "System default",
+  "systemDefaultLabelData": "System default ({data})",
   "chooseLanguageLabel": "Choose language",
   "chooseStartingDayOfWeekLabel": "Choose starting day of week",
   "chooseTimeFormatLabel": "Choose time format",

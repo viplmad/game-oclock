@@ -1,6 +1,7 @@
 import 'package:duration_picker/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
@@ -14,6 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         SavedLoginResponseGetBloc,
         ThemeModeBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
+import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/pages/routes.dart';
 import 'package:game_oclock/services/services.dart'
     show
@@ -26,6 +28,7 @@ import 'package:game_oclock/services/services.dart'
         SearchService,
         TagService,
         UserService;
+import 'package:game_oclock/utils/custom_material_localizations.dart';
 
 void main() {
   usePathUrlStrategy();
@@ -91,31 +94,49 @@ class GameOClockApp extends StatelessWidget {
   }
 
   Widget _createApp() {
-    return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode>>(
+    return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode?>>(
       builder: (final context, final themeState) {
-        final themeMode = (themeState is ActionFinal<ThemeMode, ThemeMode>)
+        final themeMode = (themeState is ActionFinal<ThemeMode?, ThemeMode?>)
             ? themeState.data
             : null;
 
-        return BlocBuilder<LocaleBloc, ActionState<Locale>>(
+        return BlocBuilder<LocaleBloc, ActionState<Locale?>>(
           builder: (final context, final localeState) {
-            final locale = (localeState is ActionFinal<Locale, Locale>)
+            final locale = (localeState is ActionFinal<Locale?, Locale?>)
                 ? localeState.data
                 : null;
 
-            return MaterialApp.router(
-              title: 'Game o\'Clock',
-              theme: ThemeData.light(),
-              darkTheme: ThemeData.dark(),
-              themeMode: themeMode,
-              locale: locale,
-              localizationsDelegates: [
-                DurationPickerLocalizations
-                    .delegate, // TODO use instead of hoursabbr
-                ...AppLocalizations.localizationsDelegates,
-              ],
-              supportedLocales: AppLocalizations.supportedLocales,
-              routerConfig: routerConfig,
+            return BlocBuilder<
+              DateLocaleConfigBloc,
+              ActionState<DateLocaleConfig>
+            >(
+              builder: (final context, final state) {
+                final dateConfig =
+                    (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+                    ? state.data
+                    : const DateLocaleConfig();
+
+                return MaterialApp.router(
+                  title: 'Game o\'Clock',
+                  theme: ThemeData.light(),
+                  darkTheme: ThemeData.dark(),
+                  themeMode: themeMode,
+                  locale: locale,
+                  localizationsDelegates: [
+                    DurationPickerLocalizations
+                        .delegate, // TODO use instead of hoursabbr
+                    AppLocalizations.delegate,
+                    CustomMaterialLocalizationsDelegate(
+                      GlobalMaterialLocalizations.delegate,
+                      dateConfig,
+                    ),
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  routerConfig: routerConfig,
+                );
+              },
             );
           },
         );

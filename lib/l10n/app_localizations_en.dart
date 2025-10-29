@@ -60,6 +60,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemDefaultLabel => 'System default';
 
   @override
+  String systemDefaultLabelData(Object data) {
+    return 'System default ($data)';
+  }
+
+  @override
   String get chooseLanguageLabel => 'Choose language';
 
   @override

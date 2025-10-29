@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/blocs/blocs.dart'
-    show ActionFinal, ActionState, DateLocaleConfigBloc;
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 import 'text.dart';
 
-class SimpleTimeFormField extends StatelessWidget {
+class SimpleTimeFormField extends StatefulWidget {
   const SimpleTimeFormField({
     super.key,
     required this.controller,
@@ -24,46 +20,10 @@ class SimpleTimeFormField extends StatelessWidget {
   final bool readOnly;
 
   @override
-  Widget build(final BuildContext context) {
-    return BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
-      builder: (final context, final state) {
-        final dateConfig =
-            (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
-            ? state.data
-            : DateLocaleConfig.def();
-
-        return _SimpleTimeFormField(
-          controller: controller,
-          label: label,
-          required: required,
-          readOnly: readOnly,
-          dateConfig: dateConfig,
-        );
-      },
-    );
-  }
+  State<SimpleTimeFormField> createState() => _SimpleTimeFormFieldState();
 }
 
-class _SimpleTimeFormField extends StatefulWidget {
-  const _SimpleTimeFormField({
-    required this.controller,
-    required this.label,
-    this.required = false,
-    this.readOnly = false,
-    required this.dateConfig,
-  });
-
-  final TimeEditingController controller;
-  final String label;
-  final bool required;
-  final bool readOnly;
-  final DateLocaleConfig dateConfig;
-
-  @override
-  State<_SimpleTimeFormField> createState() => _SimpleTimeFormFieldState();
-}
-
-class _SimpleTimeFormFieldState extends State<_SimpleTimeFormField> {
+class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
   late final TextEditingController textController;
 
   @override
@@ -119,7 +79,7 @@ class _SimpleTimeFormFieldState extends State<_SimpleTimeFormField> {
       return null;
     }
 
-    return widget.dateConfig.formatTime(value);
+    return MaterialLocalizations.of(context).formatTimeOfDay(value);
   }
 }
 

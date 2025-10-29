@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/blocs/blocs.dart'
-    show ActionFinal, ActionState, DateLocaleConfigBloc;
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -88,56 +84,6 @@ class LogCalendar extends StatelessWidget {
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<DateTime> onPageChanged;
 
-  @override
-  Widget build(final BuildContext context) {
-    return BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
-      builder: (final context, final state) {
-        final dateConfig =
-            (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
-            ? state.data
-            : DateLocaleConfig.def();
-
-        return _LogCalendar(
-          logDays: logDays,
-          firstDay: firstDay,
-          lastDay: lastDay,
-          focusedDay: focusedDay,
-          selectedDay: selectedDay,
-          onDaySelected: onDaySelected,
-          onPageChanged: onPageChanged,
-          startingDayOfWeek: dateConfig.startingDayOfWeek,
-          weekendDays: dateConfig.weekendDays,
-        );
-      },
-    );
-  }
-}
-
-class _LogCalendar extends StatelessWidget {
-  const _LogCalendar({
-    required this.logDays,
-    // TODO List<DateTime>? finishes,
-    required this.firstDay,
-    required this.lastDay,
-    required this.focusedDay,
-    required this.selectedDay,
-    required this.onDaySelected,
-    required this.onPageChanged,
-    required this.startingDayOfWeek,
-    required this.weekendDays,
-  });
-
-  final Set<DateTime> logDays;
-
-  final DateTime firstDay;
-  final DateTime lastDay;
-  final DateTime focusedDay;
-  final DateTime selectedDay;
-  final ValueChanged<DateTime> onDaySelected;
-  final ValueChanged<DateTime> onPageChanged;
-  final int startingDayOfWeek;
-  final List<int> weekendDays;
-
   static const BoxShape shape = BoxShape.circle;
   static const Color todayColour = Colors.red;
   static const Color selectedColour = Colors.red;
@@ -171,8 +117,10 @@ class _LogCalendar extends StatelessWidget {
               return finishes.any((DateTime finish) => day.isSameDay(finish));
             }
           : null,*/
-      startingDayOfWeek: _intToStartingDayOfWeek(startingDayOfWeek),
-      weekendDays: weekendDays,
+      startingDayOfWeek: _intToStartingDayOfWeek(
+        MaterialLocalizations.of(context).firstDayOfWeekIndex,
+      ),
+      //weekendDays: MaterialLocalizations.of(context).weekendDays,
       pageJumpingEnabled: true,
       availableGestures: AvailableGestures.horizontalSwipe,
       headerVisible: false,
@@ -226,13 +174,13 @@ class _LogCalendar extends StatelessWidget {
 
 StartingDayOfWeek _intToStartingDayOfWeek(final int dayOfWeek) {
   return switch (dayOfWeek) {
-    DateTime.monday => StartingDayOfWeek.monday,
-    DateTime.tuesday => StartingDayOfWeek.tuesday,
-    DateTime.wednesday => StartingDayOfWeek.wednesday,
-    DateTime.thursday => StartingDayOfWeek.thursday,
-    DateTime.friday => StartingDayOfWeek.friday,
-    DateTime.saturday => StartingDayOfWeek.saturday,
-    DateTime.sunday => StartingDayOfWeek.sunday,
+    1 => StartingDayOfWeek.monday,
+    2 => StartingDayOfWeek.tuesday,
+    3 => StartingDayOfWeek.wednesday,
+    4 => StartingDayOfWeek.thursday,
+    5 => StartingDayOfWeek.friday,
+    6 => StartingDayOfWeek.saturday,
+    0 => StartingDayOfWeek.sunday,
     _ => StartingDayOfWeek.monday,
   };
 }
