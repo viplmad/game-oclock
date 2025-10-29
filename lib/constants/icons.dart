@@ -21,14 +21,15 @@ class CommonIcons {
   static const left = Icon(Icons.chevron_left);
   static const right = Icon(Icons.chevron_right);
   static const reload = Icon(Icons.refresh);
-  static const clear = Icon(Icons.cancel_outlined);
+  static const clearInline = Icon(Icons.cancel_outlined);
+  static const addInline = Icon(Icons.add_circle_outline);
   static const listStyleTile = Icon(Icons.list);
   static const listStyleGrid = Icon(Icons.grid_on);
   static const yes = Icon(Icons.check);
   static const no = Icon(Icons.close);
   static const ascending = Icon(Icons.arrow_upward);
   static const descending = Icon(Icons.arrow_downward);
-  static const theme = Icon(Icons.brightness_6);
+  static const theme = Icon(Icons.brightness_6_outlined);
   static const light = Icon(Icons.light_mode);
   static const dark = Icon(Icons.dark_mode);
   static const language = Icon(Icons.language);

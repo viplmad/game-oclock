@@ -18,18 +18,7 @@ import 'package:game_oclock/shared/selectors/location_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameAvailableCreateForm extends StatelessWidget {
-  const GameAvailableCreateForm.fixedGame({
-    final Key? key,
-    required final String gameId,
-  }) : this._(key: key, gameId: gameId);
-
-  const GameAvailableCreateForm.fixedLocation({
-    final Key? key,
-    required final String locationId,
-  }) : this._(key: key, locationId: locationId);
-
-  const GameAvailableCreateForm._({super.key, this.gameId, this.locationId})
-    : assert(gameId != null || locationId != null);
+  const GameAvailableCreateForm({super.key, this.gameId, this.locationId});
 
   final String? gameId;
   final String? locationId;

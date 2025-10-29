@@ -18,18 +18,7 @@ import 'package:game_oclock/shared/selectors/tag_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GameTagCreateForm extends StatelessWidget {
-  const GameTagCreateForm.fixedGame({
-    final Key? key,
-    required final String gameId,
-  }) : this._(key: key, gameId: gameId);
-
-  const GameTagCreateForm.fixedTag({
-    final Key? key,
-    required final String tagId,
-  }) : this._(key: key, tagId: tagId);
-
-  const GameTagCreateForm._({super.key, this.gameId, this.tagId})
-    : assert(gameId != null || tagId != null);
+  const GameTagCreateForm({super.key, this.gameId, this.tagId});
 
   final String? gameId;
   final String? tagId;

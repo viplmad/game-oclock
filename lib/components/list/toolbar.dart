@@ -321,17 +321,19 @@ class ListFullSearchToolbar extends StatefulWidget {
     super.key,
     this.actions,
     required this.onSearchChanged,
+    this.onAddPressed,
   });
 
   final List<Widget>? actions;
   final ValueChanged<String?> onSearchChanged;
+  final ValueChanged<String>? onAddPressed;
 
   @override
   State<ListFullSearchToolbar> createState() => _ListFullSearchToolbarState();
 }
 
 class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
-  final textController = TextEditingController();
+  final controller = TextEditingController();
   bool inSearch = false;
 
   @override
@@ -342,21 +344,39 @@ class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
       child: inSearch
           ? TextField(
               autofocus: true,
-              controller: textController,
+              controller: controller,
               decoration: InputDecoration(
                 hintText: context.localize().searchLabel,
-                suffixIcon: ClearIconButton(
-                  onTap: () {
-                    textController.clear();
-                    widget.onSearchChanged(null);
-                    setState(() {
-                      inSearch = false;
-                    });
-                  },
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (widget.onAddPressed != null &&
+                        controller.text.isNotEmpty)
+                      IconButton(
+                        tooltip: context.localize().addLabel,
+                        icon: CommonIcons.addInline,
+                        onPressed: () => widget.onAddPressed!(controller.text),
+                      ),
+                    ClearIconButton(
+                      onTap: () {
+                        controller.clear();
+                        widget.onSearchChanged(null);
+                        setState(() {
+                          inSearch = false;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 border: const OutlineInputBorder(),
               ),
-              onChanged: (final value) => widget.onSearchChanged(value),
+              onChanged: (final value) {
+                if (widget.onAddPressed != null) {
+                  setState(() {});
+                }
+                widget.onSearchChanged(value);
+              },
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.end,

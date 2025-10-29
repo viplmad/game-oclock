@@ -18,7 +18,9 @@ import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameCreateForm extends StatelessWidget {
-  const UserGameCreateForm({super.key});
+  const UserGameCreateForm({super.key, this.initialTitle});
+
+  final String? initialTitle;
 
   @override
   Widget build(final BuildContext context) {
@@ -27,7 +29,7 @@ class UserGameCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) => UserGameFormBloc(
             formGroup: UserGameFormData(
-              title: TextEditingController(),
+              title: TextEditingController(text: initialTitle),
               edition: TextEditingController(),
               releaseDate: DateTimeEditingController(),
               status: TextEditingController(),

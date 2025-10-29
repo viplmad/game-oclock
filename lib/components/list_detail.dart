@@ -35,11 +35,13 @@ class ListDetailBuilder<
     required this.detailBuilder,
     required this.listItemBuilder,
     this.floatingActionButton,
+    this.onSearchAddPressed,
   });
 
   final String title;
   final String searchSpace;
   final FloatingActionButton? floatingActionButton;
+  final ValueChanged<String>? onSearchAddPressed;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
@@ -148,6 +150,7 @@ class ListDetailBuilder<
     return Scaffold(
       appBar: FullSearchAppBar(
         title: title,
+        onAddPressed: onSearchAddPressed,
         onSearchChanged: (final value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [

@@ -13,7 +13,9 @@ import 'package:game_oclock/models/models.dart' show Device, DeviceFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class DeviceCreateForm extends StatelessWidget {
-  const DeviceCreateForm({super.key});
+  const DeviceCreateForm({super.key, this.initialName});
+
+  final String? initialName;
 
   @override
   Widget build(final BuildContext context) {
@@ -21,7 +23,9 @@ class DeviceCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => DeviceFormBloc(
-            formGroup: DeviceFormData(name: TextEditingController()),
+            formGroup: DeviceFormData(
+              name: TextEditingController(text: initialName),
+            ),
           ),
         ),
         BlocProvider(

@@ -64,6 +64,13 @@ class _UserGameListDetailBuilder extends StatelessWidget {
     return ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
       title: context.localize().gamesTitle,
       searchSpace: 'game',
+      onSearchAddPressed: (final quicksearch) async => showFormDialog(
+        context,
+        builder: (final context) =>
+            UserGameCreateForm(initialTitle: quicksearch),
+        onSuccess: (final context) =>
+            context.read<UserGameListBloc>().add(const ListReloaded()),
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().addLabel,
         onPressed: () async => showFormDialog(

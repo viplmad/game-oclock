@@ -8,7 +8,9 @@ import 'package:game_oclock/models/models.dart' show Tag, TagFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class TagCreateForm extends StatelessWidget {
-  const TagCreateForm({super.key});
+  const TagCreateForm({super.key, this.initialName});
+
+  final String? initialName;
 
   @override
   Widget build(final BuildContext context) {
@@ -16,7 +18,9 @@ class TagCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => TagFormBloc(
-            formGroup: TagFormData(name: TextEditingController()),
+            formGroup: TagFormData(
+              name: TextEditingController(text: initialName),
+            ),
           ),
         ),
         BlocProvider(

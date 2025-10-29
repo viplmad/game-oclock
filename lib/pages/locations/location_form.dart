@@ -13,7 +13,9 @@ import 'package:game_oclock/models/models.dart' show Location, LocationFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class LocationCreateForm extends StatelessWidget {
-  const LocationCreateForm({super.key});
+  const LocationCreateForm({super.key, this.initialName});
+
+  final String? initialName;
 
   @override
   Widget build(final BuildContext context) {
@@ -21,7 +23,9 @@ class LocationCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => LocationFormBloc(
-            formGroup: LocationFormData(name: TextEditingController()),
+            formGroup: LocationFormData(
+              name: TextEditingController(text: initialName),
+            ),
           ),
         ),
         BlocProvider(

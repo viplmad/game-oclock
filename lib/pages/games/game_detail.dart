@@ -42,6 +42,8 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/pages/games/game_available_form.dart';
 import 'package:game_oclock/pages/games/game_form.dart';
 import 'package:game_oclock/pages/games/game_tag_form.dart';
+import 'package:game_oclock/pages/locations/location_form.dart';
+import 'package:game_oclock/pages/tags/tag_form.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -162,8 +164,10 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameAvailableListBloc>(context),
         child: RelationListBuilder<LocationWithDate, UserGameAvailableListBloc>(
           label: context.localize().locationLabel,
-          createFormBuilder: () =>
-              GameAvailableCreateForm.fixedGame(gameId: data.id),
+          createFormBuilder: ([final newId]) =>
+              GameAvailableCreateForm(gameId: data.id, locationId: newId),
+          searchCreateFormBuilder: (final quicksearch) =>
+              LocationCreateForm(initialName: quicksearch),
           itemBuilder: (final data) => GameAvailableTileListItem(data: data),
         ),
       ),
@@ -174,7 +178,10 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameTagListBloc>(context),
         child: RelationListBuilder<Tag, UserGameTagListBloc>(
           label: context.localize().tagLabel,
-          createFormBuilder: () => GameTagCreateForm.fixedGame(gameId: data.id),
+          createFormBuilder: ([final newId]) =>
+              GameTagCreateForm(gameId: data.id, tagId: newId),
+          searchCreateFormBuilder: (final quicksearch) =>
+              TagCreateForm(initialName: quicksearch),
           itemBuilder: (final data) => TagTileListItem(data: data),
         ),
       ),
@@ -353,17 +360,32 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
     super.key,
     required this.label,
     required this.createFormBuilder,
+    this.searchCreateFormBuilder,
     required this.itemBuilder,
   });
 
   final String label;
-  final Widget Function() createFormBuilder;
+  final Widget Function([String? value]) createFormBuilder;
+  final Widget Function(String value)? searchCreateFormBuilder;
   final Widget Function(T data) itemBuilder;
 
   @override
   Widget build(final BuildContext context) {
     return ListLayout(
       toolbar: ListFullSearchToolbar(
+        onAddPressed: searchCreateFormBuilder == null
+            ? null
+            : (final quicksearch) async => showFormDialog(
+                context,
+                builder: (final context) =>
+                    searchCreateFormBuilder!(quicksearch),
+                onSuccess: (final context) async => showFormDialog(
+                  context,
+                  builder: (final context) => createFormBuilder(quicksearch),
+                  onSuccess: (final context) =>
+                      context.read<LB>().add(const ListReloaded()),
+                ),
+              ),
         onSearchChanged: (final value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
