@@ -26,16 +26,27 @@ final class TabDestination {
   });
 }
 
-final class DropdownField<T> {
+final class OptionField<T> {
   final Widget? icon;
-  final String Function(BuildContext context) labelBuilder;
+  final Widget Function(BuildContext context) widgetBuilder;
   final T value;
   final Color? color;
 
-  const DropdownField({
+  const OptionField({
     this.icon,
-    required this.labelBuilder,
+    required this.widgetBuilder,
     required this.value,
     this.color,
   });
+}
+
+final class OptionTextField<T> extends OptionField<T> {
+  final String Function(BuildContext context) labelBuilder;
+
+  OptionTextField({
+    super.icon,
+    required this.labelBuilder,
+    required super.value,
+    super.color,
+  }) : super(widgetBuilder: (final context) => Text(labelBuilder(context)));
 }

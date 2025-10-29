@@ -2,54 +2,54 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-final List<DropdownField<String>> operatorOptions =
-    List.unmodifiable(<DropdownField<String>>[
-      DropdownField(
+final List<OptionTextField<String>> operatorOptions =
+    List.unmodifiable(<OptionTextField<String>>[
+      OptionTextField(
         value: 'Eq',
         labelBuilder: (final context) => context.localize().equalLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'NotEq',
         labelBuilder: (final context) => context.localize().notEqualLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'Gt',
         labelBuilder: (final context) => context.localize().greaterThanLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'Gte',
         labelBuilder: (final context) =>
             context.localize().greaterThanEqualLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'Lt',
         labelBuilder: (final context) => context.localize().lessThanLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'Lte',
         labelBuilder: (final context) => context.localize().lessThanEqualLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'StartsWith',
         labelBuilder: (final context) => context.localize().startsWithLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'NotStartsWith',
         labelBuilder: (final context) => context.localize().notStartsWithLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'EndsWith',
         labelBuilder: (final context) => context.localize().endsWithLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'NotEndsWith',
         labelBuilder: (final context) => context.localize().notEndsWithLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'Contains',
         labelBuilder: (final context) => context.localize().containsLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'NotContains',
         labelBuilder: (final context) => context.localize().notContainsLabel,
       ),

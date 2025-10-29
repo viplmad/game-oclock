@@ -10,70 +10,46 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocaleBloc,
         ThemeModeBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
-import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
+import 'package:game_oclock/models/models.dart'
+    show DateLocaleConfig, OptionField, OptionTextField;
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:intl/intl.dart';
 
-final class SettingField<T> {
-  final Widget? icon;
-  final Widget Function(BuildContext context) widgetBuilder;
-  final T value;
-  final Color? color;
-
-  const SettingField({
-    this.icon,
-    required this.widgetBuilder,
-    required this.value,
-    this.color,
-  });
-}
-
-final class SettingTextField<T> extends SettingField<T> {
-  final String Function(BuildContext context) labelBuilder;
-
-  SettingTextField({
-    super.icon,
-    required this.labelBuilder,
-    required super.value,
-    super.color,
-  }) : super(widgetBuilder: (final context) => Text(labelBuilder(context)));
-}
-
-final List<SettingField<ThemeMode?>> themeModeOptions =
-    List.unmodifiable(<SettingField<ThemeMode?>>[
-      SettingTextField(
+final List<OptionField<ThemeMode?>> themeModeOptions =
+    List.unmodifiable(<OptionField<ThemeMode?>>[
+      OptionTextField(
         value: null,
         labelBuilder: (final context) => context.localize().systemDefaultLabel,
       ),
-      SettingTextField(
+      OptionTextField(
         value: ThemeMode.dark,
         labelBuilder: (final context) => context.localize().darkLabel,
       ),
-      SettingTextField(
+      OptionTextField(
         value: ThemeMode.light,
         labelBuilder: (final context) => context.localize().lightLabel,
       ),
     ]);
 
-final List<SettingField<Locale?>> localeOptions =
-    List.unmodifiable(<SettingField<Locale?>>[
-      SettingTextField(
+final List<OptionField<Locale?>> localeOptions =
+    List.unmodifiable(<OptionField<Locale?>>[
+      OptionTextField(
         value: null,
         labelBuilder: (final context) => context
             .localize()
             .systemDefaultLabelData(Localizations.localeOf(context)),
       ),
       ...AppLocalizations.supportedLocales.map(
-        (final locale) => SettingTextField(
+        (final locale) => OptionTextField(
           value: locale,
           labelBuilder: (final context) => locale.toLanguageTag(), // TODO
         ),
       ),
     ]);
 
-final List<SettingField<int?>> startingDayOfWeekOptions = List.unmodifiable(
-  <SettingField<int?>>[
-    SettingField(
+final List<OptionField<int?>> startingDayOfWeekOptions = List.unmodifiable(
+  <OptionField<int?>>[
+    OptionField(
       value: null,
       widgetBuilder: (final context) => Localizations.override(
         context: context,
@@ -99,7 +75,7 @@ final List<SettingField<int?>> startingDayOfWeekOptions = List.unmodifiable(
       DateTime.saturday,
       DateTime.sunday,
     ].map(
-      (final weekday) => SettingTextField(
+      (final weekday) => OptionTextField(
         value: weekday,
         labelBuilder: (final context) => formatWeekday(weekday),
       ),
@@ -117,9 +93,9 @@ String formatWeekday(final int weekday) {
 /// Sample date which allows to check the date and time format
 final sampleDateTime = DateTime(2020, DateTime.january, 23, 21, 45);
 
-final List<SettingField<String?>> timeFormatOptions = List.unmodifiable(
-  <SettingField<String?>>[
-    SettingField(
+final List<OptionField<String?>> timeFormatOptions = List.unmodifiable(
+  <OptionField<String?>>[
+    OptionField(
       value: null,
       widgetBuilder: (final context) => Localizations.override(
         context: context,
@@ -144,7 +120,7 @@ final List<SettingField<String?>> timeFormatOptions = List.unmodifiable(
       'h:mm a',
       'a h:mm',
     ].map(
-      (final pattern) => SettingTextField(
+      (final pattern) => OptionTextField(
         value: pattern,
         labelBuilder: (final context) {
           return DateFormat(pattern).format(sampleDateTime);
@@ -154,9 +130,9 @@ final List<SettingField<String?>> timeFormatOptions = List.unmodifiable(
   ],
 );
 
-final List<SettingField<String?>> dateFormatOptions = List.unmodifiable(
-  <SettingField<String?>>[
-    SettingField(
+final List<OptionField<String?>> dateFormatOptions = List.unmodifiable(
+  <OptionField<String?>>[
+    OptionField(
       value: null,
       widgetBuilder: (final context) => Localizations.override(
         context: context,
@@ -186,7 +162,7 @@ final List<SettingField<String?>> dateFormatOptions = List.unmodifiable(
       'd.M.y',
       'y.M.d',
     ].map(
-      (final pattern) => SettingTextField(
+      (final pattern) => OptionTextField(
         value: pattern,
         labelBuilder: (final context) =>
             DateFormat(pattern).format(sampleDateTime),
@@ -334,7 +310,7 @@ class SettingRadioTile<T> extends StatelessWidget {
 
   final String label;
   final T? value;
-  final List<SettingField<T?>> options;
+  final List<OptionField<T?>> options;
   final void Function(BuildContext context, T? newValue) onSuccess;
 
   @override

@@ -4,59 +4,59 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-final List<DropdownField<String>> gameFieldOptions =
-    List.unmodifiable(<DropdownField<String>>[
-      DropdownField(
+final List<OptionTextField<String>> gameFieldOptions =
+    List.unmodifiable(<OptionTextField<String>>[
+      OptionTextField(
         value: 'id',
         labelBuilder: (final context) => context.localize().idLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'title',
         labelBuilder: (final context) => context.localize().titleLabel,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'edition',
         labelBuilder: (final context) => context.localize().editionLabel,
       ),
     ]);
 
-final List<DropdownField<String>> gameStatusOptions =
-    List.unmodifiable(<DropdownField<String>>[
-      DropdownField(
+final List<OptionTextField<String>> gameStatusOptions =
+    List.unmodifiable(<OptionTextField<String>>[
+      OptionTextField(
         value: 'wishlist',
         labelBuilder: (final context) => context.localize().wishlistLabel,
         color: Colors.yellow,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'lowPriorty',
         labelBuilder: (final context) => context.localize().lowPriorityLabel,
         color: Colors.grey,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'nextUp',
         labelBuilder: (final context) => context.localize().nextUpLabel,
         color: Colors.red,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'playing',
         labelBuilder: (final context) => context.localize().playingLabel,
         color: Colors.blue,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'played',
         labelBuilder: (final context) => context.localize().playedLabel,
         color: Colors.green,
       ),
     ]);
 
-final List<DropdownField<String>> gameSessionFinishedOptions =
-    List.unmodifiable(<DropdownField<String>>[
-      DropdownField(
+final List<OptionTextField<String>> gameSessionFinishedOptions =
+    List.unmodifiable(<OptionTextField<String>>[
+      OptionTextField(
         value: 'completed',
         labelBuilder: (final context) => context.localize().completedLabel,
         color: Colors.green,
       ),
-      DropdownField(
+      OptionTextField(
         value: 'retired',
         labelBuilder: (final context) => context.localize().retiredLabel,
         color: Colors.grey,

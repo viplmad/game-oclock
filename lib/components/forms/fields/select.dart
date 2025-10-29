@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/models/models.dart' show DropdownField;
+import 'package:game_oclock/models/models.dart' show OptionTextField;
 import 'package:game_oclock/utils/form_validators.dart';
 
 import 'common.dart';
@@ -19,7 +19,7 @@ class SimpleSelectFormField extends StatelessWidget {
   final bool required;
   final bool readOnly;
   final String label;
-  final List<DropdownField<String>> options;
+  final List<OptionTextField<String>> options;
 
   @override
   Widget build(final BuildContext context) {

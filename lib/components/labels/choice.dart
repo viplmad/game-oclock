@@ -12,13 +12,13 @@ class ChoiceLabel extends StatelessWidget {
 
   final String label;
   final String? value;
-  final List<DropdownField<String>> options;
+  final List<OptionTextField<String>> options;
 
   @override
   Widget build(final BuildContext context) {
     final option = options.firstWhere(
       (final element) => element.value == value,
-      orElse: () => DropdownField(
+      orElse: () => OptionTextField(
         value: value ?? '',
         labelBuilder: (final context) => value ?? '',
       ),

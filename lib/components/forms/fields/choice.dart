@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/models/models.dart' show DropdownField;
+import 'package:game_oclock/models/models.dart' show OptionTextField;
 import 'package:game_oclock/utils/text_editing_controller_extension.dart';
 
 class SimpleChoiceFormField extends StatefulWidget {
@@ -16,7 +16,7 @@ class SimpleChoiceFormField extends StatefulWidget {
   final bool required;
   final bool readOnly;
   final String label;
-  final List<DropdownField<String>> options;
+  final List<OptionTextField<String>> options;
 
   @override
   State<SimpleChoiceFormField> createState() => _SimpleChoiceFormFieldState();
