@@ -18,10 +18,20 @@ class TileListSkeleton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return TileList(
-      items: List.filled(10, 0, growable: false),
-      itemBuilder: (_, _, final index) => itemBuilder(index),
-      borderRadius: borderRadius,
+    return LayoutBuilder(
+      builder: (final context, final constraints) {
+        final availableHeight = constraints.maxHeight;
+
+        final itemHeight = kTileImageMinHeight;
+
+        final itemCount = (availableHeight / itemHeight).ceil();
+
+        return TileList(
+          items: List.filled(itemCount, 0, growable: false),
+          itemBuilder: (_, _, final index) => itemBuilder(index),
+          borderRadius: borderRadius,
+        );
+      },
     );
   }
 }
@@ -42,12 +52,31 @@ class GridListSkeleton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return GridList(
-      items: List.filled(10, 0, growable: false),
-      itemBuilder: (_, _, final index) => itemBuilder(index),
-      borderRadius: borderRadius,
-      itemAspectRatio: itemAspectRatio,
-      columns: columns,
+    return LayoutBuilder(
+      builder: (final context, final constraints) {
+        final availableWidth = constraints.maxWidth;
+        final availableHeight = constraints.maxHeight;
+
+        final itemWidth = availableWidth / columns;
+
+        final itemHeight = itemWidth / itemAspectRatio;
+
+        final minRows = (availableHeight / itemHeight).ceil();
+
+        final itemCount = minRows * columns;
+
+        return GridList(
+          items: List.filled(itemCount, 0, growable: false),
+          itemBuilder: (_, _, final index) {
+            final column = index % columns;
+            final row = (index / columns).floor();
+            return itemBuilder(column + row);
+          },
+          borderRadius: borderRadius,
+          itemAspectRatio: itemAspectRatio,
+          columns: columns,
+        );
+      },
     );
   }
 }
