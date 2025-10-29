@@ -9,6 +9,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         DateLocaleConfigBloc,
         LocaleBloc,
         ThemeModeBloc;
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/models/models.dart'
     show DateLocaleConfig, OptionField, OptionTextField;
@@ -22,12 +23,14 @@ final List<OptionField<ThemeMode?>> themeModeOptions =
         labelBuilder: (final context) => context.localize().systemDefaultLabel,
       ),
       OptionTextField(
-        value: ThemeMode.dark,
-        labelBuilder: (final context) => context.localize().darkLabel,
-      ),
-      OptionTextField(
+        icon: CommonIcons.light,
         value: ThemeMode.light,
         labelBuilder: (final context) => context.localize().lightLabel,
+      ),
+      OptionTextField(
+        icon: CommonIcons.dark,
+        value: ThemeMode.dark,
+        labelBuilder: (final context) => context.localize().darkLabel,
       ),
     ]);
 
@@ -209,6 +212,7 @@ class SettingsBuilder extends StatelessWidget {
             : null;
 
         return SettingRadioTile(
+          icon: CommonIcons.theme,
           label: context.localize().chooseThemeLabel,
           value: themeMode,
           options: themeModeOptions,
@@ -227,6 +231,7 @@ class SettingsBuilder extends StatelessWidget {
             : null;
 
         return SettingRadioTile(
+          icon: CommonIcons.language,
           label: context.localize().chooseLanguageLabel,
           value: locale,
           options: localeOptions,
@@ -302,12 +307,14 @@ class SettingsBuilder extends StatelessWidget {
 class SettingRadioTile<T> extends StatelessWidget {
   const SettingRadioTile({
     super.key,
+    this.icon,
     required this.label,
     required this.value,
     required this.options,
     required this.onSuccess,
   });
 
+  final Widget? icon;
   final String label;
   final T? value;
   final List<OptionField<T?>> options;
@@ -320,6 +327,7 @@ class SettingRadioTile<T> extends StatelessWidget {
     );
 
     return ListTile(
+      leading: icon,
       title: Text(label),
       subtitle: option.widgetBuilder(context),
       onTap: () async =>
@@ -337,6 +345,7 @@ class SettingRadioTile<T> extends StatelessWidget {
                     children: options
                         .map(
                           (final option) => RadioListTile<T?>(
+                            secondary: option.icon,
                             title: option.widgetBuilder(context),
                             value: option.value,
                           ),

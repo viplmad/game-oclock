@@ -28,6 +28,10 @@ class CommonIcons {
   static const no = Icon(Icons.close);
   static const ascending = Icon(Icons.arrow_upward);
   static const descending = Icon(Icons.arrow_downward);
+  static const theme = Icon(Icons.brightness_6);
+  static const light = Icon(Icons.light_mode);
+  static const dark = Icon(Icons.dark_mode);
+  static const language = Icon(Icons.language);
   static Icon star(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);
