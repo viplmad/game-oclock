@@ -37,7 +37,7 @@ class UserGameSelectorBuilder extends StatelessWidget {
         newBuilder: (final quicksearch) => UserGame(
           id: '',
           title: quicksearch,
-          externalId: '',
+          externalIds: [],
           edition: '',
           releaseDate: null,
           genres: [],

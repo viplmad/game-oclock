@@ -1,5 +1,4 @@
-import 'package:game_oclock/models/models.dart'
-    show ExternalGame, ExternalSource;
+import 'package:game_oclock/models/models.dart' show ExternalGame, sourceIgdb;
 import 'package:game_oclock/services/igdb/api/auth_api.dart';
 import 'package:game_oclock/services/igdb/api/games_api.dart';
 import 'package:game_oclock/services/igdb/api_client.dart';
@@ -36,8 +35,8 @@ class IGDBService {
     return data
         .map((final game) {
           return ExternalGame(
-            externalSource: ExternalSource.igdb,
-            externalId: game.id.toString(),
+            source: sourceIgdb,
+            id: game.id.toString(),
             title: game.name,
             edition: game.versionTitle,
             coverUrl: game.cover?.url,

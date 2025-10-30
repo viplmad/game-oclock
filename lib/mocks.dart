@@ -5,7 +5,7 @@ import 'package:game_oclock/models/models.dart';
 UserGame mockUserGame({final String? title}) {
   return UserGame(
     id: mockId(),
-    externalId: 'steam',
+    externalIds: [],
     title: title ?? 'title',
     edition: '',
     releaseDate: DateTime.now(),

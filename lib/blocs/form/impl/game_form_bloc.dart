@@ -9,7 +9,7 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
   UserGame fromData(final UserGameFormData values) {
     return UserGame(
       id: 'kalmdkamsd', // TODO
-      externalId: 'epic', // TODO
+      externalIds: [], // TODO
       title: values.title.text,
       edition: values.edition.text,
       releaseDate: DateTime.now(),

@@ -1,1 +1,1 @@
-enum ExternalSource { igdb }
+const String sourceIgdb = 'igdb';

@@ -65,7 +65,7 @@ final List<OptionTextField<String>> gameSessionFinishedOptions =
 
 class Game extends Equatable {
   final String id;
-  final String externalId;
+  final List<ExternalGameId> externalIds;
   final String title;
   final String edition;
   final DateTime? releaseDate;
@@ -75,7 +75,7 @@ class Game extends Equatable {
 
   const Game({
     required this.id,
-    required this.externalId,
+    required this.externalIds,
     required this.title,
     required this.edition,
     required this.releaseDate,
@@ -95,7 +95,7 @@ class UserGame extends Game {
 
   const UserGame({
     required super.id,
-    required super.externalId,
+    required super.externalIds,
     required super.title,
     required super.edition,
     required super.releaseDate,
@@ -106,4 +106,11 @@ class UserGame extends Game {
     required this.rating,
     required this.notes,
   });
+}
+
+class ExternalGameId {
+  final String source;
+  final String id;
+
+  ExternalGameId({required this.source, required this.id});
 }

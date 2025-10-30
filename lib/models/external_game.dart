@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'external_source.dart';
-
 class ExternalGame extends Equatable {
-  final ExternalSource externalSource;
-  final String externalId;
+  final String source;
+  final String id;
   final String title;
   final String? edition;
   final String? coverUrl;
@@ -13,8 +11,8 @@ class ExternalGame extends Equatable {
   final List<String> series;
 
   const ExternalGame({
-    required this.externalSource,
-    required this.externalId,
+    required this.source,
+    required this.id,
     required this.title,
     required this.edition,
     required this.coverUrl,
