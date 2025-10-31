@@ -1,6 +1,6 @@
-import '../action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
+import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
 
-class MinimizedLayoutBloc extends FunctionActionBloc<bool, bool> {
+class MinimizedLayoutBloc extends IdentityActionBloc<bool> {
   @override
   Future<ActionFinal<bool, bool>> doAction(
     final bool event,

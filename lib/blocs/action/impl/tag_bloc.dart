@@ -2,7 +2,12 @@ import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/services/services.dart' show TagService;
 
 import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
+    show
+        ActionFinal,
+        ActionSuccess,
+        ConsumerActionBloc,
+        FunctionActionBloc,
+        IdentityActionBloc;
 
 class TagGetBloc extends FunctionActionBloc<String, Tag> {
   TagGetBloc({required this.service});
@@ -19,18 +24,18 @@ class TagGetBloc extends FunctionActionBloc<String, Tag> {
   }
 }
 
-class TagCreateBloc extends ConsumerActionBloc<Tag> {
+class TagCreateBloc extends IdentityActionBloc<Tag> {
   TagCreateBloc({required this.service});
 
   final TagService service;
 
   @override
-  Future<ActionFinal<void, Tag>> doAction(
+  Future<ActionFinal<Tag, Tag>> doAction(
     final Tag event,
-    final void lastData,
+    final Tag? lastData,
   ) async {
-    await service.create(event);
-    return ActionSuccess.consumer(event);
+    final data = await service.create(event);
+    return ActionSuccess(data: data, event: event);
   }
 }
 
@@ -64,7 +69,7 @@ class TagDeleteBloc extends ConsumerActionBloc<Tag> {
   }
 }
 
-class TagSelectBloc extends FunctionActionBloc<Tag?, Tag?> {
+class TagSelectBloc extends IdentityActionBloc<Tag?> {
   @override
   Future<ActionFinal<Tag?, Tag?>> doAction(
     final Tag? event,

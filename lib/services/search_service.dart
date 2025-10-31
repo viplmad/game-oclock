@@ -19,8 +19,9 @@ class SearchService {
     return mockSearch(name: space + name, filters: 3);
   }
 
-  Future<void> create(final String space, final ListSearch name) async {
+  Future<ListSearch> create(final String space, final ListSearch search) async {
     await Future.delayed(const Duration(seconds: 1));
+    return search;
   }
 
   Future<void> update(final String space, final ListSearch search) async {

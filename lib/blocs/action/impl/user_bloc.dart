@@ -2,7 +2,12 @@ import 'package:game_oclock/models/models.dart' show User, UserChangePassword;
 import 'package:game_oclock/services/services.dart' show UserService;
 
 import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
+    show
+        ActionFinal,
+        ActionSuccess,
+        ConsumerActionBloc,
+        FunctionActionBloc,
+        IdentityActionBloc;
 
 class UserGetBloc extends FunctionActionBloc<String, User> {
   UserGetBloc({required this.service});
@@ -19,18 +24,18 @@ class UserGetBloc extends FunctionActionBloc<String, User> {
   }
 }
 
-class UserCreateBloc extends ConsumerActionBloc<User> {
+class UserCreateBloc extends IdentityActionBloc<User> {
   UserCreateBloc({required this.service});
 
   final UserService service;
 
   @override
-  Future<ActionFinal<void, User>> doAction(
+  Future<ActionFinal<User, User>> doAction(
     final User event,
-    final void lastData,
+    final User? lastData,
   ) async {
-    await service.create(event);
-    return ActionSuccess.consumer(event);
+    final data = await service.create(event);
+    return ActionSuccess(data: data, event: event);
   }
 }
 
@@ -49,17 +54,17 @@ class UserUpdateBloc extends ConsumerActionBloc<User> {
   }
 }
 
-class UserChangePasswordBloc extends ConsumerActionBloc<UserChangePassword> {
+class UserChangePasswordBloc extends IdentityActionBloc<UserChangePassword> {
   UserChangePasswordBloc({required this.service});
 
   final UserService service;
 
   @override
-  Future<ActionFinal<void, UserChangePassword>> doAction(
+  Future<ActionFinal<UserChangePassword, UserChangePassword>> doAction(
     final UserChangePassword event,
-    final void lastData,
+    final UserChangePassword? lastData,
   ) async {
     await service.changePassword(event.currentPassword, event.newPassword);
-    return ActionSuccess.consumer(event);
+    return ActionSuccess(data: event, event: event);
   }
 }

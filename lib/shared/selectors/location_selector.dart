@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart'
-    show LocationCreateBloc, LocationListBloc;
+import 'package:game_oclock/blocs/blocs.dart' show LocationListBloc;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Location;
+import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/list_item/location_list_item.dart';
 
 class LocationSelectorBuilder extends StatelessWidget {
@@ -33,9 +34,13 @@ class LocationSelectorBuilder extends StatelessWidget {
           LocationTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
-      newConfig: AutocompleteNewConfig<Location, LocationCreateBloc>(
-        newBuilder: (final quicksearch) => Location(id: '', name: quicksearch),
-      ),
+      onAddPressed: (final quicksearch, final onSelected) async =>
+          showFormDialog<Location>(
+            context,
+            builder: (final context) =>
+                LocationCreateForm(initialName: quicksearch),
+            onSuccess: (final context, final data) => onSelected(data),
+          ),
     );
   }
 }

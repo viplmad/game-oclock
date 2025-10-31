@@ -26,8 +26,9 @@ class LocationService {
     return mockLocation();
   }
 
-  Future<void> create(final Location location) async {
+  Future<Location> create(final Location location) async {
     await Future.delayed(const Duration(seconds: 5));
+    return location;
   }
 
   Future<void> update(final Location location) async {

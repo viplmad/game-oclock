@@ -39,11 +39,11 @@ import 'package:game_oclock/models/models.dart'
         Tag,
         UserGame,
         gameStatusOptions;
-import 'package:game_oclock/pages/games/game_available_form.dart';
-import 'package:game_oclock/pages/games/game_form.dart';
-import 'package:game_oclock/pages/games/game_tag_form.dart';
-import 'package:game_oclock/pages/locations/location_form.dart';
-import 'package:game_oclock/pages/tags/tag_form.dart';
+import 'package:game_oclock/shared/forms/game_available_form.dart';
+import 'package:game_oclock/shared/forms/game_form.dart';
+import 'package:game_oclock/shared/forms/game_tag_form.dart';
+import 'package:game_oclock/shared/forms/location_form.dart';
+import 'package:game_oclock/shared/forms/tag_form.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -212,19 +212,19 @@ class UserGameDetail extends StatelessWidget {
         IconButton(
           icon: CommonIcons.edit,
           tooltip: context.localize().editLabel,
-          onPressed: () async => showFormDialog(
+          onPressed: () async => showFormDialog<UserGame>(
             context,
             builder: (final context) => UserGameEditForm(id: data.id),
-            onSuccess: onEditSucceeded,
+            onSuccess: (final context, _) => onEditSucceeded(context),
           ),
         ),
         IconButton(
           icon: CommonIcons.delete,
           tooltip: context.localize().deleteLabel,
-          onPressed: () async => showFormDialog(
+          onPressed: () async => showFormDialog<UserGame>(
             context,
             builder: (final context) => _confirmDelete(context, data),
-            onSuccess: (final context) {
+            onSuccess: (final context, _) {
               context.read<UserGameDeleteBloc>().add(ActionStarted(data: data));
               onDeleteSucceeded(context); // TODO listen to bloc + snackbar
             },
@@ -379,10 +379,10 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
                 context,
                 builder: (final context) =>
                     searchCreateFormBuilder!(quicksearch),
-                onSuccess: (final context) async => showFormDialog(
+                onSuccess: (final context, _) async => showFormDialog<T>(
                   context,
                   builder: (final context) => createFormBuilder(quicksearch),
-                  onSuccess: (final context) =>
+                  onSuccess: (final context, _) =>
                       context.read<LB>().add(const ListReloaded()),
                 ),
               ),
@@ -392,10 +392,10 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
           IconButton(
             icon: CommonIcons.link,
             tooltip: context.localize().linkDataLabel(label),
-            onPressed: () async => showFormDialog(
+            onPressed: () async => showFormDialog<T>(
               context,
               builder: (final context) => createFormBuilder(),
-              onSuccess: (final context) =>
+              onSuccess: (final context, _) =>
                   context.read<LB>().add(const ListReloaded()),
             ),
           ),

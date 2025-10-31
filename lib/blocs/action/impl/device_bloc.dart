@@ -2,7 +2,12 @@ import 'package:game_oclock/models/models.dart' show Device;
 import 'package:game_oclock/services/services.dart' show DeviceService;
 
 import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
+    show
+        ActionFinal,
+        ActionSuccess,
+        ConsumerActionBloc,
+        FunctionActionBloc,
+        IdentityActionBloc;
 
 class DeviceGetBloc extends FunctionActionBloc<String, Device> {
   DeviceGetBloc({required this.service});
@@ -19,18 +24,18 @@ class DeviceGetBloc extends FunctionActionBloc<String, Device> {
   }
 }
 
-class DeviceCreateBloc extends ConsumerActionBloc<Device> {
+class DeviceCreateBloc extends IdentityActionBloc<Device> {
   DeviceCreateBloc({required this.service});
 
   final DeviceService service;
 
   @override
-  Future<ActionFinal<void, Device>> doAction(
+  Future<ActionFinal<Device, Device>> doAction(
     final Device event,
-    final void lastData,
+    final Device? lastData,
   ) async {
-    await service.create(event);
-    return ActionSuccess.consumer(event);
+    final data = await service.create(event);
+    return ActionSuccess(data: data, event: event);
   }
 }
 
@@ -64,7 +69,7 @@ class DeviceDeleteBloc extends ConsumerActionBloc<Device> {
   }
 }
 
-class DeviceSelectBloc extends FunctionActionBloc<Device?, Device?> {
+class DeviceSelectBloc extends IdentityActionBloc<Device?> {
   @override
   Future<ActionFinal<Device?, Device?>> doAction(
     final Device? event,

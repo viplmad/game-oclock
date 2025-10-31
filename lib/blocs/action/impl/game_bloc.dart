@@ -2,7 +2,12 @@ import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/services/services.dart' show GameService;
 
 import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
+    show
+        ActionFinal,
+        ActionSuccess,
+        ConsumerActionBloc,
+        FunctionActionBloc,
+        IdentityActionBloc;
 
 class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {
   UserGameGetBloc({required this.service});
@@ -19,18 +24,18 @@ class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {
   }
 }
 
-class UserGameCreateBloc extends ConsumerActionBloc<UserGame> {
+class UserGameCreateBloc extends IdentityActionBloc<UserGame> {
   UserGameCreateBloc({required this.service});
 
   final GameService service;
 
   @override
-  Future<ActionFinal<void, UserGame>> doAction(
+  Future<ActionFinal<UserGame, UserGame>> doAction(
     final UserGame event,
-    final void lastData,
+    final UserGame? lastData,
   ) async {
-    await service.create(event);
-    return ActionSuccess.consumer(event);
+    final data = await service.create(event);
+    return ActionSuccess(data: data, event: event);
   }
 }
 
@@ -64,7 +69,7 @@ class UserGameDeleteBloc extends ConsumerActionBloc<UserGame> {
   }
 }
 
-class UserGameSelectBloc extends FunctionActionBloc<UserGame?, UserGame?> {
+class UserGameSelectBloc extends IdentityActionBloc<UserGame?> {
   @override
   Future<ActionFinal<UserGame?, UserGame?>> doAction(
     final UserGame? event,

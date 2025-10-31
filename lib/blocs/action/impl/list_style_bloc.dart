@@ -1,8 +1,8 @@
 import 'package:game_oclock/models/models.dart' show ListStyle;
 
-import '../action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
+import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
 
-class ListStyleBloc extends FunctionActionBloc<ListStyle, ListStyle> {
+class ListStyleBloc extends IdentityActionBloc<ListStyle> {
   @override
   Future<ActionFinal<ListStyle, ListStyle>> doAction(
     final ListStyle event,

@@ -25,8 +25,9 @@ class UserService {
     return mockUser();
   }
 
-  Future<void> create(final User user) async {
+  Future<User> create(final User user) async {
     await Future.delayed(const Duration(seconds: 5));
+    return user;
   }
 
   Future<void> update(final User user) async {

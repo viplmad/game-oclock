@@ -50,3 +50,5 @@ abstract class FunctionActionBloc<E, S>
 abstract class ProducerActionBloc<S> extends FunctionActionBloc<void, S> {}
 
 abstract class ConsumerActionBloc<E> extends FunctionActionBloc<E, void> {}
+
+abstract class IdentityActionBloc<T> extends FunctionActionBloc<T, T> {}

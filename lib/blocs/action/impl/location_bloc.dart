@@ -2,7 +2,12 @@ import 'package:game_oclock/models/models.dart' show Location;
 import 'package:game_oclock/services/services.dart' show LocationService;
 
 import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, FunctionActionBloc;
+    show
+        ActionFinal,
+        ActionSuccess,
+        ConsumerActionBloc,
+        FunctionActionBloc,
+        IdentityActionBloc;
 
 class LocationGetBloc extends FunctionActionBloc<String, Location> {
   LocationGetBloc({required this.service});
@@ -19,18 +24,18 @@ class LocationGetBloc extends FunctionActionBloc<String, Location> {
   }
 }
 
-class LocationCreateBloc extends ConsumerActionBloc<Location> {
+class LocationCreateBloc extends IdentityActionBloc<Location> {
   LocationCreateBloc({required this.service});
 
   final LocationService service;
 
   @override
-  Future<ActionFinal<void, Location>> doAction(
+  Future<ActionFinal<Location, Location>> doAction(
     final Location event,
-    final void lastData,
+    final Location? lastData,
   ) async {
-    await service.create(event);
-    return ActionSuccess.consumer(event);
+    final data = await service.create(event);
+    return ActionSuccess(data: data, event: event);
   }
 }
 
@@ -64,7 +69,7 @@ class LocationDeleteBloc extends ConsumerActionBloc<Location> {
   }
 }
 
-class LocationSelectBloc extends FunctionActionBloc<Location?, Location?> {
+class LocationSelectBloc extends IdentityActionBloc<Location?> {
   @override
   Future<ActionFinal<Location?, Location?>> doAction(
     final Location? event,

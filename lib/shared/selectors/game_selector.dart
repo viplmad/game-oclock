@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart'
-    show UserGameCreateBloc, UserGameListBloc;
+import 'package:game_oclock/blocs/blocs.dart' show UserGameListBloc;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
+import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 
 class UserGameSelectorBuilder extends StatelessWidget {
@@ -33,21 +34,13 @@ class UserGameSelectorBuilder extends StatelessWidget {
           UserGameTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.title,
-      newConfig: AutocompleteNewConfig<UserGame, UserGameCreateBloc>(
-        newBuilder: (final quicksearch) => UserGame(
-          id: '',
-          title: quicksearch,
-          externalIds: [],
-          edition: '',
-          releaseDate: null,
-          genres: [],
-          series: [],
-          coverUrl: '',
-          status: '',
-          rating: 0,
-          notes: '',
-        ),
-      ),
+      onAddPressed: (final quicksearch, final onSelected) async =>
+          showFormDialog<UserGame>(
+            context,
+            builder: (final context) =>
+                UserGameCreateForm(initialTitle: quicksearch),
+            onSuccess: (final context, final data) => onSelected(data),
+          ),
     );
   }
 }

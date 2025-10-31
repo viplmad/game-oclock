@@ -7,6 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionInProgress,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         ConsumerActionBloc,
         FormBloc,
         FormDirtied,
@@ -15,7 +16,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValuesUpdated,
-        FunctionActionBloc;
+        FunctionActionBloc,
+        IdentityActionBloc;
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
@@ -27,7 +29,7 @@ class CreateFormBuilder<
   T,
   D extends FormData<T>,
   FB extends FormBloc<D, T>,
-  CB extends ConsumerActionBloc<T>
+  CB extends IdentityActionBloc<T>
 >
     extends _FormBuilder {
   const CreateFormBuilder({
@@ -56,10 +58,15 @@ class CreateFormBuilder<
             }
           },
         ),
-        BlocListener<CB, ActionState<void>>(
+        BlocListener<CB, ActionState<T>>(
           listener: (final context, final state) {
-            showSnackBar(context, message: 'Data created $state'); // TODO i18n
-            Navigator.pop(context, true);
+            if (state is ActionSuccess<T, T>) {
+              showSnackBar(
+                context,
+                message: 'Data created $state', // TODO i18n
+              );
+              Navigator.pop(context, state.data);
+            }
             // TODO possibly clear dirty now
           },
         ),
@@ -129,8 +136,13 @@ class EditFormBuilder<
         ),
         BlocListener<UB, ActionState<void>>(
           listener: (final context, final state) {
-            showSnackBar(context, message: 'Data updated $state'); // TODO i18n
-            Navigator.pop(context, true);
+            if (state is ActionSuccess<void, T>) {
+              showSnackBar(
+                context,
+                message: 'Data updated $state',
+              ); // TODO i18n
+              Navigator.pop(context, state.event);
+            }
             // TODO possibly clear dirty now
           },
         ),

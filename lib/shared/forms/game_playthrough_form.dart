@@ -6,15 +6,22 @@ import 'package:game_oclock/blocs/blocs.dart'
         GamePlaythroughCreateBloc,
         GamePlaythroughFormBloc,
         GamePlaythroughGetBloc,
-        GamePlaythroughUpdateBloc;
+        GamePlaythroughUpdateBloc,
+        ListLoaded,
+        UserGameCreateBloc,
+        UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show GamePlaythrough, GamePlaythroughFormData;
+    show GamePlaythrough, GamePlaythroughFormData, ListSearch, SearchDTO;
+import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class GamePlaythroughCreateForm extends StatelessWidget {
-  const GamePlaythroughCreateForm({super.key});
+  const GamePlaythroughCreateForm({super.key, this.initialName, this.gameId});
+
+  final String? initialName;
+  final String? gameId;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,8 +30,8 @@ class GamePlaythroughCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) => GamePlaythroughFormBloc(
             formGroup: GamePlaythroughFormData(
-              gameId: TextEditingController(),
-              name: TextEditingController(),
+              gameId: TextEditingController(text: gameId),
+              name: TextEditingController(text: initialName),
             ),
           ),
         ),
@@ -32,6 +39,20 @@ class GamePlaythroughCreateForm extends StatelessWidget {
           create: (_) => GamePlaythroughCreateBloc(
             service: RepositoryProvider.of(context),
           ),
+        ),
+
+        BlocProvider(
+          create: (_) =>
+              UserGameListBloc(service: RepositoryProvider.of(context))..add(
+                // Requires search to be loaded
+                ListLoaded(
+                  search: ListSearch(name: 'default', search: SearchDTO()),
+                ),
+              ),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameCreateBloc(service: RepositoryProvider.of(context)),
         ),
       ],
       child:
@@ -42,7 +63,8 @@ class GamePlaythroughCreateForm extends StatelessWidget {
             GamePlaythroughCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(context, gameId, formGroup, readOnly),
           ),
     );
   }
@@ -85,13 +107,38 @@ class GamePlaythroughEditForm extends StatelessWidget {
             GamePlaythroughUpdateBloc
           >(
             title: context.localize().editingTitle,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsEditBuilder(context, formGroup, readOnly),
           ),
     );
   }
 }
 
-Widget _fieldsBuilder(
+Widget _fieldsCreateBuilder(
+  final BuildContext context,
+  final String? gameId,
+  final GamePlaythroughFormData formGroup,
+  final bool readOnly,
+) {
+  return FormFieldsContainer(
+    children: <Widget>[
+      UserGameSelectorBuilder(
+        controller: formGroup.gameId,
+        label: context.localize().gameLabel,
+        required: true,
+        readOnly: readOnly || gameId != null,
+      ),
+      SimpleTextFormField(
+        controller: formGroup.name,
+        label: context.localize().nameLabel,
+        required: true,
+        readOnly: readOnly,
+      ),
+    ],
+  );
+}
+
+Widget _fieldsEditBuilder(
   final BuildContext context,
   final GamePlaythroughFormData formGroup,
   final bool readOnly,

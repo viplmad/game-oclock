@@ -16,7 +16,7 @@ import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, ListStyle, SearchDTO, UserGame;
-import 'package:game_oclock/pages/games/game_form.dart';
+import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -64,19 +64,19 @@ class _UserGameListDetailBuilder extends StatelessWidget {
     return ListDetailBuilder<UserGame, UserGameSelectBloc, UserGameListBloc>(
       title: context.localize().gamesTitle,
       searchSpace: 'game',
-      onSearchAddPressed: (final quicksearch) async => showFormDialog(
+      onSearchAddPressed: (final quicksearch) async => showFormDialog<UserGame>(
         context,
         builder: (final context) =>
             UserGameCreateForm(initialTitle: quicksearch),
-        onSuccess: (final context) =>
+        onSuccess: (final context, _) =>
             context.read<UserGameListBloc>().add(const ListReloaded()),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().addLabel,
-        onPressed: () async => showFormDialog(
+        onPressed: () async => showFormDialog<UserGame>(
           context,
           builder: (final context) => const UserGameCreateForm(),
-          onSuccess: (final context) =>
+          onSuccess: (final context, _) =>
               context.read<UserGameListBloc>().add(const ListReloaded()),
         ),
         child: CommonIcons.add,

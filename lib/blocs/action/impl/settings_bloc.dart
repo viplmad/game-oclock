@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 
-import '../action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
+import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
 
-class DateLocaleConfigBloc
-    extends FunctionActionBloc<DateLocaleConfig, DateLocaleConfig> {
+class DateLocaleConfigBloc extends IdentityActionBloc<DateLocaleConfig> {
   @override
   Future<ActionFinal<DateLocaleConfig, DateLocaleConfig>> doAction(
     final DateLocaleConfig event,
@@ -14,7 +13,7 @@ class DateLocaleConfigBloc
   }
 }
 
-class ThemeModeBloc extends FunctionActionBloc<ThemeMode?, ThemeMode?> {
+class ThemeModeBloc extends IdentityActionBloc<ThemeMode?> {
   @override
   Future<ActionFinal<ThemeMode?, ThemeMode?>> doAction(
     final ThemeMode? event,
@@ -24,7 +23,7 @@ class ThemeModeBloc extends FunctionActionBloc<ThemeMode?, ThemeMode?> {
   }
 }
 
-class LocaleBloc extends FunctionActionBloc<Locale?, Locale?> {
+class LocaleBloc extends IdentityActionBloc<Locale?> {
   @override
   Future<ActionFinal<Locale?, Locale?>> doAction(
     final Locale? event,

@@ -25,8 +25,9 @@ class DeviceService {
     return mockDevice();
   }
 
-  Future<void> create(final Device device) async {
+  Future<Device> create(final Device device) async {
     await Future.delayed(const Duration(seconds: 5));
+    return device;
   }
 
   Future<void> update(final Device device) async {

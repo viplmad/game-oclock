@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-Future<void> showFormDialog(
+Future<void> showFormDialog<T>(
   final BuildContext context, {
   required final WidgetBuilder builder,
-  required final ValueChanged<BuildContext> onSuccess,
+  required final void Function(BuildContext context, T data) onSuccess,
   final ValueChanged<BuildContext>? onFailure,
 }) async {
-  return showDialog<bool>(context: context, builder: builder).then<void>((
-    final bool? success,
+  return showDialog<T>(context: context, builder: builder).then<void>((
+    final T? result,
   ) {
-    if (success != null && success) {
+    if (result != null) {
       if (context.mounted) {
-        onSuccess(context);
+        onSuccess(context, result);
       }
     } else {
       if (context.mounted) {

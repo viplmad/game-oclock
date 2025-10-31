@@ -49,8 +49,9 @@ class GameSessionService {
     return mockGameSession();
   }
 
-  Future<void> create(final GameSession session) async {
+  Future<GameSession> create(final GameSession session) async {
     await Future.delayed(const Duration(seconds: 5));
+    return session;
   }
 
   Future<void> update(final GameSession session) async {

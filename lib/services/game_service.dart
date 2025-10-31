@@ -85,8 +85,9 @@ class GameService {
     return mockUserGame();
   }
 
-  Future<void> create(final UserGame game) async {
+  Future<UserGame> create(final UserGame game) async {
     await Future.delayed(const Duration(seconds: 1));
+    return game;
   }
 
   Future<void> update(final UserGame game) async {

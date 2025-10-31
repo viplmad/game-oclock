@@ -1,6 +1,6 @@
-import '../action.dart' show ActionFinal, ActionSuccess, FunctionActionBloc;
+import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
 
-class ReviewYearSelectBloc extends FunctionActionBloc<int?, int?> {
+class ReviewYearSelectBloc extends IdentityActionBloc<int?> {
   @override
   Future<ActionFinal<int?, int?>> doAction(
     final int? event,

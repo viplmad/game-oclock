@@ -49,8 +49,9 @@ class GamePlaythroughService {
     return mockGamePlaythrough();
   }
 
-  Future<void> create(final GamePlaythrough playthrough) async {
+  Future<GamePlaythrough> create(final GamePlaythrough playthrough) async {
     await Future.delayed(const Duration(seconds: 5));
+    return playthrough;
   }
 
   Future<void> update(final GamePlaythrough playthrough) async {

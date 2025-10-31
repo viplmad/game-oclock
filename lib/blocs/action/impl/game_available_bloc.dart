@@ -1,19 +1,18 @@
+import 'package:game_oclock/blocs/blocs.dart';
 import 'package:game_oclock/models/models.dart' show GameAvailable;
 import 'package:game_oclock/services/services.dart' show GameService;
 
-import '../action.dart' show ActionFinal, ActionSuccess, ConsumerActionBloc;
-
-class GameAvailableCreateBloc extends ConsumerActionBloc<GameAvailable> {
+class GameAvailableCreateBloc extends IdentityActionBloc<GameAvailable> {
   GameAvailableCreateBloc({required this.service});
 
   final GameService service;
 
   @override
-  Future<ActionFinal<void, GameAvailable>> doAction(
+  Future<ActionFinal<GameAvailable, GameAvailable>> doAction(
     final GameAvailable event,
-    final void lastData,
+    final GameAvailable? lastData,
   ) async {
     await service.addAvailability(event.gameId, event.locationId, event.date);
-    return ActionSuccess.consumer(event);
+    return ActionSuccess(data: event, event: event);
   }
 }

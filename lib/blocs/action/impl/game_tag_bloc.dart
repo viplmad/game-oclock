@@ -1,19 +1,18 @@
+import 'package:game_oclock/blocs/blocs.dart';
 import 'package:game_oclock/models/models.dart' show GameTag;
 import 'package:game_oclock/services/services.dart' show GameService;
 
-import '../action.dart' show ActionFinal, ActionSuccess, ConsumerActionBloc;
-
-class GameTagCreateBloc extends ConsumerActionBloc<GameTag> {
+class GameTagCreateBloc extends IdentityActionBloc<GameTag> {
   GameTagCreateBloc({required this.service});
 
   final GameService service;
 
   @override
-  Future<ActionFinal<void, GameTag>> doAction(
+  Future<ActionFinal<GameTag, GameTag>> doAction(
     final GameTag event,
-    final void lastData,
+    final GameTag? lastData,
   ) async {
     await service.addTag(event.gameId, event.tagId);
-    return ActionSuccess.consumer(event);
+    return ActionSuccess(data: event, event: event);
   }
 }

@@ -58,11 +58,11 @@ class SearchGridListItem extends StatelessWidget {
       trailing: IconButton(
         icon: CommonIcons.edit,
         tooltip: context.localize().editLabel,
-        onPressed: () async => showFormDialog(
+        onPressed: () async => showFormDialog<ListSearch>(
           context,
           builder: (final context) =>
               SearchEditForm(space: space, name: data.name),
-          onSuccess: (final context) =>
+          onSuccess: (final context, _) =>
               context.read<SearchListBloc>().add(const ListReloaded()),
         ),
       ),

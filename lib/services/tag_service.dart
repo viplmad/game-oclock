@@ -25,8 +25,9 @@ class TagService {
     return mockTag();
   }
 
-  Future<void> create(final Tag tag) async {
+  Future<Tag> create(final Tag tag) async {
     await Future.delayed(const Duration(seconds: 5));
+    return tag;
   }
 
   Future<void> update(final Tag tag) async {

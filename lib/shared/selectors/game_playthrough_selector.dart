@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart'
-    show GamePlaythroughCreateBloc, GamePlaythroughListBloc;
+import 'package:game_oclock/blocs/blocs.dart' show GamePlaythroughListBloc;
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show GamePlaythrough;
+import 'package:game_oclock/shared/forms/game_playthrough_form.dart';
 import 'package:game_oclock/shared/list_item/game_playthrough_list_item.dart';
 
 class GamePlaythroughSelectorBuilder extends StatelessWidget {
@@ -38,10 +39,14 @@ class GamePlaythroughSelectorBuilder extends StatelessWidget {
           GamePlaythroughTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
-      newConfig:
-          AutocompleteNewConfig<GamePlaythrough, GamePlaythroughCreateBloc>(
-            newBuilder: (final quicksearch) =>
-                GamePlaythrough(id: '', gameId: gameId, name: quicksearch),
+      onAddPressed: (final quicksearch, final onSelected) async =>
+          showFormDialog<GamePlaythrough>(
+            context,
+            builder: (final context) => GamePlaythroughCreateForm(
+              initialName: quicksearch,
+              gameId: gameId,
+            ),
+            onSuccess: (final context, final data) => onSelected(data),
           ),
     );
   }
