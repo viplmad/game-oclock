@@ -5,13 +5,14 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
         ActionState,
-        FunctionActionBloc,
+        IdentityActionBloc,
         ListLoadBloc,
         ListQuicksearchChanged,
         ListReloaded,
         ListStyleBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/toolbar.dart';
+import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
@@ -24,7 +25,7 @@ import 'list/tile_list.dart';
 
 class ListDetailBuilder<
   T,
-  SB extends FunctionActionBloc<T?, T?>,
+  SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>
 >
     extends StatelessWidget {
@@ -245,5 +246,61 @@ class ListDetailBuilder<
     required final T? data,
   }) {
     selectBloc.add(ActionStarted(data: data));
+  }
+}
+
+class ListCreateDetailBuilder<
+  T,
+  SB extends IdentityActionBloc<T?>,
+  LB extends ListLoadBloc<T>
+>
+    extends StatelessWidget {
+  const ListCreateDetailBuilder({
+    super.key,
+    required this.title,
+    required this.searchSpace,
+    required this.createFormBuilder,
+    required this.detailBuilder,
+    required this.listItemBuilder,
+  });
+
+  final String title;
+  final String searchSpace;
+  final Widget Function([String? value]) createFormBuilder;
+
+  final Widget Function(BuildContext context, T data, VoidCallback onClosed)
+  detailBuilder;
+  final Widget Function(
+    BuildContext context,
+    ListStyle style,
+    T data,
+    VoidCallback onTap,
+  )
+  listItemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListDetailBuilder<T, SB, LB>(
+      title: title,
+      searchSpace: searchSpace,
+      onSearchAddPressed: (final quicksearch) async => showFormDialog<T>(
+        context,
+        builder: (final context) => createFormBuilder(quicksearch),
+        onSuccess: (final context, _) =>
+            context.read<LB>().add(const ListReloaded()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: context.localize().addLabel,
+        onPressed: () async => showFormDialog<T>(
+          context,
+          builder: (final context) => createFormBuilder(),
+          onSuccess: (final context, _) =>
+              context.read<LB>().add(const ListReloaded()),
+        ),
+        child: CommonIcons.add,
+      ),
+      detailBuilder: detailBuilder,
+      listItemBuilder: listItemBuilder,
+    );
   }
 }

@@ -7,7 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionState,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
-        FunctionActionBloc,
+        IdentityActionBloc,
         ListFinal,
         ListLoadBloc,
         ListState;
@@ -24,7 +24,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 class CalendarListDetailBuilder<
   T,
-  SB extends FunctionActionBloc<T?, T?>,
+  SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>
 >
     extends StatelessWidget {

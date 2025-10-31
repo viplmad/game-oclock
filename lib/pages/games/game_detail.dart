@@ -164,8 +164,8 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameAvailableListBloc>(context),
         child: RelationListBuilder<LocationWithDate, UserGameAvailableListBloc>(
           label: context.localize().locationLabel,
-          createFormBuilder: ([final newId]) =>
-              GameAvailableCreateForm(gameId: data.id, locationId: newId),
+          createFormBuilder: ([final quicksearch]) =>
+              GameAvailableCreateForm(gameId: data.id, locationId: quicksearch),
           searchCreateFormBuilder: (final quicksearch) =>
               LocationCreateForm(initialName: quicksearch),
           itemBuilder: (final data) => GameAvailableTileListItem(data: data),
@@ -178,8 +178,8 @@ class UserGameDetail extends StatelessWidget {
             _loadOnlyInitial<UserGameTagListBloc>(context),
         child: RelationListBuilder<Tag, UserGameTagListBloc>(
           label: context.localize().tagLabel,
-          createFormBuilder: ([final newId]) =>
-              GameTagCreateForm(gameId: data.id, tagId: newId),
+          createFormBuilder: ([final quicksearch]) =>
+              GameTagCreateForm(gameId: data.id, tagId: quicksearch),
           searchCreateFormBuilder: (final quicksearch) =>
               TagCreateForm(initialName: quicksearch),
           itemBuilder: (final data) => TagTileListItem(data: data),
