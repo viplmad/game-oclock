@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_oclock/blocs/blocs.dart'
+    show
+        ActionFailure,
+        ActionFinal,
+        ActionInProgress,
+        ActionRestarted,
+        ActionState,
+        FunctionActionBloc;
+import 'package:game_oclock/components/error_detail.dart' show DetailError;
+import 'package:game_oclock/components/skeletons/skeletons.dart'
+    show DetailSkeleton;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
@@ -54,5 +67,52 @@ class Detail extends StatelessWidget {
         ),
       ),
     ];
+  }
+}
+
+class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
+    extends StatelessWidget {
+  const DetailBuilder({
+    super.key,
+    required this.onBackPressed,
+    required this.builder,
+  });
+
+  final VoidCallback onBackPressed;
+  final Widget Function(
+    BuildContext context,
+    T data,
+    VoidCallback onBackPressed,
+  )
+  builder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocBuilder<GB, ActionState<T>>(
+      builder: (final context, final state) {
+        T data;
+        if (state is ActionInProgress<T>) {
+          if (state.data == null) {
+            return DetailSkeleton(onBackPressed: onBackPressed);
+          }
+          data = state.data as T;
+        } else if (state is ActionFinal<T, String>) {
+          if (state is ActionFailure<T, String>) {
+            return Center(
+              child: DetailError(
+                title: context.localize().errorDetailLoadTitle,
+                onRetryTap: () =>
+                    context.read<GB>().add(const ActionRestarted()),
+              ),
+            );
+          }
+          data = state.data;
+        } else {
+          return const SizedBox();
+        }
+
+        return builder(context, data, onBackPressed);
+      },
+    );
   }
 }

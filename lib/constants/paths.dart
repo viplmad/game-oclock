@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+
 class CommonPaths {
   CommonPaths._();
 
@@ -16,12 +18,16 @@ class CommonPaths {
   static const String _idPathParamPath = '/$_idPath';
   static const String gamePath = gamesPath + _idPathParamPath;
   static const String gameCalendarPath = gamePath + calendarPath;
+  static const String locationPath = locationsPath + _idPathParamPath;
 
-  static const String _idPath = ':$idPathParam';
-  static const String idPathParam = 'id';
+  static const String _idPath = ':$_idPathParam';
+  static const String _idPathParam = 'id';
 
   static String buildGamePath(final String id) =>
       gamePath.replaceFirst(_idPath, id);
   static String buildGameCalendarPath(final String id) =>
       gameCalendarPath.replaceFirst(_idPath, id);
+
+  static String getIdParameter(final GoRouterState state) =>
+      state.pathParameters[CommonPaths._idPathParam]!;
 }

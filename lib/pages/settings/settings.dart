@@ -16,7 +16,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:intl/intl.dart';
 
-final List<OptionField<ThemeMode?>> themeModeOptions =
+final List<OptionField<ThemeMode?>> _themeModeOptions =
     List.unmodifiable(<OptionField<ThemeMode?>>[
       OptionTextField(
         value: null,
@@ -34,7 +34,7 @@ final List<OptionField<ThemeMode?>> themeModeOptions =
       ),
     ]);
 
-final List<OptionField<Locale?>> localeOptions =
+final List<OptionField<Locale?>> _localeOptions =
     List.unmodifiable(<OptionField<Locale?>>[
       OptionTextField(
         value: null,
@@ -50,7 +50,7 @@ final List<OptionField<Locale?>> localeOptions =
       ),
     ]);
 
-final List<OptionField<int?>> startingDayOfWeekOptions = List.unmodifiable(
+final List<OptionField<int?>> _startingDayOfWeekOptions = List.unmodifiable(
   <OptionField<int?>>[
     OptionField(
       value: null,
@@ -61,7 +61,7 @@ final List<OptionField<int?>> startingDayOfWeekOptions = List.unmodifiable(
         child: Builder(
           builder: (final context) => Text(
             context.localize().systemDefaultLabelData(
-              formatWeekday(
+              _formatWeekday(
                 MaterialLocalizations.of(context).firstDayOfWeekIndex % 7,
               ),
             ),
@@ -80,13 +80,13 @@ final List<OptionField<int?>> startingDayOfWeekOptions = List.unmodifiable(
     ].map(
       (final weekday) => OptionTextField(
         value: weekday,
-        labelBuilder: (final context) => formatWeekday(weekday),
+        labelBuilder: (final context) => _formatWeekday(weekday),
       ),
     ),
   ],
 );
 
-String formatWeekday(final int weekday) {
+String _formatWeekday(final int weekday) {
   return DateFormat.EEEE().format(
     // Dec of 2025 starts on a monday, so can be used to format weekday easily
     DateTime(2025, DateTime.december, weekday),
@@ -94,9 +94,9 @@ String formatWeekday(final int weekday) {
 }
 
 /// Sample date which allows to check the date and time format
-final sampleDateTime = DateTime(2020, DateTime.january, 23, 21, 45);
+final _sampleDateTime = DateTime(2020, DateTime.january, 23, 21, 45);
 
-final List<OptionField<String?>> timeFormatOptions = List.unmodifiable(
+final List<OptionField<String?>> _timeFormatOptions = List.unmodifiable(
   <OptionField<String?>>[
     OptionField(
       value: null,
@@ -109,7 +109,7 @@ final List<OptionField<String?>> timeFormatOptions = List.unmodifiable(
             context.localize().systemDefaultLabelData(
               MaterialLocalizations.of(
                 context,
-              ).formatTimeOfDay(TimeOfDay.fromDateTime(sampleDateTime)),
+              ).formatTimeOfDay(TimeOfDay.fromDateTime(_sampleDateTime)),
             ),
           ),
         ),
@@ -126,14 +126,14 @@ final List<OptionField<String?>> timeFormatOptions = List.unmodifiable(
       (final pattern) => OptionTextField(
         value: pattern,
         labelBuilder: (final context) {
-          return DateFormat(pattern).format(sampleDateTime);
+          return DateFormat(pattern).format(_sampleDateTime);
         },
       ),
     ),
   ],
 );
 
-final List<OptionField<String?>> dateFormatOptions = List.unmodifiable(
+final List<OptionField<String?>> _dateFormatOptions = List.unmodifiable(
   <OptionField<String?>>[
     OptionField(
       value: null,
@@ -146,7 +146,7 @@ final List<OptionField<String?>> dateFormatOptions = List.unmodifiable(
             context.localize().systemDefaultLabelData(
               MaterialLocalizations.of(
                 context,
-              ).formatCompactDate(sampleDateTime),
+              ).formatCompactDate(_sampleDateTime),
             ),
           ),
         ),
@@ -168,7 +168,7 @@ final List<OptionField<String?>> dateFormatOptions = List.unmodifiable(
       (final pattern) => OptionTextField(
         value: pattern,
         labelBuilder: (final context) =>
-            DateFormat(pattern).format(sampleDateTime),
+            DateFormat(pattern).format(_sampleDateTime),
       ),
     ),
   ],
@@ -179,12 +179,12 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return SettingsBuilder(title: context.localize().settingsTitle);
+    return _SettingsBuilder(title: context.localize().settingsTitle);
   }
 }
 
-class SettingsBuilder extends StatelessWidget {
-  const SettingsBuilder({super.key, required this.title});
+class _SettingsBuilder extends StatelessWidget {
+  const _SettingsBuilder({required this.title});
 
   final String title;
 
@@ -211,11 +211,11 @@ class SettingsBuilder extends StatelessWidget {
             ? state.data
             : null;
 
-        return SettingRadioTile(
+        return _SettingRadioTile(
           icon: CommonIcons.theme,
           label: context.localize().chooseThemeLabel,
           value: themeMode,
-          options: themeModeOptions,
+          options: _themeModeOptions,
           onSuccess: (final context, final newValue) =>
               context.read<ThemeModeBloc>().add(ActionStarted(data: newValue)),
         );
@@ -230,11 +230,11 @@ class SettingsBuilder extends StatelessWidget {
             ? state.data
             : null;
 
-        return SettingRadioTile(
+        return _SettingRadioTile(
           icon: CommonIcons.language,
           label: context.localize().chooseLanguageLabel,
           value: locale,
-          options: localeOptions,
+          options: _localeOptions,
           onSuccess: (final context, final newValue) =>
               context.read<LocaleBloc>().add(ActionStarted(data: newValue)),
         );
@@ -252,10 +252,10 @@ class SettingsBuilder extends StatelessWidget {
 
         return Column(
           children: [
-            SettingRadioTile(
+            _SettingRadioTile(
               label: context.localize().chooseStartingDayOfWeekLabel,
               value: dateConfig.startingDayOfWeek,
-              options: startingDayOfWeekOptions,
+              options: _startingDayOfWeekOptions,
               onSuccess: (final context, final newValue) =>
                   context.read<DateLocaleConfigBloc>().add(
                     ActionStarted(
@@ -267,10 +267,10 @@ class SettingsBuilder extends StatelessWidget {
                     ),
                   ),
             ),
-            SettingRadioTile(
+            _SettingRadioTile(
               label: context.localize().chooseTimeFormatLabel,
               value: dateConfig.timeFormat?.pattern,
-              options: timeFormatOptions,
+              options: _timeFormatOptions,
               onSuccess: (final context, final newValue) =>
                   context.read<DateLocaleConfigBloc>().add(
                     ActionStarted(
@@ -282,10 +282,10 @@ class SettingsBuilder extends StatelessWidget {
                     ),
                   ),
             ),
-            SettingRadioTile(
+            _SettingRadioTile(
               label: context.localize().chooseDateFormatLabel,
               value: dateConfig.dateFormat?.pattern,
-              options: dateFormatOptions,
+              options: _dateFormatOptions,
               onSuccess: (final context, final newValue) =>
                   context.read<DateLocaleConfigBloc>().add(
                     ActionStarted(
@@ -304,8 +304,8 @@ class SettingsBuilder extends StatelessWidget {
   }
 }
 
-class SettingRadioTile<T> extends StatelessWidget {
-  const SettingRadioTile({
+class _SettingRadioTile<T> extends StatelessWidget {
+  const _SettingRadioTile({
     super.key,
     this.icon,
     required this.label,

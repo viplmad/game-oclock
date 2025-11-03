@@ -2,30 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFailure,
-        ActionFinal,
-        ActionInProgress,
         ActionRestarted,
         ActionStarted,
-        ActionState,
         ListInitial,
         ListLoadBloc,
         ListLoaded,
         ListQuicksearchChanged,
         ListReloaded,
-        UserGameAvailableListBloc,
+        LocationAvailableListBloc,
         UserGameDeleteBloc,
         UserGameGetBloc,
         UserGameTagListBloc;
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
-import 'package:game_oclock/components/error_detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list/tile_list.dart'
     show TileListBuilder;
 import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
-import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -50,8 +44,8 @@ import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
-class UserGameDetailsPage extends StatelessWidget {
-  const UserGameDetailsPage({super.key, required this.id});
+class UserGameDetailPage extends StatelessWidget {
+  const UserGameDetailPage({super.key, required this.id});
 
   final String id;
 
@@ -71,7 +65,7 @@ class UserGameDetailsPage extends StatelessWidget {
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => UserGameAvailableListBloc(
+          create: (_) => LocationAvailableListBloc(
             gameId: id,
             service: RepositoryProvider.of(context),
           ),
@@ -83,43 +77,19 @@ class UserGameDetailsPage extends StatelessWidget {
           ),
         ),
       ],
-      child: BlocBuilder<UserGameGetBloc, ActionState<UserGame>>(
-        builder: (final context, final state) {
-          void onBackPressed() =>
-              GoRouter.of(context).go(CommonPaths.gamesPath);
-          UserGame data;
-          if (state is ActionInProgress<UserGame>) {
-            if (state.data == null) {
-              return DetailSkeleton(onBackPressed: onBackPressed);
-            }
-            data = state.data!;
-          } else if (state is ActionFinal<UserGame, String>) {
-            if (state is ActionFailure<UserGame, String>) {
-              return Center(
-                child: DetailError(
-                  title: context.localize().errorDetailLoadTitle,
-                  onRetryTap: () => context.read<UserGameGetBloc>().add(
-                    const ActionRestarted(),
-                  ),
-                ),
-              );
-            }
-            data = state.data;
-          } else {
-            return const SizedBox();
-          }
-
-          return UserGameDetail(
-            data: data,
-            fromPage: true,
-            extended: layoutTier != LayoutTier.compact,
-            onBackPressed: onBackPressed,
-            onEditSucceeded: (final context) =>
-                context.read<UserGameGetBloc>().add(const ActionRestarted()),
-            onDeleteSucceeded: (final context) =>
-                GoRouter.of(context).go(CommonPaths.gamesPath),
-          );
-        },
+      child: DetailBuilder<UserGame, UserGameGetBloc>(
+        onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
+        builder: (final context, final data, final onBackPressed) =>
+            UserGameDetail(
+              data: data,
+              fromPage: true,
+              extended: layoutTier != LayoutTier.compact,
+              onBackPressed: onBackPressed,
+              onEditSucceeded: (final context) =>
+                  context.read<UserGameGetBloc>().add(const ActionRestarted()),
+              onDeleteSucceeded: (final context) =>
+                  GoRouter.of(context).go(CommonPaths.gamesPath),
+            ),
       ),
     );
   }
@@ -146,7 +116,7 @@ class UserGameDetail extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     if (extended) {
-      _loadOnlyInitial<UserGameAvailableListBloc>(context);
+      _loadOnlyInitial<LocationAvailableListBloc>(context);
     }
 
     final List<TabDestination>
@@ -161,8 +131,8 @@ class UserGameDetail extends StatelessWidget {
         icon: CommonIcons.locations,
         labelBuilder: (final context) => context.localize().locationsTitle,
         onTap: (final context) =>
-            _loadOnlyInitial<UserGameAvailableListBloc>(context),
-        child: RelationListBuilder<LocationWithDate, UserGameAvailableListBloc>(
+            _loadOnlyInitial<LocationAvailableListBloc>(context),
+        child: RelationListBuilder<LocationWithDate, LocationAvailableListBloc>(
           label: context.localize().locationLabel,
           createFormBuilder: ([final quicksearch]) =>
               GameAvailableCreateForm(gameId: data.id, locationId: quicksearch),

@@ -69,6 +69,9 @@ class _FullSearchAppBarState extends State<FullSearchAppBar> {
               },
             )
           : Text(widget.title),
+      // Fixed elevation so background colour doesn't change on scroll
+      elevation: 1.0,
+      scrolledUnderElevation: 1.0,
       actions: inSearch
           ? null
           : [

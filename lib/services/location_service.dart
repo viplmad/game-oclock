@@ -1,6 +1,6 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show Location, PageResultDTO, SearchDTO;
+    show Location, LocationWithDate, PageResultDTO, SearchDTO;
 
 class LocationService {
   Future<PageResultDTO<Location>> search(
@@ -17,6 +17,29 @@ class LocationService {
   }
 
   Future<int> count(final SearchDTO search, final String? quicksearch) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return 500;
+  }
+
+  Future<PageResultDTO<LocationWithDate>> searchAvailable(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) =>
+          mockLocationWithDate(name: 'name $gameId ($quicksearch) $index'),
+    );
+  }
+
+  Future<int> countAvailable(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
     await Future.delayed(const Duration(seconds: 1));
     return 500;
   }

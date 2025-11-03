@@ -6,15 +6,15 @@ import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-class UserGameGridListItem extends StatelessWidget {
-  const UserGameGridListItem({super.key, required this.data, this.onTap});
+class UserGameTileListItem extends StatelessWidget {
+  const UserGameTileListItem({super.key, required this.data, this.onTap});
 
   final UserGame data;
   final VoidCallback? onTap;
 
   @override
   Widget build(final BuildContext context) {
-    final listItem = GridListItem(
+    final listItem = TileListItem(
       title: data.edition.isEmpty
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),
@@ -26,15 +26,15 @@ class UserGameGridListItem extends StatelessWidget {
   }
 }
 
-class UserGameTileListItem extends StatelessWidget {
-  const UserGameTileListItem({super.key, required this.data, this.onTap});
+class UserGameGridListItem extends StatelessWidget {
+  const UserGameGridListItem({super.key, required this.data, this.onTap});
 
   final UserGame data;
   final VoidCallback? onTap;
 
   @override
   Widget build(final BuildContext context) {
-    final listItem = TileListItem(
+    final listItem = GridListItem(
       title: data.edition.isEmpty
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),

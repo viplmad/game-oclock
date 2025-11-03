@@ -35,6 +35,7 @@ class ListDetailBuilder<
     required this.searchSpace,
     required this.detailBuilder,
     required this.listItemBuilder,
+    required this.itemAspectRatio,
     this.floatingActionButton,
     this.onSearchAddPressed,
   });
@@ -53,6 +54,7 @@ class ListDetailBuilder<
     VoidCallback onTap,
   )
   listItemBuilder;
+  final double itemAspectRatio;
 
   @override
   Widget build(final BuildContext context) {
@@ -190,7 +192,7 @@ class ListDetailBuilder<
                 borderRadius: const BorderRadius.all(
                   Radius.circular(kCardBorderRadius),
                 ),
-                itemAspectRatio: 1.85, // Steam header aspect ratio
+                itemAspectRatio: itemAspectRatio,
                 columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
                 itemBuilder: (final context, final data, final index) =>
                     listItemBuilder(
@@ -262,6 +264,7 @@ class ListCreateDetailBuilder<
     required this.createFormBuilder,
     required this.detailBuilder,
     required this.listItemBuilder,
+    required this.itemAspectRatio,
   });
 
   final String title;
@@ -277,6 +280,7 @@ class ListCreateDetailBuilder<
     VoidCallback onTap,
   )
   listItemBuilder;
+  final double itemAspectRatio;
 
   @override
   Widget build(final BuildContext context) {
@@ -301,6 +305,7 @@ class ListCreateDetailBuilder<
       ),
       detailBuilder: detailBuilder,
       listItemBuilder: listItemBuilder,
+      itemAspectRatio: itemAspectRatio,
     );
   }
 }

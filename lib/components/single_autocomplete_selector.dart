@@ -45,6 +45,7 @@ class SingleAutocompleteSelectorBuilder<
   @override
   Widget build(final BuildContext context) {
     return Autocomplete<T>(
+      initialValue: controller.value,
       optionsBuilder: (final textEditingValue) async {
         final loadBloc = context.read<LB>();
         loadBloc.add(

@@ -11,18 +11,17 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/main_layout.dart' show MainLayoutBuilder;
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart';
-import 'package:game_oclock/pages/calendar/multi_calendar.dart'
-    show MultiCalendarPage;
-import 'package:game_oclock/pages/calendar/single_calendar.dart'
-    show SingleCalendarPage;
+import 'package:game_oclock/pages/calendar/multi_calendar.dart';
+import 'package:game_oclock/pages/calendar/single_calendar.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
-import 'package:game_oclock/pages/games/game_detail.dart'
-    show UserGameDetailsPage;
-import 'package:game_oclock/pages/games/game_list.dart' show UserGameListPage;
-import 'package:game_oclock/pages/login/login.dart' show LoginPage;
-import 'package:game_oclock/pages/review/review.dart' show ReviewPage;
-import 'package:game_oclock/pages/settings/settings.dart' show SettingsPage;
+import 'package:game_oclock/pages/games/game_detail.dart';
+import 'package:game_oclock/pages/games/game_list.dart';
+import 'package:game_oclock/pages/locations/location_detail.dart';
+import 'package:game_oclock/pages/locations/location_list.dart';
+import 'package:game_oclock/pages/login/login.dart';
+import 'package:game_oclock/pages/review/review.dart';
+import 'package:game_oclock/pages/settings/settings.dart';
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -90,8 +89,8 @@ final routerConfig = GoRouter(
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
             );
-            final String id = state.pathParameters[CommonPaths.idPathParam]!;
-            return UserGameDetailsPage(id: id);
+            final String id = CommonPaths.getIdParameter(state);
+            return UserGameDetailPage(id: id);
           },
         ),
         GoRoute(
@@ -100,7 +99,7 @@ final routerConfig = GoRouter(
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
             );
-            final String id = state.pathParameters[CommonPaths.idPathParam]!;
+            final String id = CommonPaths.getIdParameter(state);
             return SingleCalendarPage(gameId: id);
           },
         ),
@@ -111,9 +110,20 @@ final routerConfig = GoRouter(
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
             );
-            return const UserGameListPage();
+            return const LocationListPage();
           },
         ),
+        GoRoute(
+          path: CommonPaths.locationPath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final String id = CommonPaths.getIdParameter(state);
+            return LocationDetailPage(id: id);
+          },
+        ),
+
         GoRoute(
           path: CommonPaths.devicesPath,
           builder: (final BuildContext context, final GoRouterState state) {

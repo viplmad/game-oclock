@@ -10,6 +10,7 @@ class LocationFormBloc extends FormBloc<LocationFormData, Location> {
     return Location(
       id: 'kalmdkamsd', // TODO
       name: values.name.text,
+      iconUrl: '',
     );
   }
 }

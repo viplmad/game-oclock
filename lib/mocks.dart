@@ -19,18 +19,43 @@ UserGame mockUserGame({final String? title}) {
   );
 }
 
+UserGameWithDate mockUserGameWithDate({final String? title}) {
+  return UserGameWithDate(
+    id: mockId(),
+    externalIds: [],
+    title: title ?? 'title',
+    edition: '',
+    releaseDate: DateTime.now(),
+    genres: [],
+    series: [],
+    coverUrl:
+        'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
+    status: 'played',
+    rating: Random().nextInt(11),
+    notes: 'cosas',
+    date: DateTime.now(),
+  );
+}
+
 Tag mockTag({final String? name}) {
   return Tag(id: mockId(), name: name ?? 'name');
 }
 
 Location mockLocation({final String? name}) {
-  return Location(id: mockId(), name: name ?? 'name');
+  return Location(
+    id: mockId(),
+    name: name ?? 'name',
+    iconUrl:
+        'https://pbs.twimg.com/profile_images/1856699937456607232/KyhkroJW_400x400.png',
+  );
 }
 
 LocationWithDate mockLocationWithDate({final String? name}) {
   return LocationWithDate(
     id: mockId(),
     name: name ?? 'name',
+    iconUrl:
+        'https://pbs.twimg.com/profile_images/1856699937456607232/KyhkroJW_400x400.png',
     date: DateTime.now(),
   );
 }

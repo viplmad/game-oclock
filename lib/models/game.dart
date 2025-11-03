@@ -108,6 +108,25 @@ class UserGame extends Game {
   });
 }
 
+class UserGameWithDate extends UserGame {
+  final DateTime date;
+
+  const UserGameWithDate({
+    required super.id,
+    required super.externalIds,
+    required super.title,
+    required super.edition,
+    required super.releaseDate,
+    required super.genres,
+    required super.series,
+    required super.coverUrl,
+    required super.status,
+    required super.rating,
+    required super.notes,
+    required this.date,
+  });
+}
+
 class ExternalGameId {
   final String source;
   final String id;
