@@ -125,8 +125,7 @@ class CenteredGridList<T> extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final count =
-        items.length + (trailing == null ? 0 : 1); // TODO duplicate logic
+    final count = countWithTrailing(items, trailing);
 
     return _GridList(
       items: items,
@@ -163,7 +162,7 @@ class _GridList<T> extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final count = items.length + (trailing == null ? 0 : 1);
+    final count = countWithTrailing(items, trailing);
 
     return GridView.builder(
       shrinkWrap: true,

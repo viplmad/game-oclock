@@ -8,7 +8,9 @@ class ChainOperatorType {
   static const and = ChainOperatorType._(r'And');
   static const or = ChainOperatorType._(r'Or');
 
-  static ChainOperatorType? fromJson(dynamic value) =>
+  String toJson() => value;
+
+  static ChainOperatorType? fromJson(final dynamic value) =>
       ChainOperatorTypeTypeTransformer().decode(value);
 }
 
@@ -20,7 +22,7 @@ class ChainOperatorTypeTypeTransformer {
 
   const ChainOperatorTypeTypeTransformer._();
 
-  String encode(ChainOperatorType data) => data.value;
+  String encode(final ChainOperatorType data) => data.value;
 
   /// Decodes a [dynamic value][data] to a ChainOperatorType.
   ///
@@ -30,7 +32,7 @@ class ChainOperatorTypeTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  ChainOperatorType? decode(dynamic data, {bool allowNull = true}) {
+  ChainOperatorType? decode(final dynamic data, {final bool allowNull = true}) {
     if (data != null) {
       switch (data) {
         case r'And':

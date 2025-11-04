@@ -27,59 +27,37 @@ class CustomMaterialLocalizationsDelegate
   String toString() => 'Custom $delegate';
 }
 
-class _CustomMaterialLocalizations extends MaterialLocalizations {
-  final MaterialLocalizations delegate;
+class _CustomMaterialLocalizations extends _DelegateMaterialLocalizations {
   final DateLocaleConfig dateConfig;
 
-  _CustomMaterialLocalizations(this.delegate, this.dateConfig);
+  _CustomMaterialLocalizations(super.delegate, this.dateConfig);
 
   @override
   int get firstDayOfWeekIndex => dateConfig.startingDayOfWeek != null
       ? dateConfig.startingDayOfWeek! % 7
-      : delegate.firstDayOfWeekIndex;
+      : super.firstDayOfWeekIndex;
 
   @override
   String get dateHelpText => dateConfig.dateFormat != null
       ? dateConfig.dateFormat!.pattern!
-      : delegate.dateHelpText;
+      : super.dateHelpText;
 
   @override
-  String get dateSeparator => delegate.dateSeparator;
+  String get dateSeparator => super.dateSeparator;
 
   @override
   String formatCompactDate(final DateTime date) => dateConfig.dateFormat != null
       ? dateConfig.dateFormat!.format(date)
-      : delegate.formatCompactDate(date);
+      : super.formatCompactDate(date);
 
   @override
-  String formatFullDate(final DateTime date) => delegate.formatFullDate(date);
+  String formatFullDate(final DateTime date) => super.formatFullDate(date);
 
   @override
-  String formatHour(
-    final TimeOfDay timeOfDay, {
-    final bool alwaysUse24HourFormat = false,
-  }) => delegate.formatHour(
-    timeOfDay,
-    alwaysUse24HourFormat: alwaysUse24HourFormat,
-  );
+  String formatMediumDate(final DateTime date) => super.formatMediumDate(date);
 
   @override
-  String formatMediumDate(final DateTime date) =>
-      delegate.formatMediumDate(date);
-
-  @override
-  String formatMinute(final TimeOfDay timeOfDay) =>
-      delegate.formatMinute(timeOfDay);
-
-  @override
-  String formatMonthYear(final DateTime date) => delegate.formatMonthYear(date);
-
-  @override
-  String formatShortDate(final DateTime date) => delegate.formatShortDate(date);
-
-  @override
-  String formatShortMonthDay(final DateTime date) =>
-      delegate.formatShortMonthDay(date);
+  String formatShortDate(final DateTime date) => super.formatShortDate(date);
 
   @override
   String formatTimeOfDay(
@@ -89,447 +67,508 @@ class _CustomMaterialLocalizations extends MaterialLocalizations {
       ? dateConfig.timeFormat!.format(
           DateTime(2020, 1, 1, timeOfDay.hour, timeOfDay.minute),
         )
-      : delegate.formatTimeOfDay(
+      : super.formatTimeOfDay(
           timeOfDay,
           alwaysUse24HourFormat: alwaysUse24HourFormat,
         );
 
   @override
-  String formatYear(final DateTime date) => delegate.formatYear(date);
-
-  @override
   DateTime? parseCompactDate(final String? inputString) =>
-      delegate.parseCompactDate(inputString);
+      super.parseCompactDate(inputString);
 
   @override
   TimeOfDayFormat timeOfDayFormat({final bool alwaysUse24HourFormat = false}) =>
-      delegate.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
+      super.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
+}
 
-  //
+abstract class _DelegateMaterialLocalizations extends MaterialLocalizations {
+  final MaterialLocalizations _delegate;
 
-  @override
-  String get alertDialogLabel => delegate.alertDialogLabel;
-
-  @override
-  String get anteMeridiemAbbreviation => delegate.anteMeridiemAbbreviation;
+  _DelegateMaterialLocalizations(this._delegate);
 
   @override
-  String get backButtonTooltip => delegate.backButtonTooltip;
+  String get alertDialogLabel => _delegate.alertDialogLabel;
 
   @override
-  String get bottomSheetLabel => delegate.bottomSheetLabel;
+  String get anteMeridiemAbbreviation => _delegate.anteMeridiemAbbreviation;
 
   @override
-  String get calendarModeButtonLabel => delegate.calendarModeButtonLabel;
+  String get backButtonTooltip => _delegate.backButtonTooltip;
 
   @override
-  String get cancelButtonLabel => delegate.cancelButtonLabel;
+  String get bottomSheetLabel => _delegate.bottomSheetLabel;
 
   @override
-  String get clearButtonTooltip => delegate.clearButtonTooltip;
+  String get calendarModeButtonLabel => _delegate.calendarModeButtonLabel;
 
   @override
-  String get closeButtonLabel => delegate.closeButtonLabel;
+  String get cancelButtonLabel => _delegate.cancelButtonLabel;
 
   @override
-  String get closeButtonTooltip => delegate.closeButtonTooltip;
+  String get clearButtonTooltip => _delegate.clearButtonTooltip;
 
   @override
-  String get collapsedHint => delegate.collapsedHint;
+  String get closeButtonLabel => _delegate.closeButtonLabel;
 
   @override
-  String get collapsedIconTapHint => delegate.collapsedIconTapHint;
+  String get closeButtonTooltip => _delegate.closeButtonTooltip;
 
   @override
-  String get continueButtonLabel => delegate.continueButtonLabel;
+  String get collapsedHint => _delegate.collapsedHint;
 
   @override
-  String get copyButtonLabel => delegate.copyButtonLabel;
+  String get collapsedIconTapHint => _delegate.collapsedIconTapHint;
 
   @override
-  String get currentDateLabel => delegate.currentDateLabel;
+  String get continueButtonLabel => _delegate.continueButtonLabel;
 
   @override
-  String get cutButtonLabel => delegate.cutButtonLabel;
+  String get copyButtonLabel => _delegate.copyButtonLabel;
 
   @override
-  String get dateInputLabel => delegate.dateInputLabel;
+  String get currentDateLabel => _delegate.currentDateLabel;
 
   @override
-  String get dateOutOfRangeLabel => delegate.dateOutOfRangeLabel;
+  String get cutButtonLabel => _delegate.cutButtonLabel;
 
   @override
-  String get datePickerHelpText => delegate.datePickerHelpText;
+  String get dateHelpText => _delegate.dateHelpText;
 
   @override
-  String get dateRangeEndLabel => delegate.dateRangeEndLabel;
+  String get dateInputLabel => _delegate.dateInputLabel;
 
   @override
-  String get dateRangePickerHelpText => delegate.dateRangePickerHelpText;
+  String get dateOutOfRangeLabel => _delegate.dateOutOfRangeLabel;
 
   @override
-  String get dateRangeStartLabel => delegate.dateRangeStartLabel;
+  String get datePickerHelpText => _delegate.datePickerHelpText;
 
   @override
-  String get deleteButtonTooltip => delegate.deleteButtonTooltip;
+  String get dateRangeEndLabel => _delegate.dateRangeEndLabel;
 
   @override
-  String get dialModeButtonLabel => delegate.dialModeButtonLabel;
+  String get dateRangePickerHelpText => _delegate.dateRangePickerHelpText;
 
   @override
-  String get dialogLabel => delegate.dialogLabel;
+  String get dateRangeStartLabel => _delegate.dateRangeStartLabel;
 
   @override
-  String get drawerLabel => delegate.drawerLabel;
+  String get dateSeparator => _delegate.dateSeparator;
 
   @override
-  String get expandedHint => delegate.expandedHint;
+  String get deleteButtonTooltip => _delegate.deleteButtonTooltip;
 
   @override
-  String get expandedIconTapHint => delegate.expandedIconTapHint;
+  String get dialModeButtonLabel => _delegate.dialModeButtonLabel;
 
   @override
-  String get expansionTileCollapsedHint => delegate.expansionTileCollapsedHint;
+  String get dialogLabel => _delegate.dialogLabel;
+
+  @override
+  String get drawerLabel => _delegate.drawerLabel;
+
+  @override
+  String get expandedHint => _delegate.expandedHint;
+
+  @override
+  String get expandedIconTapHint => _delegate.expandedIconTapHint;
+
+  @override
+  String get expansionTileCollapsedHint => _delegate.expansionTileCollapsedHint;
 
   @override
   String get expansionTileCollapsedTapHint =>
-      delegate.expansionTileCollapsedTapHint;
+      _delegate.expansionTileCollapsedTapHint;
 
   @override
-  String get expansionTileExpandedHint => delegate.expansionTileExpandedHint;
+  String get expansionTileExpandedHint => _delegate.expansionTileExpandedHint;
 
   @override
   String get expansionTileExpandedTapHint =>
-      delegate.expansionTileExpandedTapHint;
+      _delegate.expansionTileExpandedTapHint;
 
   @override
-  String get firstPageTooltip => delegate.firstPageTooltip;
+  int get firstDayOfWeekIndex => _delegate.firstDayOfWeekIndex;
 
   @override
-  String get hideAccountsLabel => delegate.hideAccountsLabel;
+  String get firstPageTooltip => _delegate.firstPageTooltip;
 
   @override
-  String get inputDateModeButtonLabel => delegate.inputDateModeButtonLabel;
+  String get hideAccountsLabel => _delegate.hideAccountsLabel;
 
   @override
-  String get inputTimeModeButtonLabel => delegate.inputTimeModeButtonLabel;
+  String get inputDateModeButtonLabel => _delegate.inputDateModeButtonLabel;
 
   @override
-  String get invalidDateFormatLabel => delegate.invalidDateFormatLabel;
+  String get inputTimeModeButtonLabel => _delegate.inputTimeModeButtonLabel;
 
   @override
-  String get invalidDateRangeLabel => delegate.invalidDateRangeLabel;
+  String get invalidDateFormatLabel => _delegate.invalidDateFormatLabel;
 
   @override
-  String get invalidTimeLabel => delegate.invalidTimeLabel;
+  String get invalidDateRangeLabel => _delegate.invalidDateRangeLabel;
 
   @override
-  String get keyboardKeyAlt => delegate.keyboardKeyAlt;
+  String get invalidTimeLabel => _delegate.invalidTimeLabel;
 
   @override
-  String get keyboardKeyAltGraph => delegate.keyboardKeyAltGraph;
+  String get keyboardKeyAlt => _delegate.keyboardKeyAlt;
 
   @override
-  String get keyboardKeyBackspace => delegate.keyboardKeyBackspace;
+  String get keyboardKeyAltGraph => _delegate.keyboardKeyAltGraph;
 
   @override
-  String get keyboardKeyCapsLock => delegate.keyboardKeyCapsLock;
+  String get keyboardKeyBackspace => _delegate.keyboardKeyBackspace;
 
   @override
-  String get keyboardKeyChannelDown => delegate.keyboardKeyChannelDown;
+  String get keyboardKeyCapsLock => _delegate.keyboardKeyCapsLock;
 
   @override
-  String get keyboardKeyChannelUp => delegate.keyboardKeyChannelUp;
+  String get keyboardKeyChannelDown => _delegate.keyboardKeyChannelDown;
 
   @override
-  String get keyboardKeyControl => delegate.keyboardKeyControl;
+  String get keyboardKeyChannelUp => _delegate.keyboardKeyChannelUp;
 
   @override
-  String get keyboardKeyDelete => delegate.keyboardKeyDelete;
+  String get keyboardKeyControl => _delegate.keyboardKeyControl;
 
   @override
-  String get keyboardKeyEject => delegate.keyboardKeyEject;
+  String get keyboardKeyDelete => _delegate.keyboardKeyDelete;
 
   @override
-  String get keyboardKeyEnd => delegate.keyboardKeyEnd;
+  String get keyboardKeyEject => _delegate.keyboardKeyEject;
 
   @override
-  String get keyboardKeyEscape => delegate.keyboardKeyEscape;
+  String get keyboardKeyEnd => _delegate.keyboardKeyEnd;
 
   @override
-  String get keyboardKeyFn => delegate.keyboardKeyFn;
+  String get keyboardKeyEscape => _delegate.keyboardKeyEscape;
 
   @override
-  String get keyboardKeyHome => delegate.keyboardKeyHome;
+  String get keyboardKeyFn => _delegate.keyboardKeyFn;
 
   @override
-  String get keyboardKeyInsert => delegate.keyboardKeyInsert;
+  String get keyboardKeyHome => _delegate.keyboardKeyHome;
 
   @override
-  String get keyboardKeyMeta => delegate.keyboardKeyMeta;
+  String get keyboardKeyInsert => _delegate.keyboardKeyInsert;
 
   @override
-  String get keyboardKeyMetaMacOs => delegate.keyboardKeyMetaMacOs;
+  String get keyboardKeyMeta => _delegate.keyboardKeyMeta;
 
   @override
-  String get keyboardKeyMetaWindows => delegate.keyboardKeyMetaWindows;
+  String get keyboardKeyMetaMacOs => _delegate.keyboardKeyMetaMacOs;
 
   @override
-  String get keyboardKeyNumLock => delegate.keyboardKeyNumLock;
+  String get keyboardKeyMetaWindows => _delegate.keyboardKeyMetaWindows;
 
   @override
-  String get keyboardKeyNumpad0 => delegate.keyboardKeyNumpad0;
+  String get keyboardKeyNumLock => _delegate.keyboardKeyNumLock;
 
   @override
-  String get keyboardKeyNumpad1 => delegate.keyboardKeyNumpad1;
+  String get keyboardKeyNumpad0 => _delegate.keyboardKeyNumpad0;
 
   @override
-  String get keyboardKeyNumpad2 => delegate.keyboardKeyNumpad2;
+  String get keyboardKeyNumpad1 => _delegate.keyboardKeyNumpad1;
 
   @override
-  String get keyboardKeyNumpad3 => delegate.keyboardKeyNumpad3;
+  String get keyboardKeyNumpad2 => _delegate.keyboardKeyNumpad2;
 
   @override
-  String get keyboardKeyNumpad4 => delegate.keyboardKeyNumpad4;
+  String get keyboardKeyNumpad3 => _delegate.keyboardKeyNumpad3;
 
   @override
-  String get keyboardKeyNumpad5 => delegate.keyboardKeyNumpad5;
+  String get keyboardKeyNumpad4 => _delegate.keyboardKeyNumpad4;
 
   @override
-  String get keyboardKeyNumpad6 => delegate.keyboardKeyNumpad6;
+  String get keyboardKeyNumpad5 => _delegate.keyboardKeyNumpad5;
 
   @override
-  String get keyboardKeyNumpad7 => delegate.keyboardKeyNumpad7;
+  String get keyboardKeyNumpad6 => _delegate.keyboardKeyNumpad6;
 
   @override
-  String get keyboardKeyNumpad8 => delegate.keyboardKeyNumpad8;
+  String get keyboardKeyNumpad7 => _delegate.keyboardKeyNumpad7;
 
   @override
-  String get keyboardKeyNumpad9 => delegate.keyboardKeyNumpad9;
+  String get keyboardKeyNumpad8 => _delegate.keyboardKeyNumpad8;
 
   @override
-  String get keyboardKeyNumpadAdd => delegate.keyboardKeyNumpadAdd;
+  String get keyboardKeyNumpad9 => _delegate.keyboardKeyNumpad9;
 
   @override
-  String get keyboardKeyNumpadComma => delegate.keyboardKeyNumpadComma;
+  String get keyboardKeyNumpadAdd => _delegate.keyboardKeyNumpadAdd;
 
   @override
-  String get keyboardKeyNumpadDecimal => delegate.keyboardKeyNumpadDecimal;
+  String get keyboardKeyNumpadComma => _delegate.keyboardKeyNumpadComma;
 
   @override
-  String get keyboardKeyNumpadDivide => delegate.keyboardKeyNumpadDivide;
+  String get keyboardKeyNumpadDecimal => _delegate.keyboardKeyNumpadDecimal;
 
   @override
-  String get keyboardKeyNumpadEnter => delegate.keyboardKeyNumpadEnter;
+  String get keyboardKeyNumpadDivide => _delegate.keyboardKeyNumpadDivide;
 
   @override
-  String get keyboardKeyNumpadEqual => delegate.keyboardKeyNumpadEqual;
+  String get keyboardKeyNumpadEnter => _delegate.keyboardKeyNumpadEnter;
 
   @override
-  String get keyboardKeyNumpadMultiply => delegate.keyboardKeyNumpadMultiply;
+  String get keyboardKeyNumpadEqual => _delegate.keyboardKeyNumpadEqual;
 
   @override
-  String get keyboardKeyNumpadParenLeft => delegate.keyboardKeyNumpadParenLeft;
+  String get keyboardKeyNumpadMultiply => _delegate.keyboardKeyNumpadMultiply;
+
+  @override
+  String get keyboardKeyNumpadParenLeft => _delegate.keyboardKeyNumpadParenLeft;
 
   @override
   String get keyboardKeyNumpadParenRight =>
-      delegate.keyboardKeyNumpadParenRight;
+      _delegate.keyboardKeyNumpadParenRight;
 
   @override
-  String get keyboardKeyNumpadSubtract => delegate.keyboardKeyNumpadSubtract;
+  String get keyboardKeyNumpadSubtract => _delegate.keyboardKeyNumpadSubtract;
 
   @override
-  String get keyboardKeyPageDown => delegate.keyboardKeyPageDown;
+  String get keyboardKeyPageDown => _delegate.keyboardKeyPageDown;
 
   @override
-  String get keyboardKeyPageUp => delegate.keyboardKeyPageUp;
+  String get keyboardKeyPageUp => _delegate.keyboardKeyPageUp;
 
   @override
-  String get keyboardKeyPower => delegate.keyboardKeyPower;
+  String get keyboardKeyPower => _delegate.keyboardKeyPower;
 
   @override
-  String get keyboardKeyPowerOff => delegate.keyboardKeyPowerOff;
+  String get keyboardKeyPowerOff => _delegate.keyboardKeyPowerOff;
 
   @override
-  String get keyboardKeyPrintScreen => delegate.keyboardKeyPrintScreen;
+  String get keyboardKeyPrintScreen => _delegate.keyboardKeyPrintScreen;
 
   @override
-  String get keyboardKeyScrollLock => delegate.keyboardKeyScrollLock;
+  String get keyboardKeyScrollLock => _delegate.keyboardKeyScrollLock;
 
   @override
-  String get keyboardKeySelect => delegate.keyboardKeySelect;
+  String get keyboardKeySelect => _delegate.keyboardKeySelect;
 
   @override
-  String get keyboardKeyShift => delegate.keyboardKeyShift;
+  String get keyboardKeyShift => _delegate.keyboardKeyShift;
 
   @override
-  String get keyboardKeySpace => delegate.keyboardKeySpace;
+  String get keyboardKeySpace => _delegate.keyboardKeySpace;
 
   @override
-  String get lastPageTooltip => delegate.lastPageTooltip;
+  String get lastPageTooltip => _delegate.lastPageTooltip;
 
   @override
-  String get licensesPageTitle => delegate.licensesPageTitle;
+  String get licensesPageTitle => _delegate.licensesPageTitle;
 
   @override
-  String get lookUpButtonLabel => delegate.lookUpButtonLabel;
+  String get lookUpButtonLabel => _delegate.lookUpButtonLabel;
 
   @override
-  String get menuBarMenuLabel => delegate.menuBarMenuLabel;
+  String get menuBarMenuLabel => _delegate.menuBarMenuLabel;
 
   @override
-  String get menuDismissLabel => delegate.menuDismissLabel;
+  String get menuDismissLabel => _delegate.menuDismissLabel;
 
   @override
-  String get modalBarrierDismissLabel => delegate.modalBarrierDismissLabel;
+  String get modalBarrierDismissLabel => _delegate.modalBarrierDismissLabel;
 
   @override
-  String get moreButtonTooltip => delegate.moreButtonTooltip;
+  String get moreButtonTooltip => _delegate.moreButtonTooltip;
 
   @override
-  String get nextMonthTooltip => delegate.nextMonthTooltip;
+  List<String> get narrowWeekdays => _delegate.narrowWeekdays;
 
   @override
-  String get nextPageTooltip => delegate.nextPageTooltip;
+  String get nextMonthTooltip => _delegate.nextMonthTooltip;
 
   @override
-  String get okButtonLabel => delegate.okButtonLabel;
+  String get nextPageTooltip => _delegate.nextPageTooltip;
 
   @override
-  String get openAppDrawerTooltip => delegate.openAppDrawerTooltip;
+  String get okButtonLabel => _delegate.okButtonLabel;
 
   @override
-  String get pasteButtonLabel => delegate.pasteButtonLabel;
+  String get openAppDrawerTooltip => _delegate.openAppDrawerTooltip;
 
   @override
-  String get popupMenuLabel => delegate.popupMenuLabel;
+  String get pasteButtonLabel => _delegate.pasteButtonLabel;
 
   @override
-  String get postMeridiemAbbreviation => delegate.postMeridiemAbbreviation;
+  String get popupMenuLabel => _delegate.popupMenuLabel;
 
   @override
-  String get previousMonthTooltip => delegate.previousMonthTooltip;
+  String get postMeridiemAbbreviation => _delegate.postMeridiemAbbreviation;
 
   @override
-  String get previousPageTooltip => delegate.previousPageTooltip;
+  String get previousMonthTooltip => _delegate.previousMonthTooltip;
+
+  @override
+  String get previousPageTooltip => _delegate.previousPageTooltip;
 
   @override
   String get refreshIndicatorSemanticLabel =>
-      delegate.refreshIndicatorSemanticLabel;
+      _delegate.refreshIndicatorSemanticLabel;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemDown => delegate.reorderItemDown;
+  String get reorderItemDown => _delegate.reorderItemDown;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemLeft => delegate.reorderItemLeft;
+  String get reorderItemLeft => _delegate.reorderItemLeft;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemRight => delegate.reorderItemRight;
+  String get reorderItemRight => _delegate.reorderItemRight;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemToEnd => delegate.reorderItemToEnd;
+  String get reorderItemToEnd => _delegate.reorderItemToEnd;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemToStart => delegate.reorderItemToStart;
+  String get reorderItemToStart => _delegate.reorderItemToStart;
 
   @override
   // ignore: deprecated_member_use
-  String get reorderItemUp => delegate.reorderItemUp;
+  String get reorderItemUp => _delegate.reorderItemUp;
 
   @override
-  String get rowsPerPageTitle => delegate.rowsPerPageTitle;
+  String get rowsPerPageTitle => _delegate.rowsPerPageTitle;
 
   @override
-  String get saveButtonLabel => delegate.saveButtonLabel;
+  String get saveButtonLabel => _delegate.saveButtonLabel;
 
   @override
-  String get scanTextButtonLabel => delegate.scanTextButtonLabel;
+  String get scanTextButtonLabel => _delegate.scanTextButtonLabel;
 
   @override
-  String get scrimLabel => delegate.scrimLabel;
+  String get scrimLabel => _delegate.scrimLabel;
 
   @override
-  ScriptCategory get scriptCategory => delegate.scriptCategory;
+  ScriptCategory get scriptCategory => _delegate.scriptCategory;
 
   @override
-  String get searchFieldLabel => delegate.searchFieldLabel;
+  String get searchFieldLabel => _delegate.searchFieldLabel;
 
   @override
-  String get searchWebButtonLabel => delegate.searchWebButtonLabel;
+  String get searchWebButtonLabel => _delegate.searchWebButtonLabel;
 
   @override
-  String get selectAllButtonLabel => delegate.selectAllButtonLabel;
+  String get selectAllButtonLabel => _delegate.selectAllButtonLabel;
 
   @override
-  String get selectYearSemanticsLabel => delegate.selectYearSemanticsLabel;
+  String get selectYearSemanticsLabel => _delegate.selectYearSemanticsLabel;
 
   @override
-  String get selectedDateLabel => delegate.selectedDateLabel;
+  String get selectedDateLabel => _delegate.selectedDateLabel;
 
   @override
-  String get shareButtonLabel => delegate.shareButtonLabel;
+  String get shareButtonLabel => _delegate.shareButtonLabel;
 
   @override
-  String get showAccountsLabel => delegate.showAccountsLabel;
+  String get showAccountsLabel => _delegate.showAccountsLabel;
 
   @override
-  String get showMenuTooltip => delegate.showMenuTooltip;
+  String get showMenuTooltip => _delegate.showMenuTooltip;
 
   @override
-  String get signedInLabel => delegate.signedInLabel;
+  String get signedInLabel => _delegate.signedInLabel;
 
   @override
-  String get timePickerDialHelpText => delegate.timePickerDialHelpText;
+  String get timePickerDialHelpText => _delegate.timePickerDialHelpText;
 
   @override
-  String get timePickerHourLabel => delegate.timePickerHourLabel;
+  String get timePickerHourLabel => _delegate.timePickerHourLabel;
 
   @override
   String get timePickerHourModeAnnouncement =>
-      delegate.timePickerHourModeAnnouncement;
+      _delegate.timePickerHourModeAnnouncement;
 
   @override
-  String get timePickerInputHelpText => delegate.timePickerInputHelpText;
+  String get timePickerInputHelpText => _delegate.timePickerInputHelpText;
 
   @override
-  String get timePickerMinuteLabel => delegate.timePickerMinuteLabel;
+  String get timePickerMinuteLabel => _delegate.timePickerMinuteLabel;
 
   @override
   String get timePickerMinuteModeAnnouncement =>
-      delegate.timePickerMinuteModeAnnouncement;
+      _delegate.timePickerMinuteModeAnnouncement;
 
   @override
-  String get unspecifiedDate => delegate.unspecifiedDate;
+  String get unspecifiedDate => _delegate.unspecifiedDate;
 
   @override
-  String get unspecifiedDateRange => delegate.unspecifiedDateRange;
+  String get unspecifiedDateRange => _delegate.unspecifiedDateRange;
 
   @override
-  String get viewLicensesButtonLabel => delegate.viewLicensesButtonLabel;
+  String get viewLicensesButtonLabel => _delegate.viewLicensesButtonLabel;
 
   @override
   String aboutListTileTitle(final String applicationName) =>
-      delegate.aboutListTileTitle(applicationName);
+      _delegate.aboutListTileTitle(applicationName);
 
   @override
   String dateRangeEndDateSemanticLabel(final String formattedDate) =>
-      delegate.dateRangeEndDateSemanticLabel(formattedDate);
+      _delegate.dateRangeEndDateSemanticLabel(formattedDate);
 
   @override
   String dateRangeStartDateSemanticLabel(final String formattedDate) =>
-      delegate.dateRangeStartDateSemanticLabel(formattedDate);
+      _delegate.dateRangeStartDateSemanticLabel(formattedDate);
 
   @override
-  String formatDecimal(final int number) => delegate.formatDecimal(number);
+  String formatDecimal(final int number) => _delegate.formatDecimal(number);
+
+  @override
+  String formatCompactDate(final DateTime date) =>
+      _delegate.formatCompactDate(date);
+
+  @override
+  String formatFullDate(final DateTime date) => _delegate.formatFullDate(date);
+
+  @override
+  String formatHour(
+    final TimeOfDay timeOfDay, {
+    final bool alwaysUse24HourFormat = false,
+  }) => _delegate.formatHour(
+    timeOfDay,
+    alwaysUse24HourFormat: alwaysUse24HourFormat,
+  );
+
+  @override
+  String formatMediumDate(final DateTime date) =>
+      _delegate.formatMediumDate(date);
+
+  @override
+  String formatMinute(final TimeOfDay timeOfDay) =>
+      _delegate.formatMinute(timeOfDay);
+
+  @override
+  String formatMonthYear(final DateTime date) =>
+      _delegate.formatMonthYear(date);
+
+  @override
+  String formatShortDate(final DateTime date) =>
+      _delegate.formatShortDate(date);
+
+  @override
+  String formatShortMonthDay(final DateTime date) =>
+      _delegate.formatShortMonthDay(date);
+
+  @override
+  String formatTimeOfDay(
+    final TimeOfDay timeOfDay, {
+    final bool alwaysUse24HourFormat = false,
+  }) => _delegate.formatTimeOfDay(
+    timeOfDay,
+    alwaysUse24HourFormat: alwaysUse24HourFormat,
+  );
+
+  @override
+  String formatYear(final DateTime date) => _delegate.formatYear(date);
 
   @override
   String licensesPackageDetailText(final int licenseCount) =>
-      delegate.licensesPackageDetailText(licenseCount);
+      _delegate.licensesPackageDetailText(licenseCount);
 
   @override
   String pageRowsInfoTitle(
@@ -537,7 +576,7 @@ class _CustomMaterialLocalizations extends MaterialLocalizations {
     final int lastRow,
     final int rowCount,
     final bool rowCountIsApproximate,
-  ) => delegate.pageRowsInfoTitle(
+  ) => _delegate.pageRowsInfoTitle(
     firstRow,
     lastRow,
     rowCount,
@@ -545,21 +584,26 @@ class _CustomMaterialLocalizations extends MaterialLocalizations {
   );
 
   @override
-  List<String> get narrowWeekdays => delegate.narrowWeekdays;
+  DateTime? parseCompactDate(final String? inputString) =>
+      _delegate.parseCompactDate(inputString);
 
   @override
   String remainingTextFieldCharacterCount(final int remaining) =>
-      delegate.remainingTextFieldCharacterCount(remaining);
+      _delegate.remainingTextFieldCharacterCount(remaining);
 
   @override
   String scrimOnTapHint(final String modalRouteContentName) =>
-      delegate.scrimOnTapHint(modalRouteContentName);
+      _delegate.scrimOnTapHint(modalRouteContentName);
 
   @override
   String selectedRowCountTitle(final int selectedRowCount) =>
-      delegate.selectedRowCountTitle(selectedRowCount);
+      _delegate.selectedRowCountTitle(selectedRowCount);
 
   @override
   String tabLabel({required final int tabIndex, required final int tabCount}) =>
-      delegate.tabLabel(tabIndex: tabIndex, tabCount: tabCount);
+      _delegate.tabLabel(tabIndex: tabIndex, tabCount: tabCount);
+
+  @override
+  TimeOfDayFormat timeOfDayFormat({final bool alwaysUse24HourFormat = false}) =>
+      _delegate.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
 }

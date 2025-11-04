@@ -14,6 +14,9 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
+int countWithTrailing(final List items, final Widget? trailing) =>
+    items.length + (trailing == null ? 0 : 1);
+
 abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const PaginatedListBuilder({

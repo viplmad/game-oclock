@@ -17,7 +17,7 @@ final class ListSearch {
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'name'] = name;
-    json[r'search'] = search;
+    json[r'search'] = search.toJson();
     return json;
   }
 

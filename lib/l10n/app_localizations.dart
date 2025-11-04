@@ -556,6 +556,12 @@ abstract class AppLocalizations {
   /// **'Discard changes'**
   String get discardChangesLabel;
 
+  /// No description provided for @allLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allLabel;
+
   /// No description provided for @emptySessionsOnSelectedDayMessage.
   ///
   /// In en, this message translates to:

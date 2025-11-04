@@ -11,7 +11,7 @@ class SortDTO {
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'field'] = field;
-    json[r'order'] = order;
+    json[r'order'] = order.toJson();
     return json;
   }
 

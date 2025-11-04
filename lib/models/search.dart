@@ -36,7 +36,9 @@ class SearchDTO {
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     if (filter != null) {
-      json[r'filter'] = filter;
+      json[r'filter'] = filter!
+          .map((final e) => e.toJson())
+          .toList(growable: false);
     }
     if (page != null) {
       json[r'page'] = page;
@@ -45,7 +47,9 @@ class SearchDTO {
       json[r'size'] = size;
     }
     if (sort != null) {
-      json[r'sort'] = sort;
+      json[r'sort'] = sort!
+          .map((final e) => e.toJson())
+          .toList(growable: false);
     }
     return json;
   }
@@ -56,8 +60,8 @@ class SearchDTO {
 
       return SearchDTO(
         filter: FilterDTO.listFromJson(json[r'filter']),
-        page: int.tryParse(json[r'page']),
-        size: int.tryParse(json[r'size']),
+        page: int.tryParse(json[r'page'] ?? ''),
+        size: int.tryParse(json[r'size'] ?? ''),
         sort: SortDTO.listFromJson(json[r'sort']),
       );
     }

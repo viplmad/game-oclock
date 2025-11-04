@@ -242,6 +242,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardChangesLabel => 'Discard changes';
 
   @override
+  String get allLabel => 'All';
+
+  @override
   String get emptySessionsOnSelectedDayMessage => 'No sessions on selected day';
 
   @override

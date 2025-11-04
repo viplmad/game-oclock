@@ -77,7 +77,9 @@ class OperatorType {
   static const contains = OperatorType._(r'Contains');
   static const notContains = OperatorType._(r'NotContains');
 
-  static OperatorType? fromJson(dynamic value) =>
+  String toJson() => value;
+
+  static OperatorType? fromJson(final dynamic value) =>
       OperatorTypeTypeTransformer().decode(value);
 }
 
@@ -89,7 +91,7 @@ class OperatorTypeTypeTransformer {
 
   const OperatorTypeTypeTransformer._();
 
-  String encode(OperatorType data) => data.value;
+  String encode(final OperatorType data) => data.value;
 
   /// Decodes a [dynamic value][data] to a OperatorType.
   ///
@@ -99,7 +101,7 @@ class OperatorTypeTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  OperatorType? decode(dynamic data, {bool allowNull = true}) {
+  OperatorType? decode(final dynamic data, {final bool allowNull = true}) {
     if (data != null) {
       switch (data) {
         case r'Eq':

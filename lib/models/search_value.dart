@@ -6,13 +6,15 @@ class SearchValue {
 
   List<String>? values;
 
-  dynamic toJson() {
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
     if (value != null) {
-      return value;
-    } else if (values != null) {
-      return values;
+      json[r'value'] = value;
     }
-    return null;
+    if (values != null) {
+      json[r'values'] = values;
+    }
+    return json;
   }
 
   static SearchValue? fromJson(final dynamic value) {
@@ -20,9 +22,9 @@ class SearchValue {
       final json = value.cast<String, dynamic>();
 
       return SearchValue(
-        value: json[r'Value'],
-        values: json[r'Values'] is List
-            ? (json[r'Values'] as List).cast<String>()
+        value: json[r'value'],
+        values: json[r'values'] is List
+            ? (json[r'values'] as List).cast<String>()
             : const [],
       );
     }

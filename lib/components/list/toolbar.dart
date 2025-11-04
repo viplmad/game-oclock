@@ -146,15 +146,23 @@ class ListFilterToolbar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final filter = search.search.filter ?? [];
+    final sort = search.search.sort ?? [];
+
     return ListTile(
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         spacing: 4.0,
         children: [
-          Text(search.name),
-          ..._buildFilterChips(context, search.search.filter ?? []),
-          ..._buildSortChips(context, search.search.sort ?? []),
+          filter.isEmpty && sort.isEmpty
+              ? Text(
+                  context.localize().allLabel,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                )
+              : Text(search.name),
+          ..._buildFilterChips(context, filter),
+          ..._buildSortChips(context, sort),
         ],
       ),
       trailing: CommonIcons.down,

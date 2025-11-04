@@ -63,12 +63,11 @@ class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
   const ReorderableListBuilder({
     super.key,
     required super.itemBuilder,
-    this.borderRadius,
+    super.borderRadius,
     required this.onReorder,
     this.readOnly = false,
   });
 
-  final BorderRadiusGeometry? borderRadius;
   final ReorderCallback onReorder;
   final bool readOnly;
 
@@ -110,7 +109,7 @@ class TileList<T> extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final count = items.length + (trailing == null ? 0 : 1);
+    final count = countWithTrailing(items, trailing);
 
     return ListView.builder(
       padding: EdgeInsets.zero,
@@ -159,7 +158,7 @@ class ReorderableTileList<T> extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final count = items.length + (trailing == null ? 0 : 1);
+    final count = countWithTrailing(items, trailing);
 
     return ReorderableListView.builder(
       buildDefaultDragHandles: !readOnly,

@@ -76,6 +76,7 @@
   "modifiedLabel": "Modified",
   "stayLabel": "Stay",
   "discardChangesLabel": "Discard changes",
+  "allLabel": "All",
   "emptySessionsOnSelectedDayMessage": "No sessions on selected day",
   "showLabel": "Show",
   "hideLabel": "Hide",

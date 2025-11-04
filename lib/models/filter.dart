@@ -19,12 +19,12 @@ class FilterDTO {
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.chainOperator != null) {
-      json[r'chain_operator'] = this.chainOperator;
+    if (chainOperator != null) {
+      json[r'chain_operator'] = chainOperator!.toJson();
     }
-    json[r'field'] = this.field;
-    json[r'operator'] = this.operator_;
-    json[r'value'] = this.value;
+    json[r'field'] = field;
+    json[r'operator'] = operator_.toJson();
+    json[r'value'] = value.toJson();
     return json;
   }
 
