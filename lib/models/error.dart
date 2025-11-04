@@ -7,3 +7,4 @@ final class ErrorDTO {
 }
 
 const errorCodeInvalidForm = 'INVALID_FORM';
+const errorCodeNotFound = 'NOT_FOUND';

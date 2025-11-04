@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        ActionStored,
         ListLoaded,
         ListReloaded,
-        ListStyleBloc,
+        ListStyleGetBloc,
+        ListStyleSaveBloc,
         LocationAvailableListBloc,
         UserGameDeleteBloc,
         UserGameListBloc,
@@ -45,10 +45,16 @@ class UserGameListPage extends StatelessWidget {
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListStyleBloc(
+          create: (_) => ListStyleGetBloc(
             space: _space,
             service: RepositoryProvider.of(context),
-          )..add(const ActionStored()),
+          )..add(ActionStarted.empty()),
+        ),
+        BlocProvider(
+          create: (_) => ListStyleSaveBloc(
+            space: _space,
+            service: RepositoryProvider.of(context),
+          ),
         ),
       ],
       child: const _UserGameListDetailBuilder(),

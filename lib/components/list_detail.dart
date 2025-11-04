@@ -9,7 +9,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListQuicksearchChanged,
         ListReloaded,
-        ListStyleBloc,
+        ListStyleGetBloc,
+        ListStyleSaveBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
@@ -60,21 +61,30 @@ class ListDetailBuilder<
   Widget build(final BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
 
-    return BlocListener<SB, ActionState<T?>>(
-      listener: (final context, final selectState) {
-        final selectedData = (selectState is ActionFinal<T?, T?>)
-            ? selectState.data
-            : null;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SB, ActionState<T?>>(
+          listener: (final context, final state) {
+            final data = (state is ActionFinal<T?, T?>) ? state.data : null;
 
-        // Allow minimized if selected
-        context.read<MinimizedLayoutBloc>().add(
-          ActionStarted(data: selectedData != null),
-        );
-      },
-      child: BlocBuilder<ListStyleBloc, ActionState<ListStyle>>(
+            // Allow minimized if selected
+            context.read<MinimizedLayoutBloc>().add(
+              ActionStarted(data: data != null),
+            );
+          },
+        ),
+        BlocListener<ListStyleSaveBloc, ActionState<ListStyle>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<ListStyle, ListStyle>) {
+              context.read<ListStyleGetBloc>().add(ActionStarted.empty());
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
           final selectedStyle =
-              (listStyleState is ActionFinal<ListStyle, ListStyle>)
+              (listStyleState is ActionFinal<ListStyle, void>)
               ? listStyleState.data
               : ListStyle.tile;
 
@@ -172,7 +182,7 @@ class ListDetailBuilder<
             ],
             selected: {selectedStyle},
             onSelectionChanged: (final newSelection) {
-              context.read<ListStyleBloc>().add(
+              context.read<ListStyleSaveBloc>().add(
                 ActionStarted(data: newSelection.first),
               );
             },

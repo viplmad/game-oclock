@@ -1,21 +1,44 @@
-import 'package:game_oclock/models/models.dart' show ListStyle;
+import 'package:game_oclock/models/models.dart'
+    show ErrorDTO, ListStyle, errorCodeNotFound;
 import 'package:game_oclock/services/services.dart' show ListStyleService;
 
-import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
+import '../action.dart'
+    show
+        ActionFailure,
+        ActionFinal,
+        ActionSuccess,
+        IdentityActionBloc,
+        ProducerActionBloc;
 
-class ListStyleBloc extends IdentityActionBloc<ListStyle> {
-  ListStyleBloc({required this.service, required this.space});
+class ListStyleGetBloc extends ProducerActionBloc<ListStyle> {
+  ListStyleGetBloc({required this.service, required this.space});
 
   final ListStyleService service;
   final String space;
 
   @override
-  Future<ActionFinal<ListStyle, ListStyle>?> doStored(
+  Future<ActionFinal<ListStyle, void>> doAction(
+    final void event,
     final ListStyle? lastData,
   ) async {
     final data = await service.get(space);
-    return data == null ? null : ActionSuccess(data: data, event: data);
+    return data == null
+        ? ActionFailure.producer(
+            const ErrorDTO(
+              code: errorCodeNotFound,
+              message: 'No ListStyle saved',
+            ),
+            ListStyle.tile,
+          )
+        : ActionSuccess.producer(data);
   }
+}
+
+class ListStyleSaveBloc extends IdentityActionBloc<ListStyle> {
+  ListStyleSaveBloc({required this.service, required this.space});
+
+  final ListStyleService service;
+  final String space;
 
   @override
   Future<ActionFinal<ListStyle, ListStyle>> doAction(
