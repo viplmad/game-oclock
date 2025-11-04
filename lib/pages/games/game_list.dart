@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        ActionStored,
         ListLoaded,
         ListReloaded,
         ListStyleBloc,
@@ -20,6 +21,8 @@ import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
+
+const String _space = 'game';
 
 class UserGameListPage extends StatelessWidget {
   const UserGameListPage({super.key});
@@ -42,12 +45,10 @@ class UserGameListPage extends StatelessWidget {
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListStyleBloc()
-            ..add(
-              const ActionStarted(
-                data: ListStyle.grid,
-              ), // TODO get from localstorage
-            ),
+          create: (_) => ListStyleBloc(
+            space: _space,
+            service: RepositoryProvider.of(context),
+          )..add(const ActionStored()),
         ),
       ],
       child: const _UserGameListDetailBuilder(),
@@ -66,7 +67,7 @@ class _UserGameListDetailBuilder extends StatelessWidget {
       UserGameListBloc
     >(
       title: context.localize().gamesTitle,
-      searchSpace: 'game',
+      searchSpace: _space,
       createFormBuilder: ([final quicksearch]) =>
           UserGameCreateForm(initialTitle: quicksearch),
       detailBuilder: (final context, final data, final onClosed) {

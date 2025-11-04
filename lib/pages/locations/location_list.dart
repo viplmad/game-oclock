@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        ActionStored,
         ListLoaded,
         ListReloaded,
         ListStyleBloc,
@@ -13,11 +14,13 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, ListStyle, Location, SearchDTO;
-import 'package:game_oclock/pages/locations/location_detail.dart'
-    show LocationDetail;
 import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/list_item/location_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+
+import 'location_detail.dart';
+
+const String _space = 'location';
 
 class LocationListPage extends StatelessWidget {
   const LocationListPage({super.key});
@@ -40,12 +43,10 @@ class LocationListPage extends StatelessWidget {
               LocationDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListStyleBloc()
-            ..add(
-              const ActionStarted(
-                data: ListStyle.grid,
-              ), // TODO get from localstorage
-            ),
+          create: (_) => ListStyleBloc(
+            space: _space,
+            service: RepositoryProvider.of(context),
+          )..add(const ActionStored()),
         ),
       ],
       child: const _LocationListDetailBuilder(),
@@ -64,7 +65,7 @@ class _LocationListDetailBuilder extends StatelessWidget {
       LocationListBloc
     >(
       title: context.localize().locationsTitle,
-      searchSpace: 'location',
+      searchSpace: _space,
       createFormBuilder: ([final quicksearch]) =>
           LocationCreateForm(initialName: quicksearch),
       detailBuilder: (final context, final data, final onClosed) {

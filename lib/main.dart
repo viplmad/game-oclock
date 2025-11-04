@@ -23,6 +23,7 @@ import 'package:game_oclock/services/services.dart'
         GameService,
         GameSessionService,
         IGDBService,
+        ListStyleService,
         LocationService,
         LoginService,
         SearchService,
@@ -71,6 +72,7 @@ class GameOClockApp extends StatelessWidget {
           create: (_) => GameSessionService(),
         ),
         RepositoryProvider<SearchService>(create: (_) => SearchService()),
+        RepositoryProvider(create: (_) => ListStyleService()),
       ],
       child: MultiBlocProvider(
         providers: [

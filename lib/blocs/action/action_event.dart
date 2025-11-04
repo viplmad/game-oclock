@@ -4,6 +4,13 @@ sealed class ActionEvent<T> extends Equatable {
   const ActionEvent();
 }
 
+final class ActionStored<T> extends ActionEvent<T> {
+  const ActionStored();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class ActionStarted<T> extends ActionEvent<T> {
   final T data;
 

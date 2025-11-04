@@ -8,11 +8,15 @@ import 'action.dart'
         ActionInitial,
         ActionRestarted,
         ActionStarted,
-        ActionState;
+        ActionState,
+        ActionStored;
 
 abstract class FunctionActionBloc<E, S>
     extends Bloc<ActionEvent<E>, ActionState<S>> {
   FunctionActionBloc() : super(ActionInitial<S>()) {
+    on<ActionStored<E>>(
+      (final event, final emit) async => await onActionStored(emit),
+    );
     on<ActionStarted<E>>(
       (final event, final emit) async =>
           await onActionStarted(event.data, emit),
@@ -20,6 +24,20 @@ abstract class FunctionActionBloc<E, S>
     on<ActionRestarted<E>>(
       (final event, final emit) async => await onActionRestarted(emit),
     );
+  }
+
+  Future<void> onActionStored(final Emitter<ActionState<S>> emit) async {
+    final initialState = state;
+    if (state is ActionInitial<S>) {
+      emit(ActionInProgress<S>(data: null));
+
+      emit(await doStored(null) ?? initialState);
+    } else if (state is ActionFinal<S, E>) {
+      final lastData = (state as ActionFinal<S, E>).data;
+      emit(ActionInProgress<S>(data: lastData));
+
+      emit(await doStored(lastData) ?? initialState);
+    }
   }
 
   Future<void> onActionStarted(
@@ -42,6 +60,10 @@ abstract class FunctionActionBloc<E, S>
       final lastEvent = (state as ActionFinal<S, E>).event;
       await onActionStarted(lastEvent, emit);
     }
+  }
+
+  Future<ActionFinal<S, E>?> doStored(final S? lastData) async {
+    return null;
   }
 
   Future<ActionFinal<S, E>> doAction(final E event, final S? lastData);

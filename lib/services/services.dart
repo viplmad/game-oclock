@@ -4,6 +4,7 @@ export 'game_playthrough_service.dart';
 export 'game_service.dart';
 export 'game_session_service.dart';
 export 'igdb_service.dart';
+export 'list_style_service.dart';
 export 'location_service.dart';
 export 'login_service.dart';
 export 'search_service.dart';
