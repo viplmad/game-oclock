@@ -7,7 +7,10 @@ import 'base_api.dart';
 class GamesApi extends BaseApi {
   GamesApi(super.apiClient);
 
-  Future<Response> getGamesWithHttpInfo({String? search, int? size}) async {
+  Future<Response> getGamesWithHttpInfo({
+    final String? search,
+    final int? size,
+  }) async {
     final fields = List.unmodifiable(<String>[
       'name',
       'version_title',
@@ -42,7 +45,10 @@ class GamesApi extends BaseApi {
     );
   }
 
-  Future<List<IGDBGame>> getGames({String? search, int? size}) async {
+  Future<List<IGDBGame>> getGames({
+    final String? search,
+    final int? size,
+  }) async {
     final response = await getGamesWithHttpInfo(search: search, size: size);
     await checkResponse(response);
     return (await apiClient.deserializeAsync(

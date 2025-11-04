@@ -1,5 +1,6 @@
-import 'package:game_oclock/models/models.dart' show FilterFormData, ListSearch;
-import 'package:game_oclock/services/services.dart' show SearchService;
+import 'package:game_oclock/models/models.dart'
+    show FilterFormData, ListSearch, SearchDTO;
+import 'package:game_oclock/services/services.dart' show ListSearchService;
 
 import '../list.dart'
     show ListFinal, ListLoadBloc, ListLoadSuccess, LocalEditableListBloc;
@@ -7,13 +8,13 @@ import '../list.dart'
 class SearchListBloc extends ListLoadBloc<ListSearch> {
   SearchListBloc({required this.service, required this.space});
 
-  final SearchService service;
+  final ListSearchService service;
   final String space;
 
   @override
   Future<ListFinal<ListSearch>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<ListSearch>? lastData,
     final int? lastTotal,
   ) async {

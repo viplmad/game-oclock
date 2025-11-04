@@ -15,8 +15,8 @@ class ApiKeyAuth implements Authentication {
 
   @override
   Future<void> applyToParams(
-    List<QueryParam> queryParams,
-    Map<String, String> headerParams,
+    final List<QueryParam> queryParams,
+    final Map<String, String> headerParams,
   ) async {
     final paramValue = apiKeyPrefix.isEmpty ? apiKey : '$apiKeyPrefix $apiKey';
 
@@ -28,7 +28,7 @@ class ApiKeyAuth implements Authentication {
       } else if (location == 'cookie') {
         headerParams.update(
           'Cookie',
-          (existingCookie) => '$existingCookie; $paramName=$paramValue',
+          (final existingCookie) => '$existingCookie; $paramName=$paramValue',
           ifAbsent: () => '$paramName=$paramValue',
         );
       }
@@ -38,7 +38,7 @@ class ApiKeyAuth implements Authentication {
   @override
   FutureOr<void> onRefresh() async {
     if (refresh != null) {
-      await this.refresh!();
+      await refresh!();
     }
   }
 }

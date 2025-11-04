@@ -9,7 +9,7 @@ class ErrorMessage {
   String errorDescription;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(this, other) ||
       other is ErrorMessage &&
           other.error == error &&
@@ -26,15 +26,15 @@ class ErrorMessage {
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'error'] = this.error;
-    json[r'error_description'] = this.errorDescription;
+    json[r'error'] = error;
+    json[r'error_description'] = errorDescription;
     return json;
   }
 
   /// Returns a new [ErrorMessage] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static ErrorMessage? fromJson(dynamic value) {
+  static ErrorMessage? fromJson(final dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -42,7 +42,7 @@ class ErrorMessage {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        requiredKeys.forEach((key) {
+        requiredKeys.forEach((final key) {
           assert(
             json.containsKey(key),
             'Required key "ErrorMessage[$key]" is missing from JSON.',
@@ -64,8 +64,8 @@ class ErrorMessage {
   }
 
   static List<ErrorMessage> listFromJson(
-    dynamic json, {
-    bool growable = false,
+    final dynamic json, {
+    final bool growable = false,
   }) {
     final result = <ErrorMessage>[];
     if (json is List && json.isNotEmpty) {
@@ -96,7 +96,7 @@ class ErrorMessage {
   // maps a json object with a list of ErrorMessage-objects as value to a dart map
   static Map<String, List<ErrorMessage>> mapListFromJson(
     dynamic json, {
-    bool growable = false,
+    final bool growable = false,
   }) {
     final map = <String, List<ErrorMessage>>{};
     if (json is Map && json.isNotEmpty) {

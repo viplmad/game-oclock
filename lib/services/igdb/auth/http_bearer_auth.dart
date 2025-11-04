@@ -13,7 +13,7 @@ class HttpBearerAuth implements Authentication {
 
   dynamic get accessToken => _accessToken;
 
-  set accessToken(dynamic accessToken) {
+  set accessToken(final dynamic accessToken) {
     if (accessToken is! String && accessToken is! HttpBearerAuthProvider) {
       throw ArgumentError(
         'accessToken value must be either a String or a String Function().',
@@ -24,8 +24,8 @@ class HttpBearerAuth implements Authentication {
 
   @override
   Future<void> applyToParams(
-    List<QueryParam> queryParams,
-    Map<String, String> headerParams,
+    final List<QueryParam> queryParams,
+    final Map<String, String> headerParams,
   ) async {
     if (_accessToken == null) {
       return;
@@ -49,7 +49,7 @@ class HttpBearerAuth implements Authentication {
   @override
   FutureOr<void> onRefresh() async {
     if (refresh != null) {
-      await this.refresh!();
+      await refresh!();
     }
   }
 }

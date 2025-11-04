@@ -28,26 +28,26 @@ class ApiClient {
   Client get client => _client;
 
   /// Requests to use a new HTTP [Client] in this class.
-  set client(Client newClient) {
+  set client(final Client newClient) {
     _client = newClient;
   }
 
   Map<String, String> get defaultHeaderMap => _defaultHeaderMap;
 
-  void addDefaultHeader(String key, String value) {
+  void addDefaultHeader(final String key, final String value) {
     _defaultHeaderMap[key] = value;
   }
 
   Future<Response> invokeAPI(
-    String path,
-    String method,
-    List<QueryParam> queryParams,
-    Object? body,
-    Map<String, String> headerParams,
-    Map<String, String> formParams,
-    String? contentType,
+    final String path,
+    final String method,
+    final List<QueryParam> queryParams,
+    final Object? body,
+    final Map<String, String> headerParams,
+    final Map<String, String> formParams,
+    final String? contentType,
   ) async {
-    final retry = RetryOptions(maxAttempts: 3);
+    final retry = const RetryOptions(maxAttempts: 3);
     return await retry.retry(
       () async {
         final Response response = await _invokeAPI(
@@ -58,7 +58,7 @@ class ApiClient {
           headerParams,
           formParams,
           contentType,
-        ).timeout(Duration(seconds: 10));
+        ).timeout(const Duration(seconds: 10));
 
         // Handle 401 without body from regular calls
         if (response.statusCode == HttpStatus.unauthorized) {
@@ -83,12 +83,12 @@ class ApiClient {
 
         return response;
       },
-      retryIf: (error) =>
+      retryIf: (final error) =>
           // If it's unauthorized and this client has authentication (retrying to refresh)
           (error is UnauthorizedApiException && authentication != null) ||
           // If it's a client error (retrying will not change response)
           (error is ClientApiException),
-      onRetry: (error) async {
+      onRetry: (final error) async {
         if (error is UnauthorizedApiException) {
           await authentication!.onRefresh();
         }
@@ -99,13 +99,13 @@ class ApiClient {
   // We don't use a Map<String, String> for queryParams.
   // If collectionFormat is 'multi', a key might appear multiple times.
   Future<Response> _invokeAPI(
-    String path,
-    String method,
-    List<QueryParam> queryParams,
-    Object? body,
-    Map<String, String> headerParams,
-    Map<String, String> formParams,
-    String? contentType,
+    final String path,
+    final String method,
+    final List<QueryParam> queryParams,
+    final Object? body,
+    final Map<String, String> headerParams,
+    final Map<String, String> formParams,
+    final String? contentType,
   ) async {
     await authentication?.applyToParams(queryParams, headerParams);
 
@@ -114,7 +114,7 @@ class ApiClient {
       headerParams['Content-Type'] = contentType;
     }
 
-    final urlEncodedQueryParams = queryParams.map((param) => '$param');
+    final urlEncodedQueryParams = queryParams.map((final param) => '$param');
     final queryString = urlEncodedQueryParams.isNotEmpty
         ? '?${urlEncodedQueryParams.join('&')}'
         : '';
@@ -132,7 +132,8 @@ class ApiClient {
           request.sink.add,
           onDone: request.sink.close,
           // ignore: avoid_types_on_closure_parameters
-          onError: (Object error, StackTrace trace) => request.sink.close(),
+          onError: (final Object error, final StackTrace trace) =>
+              request.sink.close(),
           cancelOnError: true,
         );
         final response = await _client.send(request);
@@ -223,17 +224,17 @@ class ApiClient {
   }
 
   Future<dynamic> deserializeAsync(
-    String value,
-    String targetType, {
-    bool growable = false,
+    final String value,
+    final String targetType, {
+    final bool growable = false,
   }) async =>
       // ignore: deprecated_member_use_from_same_package
       _deserialize(value, targetType, growable: growable);
 
   dynamic _deserialize(
-    String value,
+    final String value,
     String targetType, {
-    bool growable = false,
+    final bool growable = false,
   }) {
     // Remove all spaces. Necessary for regular expressions as well.
     targetType = targetType.replaceAll(
@@ -248,15 +249,16 @@ class ApiClient {
   }
 
   // ignore: deprecated_member_use_from_same_package
-  Future<String> serializeAsync(Object? value) async => _serialize(value);
+  Future<String> serializeAsync(final Object? value) async => _serialize(value);
 
-  String _serialize(Object? value) => value == null ? '' : json.encode(value);
+  String _serialize(final Object? value) =>
+      value == null ? '' : json.encode(value);
 
   /// Returns a native instance of an OpenAPI class matching the [specified type][targetType].
   static dynamic fromJson(
-    dynamic value,
-    String targetType, {
-    bool growable = false,
+    final dynamic value,
+    final String targetType, {
+    final bool growable = false,
   }) {
     try {
       switch (targetType) {
@@ -286,7 +288,7 @@ class ApiClient {
               (match = regList.firstMatch(targetType)?.group(1)) != null) {
             return value
                 .map<dynamic>(
-                  (dynamic v) => fromJson(v, match, growable: growable),
+                  (final dynamic v) => fromJson(v, match, growable: growable),
                 )
                 .toList(growable: growable);
           }
@@ -294,7 +296,7 @@ class ApiClient {
               (match = regSet.firstMatch(targetType)?.group(1)) != null) {
             return value
                 .map<dynamic>(
-                  (dynamic v) => fromJson(v, match, growable: growable),
+                  (final dynamic v) => fromJson(v, match, growable: growable),
                 )
                 .toSet();
           }
@@ -303,7 +305,7 @@ class ApiClient {
             return Map<String, dynamic>.fromIterables(
               value.keys.cast<String>(),
               value.values.map<dynamic>(
-                (dynamic v) => fromJson(v, match, growable: growable),
+                (final dynamic v) => fromJson(v, match, growable: growable),
               ),
             );
           }
@@ -340,7 +342,7 @@ class DeserializationMessage {
 }
 
 /// Primarily intended for use in an isolate.
-Future<dynamic> decodeAsync(DeserializationMessage message) async {
+Future<dynamic> decodeAsync(final DeserializationMessage message) async {
   // Remove all spaces. Necessary for regular expressions as well.
   final targetType = message.targetType.replaceAll(' ', '');
 
@@ -349,7 +351,7 @@ Future<dynamic> decodeAsync(DeserializationMessage message) async {
 }
 
 /// Primarily intended for use in an isolate.
-Future<dynamic> deserializeAsync(DeserializationMessage message) async {
+Future<dynamic> deserializeAsync(final DeserializationMessage message) async {
   // Remove all spaces. Necessary for regular expressions as well.
   final targetType = message.targetType.replaceAll(' ', '');
 
@@ -364,5 +366,5 @@ Future<dynamic> deserializeAsync(DeserializationMessage message) async {
 }
 
 /// Primarily intended for use in an isolate.
-Future<String> serializeAsync(Object? value) async =>
+Future<String> serializeAsync(final Object? value) async =>
     value == null ? '' : json.encode(value);

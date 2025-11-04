@@ -4,7 +4,6 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         GameSessionCreateBloc,
         GameSessionFormBloc,
-        ListLoaded,
         TagCreateBloc,
         TagListBloc,
         UserGameCreateBloc,
@@ -12,12 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show
-        GameSession,
-        GameSessionFormData,
-        ListSearch,
-        SearchDTO,
-        gameSessionFinishedOptions;
+    show GameSession, GameSessionFormData, gameSessionFinishedOptions;
 import 'package:game_oclock/shared/selectors/device_selector.dart';
 import 'package:game_oclock/shared/selectors/game_playthrough_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
@@ -52,12 +46,7 @@ class GameSessionCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
-              UserGameListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+              UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) =>
@@ -65,13 +54,7 @@ class GameSessionCreateForm extends StatelessWidget {
         ),
 
         BlocProvider(
-          create: (_) =>
-              TagListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+          create: (_) => TagListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),

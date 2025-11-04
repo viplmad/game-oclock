@@ -4,7 +4,6 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
         ExternalGameListBloc,
-        ListLoaded,
         UserGameCreateBloc,
         UserGameFormBloc,
         UserGameGetBloc,
@@ -13,7 +12,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart'
-    show ListSearch, SearchDTO, UserGame, UserGameFormData, gameStatusOptions;
+    show UserGame, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -46,13 +45,7 @@ class UserGameCreateForm extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) =>
-              ExternalGameListBloc(igdbService: RepositoryProvider.of(context))
-                ..add(
-                  // Requires search to be loaded
-                  ListLoaded(
-                    search: ListSearch(name: 'default', search: SearchDTO()),
-                  ),
-                ),
+              ExternalGameListBloc(igdbService: RepositoryProvider.of(context)),
         ),
       ],
       child:

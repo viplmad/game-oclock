@@ -9,6 +9,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListQuicksearchChanged,
         ListReloaded,
+        ListSearchChanged,
+        ListSearchGetBloc,
+        ListSearchSaveBloc,
         ListStyleGetBloc,
         ListStyleSaveBloc,
         MinimizedLayoutBloc;
@@ -16,7 +19,8 @@ import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier, ListStyle;
+import 'package:game_oclock/models/models.dart'
+    show LayoutTier, ListSearch, ListStyle, defaultListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -73,6 +77,22 @@ class ListDetailBuilder<
             );
           },
         ),
+        BlocListener<ListSearchGetBloc, ActionState<ListSearch>>(
+          listener: (final context, final state) {
+            if (state is ActionFinal<ListSearch, void>) {
+              context.read<LB>().add(
+                ListSearchChanged(search: state.data.search),
+              );
+            }
+          },
+        ),
+        BlocListener<ListSearchSaveBloc, ActionState<ListSearch>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<ListSearch, ListSearch>) {
+              context.read<ListSearchGetBloc>().add(ActionStarted.empty());
+            }
+          },
+        ),
         BlocListener<ListStyleSaveBloc, ActionState<ListStyle>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<ListStyle, ListStyle>) {
@@ -83,10 +103,9 @@ class ListDetailBuilder<
       ],
       child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
-          final selectedStyle =
-              (listStyleState is ActionFinal<ListStyle, void>)
+          final selectedStyle = (listStyleState is ActionFinal<ListStyle, void>)
               ? listStyleState.data
-              : ListStyle.tile;
+              : defaultListStyle;
 
           return BlocBuilder<SB, ActionState<T?>>(
             builder: (final context, final selectState) {

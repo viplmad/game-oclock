@@ -23,12 +23,13 @@ import 'package:game_oclock/services/services.dart'
         GameService,
         GameSessionService,
         IGDBService,
+        ListSearchService,
         ListStyleService,
         LocationService,
         LoginService,
-        SearchService,
         TagService,
         UserService;
+import 'package:game_oclock/services/shared_preferences_repository.dart';
 import 'package:game_oclock/utils/custom_material_localizations.dart';
 
 void main() {
@@ -54,6 +55,7 @@ class GameOClockApp extends StatelessWidget {
       );
     }
 
+    final sharedPrefsRepository = SharedPreferencesRepository();
     final authService = AuthService();
     final userService = UserService();
 
@@ -71,8 +73,12 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<GameSessionService>(
           create: (_) => GameSessionService(),
         ),
-        RepositoryProvider<SearchService>(create: (_) => SearchService()),
-        RepositoryProvider(create: (_) => ListStyleService()),
+        RepositoryProvider<ListSearchService>(
+          create: (_) => ListSearchService(sharedPrefsRepository),
+        ),
+        RepositoryProvider<ListStyleService>(
+          create: (_) => ListStyleService(sharedPrefsRepository),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [

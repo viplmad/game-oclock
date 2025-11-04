@@ -6,9 +6,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ListInitial,
         ListLoadBloc,
-        ListLoaded,
         ListQuicksearchChanged,
         ListReloaded,
+        ListSearchChanged,
         LocationAvailableListBloc,
         UserGameDeleteBloc,
         UserGameGetBloc,
@@ -26,7 +26,6 @@ import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show
         LayoutTier,
-        ListSearch,
         LocationWithDate,
         SearchDTO,
         TabDestination,
@@ -292,11 +291,7 @@ class UserGameDetail extends StatelessWidget {
   void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
-      lb.add(
-        ListLoaded(
-          search: ListSearch(name: 'default', search: SearchDTO()),
-        ),
-      );
+      lb.add(ListSearchChanged(search: SearchDTO()));
     }
   }
 

@@ -1,17 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:game_oclock/models/models.dart' show SearchDTO;
 
 sealed class ListEvent extends Equatable {
   const ListEvent();
-}
-
-final class ListLoaded extends ListEvent {
-  final ListSearch search;
-
-  const ListLoaded({required this.search});
-
-  @override
-  List<Object?> get props => [search];
 }
 
 final class ListReloaded extends ListEvent {
@@ -38,7 +29,7 @@ final class ListQuicksearchChanged extends ListEvent {
 }
 
 final class ListSearchChanged extends ListEvent {
-  final ListSearch search;
+  final SearchDTO search;
 
   const ListSearchChanged({required this.search});
 

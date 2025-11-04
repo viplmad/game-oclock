@@ -4,15 +4,13 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         GameTagCreateBloc,
         GameTagFormBloc,
-        ListLoaded,
         TagCreateBloc,
         TagListBloc,
         UserGameCreateBloc,
         UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart'
-    show GameTag, GameTagFormData, ListSearch, SearchDTO;
+import 'package:game_oclock/models/models.dart' show GameTag, GameTagFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/tag_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -42,12 +40,7 @@ class GameTagCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
-              UserGameListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+              UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) =>
@@ -55,13 +48,7 @@ class GameTagCreateForm extends StatelessWidget {
         ),
 
         BlocProvider(
-          create: (_) =>
-              TagListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+          create: (_) => TagListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),

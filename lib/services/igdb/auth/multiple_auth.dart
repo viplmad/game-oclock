@@ -12,8 +12,8 @@ class MultipleAuth implements Authentication {
 
   @override
   Future<void> applyToParams(
-    List<QueryParam> queryParams,
-    Map<String, String> headerParams,
+    final List<QueryParam> queryParams,
+    final Map<String, String> headerParams,
   ) async {
     for (final auth in auths) {
       auth.applyToParams(queryParams, headerParams);
@@ -23,7 +23,7 @@ class MultipleAuth implements Authentication {
   @override
   FutureOr<void> onRefresh() async {
     if (refresh != null) {
-      await this.refresh!();
+      await refresh!();
     }
   }
 }

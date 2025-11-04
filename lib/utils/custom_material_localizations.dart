@@ -418,21 +418,27 @@ class _CustomMaterialLocalizations extends MaterialLocalizations {
       delegate.refreshIndicatorSemanticLabel;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemDown => delegate.reorderItemDown;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemLeft => delegate.reorderItemLeft;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemRight => delegate.reorderItemRight;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemToEnd => delegate.reorderItemToEnd;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemToStart => delegate.reorderItemToStart;
 
   @override
+  // ignore: deprecated_member_use
   String get reorderItemUp => delegate.reorderItemUp;
 
   @override

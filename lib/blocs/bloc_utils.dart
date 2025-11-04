@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch, PageResultDTO;
+import 'package:game_oclock/models/models.dart' show PageResultDTO, SearchDTO;
 import 'package:rxdart/rxdart.dart';
 
 EventTransformer<T> debounce<T>(final Duration duration) {
@@ -8,11 +8,11 @@ EventTransformer<T> debounce<T>(final Duration duration) {
 }
 
 List<T> mergePageData<T>({
-  required final ListSearch search,
+  required final SearchDTO search,
   required final PageResultDTO<T> page,
   required final List<T>? lastData,
 }) {
-  if ((search.search.page ?? 0) == 0) {
+  if ((search.page ?? 0) == 0) {
     return List.unmodifiable(page.data);
   }
   return List.unmodifiable(
@@ -21,11 +21,11 @@ List<T> mergePageData<T>({
 }
 
 Future<int> mergeCount({
-  required final ListSearch search,
+  required final SearchDTO search,
   required final Future<int> Function() countGetter,
   required final int? lastTotal,
 }) async {
-  if ((search.search.page ?? 0) == 0 || lastTotal == null) {
+  if ((search.page ?? 0) == 0 || lastTotal == null) {
     return countGetter();
   }
   return lastTotal;

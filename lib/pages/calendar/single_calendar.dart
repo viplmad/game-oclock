@@ -7,10 +7,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         CalendarDaySelectBloc,
         GameSessionListBloc,
         GameSessionSelectBloc,
-        ListLoaded;
+        ListSearchChanged;
 import 'package:game_oclock/components/calendar_list_detail.dart';
-import 'package:game_oclock/models/models.dart'
-    show GameSession, ListSearch, SearchDTO;
+import 'package:game_oclock/models/models.dart' show GameSession, SearchDTO;
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -33,15 +32,10 @@ class SingleCalendarPage extends StatelessWidget {
         ),
         BlocProvider(create: (_) => GameSessionSelectBloc()),
         BlocProvider(
-          create: (_) =>
-              GameSessionListBloc(
-                service: RepositoryProvider.of(context),
-                gameId: gameId,
-              )..add(
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+          create: (_) => GameSessionListBloc(
+            service: RepositoryProvider.of(context),
+            gameId: gameId,
+          )..add(ListSearchChanged(search: SearchDTO())),
         ),
       ],
       child:

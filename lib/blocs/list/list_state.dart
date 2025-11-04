@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_oclock/models/models.dart' show ErrorDTO, ListSearch;
+import 'package:game_oclock/models/models.dart' show ErrorDTO, SearchDTO;
 
 sealed class ListState<T> extends Equatable {
   const ListState();
@@ -15,7 +15,7 @@ final class ListInitial<T> extends ListState<T> {
 final class ListLoadInProgress<T> extends ListState<T> {
   final List<T>? data;
   final String? quicksearch;
-  final ListSearch? search;
+  final SearchDTO? search;
 
   const ListLoadInProgress({
     required this.data,
@@ -31,7 +31,7 @@ sealed class ListFinal<T> extends ListState<T> {
   final List<T> data;
   final int total;
   final String? quicksearch;
-  final ListSearch search;
+  final SearchDTO search;
 
   const ListFinal({
     required this.data,

@@ -1,17 +1,21 @@
 import 'package:game_oclock/models/models.dart' show ListStyle, parseListStyle;
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'shared_preferences_repository.dart';
 
 class ListStyleService {
-  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+  const ListStyleService(this.repository);
+
+  final SharedPreferencesRepository repository;
 
   Future<ListStyle?> get(final String space) async {
-    return asyncPrefs
-        .getString(_buildKey(space))
-        .then((final value) => value == null ? null : parseListStyle(value));
+    return repository.get(
+      _buildKey(space),
+      (final value) => parseListStyle(value),
+    );
   }
 
   Future<void> save(final String space, final ListStyle style) {
-    return asyncPrefs.setString(_buildKey(space), style.name);
+    return repository.set(_buildKey(space), style, (final value) => value.name);
   }
 
   String _buildKey(final String space) => 'list-style#$space';

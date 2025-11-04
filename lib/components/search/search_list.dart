@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ListLoaded, ListReloaded, SearchListBloc;
+    show ListReloaded, ListSearchChanged, SearchListBloc;
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/components/show_form_dialog.dart';
@@ -21,11 +21,7 @@ class SearchListPage extends StatelessWidget {
     return BlocProvider(
       create: (_) =>
           SearchListBloc(space: space, service: RepositoryProvider.of(context))
-            ..add(
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
-              ),
-            ),
+            ..add(ListSearchChanged(search: SearchDTO())),
       // TODO create button
       child: GridListBuilder<ListSearch, SearchListBloc>(
         itemAspectRatio: 3.5,

@@ -4,8 +4,8 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
         FilterFormDataListBloc,
-        ListLoaded,
         ListReloaded,
+        ListSearchChanged,
         SearchCreateBloc,
         SearchFormBloc,
         SearchGetBloc,
@@ -49,12 +49,9 @@ class SearchCreateForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) => FilterFormDataListBloc(data: mutableFilters)
-            ..add(
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
-              ),
-            ),
+          create: (_) =>
+              FilterFormDataListBloc(data: mutableFilters)
+                ..add(ListSearchChanged(search: SearchDTO())),
         ),
       ],
       child:
@@ -105,12 +102,9 @@ class SearchEditForm extends StatelessWidget {
           )..add(ActionStarted(data: name)),
         ),
         BlocProvider(
-          create: (_) => FilterFormDataListBloc(data: mutableFilters)
-            ..add(
-              ListLoaded(
-                search: ListSearch(name: 'default', search: SearchDTO()),
-              ),
-            ),
+          create: (_) =>
+              FilterFormDataListBloc(data: mutableFilters)
+                ..add(ListSearchChanged(search: SearchDTO())),
         ),
       ],
       child:

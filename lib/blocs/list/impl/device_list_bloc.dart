@@ -1,5 +1,5 @@
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show Device, ListSearch;
+import 'package:game_oclock/models/models.dart' show Device, SearchDTO;
 import 'package:game_oclock/services/services.dart' show DeviceService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
@@ -12,18 +12,18 @@ class DeviceListBloc extends ListLoadBloc<Device> {
   @override
   Future<ListFinal<Device>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<Device>? lastData,
     final int? lastTotal,
   ) async {
     final data = mergePageData(
       search: search,
-      page: await service.search(search.search, quicksearch),
+      page: await service.search(search, quicksearch),
       lastData: lastData,
     );
     final count = await mergeCount(
       search: search,
-      countGetter: () => service.count(search.search, quicksearch),
+      countGetter: () => service.count(search, quicksearch),
       lastTotal: lastTotal,
     );
     return ListLoadSuccess<Device>(

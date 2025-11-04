@@ -1,4 +1,4 @@
-import 'package:game_oclock/models/models.dart' show ExternalGame, ListSearch;
+import 'package:game_oclock/models/models.dart' show ExternalGame, SearchDTO;
 import 'package:game_oclock/services/services.dart' show IGDBService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
@@ -11,7 +11,7 @@ class ExternalGameListBloc extends ListLoadBloc<ExternalGame> {
   @override
   Future<ListFinal<ExternalGame>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<ExternalGame>? lastData,
     final int? lastTotal,
   ) async {

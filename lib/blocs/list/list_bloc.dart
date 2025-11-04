@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:game_oclock/models/models.dart' show SearchDTO;
 
 import 'list.dart'
     show
@@ -9,7 +9,6 @@ import 'list.dart'
         ListInitial,
         ListLoadInProgress,
         ListLoadSuccess,
-        ListLoaded,
         ListPageIncremented,
         ListPageReloaded,
         ListQuicksearchChanged,
@@ -19,9 +18,6 @@ import 'list.dart'
 
 abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   ListLoadBloc() : super(ListInitial<S>()) {
-    on<ListLoaded>(
-      (final event, final emit) async => await onListLoaded(event.search, emit),
-    );
     on<ListReloaded>(
       (final event, final emit) async => await onListReloaded(emit),
     );
@@ -42,14 +38,24 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     );
   }
 
-  Future<void> onListLoaded(
-    final ListSearch search,
-    final Emitter<ListState<S>> emit,
-  ) async {
-    if (state is ListInitial<S>) {
-      emit(ListLoadInProgress<S>(data: null, quicksearch: null, search: null));
-      emit(await loadList(null, search, null, null));
-    } else if (state is ListFinal<S>) {
+  Future<void> onListReloaded(final Emitter<ListState<S>> emit) async {
+    if (state is ListFinal<S>) {
+      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
+      final lastSearch = (state as ListFinal<S>).search;
+      emit(
+        ListLoadInProgress<S>(
+          data: null,
+          quicksearch: lastQuicksearch,
+          search: lastSearch,
+        ),
+      );
+
+      emit(await loadList(lastQuicksearch, lastSearch, null, null));
+    }
+  }
+
+  Future<void> onListPageReloaded(final Emitter<ListState<S>> emit) async {
+    if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
@@ -62,30 +68,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
         ),
       );
 
-      emit(await loadList(lastQuicksearch, search, lastData, lastTotal));
-    }
-  }
-
-  Future<void> onListReloaded(final Emitter<ListState<S>> emit) async {
-    if (state is ListFinal<S>) {
-      final lastQuicksearch = (state as ListFinal<S>).quicksearch;
-      final lastSearch = (state as ListFinal<S>).search;
-
-      emit(
-        ListLoadInProgress<S>(
-          data: null,
-          quicksearch: lastQuicksearch,
-          search: lastSearch,
-        ),
-      );
-      emit(await loadList(lastQuicksearch, lastSearch, null, null));
-    }
-  }
-
-  Future<void> onListPageReloaded(final Emitter<ListState<S>> emit) async {
-    if (state is ListFinal<S>) {
-      final lastSearch = (state as ListFinal<S>).search;
-      await onListLoaded(lastSearch, emit);
+      emit(await loadList(lastQuicksearch, lastSearch, lastData, lastTotal));
     }
   }
 
@@ -93,7 +76,17 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     final String? quicksearch,
     final Emitter<ListState<S>> emit,
   ) async {
-    if (state is ListFinal<S>) {
+    if (state is ListInitial<S>) {
+      final search = SearchDTO();
+      emit(
+        ListLoadInProgress<S>(
+          data: null,
+          quicksearch: quicksearch,
+          search: search,
+        ),
+      );
+      emit(await loadList(quicksearch, search, null, null));
+    } else if (state is ListFinal<S>) {
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       if (lastQuicksearch == quicksearch) {
         return;
@@ -122,10 +115,15 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<void> onListSearchChanged(
-    final ListSearch search,
+    final SearchDTO search,
     final Emitter<ListState<S>> emit,
   ) async {
-    if (state is ListFinal<S>) {
+    if (state is ListInitial<S>) {
+      emit(
+        ListLoadInProgress<S>(data: null, quicksearch: null, search: search),
+      );
+      emit(await loadList(null, search, null, null));
+    } else if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
@@ -169,7 +167,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
         ),
       );
 
-      final nextPage = (lastSearch.search.page ?? 0) + 1;
+      final nextPage = (lastSearch.page ?? 0) + 1;
       emit(
         await loadList(
           lastQuicksearch,
@@ -183,7 +181,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
 
   Future<ListFinal<S>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<S>? lastData,
     final int? lastTotal,
   );
@@ -197,7 +195,7 @@ abstract class LocalEditableListBloc<S> extends ListLoadBloc<S> {
   @override
   Future<ListFinal<S>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<S>? lastData,
     final int? lastTotal,
   ) async {

@@ -26,9 +26,9 @@ abstract class ApiException implements Exception {
   String errorDescription;
 
   factory ApiException.fromServer(
-    int statusCode,
-    String error,
-    String errorDescription,
+    final int statusCode,
+    final String error,
+    final String errorDescription,
   ) {
     switch (error) {
       case InvalidParameterApiException.code:
@@ -79,9 +79,9 @@ abstract class ClientApiException extends ApiException {
 
 class ConnectionFailedApiException extends ClientApiException {
   ConnectionFailedApiException(
-    String errorDescription, [
-    Exception? innerException,
-    StackTrace? stackTrace,
+    final String errorDescription, [
+    final Exception? innerException,
+    final StackTrace? stackTrace,
   ]) : super(
          error: ErrorCode.connectionFailed,
          errorDescription: errorDescription,
@@ -92,9 +92,9 @@ class ConnectionFailedApiException extends ClientApiException {
 
 class ResponseMismatchApiException extends ClientApiException {
   ResponseMismatchApiException(
-    String errorDescription, [
-    Exception? innerException,
-    StackTrace? stackTrace,
+    final String errorDescription, [
+    final Exception? innerException,
+    final StackTrace? stackTrace,
   ]) : super(
          error: ErrorCode.responseMismatch,
          errorDescription: errorDescription,
@@ -105,9 +105,9 @@ class ResponseMismatchApiException extends ClientApiException {
 
 class UnexpectedApiException extends ClientApiException {
   UnexpectedApiException(
-    String errorDescription, [
-    Exception? innerException,
-    StackTrace? stackTrace,
+    final String errorDescription, [
+    final Exception? innerException,
+    final StackTrace? stackTrace,
   ]) : super(
          error: ErrorCode.responseMismatch,
          errorDescription: errorDescription,
@@ -134,8 +134,10 @@ abstract class ServerApiException extends ApiException {
 class InvalidParameterApiException extends ServerApiException {
   static const String code = 'invalid_parameter';
 
-  InvalidParameterApiException(int statusCode, String errorDescription)
-    : super(
+  InvalidParameterApiException(
+    final int statusCode,
+    final String errorDescription,
+  ) : super(
         statusCode: statusCode,
         error: ErrorCode.invalidParameter,
         errorDescription: errorDescription,
@@ -145,7 +147,7 @@ class InvalidParameterApiException extends ServerApiException {
 class AlreadyExistsApiException extends ServerApiException {
   static const String code = 'already_exists';
 
-  AlreadyExistsApiException(int statusCode, String errorDescription)
+  AlreadyExistsApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.alreadyExists,
@@ -156,7 +158,7 @@ class AlreadyExistsApiException extends ServerApiException {
 class NotFoundApiException extends ServerApiException {
   static const String code = 'not_found';
 
-  NotFoundApiException(int statusCode, String errorDescription)
+  NotFoundApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.notFound,
@@ -167,7 +169,7 @@ class NotFoundApiException extends ServerApiException {
 class NotSupportedApiException extends ServerApiException {
   static const String code = 'not_supported';
 
-  NotSupportedApiException(int statusCode, String errorDescription)
+  NotSupportedApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.notSupported,
@@ -178,7 +180,7 @@ class NotSupportedApiException extends ServerApiException {
 class UnauthorizedApiException extends ServerApiException {
   static const String code = 'unauthorized';
 
-  UnauthorizedApiException(int statusCode, String errorDescription)
+  UnauthorizedApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.unauthorized,
@@ -189,7 +191,7 @@ class UnauthorizedApiException extends ServerApiException {
 class ForbiddenApiException extends ServerApiException {
   static const String code = 'forbidden';
 
-  ForbiddenApiException(int statusCode, String errorDescription)
+  ForbiddenApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.forbidden,
@@ -200,7 +202,7 @@ class ForbiddenApiException extends ServerApiException {
 class UnknownErrorApiException extends ServerApiException {
   static const String code = 'unknown_error';
 
-  UnknownErrorApiException(int statusCode, String errorDescription)
+  UnknownErrorApiException(final int statusCode, final String errorDescription)
     : super(
         statusCode: statusCode,
         error: ErrorCode.unknown,
@@ -211,8 +213,10 @@ class UnknownErrorApiException extends ServerApiException {
 class AuthInvalidRequestTokenException extends ServerApiException {
   static const String code = 'invalid_request';
 
-  AuthInvalidRequestTokenException(int statusCode, String errorDescription)
-    : super(
+  AuthInvalidRequestTokenException(
+    final int statusCode,
+    final String errorDescription,
+  ) : super(
         statusCode: statusCode,
         error: ErrorCode.authInvalidRequest,
         errorDescription: errorDescription,
@@ -222,8 +226,10 @@ class AuthInvalidRequestTokenException extends ServerApiException {
 class AuthInvalidGrantTokenException extends ServerApiException {
   static const String code = 'invalid_grant';
 
-  AuthInvalidGrantTokenException(int statusCode, String errorDescription)
-    : super(
+  AuthInvalidGrantTokenException(
+    final int statusCode,
+    final String errorDescription,
+  ) : super(
         statusCode: statusCode,
         error: ErrorCode.authInvalidGrant,
         errorDescription: errorDescription,
@@ -234,8 +240,8 @@ class AuthUnsupportedGrantTypeTokenException extends ServerApiException {
   static const String code = 'unsupported_grant_type';
 
   AuthUnsupportedGrantTypeTokenException(
-    int statusCode,
-    String errorDescription,
+    final int statusCode,
+    final String errorDescription,
   ) : super(
         statusCode: statusCode,
         error: ErrorCode.authUnsupportedGrantType,

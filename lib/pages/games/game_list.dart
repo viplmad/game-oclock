@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        ListLoaded,
         ListReloaded,
+        ListSearchGetBloc,
+        ListSearchSaveBloc,
         ListStyleGetBloc,
         ListStyleSaveBloc,
         LocationAvailableListBloc,
@@ -14,8 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameTagListBloc;
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
-import 'package:game_oclock/models/models.dart'
-    show ListSearch, ListStyle, SearchDTO, UserGame;
+import 'package:game_oclock/models/models.dart' show ListStyle, UserGame;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -34,11 +34,19 @@ class UserGameListPage extends StatelessWidget {
         BlocProvider(create: (_) => UserGameSelectBloc()),
         BlocProvider(
           create: (_) =>
-              UserGameListBloc(service: RepositoryProvider.of(context))..add(
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+              UserGameListBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) => ListSearchGetBloc(
+            space: _space,
+            service: RepositoryProvider.of(context),
+          )..add(ActionStarted.empty()),
+        ),
+        BlocProvider(
+          create: (_) => ListSearchSaveBloc(
+            space: _space,
+            service: RepositoryProvider.of(context),
+          ),
         ),
         BlocProvider(
           create: (_) =>

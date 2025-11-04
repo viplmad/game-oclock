@@ -27,7 +27,7 @@ class IGDBGame {
   List<IGDBIdName> collections;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(this, other) ||
       other is IGDBGame &&
           other.name == name &&
@@ -50,7 +50,7 @@ class IGDBGame {
   /// Returns a new [IGDBGame] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static IGDBGame? fromJson(dynamic value) {
+  static IGDBGame? fromJson(final dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -58,7 +58,7 @@ class IGDBGame {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        requiredKeys.forEach((key) {
+        requiredKeys.forEach((final key) {
           assert(
             json.containsKey(key),
             'Required key "IGDBGameDTO[$key]" is missing from JSON.',
@@ -84,7 +84,10 @@ class IGDBGame {
     return null;
   }
 
-  static List<IGDBGame> listFromJson(dynamic json, {bool growable = false}) {
+  static List<IGDBGame> listFromJson(
+    final dynamic json, {
+    final bool growable = false,
+  }) {
     final result = <IGDBGame>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -110,7 +113,7 @@ class IGDBCover {
   /// Returns a new [IGDBCover] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static IGDBCover? fromJson(dynamic value) {
+  static IGDBCover? fromJson(final dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -118,7 +121,7 @@ class IGDBCover {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        requiredKeys.forEach((key) {
+        requiredKeys.forEach((final key) {
           assert(
             json.containsKey(key),
             'Required key "Element[$key]" is missing from JSON.',
@@ -152,7 +155,7 @@ class IGDBIdName {
   /// Returns a new [IGDBIdName] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static IGDBIdName? fromJson(dynamic value) {
+  static IGDBIdName? fromJson(final dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -160,7 +163,7 @@ class IGDBIdName {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        requiredKeys.forEach((key) {
+        requiredKeys.forEach((final key) {
           assert(
             json.containsKey(key),
             'Required key "IGDBIdName[$key]" is missing from JSON.',
@@ -181,7 +184,10 @@ class IGDBIdName {
     return null;
   }
 
-  static List<IGDBIdName> listFromJson(dynamic json, {bool growable = false}) {
+  static List<IGDBIdName> listFromJson(
+    final dynamic json, {
+    final bool growable = false,
+  }) {
     final result = <IGDBIdName>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {

@@ -4,7 +4,6 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         GameAvailableCreateBloc,
         GameAvailableFormBloc,
-        ListLoaded,
         LocationCreateBloc,
         LocationListBloc,
         UserGameCreateBloc,
@@ -12,7 +11,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show GameAvailable, GameAvailableFormData, ListSearch, SearchDTO;
+    show GameAvailable, GameAvailableFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/location_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -43,12 +42,7 @@ class GameAvailableCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
-              UserGameListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+              UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) =>
@@ -57,12 +51,7 @@ class GameAvailableCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
-              LocationListBloc(service: RepositoryProvider.of(context))..add(
-                // Requires search to be loaded
-                ListLoaded(
-                  search: ListSearch(name: 'default', search: SearchDTO()),
-                ),
-              ),
+              LocationListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) =>

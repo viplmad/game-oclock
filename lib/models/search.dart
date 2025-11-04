@@ -32,4 +32,35 @@ class SearchDTO {
       sort: sort ?? this.sort,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+    if (filter != null) {
+      json[r'filter'] = filter;
+    }
+    if (page != null) {
+      json[r'page'] = page;
+    }
+    if (size != null) {
+      json[r'size'] = size;
+    }
+    if (sort != null) {
+      json[r'sort'] = sort;
+    }
+    return json;
+  }
+
+  static SearchDTO? fromJson(final dynamic value) {
+    if (value is Map) {
+      final json = value.cast<String, dynamic>();
+
+      return SearchDTO(
+        filter: FilterDTO.listFromJson(json[r'filter']),
+        page: int.tryParse(json[r'page']),
+        size: int.tryParse(json[r'size']),
+        sort: SortDTO.listFromJson(json[r'sort']),
+      );
+    }
+    return null;
+  }
 }

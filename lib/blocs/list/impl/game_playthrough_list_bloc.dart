@@ -1,6 +1,5 @@
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart'
-    show GamePlaythrough, ListSearch;
+import 'package:game_oclock/models/models.dart' show GamePlaythrough, SearchDTO;
 import 'package:game_oclock/services/services.dart' show GamePlaythroughService;
 
 import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
@@ -14,19 +13,18 @@ class GamePlaythroughListBloc extends ListLoadBloc<GamePlaythrough> {
   @override
   Future<ListFinal<GamePlaythrough>> loadList(
     final String? quicksearch,
-    final ListSearch search,
+    final SearchDTO search,
     final List<GamePlaythrough>? lastData,
     final int? lastTotal,
   ) async {
     final data = mergePageData(
       search: search,
-      page: await service.searchForGame(gameId, search.search, quicksearch),
+      page: await service.searchForGame(gameId, search, quicksearch),
       lastData: lastData,
     );
     final count = await mergeCount(
       search: search,
-      countGetter: () =>
-          service.countForGame(gameId, search.search, quicksearch),
+      countGetter: () => service.countForGame(gameId, search, quicksearch),
       lastTotal: lastTotal,
     );
     return ListLoadSuccess<GamePlaythrough>(

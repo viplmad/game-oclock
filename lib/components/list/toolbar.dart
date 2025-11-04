@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFinal,
+        ActionInProgress,
+        ActionStarted,
+        ActionState,
         ListFinal,
         ListLoadBloc,
         ListLoadInProgress,
-        ListSearchChanged,
+        ListSearchGetBloc,
+        ListSearchSaveBloc,
         ListState;
 import 'package:game_oclock/components/forms/fields/common.dart';
 import 'package:game_oclock/components/label_chip.dart';
@@ -55,7 +60,7 @@ class ListTotalStatusbarBuilder<T, LB extends ListLoadBloc<T>>
       builder: (final context, final state) {
         int total;
         if (state is ListLoadInProgress<T>) {
-          return ListTotalStatusbarSkeleton();
+          return const ListTotalStatusbarSkeleton();
         } else if (state is ListFinal<T>) {
           total = state.total;
         } else {
@@ -101,13 +106,13 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<LB, ListState<T>>(
+    return BlocBuilder<ListSearchGetBloc, ActionState<ListSearch>>(
       builder: (final context, final state) {
         ListSearch currentSearch;
-        if (state is ListLoadInProgress<T>) {
+        if (state is ActionInProgress<ListSearch>) {
           return const ListFilterToolbarSkeleton();
-        } else if (state is ListFinal<T>) {
-          currentSearch = state.search;
+        } else if (state is ActionFinal<ListSearch, void>) {
+          currentSearch = state.data;
         } else {
           return const SizedBox();
         }
@@ -116,7 +121,9 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
           space: space,
           search: currentSearch,
           onSearchChanged: (final context, final selectedSearch) {
-            context.read<LB>().add(ListSearchChanged(search: selectedSearch));
+            context.read<ListSearchSaveBloc>().add(
+              ActionStarted(data: selectedSearch),
+            );
           },
         );
       },

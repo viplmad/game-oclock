@@ -10,7 +10,7 @@ abstract class BaseApi {
 
   final ApiClient apiClient;
 
-  Future<void> checkResponse(Response response) async {
+  Future<void> checkResponse(final Response response) async {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.

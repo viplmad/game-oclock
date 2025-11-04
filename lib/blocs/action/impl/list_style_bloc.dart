@@ -1,5 +1,5 @@
 import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, ListStyle, errorCodeNotFound;
+    show ErrorDTO, ListStyle, defaultListStyle, errorCodeNotFound;
 import 'package:game_oclock/services/services.dart' show ListStyleService;
 
 import '../action.dart'
@@ -28,7 +28,7 @@ class ListStyleGetBloc extends ProducerActionBloc<ListStyle> {
               code: errorCodeNotFound,
               message: 'No ListStyle saved',
             ),
-            ListStyle.tile,
+            defaultListStyle,
           )
         : ActionSuccess.producer(data);
   }

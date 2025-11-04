@@ -15,7 +15,7 @@ class TokenResponse {
   String tokenType;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(this, other) ||
       other is TokenResponse &&
           other.accessToken == accessToken &&
@@ -33,16 +33,16 @@ class TokenResponse {
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'access_token'] = this.accessToken;
-    json[r'expires_in'] = this.expiresIn;
-    json[r'token_type'] = this.tokenType;
+    json[r'access_token'] = accessToken;
+    json[r'expires_in'] = expiresIn;
+    json[r'token_type'] = tokenType;
     return json;
   }
 
   /// Returns a new [TokenResponse] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static TokenResponse? fromJson(dynamic value) {
+  static TokenResponse? fromJson(final dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -50,7 +50,7 @@ class TokenResponse {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        requiredKeys.forEach((key) {
+        requiredKeys.forEach((final key) {
           assert(
             json.containsKey(key),
             'Required key "TokenResponse[$key]" is missing from JSON.',
@@ -73,8 +73,8 @@ class TokenResponse {
   }
 
   static List<TokenResponse> listFromJson(
-    dynamic json, {
-    bool growable = false,
+    final dynamic json, {
+    final bool growable = false,
   }) {
     final result = <TokenResponse>[];
     if (json is List && json.isNotEmpty) {
@@ -105,7 +105,7 @@ class TokenResponse {
   // maps a json object with a list of TokenResponse-objects as value to a dart map
   static Map<String, List<TokenResponse>> mapListFromJson(
     dynamic json, {
-    bool growable = false,
+    final bool growable = false,
   }) {
     final map = <String, List<TokenResponse>>{};
     if (json is Map && json.isNotEmpty) {
