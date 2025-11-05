@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFinal,
         ActionInProgress,
         ActionStarted,
         ActionState,
@@ -104,7 +102,7 @@ class EditFormBuilder<
   T,
   D extends FormData<T>,
   FB extends FormBloc<D, T>,
-  GB extends FunctionActionBloc<String, T?>,
+  GB extends FunctionActionBloc<String, T>,
   UB extends ConsumerActionBloc<T>
 >
     extends _FormBuilder {
@@ -146,9 +144,9 @@ class EditFormBuilder<
             // TODO possibly clear dirty now
           },
         ),
-        BlocListener<GB, ActionState<T?>>(
+        BlocListener<GB, ActionState<T>>(
           listener: (final context, final state) {
-            if (state is ActionFinal<T?, String>) {
+            if (state is ActionSuccess<T, String>) {
               final T? data = state.data;
               if (data != null) {
                 context.read<FB>().add(FormValuesUpdated(values: data));
@@ -159,7 +157,7 @@ class EditFormBuilder<
       ],
       child: BlocBuilder<FB, FormState2<D, T>>(
         builder: (final context, final formState) {
-          return BlocBuilder<GB, ActionState<T?>>(
+          return BlocBuilder<GB, ActionState<T>>(
             builder: (final context, final getState) {
               return BlocBuilder<UB, ActionState<void>>(
                 builder: (final context, final createState) {

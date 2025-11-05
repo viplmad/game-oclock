@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/services/services.dart' show TagService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class TagGetBloc extends FunctionActionBloc<String, Tag> {
   TagGetBloc({required this.service});
@@ -15,13 +10,8 @@ class TagGetBloc extends FunctionActionBloc<String, Tag> {
   final TagService service;
 
   @override
-  Future<ActionFinal<Tag, String>> doAction(
-    final String event,
-    final Tag? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Tag> doAction(final String event, final Tag? lastData) =>
+      service.get(event);
 }
 
 class TagCreateBloc extends IdentityActionBloc<Tag> {
@@ -30,13 +20,8 @@ class TagCreateBloc extends IdentityActionBloc<Tag> {
   final TagService service;
 
   @override
-  Future<ActionFinal<Tag, Tag>> doAction(
-    final Tag event,
-    final Tag? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Tag> doAction(final Tag event, final Tag? lastData) =>
+      service.create(event);
 }
 
 class TagUpdateBloc extends ConsumerActionBloc<Tag> {
@@ -45,13 +30,8 @@ class TagUpdateBloc extends ConsumerActionBloc<Tag> {
   final TagService service;
 
   @override
-  Future<ActionFinal<void, Tag>> doAction(
-    final Tag event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Tag event, final void lastData) =>
+      service.update(event);
 }
 
 class TagDeleteBloc extends ConsumerActionBloc<Tag> {
@@ -60,21 +40,11 @@ class TagDeleteBloc extends ConsumerActionBloc<Tag> {
   final TagService service;
 
   @override
-  Future<ActionFinal<void, Tag>> doAction(
-    final Tag event,
-    final void lastData,
-  ) async {
-    await service.delete(event.id);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Tag event, final void lastData) =>
+      service.delete(event.id);
 }
 
 class TagSelectBloc extends IdentityActionBloc<Tag?> {
   @override
-  Future<ActionFinal<Tag?, Tag?>> doAction(
-    final Tag? event,
-    final Tag? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  Future<Tag?> doAction(final Tag? event, final Tag? lastData) async => event;
 }

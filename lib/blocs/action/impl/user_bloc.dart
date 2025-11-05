@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show User, UserChangePassword;
 import 'package:game_oclock/services/services.dart' show UserService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class UserGetBloc extends FunctionActionBloc<String, User> {
   UserGetBloc({required this.service});
@@ -15,13 +10,8 @@ class UserGetBloc extends FunctionActionBloc<String, User> {
   final UserService service;
 
   @override
-  Future<ActionFinal<User, String>> doAction(
-    final String event,
-    final User? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<User> doAction(final String event, final User? lastData) =>
+      service.get(event);
 }
 
 class UserCreateBloc extends IdentityActionBloc<User> {
@@ -30,13 +20,8 @@ class UserCreateBloc extends IdentityActionBloc<User> {
   final UserService service;
 
   @override
-  Future<ActionFinal<User, User>> doAction(
-    final User event,
-    final User? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<User> doAction(final User event, final User? lastData) =>
+      service.create(event);
 }
 
 class UserUpdateBloc extends ConsumerActionBloc<User> {
@@ -45,13 +30,8 @@ class UserUpdateBloc extends ConsumerActionBloc<User> {
   final UserService service;
 
   @override
-  Future<ActionFinal<void, User>> doAction(
-    final User event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final User event, final void lastData) =>
+      service.update(event);
 }
 
 class UserChangePasswordBloc extends IdentityActionBloc<UserChangePassword> {
@@ -60,11 +40,10 @@ class UserChangePasswordBloc extends IdentityActionBloc<UserChangePassword> {
   final UserService service;
 
   @override
-  Future<ActionFinal<UserChangePassword, UserChangePassword>> doAction(
+  Future<UserChangePassword> doAction(
     final UserChangePassword event,
     final UserChangePassword? lastData,
-  ) async {
-    await service.changePassword(event.currentPassword, event.newPassword);
-    return ActionSuccess(data: event, event: event);
-  }
+  ) => service
+      .changePassword(event.currentPassword, event.newPassword)
+      .then((_) => event);
 }

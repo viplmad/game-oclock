@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
-    show ActionFinal, ActionState, MinimizedLayoutBloc;
+    show ActionState, ActionSuccess, MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -30,7 +30,7 @@ class MainLayoutBuilder extends StatelessWidget {
 
     return BlocBuilder<MinimizedLayoutBloc, ActionState<bool>>(
       builder: (final context, final minimizedState) {
-        final minimized = (minimizedState is ActionFinal<bool, bool>)
+        final minimized = (minimizedState is ActionSuccess<bool, bool>)
             ? minimizedState.data
             : false;
         return layoutTier == LayoutTier.compact && minimized

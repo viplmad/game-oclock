@@ -6,8 +6,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ListInitial,
         ListLoadBloc,
-        ListQuicksearchChanged,
-        ListReloaded,
         ListSearchChanged,
         LocationAvailableListBloc,
         UserGameDeleteBloc,
@@ -16,9 +14,9 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
-import 'package:game_oclock/components/list/tile_list.dart'
-    show TileListBuilder;
-import 'package:game_oclock/components/list/toolbar.dart';
+import 'package:game_oclock/components/list_detail.dart'
+    show RelationListBuilder;
+import 'package:game_oclock/components/show_confirmation_dialog.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
@@ -118,26 +116,26 @@ class UserGameDetail extends StatelessWidget {
       _loadOnlyInitial<LocationAvailableListBloc>(context);
     }
 
-    final List<TabDestination>
-    destinations = List.unmodifiable(<TabDestination>[
-      TabDestination(
-        icon: CommonIcons.detail,
-        labelBuilder: (final context) => context.localize().detailLabel,
-        onTap: (_) {},
-        child: _info(context),
-      ),
+    final mainTab = TabDestination(
+      icon: CommonIcons.detail,
+      labelBuilder: (final context) => context.localize().detailLabel,
+      onTap: (_) {},
+      child: _info(context),
+    );
+
+    final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
       TabDestination(
         icon: CommonIcons.locations,
         labelBuilder: (final context) => context.localize().locationsTitle,
         onTap: (final context) =>
             _loadOnlyInitial<LocationAvailableListBloc>(context),
         child: RelationListBuilder<LocationWithDate, LocationAvailableListBloc>(
-          label: context.localize().locationLabel,
           createFormBuilder: ([final quicksearch]) =>
               GameAvailableCreateForm(gameId: data.id, locationId: quicksearch),
           searchCreateFormBuilder: (final quicksearch) =>
               LocationCreateForm(initialName: quicksearch),
-          itemBuilder: (final data) => GameAvailableTileListItem(data: data),
+          itemBuilder: (final context, final data) =>
+              GameAvailableTileListItem(data: data),
         ),
       ),
       TabDestination(
@@ -146,17 +144,17 @@ class UserGameDetail extends StatelessWidget {
         onTap: (final context) =>
             _loadOnlyInitial<UserGameTagListBloc>(context),
         child: RelationListBuilder<Tag, UserGameTagListBloc>(
-          label: context.localize().tagLabel,
           createFormBuilder: ([final quicksearch]) =>
               GameTagCreateForm(gameId: data.id, tagId: quicksearch),
           searchCreateFormBuilder: (final quicksearch) =>
               TagCreateForm(initialName: quicksearch),
-          itemBuilder: (final data) => TagTileListItem(data: data),
+          itemBuilder: (final context, final data) =>
+              TagTileListItem(data: data),
         ),
       ),
     ]);
 
-    return Detail(
+    return DetailWithTabs(
       title: Text(data.title),
       image: SimpleCachedNetworkImage(
         imageUrl: data.coverUrl,
@@ -190,29 +188,26 @@ class UserGameDetail extends StatelessWidget {
         IconButton(
           icon: CommonIcons.delete,
           tooltip: context.localize().deleteLabel,
-          onPressed: () async => showFormDialog<UserGame>(
+          onPressed: () async => showConfirmationDialog(
             context,
-            builder: (final context) => _confirmDelete(context, data),
-            onSuccess: (final context, _) {
+            builder: (final context) => ConfirmationDialog(
+              title: context.localize().deleteDialogTitle,
+              subtitle: context.localize().deleteDialogSubtitle,
+              message: context.localize().deleteDialogDataTitle(data.title),
+              acceptLabel: MaterialLocalizations.of(
+                context,
+              ).deleteButtonTooltip,
+            ),
+            onSuccess: (final context) {
               context.read<UserGameDeleteBloc>().add(ActionStarted(data: data));
               onDeleteSucceeded(context); // TODO listen to bloc + snackbar
             },
           ),
         ),
       ],
-      child: extended
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(flex: 2, child: _info(context)),
-                const VerticalDivider(width: 1.0),
-                Expanded(
-                  flex: 4,
-                  child: _tabs(context, destinations: destinations.sublist(1)),
-                ),
-              ],
-            )
-          : _tabs(context, destinations: destinations),
+      extended: extended,
+      mainTab: mainTab,
+      tabs: tabs,
     );
   }
 
@@ -258,124 +253,10 @@ class UserGameDetail extends StatelessWidget {
     );
   }
 
-  Widget _tabs(
-    final BuildContext context, {
-    required final List<TabDestination> destinations,
-  }) {
-    return DefaultTabController(
-      length: destinations.length,
-      child: Column(
-        children: [
-          TabBar(
-            onTap: (final index) =>
-                destinations.elementAt(index).onTap(context),
-            tabs: destinations
-                .map(
-                  (final dest) =>
-                      Tab(icon: dest.icon, text: dest.labelBuilder(context)),
-                )
-                .toList(growable: false),
-          ),
-          Expanded(
-            child: TabBarView(
-              children: destinations
-                  .map((final dest) => dest.child)
-                  .toList(growable: false),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
       lb.add(ListSearchChanged(search: SearchDTO()));
     }
-  }
-
-  Widget _confirmDelete(final BuildContext context, final UserGame data) {
-    return AlertDialog(
-      title: Text(
-        context.localize().deleteDialogTitle,
-      ), // TODO HeaderText(AppLocalizations.of(context)!.deleteString),
-      content: ListTile(
-        title: Text(context.localize().deleteDialogDataTitle(data.title)),
-        subtitle: Text(context.localize().deleteDialogSubtitle),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          onPressed: () async => await Navigator.maybePop(context),
-        ),
-        TextButton(
-          onPressed: () async => await Navigator.maybePop(context, true),
-          child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
-        ),
-      ],
-    );
-  }
-}
-
-class RelationListBuilder<T, LB extends ListLoadBloc<T>>
-    extends StatelessWidget {
-  // TODO filtering?
-  const RelationListBuilder({
-    super.key,
-    required this.label,
-    required this.createFormBuilder,
-    this.searchCreateFormBuilder,
-    required this.itemBuilder,
-  });
-
-  final String label;
-  final Widget Function([String? value]) createFormBuilder;
-  final Widget Function(String value)? searchCreateFormBuilder;
-  final Widget Function(T data) itemBuilder;
-
-  @override
-  Widget build(final BuildContext context) {
-    return ListLayout(
-      toolbar: ListFullSearchToolbar(
-        onAddPressed: searchCreateFormBuilder == null
-            ? null
-            : (final quicksearch) async => showFormDialog(
-                context,
-                builder: (final context) =>
-                    searchCreateFormBuilder!(quicksearch),
-                onSuccess: (final context, _) async => showFormDialog<T>(
-                  context,
-                  builder: (final context) => createFormBuilder(quicksearch),
-                  onSuccess: (final context, _) =>
-                      context.read<LB>().add(const ListReloaded()),
-                ),
-              ),
-        onSearchChanged: (final value) =>
-            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
-        actions: [
-          IconButton(
-            icon: CommonIcons.link,
-            tooltip: context.localize().linkDataLabel(label),
-            onPressed: () async => showFormDialog<T>(
-              context,
-              builder: (final context) => createFormBuilder(),
-              onSuccess: (final context, _) =>
-                  context.read<LB>().add(const ListReloaded()),
-            ),
-          ),
-          IconButton(
-            icon: CommonIcons.reload,
-            tooltip: context.localize().reloadLabel,
-            onPressed: () => context.read<LB>().add(const ListReloaded()),
-          ),
-        ],
-      ),
-      statusbar: ListTotalStatusbarBuilder<T, LB>(),
-      child: TileListBuilder<T, LB>(
-        itemBuilder: (final context, final data, final index) =>
-            itemBuilder(data),
-      ),
-    );
   }
 }

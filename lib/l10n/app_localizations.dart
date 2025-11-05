@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'Error loading detail.'**
   String get errorDetailLoadTitle;
 
+  /// No description provided for @errorListSearchLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading search. Tap to retry.'**
+  String get errorListSearchLoadTitle;
+
   /// No description provided for @errorPageLoadTitle.
   ///
   /// In en, this message translates to:
@@ -868,11 +874,11 @@ abstract class AppLocalizations {
   /// **'Create new: \"{data}\"'**
   String createNewDataLabel(Object data);
 
-  /// No description provided for @linkDataLabel.
+  /// No description provided for @linkLabel.
   ///
   /// In en, this message translates to:
-  /// **'Link {data}'**
-  String linkDataLabel(Object data);
+  /// **'Link'**
+  String get linkLabel;
 
   /// No description provided for @totalDataLabel.
   ///

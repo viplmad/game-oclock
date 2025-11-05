@@ -5,9 +5,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFinal,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         CurrentUserGetBloc,
         DateLocaleConfigBloc,
         LocaleBloc,
@@ -104,13 +104,13 @@ class GameOClockApp extends StatelessWidget {
   Widget _createApp() {
     return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode?>>(
       builder: (final context, final themeState) {
-        final themeMode = (themeState is ActionFinal<ThemeMode?, ThemeMode?>)
+        final themeMode = (themeState is ActionSuccess<ThemeMode?, ThemeMode?>)
             ? themeState.data
             : null;
 
         return BlocBuilder<LocaleBloc, ActionState<Locale?>>(
           builder: (final context, final localeState) {
-            final locale = (localeState is ActionFinal<Locale?, Locale?>)
+            final locale = (localeState is ActionSuccess<Locale?, Locale?>)
                 ? localeState.data
                 : null;
 
@@ -120,9 +120,9 @@ class GameOClockApp extends StatelessWidget {
             >(
               builder: (final context, final state) {
                 final dateConfig =
-                    (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+                    (state is ActionSuccess<DateLocaleConfig, DateLocaleConfig>)
                     ? state.data
-                    : const DateLocaleConfig();
+                    : const DateLocaleConfig.def();
 
                 return MaterialApp.router(
                   title: 'Game o\'Clock',

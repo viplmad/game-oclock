@@ -8,11 +8,6 @@ class GameTagCreateBloc extends IdentityActionBloc<GameTag> {
   final GameService service;
 
   @override
-  Future<ActionFinal<GameTag, GameTag>> doAction(
-    final GameTag event,
-    final GameTag? lastData,
-  ) async {
-    await service.addTag(event.gameId, event.tagId);
-    return ActionSuccess(data: event, event: event);
-  }
+  Future<GameTag> doAction(final GameTag event, final GameTag? lastData) =>
+      service.addTag(event.gameId, event.tagId).then((_) => event);
 }

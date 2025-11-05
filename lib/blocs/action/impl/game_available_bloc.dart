@@ -8,11 +8,10 @@ class GameAvailableCreateBloc extends IdentityActionBloc<GameAvailable> {
   final GameService service;
 
   @override
-  Future<ActionFinal<GameAvailable, GameAvailable>> doAction(
+  Future<GameAvailable> doAction(
     final GameAvailable event,
     final GameAvailable? lastData,
-  ) async {
-    await service.addAvailability(event.gameId, event.locationId, event.date);
-    return ActionSuccess(data: event, event: event);
-  }
+  ) => service
+      .addAvailability(event.gameId, event.locationId, event.date)
+      .then((_) => event);
 }

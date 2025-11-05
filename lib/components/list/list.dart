@@ -53,7 +53,7 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
         return skeletonListView();
       }
       items = state.data!;
-      trailing = skeletonItemBuilder();
+      trailing = const Center(child: CircularProgressIndicator());
     } else if (state is ListFinal<T>) {
       if (state is ListLoadSuccess<T> && state.data.isEmpty) {
         return Center(child: Text(context.localize().emptyListLabel));

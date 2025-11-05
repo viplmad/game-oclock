@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show Location;
 import 'package:game_oclock/services/services.dart' show LocationService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class LocationGetBloc extends FunctionActionBloc<String, Location> {
   LocationGetBloc({required this.service});
@@ -15,13 +10,8 @@ class LocationGetBloc extends FunctionActionBloc<String, Location> {
   final LocationService service;
 
   @override
-  Future<ActionFinal<Location, String>> doAction(
-    final String event,
-    final Location? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Location> doAction(final String event, final Location? lastData) =>
+      service.get(event);
 }
 
 class LocationCreateBloc extends IdentityActionBloc<Location> {
@@ -30,13 +20,8 @@ class LocationCreateBloc extends IdentityActionBloc<Location> {
   final LocationService service;
 
   @override
-  Future<ActionFinal<Location, Location>> doAction(
-    final Location event,
-    final Location? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Location> doAction(final Location event, final Location? lastData) =>
+      service.create(event);
 }
 
 class LocationUpdateBloc extends ConsumerActionBloc<Location> {
@@ -45,13 +30,8 @@ class LocationUpdateBloc extends ConsumerActionBloc<Location> {
   final LocationService service;
 
   @override
-  Future<ActionFinal<void, Location>> doAction(
-    final Location event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Location event, final void lastData) =>
+      service.update(event);
 }
 
 class LocationDeleteBloc extends ConsumerActionBloc<Location> {
@@ -60,21 +40,14 @@ class LocationDeleteBloc extends ConsumerActionBloc<Location> {
   final LocationService service;
 
   @override
-  Future<ActionFinal<void, Location>> doAction(
-    final Location event,
-    final void lastData,
-  ) async {
-    await service.delete(event.id);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Location event, final void lastData) =>
+      service.delete(event.id);
 }
 
 class LocationSelectBloc extends IdentityActionBloc<Location?> {
   @override
-  Future<ActionFinal<Location?, Location?>> doAction(
+  Future<Location?> doAction(
     final Location? event,
     final Location? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  ) async => event;
 }

@@ -1,6 +1,7 @@
 {
   "errorListPageLoadTitle": "Error loading page.",
   "errorDetailLoadTitle": "Error loading detail.",
+  "errorListSearchLoadTitle": "Error loading search. Tap to retry.",
   "errorPageLoadTitle": "Loading error.",
   "retryLabel": "Retry",
   "emptyListLabel": "Empty",
@@ -128,7 +129,7 @@
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
   "gameEditionDataTitle": "{aTitle} - {bEdition}",
   "createNewDataLabel": "Create new: \"{data}\"",
-  "linkDataLabel": "Link {data}",
+  "linkLabel": "Link",
   "totalDataLabel": "Total: {data}",
   "hoursAbbr": "{hours} {hours, plural, =1{hr.} other{hrs.}}",
   "minutesAbbr": "{minutes} min."

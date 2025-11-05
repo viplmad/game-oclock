@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show Device;
 import 'package:game_oclock/services/services.dart' show DeviceService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class DeviceGetBloc extends FunctionActionBloc<String, Device> {
   DeviceGetBloc({required this.service});
@@ -15,13 +10,8 @@ class DeviceGetBloc extends FunctionActionBloc<String, Device> {
   final DeviceService service;
 
   @override
-  Future<ActionFinal<Device, String>> doAction(
-    final String event,
-    final Device? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Device> doAction(final String event, final Device? lastData) =>
+      service.get(event);
 }
 
 class DeviceCreateBloc extends IdentityActionBloc<Device> {
@@ -30,13 +20,8 @@ class DeviceCreateBloc extends IdentityActionBloc<Device> {
   final DeviceService service;
 
   @override
-  Future<ActionFinal<Device, Device>> doAction(
-    final Device event,
-    final Device? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<Device> doAction(final Device event, final Device? lastData) =>
+      service.create(event);
 }
 
 class DeviceUpdateBloc extends ConsumerActionBloc<Device> {
@@ -45,13 +30,8 @@ class DeviceUpdateBloc extends ConsumerActionBloc<Device> {
   final DeviceService service;
 
   @override
-  Future<ActionFinal<void, Device>> doAction(
-    final Device event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Device event, final void lastData) =>
+      service.update(event);
 }
 
 class DeviceDeleteBloc extends ConsumerActionBloc<Device> {
@@ -60,21 +40,12 @@ class DeviceDeleteBloc extends ConsumerActionBloc<Device> {
   final DeviceService service;
 
   @override
-  Future<ActionFinal<void, Device>> doAction(
-    final Device event,
-    final void lastData,
-  ) async {
-    await service.delete(event.id);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final Device event, final void lastData) =>
+      service.delete(event.id);
 }
 
 class DeviceSelectBloc extends IdentityActionBloc<Device?> {
   @override
-  Future<ActionFinal<Device?, Device?>> doAction(
-    final Device? event,
-    final Device? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  Future<Device?> doAction(final Device? event, final Device? lastData) async =>
+      event;
 }

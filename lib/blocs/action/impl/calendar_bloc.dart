@@ -1,21 +1,17 @@
-import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
+import '../action.dart' show IdentityActionBloc;
 
 class CalendarDaySelectBloc extends IdentityActionBloc<DateTime> {
   @override
-  Future<ActionFinal<DateTime, DateTime>> doAction(
+  Future<DateTime> doAction(
     final DateTime event,
     final DateTime? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  ) async => event;
 }
 
 class CalendarDayFocusBloc extends IdentityActionBloc<DateTime> {
   @override
-  Future<ActionFinal<DateTime, DateTime>> doAction(
+  Future<DateTime> doAction(
     final DateTime event,
     final DateTime? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  ) async => event;
 }

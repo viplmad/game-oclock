@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show GamePlaythrough;
 import 'package:game_oclock/services/services.dart' show GamePlaythroughService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class GamePlaythroughGetBloc
     extends FunctionActionBloc<String, GamePlaythrough> {
@@ -16,13 +11,10 @@ class GamePlaythroughGetBloc
   final GamePlaythroughService service;
 
   @override
-  Future<ActionFinal<GamePlaythrough, String>> doAction(
+  Future<GamePlaythrough> doAction(
     final String event,
     final GamePlaythrough? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  ) => service.get(event);
 }
 
 class GamePlaythroughCreateBloc extends IdentityActionBloc<GamePlaythrough> {
@@ -31,13 +23,10 @@ class GamePlaythroughCreateBloc extends IdentityActionBloc<GamePlaythrough> {
   final GamePlaythroughService service;
 
   @override
-  Future<ActionFinal<GamePlaythrough, GamePlaythrough>> doAction(
+  Future<GamePlaythrough> doAction(
     final GamePlaythrough event,
     final GamePlaythrough? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  ) => service.create(event);
 }
 
 class GamePlaythroughUpdateBloc extends ConsumerActionBloc<GamePlaythrough> {
@@ -46,11 +35,6 @@ class GamePlaythroughUpdateBloc extends ConsumerActionBloc<GamePlaythrough> {
   final GamePlaythroughService service;
 
   @override
-  Future<ActionFinal<void, GamePlaythrough>> doAction(
-    final GamePlaythrough event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final GamePlaythrough event, final void lastData) =>
+      service.update(event);
 }

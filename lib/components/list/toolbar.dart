@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFailure,
         ActionFinal,
         ActionInProgress,
+        ActionRestarted,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         ListFinal,
         ListLoadBloc,
         ListLoadInProgress,
@@ -19,7 +22,13 @@ import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show ChainOperatorType, FilterDTO, ListSearch, SearchValue, SortDTO;
+    show
+        ChainOperatorType,
+        FilterDTO,
+        ListSearch,
+        SearchValue,
+        SortDTO,
+        UnreachableError;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class ListLayout extends StatelessWidget {
@@ -112,7 +121,18 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
         if (state is ActionInProgress<ListSearch>) {
           return const ListFilterToolbarSkeleton();
         } else if (state is ActionFinal<ListSearch, void>) {
-          currentSearch = state.data;
+          if (state is ActionFailure<ListSearch, void>) {
+            return ListTile(
+              title: Text(context.localize().errorListSearchLoadTitle),
+              onTap: () => context.read<ListSearchGetBloc>().add(
+                const ActionRestarted(),
+              ),
+            );
+          } else if (state is ActionSuccess<ListSearch, void>) {
+            currentSearch = state.data;
+          } else {
+            throw UnreachableError();
+          }
         } else {
           return const SizedBox();
         }

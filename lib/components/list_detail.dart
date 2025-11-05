@@ -69,7 +69,7 @@ class ListDetailBuilder<
       listeners: [
         BlocListener<SB, ActionState<T?>>(
           listener: (final context, final state) {
-            final data = (state is ActionFinal<T?, T?>) ? state.data : null;
+            final data = (state is ActionSuccess<T?, T?>) ? state.data : null;
 
             // Allow minimized if selected
             context.read<MinimizedLayoutBloc>().add(
@@ -79,23 +79,23 @@ class ListDetailBuilder<
         ),
         BlocListener<ListSearchGetBloc, ActionState<ListSearch>>(
           listener: (final context, final state) {
-            if (state is ActionFinal<ListSearch, void>) {
+            if (state is ActionSuccess<ListSearch, void>) {
               context.read<LB>().add(
                 ListSearchChanged(search: state.data.search),
               );
             }
           },
         ),
-        BlocListener<ListSearchSaveBloc, ActionState<ListSearch>>(
+        BlocListener<ListSearchSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<ListSearch, ListSearch>) {
+            if (state is ActionSuccess<void, ListSearch>) {
               context.read<ListSearchGetBloc>().add(ActionStarted.empty());
             }
           },
         ),
-        BlocListener<ListStyleSaveBloc, ActionState<ListStyle>>(
+        BlocListener<ListStyleSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<ListStyle, ListStyle>) {
+            if (state is ActionSuccess<void, ListStyle>) {
               context.read<ListStyleGetBloc>().add(ActionStarted.empty());
             }
           },
@@ -103,13 +103,14 @@ class ListDetailBuilder<
       ],
       child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
-          final selectedStyle = (listStyleState is ActionFinal<ListStyle, void>)
+          final selectedStyle =
+              (listStyleState is ActionSuccess<ListStyle, void>)
               ? listStyleState.data
               : defaultListStyle;
 
           return BlocBuilder<SB, ActionState<T?>>(
             builder: (final context, final selectState) {
-              final selectedData = (selectState is ActionFinal<T?, T?>)
+              final selectedData = (selectState is ActionSuccess<T?, T?>)
                   ? selectState.data
                   : null;
 
@@ -335,6 +336,66 @@ class ListCreateDetailBuilder<
       detailBuilder: detailBuilder,
       listItemBuilder: listItemBuilder,
       itemAspectRatio: itemAspectRatio,
+    );
+  }
+}
+
+class RelationListBuilder<T, LB extends ListLoadBloc<T>>
+    extends StatelessWidget {
+  // TODO filtering?
+  const RelationListBuilder({
+    super.key,
+    required this.createFormBuilder,
+    this.searchCreateFormBuilder,
+    required this.itemBuilder,
+  });
+
+  final Widget Function([String? value]) createFormBuilder;
+  final Widget Function(String value)? searchCreateFormBuilder;
+  final Widget Function(BuildContext context, T data) itemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListLayout(
+      toolbar: ListFullSearchToolbar(
+        onAddPressed: searchCreateFormBuilder == null
+            ? null
+            : (final quicksearch) async => showFormDialog(
+                context,
+                builder: (final context) =>
+                    searchCreateFormBuilder!(quicksearch),
+                onSuccess: (final context, _) async => showFormDialog<T>(
+                  context,
+                  builder: (final context) => createFormBuilder(quicksearch),
+                  onSuccess: (final context, _) =>
+                      context.read<LB>().add(const ListReloaded()),
+                ),
+              ),
+        onSearchChanged: (final value) =>
+            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
+        actions: [
+          IconButton(
+            icon: CommonIcons.link,
+            tooltip: context.localize().linkLabel,
+            onPressed: () async => showFormDialog<T>(
+              context,
+              builder: (final context) => createFormBuilder(),
+              onSuccess: (final context, _) =>
+                  context.read<LB>().add(const ListReloaded()),
+            ),
+          ),
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () => context.read<LB>().add(const ListReloaded()),
+          ),
+        ],
+      ),
+      statusbar: ListTotalStatusbarBuilder<T, LB>(),
+      child: TileListBuilder<T, LB>(
+        itemBuilder: (final context, final data, final index) =>
+            itemBuilder(context, data),
+      ),
     );
   }
 }

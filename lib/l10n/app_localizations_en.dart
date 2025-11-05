@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorDetailLoadTitle => 'Error loading detail.';
 
   @override
+  String get errorListSearchLoadTitle => 'Error loading search. Tap to retry.';
+
+  @override
   String get errorPageLoadTitle => 'Loading error.';
 
   @override
@@ -436,9 +439,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String linkDataLabel(Object data) {
-    return 'Link $data';
-  }
+  String get linkLabel => 'Link';
 
   @override
   String totalDataLabel(Object data) {

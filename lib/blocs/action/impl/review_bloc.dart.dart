@@ -1,11 +1,6 @@
-import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
+import '../action.dart' show IdentityActionBloc;
 
 class ReviewYearSelectBloc extends IdentityActionBloc<int?> {
   @override
-  Future<ActionFinal<int?, int?>> doAction(
-    final int? event,
-    final int? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  Future<int?> doAction(final int? event, final int? lastData) async => event;
 }

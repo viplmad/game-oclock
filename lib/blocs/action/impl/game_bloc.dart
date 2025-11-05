@@ -2,12 +2,7 @@ import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/services/services.dart' show GameService;
 
 import '../action.dart'
-    show
-        ActionFinal,
-        ActionSuccess,
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {
   UserGameGetBloc({required this.service});
@@ -15,13 +10,8 @@ class UserGameGetBloc extends FunctionActionBloc<String, UserGame> {
   final GameService service;
 
   @override
-  Future<ActionFinal<UserGame, String>> doAction(
-    final String event,
-    final UserGame? lastData,
-  ) async {
-    final data = await service.get(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<UserGame> doAction(final String event, final UserGame? lastData) =>
+      service.get(event);
 }
 
 class UserGameCreateBloc extends IdentityActionBloc<UserGame> {
@@ -30,13 +20,8 @@ class UserGameCreateBloc extends IdentityActionBloc<UserGame> {
   final GameService service;
 
   @override
-  Future<ActionFinal<UserGame, UserGame>> doAction(
-    final UserGame event,
-    final UserGame? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<UserGame> doAction(final UserGame event, final UserGame? lastData) =>
+      service.create(event);
 }
 
 class UserGameUpdateBloc extends ConsumerActionBloc<UserGame> {
@@ -45,13 +30,8 @@ class UserGameUpdateBloc extends ConsumerActionBloc<UserGame> {
   final GameService service;
 
   @override
-  Future<ActionFinal<void, UserGame>> doAction(
-    final UserGame event,
-    final void lastData,
-  ) async {
-    await service.update(event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final UserGame event, final void lastData) =>
+      service.update(event);
 }
 
 class UserGameDeleteBloc extends ConsumerActionBloc<UserGame> {
@@ -60,21 +40,14 @@ class UserGameDeleteBloc extends ConsumerActionBloc<UserGame> {
   final GameService service;
 
   @override
-  Future<ActionFinal<void, UserGame>> doAction(
-    final UserGame event,
-    final void lastData,
-  ) async {
-    await service.delete(event.id);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final UserGame event, final void lastData) =>
+      service.delete(event.id);
 }
 
 class UserGameSelectBloc extends IdentityActionBloc<UserGame?> {
   @override
-  Future<ActionFinal<UserGame?, UserGame?>> doAction(
+  Future<UserGame?> doAction(
     final UserGame? event,
     final UserGame? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  ) async => event;
 }

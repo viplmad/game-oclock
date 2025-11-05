@@ -1,12 +1,8 @@
-import 'package:game_oclock/models/models.dart'
-    show ErrorDTO, ListSearch, errorCodeNotFound;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 import 'package:game_oclock/services/services.dart' show ListSearchService;
 
 import '../action.dart'
     show
-        ActionFailure,
-        ActionFinal,
-        ActionSuccess,
         ConsumerActionBloc,
         FunctionActionBloc,
         IdentityActionBloc,
@@ -19,37 +15,21 @@ class ListSearchGetBloc extends ProducerActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<ListSearch, void>> doAction(
-    final void event,
-    final ListSearch? lastData,
-  ) async {
-    final data = await service.getCurrent(space);
-    return data == null
-        ? ActionFailure.producer(
-            const ErrorDTO(
-              code: errorCodeNotFound,
-              message: 'No ListSearch saved',
-            ),
-            ListSearch.def(),
-          )
-        : ActionSuccess.producer(data);
-  }
+  Future<ListSearch> doAction(final void event, final ListSearch? lastData) =>
+      service
+          .getCurrent(space)
+          .then((final value) => value ?? ListSearch.def());
 }
 
-class ListSearchSaveBloc extends IdentityActionBloc<ListSearch> {
+class ListSearchSaveBloc extends ConsumerActionBloc<ListSearch> {
   ListSearchSaveBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
 
   @override
-  Future<ActionFinal<ListSearch, ListSearch>> doAction(
-    final ListSearch event,
-    final ListSearch? lastData,
-  ) async {
-    await service.saveCurrent(space, event);
-    return ActionSuccess(data: event, event: event);
-  }
+  Future<void> doAction(final ListSearch event, final void lastData) =>
+      service.saveCurrent(space, event);
 }
 
 // TODO rename
@@ -60,13 +40,8 @@ class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<ListSearch, String>> doAction(
-    final String event,
-    final ListSearch? lastData,
-  ) async {
-    final data = await service.get(space, event);
-    return ActionSuccess(data: data, event: event);
-  }
+  Future<ListSearch> doAction(final String event, final ListSearch? lastData) =>
+      service.get(space, event);
 }
 
 class SearchCreateBloc extends IdentityActionBloc<ListSearch> {
@@ -76,13 +51,10 @@ class SearchCreateBloc extends IdentityActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<ListSearch, ListSearch>> doAction(
+  Future<ListSearch> doAction(
     final ListSearch event,
     final ListSearch? lastData,
-  ) async {
-    final data = await service.create(space, event);
-    return ActionSuccess(data: data, event: event);
-  }
+  ) => service.create(space, event);
 }
 
 class SearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
@@ -92,11 +64,6 @@ class SearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
   final String space;
 
   @override
-  Future<ActionFinal<void, ListSearch>> doAction(
-    final ListSearch event,
-    final void lastData,
-  ) async {
-    await service.update(space, event);
-    return ActionSuccess.consumer(event);
-  }
+  Future<void> doAction(final ListSearch event, final void lastData) =>
+      service.update(space, event);
 }

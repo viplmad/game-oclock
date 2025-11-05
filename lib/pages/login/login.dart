@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFinal,
         ActionInProgress,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         FormDirtied,
         FormState2,
         FormStateSubmitInProgress,
@@ -101,7 +101,7 @@ class LoginBuilder extends StatelessWidget {
         >(
           listener: (final context, final state) {
             SavedLoginResponse savedLogin;
-            if (state is ActionFinal<SavedLoginResponse, void>) {
+            if (state is ActionSuccess<SavedLoginResponse, void>) {
               savedLogin = state.data;
               context.read<LoginFormBloc>().add(
                 FormValuesUpdated(

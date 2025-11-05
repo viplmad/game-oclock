@@ -7,10 +7,13 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionInProgress,
         ActionRestarted,
         ActionState,
+        ActionSuccess,
         FunctionActionBloc;
 import 'package:game_oclock/components/error_detail.dart' show DetailError;
 import 'package:game_oclock/components/skeletons/skeletons.dart'
     show DetailSkeleton;
+import 'package:game_oclock/models/models.dart'
+    show TabDestination, UnreachableError;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class Detail extends StatelessWidget {
@@ -70,6 +73,77 @@ class Detail extends StatelessWidget {
   }
 }
 
+class DetailWithTabs extends StatelessWidget {
+  const DetailWithTabs({
+    super.key,
+    required this.title,
+    this.image,
+    required this.onBackPressed,
+    this.actions,
+    required this.extended,
+    required this.mainTab,
+    required this.tabs,
+  });
+
+  final Widget title;
+  final Widget? image;
+  final VoidCallback onBackPressed;
+  final List<Widget>? actions;
+  final bool extended;
+  final TabDestination mainTab;
+  final List<TabDestination> tabs;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Detail(
+      title: title,
+      image: image,
+      onBackPressed: onBackPressed,
+      actions: actions,
+      child: extended
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 2, child: mainTab.child),
+                const VerticalDivider(width: 1.0),
+                Expanded(flex: 4, child: _tabs(context, destinations: tabs)),
+              ],
+            )
+          : _tabs(context, destinations: [mainTab, ...tabs]),
+    );
+  }
+
+  Widget _tabs(
+    final BuildContext context, {
+    required final List<TabDestination> destinations,
+  }) {
+    return DefaultTabController(
+      length: destinations.length,
+      child: Column(
+        children: [
+          TabBar(
+            onTap: (final index) =>
+                destinations.elementAt(index).onTap(context),
+            tabs: destinations
+                .map(
+                  (final dest) =>
+                      Tab(icon: dest.icon, text: dest.labelBuilder(context)),
+                )
+                .toList(growable: false),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: destinations
+                  .map((final dest) => dest.child)
+                  .toList(growable: false),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
     extends StatelessWidget {
   const DetailBuilder({
@@ -93,6 +167,7 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
         T data;
         if (state is ActionInProgress<T>) {
           if (state.data == null) {
+            // First time
             return DetailSkeleton(onBackPressed: onBackPressed);
           }
           data = state.data as T;
@@ -105,8 +180,11 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
                     context.read<GB>().add(const ActionRestarted()),
               ),
             );
+          } else if (state is ActionSuccess<T, String>) {
+            data = state.data;
+          } else {
+            throw UnreachableError();
           }
-          data = state.data;
         } else {
           return const SizedBox();
         }

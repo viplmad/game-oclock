@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFinal,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
         IdentityActionBloc,
@@ -55,7 +55,7 @@ class CalendarListDetailBuilder<
 
     return BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
       listener: (final context, final selectDayState) async {
-        if (selectDayState is ActionFinal<DateTime, DateTime>) {
+        if (selectDayState is ActionSuccess<DateTime, DateTime>) {
           final DateTime selectedDay = selectDayState.data;
 
           final ListState<T> listState = context.read<LB>().state;
@@ -83,20 +83,20 @@ class CalendarListDetailBuilder<
       child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
         builder: (final context, final selectDayState) {
           final DateTime selectedDay =
-              (selectDayState is ActionFinal<DateTime, DateTime>)
+              (selectDayState is ActionSuccess<DateTime, DateTime>)
               ? selectDayState.data
               : DateTime.now();
 
           return BlocBuilder<CalendarDayFocusBloc, ActionState<DateTime>>(
             builder: (final context, final focusDayState) {
               final DateTime focusedDay =
-                  (focusDayState is ActionFinal<DateTime, DateTime>)
+                  (focusDayState is ActionSuccess<DateTime, DateTime>)
                   ? focusDayState.data
                   : DateTime.now();
 
               return BlocBuilder<SB, ActionState<T?>>(
                 builder: (final context, final selectState) {
-                  final selectedData = (selectState is ActionFinal<T?, T?>)
+                  final selectedData = (selectState is ActionSuccess<T?, T?>)
                       ? selectState.data
                       : null;
 

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        ActionFinal,
         ActionStarted,
         ActionState,
+        ActionSuccess,
         DateLocaleConfigBloc,
         LocaleBloc,
         ThemeModeBloc;
@@ -207,7 +207,7 @@ class _SettingsBuilder extends StatelessWidget {
   Widget _themeSettingBuilder() {
     return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode?>>(
       builder: (final context, final state) {
-        final themeMode = (state is ActionFinal<ThemeMode?, ThemeMode?>)
+        final themeMode = (state is ActionSuccess<ThemeMode?, ThemeMode?>)
             ? state.data
             : null;
 
@@ -226,7 +226,7 @@ class _SettingsBuilder extends StatelessWidget {
   Widget _localeSettingBuilder() {
     return BlocBuilder<LocaleBloc, ActionState<Locale?>>(
       builder: (final context, final state) {
-        final locale = (state is ActionFinal<Locale?, Locale?>)
+        final locale = (state is ActionSuccess<Locale?, Locale?>)
             ? state.data
             : null;
 
@@ -246,9 +246,9 @@ class _SettingsBuilder extends StatelessWidget {
     return BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
       builder: (final context, final state) {
         final dateConfig =
-            (state is ActionFinal<DateLocaleConfig, DateLocaleConfig>)
+            (state is ActionSuccess<DateLocaleConfig, DateLocaleConfig>)
             ? state.data
-            : const DateLocaleConfig();
+            : const DateLocaleConfig.def();
 
         return Column(
           children: [

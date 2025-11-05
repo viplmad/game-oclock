@@ -1,14 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_oclock/models/models.dart'
+    show ErrorDTO, GameOClockException, errorCodeUnknown;
 
 import 'action.dart'
     show
         ActionEvent,
+        ActionFailure,
         ActionFinal,
         ActionInProgress,
         ActionInitial,
         ActionRestarted,
         ActionStarted,
-        ActionState;
+        ActionState,
+        ActionSuccess;
 
 abstract class FunctionActionBloc<E, S>
     extends Bloc<ActionEvent<E>, ActionState<S>> {
@@ -28,12 +32,14 @@ abstract class FunctionActionBloc<E, S>
   ) async {
     if (state is ActionInitial<S>) {
       emit(ActionInProgress<S>(data: null));
-      emit(await doAction(event, null));
+      emit(await _tryDoAction(event, null));
     } else if (state is ActionFinal<S, E>) {
-      final lastData = (state as ActionFinal<S, E>).data;
+      final S? lastData = (state is ActionSuccess<S, E>)
+          ? (state as ActionSuccess<S, E>).data
+          : null;
       emit(ActionInProgress<S>(data: lastData));
 
-      emit(await doAction(event, lastData));
+      emit(await _tryDoAction(event, lastData));
     }
   }
 
@@ -44,7 +50,29 @@ abstract class FunctionActionBloc<E, S>
     }
   }
 
-  Future<ActionFinal<S, E>> doAction(final E event, final S? lastData);
+  Future<ActionFinal<S, E>> _tryDoAction(
+    final E event,
+    final S? lastData,
+  ) async {
+    try {
+      return ActionSuccess<S, E>(
+        data: await doAction(event, lastData),
+        event: event,
+      );
+    } on GameOClockException catch (e) {
+      return ActionFailure<S, E>(
+        error: ErrorDTO(code: e.code, message: e.message),
+        event: event,
+      );
+    } catch (e) {
+      return ActionFailure<S, E>(
+        error: ErrorDTO(code: errorCodeUnknown, message: e.toString()),
+        event: event,
+      );
+    }
+  }
+
+  Future<S> doAction(final E event, final S? lastData);
 }
 
 abstract class ProducerActionBloc<S> extends FunctionActionBloc<void, S> {}

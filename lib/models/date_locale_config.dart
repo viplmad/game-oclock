@@ -11,6 +11,7 @@ final class DateLocaleConfig extends Equatable {
     this.dateFormat,
     this.timeFormat,
   });
+  const DateLocaleConfig.def() : this();
 
   @override
   List<Object?> get props => [

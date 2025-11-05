@@ -3,8 +3,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/services/services.dart'
     show AuthService, LoginService, UserService;
 
-import '../action.dart'
-    show ActionFinal, ActionSuccess, ConsumerActionBloc, ProducerActionBloc;
+import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
 class CurrentUserGetBloc extends ProducerActionBloc<User> {
   CurrentUserGetBloc({required this.service});
@@ -12,13 +11,8 @@ class CurrentUserGetBloc extends ProducerActionBloc<User> {
   final UserService service;
 
   @override
-  Future<ActionFinal<User, void>> doAction(
-    final void event,
-    final User? lastData,
-  ) async {
-    final data = await service.getCurrent();
-    return ActionSuccess.producer(data);
-  }
+  Future<User> doAction(final void event, final User? lastData) =>
+      service.getCurrent();
 }
 
 class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
@@ -27,13 +21,10 @@ class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
   final AuthService service;
 
   @override
-  Future<ActionFinal<SavedLoginResponse, void>> doAction(
+  Future<SavedLoginResponse> doAction(
     final void event,
     final SavedLoginResponse? lastData,
-  ) async {
-    final data = await service.getSavedLoginResponse();
-    return ActionSuccess.producer(data);
-  }
+  ) => service.getSavedLoginResponse();
 }
 
 class LoginSaveBloc extends ConsumerActionBloc<Login> {
@@ -43,22 +34,18 @@ class LoginSaveBloc extends ConsumerActionBloc<Login> {
   final AuthService authService;
 
   @override
-  Future<ActionFinal<void, Login>> doAction(
-    final Login event,
-    final void lastData,
-  ) async {
+  Future<void> doAction(final Login event, final void lastData) async {
     final loginResponse = await service.login(
       event.host,
       event.username,
       event.password,
     );
-    authService.saveLoginResponse(
+    return authService.saveLoginResponse(
       SavedLoginResponse(
         host: event.host,
         username: event.username,
         tokenResponse: loginResponse,
       ),
     );
-    return ActionSuccess.consumer(event);
   }
 }

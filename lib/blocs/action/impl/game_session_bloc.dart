@@ -1,7 +1,7 @@
 import 'package:game_oclock/models/models.dart' show GameSession;
 import 'package:game_oclock/services/services.dart' show GameSessionService;
 
-import '../action.dart' show ActionFinal, ActionSuccess, IdentityActionBloc;
+import '../action.dart' show IdentityActionBloc;
 
 class GameSessionCreateBloc extends IdentityActionBloc<GameSession> {
   GameSessionCreateBloc({required this.service});
@@ -9,21 +9,16 @@ class GameSessionCreateBloc extends IdentityActionBloc<GameSession> {
   final GameSessionService service;
 
   @override
-  Future<ActionFinal<GameSession, GameSession>> doAction(
+  Future<GameSession> doAction(
     final GameSession event,
     final GameSession? lastData,
-  ) async {
-    final data = await service.create(event);
-    return ActionSuccess(data: data, event: event);
-  }
+  ) => service.create(event);
 }
 
 class GameSessionSelectBloc extends IdentityActionBloc<GameSession?> {
   @override
-  Future<ActionFinal<GameSession?, GameSession?>> doAction(
+  Future<GameSession?> doAction(
     final GameSession? event,
     final GameSession? lastData,
-  ) async {
-    return ActionSuccess(data: event, event: event);
-  }
+  ) async => event;
 }

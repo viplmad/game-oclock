@@ -1,70 +1,46 @@
 import 'package:equatable/equatable.dart';
 import 'package:game_oclock/models/models.dart' show ErrorDTO;
 
-sealed class ActionState<T> extends Equatable {
+sealed class ActionState<S> extends Equatable {
   const ActionState();
 }
 
-final class ActionInitial<T> extends ActionState<T> {
+final class ActionInitial<S> extends ActionState<S> {
   const ActionInitial();
 
   @override
   List<Object?> get props => [];
 }
 
-final class ActionInProgress<T> extends ActionState<T> {
-  final T? data;
+final class ActionInProgress<S> extends ActionState<S> {
+  final S? data;
 
   const ActionInProgress({required this.data});
-  static ActionInProgress<void> empty() =>
-      // ignore: void_checks
-      const ActionInProgress<void>(data: '');
 
   @override
   List<Object?> get props => [data];
 }
 
-sealed class ActionFinal<T, K> extends ActionState<T> {
-  final T data;
-  final K event;
+sealed class ActionFinal<S, E> extends ActionState<S> {
+  final E event;
 
-  const ActionFinal({required this.data, required this.event});
+  const ActionFinal({required this.event});
+}
+
+final class ActionSuccess<S, E> extends ActionFinal<S, E> {
+  final S data;
+
+  const ActionSuccess({required this.data, required super.event});
 
   @override
   List<Object?> get props => [data];
 }
 
-final class ActionSuccess<T, K> extends ActionFinal<T, K> {
-  const ActionSuccess({required super.data, required super.event});
-  static ActionSuccess<S, void> producer<S>(final S data) =>
-      // ignore: void_checks
-      ActionSuccess<S, void>(data: data, event: '');
-  static ActionSuccess<void, S> consumer<S>(final S event) =>
-      // ignore: void_checks
-      ActionSuccess<void, S>(data: '', event: event);
-}
-
-final class ActionFailure<T, K> extends ActionFinal<T, K> {
+final class ActionFailure<S, E> extends ActionFinal<S, E> {
   final ErrorDTO error;
 
-  const ActionFailure({
-    required this.error,
-    required super.data,
-    required super.event,
-  });
-  static ActionFailure<S, void> producer<S>(
-    final ErrorDTO error,
-    final S data,
-  ) =>
-      // ignore: void_checks
-      ActionFailure(data: data, event: '', error: error);
-  static ActionFailure<void, S> consumer<S>(
-    final ErrorDTO error,
-    final S event,
-  ) =>
-      // ignore: void_checks
-      ActionFailure<void, S>(data: '', event: event, error: error);
+  const ActionFailure({required this.error, required super.event});
 
   @override
-  List<Object?> get props => [error, ...super.props];
+  List<Object?> get props => [error];
 }
