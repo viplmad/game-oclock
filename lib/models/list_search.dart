@@ -1,21 +1,20 @@
 import 'models.dart' show SearchDTO;
 
 final class ListSearch {
+  final String id;
   final String name;
   final SearchDTO search;
 
-  ListSearch.def() : this(name: '-', search: SearchDTO());
-  const ListSearch({required this.name, required this.search});
-
-  ListSearch copyWith({final int? page, final int? size}) {
-    return ListSearch(
-      name: name,
-      search: search.copyWith(page: page, size: size),
-    );
-  }
+  ListSearch.def() : this(id: '-1', name: '-', search: SearchDTO());
+  const ListSearch({
+    required this.id,
+    required this.name,
+    required this.search,
+  });
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    json[r'id'] = id;
     json[r'name'] = name;
     json[r'search'] = search.toJson();
     return json;
@@ -25,6 +24,7 @@ final class ListSearch {
     final json = value.cast<String, dynamic>();
 
     return ListSearch(
+      id: json[r'id'],
       name: json[r'name']!,
       search: SearchDTO.fromJson(json[r'search'])!,
     );

@@ -8,6 +8,7 @@ final class ErrorDTO {
 
 const errorCodeUnknown = 'UNKNOWN';
 const errorCodeNotFound = 'NOT_FOUND';
+const errorCodeAlreadyExists = 'ALREADY_EXISTS';
 const errorCodeInvalidForm = 'INVALID_FORM';
 
 final class GameOClockException implements Exception {

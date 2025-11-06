@@ -16,6 +16,7 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch> {
   @override
   ListSearch fromData(final SearchFormData values) {
     return ListSearch(
+      id: 'kasdmakl', // TODO
       name: values.name.text,
       search: SearchDTO(
         filter: values.filters

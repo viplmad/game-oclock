@@ -134,6 +134,7 @@ ListSearch mockSearch({
   final int sorts = 0,
 }) {
   return ListSearch(
+    id: mockId(),
     name: name ?? 'search',
     search: SearchDTO(
       filter: List.generate(
