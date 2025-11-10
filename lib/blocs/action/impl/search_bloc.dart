@@ -8,28 +8,28 @@ import '../action.dart'
         IdentityActionBloc,
         ProducerActionBloc;
 
-class ListSearchGetBloc extends ProducerActionBloc<ListSearch> {
+class ListSearchGetBloc extends ProducerActionBloc<ListSearch?> {
   ListSearchGetBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
 
   @override
-  Future<ListSearch> doAction(final void event, final ListSearch? lastData) =>
-      service
-          .getCurrent(space)
-          .then((final value) => value ?? ListSearch.def());
+  Future<ListSearch?> doAction(final void event, final ListSearch? lastData) =>
+      service.getCurrent(space);
 }
 
-class ListSearchSaveBloc extends ConsumerActionBloc<ListSearch> {
+class ListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {
   ListSearchSaveBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
 
   @override
-  Future<void> doAction(final ListSearch event, final void lastData) =>
-      service.saveCurrent(space, event);
+  Future<void> doAction(final ListSearch? event, final void lastData) =>
+      event == null
+      ? service.removeCurrent(space)
+      : service.saveCurrent(space, event);
 }
 
 // TODO rename

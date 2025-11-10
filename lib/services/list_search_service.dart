@@ -62,11 +62,12 @@ class ListSearchService {
     return repository.setString(_buildCurrentKey(space), id);
   }
 
+  Future<void> removeCurrent(final String space) {
+    return repository.remove(_buildCurrentKey(space));
+  }
+
   Future<ListSearch> get(final String space, final String id) async {
-    final result = await repository.get(
-      _buildElementKey(space, id),
-      (final value) => ListSearch.fromJson(json.decode(value)),
-    );
+    final result = await getOrNull(space, id);
     if (result == null) {
       throw GameOClockException(
         code: errorCodeNotFound,
@@ -76,12 +77,11 @@ class ListSearchService {
     return result;
   }
 
-  Future<ListSearch?> getOrNull(final String space, final String id) async {
-    try {
-      return await get(space, id);
-    } on GameOClockException {
-      return null;
-    }
+  Future<ListSearch?> getOrNull(final String space, final String id) {
+    return repository.get(
+      _buildElementKey(space, id),
+      (final value) => ListSearch.fromJson(json.decode(value)),
+    );
   }
 
   Future<ListSearch> create(final String space, final ListSearch search) async {
@@ -101,7 +101,7 @@ class ListSearchService {
     await repository.set(
       _buildElementKey(space, id),
       createdListSearch,
-      (final value) => json.encode(createdListSearch.toJson()),
+      (final value) => json.encode(value.toJson()),
     );
 
     final ids = await _getIds(space);
@@ -121,7 +121,7 @@ class ListSearchService {
     return repository.set(
       _buildElementKey(space, id),
       search,
-      (final value) => json.encode(search.toJson()),
+      (final value) => json.encode(value.toJson()),
     );
   }
 

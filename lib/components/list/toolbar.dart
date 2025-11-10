@@ -115,21 +115,21 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<ListSearchGetBloc, ActionState<ListSearch>>(
+    return BlocBuilder<ListSearchGetBloc, ActionState<ListSearch?>>(
       builder: (final context, final state) {
         ListSearch currentSearch;
-        if (state is ActionInProgress<ListSearch>) {
+        if (state is ActionInProgress<ListSearch?>) {
           return const ListFilterToolbarSkeleton();
-        } else if (state is ActionFinal<ListSearch, void>) {
-          if (state is ActionFailure<ListSearch, void>) {
+        } else if (state is ActionFinal<ListSearch?, void>) {
+          if (state is ActionFailure<ListSearch?, void>) {
             return ListTile(
               title: Text(context.localize().errorListSearchLoadTitle),
               onTap: () => context.read<ListSearchGetBloc>().add(
                 const ActionRestarted(),
               ),
             );
-          } else if (state is ActionSuccess<ListSearch, void>) {
-            currentSearch = state.data;
+          } else if (state is ActionSuccess<ListSearch?, void>) {
+            currentSearch = state.data ?? ListSearch.def();
           } else {
             throw UnreachableError();
           }
@@ -186,16 +186,15 @@ class ListFilterToolbar extends StatelessWidget {
         ],
       ),
       trailing: CommonIcons.down,
-      onTap: () async {
-        showModalBottomSheet<ListSearch>(
-          context: context,
-          builder: (final context) => SearchListPage(space: space),
-        ).then((final selectedSearch) {
-          if (selectedSearch != null && context.mounted) {
-            onSearchChanged(context, selectedSearch);
-          }
-        });
-      },
+      onTap: () async =>
+          showModalBottomSheet<ListSearch>(
+            context: context,
+            builder: (final context) => SearchListPage(space: space),
+          ).then((final selectedSearch) {
+            if (selectedSearch != null && context.mounted) {
+              onSearchChanged(context, selectedSearch);
+            }
+          }),
     );
   }
 

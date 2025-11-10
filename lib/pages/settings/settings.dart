@@ -6,9 +6,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
-        DateLocaleConfigBloc,
-        LocaleBloc,
-        ThemeModeBloc;
+        DateLocaleConfigGetBloc,
+        DateLocaleConfigSaveBloc,
+        LocaleGetBloc,
+        LocaleSaveBloc,
+        ThemeModeGetBloc,
+        ThemeModeSaveBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/models/models.dart'
@@ -205,9 +208,9 @@ class _SettingsBuilder extends StatelessWidget {
   }
 
   Widget _themeSettingBuilder() {
-    return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode?>>(
+    return BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode?>>(
       builder: (final context, final state) {
-        final themeMode = (state is ActionSuccess<ThemeMode?, ThemeMode?>)
+        final themeMode = (state is ActionSuccess<ThemeMode?, void>)
             ? state.data
             : null;
 
@@ -216,17 +219,18 @@ class _SettingsBuilder extends StatelessWidget {
           label: context.localize().chooseThemeLabel,
           value: themeMode,
           options: _themeModeOptions,
-          onSuccess: (final context, final newValue) =>
-              context.read<ThemeModeBloc>().add(ActionStarted(data: newValue)),
+          onSuccess: (final context, final newValue) => context
+              .read<ThemeModeSaveBloc>()
+              .add(ActionStarted(data: newValue)),
         );
       },
     );
   }
 
   Widget _localeSettingBuilder() {
-    return BlocBuilder<LocaleBloc, ActionState<Locale?>>(
+    return BlocBuilder<LocaleGetBloc, ActionState<Locale?>>(
       builder: (final context, final state) {
-        final locale = (state is ActionSuccess<Locale?, Locale?>)
+        final locale = (state is ActionSuccess<Locale?, void>)
             ? state.data
             : null;
 
@@ -236,18 +240,17 @@ class _SettingsBuilder extends StatelessWidget {
           value: locale,
           options: _localeOptions,
           onSuccess: (final context, final newValue) =>
-              context.read<LocaleBloc>().add(ActionStarted(data: newValue)),
+              context.read<LocaleSaveBloc>().add(ActionStarted(data: newValue)),
         );
       },
     );
   }
 
   Widget _dateSettingsBuilder() {
-    return BlocBuilder<DateLocaleConfigBloc, ActionState<DateLocaleConfig>>(
+    return BlocBuilder<DateLocaleConfigGetBloc, ActionState<DateLocaleConfig?>>(
       builder: (final context, final state) {
-        final dateConfig =
-            (state is ActionSuccess<DateLocaleConfig, DateLocaleConfig>)
-            ? state.data
+        final dateConfig = (state is ActionSuccess<DateLocaleConfig?, void>)
+            ? state.data ?? const DateLocaleConfig.def()
             : const DateLocaleConfig.def();
 
         return Column(
@@ -257,7 +260,7 @@ class _SettingsBuilder extends StatelessWidget {
               value: dateConfig.startingDayOfWeek,
               options: _startingDayOfWeekOptions,
               onSuccess: (final context, final newValue) =>
-                  context.read<DateLocaleConfigBloc>().add(
+                  context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
                         startingDayOfWeek: newValue,
@@ -272,7 +275,7 @@ class _SettingsBuilder extends StatelessWidget {
               value: dateConfig.timeFormat?.pattern,
               options: _timeFormatOptions,
               onSuccess: (final context, final newValue) =>
-                  context.read<DateLocaleConfigBloc>().add(
+                  context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
                         startingDayOfWeek: dateConfig.startingDayOfWeek,
@@ -287,7 +290,7 @@ class _SettingsBuilder extends StatelessWidget {
               value: dateConfig.dateFormat?.pattern,
               options: _dateFormatOptions,
               onSuccess: (final context, final newValue) =>
-                  context.read<DateLocaleConfigBloc>().add(
+                  context.read<DateLocaleConfigSaveBloc>().add(
                     ActionStarted(
                       data: DateLocaleConfig(
                         startingDayOfWeek: dateConfig.startingDayOfWeek,

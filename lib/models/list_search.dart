@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import 'models.dart' show SearchDTO;
 
-final class ListSearch {
+final class ListSearch extends Equatable {
   final String id;
   final String name;
   final SearchDTO search;
@@ -29,4 +31,7 @@ final class ListSearch {
       search: SearchDTO.fromJson(json[r'search'])!,
     );
   }
+
+  @override
+  List<Object?> get props => [name, search];
 }

@@ -1,26 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
+import 'package:game_oclock/services/services.dart' show SettingsService;
 
-import '../action.dart' show IdentityActionBloc;
+import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
-class DateLocaleConfigBloc extends IdentityActionBloc<DateLocaleConfig> {
+class ThemeModeGetBloc extends ProducerActionBloc<ThemeMode?> {
+  ThemeModeGetBloc({required this.service});
+
+  final SettingsService service;
+
   @override
-  Future<DateLocaleConfig> doAction(
-    final DateLocaleConfig event,
+  Future<ThemeMode?> doAction(final void event, final ThemeMode? lastData) =>
+      service.getCurrentTheme();
+}
+
+class ThemeModeSaveBloc extends ConsumerActionBloc<ThemeMode?> {
+  ThemeModeSaveBloc({required this.service});
+
+  final SettingsService service;
+
+  @override
+  Future<void> doAction(final ThemeMode? event, final void lastData) =>
+      event == null
+      ? service.removeCurrentTheme()
+      : service.saveCurrentTheme(event);
+}
+
+class LocaleGetBloc extends ProducerActionBloc<Locale?> {
+  LocaleGetBloc({required this.service});
+
+  final SettingsService service;
+
+  @override
+  Future<Locale?> doAction(final void event, final Locale? lastData) =>
+      service.getCurrentLocale();
+}
+
+class LocaleSaveBloc extends ConsumerActionBloc<Locale?> {
+  LocaleSaveBloc({required this.service});
+
+  final SettingsService service;
+
+  @override
+  Future<void> doAction(final Locale? event, final void lastData) =>
+      event == null
+      ? service.removeCurrentLocale()
+      : service.saveCurrentLocale(event);
+}
+
+class DateLocaleConfigGetBloc extends ProducerActionBloc<DateLocaleConfig?> {
+  DateLocaleConfigGetBloc({required this.service});
+
+  final SettingsService service;
+
+  @override
+  Future<DateLocaleConfig?> doAction(
+    final void event,
     final DateLocaleConfig? lastData,
-  ) async => event;
+  ) => service.getCurrentDateConfig();
 }
 
-class ThemeModeBloc extends IdentityActionBloc<ThemeMode?> {
-  @override
-  Future<ThemeMode?> doAction(
-    final ThemeMode? event,
-    final ThemeMode? lastData,
-  ) async => event;
-}
+class DateLocaleConfigSaveBloc extends ConsumerActionBloc<DateLocaleConfig?> {
+  DateLocaleConfigSaveBloc({required this.service});
 
-class LocaleBloc extends IdentityActionBloc<Locale?> {
+  final SettingsService service;
+
   @override
-  Future<Locale?> doAction(final Locale? event, final Locale? lastData) async =>
-      event;
+  Future<void> doAction(final DateLocaleConfig? event, final void lastData) =>
+      event == null
+      ? service.removeCurrentDateConfig()
+      : service.saveCurrentDateConfig(event);
 }

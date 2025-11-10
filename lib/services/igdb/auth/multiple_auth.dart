@@ -16,7 +16,7 @@ class MultipleAuth implements Authentication {
     final Map<String, String> headerParams,
   ) async {
     for (final auth in auths) {
-      auth.applyToParams(queryParams, headerParams);
+      await auth.applyToParams(queryParams, headerParams);
     }
   }
 

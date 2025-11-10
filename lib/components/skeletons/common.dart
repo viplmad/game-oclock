@@ -77,7 +77,7 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   void dispose() async {
-    delayFuture.cancel();
+    await delayFuture.cancel();
     animationController.dispose();
     super.dispose();
   }

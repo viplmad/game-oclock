@@ -5,15 +5,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionRestarted,
         ActionStarted,
         ActionState,
         ActionSuccess,
         CurrentUserGetBloc,
-        DateLocaleConfigBloc,
-        LocaleBloc,
+        DateLocaleConfigGetBloc,
+        DateLocaleConfigSaveBloc,
+        LocaleGetBloc,
+        LocaleSaveBloc,
         MinimizedLayoutBloc,
         SavedLoginResponseGetBloc,
-        ThemeModeBloc;
+        ThemeModeGetBloc,
+        ThemeModeSaveBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/models/models.dart' show DateLocaleConfig;
 import 'package:game_oclock/pages/routes.dart';
@@ -27,6 +31,7 @@ import 'package:game_oclock/services/services.dart'
         ListStyleService,
         LocationService,
         LoginService,
+        SettingsService,
         TagService,
         UserService;
 import 'package:game_oclock/services/shared_preferences_repository.dart';
@@ -58,6 +63,7 @@ class GameOClockApp extends StatelessWidget {
     final sharedPrefsRepository = SharedPreferencesRepository();
     final authService = AuthService();
     final userService = UserService();
+    final settingsService = SettingsService(sharedPrefsRepository);
 
     return MultiRepositoryProvider(
       providers: [
@@ -79,6 +85,7 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<ListStyleService>(
           create: (_) => ListStyleService(sharedPrefsRepository),
         ),
+        RepositoryProvider<SettingsService>(create: (_) => settingsService),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -92,9 +99,28 @@ class GameOClockApp extends StatelessWidget {
             create: (_) =>
                 MinimizedLayoutBloc()..add(const ActionStarted(data: false)),
           ),
-          BlocProvider(create: (_) => DateLocaleConfigBloc()),
-          BlocProvider(create: (_) => ThemeModeBloc()),
-          BlocProvider(create: (_) => LocaleBloc()),
+          BlocProvider(
+            create: (_) =>
+                ThemeModeGetBloc(service: settingsService)
+                  ..add(ActionStarted.empty()),
+          ),
+          BlocProvider(
+            create: (_) => ThemeModeSaveBloc(service: settingsService),
+          ),
+          BlocProvider(
+            create: (_) =>
+                LocaleGetBloc(service: settingsService)
+                  ..add(ActionStarted.empty()),
+          ),
+          BlocProvider(create: (_) => LocaleSaveBloc(service: settingsService)),
+          BlocProvider(
+            create: (_) =>
+                DateLocaleConfigGetBloc(service: settingsService)
+                  ..add(ActionStarted.empty()),
+          ),
+          BlocProvider(
+            create: (_) => DateLocaleConfigSaveBloc(service: settingsService),
+          ),
         ],
         child: _createApp(),
       ),
@@ -102,53 +128,80 @@ class GameOClockApp extends StatelessWidget {
   }
 
   Widget _createApp() {
-    return BlocBuilder<ThemeModeBloc, ActionState<ThemeMode?>>(
-      builder: (final context, final themeState) {
-        final themeMode = (themeState is ActionSuccess<ThemeMode?, ThemeMode?>)
-            ? themeState.data
-            : null;
-
-        return BlocBuilder<LocaleBloc, ActionState<Locale?>>(
-          builder: (final context, final localeState) {
-            final locale = (localeState is ActionSuccess<Locale?, Locale?>)
-                ? localeState.data
-                : null;
-
-            return BlocBuilder<
-              DateLocaleConfigBloc,
-              ActionState<DateLocaleConfig>
-            >(
-              builder: (final context, final state) {
-                final dateConfig =
-                    (state is ActionSuccess<DateLocaleConfig, DateLocaleConfig>)
-                    ? state.data
-                    : const DateLocaleConfig.def();
-
-                return MaterialApp.router(
-                  title: 'Game o\'Clock',
-                  theme: ThemeData.light(),
-                  darkTheme: ThemeData.dark(),
-                  themeMode: themeMode,
-                  locale: locale,
-                  localizationsDelegates: [
-                    DurationPickerLocalizations
-                        .delegate, // TODO use instead of hoursabbr
-                    AppLocalizations.delegate,
-                    CustomMaterialLocalizationsDelegate(
-                      GlobalMaterialLocalizations.delegate,
-                      dateConfig,
-                    ),
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                  ],
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  routerConfig: routerConfig,
-                );
-              },
-            );
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ThemeModeSaveBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, ThemeMode?>) {
+              context.read<ThemeModeGetBloc>().add(const ActionRestarted());
+            }
           },
-        );
-      },
+        ),
+        BlocListener<LocaleSaveBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, Locale?>) {
+              context.read<LocaleGetBloc>().add(const ActionRestarted());
+            }
+          },
+        ),
+        BlocListener<DateLocaleConfigSaveBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, DateLocaleConfig?>) {
+              context.read<DateLocaleConfigGetBloc>().add(
+                const ActionRestarted(),
+              );
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode?>>(
+        builder: (final context, final themeState) {
+          final themeMode = (themeState is ActionSuccess<ThemeMode?, void>)
+              ? themeState.data
+              : null;
+
+          return BlocBuilder<LocaleGetBloc, ActionState<Locale?>>(
+            builder: (final context, final localeState) {
+              final locale = (localeState is ActionSuccess<Locale?, void>)
+                  ? localeState.data
+                  : null;
+
+              return BlocBuilder<
+                DateLocaleConfigGetBloc,
+                ActionState<DateLocaleConfig?>
+              >(
+                builder: (final context, final state) {
+                  final dateConfig =
+                      (state is ActionSuccess<DateLocaleConfig?, void>)
+                      ? state.data ?? const DateLocaleConfig.def()
+                      : const DateLocaleConfig.def();
+
+                  return MaterialApp.router(
+                    title: 'Game o\'Clock',
+                    theme: ThemeData.light(),
+                    darkTheme: ThemeData.dark(),
+                    themeMode: themeMode,
+                    locale: locale,
+                    localizationsDelegates: [
+                      DurationPickerLocalizations
+                          .delegate, // TODO use instead of hoursabbr
+                      AppLocalizations.delegate,
+                      CustomMaterialLocalizationsDelegate(
+                        GlobalMaterialLocalizations.delegate,
+                        dateConfig,
+                      ),
+                      GlobalCupertinoLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                    ],
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    routerConfig: routerConfig,
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

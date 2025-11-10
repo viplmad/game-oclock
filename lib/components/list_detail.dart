@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/action/action_state.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionRestarted,
         ActionStarted,
         ActionState,
         IdentityActionBloc,
@@ -20,7 +21,7 @@ import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, ListSearch, ListStyle, defaultListStyle;
+    show LayoutTier, ListSearch, ListStyle, SearchDTO, defaultListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -77,35 +78,37 @@ class ListDetailBuilder<
             );
           },
         ),
-        BlocListener<ListSearchGetBloc, ActionState<ListSearch>>(
+        BlocListener<ListSearchGetBloc, ActionState<ListSearch?>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<ListSearch, void>) {
-              context.read<LB>().add(
-                ListSearchChanged(search: state.data.search),
-              );
+            if (state is ActionFinal<ListSearch?, void>) {
+              final currentSearch = (state is ActionSuccess<ListSearch?, void>)
+                  ? state.data?.search ?? SearchDTO()
+                  : SearchDTO();
+
+              context.read<LB>().add(ListSearchChanged(search: currentSearch));
             }
           },
         ),
         BlocListener<ListSearchSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<void, ListSearch>) {
-              context.read<ListSearchGetBloc>().add(ActionStarted.empty());
+            if (state is ActionSuccess<void, ListSearch?>) {
+              context.read<ListSearchGetBloc>().add(const ActionRestarted());
             }
           },
         ),
         BlocListener<ListStyleSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<void, ListStyle>) {
-              context.read<ListStyleGetBloc>().add(ActionStarted.empty());
+            if (state is ActionSuccess<void, ListStyle?>) {
+              context.read<ListStyleGetBloc>().add(const ActionRestarted());
             }
           },
         ),
       ],
-      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
+      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle?>>(
         builder: (final context, final listStyleState) {
           final selectedStyle =
-              (listStyleState is ActionSuccess<ListStyle, void>)
-              ? listStyleState.data
+              (listStyleState is ActionSuccess<ListStyle?, void>)
+              ? listStyleState.data ?? defaultListStyle
               : defaultListStyle;
 
           return BlocBuilder<SB, ActionState<T?>>(
