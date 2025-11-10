@@ -8,7 +8,7 @@ class ListStyleService {
 
   final SharedPreferencesRepository repository;
 
-  Future<ListStyle?> getCurrent(final String space) {
+  Future<ListStyle> getCurrent(final String space) {
     return repository.get(
       _buildCurrentKey(space),
       (final value) => parseListStyle(value),

@@ -3,14 +3,14 @@ import 'package:game_oclock/services/services.dart' show ListStyleService;
 
 import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
-class ListStyleGetBloc extends ProducerActionBloc<ListStyle?> {
+class ListStyleGetBloc extends ProducerActionBloc<ListStyle> {
   ListStyleGetBloc({required this.service, required this.space});
 
   final ListStyleService service;
   final String space;
 
   @override
-  Future<ListStyle?> doAction(final void event, final ListStyle? lastData) =>
+  Future<ListStyle> doAction(final void event, final ListStyle? lastData) =>
       service.getCurrent(space);
 }
 

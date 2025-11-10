@@ -106,12 +106,6 @@ abstract class AppLocalizations {
   /// **'Error loading detail.'**
   String get errorDetailLoadTitle;
 
-  /// No description provided for @errorListSearchLoadTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading search. Tap to retry.'**
-  String get errorListSearchLoadTitle;
-
   /// No description provided for @errorPageLoadTitle.
   ///
   /// In en, this message translates to:

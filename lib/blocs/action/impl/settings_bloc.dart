@@ -4,13 +4,13 @@ import 'package:game_oclock/services/services.dart' show SettingsService;
 
 import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
-class ThemeModeGetBloc extends ProducerActionBloc<ThemeMode?> {
+class ThemeModeGetBloc extends ProducerActionBloc<ThemeMode> {
   ThemeModeGetBloc({required this.service});
 
   final SettingsService service;
 
   @override
-  Future<ThemeMode?> doAction(final void event, final ThemeMode? lastData) =>
+  Future<ThemeMode> doAction(final void event, final ThemeMode? lastData) =>
       service.getCurrentTheme();
 }
 
@@ -26,13 +26,13 @@ class ThemeModeSaveBloc extends ConsumerActionBloc<ThemeMode?> {
       : service.saveCurrentTheme(event);
 }
 
-class LocaleGetBloc extends ProducerActionBloc<Locale?> {
+class LocaleGetBloc extends ProducerActionBloc<Locale> {
   LocaleGetBloc({required this.service});
 
   final SettingsService service;
 
   @override
-  Future<Locale?> doAction(final void event, final Locale? lastData) =>
+  Future<Locale> doAction(final void event, final Locale? lastData) =>
       service.getCurrentLocale();
 }
 
@@ -48,13 +48,13 @@ class LocaleSaveBloc extends ConsumerActionBloc<Locale?> {
       : service.saveCurrentLocale(event);
 }
 
-class DateLocaleConfigGetBloc extends ProducerActionBloc<DateLocaleConfig?> {
+class DateLocaleConfigGetBloc extends ProducerActionBloc<DateLocaleConfig> {
   DateLocaleConfigGetBloc({required this.service});
 
   final SettingsService service;
 
   @override
-  Future<DateLocaleConfig?> doAction(
+  Future<DateLocaleConfig> doAction(
     final void event,
     final DateLocaleConfig? lastData,
   ) => service.getCurrentDateConfig();

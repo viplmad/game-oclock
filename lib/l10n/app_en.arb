@@ -1,7 +1,6 @@
 {
   "errorListPageLoadTitle": "Error loading page.",
   "errorDetailLoadTitle": "Error loading detail.",
-  "errorListSearchLoadTitle": "Error loading search. Tap to retry.",
   "errorPageLoadTitle": "Loading error.",
   "retryLabel": "Retry",
   "emptyListLabel": "Empty",

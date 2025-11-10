@@ -208,9 +208,9 @@ class _SettingsBuilder extends StatelessWidget {
   }
 
   Widget _themeSettingBuilder() {
-    return BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode?>>(
+    return BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode>>(
       builder: (final context, final state) {
-        final themeMode = (state is ActionSuccess<ThemeMode?, void>)
+        final themeMode = (state is ActionSuccess<ThemeMode, void>)
             ? state.data
             : null;
 
@@ -228,9 +228,9 @@ class _SettingsBuilder extends StatelessWidget {
   }
 
   Widget _localeSettingBuilder() {
-    return BlocBuilder<LocaleGetBloc, ActionState<Locale?>>(
+    return BlocBuilder<LocaleGetBloc, ActionState<Locale>>(
       builder: (final context, final state) {
-        final locale = (state is ActionSuccess<Locale?, void>)
+        final locale = (state is ActionSuccess<Locale, void>)
             ? state.data
             : null;
 
@@ -247,10 +247,10 @@ class _SettingsBuilder extends StatelessWidget {
   }
 
   Widget _dateSettingsBuilder() {
-    return BlocBuilder<DateLocaleConfigGetBloc, ActionState<DateLocaleConfig?>>(
+    return BlocBuilder<DateLocaleConfigGetBloc, ActionState<DateLocaleConfig>>(
       builder: (final context, final state) {
-        final dateConfig = (state is ActionSuccess<DateLocaleConfig?, void>)
-            ? state.data ?? const DateLocaleConfig.def()
+        final dateConfig = (state is ActionSuccess<DateLocaleConfig, void>)
+            ? state.data
             : const DateLocaleConfig.def();
 
         return Column(

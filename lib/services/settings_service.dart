@@ -10,7 +10,7 @@ class SettingsService {
 
   final SharedPreferencesRepository repository;
 
-  Future<ThemeMode?> getCurrentTheme() {
+  Future<ThemeMode> getCurrentTheme() {
     return repository.get(
       _buildCurrentThemeKey(),
       (final value) => parseThemeMode(value),
@@ -29,7 +29,7 @@ class SettingsService {
     return repository.remove(_buildCurrentThemeKey());
   }
 
-  Future<Locale?> getCurrentLocale() {
+  Future<Locale> getCurrentLocale() {
     return repository.get(
       _buildCurrentLocaleKey(),
       (final value) => parseLocale(value),
@@ -48,7 +48,7 @@ class SettingsService {
     return repository.remove(_buildCurrentLocaleKey());
   }
 
-  Future<DateLocaleConfig?> getCurrentDateConfig() {
+  Future<DateLocaleConfig> getCurrentDateConfig() {
     return repository.get(
       _buildCurrentDateConfigKey(),
       (final value) => DateLocaleConfig.fromJson(json.decode(value)),

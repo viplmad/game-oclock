@@ -78,11 +78,11 @@ class ListDetailBuilder<
             );
           },
         ),
-        BlocListener<ListSearchGetBloc, ActionState<ListSearch?>>(
+        BlocListener<ListSearchGetBloc, ActionState<ListSearch>>(
           listener: (final context, final state) {
-            if (state is ActionFinal<ListSearch?, void>) {
-              final currentSearch = (state is ActionSuccess<ListSearch?, void>)
-                  ? state.data?.search ?? SearchDTO()
+            if (state is ActionFinal<ListSearch, void>) {
+              final currentSearch = (state is ActionSuccess<ListSearch, void>)
+                  ? state.data.search
                   : SearchDTO();
 
               context.read<LB>().add(ListSearchChanged(search: currentSearch));
@@ -104,11 +104,11 @@ class ListDetailBuilder<
           },
         ),
       ],
-      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle?>>(
+      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
           final selectedStyle =
-              (listStyleState is ActionSuccess<ListStyle?, void>)
-              ? listStyleState.data ?? defaultListStyle
+              (listStyleState is ActionSuccess<ListStyle, void>)
+              ? listStyleState.data
               : defaultListStyle;
 
           return BlocBuilder<SB, ActionState<T?>>(

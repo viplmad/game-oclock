@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
@@ -6,7 +7,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionFailure,
         ActionFinal,
         ActionStarted,
-        ActionSuccess,
         CurrentUserGetBloc,
         MinimizedLayoutBloc,
         SavedLoginResponseGetBloc;
@@ -169,12 +169,10 @@ FutureOr<String?> _authGuardRedirect(
   final savedLoginState =
       await savedLoginBloc.stream.firstWhere(
             (final actionState) =>
-                actionState is ActionFinal<SavedLoginResponse?, void>,
+                actionState is ActionFinal<SavedLoginResponse, void>,
           )
-          as ActionFinal<SavedLoginResponse?, void>;
-  if (savedLoginState is ActionFailure<SavedLoginResponse?, void> ||
-      (savedLoginState is ActionSuccess<SavedLoginResponse?, void> &&
-          savedLoginState.data == null)) {
+          as ActionFinal<SavedLoginResponse, void>;
+  if (savedLoginState is ActionFailure<SavedLoginResponse, void>) {
     return CommonPaths.loginPath;
   }
 

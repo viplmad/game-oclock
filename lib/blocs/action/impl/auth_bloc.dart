@@ -15,14 +15,13 @@ class CurrentUserGetBloc extends ProducerActionBloc<User> {
       service.getCurrent();
 }
 
-class SavedLoginResponseGetBloc
-    extends ProducerActionBloc<SavedLoginResponse?> {
+class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
   SavedLoginResponseGetBloc({required this.service});
 
   final AuthService service;
 
   @override
-  Future<SavedLoginResponse?> doAction(
+  Future<SavedLoginResponse> doAction(
     final void event,
     final SavedLoginResponse? lastData,
   ) => service.getCurrent();

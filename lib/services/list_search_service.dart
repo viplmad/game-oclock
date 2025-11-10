@@ -19,7 +19,7 @@ class ListSearchService {
       .get(_buildIdsKey(space), (final value) {
         return (json.decode(value) as List).cast<String>();
       })
-      .then((final value) => List.unmodifiable(value ?? []));
+      .then((final value) => List.unmodifiable(value));
 
   Future<void> _setIds(final String space, final List<String> keys) =>
       repository.set(
@@ -33,21 +33,15 @@ class ListSearchService {
 
     final result = <ListSearch>[];
     for (final id in ids) {
-      final listSearch = await getOrNull(space, id);
-      if (listSearch != null) {
-        result.add(listSearch);
-      }
+      final listSearch = await get(space, id);
+      result.add(listSearch);
     }
     return result;
   }
 
-  Future<ListSearch?> getCurrent(final String space) async {
+  Future<ListSearch> getCurrent(final String space) async {
     final currentKey = await repository.getString(_buildCurrentKey(space));
-    if (currentKey == null) {
-      return null;
-    }
-
-    return getOrNull(space, currentKey);
+    return get(space, currentKey);
   }
 
   Future<void> saveCurrent(final String space, final ListSearch search) async {
@@ -66,18 +60,7 @@ class ListSearchService {
     return repository.remove(_buildCurrentKey(space));
   }
 
-  Future<ListSearch> get(final String space, final String id) async {
-    final result = await getOrNull(space, id);
-    if (result == null) {
-      throw GameOClockException(
-        code: errorCodeNotFound,
-        message: 'ListSearch with id $id not found',
-      );
-    }
-    return result;
-  }
-
-  Future<ListSearch?> getOrNull(final String space, final String id) {
+  Future<ListSearch> get(final String space, final String id) {
     return repository.get(
       _buildElementKey(space, id),
       (final value) => ListSearch.fromJson(json.decode(value)),

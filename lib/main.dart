@@ -154,26 +154,26 @@ class GameOClockApp extends StatelessWidget {
           },
         ),
       ],
-      child: BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode?>>(
+      child: BlocBuilder<ThemeModeGetBloc, ActionState<ThemeMode>>(
         builder: (final context, final themeState) {
-          final themeMode = (themeState is ActionSuccess<ThemeMode?, void>)
+          final themeMode = (themeState is ActionSuccess<ThemeMode, void>)
               ? themeState.data
               : null;
 
-          return BlocBuilder<LocaleGetBloc, ActionState<Locale?>>(
+          return BlocBuilder<LocaleGetBloc, ActionState<Locale>>(
             builder: (final context, final localeState) {
-              final locale = (localeState is ActionSuccess<Locale?, void>)
+              final locale = (localeState is ActionSuccess<Locale, void>)
                   ? localeState.data
                   : null;
 
               return BlocBuilder<
                 DateLocaleConfigGetBloc,
-                ActionState<DateLocaleConfig?>
+                ActionState<DateLocaleConfig>
               >(
                 builder: (final context, final state) {
                   final dateConfig =
-                      (state is ActionSuccess<DateLocaleConfig?, void>)
-                      ? state.data ?? const DateLocaleConfig.def()
+                      (state is ActionSuccess<DateLocaleConfig, void>)
+                      ? state.data
                       : const DateLocaleConfig.def();
 
                   return MaterialApp.router(

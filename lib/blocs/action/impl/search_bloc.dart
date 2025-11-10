@@ -8,14 +8,14 @@ import '../action.dart'
         IdentityActionBloc,
         ProducerActionBloc;
 
-class ListSearchGetBloc extends ProducerActionBloc<ListSearch?> {
+class ListSearchGetBloc extends ProducerActionBloc<ListSearch> {
   ListSearchGetBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
 
   @override
-  Future<ListSearch?> doAction(final void event, final ListSearch? lastData) =>
+  Future<ListSearch> doAction(final void event, final ListSearch? lastData) =>
       service.getCurrent(space);
 }
 

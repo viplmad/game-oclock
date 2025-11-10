@@ -9,7 +9,7 @@ class AuthService {
 
   final SharedPreferencesRepository repository;
 
-  Future<SavedLoginResponse?> getCurrent() {
+  Future<SavedLoginResponse> getCurrent() {
     return repository.get(
       _buildCurrentKey(),
       (final value) => SavedLoginResponse.fromJson(json.decode(value)),
