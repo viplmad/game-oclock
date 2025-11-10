@@ -97,12 +97,13 @@ class LoginBuilder extends StatelessWidget {
         ),
         BlocListener<
           SavedLoginResponseGetBloc,
-          ActionState<SavedLoginResponse>
+          ActionState<SavedLoginResponse?>
         >(
           listener: (final context, final state) {
             SavedLoginResponse savedLogin;
-            if (state is ActionSuccess<SavedLoginResponse, void>) {
-              savedLogin = state.data;
+            if (state is ActionSuccess<SavedLoginResponse?, void> &&
+                state.data != null) {
+              savedLogin = state.data!;
               context.read<LoginFormBloc>().add(
                 FormValuesUpdated(
                   values: Login(
@@ -120,7 +121,7 @@ class LoginBuilder extends StatelessWidget {
         builder: (final context, final formState) {
           return BlocBuilder<
             SavedLoginResponseGetBloc,
-            ActionState<SavedLoginResponse>
+            ActionState<SavedLoginResponse?>
           >(
             builder: (final context, final getState) {
               return BlocBuilder<LoginSaveBloc, ActionState<void>>(

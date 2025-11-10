@@ -6,6 +6,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionFailure,
         ActionFinal,
         ActionStarted,
+        ActionSuccess,
         CurrentUserGetBloc,
         MinimizedLayoutBloc,
         SavedLoginResponseGetBloc;
@@ -168,10 +169,12 @@ FutureOr<String?> _authGuardRedirect(
   final savedLoginState =
       await savedLoginBloc.stream.firstWhere(
             (final actionState) =>
-                actionState is ActionFinal<SavedLoginResponse, void>,
+                actionState is ActionFinal<SavedLoginResponse?, void>,
           )
-          as ActionFinal<SavedLoginResponse, void>;
-  if (savedLoginState is ActionFailure<SavedLoginResponse, void>) {
+          as ActionFinal<SavedLoginResponse?, void>;
+  if (savedLoginState is ActionFailure<SavedLoginResponse?, void> ||
+      (savedLoginState is ActionSuccess<SavedLoginResponse?, void> &&
+          savedLoginState.data == null)) {
     return CommonPaths.loginPath;
   }
 

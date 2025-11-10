@@ -15,16 +15,17 @@ class CurrentUserGetBloc extends ProducerActionBloc<User> {
       service.getCurrent();
 }
 
-class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
+class SavedLoginResponseGetBloc
+    extends ProducerActionBloc<SavedLoginResponse?> {
   SavedLoginResponseGetBloc({required this.service});
 
   final AuthService service;
 
   @override
-  Future<SavedLoginResponse> doAction(
+  Future<SavedLoginResponse?> doAction(
     final void event,
     final SavedLoginResponse? lastData,
-  ) => service.getSavedLoginResponse();
+  ) => service.getCurrent();
 }
 
 class LoginSaveBloc extends ConsumerActionBloc<Login> {
@@ -40,7 +41,7 @@ class LoginSaveBloc extends ConsumerActionBloc<Login> {
       event.username,
       event.password,
     );
-    return authService.saveLoginResponse(
+    return authService.saveCurrent(
       SavedLoginResponse(
         host: event.host,
         username: event.username,

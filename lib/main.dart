@@ -61,7 +61,7 @@ class GameOClockApp extends StatelessWidget {
     }
 
     final sharedPrefsRepository = SharedPreferencesRepository();
-    final authService = AuthService();
+    final authService = AuthService(sharedPrefsRepository);
     final userService = UserService();
     final settingsService = SettingsService(sharedPrefsRepository);
 

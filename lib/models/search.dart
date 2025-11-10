@@ -60,8 +60,8 @@ class SearchDTO {
 
       return SearchDTO(
         filter: FilterDTO.listFromJson(json[r'filter']),
-        page: int.tryParse(json[r'page'] ?? ''),
-        size: int.tryParse(json[r'size'] ?? ''),
+        page: json[r'page'],
+        size: json[r'size'],
         sort: SortDTO.listFromJson(json[r'sort']),
       );
     }

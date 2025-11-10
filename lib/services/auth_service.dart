@@ -1,12 +1,33 @@
-import 'package:game_oclock/mocks.dart';
+import 'dart:convert';
+
 import 'package:game_oclock/models/models.dart' show SavedLoginResponse;
 
+import 'shared_preferences_repository.dart';
+
 class AuthService {
-  Future<SavedLoginResponse> getSavedLoginResponse() async {
-    return mockSavedLoginResponse();
+  AuthService(this.repository);
+
+  final SharedPreferencesRepository repository;
+
+  Future<SavedLoginResponse?> getCurrent() {
+    return repository.get(
+      _buildCurrentKey(),
+      (final value) => SavedLoginResponse.fromJson(json.decode(value)),
+    );
   }
 
-  Future<void> saveLoginResponse(final SavedLoginResponse loginResponse) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> saveCurrent(final SavedLoginResponse loginResponse) {
+    return repository.set(
+      _buildCurrentKey(),
+      loginResponse,
+      (final value) => json.encode(value.toJson()),
+    );
   }
+
+  Future<void> removeCurrent() {
+    return repository.remove(_buildCurrentKey());
+  }
+
+  String _buildKey() => 'login';
+  String _buildCurrentKey() => '${_buildKey()}#current';
 }
