@@ -15,6 +15,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/location_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class GameAvailableCreateForm extends StatelessWidget {
   const GameAvailableCreateForm({super.key, this.gameId, this.locationId});
@@ -28,10 +29,18 @@ class GameAvailableCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => GameAvailableFormBloc(
-            formGroup: GameAvailableFormData(
-              gameId: TextEditingController(text: gameId),
-              locationId: TextEditingController(text: locationId),
-              date: DateTimeEditingController(),
+            data: GameAvailableFormData(
+              gameId: FormControl<String>(
+                value: gameId,
+                validators: [Validators.required],
+                disabled: gameId != null,
+              ),
+              locationId: FormControl<String>(
+                value: locationId,
+                validators: [Validators.required],
+                disabled: locationId != null,
+              ),
+              date: FormControl<DateTime>(validators: [Validators.required]),
             ),
           ),
         ),
@@ -66,14 +75,7 @@ class GameAvailableCreateForm extends StatelessWidget {
             GameAvailableCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsCreateBuilder(
-                  context,
-                  gameId,
-                  locationId,
-                  formGroup,
-                  readOnly,
-                ),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -81,29 +83,24 @@ class GameAvailableCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
-  final String? gameId,
-  final String? locationId,
-  final GameAvailableFormData formGroup,
+  final GameAvailableFormData formData,
   final bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
       UserGameSelectorBuilder(
-        controller: formGroup.gameId,
+        formControl: formData.gameId,
         label: context.localize().gameLabel,
-        required: true,
-        readOnly: readOnly || gameId != null,
+        readOnly: readOnly,
       ),
       LocationSelectorBuilder(
-        controller: formGroup.locationId,
+        formControl: formData.locationId,
         label: context.localize().locationLabel,
-        required: true,
-        readOnly: readOnly || locationId != null,
+        readOnly: readOnly,
       ),
       SimpleDateFormField(
-        controller: formGroup.date,
+        formControl: formData.date,
         label: context.localize().dateLabel,
-        required: true,
         readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),

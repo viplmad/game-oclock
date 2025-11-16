@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        FilterFormDataListBloc,
-        ListReloaded,
-        ListSearchChanged,
         SearchCreateBloc,
         SearchFormBloc,
         SearchGetBloc,
@@ -15,14 +12,9 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show
-        FilterFormData,
-        ListSearch,
-        SearchDTO,
-        SearchFormData,
-        gameFieldOptions,
-        operatorOptions;
+    show ListSearch, SearchFormData, gameFieldOptions, operatorOptions;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class SearchCreateForm extends StatelessWidget {
   const SearchCreateForm({super.key, required this.space});
@@ -31,14 +23,13 @@ class SearchCreateForm extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final List<FilterFormData> mutableFilters = List.empty(growable: true);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (_) => SearchFormBloc(
-            formGroup: SearchFormData(
-              name: TextEditingController(),
-              filters: mutableFilters,
+            data: SearchFormData(
+              name: FormControl<String>(validators: [Validators.required]),
+              filters: FormArray([]),
             ),
           ),
         ),
@@ -47,11 +38,6 @@ class SearchCreateForm extends StatelessWidget {
             space: space,
             service: RepositoryProvider.of(context),
           ),
-        ),
-        BlocProvider(
-          create: (_) =>
-              FilterFormDataListBloc(data: mutableFilters)
-                ..add(ListSearchChanged(search: SearchDTO())),
         ),
       ],
       child:
@@ -76,15 +62,14 @@ class SearchEditForm extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final List<FilterFormData> mutableFilters = List.empty(growable: true);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (_) {
             return SearchFormBloc(
-              formGroup: SearchFormData(
-                name: TextEditingController(),
-                filters: mutableFilters,
+              data: SearchFormData(
+                name: FormControl<String>(validators: [Validators.required]),
+                filters: FormArray([]),
               ),
             );
           },
@@ -100,11 +85,6 @@ class SearchEditForm extends StatelessWidget {
             space: space,
             service: RepositoryProvider.of(context),
           )..add(ActionStarted(data: name)),
-        ),
-        BlocProvider(
-          create: (_) =>
-              FilterFormDataListBloc(data: mutableFilters)
-                ..add(ListSearchChanged(search: SearchDTO())),
         ),
       ],
       child:
@@ -124,76 +104,76 @@ class SearchEditForm extends StatelessWidget {
 
 Widget _fieldsBuilder(
   final BuildContext context,
-  final SearchFormData formGroup,
+  final SearchFormData formData,
   final bool readOnly,
 ) {
-  context.read<FilterFormDataListBloc>().add(const ListReloaded());
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.name,
-        required: true,
-        readOnly: readOnly,
+        formControl: formData.name,
         label: context.localize().nameLabel,
-      ),
-      ReorderableListBuilder<FilterFormData, FilterFormDataListBloc>(
         readOnly: readOnly,
-        onReorder: (final oldIndex, final newIndex) {
-          context.read<FilterFormDataListBloc>().replaceElement(
-            oldIndex,
-            newIndex,
+      ),
+      ReactiveFormArray(
+        formArray: formData.filters,
+        builder: (final context, final formArray, final child) {
+          return ReorderableTileList(
+            readOnly: readOnly,
+            items: formArray.controls as List<FormGroup>,
+            onReorder: (final oldIndex, final newIndex) {
+              final temp = formArray.removeAt(oldIndex);
+              formArray.insert(newIndex, temp);
+            },
+            itemBuilder: (final context, final data, final index) => ListTile(
+              // TODO Missing chainOperator
+              title: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: SimpleSelectFormField(
+                      formControl: data.controls['field'] as FormControl<String>,
+                      label: context.localize().fieldLabel,
+                      options: gameFieldOptions,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SimpleSelectFormField(
+                      formControl:
+                          data.controls['operator'] as FormControl<String>,
+                      label: context.localize().operatorLabel,
+                      options: operatorOptions,
+                    ),
+                  ),
+                ],
+              ),
+              subtitle: SimpleTextFormField(
+                formControl: data.controls['value'] as FormControl<String>,
+                label: context.localize().valueLabel,
+                readOnly: readOnly,
+              ),
+              trailing: IconButton(
+                icon: CommonIcons.delete,
+                tooltip: context.localize().deleteLabel,
+                onPressed: () {
+                  formArray.removeAt(index);
+                },
+              ),
+            ),
           );
         },
-        itemBuilder: (final context, final data, final index) => ListTile(
-          // TODO Missing chainOperator
-          title: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: SimpleSelectFormField(
-                  controller: data.field,
-                  label: context.localize().fieldLabel,
-                  required: true,
-                  options: gameFieldOptions,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: SimpleSelectFormField(
-                  controller: data.operator,
-                  label: context.localize().operatorLabel,
-                  required: true,
-                  options: operatorOptions,
-                ),
-              ),
-            ],
-          ),
-          subtitle: SimpleTextFormField(
-            controller: data.value,
-            required: true,
-            readOnly: readOnly,
-            label: context.localize().valueLabel,
-          ),
-          trailing: IconButton(
-            icon: CommonIcons.delete,
-            tooltip: context.localize().deleteLabel,
-            onPressed: () {
-              context.read<FilterFormDataListBloc>().removeElement(index);
-            },
-          ),
-        ),
       ),
       TextButton.icon(
         label: Text(context.localize().addLabel),
         icon: CommonIcons.add,
         onPressed: () {
-          context.read<FilterFormDataListBloc>().addElement(
-            FilterFormData(
-              field: TextEditingController(),
-              operator: TextEditingController(),
-              value: TextEditingController(),
-              chainOperator: TextEditingController(),
-            ),
+          formData.filters.add(
+            FormGroup({
+              'field': FormControl<String>(),
+              'operator': FormControl<String>(),
+              'value': FormControl<String>(),
+              'chainOperator': FormControl<String>(),
+            }),
           );
         },
       ),

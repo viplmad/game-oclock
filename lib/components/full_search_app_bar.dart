@@ -25,7 +25,7 @@ class FullSearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _FullSearchAppBarState extends State<FullSearchAppBar> {
-  final controller = TextEditingController();
+  final controller = TextEditingController(); // TODO use reactive form
   bool inSearch = false;
 
   @override

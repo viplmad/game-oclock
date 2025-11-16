@@ -5,31 +5,26 @@ import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/shared/forms/tag_form.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class TagSelectorBuilder extends StatelessWidget {
   const TagSelectorBuilder({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
-    this.validator,
   });
 
-  final TextEditingController controller;
+  final FormControl<String> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
-  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(final BuildContext context) {
     return SingleAutocompleteSelectorBuilder<Tag, TagListBloc>(
-      controller: controller,
+      formControl: formControl,
       label: label,
-      required: required,
       readOnly: readOnly,
-      validator: validator,
       itemBuilder: (final context, final item, final index, final onSelected) =>
           TagTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,

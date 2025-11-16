@@ -8,12 +8,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionSuccess,
         ConsumerActionBloc,
         FormBloc,
-        FormDirtied,
         FormState2,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
         FormSubmitted,
-        FormValuesUpdated,
+        FormValueUpdated,
         FunctionActionBloc,
         IdentityActionBloc;
 import 'package:game_oclock/components/label_chip.dart';
@@ -22,6 +21,7 @@ import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class CreateFormBuilder<
   T,
@@ -29,18 +29,12 @@ class CreateFormBuilder<
   FB extends FormBloc<D, T>,
   CB extends IdentityActionBloc<T>
 >
-    extends _FormBuilder {
+    extends _FormBuilder<T, D> {
   const CreateFormBuilder({
     super.key,
-    required this.title,
-    required this.fieldsBuilder,
+    required super.title,
+    required super.fieldsBuilder,
   });
-
-  final String title;
-
-  // ignore: avoid_positional_boolean_parameters
-  final Widget Function(BuildContext context, D formGroup, bool readOnly)
-  fieldsBuilder;
 
   @override
   Widget buildForm(
@@ -52,7 +46,7 @@ class CreateFormBuilder<
         BlocListener<FB, FormState2<D, T>>(
           listener: (final context, final state) {
             if (state is FormStateSubmitSuccess<D, T>) {
-              context.read<CB>().add(ActionStarted(data: state.data));
+              context.read<CB>().add(ActionStarted(data: state.value));
             }
           },
         ),
@@ -79,16 +73,14 @@ class CreateFormBuilder<
 
               return FullForm(
                 title: title,
-                formKey: formState.key,
+                formGroup: formState.data.formGroup,
                 fullscreen: fullscreen,
-                dirty: formState.dirty,
-                onChanged: () => context.read<FB>().add(const FormDirtied()),
                 onSubmit: inProgress
                     ? null
                     : () {
                         context.read<FB>().add(const FormSubmitted());
                       },
-                child: fieldsBuilder(context, formState.group, inProgress),
+                child: fieldsBuilder(context, formState.data, inProgress),
               );
             },
           );
@@ -105,18 +97,12 @@ class EditFormBuilder<
   GB extends FunctionActionBloc<String, T>,
   UB extends ConsumerActionBloc<T>
 >
-    extends _FormBuilder {
+    extends _FormBuilder<T, D> {
   const EditFormBuilder({
     super.key,
-    required this.title,
-    required this.fieldsBuilder,
+    required super.title,
+    required super.fieldsBuilder,
   });
-
-  final String title;
-
-  // ignore: avoid_positional_boolean_parameters
-  final Widget Function(BuildContext context, D formGroup, bool readOnly)
-  fieldsBuilder;
 
   @override
   Widget buildForm(
@@ -128,7 +114,7 @@ class EditFormBuilder<
         BlocListener<FB, FormState2<D, T>>(
           listener: (final context, final state) {
             if (state is FormStateSubmitSuccess<D, T>) {
-              context.read<UB>().add(ActionStarted(data: state.data));
+              context.read<UB>().add(ActionStarted(data: state.value));
             }
           },
         ),
@@ -149,7 +135,7 @@ class EditFormBuilder<
             if (state is ActionSuccess<T, String>) {
               final T? data = state.data;
               if (data != null) {
-                context.read<FB>().add(FormValuesUpdated(values: data));
+                context.read<FB>().add(FormValueUpdated(value: data));
               }
             }
           },
@@ -168,18 +154,15 @@ class EditFormBuilder<
 
                   return FullForm(
                     title: title,
-                    formKey: formState.key,
+                    formGroup: formState.data.formGroup,
                     fullscreen: fullscreen,
-                    dirty: formState.dirty,
-                    onChanged: () =>
-                        context.read<FB>().add(const FormDirtied()),
                     onSubmit: // TODO possibly disallow submit if not dirty
                     inProgress
                         ? null
                         : () {
                             context.read<FB>().add(const FormSubmitted());
                           },
-                    child: fieldsBuilder(context, formState.group, inProgress),
+                    child: fieldsBuilder(context, formState.data, inProgress),
                   );
                 },
               );
@@ -191,8 +174,22 @@ class EditFormBuilder<
   }
 }
 
-abstract class _FormBuilder extends StatelessWidget {
-  const _FormBuilder({super.key});
+abstract class _FormBuilder<T, D extends FormData<T>> extends StatelessWidget {
+  const _FormBuilder({
+    super.key,
+    required this.title,
+    required this.fieldsBuilder,
+  });
+
+  final String title;
+
+  final Widget Function(
+    BuildContext context,
+    D formGroup,
+    // ignore: avoid_positional_boolean_parameters
+    bool readOnly,
+  )
+  fieldsBuilder;
 
   @override
   Widget build(final BuildContext context) {
@@ -221,20 +218,16 @@ class FullForm extends StatelessWidget {
   const FullForm({
     super.key,
     required this.title,
-    required this.formKey,
+    required this.formGroup,
     required this.fullscreen,
-    required this.dirty,
     required this.child,
-    required this.onChanged,
     this.onSubmit,
   });
 
   final String title;
-  final Key formKey;
+  final FormGroup formGroup;
   final bool fullscreen;
-  final bool dirty;
   final Widget child;
-  final VoidCallback onChanged;
   final VoidCallback? onSubmit;
 
   @override
@@ -246,31 +239,32 @@ class FullForm extends StatelessWidget {
       onPressed: onSubmit,
     );
 
-    final form = Form(
-      key: formKey,
-      canPop: false,
-      onPopInvokedWithResult: (final didPop, final result) async {
-        if (didPop) {
-          return;
-        }
-        if (inProgress) {
-          return;
-        }
+    final form = ReactiveForm(
+      formGroup: formGroup,
+      // Can pop only if it is pristine (not dirty)
+      canPop: (final formGroup) => formGroup.pristine,
+      onPopInvokedWithResult:
+          (final formGroup, final didPop, final result) async {
+            if (didPop) {
+              return;
+            }
+            if (inProgress) {
+              return;
+            }
 
-        final bool shouldPop = dirty
-            ? await _showLeaveConfirmationDialog(context) ?? false
-            : true;
-        if (context.mounted && shouldPop) {
-          Navigator.pop(context);
-        }
-      },
-      onChanged: inProgress ? null : onChanged,
+            final bool shouldPop = formGroup.pristine
+                ? true
+                : await _showLeaveConfirmationDialog(context) ?? false;
+            if (context.mounted && shouldPop) {
+              Navigator.pop(context);
+            }
+          },
       child: child,
     );
 
-    final modifiedChip = dirty
-        ? LabelChip(label: context.localize().modifiedLabel)
-        : const SizedBox();
+    final modifiedChip = formGroup.pristine
+        ? const SizedBox()
+        : LabelChip(label: context.localize().modifiedLabel);
 
     return fullscreen
         ? Scaffold(

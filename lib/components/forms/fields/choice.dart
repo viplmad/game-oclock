@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show OptionTextField;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
-class SimpleChoiceFormField extends StatefulWidget {
+class SimpleChoiceFormField extends StatelessWidget {
   const SimpleChoiceFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
     required this.options,
   });
 
-  final TextEditingController controller;
-  final bool required;
+  final FormControl<String> formControl;
   final bool readOnly;
   final String label;
   final List<OptionTextField<String>> options;
 
   @override
-  State<SimpleChoiceFormField> createState() => _SimpleChoiceFormFieldState();
-}
-
-class _SimpleChoiceFormFieldState extends State<SimpleChoiceFormField> {
-  @override
   Widget build(final BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: widget.options
-          .map(
-            (final field) => ChoiceChip(
-              label: Text(field.labelBuilder(context)),
-              selected: field.value == widget.controller.text,
-              onSelected: (final newChoice) {
-                if (newChoice) {
-                  widget.controller.setValue(field.value);
-                  setState(() {});
-                }
-              },
-              selectedColor: field.color,
-            ),
-          )
-          .toList(growable: false),
+    return ReactiveValueListenableBuilder(
+      formControl: formControl,
+      builder: (final context, final control, final child) => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: options
+            .map(
+              (final field) => ChoiceChip(
+                label: Text(field.labelBuilder(context)),
+                selected: field.value == formControl.value,
+                onSelected: (final newChoice) {
+                  if (newChoice) {
+                    formControl.value = field.value;
+                  }
+                },
+                selectedColor: field.color,
+              ),
+            )
+            .toList(growable: false),
+      ),
     );
   }
 }

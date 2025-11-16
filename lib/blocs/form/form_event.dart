@@ -11,18 +11,11 @@ final class FormSubmitted<T> extends FormEvent<T> {
   List<Object?> get props => [];
 }
 
-final class FormDirtied<T> extends FormEvent<T> {
-  const FormDirtied();
+final class FormValueUpdated<T> extends FormEvent<T> {
+  final T? value;
+
+  const FormValueUpdated({required this.value});
 
   @override
-  List<Object?> get props => [];
-}
-
-final class FormValuesUpdated<T> extends FormEvent<T> {
-  final T? values;
-
-  const FormValuesUpdated({required this.values});
-
-  @override
-  List<Object?> get props => [values];
+  List<Object?> get props => [value];
 }

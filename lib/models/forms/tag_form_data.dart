@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, Tag;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class TagFormData extends FormData<Tag> {
-  final TextEditingController name;
+  final FormControl<String> name;
 
-  TagFormData({required this.name});
-
-  @override
-  void setValues(final Tag? data) {
-    name.setValue(data?.name);
-  }
+  TagFormData({required this.name})
+    : super(formGroup: FormGroup({'name': name}));
 }

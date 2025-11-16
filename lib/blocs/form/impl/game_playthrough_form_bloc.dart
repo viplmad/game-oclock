@@ -5,14 +5,23 @@ import '../form.dart' show FormBloc;
 
 class GamePlaythroughFormBloc
     extends FormBloc<GamePlaythroughFormData, GamePlaythrough> {
-  GamePlaythroughFormBloc({required super.formGroup});
+  GamePlaythroughFormBloc({required super.data});
 
   @override
-  GamePlaythrough fromData(final GamePlaythroughFormData values) {
+  GamePlaythrough fromFormData(final GamePlaythroughFormData data) {
     return GamePlaythrough(
-      id: 'kalmdkamsd', // TODO
-      gameId: values.gameId.text,
-      name: values.name.text,
+      id: '', // TODO
+      gameId: data.gameId.value!,
+      name: data.name.value!,
     );
+  }
+
+  @override
+  void setFormValue(
+    final GamePlaythroughFormData data,
+    final GamePlaythrough? value,
+  ) {
+    data.gameId.value = value?.gameId;
+    data.name.value = value?.name;
   }
 }

@@ -7,31 +7,58 @@ import 'package:game_oclock/models/models.dart'
         SearchDTO,
         SearchFormData,
         SearchValue;
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../form.dart' show FormBloc;
 
 class SearchFormBloc extends FormBloc<SearchFormData, ListSearch> {
-  SearchFormBloc({required super.formGroup});
+  SearchFormBloc({required super.data});
 
   @override
-  ListSearch fromData(final SearchFormData values) {
+  ListSearch fromFormData(final SearchFormData data) {
     return ListSearch(
-      id: 'kasdmakl', // TODO
-      name: values.name.text,
+      id: '', // TODO
+      name: data.name.value!,
       search: SearchDTO(
-        filter: values.filters
+        filter: (data.filters.controls as List<FormGroup>)
             .map(
               (final filterValues) => FilterDTO(
-                field: filterValues.field.text,
-                operator_: OperatorType.fromJson(filterValues.operator.text)!,
-                value: SearchValue(value: filterValues.value.text),
+                field: (filterValues.controls['field'] as FormControl<String>)
+                    .value!,
+                operator_: OperatorType.fromJson(
+                  (filterValues.controls['operator'] as FormControl<String>)
+                      .value,
+                )!,
+                value: SearchValue(
+                  value: (filterValues.controls['value'] as FormControl<String>)
+                      .value,
+                ),
                 chainOperator: ChainOperatorType.fromJson(
-                  filterValues.chainOperator.text,
+                  (filterValues.controls['chainOperator']
+                          as FormControl<String>)
+                      .value,
                 ),
               ),
             )
             .toList(growable: false),
       ),
     );
+  }
+
+  @override
+  void setFormValue(final SearchFormData data, final ListSearch? value) {
+    data.name.value = value?.name;
+    data.filters.value = value?.search.filter
+        ?.map(
+          (final filter) => FormGroup({
+            'field': FormControl<String>(value: filter.field),
+            'operator': FormControl<String>(value: filter.operator_.value),
+            'value': FormControl<String>(value: filter.value.value),
+            'chainOperator': FormControl<String>(
+              value: filter.chainOperator?.value,
+            ),
+          }),
+        )
+        .toList(growable: false);
   }
 }

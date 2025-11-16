@@ -5,31 +5,26 @@ import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class UserGameSelectorBuilder extends StatelessWidget {
   const UserGameSelectorBuilder({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
-    this.validator,
   });
 
-  final TextEditingController controller;
+  final FormControl<String> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
-  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(final BuildContext context) {
     return SingleAutocompleteSelectorBuilder<UserGame, UserGameListBloc>(
-      controller: controller,
+      formControl: formControl,
       label: label,
-      required: required,
       readOnly: readOnly,
-      validator: validator,
       itemBuilder: (final context, final item, final index, final onSelected) =>
           UserGameTileListItem(data: item, onTap: onSelected),
       keyGetter: (final item) => item.id,

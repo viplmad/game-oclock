@@ -3,13 +3,18 @@ import 'package:game_oclock/models/models.dart' show Device, DeviceFormData;
 import '../form.dart' show FormBloc;
 
 class DeviceFormBloc extends FormBloc<DeviceFormData, Device> {
-  DeviceFormBloc({required super.formGroup});
+  DeviceFormBloc({required super.data});
 
   @override
-  Device fromData(final DeviceFormData values) {
+  Device fromFormData(final DeviceFormData data) {
     return Device(
-      id: 'kalmdkamsd', // TODO
-      name: values.name.text,
+      id: '', // TODO
+      name: data.name.value!,
     );
+  }
+
+  @override
+  void setFormValue(final DeviceFormData data, final Device? value) {
+    data.name.value = value?.name;
   }
 }

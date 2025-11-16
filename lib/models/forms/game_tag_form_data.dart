@@ -1,16 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, GameTag;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class GameTagFormData extends FormData<GameTag> {
-  final TextEditingController gameId;
-  final TextEditingController tagId;
+  final FormControl<String> gameId;
+  final FormControl<String> tagId;
 
-  GameTagFormData({required this.gameId, required this.tagId});
-
-  @override
-  void setValues(final GameTag? data) {
-    gameId.setValue(data?.gameId);
-    tagId.setValue(data?.tagId);
-  }
+  GameTagFormData({required this.gameId, required this.tagId})
+    : super(formGroup: FormGroup({'gameId': gameId, 'tagId': tagId}));
 }

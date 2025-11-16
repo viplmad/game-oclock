@@ -2,23 +2,21 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'text.dart';
 
 class SimpleDurationFormField extends StatefulWidget {
   const SimpleDurationFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
   });
 
-  final DurationEditingController controller;
-  final bool required;
-  final bool readOnly;
+  final FormControl<Duration> formControl;
   final String label;
+  final bool readOnly;
 
   @override
   State<SimpleDurationFormField> createState() =>
@@ -26,13 +24,15 @@ class SimpleDurationFormField extends StatefulWidget {
 }
 
 class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
-  late final TextEditingController textController;
+  late final FormControl<String> textFormControl;
 
   @override
   void initState() {
-    textController = TextEditingController(
-      text: _buildTextValue(widget.controller.value),
+    textFormControl = FormControl<String>(
+      value: _buildTextValue(widget.formControl.value),
+      validators: widget.formControl.validators,
     );
+    textFormControl.setErrors(widget.formControl.errors, markAsDirty: false);
 
     super.initState();
   }
@@ -40,12 +40,12 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
   @override
   Widget build(final BuildContext context) {
     return SimpleTextFormField(
-      controller: textController,
+      formControl: textFormControl,
       label: widget.label,
-      required: widget.required,
       readOnly: false,
       onCleared: () {
-        widget.controller.clear();
+        widget.formControl.value = null;
+        textFormControl.setErrors(widget.formControl.errors);
       },
       suffixIcons: [
         IconButton(
@@ -61,13 +61,13 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
   Future<void> _showPicker() {
     return showDurationPicker(
       context: context,
-      initialTime: widget.controller.value ?? Duration.zero,
+      initialTime: widget.formControl.value ?? Duration.zero,
     ).then<void>((final value) {
       if (value != null) {
-        widget.controller.setValue(value);
-        textController.setValue(_buildTextValue(value));
+        widget.formControl.value = value;
 
-        setState(() {});
+        textFormControl.value = _buildTextValue(value);
+        textFormControl.setErrors(widget.formControl.errors);
       }
     });
   }
@@ -78,17 +78,5 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
     }
 
     return context.localize().duration(value);
-  }
-}
-
-class DurationEditingController extends ValueNotifier<Duration?> {
-  DurationEditingController({final Duration? duration}) : super(duration);
-
-  void clear() {
-    value = null;
-  }
-
-  void setValue(final Duration? newValue) {
-    value = newValue;
   }
 }

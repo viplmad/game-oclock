@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show Device, FormData;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class DeviceFormData extends FormData<Device> {
-  final TextEditingController name;
+  final FormControl<String> name;
 
-  DeviceFormData({required this.name});
-
-  @override
-  void setValues(final Device? data) {
-    name.setValue(data?.name);
-  }
+  DeviceFormData({required this.name})
+    : super(formGroup: FormGroup({'name': name}));
 }

@@ -14,6 +14,7 @@ import 'package:game_oclock/models/models.dart' show GameTag, GameTagFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/tag_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class GameTagCreateForm extends StatelessWidget {
   const GameTagCreateForm({super.key, this.gameId, this.tagId});
@@ -27,9 +28,17 @@ class GameTagCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => GameTagFormBloc(
-            formGroup: GameTagFormData(
-              gameId: TextEditingController(text: gameId),
-              tagId: TextEditingController(text: tagId),
+            data: GameTagFormData(
+              gameId: FormControl<String>(
+                value: gameId,
+                validators: [Validators.required],
+                disabled: gameId != null,
+              ),
+              tagId: FormControl<String>(
+                value: tagId,
+                validators: [Validators.required],
+                disabled: tagId != null,
+              ),
             ),
           ),
         ),
@@ -62,14 +71,7 @@ class GameTagCreateForm extends StatelessWidget {
             GameTagCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsCreateBuilder(
-                  context,
-                  gameId,
-                  tagId,
-                  formGroup,
-                  readOnly,
-                ),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -77,24 +79,20 @@ class GameTagCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
-  final String? gameId,
-  final String? tagId,
   final GameTagFormData formGroup,
   final bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
       UserGameSelectorBuilder(
-        controller: formGroup.gameId,
+        formControl: formGroup.gameId,
         label: context.localize().gameLabel,
-        required: true,
-        readOnly: readOnly || gameId != null,
+        readOnly: readOnly,
       ),
       TagSelectorBuilder(
-        controller: formGroup.tagId,
+        formControl: formGroup.tagId,
         label: context.localize().tagLabel,
-        required: true,
-        readOnly: readOnly || tagId != null,
+        readOnly: readOnly,
       ),
     ],
   );

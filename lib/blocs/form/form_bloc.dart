@@ -1,11 +1,9 @@
-import 'package:flutter/widgets.dart' as widgets; // TODO
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart'
     show ErrorDTO, FormData, errorCodeInvalidForm;
 
 import 'form.dart'
     show
-        FormDirtied,
         FormEvent,
         FormState2,
         FormStateInitial,
@@ -13,27 +11,18 @@ import 'form.dart'
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
         FormSubmitted,
-        FormValuesUpdated;
+        FormValueUpdated;
 
 abstract class FormBloc<D extends FormData<T>, T>
     extends Bloc<FormEvent<T>, FormState2<D, T>> {
-  FormBloc({required final D formGroup})
-    : super(
-        FormStateInitial<D, T>(
-          key: widgets.GlobalKey<widgets.FormState>(),
-          group: formGroup,
-          dirty: false,
-        ),
-      ) {
+  FormBloc({required final D data})
+    : super(FormStateInitial<D, T>(data: data)) {
     on<FormSubmitted<T>>(
       (final event, final emit) async => await onSubmitted(emit),
     );
-    on<FormDirtied<T>>(
-      (final event, final emit) async => await onDirtied(emit),
-    );
-    on<FormValuesUpdated<T>>(
+    on<FormValueUpdated<T>>(
       (final event, final emit) async =>
-          await onValuesUpdated(event.values, emit),
+          await onValueUpdated(event.value, emit),
     );
   }
 
@@ -42,71 +31,41 @@ abstract class FormBloc<D extends FormData<T>, T>
       return;
     }
 
-    final formKey = state.key;
-    final formGroup = state.group;
-    final dirty = state.dirty;
+    final data = state.data;
 
-    emit(
-      FormStateSubmitInProgress<D, T>(
-        key: formKey,
-        group: formGroup,
-        dirty: dirty,
-      ),
-    );
-    final valid = formKey.currentState == null
-        ? false
-        : formKey.currentState!.validate();
-    if (valid) {
-      formKey.currentState!.save();
-      final data = fromData(formGroup);
-      emit(
-        FormStateSubmitSuccess<D, T>(
-          data: data,
-          key: formKey,
-          group: formGroup,
-          dirty: false,
-        ),
-      );
+    emit(FormStateSubmitInProgress<D, T>(data: data));
+    data.formGroup.updateValueAndValidity();
+    if (data.formGroup.valid) {
+      final value = fromFormData(data);
+      emit(FormStateSubmitSuccess<D, T>(value: value, data: data));
     } else {
       emit(
         FormStateSubmitFailure<D, T>(
           error: ErrorDTO(
             code: errorCodeInvalidForm,
-            message: formKey.currentState.toString(),
+            message:
+                'The form has ${data.formGroup.errors.length} errors', // TODO i18n
           ),
-          key: formKey,
-          group: formGroup,
-          dirty: dirty,
+          data: data,
         ),
       );
     }
   }
 
-  Future<void> onDirtied(final Emitter<FormState2> emit) async {
-    if (state is FormStateSubmitInProgress) {
-      return;
-    }
-
-    final formKey = state.key;
-    final formGroup = state.group;
-
-    emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: true));
-  }
-
-  Future<void> onValuesUpdated(
-    final T? values,
+  Future<void> onValueUpdated(
+    final T? value,
     final Emitter<FormState2> emit,
   ) async {
     if (state is FormStateSubmitInProgress) {
       return;
     }
 
-    final formKey = state.key;
-    final formGroup = state.group;
-
-    formGroup.setValues(values);
-    emit(FormStateInitial<D, T>(key: formKey, group: formGroup, dirty: false));
+    final data = state.data;
+    setFormValue(data, value);
+    emit(FormStateInitial<D, T>(data: data));
   }
 
-  T fromData(final D values);
+  T fromFormData(final D data);
+
+  void setFormValue(final D data, final T? value);
 }

@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'text.dart';
 
 class SimpleDateFormField extends StatefulWidget {
   const SimpleDateFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
     required this.firstDate,
     required this.lastDate,
   });
 
-  final DateTimeEditingController controller;
+  final FormControl<DateTime> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
   final DateTime firstDate;
   final DateTime lastDate;
@@ -28,13 +26,15 @@ class SimpleDateFormField extends StatefulWidget {
 }
 
 class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
-  late final TextEditingController textController;
+  late final FormControl<String> textFormControl;
 
   @override
   void initState() {
-    textController = TextEditingController(
-      text: _buildTextValue(widget.controller.value),
+    textFormControl = FormControl<String>(
+      value: _buildTextValue(widget.formControl.value),
+      validators: widget.formControl.validators,
     );
+    textFormControl.setErrors(widget.formControl.errors, markAsDirty: false);
 
     super.initState();
   }
@@ -42,12 +42,12 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   @override
   Widget build(final BuildContext context) {
     return SimpleTextFormField(
-      controller: textController,
+      formControl: textFormControl,
       label: widget.label,
-      required: widget.required,
       readOnly: false,
       onCleared: () {
-        widget.controller.clear();
+        widget.formControl.value = null;
+        textFormControl.setErrors(widget.formControl.errors);
       },
       suffixIcons: [
         IconButton(
@@ -63,15 +63,15 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
   Future<void> _showPicker() {
     return showDatePicker(
       context: context,
-      initialDate: widget.controller.value ?? DateTime.now(),
+      initialDate: widget.formControl.value ?? DateTime.now(),
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
     ).then<void>((final value) {
       if (value != null) {
-        widget.controller.setValue(value);
-        textController.setValue(_buildTextValue(value));
+        widget.formControl.value = value;
 
-        setState(() {});
+        textFormControl.value = _buildTextValue(value);
+        textFormControl.setErrors(widget.formControl.errors);
       }
     });
   }
@@ -82,17 +82,5 @@ class _SimpleDateFormFieldState extends State<SimpleDateFormField> {
     }
 
     return MaterialLocalizations.of(context).formatCompactDate(value);
-  }
-}
-
-class DateTimeEditingController extends ValueNotifier<DateTime?> {
-  DateTimeEditingController({final DateTime? date}) : super(date);
-
-  void clear() {
-    value = null;
-  }
-
-  void setValue(final DateTime? newValue) {
-    value = newValue;
   }
 }

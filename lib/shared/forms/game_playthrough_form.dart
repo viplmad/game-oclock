@@ -15,6 +15,7 @@ import 'package:game_oclock/models/models.dart'
     show GamePlaythrough, GamePlaythroughFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class GamePlaythroughCreateForm extends StatelessWidget {
   const GamePlaythroughCreateForm({super.key, this.initialName, this.gameId});
@@ -28,9 +29,16 @@ class GamePlaythroughCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => GamePlaythroughFormBloc(
-            formGroup: GamePlaythroughFormData(
-              gameId: TextEditingController(text: gameId),
-              name: TextEditingController(text: initialName),
+            data: GamePlaythroughFormData(
+              gameId: FormControl<String>(
+                value: gameId,
+                disabled: gameId != null,
+                validators: [Validators.required],
+              ),
+              name: FormControl<String>(
+                value: initialName,
+                validators: [Validators.required],
+              ),
             ),
           ),
         ),
@@ -57,8 +65,7 @@ class GamePlaythroughCreateForm extends StatelessWidget {
             GamePlaythroughCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsCreateBuilder(context, gameId, formGroup, readOnly),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -75,9 +82,9 @@ class GamePlaythroughEditForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => GamePlaythroughFormBloc(
-            formGroup: GamePlaythroughFormData(
-              gameId: TextEditingController(),
-              name: TextEditingController(),
+            data: GamePlaythroughFormData(
+              gameId: FormControl<String>(disabled: true),
+              name: FormControl<String>(validators: [Validators.required]),
             ),
           ),
         ),
@@ -101,8 +108,7 @@ class GamePlaythroughEditForm extends StatelessWidget {
             GamePlaythroughUpdateBloc
           >(
             title: context.localize().editingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsEditBuilder(context, formGroup, readOnly),
+            fieldsBuilder: _fieldsEditBuilder,
           ),
     );
   }
@@ -110,22 +116,19 @@ class GamePlaythroughEditForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
-  final String? gameId,
   final GamePlaythroughFormData formGroup,
   final bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
       UserGameSelectorBuilder(
-        controller: formGroup.gameId,
+        formControl: formGroup.gameId,
         label: context.localize().gameLabel,
-        required: true,
-        readOnly: readOnly || gameId != null,
+        readOnly: readOnly,
       ),
       SimpleTextFormField(
-        controller: formGroup.name,
+        formControl: formGroup.name,
         label: context.localize().nameLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],
@@ -140,9 +143,8 @@ Widget _fieldsEditBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.name,
+        formControl: formGroup.name,
         label: context.localize().nameLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],

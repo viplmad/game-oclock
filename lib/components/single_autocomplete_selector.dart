@@ -6,7 +6,8 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
 
 class SingleAutocompleteSelectorBuilder<
   T extends Object,
@@ -15,22 +16,18 @@ class SingleAutocompleteSelectorBuilder<
     extends StatelessWidget {
   const SingleAutocompleteSelectorBuilder({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
-    this.validator,
     required this.itemBuilder,
     required this.keyGetter,
     this.displayString,
     this.onAddPressed,
   });
 
-  final TextEditingController controller;
+  final FormControl<String> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
-  final FormFieldValidator<String>? validator;
   final Widget Function(
     BuildContext context,
     T item,
@@ -44,8 +41,44 @@ class SingleAutocompleteSelectorBuilder<
 
   @override
   Widget build(final BuildContext context) {
-    return Autocomplete<T>(
-      initialValue: controller.value,
+    return ReactiveRawAutocomplete(
+      formControl: formControl,
+      fieldViewBuilder:
+          (
+            final context,
+            final textEditingController,
+            final focusNode,
+            final onFieldSubmitted,
+          ) {
+            final queryFormControl = FormControl<String>(
+              value: textEditingController.text,
+            );
+            return ReactiveForm(
+              // Scoped to an independent form
+              formGroup: FormGroup({'query': queryFormControl}),
+              child: SimpleTextFormField(
+                formControl: queryFormControl,
+                label: label,
+                readOnly: readOnly,
+                suffixIcons: [
+                  if (onAddPressed != null && formControl.isNotNullOrEmpty)
+                    IconButton(
+                      tooltip: context.localize().addLabel,
+                      icon: CommonIcons.addInline,
+                      onPressed: () => onAddPressed!(
+                        formControl.value!,
+                        (final option) => formControl.value = keyGetter(option),
+                      ),
+                    ),
+                ],
+                //
+                focusNode: focusNode,
+                onFieldSubmitted: (final String value) {
+                  onFieldSubmitted();
+                },
+              ),
+            );
+          },
       optionsBuilder: (final textEditingValue) async {
         final loadBloc = context.read<LB>();
         loadBloc.add(
@@ -60,39 +93,6 @@ class SingleAutocompleteSelectorBuilder<
 
         return listState.data; // Using BlocBuilder to refreh data
       },
-      fieldViewBuilder:
-          (
-            final context,
-            final textEditingController,
-            final focusNode,
-            final onFieldSubmitted,
-          ) => Form(
-            // Scoped to an independent form
-            key: GlobalKey<FormState>(),
-            child: SimpleTextFormField(
-              controller: textEditingController,
-              label: label,
-              required: required,
-              readOnly: readOnly,
-              validator: validator,
-              suffixIcons: [
-                if (onAddPressed != null && controller.text.isNotEmpty)
-                  IconButton(
-                    tooltip: context.localize().addLabel,
-                    icon: CommonIcons.addInline,
-                    onPressed: () => onAddPressed!(
-                      controller.text,
-                      (final option) => controller.setValue(keyGetter(option)),
-                    ),
-                  ),
-              ],
-              //
-              focusNode: focusNode,
-              onFieldSubmitted: (final String value) {
-                onFieldSubmitted();
-              },
-            ),
-          ),
       displayStringForOption: displayString ?? keyGetter,
       optionsViewBuilder: (final context, final onSelected, final options) =>
           Align(
@@ -108,9 +108,6 @@ class SingleAutocompleteSelectorBuilder<
               ),
             ),
           ),
-      onSelected: (final option) {
-        controller.setValue(keyGetter(option));
-      },
     );
   }
 }

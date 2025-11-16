@@ -3,10 +3,16 @@ import 'package:game_oclock/models/models.dart' show GameTag, GameTagFormData;
 import '../form.dart' show FormBloc;
 
 class GameTagFormBloc extends FormBloc<GameTagFormData, GameTag> {
-  GameTagFormBloc({required super.formGroup});
+  GameTagFormBloc({required super.data});
 
   @override
-  GameTag fromData(final GameTagFormData values) {
-    return GameTag(gameId: values.gameId.text, tagId: values.tagId.text);
+  GameTag fromFormData(final GameTagFormData data) {
+    return GameTag(gameId: data.gameId.value!, tagId: data.tagId.value!);
+  }
+
+  @override
+  void setFormValue(final GameTagFormData data, final GameTag? value) {
+    data.gameId.value = value?.gameId;
+    data.tagId.value = value?.tagId;
   }
 }

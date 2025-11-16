@@ -1,52 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:game_oclock/models/models.dart'
-    show FilterDTO, FormData, ListSearch;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:game_oclock/models/models.dart' show FormData, ListSearch;
+import 'package:reactive_forms/reactive_forms.dart';
 
 class SearchFormData extends FormData<ListSearch> {
-  final TextEditingController name;
-  final List<FilterFormData> filters; // TODO
+  final FormControl<String> name;
+  final FormArray<dynamic> filters; // TODO
 
-  SearchFormData({required this.name, required this.filters});
-
-  @override
-  void setValues(final ListSearch? data) {
-    name.setValue(data?.name);
-
-    filters.clear();
-    if (data?.search.filter != null) {
-      filters.addAll(
-        data!.search.filter!.map(
-          (final filter) => FilterFormData(
-            field: TextEditingController(),
-            operator: TextEditingController(),
-            value: TextEditingController(),
-            chainOperator: TextEditingController(),
-          )..setValues(filter),
-        ),
-      );
-    }
-  }
-}
-
-class FilterFormData extends FormData<FilterDTO> {
-  final TextEditingController field;
-  final TextEditingController operator;
-  final TextEditingController value;
-  final TextEditingController chainOperator;
-
-  FilterFormData({
-    required this.field,
-    required this.operator,
-    required this.value,
-    required this.chainOperator,
-  });
-
-  @override
-  void setValues(final FilterDTO? data) {
-    field.setValue(data?.field);
-    operator.setValue(data?.operator_.value);
-    value.setValue(data?.value.value); // TODO list
-    chainOperator.setValue(data?.chainOperator?.value);
-  }
+  SearchFormData({required this.name, required this.filters})
+    : super(formGroup: FormGroup({'name': name, 'filters': filters}));
 }

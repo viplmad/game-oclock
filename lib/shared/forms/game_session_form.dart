@@ -16,6 +16,7 @@ import 'package:game_oclock/shared/selectors/device_selector.dart';
 import 'package:game_oclock/shared/selectors/game_playthrough_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class GameSessionCreateForm extends StatelessWidget {
   const GameSessionCreateForm({super.key, required this.gameId});
@@ -28,14 +29,21 @@ class GameSessionCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => GameSessionFormBloc(
-            formGroup: GameSessionFormData(
-              gameId: TextEditingController(text: gameId),
-              startDateTime: DateTimeEditingController(),
-              endDateTime: DateTimeEditingController(),
-              deviceId: TextEditingController(),
-              playthroughId: TextEditingController(),
-              started: BoolEditingController(),
-              finished: TextEditingController(),
+            data: GameSessionFormData(
+              gameId: FormControl(
+                value: gameId,
+                validators: [Validators.required],
+              ),
+              startDateTime: FormControl<DateTime>(
+                validators: [Validators.required],
+              ),
+              endDateTime: FormControl<DateTime>(
+                validators: [Validators.required],
+              ),
+              deviceId: FormControl<String>(validators: [Validators.required]),
+              playthroughId: FormControl<String>(),
+              started: FormControl<bool>(),
+              finished: FormControl<String>(),
             ),
           ),
         ),
@@ -84,46 +92,42 @@ Widget _fieldsCreateBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       UserGameSelectorBuilder(
-        controller: formGroup.gameId,
+        formControl: formGroup.gameId,
         label: context.localize().gameLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleDateTimeFormField(
-        controller: formGroup.startDateTime,
+        formControl: formGroup.startDateTime,
         label: context.localize().startDateTimeLabel,
-        required: true,
         readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),
       SimpleDateTimeFormField(
-        controller: formGroup.endDateTime,
+        formControl: formGroup.endDateTime,
         label: context.localize().endDateTimeLabel,
-        required: true,
         readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ), // TODO Range date time form field
       DeviceSelectorBuilder(
-        controller: formGroup.deviceId,
+        formControl: formGroup.deviceId,
         label: context.localize().deviceLabel,
-        required: true,
         readOnly: readOnly,
       ),
       GamePlaythroughSelectorBuilder(
         gameId: gameId,
-        controller: formGroup.playthroughId,
+        formControl: formGroup.playthroughId,
         label: context.localize().playthroughLabel,
         readOnly: readOnly,
       ),
       SimpleBoolFormField(
-        controller: formGroup.started,
+        formControl: formGroup.started,
         label: context.localize().startedLabel,
         readOnly: readOnly,
       ),
       SimpleChoiceFormField(
-        controller: formGroup.finished,
+        formControl: formGroup.finished,
         label: context.localize().finishedLabel,
         readOnly: readOnly,
         options: gameSessionFinishedOptions,

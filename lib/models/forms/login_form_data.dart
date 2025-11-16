@@ -1,22 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, Login;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginFormData extends FormData<Login> {
-  final TextEditingController host;
-  final TextEditingController username;
-  final TextEditingController password;
+  final FormControl<String> host;
+  final FormControl<String> username;
+  final FormControl<String> password;
 
   LoginFormData({
     required this.host,
     required this.username,
     required this.password,
-  });
-
-  @override
-  void setValues(final Login? data) {
-    host.setValue(data?.host);
-    username.setValue(data?.username);
-    password.setValue(data?.password);
-  }
+  }) : super(
+         formGroup: FormGroup({
+           'host': host,
+           'username': username,
+           'password': password,
+         }),
+       );
 }

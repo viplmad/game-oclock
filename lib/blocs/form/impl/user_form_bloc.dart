@@ -4,28 +4,43 @@ import 'package:game_oclock/models/models.dart'
 import '../form.dart' show FormBloc;
 
 class UserFormBloc extends FormBloc<UserFormData, User> {
-  UserFormBloc({required super.formGroup});
+  UserFormBloc({required super.data});
 
   @override
-  User fromData(final UserFormData values) {
+  User fromFormData(final UserFormData data) {
     return User(
-      id: 'kalmdkamsd', // TODO
-      username: values.username.text,
-      password: values.password.text,
-      roles: values.admin.value == true ? ['ROLE_ADMIN'] : [],
+      id: '', // TODO
+      username: data.username.value!,
+      password: data.password.value!,
+      roles: data.admin.value == true ? ['ROLE_ADMIN'] : [], // TODO
     );
+  }
+
+  @override
+  void setFormValue(final UserFormData data, final User? value) {
+    data.username.value = value?.username;
+    data.password.value = value?.password;
+    data.admin.value = value?.roles.contains('ROLE_ADMIN'); // TODO
   }
 }
 
 class UserChangePasswordFormBloc
     extends FormBloc<UserChangePasswordFormData, UserChangePassword> {
-  UserChangePasswordFormBloc({required super.formGroup});
+  UserChangePasswordFormBloc({required super.data});
 
   @override
-  UserChangePassword fromData(final UserChangePasswordFormData values) {
+  UserChangePassword fromFormData(final UserChangePasswordFormData data) {
     return UserChangePassword(
-      currentPassword: values.currentPassword.text,
-      newPassword: values.newPassword.text,
+      currentPassword: data.currentPassword.value!,
+      newPassword: data.newPassword.value!,
     );
+  }
+
+  @override
+  void setFormValue(
+    final UserChangePasswordFormData data,
+    final UserChangePassword? value,
+  ) {
+    // Edit not allowed
   }
 }

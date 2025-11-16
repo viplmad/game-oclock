@@ -1,93 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'common.dart';
 
-class SimpleTextFormField extends StatefulWidget {
+class SimpleTextFormField extends StatelessWidget {
   const SimpleTextFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
-    this.validator,
     this.hint,
     this.multiline = false,
     this.obscureText = false,
     //
     this.suffixIcons,
     this.onCleared,
-    this.onChanged,
     this.focusNode,
     this.onFieldSubmitted,
     this.onTap,
   });
 
-  final TextEditingController controller;
+  final FormControl<String> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
-  final FormFieldValidator<String>? validator;
   final String? hint;
   final bool obscureText;
   final bool multiline;
   final List<Widget>? suffixIcons;
   final VoidCallback? onCleared;
-  final ValueChanged<String>? onChanged;
   final FocusNode? focusNode;
   final ValueChanged<String>? onFieldSubmitted;
   final VoidCallback? onTap;
 
   @override
-  State<SimpleTextFormField> createState() => _SimpleTextFormFieldState();
-}
-
-class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
-  @override
   Widget build(final BuildContext context) {
-    return TextFormField(
-      readOnly: widget.readOnly,
-      controller: widget.controller,
+    return ReactiveTextField(
+      formControl: formControl,
+      readOnly: readOnly,
       decoration: InputDecoration(
-        label: FormFieldLabel(text: widget.label, required: widget.required),
-        hintText: widget.hint,
-        suffixIcon: widget.readOnly
+        label: FormFieldLabel(
+          text: label,
+          required: formControl.validators.contains(Validators.required),
+        ),
+        hintText: hint,
+        suffixIcon: readOnly
             ? null
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (widget.controller.text.isNotEmpty)
+                  if (formControl.isNotNullOrEmpty)
                     ClearIconButton(
                       onTap: () {
-                        widget.controller.clear();
-                        widget.onCleared?.call();
-                        setState(() {});
+                        formControl.value = null;
+                        onCleared?.call();
                       },
                     ),
-                  ...?widget.suffixIcons,
+                  ...?suffixIcons,
                 ],
               ),
         border: const OutlineInputBorder(),
       ),
-      validator: (final value) =>
-          (widget.required ? notEmptyValidator(context, value) : null) ??
-          widget.validator?.call(value),
-      maxLines: widget.multiline ? null : 1,
-      keyboardType: widget.multiline
-          ? TextInputType.multiline
-          : TextInputType.text,
-      obscureText: widget.obscureText,
-      onChanged: (final value) {
-        widget.onChanged?.call(value);
-        setState(() {});
-      },
-      onTap: widget.onTap,
+      maxLines: multiline ? null : 1,
+      keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+      obscureText: obscureText,
+      onTap: (_) => onTap?.call(),
       //
-      focusNode: widget.focusNode,
-      onFieldSubmitted: widget.onFieldSubmitted,
+      focusNode: focusNode,
+      onSubmitted: onFieldSubmitted != null
+          ? (_) => onFieldSubmitted!(formControl.value ?? '')
+          : null,
     );
   }
 }
@@ -95,18 +79,14 @@ class _SimpleTextFormFieldState extends State<SimpleTextFormField> {
 class SimpleObscuredTextFormField extends StatefulWidget {
   const SimpleObscuredTextFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
-    this.validator,
   });
 
-  final TextEditingController controller;
+  final FormControl<String> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
-  final FormFieldValidator<String>? validator;
 
   @override
   State<SimpleObscuredTextFormField> createState() =>
@@ -120,11 +100,9 @@ class _SimpleObscuredTextFormFieldState
   @override
   Widget build(final BuildContext context) {
     return SimpleTextFormField(
-      controller: widget.controller,
+      formControl: widget.formControl,
       label: widget.label,
-      required: widget.required,
       readOnly: widget.readOnly,
-      validator: widget.validator,
       suffixIcons: [
         IconButton(
           tooltip: obscureText

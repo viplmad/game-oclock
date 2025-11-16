@@ -11,6 +11,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show Location, LocationFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class LocationCreateForm extends StatelessWidget {
   const LocationCreateForm({super.key, this.initialName});
@@ -23,8 +24,11 @@ class LocationCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => LocationFormBloc(
-            formGroup: LocationFormData(
-              name: TextEditingController(text: initialName),
+            data: LocationFormData(
+              name: FormControl<String>(
+                value: initialName,
+                validators: [Validators.required],
+              ),
             ),
           ),
         ),
@@ -58,7 +62,9 @@ class LocationEditForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => LocationFormBloc(
-            formGroup: LocationFormData(name: TextEditingController()),
+            data: LocationFormData(
+              name: FormControl<String>(validators: [Validators.required]),
+            ),
           ),
         ),
         BlocProvider(
@@ -94,9 +100,8 @@ Widget _fieldsBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.name,
+        formControl: formGroup.name,
         label: context.localize().nameLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],

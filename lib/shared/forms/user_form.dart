@@ -11,6 +11,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show User, UserFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class UserCreateForm extends StatelessWidget {
   const UserCreateForm({super.key});
@@ -21,10 +22,11 @@ class UserCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserFormBloc(
-            formGroup: UserFormData(
-              username: TextEditingController(),
-              password: TextEditingController(),
-              admin: BoolEditingController(),
+            data: UserFormData(
+              username: FormControl<String>(validators: [Validators.required]),
+              password: FormControl<String>(validators: [Validators.required]),
+              passwordConfirmation: FormControl<String>(),
+              admin: FormControl<bool>(),
             ),
           ),
         ),
@@ -53,10 +55,11 @@ class UserEditForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserFormBloc(
-            formGroup: UserFormData(
-              username: TextEditingController(),
-              password: TextEditingController(),
-              admin: BoolEditingController(),
+            data: UserFormData(
+              username: FormControl<String>(validators: [Validators.required]),
+              password: FormControl<String>(),
+              passwordConfirmation: FormControl<String>(),
+              admin: FormControl<bool>(),
             ),
           ),
         ),
@@ -93,19 +96,18 @@ Widget _fieldsCreateBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.username,
+        formControl: formGroup.username,
         label: context.localize().usernameLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleConfirmationTextFormField(
-        controller: formGroup.password,
+        formControl: formGroup.password,
+        confirmationFormControl: formGroup.passwordConfirmation,
         label: context.localize().passwordLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleBoolFormField(
-        controller: formGroup.admin,
+        formControl: formGroup.admin,
         label: context.localize().adminLabel,
         readOnly: readOnly,
       ),
@@ -121,13 +123,12 @@ Widget _fieldsEditBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.username,
+        formControl: formGroup.username,
         label: context.localize().usernameLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleBoolFormField(
-        controller: formGroup.admin,
+        formControl: formGroup.admin,
         label: context.localize().adminLabel,
         readOnly: readOnly,
       ),

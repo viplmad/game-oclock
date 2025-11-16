@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'common.dart';
 
 class SimpleBoolFormField extends StatefulWidget {
   const SimpleBoolFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
     this.readOnly = false,
   });
 
-  final BoolEditingController controller;
+  final FormControl<bool> formControl;
   final String label;
   final bool readOnly;
 
@@ -21,28 +22,10 @@ class SimpleBoolFormField extends StatefulWidget {
 class _SimpleBoolFormFieldState extends State<SimpleBoolFormField> {
   @override
   Widget build(final BuildContext context) {
-    return SwitchListTile(
-      value: widget.controller.value ?? false,
-      onChanged: widget.readOnly
-          ? null
-          : (final value) {
-              widget.controller.setValue(value);
-              setState(() {});
-            },
+    return ReactiveSwitchListTile(
+      formControl: widget.formControl,
       title: FormFieldLabel(text: widget.label),
+      // TODO readOnly
     );
-  }
-}
-
-class BoolEditingController extends ValueNotifier<bool?> {
-  BoolEditingController({final bool? value}) : super(value);
-
-  void clear() {
-    value = null;
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  void setValue(final bool? newValue) {
-    value = newValue;
   }
 }

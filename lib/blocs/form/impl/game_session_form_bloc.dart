@@ -4,18 +4,29 @@ import 'package:game_oclock/models/models.dart'
 import '../form.dart' show FormBloc;
 
 class GameSessionFormBloc extends FormBloc<GameSessionFormData, GameSession> {
-  GameSessionFormBloc({required super.formGroup});
+  GameSessionFormBloc({required super.data});
 
   @override
-  GameSession fromData(final GameSessionFormData values) {
+  GameSession fromFormData(final GameSessionFormData data) {
     return GameSession(
-      gameId: values.gameId.text,
-      start: values.startDateTime.value!,
-      end: values.endDateTime.value!,
-      deviceId: values.deviceId.text,
-      playthroughId: values.playthroughId.text,
-      started: values.started.value!,
-      finished: values.finished.text,
+      gameId: data.gameId.value!,
+      start: data.startDateTime.value!,
+      end: data.endDateTime.value!,
+      deviceId: data.deviceId.value!,
+      playthroughId: data.playthroughId.value!,
+      started: data.started.value!,
+      finished: data.finished.value!,
     );
+  }
+
+  @override
+  void setFormValue(final GameSessionFormData data, final GameSession? value) {
+    data.gameId.value = value?.gameId;
+    data.startDateTime.value = value?.start;
+    data.endDateTime.value = value?.end;
+    data.deviceId.value = value?.deviceId;
+    data.playthroughId.value = value?.playthroughId;
+    data.started.value = value?.started;
+    data.finished.value = value?.finished;
   }
 }

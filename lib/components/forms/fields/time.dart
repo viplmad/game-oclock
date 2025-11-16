@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'text.dart';
 
 class SimpleTimeFormField extends StatefulWidget {
   const SimpleTimeFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
   });
 
-  final TimeEditingController controller;
+  final FormControl<TimeOfDay> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
 
   @override
@@ -24,13 +22,15 @@ class SimpleTimeFormField extends StatefulWidget {
 }
 
 class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
-  late final TextEditingController textController;
+  late final FormControl<String> textFormControl;
 
   @override
   void initState() {
-    textController = TextEditingController(
-      text: _buildTextValue(widget.controller.value),
+    textFormControl = FormControl<String>(
+      value: _buildTextValue(widget.formControl.value),
+      validators: widget.formControl.validators,
     );
+    textFormControl.setErrors(widget.formControl.errors, markAsDirty: false);
 
     super.initState();
   }
@@ -38,12 +38,12 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
   @override
   Widget build(final BuildContext context) {
     return SimpleTextFormField(
-      controller: textController,
+      formControl: textFormControl,
       label: widget.label,
-      required: widget.required,
       readOnly: false,
       onCleared: () {
-        widget.controller.clear();
+        widget.formControl.value = null;
+        textFormControl.setErrors(widget.formControl.errors);
       },
       suffixIcons: [
         IconButton(
@@ -59,17 +59,13 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
   Future<void> _showPicker() {
     return showTimePicker(
       context: context,
-      initialTime: widget.controller.value ?? TimeOfDay.now(),
-      builder: (final BuildContext context, final Widget? child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
-      ),
+      initialTime: widget.formControl.value ?? TimeOfDay.now(),
     ).then<void>((final value) {
       if (value != null) {
-        widget.controller.setValue(value);
-        textController.setValue(_buildTextValue(value));
+        widget.formControl.value = value;
 
-        setState(() {});
+        textFormControl.value = _buildTextValue(value);
+        textFormControl.setErrors(widget.formControl.errors);
       }
     });
   }
@@ -80,17 +76,5 @@ class _SimpleTimeFormFieldState extends State<SimpleTimeFormField> {
     }
 
     return MaterialLocalizations.of(context).formatTimeOfDay(value);
-  }
-}
-
-class TimeEditingController extends ValueNotifier<TimeOfDay?> {
-  TimeEditingController({final TimeOfDay? time}) : super(time);
-
-  void clear() {
-    value = null;
-  }
-
-  void setValue(final TimeOfDay? newValue) {
-    value = newValue;
   }
 }

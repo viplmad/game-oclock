@@ -5,14 +5,24 @@ import '../form.dart' show FormBloc;
 
 class GameAvailableFormBloc
     extends FormBloc<GameAvailableFormData, GameAvailable> {
-  GameAvailableFormBloc({required super.formGroup});
+  GameAvailableFormBloc({required super.data});
 
   @override
-  GameAvailable fromData(final GameAvailableFormData values) {
+  GameAvailable fromFormData(final GameAvailableFormData data) {
     return GameAvailable(
-      gameId: values.gameId.text,
-      locationId: values.locationId.text,
-      date: values.date.value!, // UI validation should prevent null pointer
+      gameId: data.gameId.value!,
+      locationId: data.locationId.value!,
+      date: data.date.value!,
     );
+  }
+
+  @override
+  void setFormValue(
+    final GameAvailableFormData data,
+    final GameAvailable? value,
+  ) {
+    data.gameId.value = value?.gameId;
+    data.locationId.value = value?.locationId;
+    data.date.value = value?.date;
   }
 }

@@ -7,6 +7,7 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show UserChangePassword, UserChangePasswordFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class UserChangePasswordForm extends StatelessWidget {
   const UserChangePasswordForm({super.key, required this.id});
@@ -19,9 +20,14 @@ class UserChangePasswordForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserChangePasswordFormBloc(
-            formGroup: UserChangePasswordFormData(
-              currentPassword: TextEditingController(),
-              newPassword: TextEditingController(),
+            data: UserChangePasswordFormData(
+              currentPassword: FormControl<String>(
+                validators: [Validators.required],
+              ),
+              newPassword: FormControl<String>(
+                validators: [Validators.required],
+              ),
+              newPasswordConfirmation: FormControl<String>(),
             ),
           ),
         ),
@@ -52,15 +58,14 @@ Widget _fieldsCreateBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleObscuredTextFormField(
-        controller: formGroup.currentPassword,
+        formControl: formGroup.currentPassword,
         label: context.localize().currentPasswordLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleConfirmationTextFormField(
-        controller: formGroup.newPassword,
+        formControl: formGroup.newPassword,
+        confirmationFormControl: formGroup.newPasswordConfirmation,
         label: context.localize().newPasswordLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],

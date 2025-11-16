@@ -11,6 +11,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show Device, DeviceFormData;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class DeviceCreateForm extends StatelessWidget {
   const DeviceCreateForm({super.key, this.initialName});
@@ -23,8 +24,11 @@ class DeviceCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => DeviceFormBloc(
-            formGroup: DeviceFormData(
-              name: TextEditingController(text: initialName),
+            data: DeviceFormData(
+              name: FormControl<String>(
+                value: initialName,
+                validators: [Validators.required],
+              ),
             ),
           ),
         ),
@@ -58,7 +62,9 @@ class DeviceEditForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => DeviceFormBloc(
-            formGroup: DeviceFormData(name: TextEditingController()),
+            data: DeviceFormData(
+              name: FormControl<String>(validators: [Validators.required]),
+            ),
           ),
         ),
         BlocProvider(
@@ -88,15 +94,14 @@ class DeviceEditForm extends StatelessWidget {
 
 Widget _fieldsBuilder(
   final BuildContext context,
-  final DeviceFormData formGroup,
+  final DeviceFormData formData,
   final bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.name,
+        formControl: formData.name,
         label: context.localize().nameLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],

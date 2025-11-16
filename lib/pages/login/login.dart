@@ -6,12 +6,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
-        FormDirtied,
         FormState2,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
         FormSubmitted,
-        FormValuesUpdated,
+        FormValueUpdated,
         LoginFormBloc,
         LoginSaveBloc,
         SavedLoginResponseGetBloc;
@@ -23,6 +22,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -33,10 +33,10 @@ class LoginPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => LoginFormBloc(
-            formGroup: LoginFormData(
-              host: TextEditingController(),
-              username: TextEditingController(),
-              password: TextEditingController(),
+            data: LoginFormData(
+              host: FormControl<String>(validators: [Validators.required]),
+              username: FormControl<String>(validators: [Validators.required]),
+              password: FormControl<String>(validators: [Validators.required]),
             ),
           ),
         ),
@@ -84,7 +84,7 @@ class LoginBuilder extends StatelessWidget {
           listener: (final context, final state) {
             if (state is FormStateSubmitSuccess<LoginFormData, Login>) {
               context.read<LoginSaveBloc>().add(
-                ActionStarted(data: state.data),
+                ActionStarted(data: state.value),
               );
             }
           },
@@ -104,8 +104,8 @@ class LoginBuilder extends StatelessWidget {
             if (state is ActionSuccess<SavedLoginResponse, void>) {
               savedLogin = state.data;
               context.read<LoginFormBloc>().add(
-                FormValuesUpdated(
-                  values: Login(
+                FormValueUpdated(
+                  value: Login(
                     host: savedLogin.host,
                     username: savedLogin.username,
                     password: '',
@@ -131,10 +131,7 @@ class LoginBuilder extends StatelessWidget {
                       saveState is ActionInProgress;
 
                   return SimpleForm(
-                    formKey: formState.key,
-                    dirty: formState.dirty,
-                    onChanged: () =>
-                        context.read<LoginFormBloc>().add(const FormDirtied()),
+                    formGroup: formState.data.formGroup,
                     onSubmit: // TODO possibly disallow submit if not dirty
                     inProgress
                         ? null
@@ -143,7 +140,7 @@ class LoginBuilder extends StatelessWidget {
                               const FormSubmitted(),
                             );
                           },
-                    child: _fieldsBuilder(context, formState.group, inProgress),
+                    child: _fieldsBuilder(context, formState.data, inProgress),
                   );
                 },
               );
@@ -163,21 +160,18 @@ Widget _fieldsBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.host,
+        formControl: formGroup.host,
         label: context.localize().hostLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleTextFormField(
-        controller: formGroup.username,
+        formControl: formGroup.username,
         label: context.localize().usernameLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleObscuredTextFormField(
-        controller: formGroup.password,
+        formControl: formGroup.password,
         label: context.localize().passwordLabel,
-        required: true,
         readOnly: readOnly,
       ),
     ],
@@ -187,17 +181,13 @@ Widget _fieldsBuilder(
 class SimpleForm extends StatelessWidget {
   const SimpleForm({
     super.key,
-    required this.formKey,
-    required this.dirty,
+    required this.formGroup,
     required this.child,
-    required this.onChanged,
     this.onSubmit,
   });
 
-  final Key formKey;
-  final bool dirty;
+  final FormGroup formGroup;
   final Widget child;
-  final VoidCallback onChanged;
   final VoidCallback? onSubmit;
 
   @override
@@ -209,11 +199,8 @@ class SimpleForm extends StatelessWidget {
       onPressed: onSubmit,
     );
 
-    final form = Form(
-      key: formKey,
-      onChanged: inProgress ? null : onChanged,
-      child: child,
-    );
+    final form = ReactiveForm(formGroup: formGroup, child: child);
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(

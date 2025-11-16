@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show FormData, Location;
-import 'package:game_oclock/utils/text_editing_controller_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class LocationFormData extends FormData<Location> {
-  final TextEditingController name;
+  final FormControl<String> name;
 
-  LocationFormData({required this.name});
-
-  @override
-  void setValues(final Location? data) {
-    name.setValue(data?.name);
-  }
+  LocationFormData({required this.name})
+    : super(formGroup: FormGroup({'name': name}));
 }

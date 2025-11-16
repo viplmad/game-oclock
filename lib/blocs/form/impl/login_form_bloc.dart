@@ -3,14 +3,21 @@ import 'package:game_oclock/models/models.dart' show Login, LoginFormData;
 import '../form.dart' show FormBloc;
 
 class LoginFormBloc extends FormBloc<LoginFormData, Login> {
-  LoginFormBloc({required super.formGroup});
+  LoginFormBloc({required super.data});
 
   @override
-  Login fromData(final LoginFormData values) {
+  Login fromFormData(final LoginFormData data) {
     return Login(
-      host: values.host.text,
-      username: values.username.text,
-      password: values.password.text,
+      host: data.host.value!,
+      username: data.username.value!,
+      password: data.password.value!,
     );
+  }
+
+  @override
+  void setFormValue(final LoginFormData data, final Login? value) {
+    data.host.value = value?.host;
+    data.username.value = value?.username;
+    data.password.value = value?.password;
   }
 }

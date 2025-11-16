@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import 'date.dart';
 import 'time.dart';
@@ -7,54 +8,51 @@ import 'time.dart';
 class SimpleDateTimeFormField extends StatelessWidget {
   const SimpleDateTimeFormField({
     super.key,
-    required this.controller,
+    required this.formControl,
     required this.label,
-    this.required = false,
     this.readOnly = false,
     required this.firstDate,
     required this.lastDate,
   });
 
-  final DateTimeEditingController controller;
+  final FormControl<DateTime> formControl;
   final String label;
-  final bool required;
   final bool readOnly;
   final DateTime firstDate;
   final DateTime lastDate;
 
   @override
   Widget build(final BuildContext context) {
-    final dateController = DateTimeEditingController(date: controller.value);
-    final timeController = TimeEditingController(
-      time: controller.value == null
+    final dateController = FormControl<DateTime>(value: formControl.value);
+    final timeController = FormControl<TimeOfDay>(
+      value: formControl.value == null
           ? null
-          : TimeOfDay.fromDateTime(controller.value!),
+          : TimeOfDay.fromDateTime(formControl.value!),
     );
 
-    dateController.addListener(() {
-      final date = (controller.value ?? DateTime.now()).copyWith(
-        day: dateController.value?.day,
-        month: dateController.value?.month,
-        year: dateController.value?.year,
+    dateController.valueChanges.listen((final value) {
+      final date = (formControl.value ?? DateTime.now()).copyWith(
+        day: value?.day,
+        month: value?.month,
+        year: value?.year,
       );
-      controller.setValue(date);
-    });
-    timeController.addListener(() {
-      final date = (controller.value ?? DateTime.now()).copyWith(
-        hour: timeController.value?.hour,
-        minute: timeController.value?.minute,
+      formControl.value = date;
+    }); // TODO close
+    timeController.valueChanges.listen((final value) {
+      final date = (formControl.value ?? DateTime.now()).copyWith(
+        hour: value?.hour,
+        minute: value?.minute,
       );
-      controller.setValue(date);
-    });
+      formControl.value = date;
+    }); // TODO close
 
     return Row(
       children: [
         Expanded(
           flex: 4,
           child: SimpleDateFormField(
-            controller: dateController,
+            formControl: dateController,
             label: label,
-            required: required,
             readOnly: readOnly,
             firstDate: firstDate,
             lastDate: lastDate,
@@ -63,9 +61,8 @@ class SimpleDateTimeFormField extends StatelessWidget {
         Expanded(
           flex: 2,
           child: SimpleTimeFormField(
-            controller: timeController,
+            formControl: timeController,
             label: context.localize().timeLabel,
-            required: required,
             readOnly: readOnly,
           ),
         ),

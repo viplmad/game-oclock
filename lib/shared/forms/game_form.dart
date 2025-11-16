@@ -15,6 +15,7 @@ import 'package:game_oclock/models/models.dart'
     show UserGame, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class UserGameCreateForm extends StatelessWidget {
   const UserGameCreateForm({super.key, this.initialTitle});
@@ -27,15 +28,18 @@ class UserGameCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserGameFormBloc(
-            formGroup: UserGameFormData(
-              title: TextEditingController(text: initialTitle),
-              edition: TextEditingController(),
-              releaseDate: DateTimeEditingController(),
-              status: TextEditingController(),
-              rating: ScalarNumberEditingController(),
-              notes: TextEditingController(),
-              genres: MultipleTextEditingController(),
-              series: MultipleTextEditingController(),
+            data: UserGameFormData(
+              title: FormControl<String>(
+                value: initialTitle,
+                validators: [Validators.required],
+              ),
+              edition: FormControl<String>(),
+              releaseDate: FormControl<DateTime>(),
+              status: FormControl<String>(validators: [Validators.required]),
+              rating: FormControl<int>(),
+              notes: FormControl<String>(),
+              genres: FormArray<String>([]),
+              series: FormArray<String>([]),
             ),
           ),
         ),
@@ -73,15 +77,15 @@ class UserGameEditForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserGameFormBloc(
-            formGroup: UserGameFormData(
-              title: TextEditingController(),
-              edition: TextEditingController(),
-              releaseDate: DateTimeEditingController(),
-              status: TextEditingController(),
-              rating: ScalarNumberEditingController(),
-              notes: TextEditingController(),
-              genres: MultipleTextEditingController(),
-              series: MultipleTextEditingController(),
+            data: UserGameFormData(
+              title: FormControl<String>(validators: [Validators.required]),
+              edition: FormControl<String>(),
+              releaseDate: FormControl<DateTime>(),
+              status: FormControl<String>(),
+              rating: FormControl<int>(),
+              notes: FormControl<String>(),
+              genres: FormArray<String>([]),
+              series: FormArray<String>([]),
             ),
           ),
         ),
@@ -118,49 +122,47 @@ Widget _fieldsCreateBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       ExternalGameSelectorBuilder(
-        controller: formGroup.title,
+        formControl: formGroup.title,
         label: context.localize().titleLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleTextFormField(
-        controller: formGroup.edition,
+        formControl: formGroup.edition,
         label: context.localize().editionLabel,
         readOnly: readOnly,
       ),
       SimpleDateFormField(
-        controller: formGroup.releaseDate,
+        formControl: formGroup.releaseDate,
         label: context.localize().releaseDateLabel,
         readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),
       SimpleChoiceFormField(
-        controller: formGroup.status,
+        formControl: formGroup.status,
         label: context.localize().statusLabel,
-        required: true,
         readOnly: readOnly,
         options: gameStatusOptions,
       ),
       SimpleRatingFormField(
-        controller: formGroup.rating,
+        formControl: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
         color: CommonColors.ratingColor,
       ),
       SimpleTextFormField(
-        controller: formGroup.notes,
+        formControl: formGroup.notes,
         label: context.localize().notesLabel,
         readOnly: readOnly,
         multiline: true,
       ),
       SimpleMultipleSelectFormField(
-        controller: formGroup.genres,
+        formArray: formGroup.genres,
         label: context.localize().genresLabel,
         readOnly: readOnly,
       ),
       SimpleMultipleSelectFormField(
-        controller: formGroup.series,
+        formArray: formGroup.series,
         label: context.localize().seriesLabel,
         readOnly: readOnly,
       ),
@@ -176,49 +178,47 @@ Widget _fieldsEditBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       SimpleTextFormField(
-        controller: formGroup.title,
+        formControl: formGroup.title,
         label: context.localize().titleLabel,
-        required: true,
         readOnly: readOnly,
       ),
       SimpleTextFormField(
-        controller: formGroup.edition,
+        formControl: formGroup.edition,
         label: context.localize().editionLabel,
         readOnly: readOnly,
       ),
       SimpleDateFormField(
-        controller: formGroup.releaseDate,
+        formControl: formGroup.releaseDate,
         label: context.localize().releaseDateLabel,
         readOnly: readOnly,
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),
       SimpleChoiceFormField(
-        controller: formGroup.status,
+        formControl: formGroup.status,
         label: context.localize().statusLabel,
-        required: true,
         readOnly: readOnly,
         options: gameStatusOptions,
       ),
       SimpleRatingFormField(
-        controller: formGroup.rating,
+        formControl: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
         color: CommonColors.ratingColor,
       ),
       SimpleTextFormField(
-        controller: formGroup.notes,
+        formControl: formGroup.notes,
         label: context.localize().notesLabel,
         readOnly: readOnly,
         multiline: true,
       ),
       SimpleMultipleSelectFormField(
-        controller: formGroup.genres,
+        formArray: formGroup.genres,
         label: context.localize().genresLabel,
         readOnly: readOnly,
       ),
       SimpleMultipleSelectFormField(
-        controller: formGroup.series,
+        formArray: formGroup.series,
         label: context.localize().seriesLabel,
         readOnly: readOnly,
       ),

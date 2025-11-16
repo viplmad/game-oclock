@@ -3,14 +3,19 @@ import 'package:game_oclock/models/models.dart' show Location, LocationFormData;
 import '../form.dart' show FormBloc;
 
 class LocationFormBloc extends FormBloc<LocationFormData, Location> {
-  LocationFormBloc({required super.formGroup});
+  LocationFormBloc({required super.data});
 
   @override
-  Location fromData(final LocationFormData values) {
+  Location fromFormData(final LocationFormData data) {
     return Location(
-      id: 'kalmdkamsd', // TODO
-      name: values.name.text,
-      iconUrl: '',
+      id: '', // TODO
+      name: data.name.value!,
+      iconUrl: '', // TODO
     );
+  }
+
+  @override
+  void setFormValue(final LocationFormData data, final Location? value) {
+    data.name.value = value?.name;
   }
 }
