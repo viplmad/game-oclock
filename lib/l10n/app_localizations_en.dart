@@ -421,6 +421,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get deletedSuccessfullyLabel => 'Deleted successfully';
+
+  @override
+  String unableToDeleteDataLabel(Object data) {
+    return 'Unable to delete - $data';
+  }
+
+  @override
   String get leaveDirtyFormConfirmationDialogTitle =>
       'Are you sure you want to leave?';
 

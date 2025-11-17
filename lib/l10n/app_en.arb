@@ -125,6 +125,8 @@
   "deleteDialogTitle": "Delete?",
   "deleteDialogSubtitle": "This action cannot be undone.",
   "deleteDialogDataTitle": "{data} will be deleted.",
+  "deletedSuccessfullyLabel": "Deleted successfully",
+  "unableToDeleteDataLabel": "Unable to delete - {data}",
   "leaveDirtyFormConfirmationDialogTitle": "Are you sure you want to leave?",
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
   "gameEditionDataTitle": "{aTitle} - {bEdition}",

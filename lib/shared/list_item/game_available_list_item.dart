@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/models/models.dart' show LocationWithDate;
+import 'package:game_oclock/models/models.dart'
+    show LocationWithDate, UserGameWithDate;
+import 'package:game_oclock/utils/localisation_extension.dart';
 
-class GameAvailableTileListItem extends StatelessWidget {
-  const GameAvailableTileListItem({super.key, required this.data, this.onTap});
+class LocationWithDateTileListItem extends StatelessWidget {
+  const LocationWithDateTileListItem({
+    super.key,
+    required this.data,
+    this.onTap,
+  });
 
   final LocationWithDate data;
   final VoidCallback? onTap;
 
   @override
   Widget build(final BuildContext context) {
-    return TileListItem(title: data.name);
+    return TileListItem(
+      title: data.name,
+      subtitle: MaterialLocalizations.of(context).formatCompactDate(data.date),
+      imageURL: data.iconUrl,
+      onTap: onTap,
+    );
+  }
+}
+
+class GameWithDateTileListItem extends StatelessWidget {
+  const GameWithDateTileListItem({super.key, required this.data, this.onTap});
+
+  final UserGameWithDate data;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(final BuildContext context) {
+    return TileListItem(
+      title: data.edition.isEmpty
+          ? data.title
+          : context.localize().gameEditionDataTitle(data.title, data.edition),
+      subtitle: MaterialLocalizations.of(context).formatCompactDate(data.date),
+      imageURL: data.coverUrl,
+      onTap: onTap,
+    );
   }
 }

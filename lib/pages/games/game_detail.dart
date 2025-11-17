@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFailure,
         ActionRestarted,
         ActionStarted,
+        ActionState,
+        ActionSuccess,
         ListInitial,
         ListLoadBloc,
         ListSearchChanged,
@@ -18,6 +21,7 @@ import 'package:game_oclock/components/list_detail.dart'
     show RelationListBuilder;
 import 'package:game_oclock/components/show_confirmation_dialog.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
+import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -112,10 +116,6 @@ class UserGameDetail extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    if (extended) {
-      _loadOnlyInitial<LocationAvailableListBloc>(context);
-    }
-
     final mainTab = TabDestination(
       icon: CommonIcons.detail,
       labelBuilder: (final context) => context.localize().detailLabel,
@@ -135,7 +135,7 @@ class UserGameDetail extends StatelessWidget {
           searchCreateFormBuilder: (final quicksearch) =>
               LocationCreateForm(initialName: quicksearch),
           itemBuilder: (final context, final data) =>
-              GameAvailableTileListItem(data: data),
+              LocationWithDateTileListItem(data: data),
         ),
       ),
       TabDestination(
@@ -154,60 +154,81 @@ class UserGameDetail extends StatelessWidget {
       ),
     ]);
 
-    return DetailWithTabs(
-      title: Text(data.title),
-      image: SimpleCachedNetworkImage(
-        imageUrl: data.coverUrl,
-        fit: BoxFit.cover,
-      ),
-      onBackPressed: onBackPressed,
-      actions: [
-        IconButton(
-          icon: CommonIcons.calendar,
-          tooltip: context.localize().calendarLabel,
-          onPressed: () => GoRouter.of(
+    return BlocListener<UserGameDeleteBloc, ActionState<void>>(
+      listener: (final context, final state) {
+        if (state is ActionSuccess<void, UserGame>) {
+          showSnackBar(
             context,
-          ).go(CommonPaths.buildGameCalendarPath(data.id)),
-        ),
-        if (!fromPage)
-          IconButton(
-            icon: CommonIcons.view,
-            tooltip: context.localize().viewLabel,
-            onPressed: () =>
-                GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
-          ),
-        IconButton(
-          icon: CommonIcons.edit,
-          tooltip: context.localize().editLabel,
-          onPressed: () async => showFormDialog<UserGame>(
+            message: context.localize().deletedSuccessfullyLabel,
+          );
+          onDeleteSucceeded(context);
+        }
+        if (state is ActionFailure<void, UserGame>) {
+          showSnackBar(
             context,
-            builder: (final context) => UserGameEditForm(id: data.id),
-            onSuccess: (final context, _) => onEditSucceeded(context),
-          ),
-        ),
-        IconButton(
-          icon: CommonIcons.delete,
-          tooltip: context.localize().deleteLabel,
-          onPressed: () async => showConfirmationDialog(
-            context,
-            builder: (final context) => ConfirmationDialog(
-              title: context.localize().deleteDialogTitle,
-              subtitle: context.localize().deleteDialogSubtitle,
-              message: context.localize().deleteDialogDataTitle(data.title),
-              acceptLabel: MaterialLocalizations.of(
-                context,
-              ).deleteButtonTooltip,
+            message: context.localize().unableToDeleteDataLabel(
+              state.error.message,
             ),
-            onSuccess: (final context) {
-              context.read<UserGameDeleteBloc>().add(ActionStarted(data: data));
-              onDeleteSucceeded(context); // TODO listen to bloc + snackbar
-            },
-          ),
+          );
+        }
+      },
+      child: DetailWithTabs(
+        title: Text(data.title),
+        image: SimpleCachedNetworkImage(
+          imageUrl: data.coverUrl,
+          fit: BoxFit.cover,
+          applyGradient: true,
         ),
-      ],
-      extended: extended,
-      mainTab: mainTab,
-      tabs: tabs,
+        onBackPressed: onBackPressed,
+        actions: [
+          IconButton(
+            icon: CommonIcons.calendar,
+            tooltip: context.localize().calendarLabel,
+            onPressed: () => GoRouter.of(
+              context,
+            ).go(CommonPaths.buildGameCalendarPath(data.id)),
+          ),
+          if (!fromPage)
+            IconButton(
+              icon: CommonIcons.view,
+              tooltip: context.localize().viewLabel,
+              onPressed: () =>
+                  GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
+            ),
+          IconButton(
+            icon: CommonIcons.edit,
+            tooltip: context.localize().editLabel,
+            onPressed: () async => showFormDialog<UserGame>(
+              context,
+              builder: (final context) => UserGameEditForm(id: data.id),
+              onSuccess: (final context, _) => onEditSucceeded(context),
+            ),
+          ),
+          IconButton(
+            icon: CommonIcons.delete,
+            tooltip: context.localize().deleteLabel,
+            onPressed: () async => showConfirmationDialog(
+              context,
+              builder: (final context) => ConfirmationDialog(
+                title: context.localize().deleteDialogTitle,
+                subtitle: context.localize().deleteDialogSubtitle,
+                message: context.localize().deleteDialogDataTitle(data.title),
+                acceptLabel: MaterialLocalizations.of(
+                  context,
+                ).deleteButtonTooltip,
+              ),
+              onSuccess: (final context) {
+                context.read<UserGameDeleteBloc>().add(
+                  ActionStarted(data: data),
+                );
+              },
+            ),
+          ),
+        ],
+        extended: extended,
+        mainTab: mainTab,
+        tabs: tabs,
+      ),
     );
   }
 

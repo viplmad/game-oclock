@@ -850,6 +850,18 @@ abstract class AppLocalizations {
   /// **'{data} will be deleted.'**
   String deleteDialogDataTitle(Object data);
 
+  /// No description provided for @deletedSuccessfullyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted successfully'**
+  String get deletedSuccessfullyLabel;
+
+  /// No description provided for @unableToDeleteDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete - {data}'**
+  String unableToDeleteDataLabel(Object data);
+
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///
   /// In en, this message translates to:

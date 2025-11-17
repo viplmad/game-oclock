@@ -27,6 +27,8 @@ class CommonPaths {
       gamePath.replaceFirst(_idPath, id);
   static String buildGameCalendarPath(final String id) =>
       gameCalendarPath.replaceFirst(_idPath, id);
+  static String buildLocationPath(final String id) =>
+      locationPath.replaceFirst(_idPath, id);
 
   static String getIdParameter(final GoRouterState state) =>
       state.pathParameters[CommonPaths._idPathParam]!;

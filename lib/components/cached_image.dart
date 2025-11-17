@@ -3,13 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 
 class SimpleCachedNetworkImage extends StatelessWidget {
-  const SimpleCachedNetworkImage({super.key, required this.imageUrl, this.fit});
+  const SimpleCachedNetworkImage({
+    super.key,
+    required this.imageUrl,
+    this.fit,
+    this.applyGradient = false,
+  });
 
   final String imageUrl;
   final BoxFit? fit;
+  final bool applyGradient;
 
   @override
   Widget build(final BuildContext context) {
+    return applyGradient ? _getGradientImage() : _getCachedImage();
+  }
+
+  Widget _getGradientImage() {
+    return Container(
+      color: Colors.black87,
+      child: Opacity(opacity: 0.65, child: _getCachedImage()),
+    );
+  }
+
+  Widget _getCachedImage() {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       fit: fit,

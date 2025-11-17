@@ -2,15 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFailure,
         ActionRestarted,
         ActionStarted,
+        ActionState,
+        ActionSuccess,
+        ListInitial,
+        ListLoadBloc,
+        ListSearchChanged,
         LocationDeleteBloc,
         LocationGetBloc,
         UserGameAvailableListBloc;
+import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
+import 'package:game_oclock/components/labels/labels.dart';
+import 'package:game_oclock/components/list_detail.dart';
+import 'package:game_oclock/components/show_confirmation_dialog.dart';
+import 'package:game_oclock/components/show_form_dialog.dart';
+import 'package:game_oclock/components/show_snackbar.dart';
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier, Location;
+import 'package:game_oclock/models/models.dart'
+    show LayoutTier, Location, SearchDTO, TabDestination, UserGameWithDate;
+import 'package:game_oclock/shared/forms/game_available_form.dart';
+import 'package:game_oclock/shared/forms/game_form.dart';
+import 'package:game_oclock/shared/forms/location_form.dart';
+import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class LocationDetailPage extends StatelessWidget {
@@ -78,6 +97,117 @@ class LocationDetail extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return const SizedBox();
+    final mainTab = TabDestination(
+      icon: CommonIcons.detail,
+      labelBuilder: (final context) => context.localize().detailLabel,
+      onTap: (_) {},
+      child: _info(context),
+    );
+
+    final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
+      TabDestination(
+        icon: CommonIcons.games,
+        labelBuilder: (final context) => context.localize().gamesTitle,
+        onTap: (final context) =>
+            _loadOnlyInitial<UserGameAvailableListBloc>(context),
+        child: RelationListBuilder<UserGameWithDate, UserGameAvailableListBloc>(
+          createFormBuilder: ([final quicksearch]) =>
+              GameAvailableCreateForm(gameId: quicksearch, locationId: data.id),
+          searchCreateFormBuilder: (final quicksearch) =>
+              UserGameCreateForm(initialTitle: quicksearch),
+          itemBuilder: (final context, final data) =>
+              GameWithDateTileListItem(data: data),
+        ),
+      ),
+    ]);
+
+    return BlocListener<LocationDeleteBloc, ActionState<void>>(
+      listener: (final context, final state) {
+        if (state is ActionSuccess<void, Location>) {
+          showSnackBar(
+            context,
+            message: context.localize().deletedSuccessfullyLabel,
+          );
+          onDeleteSucceeded(context);
+        }
+        if (state is ActionFailure<void, Location>) {
+          showSnackBar(
+            context,
+            message: context.localize().unableToDeleteDataLabel(
+              state.error.message,
+            ),
+          );
+        }
+      },
+      child: DetailWithTabs(
+        title: Text(data.name),
+        image: SimpleCachedNetworkImage(
+          imageUrl: data.iconUrl,
+          fit: BoxFit.cover,
+          applyGradient: true,
+        ),
+        onBackPressed: onBackPressed,
+        actions: [
+          if (!fromPage)
+            IconButton(
+              icon: CommonIcons.view,
+              tooltip: context.localize().viewLabel,
+              onPressed: () => GoRouter.of(
+                context,
+              ).go(CommonPaths.buildLocationPath(data.id)),
+            ),
+          IconButton(
+            icon: CommonIcons.edit,
+            tooltip: context.localize().editLabel,
+            onPressed: () async => showFormDialog<Location>(
+              context,
+              builder: (final context) => LocationEditForm(id: data.id),
+              onSuccess: (final context, _) => onEditSucceeded(context),
+            ),
+          ),
+          IconButton(
+            icon: CommonIcons.delete,
+            tooltip: context.localize().deleteLabel,
+            onPressed: () async => showConfirmationDialog(
+              context,
+              builder: (final context) => ConfirmationDialog(
+                title: context.localize().deleteDialogTitle,
+                subtitle: context.localize().deleteDialogSubtitle,
+                message: context.localize().deleteDialogDataTitle(data.name),
+                acceptLabel: MaterialLocalizations.of(
+                  context,
+                ).deleteButtonTooltip,
+              ),
+              onSuccess: (final context) {
+                context.read<LocationDeleteBloc>().add(
+                  ActionStarted(data: data),
+                );
+              },
+            ),
+          ),
+        ],
+        extended: extended,
+        mainTab: mainTab,
+        tabs: tabs,
+      ),
+    );
+  }
+
+  Widget _info(final BuildContext context) {
+    return SingleChildScrollView(
+      child: LabelsContainer(
+        children: [
+          TextLabel(label: context.localize().idLabel, value: data.id),
+          TextLabel(label: context.localize().nameLabel, value: data.name),
+        ],
+      ),
+    );
+  }
+
+  void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
+    final lb = context.read<LB>();
+    if (lb.state is ListInitial) {
+      lb.add(ListSearchChanged(search: SearchDTO()));
+    }
   }
 }

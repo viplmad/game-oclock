@@ -95,6 +95,11 @@ class DetailWithTabs extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    mainTab.onTap(context);
+    if (extended && tabs.isNotEmpty) {
+      tabs.first.onTap(context);
+    }
+
     return Detail(
       title: title,
       image: image,
