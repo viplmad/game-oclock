@@ -182,6 +182,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detailLabel => 'Detail';
 
   @override
+  String get backLabel => 'Back';
+
+  @override
   String get addLabel => 'Add';
 
   @override

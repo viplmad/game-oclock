@@ -20,7 +20,7 @@ class SimpleChoiceFormField extends StatelessWidget {
   Widget build(final BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
-      builder: (final context, final control, final child) => Row(
+      builder: (final context, _, _) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: options

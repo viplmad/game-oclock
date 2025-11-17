@@ -18,6 +18,7 @@ class SimpleTextFormField extends StatelessWidget {
     this.suffixIcons,
     this.onCleared,
     this.focusNode,
+    this.onChanged,
     this.onFieldSubmitted,
     this.onTap,
   });
@@ -31,6 +32,7 @@ class SimpleTextFormField extends StatelessWidget {
   final List<Widget>? suffixIcons;
   final VoidCallback? onCleared;
   final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onFieldSubmitted;
   final VoidCallback? onTap;
 
@@ -51,13 +53,20 @@ class SimpleTextFormField extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (formControl.isNotNullOrEmpty)
-                    ClearIconButton(
-                      onTap: () {
-                        formControl.value = null;
-                        onCleared?.call();
-                      },
-                    ),
+                  ReactiveValueListenableBuilder(
+                    formControl: formControl,
+                    builder: (_, _, _) {
+                      if (formControl.isNotNullOrEmpty) {
+                        return ClearIconButton(
+                          onTap: () {
+                            formControl.value = null;
+                            onCleared?.call();
+                          },
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
                   ...?suffixIcons,
                 ],
               ),
@@ -67,6 +76,9 @@ class SimpleTextFormField extends StatelessWidget {
       keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
       obscureText: obscureText,
       onTap: (_) => onTap?.call(),
+      onChanged: onChanged != null
+          ? (_) => onChanged!(formControl.value ?? '')
+          : null,
       //
       focusNode: focusNode,
       onSubmitted: onFieldSubmitted != null

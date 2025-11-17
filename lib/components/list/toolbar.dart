@@ -13,9 +13,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListSearchGetBloc,
         ListSearchSaveBloc,
         ListState;
-import 'package:game_oclock/components/forms/fields/common.dart';
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/search/search_list.dart';
+import 'package:game_oclock/components/search_text_field.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
@@ -359,41 +359,20 @@ class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
       width: double.maxFinite,
       height: kMinInteractiveDimension,
       child: inSearch
-          ? TextField(
-              autofocus: true,
+          ? SearchTextField(
               controller: controller,
-              decoration: InputDecoration(
-                hintText: context.localize().searchLabel,
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (widget.onAddPressed != null &&
-                        controller.text.isNotEmpty)
-                      IconButton(
-                        tooltip: context.localize().addLabel,
-                        icon: CommonIcons.addInline,
-                        onPressed: () => widget.onAddPressed!(controller.text),
-                      ),
-                    ClearIconButton(
-                      onTap: () {
-                        controller.clear();
-                        widget.onSearchChanged(null);
-                        setState(() {
-                          inSearch = false;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                border: const OutlineInputBorder(),
-              ),
-              onChanged: (final value) {
-                if (widget.onAddPressed != null) {
-                  setState(() {});
-                }
-                widget.onSearchChanged(value);
+              onDismissed: () => {
+                setState(() {
+                  inSearch = false;
+                }),
               },
+              onCleared: () => {
+                setState(() {
+                  inSearch = false;
+                }),
+              },
+              onSearchChanged: widget.onSearchChanged,
+              onAddPressed: widget.onAddPressed,
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.end,

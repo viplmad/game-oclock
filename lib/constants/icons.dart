@@ -23,6 +23,7 @@ class CommonIcons {
   static const reload = Icon(Icons.refresh);
   static const clearInline = Icon(Icons.cancel_outlined);
   static const addInline = Icon(Icons.add_circle_outline);
+  static const back = Icon(Icons.arrow_back);
   static const listStyleTile = Icon(Icons.list);
   static const listStyleGrid = Icon(Icons.grid_on);
   static const yes = Icon(Icons.check);

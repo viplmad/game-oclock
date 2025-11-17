@@ -53,30 +53,28 @@ class SingleAutocompleteSelectorBuilder<
             final queryFormControl = FormControl<String>(
               value: textEditingController.text,
             );
-            return ReactiveForm(
-              // Scoped to an independent form
-              formGroup: FormGroup({'query': queryFormControl}),
-              child: SimpleTextFormField(
-                formControl: queryFormControl,
-                label: label,
-                readOnly: readOnly,
-                suffixIcons: [
-                  if (onAddPressed != null && formControl.isNotNullOrEmpty)
-                    IconButton(
-                      tooltip: context.localize().addLabel,
-                      icon: CommonIcons.addInline,
-                      onPressed: () => onAddPressed!(
-                        formControl.value!,
-                        (final option) => formControl.value = keyGetter(option),
-                      ),
+            return SimpleTextFormField(
+              formControl: queryFormControl,
+              label: label,
+              readOnly: readOnly,
+              suffixIcons: [
+                if (onAddPressed != null && formControl.isNotNullOrEmpty)
+                  IconButton(
+                    tooltip: context.localize().addLabel,
+                    icon: CommonIcons.addInline,
+                    onPressed: () => onAddPressed!(
+                      formControl.value!,
+                      (final option) => formControl.value = keyGetter(option),
                     ),
-                ],
-                //
-                focusNode: focusNode,
-                onFieldSubmitted: (final String value) {
-                  onFieldSubmitted();
-                },
-              ),
+                  ),
+              ],
+              onChanged: (final value) => textEditingController.value =
+                  textEditingController.value.copyWith(text: value),
+              //
+              focusNode: focusNode,
+              onFieldSubmitted: (final String value) {
+                onFieldSubmitted();
+              },
             );
           },
       optionsBuilder: (final textEditingValue) async {

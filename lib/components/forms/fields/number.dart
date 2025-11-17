@@ -22,7 +22,7 @@ class SimpleRatingFormField extends StatelessWidget {
   Widget build(final BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
-      builder: (final context, final control, final child) => SmoothStarRating(
+      builder: (_, _, _) => SmoothStarRating(
         allowHalfRating: false,
         starCount: 10,
         rating: (formControl.value ?? 0).roundToDouble(),

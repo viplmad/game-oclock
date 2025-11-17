@@ -23,32 +23,31 @@ class SimpleSelectFormField extends StatelessWidget {
   Widget build(final BuildContext context) {
     return ReactiveValueListenableBuilder(
       formControl: formControl,
-      builder: (final context, final control, final child) =>
-          DropdownMenuFormField<String>(
-            enabled: !readOnly,
-            initialSelection: formControl.value,
-            enableFilter: true,
-            requestFocusOnTap: true,
-            label: FormFieldLabel(
-              text: label,
-              required: formControl.validators.contains(Validators.required),
-            ),
-            trailingIcon: readOnly || formControl.isNotNullOrEmpty
-                ? null
-                : ClearIconButton(onTap: () => formControl.value = null),
-            forceErrorText: formControl.hasErrors
-                ? formControl.errors.values.first
-                      as String // TODO use validator
-                : null,
-            dropdownMenuEntries: options
-                .map(
-                  (final field) => DropdownMenuEntry<String>(
-                    value: field.value,
-                    label: field.labelBuilder(context),
-                  ),
-                )
-                .toList(growable: false),
-          ),
+      builder: (final context, _, _) => DropdownMenuFormField<String>(
+        enabled: !readOnly,
+        initialSelection: formControl.value,
+        enableFilter: true,
+        requestFocusOnTap: true,
+        label: FormFieldLabel(
+          text: label,
+          required: formControl.validators.contains(Validators.required),
+        ),
+        trailingIcon: readOnly || formControl.isNotNullOrEmpty
+            ? null
+            : ClearIconButton(onTap: () => formControl.value = null),
+        forceErrorText: formControl.hasErrors
+            ? formControl.errors.values.first
+                  as String // TODO use validator
+            : null,
+        dropdownMenuEntries: options
+            .map(
+              (final field) => DropdownMenuEntry<String>(
+                value: field.value,
+                label: field.labelBuilder(context),
+              ),
+            )
+            .toList(growable: false),
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/components/forms/fields/common.dart';
+import 'package:game_oclock/components/search_text_field.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -32,41 +32,20 @@ class _FullSearchAppBarState extends State<FullSearchAppBar> {
   Widget build(final BuildContext context) {
     return AppBar(
       title: inSearch
-          ? TextField(
-              autofocus: true,
+          ? SearchTextField(
               controller: controller,
-              decoration: InputDecoration(
-                hintText: context.localize().searchLabel,
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (widget.onAddPressed != null &&
-                        controller.text.isNotEmpty)
-                      IconButton(
-                        tooltip: context.localize().addLabel,
-                        icon: CommonIcons.addInline,
-                        onPressed: () => widget.onAddPressed!(controller.text),
-                      ),
-                    ClearIconButton(
-                      onTap: () {
-                        controller.clear();
-                        widget.onSearchChanged(null);
-                        setState(() {
-                          inSearch = false;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                border: const OutlineInputBorder(),
-              ),
-              onChanged: (final value) {
-                if (widget.onAddPressed != null) {
-                  setState(() {});
-                }
-                widget.onSearchChanged(value);
+              onDismissed: () => {
+                setState(() {
+                  inSearch = false;
+                }),
               },
+              onCleared: () => {
+                setState(() {
+                  inSearch = false;
+                }),
+              },
+              onSearchChanged: widget.onSearchChanged,
+              onAddPressed: widget.onAddPressed,
             )
           : Text(widget.title),
       // Fixed elevation so background colour doesn't change on scroll

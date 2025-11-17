@@ -436,6 +436,12 @@ abstract class AppLocalizations {
   /// **'Detail'**
   String get detailLabel;
 
+  /// No description provided for @backLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backLabel;
+
   /// No description provided for @addLabel.
   ///
   /// In en, this message translates to:
