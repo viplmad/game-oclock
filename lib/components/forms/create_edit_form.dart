@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFailure,
         ActionInProgress,
         ActionStarted,
         ActionState,
@@ -55,11 +56,18 @@ class CreateFormBuilder<
             if (state is ActionSuccess<T, T>) {
               showSnackBar(
                 context,
-                message: 'Data created $state', // TODO i18n
+                message: context.localize().createdSuccessfullyLabel,
               );
               Navigator.pop(context, state.data);
             }
-            // TODO possibly clear dirty now
+            if (state is ActionFailure<T, T>) {
+              showSnackBar(
+                context,
+                message: context.localize().unableToCreateDataLabel(
+                  state.error.message,
+                ),
+              );
+            }
           },
         ),
       ],
@@ -123,11 +131,18 @@ class EditFormBuilder<
             if (state is ActionSuccess<void, T>) {
               showSnackBar(
                 context,
-                message: 'Data updated $state',
-              ); // TODO i18n
+                message: context.localize().updatedSuccessfullyLabel,
+              );
               Navigator.pop(context, state.event);
             }
-            // TODO possibly clear dirty now
+            if (state is ActionFailure<T, T>) {
+              showSnackBar(
+                context,
+                message: context.localize().unableToUpdateDataLabel(
+                  state.error.message,
+                ),
+              );
+            }
           },
         ),
         BlocListener<GB, ActionState<T>>(

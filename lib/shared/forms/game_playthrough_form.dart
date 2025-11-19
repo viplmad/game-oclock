@@ -32,7 +32,6 @@ class GamePlaythroughCreateForm extends StatelessWidget {
             data: GamePlaythroughFormData(
               gameId: FormControl<String>(
                 value: gameId,
-                disabled: gameId != null,
                 validators: [Validators.required],
               ),
               name: FormControl<String>(
@@ -65,7 +64,8 @@ class GamePlaythroughCreateForm extends StatelessWidget {
             GamePlaythroughCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsCreateBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(context, gameId, formGroup, readOnly),
           ),
     );
   }
@@ -116,6 +116,7 @@ class GamePlaythroughEditForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
+  final String? gameId,
   final GamePlaythroughFormData formGroup,
   final bool readOnly,
 ) {
@@ -124,7 +125,7 @@ Widget _fieldsCreateBuilder(
       UserGameSelectorBuilder(
         formControl: formGroup.gameId,
         label: context.localize().gameLabel,
-        readOnly: readOnly,
+        readOnly: readOnly || gameId != null,
       ),
       SimpleTextFormField(
         formControl: formGroup.name,

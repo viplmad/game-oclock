@@ -33,12 +33,10 @@ class GameAvailableCreateForm extends StatelessWidget {
               gameId: FormControl<String>(
                 value: gameId,
                 validators: [Validators.required],
-                disabled: gameId != null,
               ),
               locationId: FormControl<String>(
                 value: locationId,
                 validators: [Validators.required],
-                disabled: locationId != null,
               ),
               date: FormControl<DateTime>(validators: [Validators.required]),
             ),
@@ -75,7 +73,14 @@ class GameAvailableCreateForm extends StatelessWidget {
             GameAvailableCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsCreateBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(
+                  context,
+                  gameId,
+                  locationId,
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -83,6 +88,8 @@ class GameAvailableCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
+  final String? gameId,
+  final String? locationId,
   final GameAvailableFormData formData,
   final bool readOnly,
 ) {
@@ -91,12 +98,12 @@ Widget _fieldsCreateBuilder(
       UserGameSelectorBuilder(
         formControl: formData.gameId,
         label: context.localize().gameLabel,
-        readOnly: readOnly,
+        readOnly: readOnly || gameId != null,
       ),
       LocationSelectorBuilder(
         formControl: formData.locationId,
         label: context.localize().locationLabel,
-        readOnly: readOnly,
+        readOnly: readOnly || locationId != null,
       ),
       SimpleDateFormField(
         formControl: formData.date,

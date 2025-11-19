@@ -43,8 +43,7 @@ abstract class FormBloc<D extends FormData<T>, T>
         FormStateSubmitFailure<D, T>(
           error: ErrorDTO(
             code: errorCodeInvalidForm,
-            message:
-                'The form has ${data.formGroup.errors.length} errors', // TODO i18n
+            message: 'The form has ${data.formGroup.errors.length} errors',
           ),
           data: data,
         ),

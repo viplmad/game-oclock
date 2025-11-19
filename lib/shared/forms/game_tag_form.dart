@@ -32,12 +32,10 @@ class GameTagCreateForm extends StatelessWidget {
               gameId: FormControl<String>(
                 value: gameId,
                 validators: [Validators.required],
-                disabled: gameId != null,
               ),
               tagId: FormControl<String>(
                 value: tagId,
                 validators: [Validators.required],
-                disabled: tagId != null,
               ),
             ),
           ),
@@ -71,7 +69,14 @@ class GameTagCreateForm extends StatelessWidget {
             GameTagCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsCreateBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsCreateBuilder(
+                  context,
+                  gameId,
+                  tagId,
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -79,6 +84,8 @@ class GameTagCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
+  final String? gameId,
+  final String? tagId,
   final GameTagFormData formGroup,
   final bool readOnly,
 ) {
@@ -87,12 +94,12 @@ Widget _fieldsCreateBuilder(
       UserGameSelectorBuilder(
         formControl: formGroup.gameId,
         label: context.localize().gameLabel,
-        readOnly: readOnly,
+        readOnly: readOnly || gameId != null,
       ),
       TagSelectorBuilder(
         formControl: formGroup.tagId,
         label: context.localize().tagLabel,
-        readOnly: readOnly,
+        readOnly: readOnly || tagId != null,
       ),
     ],
   );

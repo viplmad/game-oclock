@@ -862,6 +862,30 @@ abstract class AppLocalizations {
   /// **'Unable to delete - {data}'**
   String unableToDeleteDataLabel(Object data);
 
+  /// No description provided for @createdSuccessfullyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Created successfully'**
+  String get createdSuccessfullyLabel;
+
+  /// No description provided for @unableToCreateDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create - {data}'**
+  String unableToCreateDataLabel(Object data);
+
+  /// No description provided for @updatedSuccessfullyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated successfully'**
+  String get updatedSuccessfullyLabel;
+
+  /// No description provided for @unableToUpdateDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update - {data}'**
+  String unableToUpdateDataLabel(Object data);
+
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///
   /// In en, this message translates to:

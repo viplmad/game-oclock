@@ -429,6 +429,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get createdSuccessfullyLabel => 'Created successfully';
+
+  @override
+  String unableToCreateDataLabel(Object data) {
+    return 'Unable to create - $data';
+  }
+
+  @override
+  String get updatedSuccessfullyLabel => 'Updated successfully';
+
+  @override
+  String unableToUpdateDataLabel(Object data) {
+    return 'Unable to update - $data';
+  }
+
+  @override
   String get leaveDirtyFormConfirmationDialogTitle =>
       'Are you sure you want to leave?';
 
