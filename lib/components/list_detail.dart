@@ -21,13 +21,32 @@ import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, ListSearch, ListStyle, SearchDTO, defaultListStyle;
+    show
+        LayoutTier,
+        ListSearch,
+        ListStyle,
+        OptionField,
+        OptionTextField,
+        SearchDTO,
+        defaultListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'full_search_app_bar.dart';
 import 'list/grid_list.dart';
 import 'list/tile_list.dart';
+
+final OptionField<ListStyle> _listStyleTileOption = OptionTextField<ListStyle>(
+  value: ListStyle.tile,
+  labelBuilder: (final context) => context.localize().listStyleTileLabel,
+  icon: CommonIcons.listStyleTile,
+);
+
+final OptionField<ListStyle> _listStyleGridOption = OptionTextField<ListStyle>(
+  value: ListStyle.grid,
+  labelBuilder: (final context) => context.localize().listStyleGridLabel,
+  icon: CommonIcons.listStyleGrid,
+);
 
 class ListDetailBuilder<
   T,
@@ -39,6 +58,7 @@ class ListDetailBuilder<
     super.key,
     required this.title,
     required this.searchSpace,
+    this.availableStyles = const [ListStyle.tile, ListStyle.grid],
     required this.detailBuilder,
     required this.listItemBuilder,
     required this.itemAspectRatio,
@@ -48,6 +68,7 @@ class ListDetailBuilder<
 
   final String title;
   final String searchSpace;
+  final List<ListStyle> availableStyles;
   final FloatingActionButton? floatingActionButton;
   final ValueChanged<String>? onSearchAddPressed;
 
@@ -190,26 +211,29 @@ class ListDetailBuilder<
         onSearchChanged: (final value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
-          SegmentedButton<ListStyle>(
-            segments: <ButtonSegment<ListStyle>>[
-              ButtonSegment<ListStyle>(
-                value: ListStyle.tile,
-                label: Text(context.localize().listStyleTileLabel),
-                icon: CommonIcons.listStyleTile,
-              ),
-              ButtonSegment<ListStyle>(
-                value: ListStyle.grid,
-                label: Text(context.localize().listStyleGridLabel),
-                icon: CommonIcons.listStyleGrid,
-              ),
-            ],
-            selected: {selectedStyle},
-            onSelectionChanged: (final newSelection) {
-              context.read<ListStyleSaveBloc>().add(
-                ActionStarted(data: newSelection.first),
-              );
-            },
-          ),
+          if (availableStyles.length > 1)
+            SegmentedButton<ListStyle>(
+              segments: availableStyles
+                  .map(
+                    (final style) => style == ListStyle.grid
+                        ? _listStyleGridOption
+                        : _listStyleTileOption,
+                  )
+                  .map(
+                    (final choice) => ButtonSegment<ListStyle>(
+                      value: choice.value,
+                      label: choice.widgetBuilder(context),
+                      icon: choice.icon,
+                    ),
+                  )
+                  .toList(growable: false),
+              selected: {selectedStyle},
+              onSelectionChanged: (final newSelection) {
+                context.read<ListStyleSaveBloc>().add(
+                  ActionStarted(data: newSelection.first),
+                );
+              },
+            ),
           IconButton(
             icon: CommonIcons.reload,
             tooltip: context.localize().reloadLabel,
@@ -232,7 +256,7 @@ class ListDetailBuilder<
                       context,
                       ListStyle.grid,
                       data,
-                      () => _selectRemoveIfSame(
+                      () => _selectOrUnselectIfSame(
                         context,
                         selectBloc: context.read<SB>(),
                         data: data,
@@ -247,7 +271,7 @@ class ListDetailBuilder<
                       context,
                       ListStyle.tile,
                       data,
-                      () => _selectRemoveIfSame(
+                      () => _selectOrUnselectIfSame(
                         context,
                         selectBloc: context.read<SB>(),
                         data: data,
@@ -260,7 +284,7 @@ class ListDetailBuilder<
     );
   }
 
-  void _selectRemoveIfSame(
+  void _selectOrUnselectIfSame(
     final BuildContext context, {
     required final SB selectBloc,
     required final T? data,
@@ -294,6 +318,7 @@ class ListCreateDetailBuilder<
     super.key,
     required this.title,
     required this.searchSpace,
+    this.availableStyles = const [ListStyle.tile, ListStyle.grid],
     required this.createFormBuilder,
     required this.detailBuilder,
     required this.listItemBuilder,
@@ -302,6 +327,7 @@ class ListCreateDetailBuilder<
 
   final String title;
   final String searchSpace;
+  final List<ListStyle> availableStyles;
   final Widget Function([String? value]) createFormBuilder;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
@@ -320,6 +346,7 @@ class ListCreateDetailBuilder<
     return ListDetailBuilder<T, SB, LB>(
       title: title,
       searchSpace: searchSpace,
+      availableStyles: availableStyles,
       onSearchAddPressed: (final quicksearch) async => showFormDialog<T>(
         context,
         builder: (final context) => createFormBuilder(quicksearch),
