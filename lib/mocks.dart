@@ -85,8 +85,12 @@ GameSession mockGameSession({final String? name}) {
   );
 }
 
-User mockUser() {
-  return User(id: mockId(), username: 'username');
+User mockUser({final String? username}) {
+  return User(
+    id: mockId(),
+    username: username ?? 'username',
+    roles: ['ROLE_ADMIN'],
+  );
 }
 
 String mockId() => Random().nextInt(1000).toString();

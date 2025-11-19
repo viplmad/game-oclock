@@ -11,7 +11,8 @@ class UserService {
     return mockPageResult(
       search: search,
       quicksearch: quicksearch,
-      builder: (final index) => mockUser(),
+      builder: (final index) =>
+          mockUser(username: 'username ($quicksearch) $index'),
     );
   }
 
@@ -31,6 +32,10 @@ class UserService {
   }
 
   Future<void> update(final User user) async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> delete(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
   }
 

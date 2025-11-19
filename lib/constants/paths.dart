@@ -21,6 +21,7 @@ class CommonPaths {
   static const String locationPath = locationsPath + _idPathParamPath;
   static const String devicePath = devicesPath + _idPathParamPath;
   static const String tagPath = tagsPath + _idPathParamPath;
+  static const String userPath = usersPath + _idPathParamPath;
 
   static const String _idPath = ':$_idPathParam';
   static const String _idPathParam = 'id';
@@ -35,6 +36,8 @@ class CommonPaths {
       devicePath.replaceFirst(_idPath, id);
   static String buildTagPath(final String id) =>
       tagPath.replaceFirst(_idPath, id);
+  static String buildUserPath(final String id) =>
+      userPath.replaceFirst(_idPath, id);
 
   static String getIdParameter(final GoRouterState state) =>
       state.pathParameters[CommonPaths._idPathParam]!;

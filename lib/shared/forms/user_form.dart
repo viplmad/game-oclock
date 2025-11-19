@@ -14,7 +14,9 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class UserCreateForm extends StatelessWidget {
-  const UserCreateForm({super.key});
+  const UserCreateForm({super.key, required this.initialName});
+
+  final String? initialName;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,7 +25,10 @@ class UserCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) => UserFormBloc(
             data: UserFormData(
-              username: FormControl<String>(validators: [Validators.required]),
+              username: FormControl<String>(
+                value: initialName,
+                validators: [Validators.required],
+              ),
               password: FormControl<String>(validators: [Validators.required]),
               passwordConfirmation: FormControl<String>(),
               admin: FormControl<bool>(),

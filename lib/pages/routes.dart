@@ -28,6 +28,8 @@ import 'package:game_oclock/pages/review/review.dart';
 import 'package:game_oclock/pages/settings/settings.dart';
 import 'package:game_oclock/pages/tags/tag_detail.dart';
 import 'package:game_oclock/pages/tags/tag_list.dart';
+import 'package:game_oclock/pages/users/user_detail.dart';
+import 'package:game_oclock/pages/users/user_list.dart';
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -147,9 +149,20 @@ final routerConfig = GoRouter(
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
             );
-            return const UserGameListPage();
+            return const UserListPage();
           },
         ),
+        GoRoute(
+          path: CommonPaths.userPath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final String id = CommonPaths.getIdParameter(state);
+            return UserDetailPage(id: id);
+          },
+        ),
+
         GoRoute(
           path: CommonPaths.settingsPath,
           builder: (final BuildContext context, final GoRouterState state) {

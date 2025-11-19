@@ -34,6 +34,22 @@ class UserUpdateBloc extends ConsumerActionBloc<User> {
       service.update(event);
 }
 
+class UserDeleteBloc extends ConsumerActionBloc<User> {
+  UserDeleteBloc({required this.service});
+
+  final UserService service;
+
+  @override
+  Future<void> doAction(final User event, final void lastData) =>
+      service.delete(event.id);
+}
+
+class UserSelectBloc extends IdentityActionBloc<User?> {
+  @override
+  Future<User?> doAction(final User? event, final User? lastData) async =>
+      event;
+}
+
 class UserChangePasswordBloc extends IdentityActionBloc<UserChangePassword> {
   UserChangePasswordBloc({required this.service});
 

@@ -1,5 +1,10 @@
 import 'package:game_oclock/models/models.dart'
-    show User, UserChangePassword, UserChangePasswordFormData, UserFormData;
+    show
+        User,
+        UserChangePassword,
+        UserChangePasswordFormData,
+        UserFormData,
+        roleAdmin;
 
 import '../form.dart' show FormBloc;
 
@@ -12,7 +17,7 @@ class UserFormBloc extends FormBloc<UserFormData, User> {
       id: '', // TODO
       username: data.username.value!,
       password: data.password.value!,
-      roles: data.admin.value == true ? ['ROLE_ADMIN'] : [], // TODO
+      roles: data.admin.value == true ? [roleAdmin] : [], // TODO
     );
   }
 
@@ -20,7 +25,7 @@ class UserFormBloc extends FormBloc<UserFormData, User> {
   void setFormValue(final UserFormData data, final User? value) {
     data.username.value = value?.username;
     data.password.value = value?.password;
-    data.admin.value = value?.roles.contains('ROLE_ADMIN'); // TODO
+    data.admin.value = value?.isAdmin; // TODO
   }
 }
 
