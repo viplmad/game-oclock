@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/utils/theme_utils.dart';
 
 class SeriesElement<N extends num> {
@@ -10,5 +11,5 @@ class SeriesElement<N extends num> {
 }
 
 Color defaultThemeTextColor(final BuildContext context) {
-  return isThemeDark(context) ? Colors.white : Colors.black87;
+  return isThemeDark(context) ? CommonColors.white : CommonColors.black;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -85,10 +86,10 @@ class LogCalendar extends StatelessWidget {
   final ValueChanged<DateTime> onPageChanged;
 
   static const BoxShape shape = BoxShape.circle;
-  static const Color todayColour = Colors.red;
-  static const Color selectedColour = Colors.red;
-  static const Color logColour = Colors.blueAccent;
-  static Color finishedColour = Colors.grey[800]!;
+  static const Color todayColour = CommonColors.activeColor;
+  static const Color selectedColour = CommonColors.activeColor;
+  static const Color logColour = CommonColors.playingColor;
+  static Color finishedColour = CommonColors.finishedColor;
 
   @override
   Widget build(final BuildContext context) {
@@ -154,7 +155,7 @@ class LogCalendar extends StatelessWidget {
 
         ///HOLIDAY - Finish dates
         holidayDecoration: BoxDecoration(color: finishedColour, shape: shape),
-        holidayTextStyle: const TextStyle(color: Colors.white),
+        holidayTextStyle: const TextStyle(color: CommonColors.white),
 
         /// TextStyle - Like Calendar Date Picker
         // Enabled

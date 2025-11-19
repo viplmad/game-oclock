@@ -171,8 +171,7 @@ class EditFormBuilder<
                     title: title,
                     formGroup: formState.data.formGroup,
                     fullscreen: fullscreen,
-                    onSubmit: // TODO possibly disallow submit if not dirty
-                    inProgress
+                    onSubmit: inProgress
                         ? null
                         : () {
                             context.read<FB>().add(const FormSubmitted());

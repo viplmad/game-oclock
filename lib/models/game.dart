@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
@@ -25,27 +25,27 @@ final List<OptionTextField<String>> gameStatusOptions =
       OptionTextField(
         value: 'wishlist',
         labelBuilder: (final context) => context.localize().wishlistLabel,
-        color: Colors.yellow,
+        color: CommonColors.wishlistColor,
       ),
       OptionTextField(
         value: 'lowPriorty',
         labelBuilder: (final context) => context.localize().lowPriorityLabel,
-        color: Colors.grey,
+        color: CommonColors.lowPriorityColor,
       ),
       OptionTextField(
         value: 'nextUp',
         labelBuilder: (final context) => context.localize().nextUpLabel,
-        color: Colors.red,
+        color: CommonColors.nextUpColor,
       ),
       OptionTextField(
         value: 'playing',
         labelBuilder: (final context) => context.localize().playingLabel,
-        color: Colors.blue,
+        color: CommonColors.playingColor,
       ),
       OptionTextField(
         value: 'played',
         labelBuilder: (final context) => context.localize().playedLabel,
-        color: Colors.green,
+        color: CommonColors.playedColor,
       ),
     ]);
 
@@ -54,12 +54,12 @@ final List<OptionTextField<String>> gameSessionFinishedOptions =
       OptionTextField(
         value: 'completed',
         labelBuilder: (final context) => context.localize().completedLabel,
-        color: Colors.green,
+        color: CommonColors.completedColor,
       ),
       OptionTextField(
         value: 'retired',
         labelBuilder: (final context) => context.localize().retiredLabel,
-        color: Colors.grey,
+        color: CommonColors.retiredColor,
       ),
     ]);
 

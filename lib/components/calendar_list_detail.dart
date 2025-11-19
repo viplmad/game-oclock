@@ -15,6 +15,7 @@ import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
 import 'package:game_oclock/components/show_snackbar.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
@@ -250,13 +251,13 @@ class CalendarListDetailBuilder<
               width: kAvatarWidth,
               height: kAvatarHeight,
               child: CircleAvatar(
-                backgroundColor: Colors.grey[800],
-                foregroundColor: Colors.white,
+                backgroundColor: CommonColors.darkerGrey,
+                foregroundColor: CommonColors.white,
                 child: Text(
-                  context.localize().day(date),
+                  context.localize().formatDay(date),
                   style: DefaultTextStyle.of(
                     context,
-                  ).style.copyWith(color: Colors.white),
+                  ).style.copyWith(color: CommonColors.white),
                 ),
               ),
             ),

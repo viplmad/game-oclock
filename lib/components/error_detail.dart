@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -22,7 +23,7 @@ class DetailError extends StatelessWidget {
             label: Text(
               context.localize().retryLabel,
               maxLines: 1,
-              style: const TextStyle(fontSize: 18.0, color: Colors.white),
+              style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
             ),
             onPressed: onRetryTap,
           ),

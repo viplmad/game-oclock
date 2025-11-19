@@ -17,7 +17,9 @@ class ExternalGameTileListItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TileListItem(
       title: data.title,
-      subtitle: '${data.edition} - ${data.releaseDate?.year}', // TODO i18n
+      subtitle: data.releaseDate == null
+          ? null
+          : MaterialLocalizations.of(context).formatYear(data.releaseDate!),
       imageURL: data.coverUrl,
       trailing: data.source == sourceIgdb
           ? CommonIcons.externalSourceIgdb

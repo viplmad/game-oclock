@@ -77,6 +77,6 @@ class _SimpleDurationFormFieldState extends State<SimpleDurationFormField> {
       return null;
     }
 
-    return context.localize().duration(value);
+    return context.localize().formatDuration(value);
   }
 }

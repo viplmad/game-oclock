@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/cached_image.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -52,14 +53,14 @@ class TileListErrorItem extends StatelessWidget {
         title,
         maxLines: 1,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 18.0, color: Colors.white),
+        style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
       ),
       trailing: OutlinedButton.icon(
         icon: CommonIcons.reload,
         label: Text(
           context.localize().retryLabel,
           maxLines: 1,
-          style: const TextStyle(fontSize: 18.0, color: Colors.white),
+          style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
         ),
         onPressed: onRetryTap,
       ),
@@ -88,7 +89,7 @@ class GridListItem extends StatelessWidget {
         ),
         Positioned.fill(
           child: Material(
-            color: Colors.transparent,
+            color: CommonColors.transparent,
             child: InkWell(onTap: onTap),
           ),
         ),
@@ -111,7 +112,7 @@ class GridListErrorItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return GridTile(
       child: Container(
-        color: Colors.black87,
+        color: CommonColors.black,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -119,14 +120,20 @@ class GridListErrorItem extends StatelessWidget {
               Text(
                 title,
                 maxLines: 1,
-                style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  color: CommonColors.white,
+                ),
               ),
               OutlinedButton.icon(
                 icon: CommonIcons.reload,
                 label: Text(
                   context.localize().retryLabel,
                   maxLines: 1,
-                  style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: CommonColors.white,
+                  ),
                 ),
                 onPressed: onRetryTap,
               ),
@@ -169,7 +176,7 @@ class _ListItemListTile extends StatelessWidget {
               child: CachedImage(
                 imageURL: imageURL ?? '',
                 fit: BoxFit.scaleDown,
-                backgroundColour: Colors.white,
+                backgroundColour: CommonColors.white,
                 applyGradient: false,
               ),
             )
@@ -192,18 +199,18 @@ class _ListItemGridTile extends StatelessWidget {
   Widget build(final BuildContext context) {
     return GridTile(
       footer: Container(
-        color: Colors.black87.withAlpha(128),
+        color: CommonColors.blackTransparent,
         child: Text(
           title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 18.0, color: Colors.white),
+          style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
         ),
       ),
       child: CachedImage(
         imageURL: imageURL ?? '',
         fit: BoxFit.cover,
-        backgroundColour: Colors.black87,
+        backgroundColour: CommonColors.black,
         applyGradient: false,
       ),
     );
@@ -235,7 +242,7 @@ class CachedImage extends StatelessWidget {
 
   Widget _getGradientImage() {
     return Container(
-      color: Colors.black87,
+      color: CommonColors.black,
       child: Opacity(opacity: 0.75, child: _getCachedImage()),
     );
   }

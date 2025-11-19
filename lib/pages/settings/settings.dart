@@ -41,14 +41,16 @@ final List<OptionField<Locale?>> _localeOptions =
     List.unmodifiable(<OptionField<Locale?>>[
       OptionTextField(
         value: null,
-        labelBuilder: (final context) => context
-            .localize()
-            .systemDefaultLabelData(Localizations.localeOf(context)),
+        labelBuilder: (final context) =>
+            context.localize().systemDefaultLabelData(
+              context.localize().formatLocale(Localizations.localeOf(context)),
+            ),
       ),
       ...AppLocalizations.supportedLocales.map(
         (final locale) => OptionTextField(
           value: locale,
-          labelBuilder: (final context) => locale.toLanguageTag(), // TODO
+          labelBuilder: (final context) =>
+              context.localize().formatLocale(locale),
         ),
       ),
     ]);

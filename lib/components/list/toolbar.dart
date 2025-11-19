@@ -350,7 +350,7 @@ class ListFullSearchToolbar extends StatefulWidget {
 }
 
 class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
-  final controller = TextEditingController(); // TODO use reactive form
+  final controller = TextEditingController();
   bool inSearch = false;
 
   @override

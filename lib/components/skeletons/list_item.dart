@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/skeletons/common.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
 
 import 'text.dart';
@@ -59,8 +60,8 @@ class SideHeaderSkeletonItem extends StatelessWidget {
           width: kAvatarWidth,
           height: kAvatarHeight,
           child: CircleAvatar(
-            backgroundColor: Colors.grey[800],
-            foregroundColor: Colors.white,
+            backgroundColor: CommonColors.darkerGrey,
+            foregroundColor: CommonColors.white,
             child: RoundSkeleton(width: 20.0, height: 16.0, order: order),
           ),
         ),

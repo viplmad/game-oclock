@@ -14,7 +14,7 @@ const Rect _kRect = Rect.fromLTWH(
 
 const Color _kColor = Colors.blueGrey;
 const TextStyle _kTextStyle = TextStyle(
-  color: Color(0xFFFFFFFF),
+  color: Colors.white,
   fontSize: _kHeight * 0.85,
   fontWeight: FontWeight.w900,
   height: 1.0,

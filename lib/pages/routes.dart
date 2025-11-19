@@ -7,6 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionFailure,
         ActionFinal,
         ActionStarted,
+        ActionSuccess,
         CurrentUserGetBloc,
         MinimizedLayoutBloc,
         SavedLoginResponseGetBloc;
@@ -145,6 +146,7 @@ final routerConfig = GoRouter(
 
         GoRoute(
           path: CommonPaths.usersPath,
+          redirect: _adminGuardRedirect,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
@@ -154,6 +156,7 @@ final routerConfig = GoRouter(
         ),
         GoRoute(
           path: CommonPaths.userPath,
+          redirect: _adminGuardRedirect,
           builder: (final BuildContext context, final GoRouterState state) {
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: true),
@@ -229,4 +232,25 @@ FutureOr<String?> _authGuardRedirect(
       ? CommonPaths
             .gamesPath // TODO redirectUrl pathparam
       : null;
+}
+
+FutureOr<String?> _adminGuardRedirect(
+  final BuildContext context,
+  final GoRouterState state,
+) async {
+  final currentUserBloc = context.read<CurrentUserGetBloc>();
+
+  currentUserBloc.add(ActionStarted.empty());
+  final currentUserState =
+      await currentUserBloc.stream.firstWhere(
+            (final actionState) => actionState is ActionFinal<User, void>,
+          )
+          as ActionFinal<User, void>;
+  if (currentUserState is ActionFailure<User, void>) {
+    return CommonPaths.loginPath;
+  }
+
+  return (currentUserState as ActionSuccess<User, void>).data.isAdmin
+      ? null
+      : CommonPaths.gamesPath;
 }

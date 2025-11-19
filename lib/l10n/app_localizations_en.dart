@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get englishLabel => 'English';
+
+  @override
   String get errorListPageLoadTitle => 'Error loading page.';
 
   @override
@@ -442,6 +445,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String unableToUpdateDataLabel(Object data) {
     return 'Unable to update - $data';
+  }
+
+  @override
+  String get loginSuccessfulLabel => 'Login successful';
+
+  @override
+  String unableToLoginDataLabel(Object data) {
+    return 'Unable to login - $data';
   }
 
   @override

@@ -10,11 +10,19 @@ extension LocalizeContext on BuildContext {
 }
 
 extension AppLocalizationsExtension on AppLocalizations {
-  String day(final DateTime date) {
+  String formatDay(final DateTime date) {
     return DateFormat.d().format(date);
   }
 
-  String duration(final Duration duration) {
+  String formatLocale(final Locale locale) {
+    if (locale == const Locale('en')) {
+      return englishLabel;
+    }
+
+    return locale.toLanguageTag();
+  }
+
+  String formatDuration(final Duration duration) {
     if (duration.isZero()) {
       return '0';
     }

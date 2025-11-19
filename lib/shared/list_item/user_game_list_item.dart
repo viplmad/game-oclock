@@ -62,7 +62,7 @@ Widget _addRatingBanner(final Widget listItem, final UserGame data) {
           showShadow: false,
           color: CommonColors.ratingColor,
           textStyle: const TextStyle(
-            color: Colors.white,
+            color: CommonColors.white,
             fontSize: 20,
             fontWeight: FontWeight.w900,
             height: 1.0,

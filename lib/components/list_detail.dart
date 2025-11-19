@@ -372,7 +372,6 @@ class ListCreateDetailBuilder<
 
 class RelationListBuilder<T, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
-  // TODO filtering?
   const RelationListBuilder({
     super.key,
     this.createFormBuilder,

@@ -13,7 +13,7 @@ class DurationLabel extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TextLabel(
       label: label,
-      value: value == null ? '0' : context.localize().duration(value!),
+      value: value == null ? '0' : context.localize().formatDuration(value!),
     );
   }
 }

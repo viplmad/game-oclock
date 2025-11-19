@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFailure,
         ActionInProgress,
         ActionStarted,
         ActionState,
@@ -16,6 +17,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         SavedLoginResponseGetBloc;
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
+import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData, SavedLoginResponse;
@@ -91,8 +93,21 @@ class LoginBuilder extends StatelessWidget {
         ),
         BlocListener<LoginSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
-            // TODO possibly clear dirty now
-            GoRouter.of(context).go(CommonPaths.gamesPath);
+            if (state is ActionSuccess<void, Login>) {
+              showSnackBar(
+                context,
+                message: context.localize().loginSuccessfulLabel,
+              );
+              GoRouter.of(context).go(CommonPaths.gamesPath);
+            }
+            if (state is ActionFailure<void, Login>) {
+              showSnackBar(
+                context,
+                message: context.localize().unableToLoginDataLabel(
+                  state.error.message,
+                ),
+              );
+            }
           },
         ),
         BlocListener<
@@ -132,8 +147,7 @@ class LoginBuilder extends StatelessWidget {
 
                   return SimpleForm(
                     formGroup: formState.data.formGroup,
-                    onSubmit: // TODO possibly disallow submit if not dirty
-                    inProgress
+                    onSubmit: inProgress
                         ? null
                         : () {
                             context.read<LoginFormBloc>().add(

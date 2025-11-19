@@ -94,6 +94,12 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
+  /// No description provided for @englishLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get englishLabel;
+
   /// No description provided for @errorListPageLoadTitle.
   ///
   /// In en, this message translates to:
@@ -885,6 +891,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to update - {data}'**
   String unableToUpdateDataLabel(Object data);
+
+  /// No description provided for @loginSuccessfulLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful'**
+  String get loginSuccessfulLabel;
+
+  /// No description provided for @unableToLoginDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to login - {data}'**
+  String unableToLoginDataLabel(Object data);
 
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///

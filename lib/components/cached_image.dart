@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
+import 'package:game_oclock/constants/colors.dart';
 
 class SimpleCachedNetworkImage extends StatelessWidget {
   const SimpleCachedNetworkImage({
@@ -21,7 +22,7 @@ class SimpleCachedNetworkImage extends StatelessWidget {
 
   Widget _getGradientImage() {
     return Container(
-      color: Colors.black87,
+      color: CommonColors.black,
       child: Opacity(opacity: 0.65, child: _getCachedImage()),
     );
   }
@@ -32,7 +33,7 @@ class SimpleCachedNetworkImage extends StatelessWidget {
       fit: fit,
       useOldImageOnUrlChange: true,
       progressIndicatorBuilder: (_, _, _) => const ImageSkeleton(),
-      errorWidget: (_, _, _) => Container(color: Colors.grey),
+      errorWidget: (_, _, _) => Container(color: CommonColors.grey),
     );
   }
 }

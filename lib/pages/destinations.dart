@@ -25,6 +25,11 @@ final List<NavDestination> mainDestinations =
 final List<NavDestination> secondaryDestinations =
     List.unmodifiable(<NavDestination>[
       NavDestination(
+        icon: CommonIcons.tags,
+        labelBuilder: (final context) => context.localize().tagsTitle,
+        path: CommonPaths.tagsPath,
+      ),
+      NavDestination(
         icon: CommonIcons.calendar,
         labelBuilder: (final context) => context.localize().calendarTitle,
         path: CommonPaths.calendarPath,
@@ -33,11 +38,6 @@ final List<NavDestination> secondaryDestinations =
         icon: CommonIcons.review,
         labelBuilder: (final context) => context.localize().yearInReviewTitle,
         path: CommonPaths.reviewPath,
-      ),
-      NavDestination(
-        icon: CommonIcons.tags,
-        labelBuilder: (final context) => context.localize().tagsTitle,
-        path: CommonPaths.tagsPath,
       ),
       NavDestination(
         icon: CommonIcons.users,

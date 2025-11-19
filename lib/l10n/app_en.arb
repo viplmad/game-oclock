@@ -1,4 +1,5 @@
 {
+  "englishLabel": "English",
   "errorListPageLoadTitle": "Error loading page.",
   "errorDetailLoadTitle": "Error loading detail.",
   "errorPageLoadTitle": "Loading error.",
@@ -131,6 +132,8 @@
   "unableToCreateDataLabel": "Unable to create - {data}",
   "updatedSuccessfullyLabel": "Updated successfully",
   "unableToUpdateDataLabel": "Unable to update - {data}",
+  "loginSuccessfulLabel": "Login successful",
+  "unableToLoginDataLabel": "Unable to login - {data}",
   "leaveDirtyFormConfirmationDialogTitle": "Are you sure you want to leave?",
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
   "gameEditionDataTitle": "{aTitle} - {bEdition}",

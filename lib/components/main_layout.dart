@@ -124,7 +124,12 @@ class MainLayoutBuilder extends StatelessWidget {
   }) {
     final destinations = (extended
         ? [...mainDestinations, ...secondaryDestinations]
-        : mainDestinations);
+        : [
+            ...mainDestinations,
+            ...secondaryDestinations.where(
+              (final dest) => dest.path == selectedPath,
+            ),
+          ]);
     return NavigationRail(
       leading: extended
           ? IconButton(
@@ -143,6 +148,7 @@ class MainLayoutBuilder extends StatelessWidget {
               )
               .toList(growable: false),
       extended: extended,
+      labelType: extended ? null : NavigationRailLabelType.all,
       selectedIndex: _selectedIndex(
         selectedPath: selectedPath,
         destinations: destinations,
