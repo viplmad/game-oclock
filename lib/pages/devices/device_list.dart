@@ -3,36 +3,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        DeviceDeleteBloc,
+        DeviceListBloc,
+        DeviceSelectBloc,
         ListReloaded,
         ListSearchGetBloc,
         ListSearchSaveBloc,
         ListStyleGetBloc,
         ListStyleSaveBloc,
-        LocationDeleteBloc,
-        LocationListBloc,
-        LocationSelectBloc,
-        UserGameAvailableListBloc;
+        UserGamePlayedOnDeviceListBloc;
 import 'package:game_oclock/components/list_detail.dart';
-import 'package:game_oclock/models/models.dart' show ListStyle, Location;
-import 'package:game_oclock/shared/forms/location_form.dart';
-import 'package:game_oclock/shared/list_item/location_list_item.dart';
+import 'package:game_oclock/models/models.dart' show Device, ListStyle;
+import 'package:game_oclock/shared/forms/device_form.dart';
+import 'package:game_oclock/shared/list_item/device_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-import 'location_detail.dart';
+import 'device_detail.dart';
 
-const String _space = 'location';
+const String _space = 'device';
 
-class LocationListPage extends StatelessWidget {
-  const LocationListPage({super.key});
+class DeviceListPage extends StatelessWidget {
+  const DeviceListPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => LocationSelectBloc()),
+        BlocProvider(create: (_) => DeviceSelectBloc()),
         BlocProvider(
           create: (_) =>
-              LocationListBloc(service: RepositoryProvider.of(context)),
+              DeviceListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => ListSearchGetBloc(
@@ -48,7 +48,7 @@ class LocationListPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) =>
-              LocationDeleteBloc(service: RepositoryProvider.of(context)),
+              DeviceDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => ListStyleGetBloc(
@@ -63,47 +63,43 @@ class LocationListPage extends StatelessWidget {
           ),
         ),
       ],
-      child: const _LocationListDetailBuilder(),
+      child: const _DeviceListDetailBuilder(),
     );
   }
 }
 
-class _LocationListDetailBuilder extends StatelessWidget {
-  const _LocationListDetailBuilder();
+class _DeviceListDetailBuilder extends StatelessWidget {
+  const _DeviceListDetailBuilder();
 
   @override
   Widget build(final BuildContext context) {
-    return ListCreateDetailBuilder<
-      Location,
-      LocationSelectBloc,
-      LocationListBloc
-    >(
-      title: context.localize().locationsTitle,
+    return ListCreateDetailBuilder<Device, DeviceSelectBloc, DeviceListBloc>(
+      title: context.localize().devicesTitle,
       searchSpace: _space,
       createFormBuilder: ([final quicksearch]) =>
-          LocationCreateForm(initialName: quicksearch),
+          DeviceCreateForm(initialName: quicksearch),
       detailBuilder: (final context, final data, final onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change
           key: Key(data.id),
           providers: [
             BlocProvider(
-              create: (_) => UserGameAvailableListBloc(
+              create: (_) => UserGamePlayedOnDeviceListBloc(
                 service: RepositoryProvider.of(context),
-                locationId: data.id,
+                deviceId: data.id,
               ),
             ),
           ],
-          child: LocationDetail(
+          child: DeviceDetail(
             data: data,
             extended: false,
             onBackPressed: onClosed,
             onEditSucceeded: (final context) {
-              context.read<LocationListBloc>().add(const ListReloaded());
+              context.read<DeviceListBloc>().add(const ListReloaded());
             },
             onDeleteSucceeded: (final context) {
-              context.read<LocationListBloc>().add(const ListReloaded());
-              context.read<LocationSelectBloc>().add(
+              context.read<DeviceListBloc>().add(const ListReloaded());
+              context.read<DeviceSelectBloc>().add(
                 const ActionStarted(data: null),
               );
             },
@@ -112,8 +108,8 @@ class _LocationListDetailBuilder extends StatelessWidget {
       },
       listItemBuilder: (final context, final style, final data, final onTap) =>
           style == ListStyle.grid
-          ? LocationGridListItem(data: data, onTap: onTap)
-          : LocationTileListItem(data: data, onTap: onTap),
+          ? DeviceGridListItem(data: data, onTap: onTap)
+          : DeviceTileListItem(data: data, onTap: onTap),
       itemAspectRatio: 1, // Square aspect ratio
     );
   }

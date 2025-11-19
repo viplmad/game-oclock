@@ -7,13 +7,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        DevicePlayedGameListBloc,
         ListInitial,
         ListLoadBloc,
         ListSearchChanged,
         LocationAvailableListBloc,
+        TagOfGameListBloc,
         UserGameDeleteBloc,
-        UserGameGetBloc,
-        UserGameTagListBloc;
+        UserGameGetBloc;
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
@@ -27,6 +28,7 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show
+        Device,
         LayoutTier,
         LocationWithDate,
         SearchDTO,
@@ -39,6 +41,7 @@ import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/game_tag_form.dart';
 import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/forms/tag_form.dart';
+import 'package:game_oclock/shared/list_item/device_list_item.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -67,14 +70,20 @@ class UserGameDetailPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => LocationAvailableListBloc(
-            gameId: id,
             service: RepositoryProvider.of(context),
+            gameId: id,
           ),
         ),
         BlocProvider(
-          create: (_) => UserGameTagListBloc(
-            gameId: id,
+          create: (_) => TagOfGameListBloc(
             service: RepositoryProvider.of(context),
+            gameId: id,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => DevicePlayedGameListBloc(
+            service: RepositoryProvider.of(context),
+            gameId: id,
           ),
         ),
       ],
@@ -135,21 +144,41 @@ class UserGameDetail extends StatelessWidget {
           searchCreateFormBuilder: (final quicksearch) =>
               LocationCreateForm(initialName: quicksearch),
           itemBuilder: (final context, final data) =>
-              LocationWithDateTileListItem(data: data),
+              LocationWithDateTileListItem(
+                data: data,
+                onTap: () => GoRouter.of(
+                  context,
+                ).go(CommonPaths.buildLocationPath(data.id)),
+              ),
         ),
       ),
       TabDestination(
         icon: CommonIcons.tags,
         labelBuilder: (final context) => context.localize().tagsTitle,
-        onTap: (final context) =>
-            _loadOnlyInitial<UserGameTagListBloc>(context),
-        child: RelationListBuilder<Tag, UserGameTagListBloc>(
+        onTap: (final context) => _loadOnlyInitial<TagOfGameListBloc>(context),
+        child: RelationListBuilder<Tag, TagOfGameListBloc>(
           createFormBuilder: ([final quicksearch]) =>
               GameTagCreateForm(gameId: data.id, tagId: quicksearch),
           searchCreateFormBuilder: (final quicksearch) =>
               TagCreateForm(initialName: quicksearch),
-          itemBuilder: (final context, final data) =>
-              TagTileListItem(data: data),
+          itemBuilder: (final context, final data) => TagTileListItem(
+            data: data,
+            onTap: () =>
+                GoRouter.of(context).go(CommonPaths.buildTagPath(data.id)),
+          ),
+        ),
+      ),
+      TabDestination(
+        icon: CommonIcons.devices,
+        labelBuilder: (final context) => context.localize().devicesTitle,
+        onTap: (final context) =>
+            _loadOnlyInitial<DevicePlayedGameListBloc>(context),
+        child: RelationListBuilder<Device, DevicePlayedGameListBloc>(
+          itemBuilder: (final context, final data) => DeviceTileListItem(
+            data: data,
+            onTap: () =>
+                GoRouter.of(context).go(CommonPaths.buildDevicePath(data.id)),
+          ),
         ),
       ),
     ]);

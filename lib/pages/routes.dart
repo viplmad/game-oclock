@@ -17,6 +17,8 @@ import 'package:game_oclock/pages/calendar/multi_calendar.dart';
 import 'package:game_oclock/pages/calendar/single_calendar.dart';
 import 'package:game_oclock/pages/destinations.dart'
     show mainDestinations, secondaryDestinations;
+import 'package:game_oclock/pages/devices/device_detail.dart';
+import 'package:game_oclock/pages/devices/device_list.dart';
 import 'package:game_oclock/pages/games/game_detail.dart';
 import 'package:game_oclock/pages/games/game_list.dart';
 import 'package:game_oclock/pages/locations/location_detail.dart';
@@ -103,9 +105,20 @@ final routerConfig = GoRouter(
             context.read<MinimizedLayoutBloc>().add(
               const ActionStarted(data: false),
             );
-            return const UserGameListPage();
+            return const DeviceListPage();
           },
         ),
+        GoRoute(
+          path: CommonPaths.devicePath,
+          builder: (final BuildContext context, final GoRouterState state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final String id = CommonPaths.getIdParameter(state);
+            return DeviceDetailPage(id: id);
+          },
+        ),
+
         GoRoute(
           path: CommonPaths.tagsPath,
           builder: (final BuildContext context, final GoRouterState state) {

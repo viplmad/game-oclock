@@ -3,10 +3,14 @@ import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/models/models.dart' show GameSession;
 
 class GameSessionTileListItem extends StatelessWidget {
-  const GameSessionTileListItem({super.key, required this.data, this.onTap});
+  const GameSessionTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final GameSession data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {

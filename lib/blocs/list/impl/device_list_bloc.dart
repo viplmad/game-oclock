@@ -34,3 +34,35 @@ class DeviceListBloc extends ListLoadBloc<Device> {
     );
   }
 }
+
+class DevicePlayedGameListBloc extends ListLoadBloc<Device> {
+  DevicePlayedGameListBloc({required this.service, required this.gameId});
+
+  final DeviceService service;
+  final String gameId;
+
+  @override
+  Future<ListFinal<Device>> loadList(
+    final String? quicksearch,
+    final SearchDTO search,
+    final List<Device>? lastData,
+    final int? lastTotal,
+  ) async {
+    final data = mergePageData(
+      search: search,
+      page: await service.searchPlayed(gameId, search, quicksearch),
+      lastData: lastData,
+    );
+    final count = await mergeCount(
+      search: search,
+      countGetter: () => service.countPlayed(gameId, search, quicksearch),
+      lastTotal: lastTotal,
+    );
+    return ListLoadSuccess<Device>(
+      data: data,
+      total: count,
+      quicksearch: quicksearch,
+      search: search,
+    );
+  }
+}

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/constants.dart';
@@ -77,7 +79,7 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   void dispose() async {
-    await delayFuture.cancel();
+    unawaited(delayFuture.cancel());
     animationController.dispose();
     super.dispose();
   }

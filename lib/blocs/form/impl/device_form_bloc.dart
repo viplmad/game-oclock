@@ -10,6 +10,7 @@ class DeviceFormBloc extends FormBloc<DeviceFormData, Device> {
     return Device(
       id: '', // TODO
       name: data.name.value!,
+      iconUrl: '', // TODO
     );
   }
 

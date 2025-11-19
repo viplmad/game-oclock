@@ -61,7 +61,12 @@ LocationWithDate mockLocationWithDate({final String? name}) {
 }
 
 Device mockDevice({final String? name}) {
-  return Device(id: mockId(), name: name ?? 'name');
+  return Device(
+    id: mockId(),
+    name: name ?? 'name',
+    iconUrl:
+        'https://pbs.twimg.com/profile_images/1723097406726975488/9NtoObia_400x400.jpg',
+  );
 }
 
 GamePlaythrough mockGamePlaythrough({final String? name}) {

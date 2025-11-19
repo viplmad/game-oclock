@@ -35,8 +35,8 @@ class SearchCreateForm extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => SearchCreateBloc(
-            space: space,
             service: RepositoryProvider.of(context),
+            space: space,
           ),
         ),
       ],
@@ -76,14 +76,14 @@ class SearchEditForm extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => SearchUpdateBloc(
-            space: space,
             service: RepositoryProvider.of(context),
+            space: space,
           ),
         ),
         BlocProvider(
           create: (_) => SearchGetBloc(
-            space: space,
             service: RepositoryProvider.of(context),
+            space: space,
           )..add(ActionStarted(data: name)),
         ),
       ],
@@ -131,7 +131,8 @@ Widget _fieldsBuilder(
                   Expanded(
                     flex: 2,
                     child: SimpleSelectFormField(
-                      formControl: data.controls['field'] as FormControl<String>,
+                      formControl:
+                          data.controls['field'] as FormControl<String>,
                       label: context.localize().fieldLabel,
                       options: gameFieldOptions,
                     ),

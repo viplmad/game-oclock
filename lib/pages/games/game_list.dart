@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        DevicePlayedGameListBloc,
         ListReloaded,
         ListSearchGetBloc,
         ListSearchSaveBloc,
         ListStyleGetBloc,
         ListStyleSaveBloc,
         LocationAvailableListBloc,
+        TagOfGameListBloc,
         UserGameDeleteBloc,
         UserGameListBloc,
-        UserGameSelectBloc,
-        UserGameTagListBloc;
+        UserGameSelectBloc;
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
 import 'package:game_oclock/models/models.dart' show ListStyle, UserGame;
@@ -38,14 +39,14 @@ class UserGameListPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ListSearchGetBloc(
-            space: _space,
             service: RepositoryProvider.of(context),
+            space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
           create: (_) => ListSearchSaveBloc(
-            space: _space,
             service: RepositoryProvider.of(context),
+            space: _space,
           ),
         ),
         BlocProvider(
@@ -54,14 +55,14 @@ class UserGameListPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ListStyleGetBloc(
-            space: _space,
             service: RepositoryProvider.of(context),
+            space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
           create: (_) => ListStyleSaveBloc(
-            space: _space,
             service: RepositoryProvider.of(context),
+            space: _space,
           ),
         ),
       ],
@@ -91,14 +92,20 @@ class _UserGameListDetailBuilder extends StatelessWidget {
           providers: [
             BlocProvider(
               create: (_) => LocationAvailableListBloc(
-                gameId: data.id,
                 service: RepositoryProvider.of(context),
+                gameId: data.id,
               ),
             ),
             BlocProvider(
-              create: (_) => UserGameTagListBloc(
-                gameId: data.id,
+              create: (_) => TagOfGameListBloc(
                 service: RepositoryProvider.of(context),
+                gameId: data.id,
+              ),
+            ),
+            BlocProvider(
+              create: (_) => DevicePlayedGameListBloc(
+                service: RepositoryProvider.of(context),
+                gameId: data.id,
               ),
             ),
           ],

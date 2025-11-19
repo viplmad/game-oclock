@@ -6,11 +6,11 @@ class GamePlaythroughTileListItem extends StatelessWidget {
   const GamePlaythroughTileListItem({
     super.key,
     required this.data,
-    this.onTap,
+    required this.onTap,
   });
 
   final GamePlaythrough data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {

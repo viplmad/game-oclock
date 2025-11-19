@@ -7,10 +7,14 @@ import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameTileListItem extends StatelessWidget {
-  const UserGameTileListItem({super.key, required this.data, this.onTap});
+  const UserGameTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final UserGame data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
@@ -27,10 +31,14 @@ class UserGameTileListItem extends StatelessWidget {
 }
 
 class UserGameGridListItem extends StatelessWidget {
-  const UserGameGridListItem({super.key, required this.data, this.onTap});
+  const UserGameGridListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final UserGame data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {

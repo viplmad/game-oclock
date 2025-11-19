@@ -34,3 +34,35 @@ class TagListBloc extends ListLoadBloc<Tag> {
     );
   }
 }
+
+class TagOfGameListBloc extends ListLoadBloc<Tag> {
+  TagOfGameListBloc({required this.service, required this.gameId});
+
+  final TagService service;
+  final String gameId;
+
+  @override
+  Future<ListFinal<Tag>> loadList(
+    final String? quicksearch,
+    final SearchDTO search,
+    final List<Tag>? lastData,
+    final int? lastTotal,
+  ) async {
+    final data = mergePageData(
+      search: search,
+      page: await service.searchGameTags(gameId, search, quicksearch),
+      lastData: lastData,
+    );
+    final count = await mergeCount(
+      search: search,
+      countGetter: () => service.countGameTags(gameId, search, quicksearch),
+      lastTotal: lastTotal,
+    );
+    return ListLoadSuccess<Tag>(
+      data: data,
+      total: count,
+      quicksearch: quicksearch,
+      search: search,
+    );
+  }
+}

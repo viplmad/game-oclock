@@ -8,11 +8,11 @@ class LocationWithDateTileListItem extends StatelessWidget {
   const LocationWithDateTileListItem({
     super.key,
     required this.data,
-    this.onTap,
+    required this.onTap,
   });
 
   final LocationWithDate data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
@@ -26,10 +26,14 @@ class LocationWithDateTileListItem extends StatelessWidget {
 }
 
 class GameWithDateTileListItem extends StatelessWidget {
-  const GameWithDateTileListItem({super.key, required this.data, this.onTap});
+  const GameWithDateTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final UserGameWithDate data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {

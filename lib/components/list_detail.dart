@@ -348,12 +348,12 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
   // TODO filtering?
   const RelationListBuilder({
     super.key,
-    required this.createFormBuilder,
+    this.createFormBuilder,
     this.searchCreateFormBuilder,
     required this.itemBuilder,
   });
 
-  final Widget Function([String? value]) createFormBuilder;
+  final Widget Function([String? value])? createFormBuilder;
   final Widget Function(String value)? searchCreateFormBuilder;
   final Widget Function(BuildContext context, T data) itemBuilder;
 
@@ -361,7 +361,8 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
   Widget build(final BuildContext context) {
     return ListLayout(
       toolbar: ListFullSearchToolbar(
-        onAddPressed: searchCreateFormBuilder == null
+        onAddPressed:
+            createFormBuilder == null || searchCreateFormBuilder == null
             ? null
             : (final quicksearch) async => showFormDialog(
                 context,
@@ -369,7 +370,7 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
                     searchCreateFormBuilder!(quicksearch),
                 onSuccess: (final context, _) async => showFormDialog<T>(
                   context,
-                  builder: (final context) => createFormBuilder(quicksearch),
+                  builder: (final context) => createFormBuilder!(quicksearch),
                   onSuccess: (final context, _) =>
                       context.read<LB>().add(const ListReloaded()),
                 ),
@@ -377,16 +378,17 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
         onSearchChanged: (final value) =>
             context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
         actions: [
-          IconButton(
-            icon: CommonIcons.link,
-            tooltip: context.localize().linkLabel,
-            onPressed: () async => showFormDialog<T>(
-              context,
-              builder: (final context) => createFormBuilder(),
-              onSuccess: (final context, _) =>
-                  context.read<LB>().add(const ListReloaded()),
+          if (createFormBuilder != null)
+            IconButton(
+              icon: CommonIcons.link,
+              tooltip: context.localize().linkLabel,
+              onPressed: () async => showFormDialog<T>(
+                context,
+                builder: (final context) => createFormBuilder!(),
+                onSuccess: (final context, _) =>
+                    context.read<LB>().add(const ListReloaded()),
+              ),
             ),
-          ),
           IconButton(
             icon: CommonIcons.reload,
             tooltip: context.localize().reloadLabel,
@@ -396,6 +398,7 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
       ),
       statusbar: ListTotalStatusbarBuilder<T, LB>(),
       child: TileListBuilder<T, LB>(
+        borderRadius: BorderRadius.zero,
         itemBuilder: (final context, final data, final index) =>
             itemBuilder(context, data),
       ),

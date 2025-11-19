@@ -20,6 +20,29 @@ class TagService {
     return 500;
   }
 
+  Future<PageResultDTO<Tag>> searchGameTags(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) =>
+          mockTag(name: 'name $gameId ($quicksearch) $index'),
+    );
+  }
+
+  Future<int> countGameTags(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return 500;
+  }
+
   Future<Tag> get(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
     return mockTag();

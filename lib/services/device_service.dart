@@ -20,6 +20,29 @@ class DeviceService {
     return 500;
   }
 
+  Future<PageResultDTO<Device>> searchPlayed(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) =>
+          mockDevice(name: 'name $gameId ($quicksearch) $index'),
+    );
+  }
+
+  Future<int> countPlayed(
+    final String gameId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return 500;
+  }
+
   Future<Device> get(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
     return mockDevice();

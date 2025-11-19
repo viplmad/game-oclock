@@ -4,10 +4,14 @@ import 'package:game_oclock/components/list/list_item.dart'
 import 'package:game_oclock/models/models.dart' show Location;
 
 class LocationTileListItem extends StatelessWidget {
-  const LocationTileListItem({super.key, required this.data, this.onTap});
+  const LocationTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final Location data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
@@ -16,10 +20,14 @@ class LocationTileListItem extends StatelessWidget {
 }
 
 class LocationGridListItem extends StatelessWidget {
-  const LocationGridListItem({super.key, required this.data, this.onTap});
+  const LocationGridListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final Location data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {

@@ -7,12 +7,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        DeviceDeleteBloc,
+        DeviceGetBloc,
         ListInitial,
         ListLoadBloc,
         ListSearchChanged,
-        LocationDeleteBloc,
-        LocationGetBloc,
-        UserGameAvailableListBloc;
+        UserGamePlayedOnDeviceListBloc;
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
@@ -23,17 +23,15 @@ import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, Location, SearchDTO, TabDestination, UserGameWithDate;
-import 'package:game_oclock/shared/forms/game_available_form.dart';
-import 'package:game_oclock/shared/forms/game_form.dart';
-import 'package:game_oclock/shared/forms/location_form.dart';
-import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
+    show Device, LayoutTier, SearchDTO, TabDestination, UserGame;
+import 'package:game_oclock/shared/forms/device_form.dart';
+import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
-class LocationDetailPage extends StatelessWidget {
-  const LocationDetailPage({super.key, required this.id});
+class DeviceDetailPage extends StatelessWidget {
+  const DeviceDetailPage({super.key, required this.id});
 
   final String id;
 
@@ -45,40 +43,40 @@ class LocationDetailPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) =>
-              LocationGetBloc(service: RepositoryProvider.of(context))
+              DeviceGetBloc(service: RepositoryProvider.of(context))
                 ..add(ActionStarted(data: id)),
         ),
         BlocProvider(
           create: (_) =>
-              LocationDeleteBloc(service: RepositoryProvider.of(context)),
+              DeviceDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => UserGameAvailableListBloc(
+          create: (_) => UserGamePlayedOnDeviceListBloc(
             service: RepositoryProvider.of(context),
-            locationId: id,
+            deviceId: id,
           ),
         ),
       ],
-      child: DetailBuilder<Location, LocationGetBloc>(
-        onBackPressed: () => GoRouter.of(context).go(CommonPaths.locationsPath),
+      child: DetailBuilder<Device, DeviceGetBloc>(
+        onBackPressed: () => GoRouter.of(context).go(CommonPaths.devicesPath),
         builder: (final context, final data, final onBackPressed) =>
-            LocationDetail(
+            DeviceDetail(
               data: data,
               fromPage: true,
               extended: layoutTier != LayoutTier.compact,
               onBackPressed: onBackPressed,
               onEditSucceeded: (final context) =>
-                  context.read<LocationGetBloc>().add(const ActionRestarted()),
+                  context.read<DeviceGetBloc>().add(const ActionRestarted()),
               onDeleteSucceeded: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.locationsPath),
+                  GoRouter.of(context).go(CommonPaths.devicesPath),
             ),
       ),
     );
   }
 }
 
-class LocationDetail extends StatelessWidget {
-  const LocationDetail({
+class DeviceDetail extends StatelessWidget {
+  const DeviceDetail({
     super.key,
     required this.data,
     this.fromPage = false,
@@ -88,7 +86,7 @@ class LocationDetail extends StatelessWidget {
     required this.onDeleteSucceeded,
   });
 
-  final Location data;
+  final Device data;
   final VoidCallback onBackPressed;
   final bool fromPage;
   final bool extended;
@@ -109,13 +107,9 @@ class LocationDetail extends StatelessWidget {
         icon: CommonIcons.games,
         labelBuilder: (final context) => context.localize().gamesTitle,
         onTap: (final context) =>
-            _loadOnlyInitial<UserGameAvailableListBloc>(context),
-        child: RelationListBuilder<UserGameWithDate, UserGameAvailableListBloc>(
-          createFormBuilder: ([final quicksearch]) =>
-              GameAvailableCreateForm(gameId: quicksearch, locationId: data.id),
-          searchCreateFormBuilder: (final quicksearch) =>
-              UserGameCreateForm(initialTitle: quicksearch),
-          itemBuilder: (final context, final data) => GameWithDateTileListItem(
+            _loadOnlyInitial<UserGamePlayedOnDeviceListBloc>(context),
+        child: RelationListBuilder<UserGame, UserGamePlayedOnDeviceListBloc>(
+          itemBuilder: (final context, final data) => UserGameTileListItem(
             data: data,
             onTap: () =>
                 GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
@@ -124,16 +118,16 @@ class LocationDetail extends StatelessWidget {
       ),
     ]);
 
-    return BlocListener<LocationDeleteBloc, ActionState<void>>(
+    return BlocListener<DeviceDeleteBloc, ActionState<void>>(
       listener: (final context, final state) {
-        if (state is ActionSuccess<void, Location>) {
+        if (state is ActionSuccess<void, Device>) {
           showSnackBar(
             context,
             message: context.localize().deletedSuccessfullyLabel,
           );
           onDeleteSucceeded(context);
         }
-        if (state is ActionFailure<void, Location>) {
+        if (state is ActionFailure<void, Device>) {
           showSnackBar(
             context,
             message: context.localize().unableToDeleteDataLabel(
@@ -155,16 +149,15 @@ class LocationDetail extends StatelessWidget {
             IconButton(
               icon: CommonIcons.view,
               tooltip: context.localize().viewLabel,
-              onPressed: () => GoRouter.of(
-                context,
-              ).go(CommonPaths.buildLocationPath(data.id)),
+              onPressed: () =>
+                  GoRouter.of(context).go(CommonPaths.buildDevicePath(data.id)),
             ),
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog<Location>(
+            onPressed: () async => showFormDialog<Device>(
               context,
-              builder: (final context) => LocationEditForm(id: data.id),
+              builder: (final context) => DeviceEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
             ),
           ),
@@ -182,9 +175,7 @@ class LocationDetail extends StatelessWidget {
                 ).deleteButtonTooltip,
               ),
               onSuccess: (final context) {
-                context.read<LocationDeleteBloc>().add(
-                  ActionStarted(data: data),
-                );
+                context.read<DeviceDeleteBloc>().add(ActionStarted(data: data));
               },
             ),
           ),

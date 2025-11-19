@@ -20,14 +20,18 @@ class SearchListPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          SearchListBloc(space: space, service: RepositoryProvider.of(context))
+          SearchListBloc(service: RepositoryProvider.of(context), space: space)
             ..add(ListSearchChanged(search: SearchDTO())),
       // TODO create button
       child: GridListBuilder<ListSearch, SearchListBloc>(
         itemAspectRatio: 3.5,
         columns: (MediaQuery.sizeOf(context).width / 600).ceil(),
         itemBuilder: (final context, final data, final index) =>
-            SearchGridListItem(space: space, data: data),
+            SearchGridListItem(
+              space: space,
+              data: data,
+              onTap: () => Navigator.pop(context, data),
+            ),
       ),
     );
   }
@@ -38,19 +42,19 @@ class SearchGridListItem extends StatelessWidget {
     super.key,
     required this.space,
     required this.data,
+    required this.onTap,
   });
 
   final String space;
   final ListSearch data;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
     return TileListItem(
       hasImage: false,
       title: data.name,
-      onTap: () {
-        Navigator.pop(context, data);
-      },
+      onTap: onTap,
       trailing: IconButton(
         icon: CommonIcons.edit,
         tooltip: context.localize().editLabel,

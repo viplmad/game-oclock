@@ -1,7 +1,6 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
     show PageResultDTO, SearchDTO, UserGame, UserGameWithDate;
-import 'package:game_oclock/models/tag.dart';
 
 class GameService {
   Future<PageResultDTO<UserGame>> search(
@@ -46,16 +45,8 @@ class GameService {
     return 500;
   }
 
-  Future<void> addAvailability(
-    final String gameId,
-    final String locationId,
-    final DateTime date,
-  ) async {
-    await Future.delayed(const Duration(seconds: 1));
-  }
-
-  Future<PageResultDTO<Tag>> searchTags(
-    final String gameId,
+  Future<PageResultDTO<UserGame>> searchWithTag(
+    final String tagId,
     final SearchDTO search,
     final String? quicksearch,
   ) async {
@@ -64,17 +55,48 @@ class GameService {
       search: search,
       quicksearch: quicksearch,
       builder: (final index) =>
-          mockTag(name: 'name $gameId ($quicksearch) $index'),
+          mockUserGame(title: 'title $tagId ($quicksearch) $index'),
     );
   }
 
-  Future<int> countTags(
-    final String gameId,
+  Future<int> countWithTag(
+    final String tagId,
     final SearchDTO search,
     final String? quicksearch,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
     return 500;
+  }
+
+  Future<PageResultDTO<UserGame>> searchPlayedOnDevice(
+    final String deviceId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) =>
+          mockUserGame(title: 'title $deviceId ($quicksearch) $index'),
+    );
+  }
+
+  Future<int> countPlayedOnDevice(
+    final String deviceId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return 500;
+  }
+
+  Future<void> addAvailability(
+    final String gameId,
+    final String locationId,
+    final DateTime date,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   Future<void> addTag(final String gameId, final String tagId) async {

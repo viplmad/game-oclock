@@ -4,10 +4,14 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ExternalGame, sourceIgdb;
 
 class ExternalGameTileListItem extends StatelessWidget {
-  const ExternalGameTileListItem({super.key, required this.data, this.onTap});
+  const ExternalGameTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+  });
 
   final ExternalGame data;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
