@@ -204,84 +204,120 @@ class ListDetailBuilder<
     required final T? selectedData,
     required final ListStyle selectedStyle,
   }) {
-    return Scaffold(
-      appBar: FullSearchAppBar(
-        title: title,
-        onAddPressed: onSearchAddPressed,
-        onSearchChanged: (final value) =>
-            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
-        actions: [
-          if (availableStyles.length > 1)
-            SegmentedButton<ListStyle>(
-              segments: availableStyles
-                  .map(
-                    (final style) => style == ListStyle.grid
-                        ? _listStyleGridOption
-                        : _listStyleTileOption,
-                  )
-                  .map(
-                    (final choice) => ButtonSegment<ListStyle>(
-                      value: choice.value,
-                      label: choice.widgetBuilder(context),
-                      icon: choice.icon,
+    return NestedScrollView(
+      headerSliverBuilder: (final context, final innerBoxIsScrolled) =>
+          _appBarBuilder(
+            context,
+            innerBoxIsScrolled,
+            selectedStyle: selectedStyle,
+          ),
+      body: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          ListLayout(
+            toolbar: ListFilterToolbarBuilder<T, LB>(space: searchSpace),
+            statusbar: ListTotalStatusbarBuilder<T, LB>(),
+            child: selectedStyle == ListStyle.grid
+                ? GridListBuilder<T, LB>(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(kCardBorderRadius),
                     ),
+                    itemAspectRatio: itemAspectRatio,
+                    columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
+                    itemBuilder: (final context, final data, final index) =>
+                        listItemBuilder(
+                          context,
+                          ListStyle.grid,
+                          data,
+                          () => _selectOrUnselectIfSame(
+                            context,
+                            selectBloc: context.read<SB>(),
+                            data: data,
+                            selectedData: selectedData,
+                          ),
+                        ),
                   )
-                  .toList(growable: false),
-              selected: {selectedStyle},
-              onSelectionChanged: (final newSelection) {
-                context.read<ListStyleSaveBloc>().add(
-                  ActionStarted(data: newSelection.first),
-                );
-              },
-            ),
-          IconButton(
-            icon: CommonIcons.reload,
-            tooltip: context.localize().reloadLabel,
-            onPressed: () => context.read<LB>().add(const ListReloaded()),
+                : TileListBuilder<T, LB>(
+                    borderRadius: BorderRadius.zero,
+                    itemBuilder: (final context, final data, final index) =>
+                        listItemBuilder(
+                          context,
+                          ListStyle.tile,
+                          data,
+                          () => _selectOrUnselectIfSame(
+                            context,
+                            selectBloc: context.read<SB>(),
+                            data: data,
+                            selectedData: selectedData,
+                          ),
+                        ),
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: floatingActionButton,
           ),
         ],
       ),
-      body: ListLayout(
-        toolbar: ListFilterToolbarBuilder<T, LB>(space: searchSpace),
-        statusbar: ListTotalStatusbarBuilder<T, LB>(),
-        child: selectedStyle == ListStyle.grid
-            ? GridListBuilder<T, LB>(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(kCardBorderRadius),
-                ),
-                itemAspectRatio: itemAspectRatio,
-                columns: (MediaQuery.sizeOf(context).width / 400).ceil(),
-                itemBuilder: (final context, final data, final index) =>
-                    listItemBuilder(
-                      context,
-                      ListStyle.grid,
-                      data,
-                      () => _selectOrUnselectIfSame(
-                        context,
-                        selectBloc: context.read<SB>(),
-                        data: data,
-                        selectedData: selectedData,
-                      ),
-                    ),
-              )
-            : TileListBuilder<T, LB>(
-                borderRadius: BorderRadius.zero,
-                itemBuilder: (final context, final data, final index) =>
-                    listItemBuilder(
-                      context,
-                      ListStyle.tile,
-                      data,
-                      () => _selectOrUnselectIfSame(
-                        context,
-                        selectBloc: context.read<SB>(),
-                        data: data,
-                        selectedData: selectedData,
-                      ),
-                    ),
-              ),
-      ),
-      floatingActionButton: floatingActionButton,
     );
+  }
+
+  List<Widget> _appBarBuilder(
+    final BuildContext context,
+    final bool innerBoxIsScrolled, {
+    required final ListStyle selectedStyle,
+  }) {
+    return <Widget>[
+      SliverAppBar(
+        surfaceTintColor: Theme.of(context).primaryColor,
+        // Fixed elevation so background colour doesn't change on scroll
+        forceElevated: true,
+        elevation: 1.0,
+        scrolledUnderElevation: 1.0,
+        floating: true,
+        pinned: false,
+        snap: false,
+        automaticallyImplyLeading: false,
+        // TODO
+        flexibleSpace: FullSearchAppBar(
+          title: title,
+          onAddPressed: onSearchAddPressed,
+          onSearchChanged: (final value) => context.read<LB>().add(
+            ListQuicksearchChanged(quicksearch: value),
+          ),
+          actions: [
+            if (availableStyles.length > 1)
+              SegmentedButton<ListStyle>(
+                segments: availableStyles
+                    .map(
+                      (final style) => style == ListStyle.grid
+                          ? _listStyleGridOption
+                          : _listStyleTileOption,
+                    )
+                    .map(
+                      (final choice) => ButtonSegment<ListStyle>(
+                        value: choice.value,
+                        label: choice.widgetBuilder(context),
+                        icon: choice.icon,
+                      ),
+                    )
+                    .toList(growable: false),
+                selected: {selectedStyle},
+                onSelectionChanged: (final newSelection) {
+                  context.read<ListStyleSaveBloc>().add(
+                    ActionStarted(data: newSelection.first),
+                  );
+                },
+              ),
+            IconButton(
+              icon: CommonIcons.reload,
+              tooltip: context.localize().reloadLabel,
+              onPressed: () => context.read<LB>().add(const ListReloaded()),
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 
   void _selectOrUnselectIfSame(

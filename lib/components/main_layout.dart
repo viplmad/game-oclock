@@ -164,30 +164,25 @@ class MainLayoutBuilder extends StatelessWidget {
     final BuildContext context, {
     required final String selectedPath,
   }) {
-    return Stack(
-      children: [
-        NavigationBar(
-          destinations: mainDestinations
-              .map(
-                (final dest) => NavigationDestination(
-                  icon: dest.icon,
-                  label: dest.labelBuilder(context),
-                ),
-              )
-              .toList(growable: false),
-          selectedIndex:
-              _selectedIndex(
-                selectedPath: selectedPath,
-                destinations: mainDestinations,
-              ) ??
-              0,
-          onDestinationSelected: _goToSelectedPathCallback(
-            context,
+    return NavigationBar(
+      destinations: mainDestinations
+          .map(
+            (final dest) => NavigationDestination(
+              icon: dest.icon,
+              label: dest.labelBuilder(context),
+            ),
+          )
+          .toList(growable: false),
+      selectedIndex:
+          _selectedIndex(
+            selectedPath: selectedPath,
             destinations: mainDestinations,
-          ),
-        ),
-        Positioned(left: 10, top: 20, child: drawerButton(context)),
-      ],
+          ) ??
+          0,
+      onDestinationSelected: _goToSelectedPathCallback(
+        context,
+        destinations: mainDestinations,
+      ),
     );
   }
 

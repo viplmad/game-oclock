@@ -30,8 +30,8 @@ class ReviewBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
+    return NestedScrollView(
+      headerSliverBuilder: _appBarBuilder,
       body: SingleChildScrollView(
         child: Column(
           /*
@@ -92,5 +92,31 @@ class ReviewBuilder extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _appBarBuilder(
+    final BuildContext context,
+    final bool innerBoxIsScrolled,
+  ) {
+    return <Widget>[
+      SliverAppBar(
+        surfaceTintColor: Theme.of(context).primaryColor,
+        // Fixed elevation so background colour doesn't change on scroll
+        forceElevated: true,
+        elevation: 1.0,
+        scrolledUnderElevation: 1.0,
+        floating: true,
+        pinned: false,
+        snap: false,
+        automaticallyImplyLeading: false,
+        flexibleSpace: FlexibleSpaceBar(
+          title: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(title),
+          ),
+          expandedTitleScale: 1.0,
+        ),
+      ),
+    ];
   }
 }

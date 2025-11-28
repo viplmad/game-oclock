@@ -1,12 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show SearchDTO;
+import 'package:game_oclock/models/models.dart'
+    show ErrorDTO, GameOClockException, SearchDTO, errorCodeUnknown;
 
 import 'list.dart'
     show
         ListEvent,
         ListFinal,
         ListInitial,
+        ListLoadFailure,
         ListLoadInProgress,
         ListLoadSuccess,
         ListPageIncremented,
@@ -50,7 +52,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
         ),
       );
 
-      emit(await loadList(lastQuicksearch, lastSearch, null, null));
+      emit(await _tryLoadList(lastQuicksearch, lastSearch, null, null));
     }
   }
 
@@ -68,7 +70,9 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
         ),
       );
 
-      emit(await loadList(lastQuicksearch, lastSearch, lastData, lastTotal));
+      emit(
+        await _tryLoadList(lastQuicksearch, lastSearch, lastData, lastTotal),
+      );
     }
   }
 
@@ -85,7 +89,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
           search: search,
         ),
       );
-      emit(await loadList(quicksearch, search, null, null));
+      emit(await _tryLoadList(quicksearch, search, null, null));
     } else if (state is ListFinal<S>) {
       final lastQuicksearch = (state as ListFinal<S>).quicksearch;
       if (lastQuicksearch == quicksearch) {
@@ -104,7 +108,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
       );
 
       emit(
-        await loadList(
+        await _tryLoadList(
           quicksearch,
           lastSearch.copyWith(page: 0),
           lastData,
@@ -122,7 +126,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
       emit(
         ListLoadInProgress<S>(data: null, quicksearch: null, search: search),
       );
-      emit(await loadList(null, search, null, null));
+      emit(await _tryLoadList(null, search, null, null));
     } else if (state is ListFinal<S>) {
       final lastData = (state as ListFinal<S>).data;
       final lastTotal = (state as ListFinal<S>).total;
@@ -137,7 +141,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
       );
 
       emit(
-        await loadList(
+        await _tryLoadList(
           lastQuicksearch,
           search.copyWith(page: 0),
           lastData,
@@ -169,12 +173,43 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
 
       final nextPage = (lastSearch.page ?? 0) + 1;
       emit(
-        await loadList(
+        await _tryLoadList(
           lastQuicksearch,
           lastSearch.copyWith(page: nextPage),
           lastData,
           lastTotal,
         ),
+      );
+    }
+  }
+
+  Future<ListFinal<S>> _tryLoadList(
+    final String? quicksearch,
+    final SearchDTO search,
+    final List<S>? lastData,
+    final int? lastTotal,
+  ) async {
+    try {
+      /* TODO return ActionSuccess<S, E>(
+        data: await doAction(event, lastData),
+        event: event,
+      );*/
+      return await loadList(quicksearch, search, lastData, lastTotal);
+    } on GameOClockException catch (e) {
+      return ListLoadFailure<S>(
+        error: ErrorDTO(code: e.code, message: e.message),
+        data: lastData ?? [],
+        total: lastTotal ?? 0,
+        quicksearch: quicksearch,
+        search: search,
+      );
+    } catch (e) {
+      return ListLoadFailure<S>(
+        error: ErrorDTO(code: errorCodeUnknown, message: e.toString()),
+        data: lastData ?? [],
+        total: lastTotal ?? 0,
+        quicksearch: quicksearch,
+        search: search,
       );
     }
   }

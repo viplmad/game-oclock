@@ -34,9 +34,7 @@ class Detail extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(headerSliverBuilder: _appBarBuilder, body: child),
-    );
+    return NestedScrollView(headerSliverBuilder: _appBarBuilder, body: child);
   }
 
   List<Widget> _appBarBuilder(
