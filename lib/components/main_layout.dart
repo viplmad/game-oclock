@@ -4,6 +4,7 @@ import 'package:game_oclock/blocs/blocs.dart'
     show ActionState, ActionSuccess, MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
+import 'package:game_oclock/pages/destinations.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -14,12 +15,14 @@ class MainLayoutBuilder extends StatelessWidget {
     required this.selectedPath,
     required this.mainDestinations,
     required this.secondaryDestinations,
+    required this.trailingDestinations,
     required this.child,
   });
 
   final String selectedPath;
   final List<NavDestination> mainDestinations;
   final List<NavDestination> secondaryDestinations; // TODO grouping
+  final List<NavDestination> trailingDestinations;
   final Widget child;
 
   @override
@@ -84,10 +87,11 @@ class MainLayoutBuilder extends StatelessWidget {
     final BuildContext context, {
     required final String selectedPath,
   }) {
-    final destinations = [...mainDestinations, ...secondaryDestinations];
     return RouterNavigationDrawer(
       selectedPath: selectedPath,
-      destinations: destinations,
+      mainDestinations: mainDestinations,
+      secondaryDestinations: secondaryDestinations,
+      trailingDestinations: trailingDestinations,
     );
   }
 
@@ -102,6 +106,7 @@ class MainLayoutBuilder extends StatelessWidget {
       selectedPath: selectedPath,
       mainDestinations: mainDestinations,
       secondaryDestinations: secondaryDestinations,
+      trailingDestinations: trailingDestinations,
       extended: extended,
     );
   }
@@ -123,9 +128,16 @@ ValueChanged<int> _goToSelectedPathCallback(
 }) {
   return (final selectedIndex) {
     final selectedDest = destinations.elementAt(selectedIndex);
-    GoRouter.of(context).go(selectedDest.path);
-    Scaffold.of(context).closeDrawer();
+    _goToSelectedPath(context, selectedDest);
   };
+}
+
+void _goToSelectedPath(
+  final BuildContext context,
+  final NavDestination destination,
+) {
+  GoRouter.of(context).go(destination.path);
+  Scaffold.of(context).closeDrawer();
 }
 
 int? _selectedIndex({
@@ -142,14 +154,24 @@ class RouterNavigationDrawer extends StatelessWidget {
   const RouterNavigationDrawer({
     super.key,
     required this.selectedPath,
-    required this.destinations,
+    required this.mainDestinations,
+    required this.secondaryDestinations,
+    required this.trailingDestinations,
   });
 
   final String selectedPath;
-  final List<NavDestination> destinations;
+  final List<NavDestination> mainDestinations;
+  final List<NavDestination> secondaryDestinations;
+  final List<NavDestination> trailingDestinations;
 
   @override
   Widget build(final BuildContext context) {
+    final destinations = [
+      ...mainDestinations,
+      ...secondaryDestinations,
+      ...trailingDestinations,
+    ];
+
     return NavigationDrawer(
       selectedIndex: _selectedIndex(
         selectedPath: selectedPath,
@@ -159,14 +181,25 @@ class RouterNavigationDrawer extends StatelessWidget {
         context,
         destinations: destinations,
       ),
-      children: destinations
-          .map(
-            (final dest) => NavigationDrawerDestination(
-              icon: dest.icon,
-              label: Text(dest.labelBuilder(context)),
-            ),
-          )
-          .toList(growable: false),
+      footer: RouterTrailingNavigation(
+        selectedPath: selectedPath,
+        destinations: trailingDestinations,
+      ),
+      children: [
+        ...mainDestinations.map(
+          (final dest) => NavigationDrawerDestination(
+            icon: dest.icon,
+            label: Text(dest.labelBuilder(context)),
+          ),
+        ),
+        const Divider(),
+        ...secondaryDestinations.map(
+          (final dest) => NavigationDrawerDestination(
+            icon: dest.icon,
+            label: Text(dest.labelBuilder(context)),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -212,13 +245,15 @@ class RouterNavigationRail extends StatefulWidget {
     required this.selectedPath,
     required this.mainDestinations,
     required this.secondaryDestinations,
+    required this.trailingDestinations,
     required this.extended,
   });
 
+  final String selectedPath;
   final List<NavDestination> mainDestinations;
   final List<NavDestination> secondaryDestinations;
+  final List<NavDestination> trailingDestinations;
   final bool extended;
-  final String selectedPath;
 
   @override
   State<RouterNavigationRail> createState() => _RouterNavigationRailState();
@@ -264,6 +299,11 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
             ),
           )
           .toList(growable: false),
+      trailingAtBottom: true,
+      trailing: RouterTrailingNavigation(
+        selectedPath: widget.selectedPath,
+        destinations: trailingDestinations,
+      ),
       extended: extended,
       labelType: extended ? null : NavigationRailLabelType.all,
       selectedIndex: _selectedIndex(
@@ -273,6 +313,44 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
       onDestinationSelected: _goToSelectedPathCallback(
         context,
         destinations: destinations,
+      ),
+    );
+  }
+}
+
+class RouterTrailingNavigation extends StatelessWidget {
+  const RouterTrailingNavigation({
+    super.key,
+    required this.selectedPath,
+    required this.destinations,
+  });
+
+  final String selectedPath;
+  final List<NavDestination> destinations;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: destinations
+            .map(
+              (final dest) => selectedPath.startsWith(dest.path)
+                  ? IconButton.filledTonal(
+                      icon: dest.icon,
+                      tooltip: dest.labelBuilder(context),
+                      isSelected: true,
+                      onPressed: () => _goToSelectedPath(context, dest),
+                    )
+                  : IconButton(
+                      icon: dest.icon,
+                      tooltip: dest.labelBuilder(context),
+                      onPressed: () => _goToSelectedPath(context, dest),
+                    ),
+            )
+            .toList(growable: false),
       ),
     );
   }

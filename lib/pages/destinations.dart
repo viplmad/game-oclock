@@ -44,6 +44,10 @@ final List<NavDestination> secondaryDestinations =
         labelBuilder: (final context) => context.localize().usersTitle,
         path: CommonPaths.usersPath,
       ),
+    ]);
+
+final List<NavDestination> trailingDestinations =
+    List.unmodifiable(<NavDestination>[
       NavDestination(
         icon: CommonIcons.settings,
         labelBuilder: (final context) => context.localize().settingsTitle,

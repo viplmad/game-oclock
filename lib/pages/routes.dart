@@ -17,7 +17,7 @@ import 'package:game_oclock/models/models.dart';
 import 'package:game_oclock/pages/calendar/multi_calendar.dart';
 import 'package:game_oclock/pages/calendar/single_calendar.dart';
 import 'package:game_oclock/pages/destinations.dart'
-    show mainDestinations, secondaryDestinations;
+    show mainDestinations, secondaryDestinations, trailingDestinations;
 import 'package:game_oclock/pages/devices/device_detail.dart';
 import 'package:game_oclock/pages/devices/device_list.dart';
 import 'package:game_oclock/pages/games/game_detail.dart';
@@ -50,6 +50,7 @@ final routerConfig = GoRouter(
           selectedPath: state.uri.path,
           mainDestinations: mainDestinations,
           secondaryDestinations: secondaryDestinations,
+          trailingDestinations: trailingDestinations,
           child: child,
         );
       },
