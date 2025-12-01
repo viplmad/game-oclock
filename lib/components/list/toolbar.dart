@@ -359,36 +359,42 @@ class _ListFullSearchToolbarState extends State<ListFullSearchToolbar> {
       width: double.maxFinite,
       height: kMinInteractiveDimension,
       child: inSearch
-          ? SearchTextField(
-              controller: controller,
-              onDismissed: () => {
-                setState(() {
-                  inSearch = false;
-                }),
-              },
-              onCleared: () => {
-                setState(() {
-                  inSearch = false;
-                }),
-              },
-              onSearchChanged: widget.onSearchChanged,
-              onAddPressed: widget.onAddPressed,
+          ? Padding(
+              padding: const EdgeInsetsDirectional.all(4.0),
+              child: SearchTextField(
+                controller: controller,
+                onDismissed: () => {
+                  setState(() {
+                    inSearch = false;
+                  }),
+                },
+                onCleared: () => {
+                  setState(() {
+                    inSearch = false;
+                  }),
+                },
+                onSearchChanged: widget.onSearchChanged,
+                onAddPressed: widget.onAddPressed,
+              ),
             )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: CommonIcons.search,
-                  tooltip: context.localize().searchLabel,
-                  onPressed: () {
-                    setState(() {
-                      inSearch = true;
-                    });
-                  },
-                ),
-                ...?widget.actions,
-              ],
+          : Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: CommonIcons.search,
+                    tooltip: context.localize().searchLabel,
+                    onPressed: () {
+                      setState(() {
+                        inSearch = true;
+                      });
+                    },
+                  ),
+                  ...?widget.actions,
+                ],
+              ),
             ),
     );
   }

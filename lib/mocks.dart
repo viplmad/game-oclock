@@ -89,6 +89,7 @@ User mockUser({final String? username}) {
   return User(
     id: mockId(),
     username: username ?? 'username',
+    roles: ['ROLE_ADMIN'],
   );
 }
 

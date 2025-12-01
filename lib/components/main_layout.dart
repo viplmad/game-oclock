@@ -9,7 +9,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class MainLayoutBuilder extends StatelessWidget {
-  MainLayoutBuilder({
+  const MainLayoutBuilder({
     super.key,
     required this.selectedPath,
     required this.mainDestinations,
@@ -19,10 +19,8 @@ class MainLayoutBuilder extends StatelessWidget {
 
   final String selectedPath;
   final List<NavDestination> mainDestinations;
-  final List<NavDestination> secondaryDestinations;
+  final List<NavDestination> secondaryDestinations; // TODO grouping
   final Widget child;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(final BuildContext context) {
@@ -36,7 +34,6 @@ class MainLayoutBuilder extends StatelessWidget {
         return layoutTier == LayoutTier.compact && minimized
             ? Scaffold(body: child)
             : Scaffold(
-                key: scaffoldKey,
                 body: body(
                   context,
                   selectedPath: selectedPath,
@@ -83,19 +80,76 @@ class MainLayoutBuilder extends StatelessWidget {
     }
   }
 
-  IconButton drawerButton(final BuildContext context) {
-    return IconButton(
-      icon: CommonIcons.drawer,
-      tooltip: context.localize().openLabel,
-      onPressed: () => scaffoldKey.currentState?.openDrawer(),
-    );
-  }
-
-  NavigationDrawer navigationDrawer(
+  Widget navigationDrawer(
     final BuildContext context, {
     required final String selectedPath,
   }) {
     final destinations = [...mainDestinations, ...secondaryDestinations];
+    return RouterNavigationDrawer(
+      selectedPath: selectedPath,
+      destinations: destinations,
+    );
+  }
+
+  Widget navigationRail(
+    final BuildContext context, {
+    required final String selectedPath,
+    required final bool extended,
+  }) {
+    return RouterNavigationRail(
+      // Force extend change on tier change
+      key: Key(extended.toString()),
+      selectedPath: selectedPath,
+      mainDestinations: mainDestinations,
+      secondaryDestinations: secondaryDestinations,
+      extended: extended,
+    );
+  }
+
+  Widget navigationBar(
+    final BuildContext context, {
+    required final String selectedPath,
+  }) {
+    return RouterNavigationBar(
+      selectedPath: selectedPath,
+      destinations: mainDestinations,
+    );
+  }
+}
+
+ValueChanged<int> _goToSelectedPathCallback(
+  final BuildContext context, {
+  required final List<NavDestination> destinations,
+}) {
+  return (final selectedIndex) {
+    final selectedDest = destinations.elementAt(selectedIndex);
+    GoRouter.of(context).go(selectedDest.path);
+    Scaffold.of(context).closeDrawer();
+  };
+}
+
+int? _selectedIndex({
+  required final String selectedPath,
+  required final List<NavDestination> destinations,
+}) {
+  final destinationIndex = destinations.indexWhere(
+    (final dest) => selectedPath.startsWith(dest.path),
+  );
+  return destinationIndex >= 0 ? destinationIndex : null;
+}
+
+class RouterNavigationDrawer extends StatelessWidget {
+  const RouterNavigationDrawer({
+    super.key,
+    required this.selectedPath,
+    required this.destinations,
+  });
+
+  final String selectedPath;
+  final List<NavDestination> destinations;
+
+  @override
+  Widget build(final BuildContext context) {
     return NavigationDrawer(
       selectedIndex: _selectedIndex(
         selectedPath: selectedPath,
@@ -105,67 +159,32 @@ class MainLayoutBuilder extends StatelessWidget {
         context,
         destinations: destinations,
       ),
-      children:
-          destinations // TODO group
-              .map(
-                (final dest) => NavigationDrawerDestination(
-                  icon: dest.icon,
-                  label: Text(dest.labelBuilder(context)),
-                ),
-              )
-              .toList(growable: false),
-    );
-  }
-
-  NavigationRail navigationRail(
-    final BuildContext context, {
-    required final String selectedPath,
-    required final bool extended,
-  }) {
-    final destinations = (extended
-        ? [...mainDestinations, ...secondaryDestinations]
-        : [
-            ...mainDestinations,
-            ...secondaryDestinations.where(
-              (final dest) => dest.path == selectedPath,
+      children: destinations
+          .map(
+            (final dest) => NavigationDrawerDestination(
+              icon: dest.icon,
+              label: Text(dest.labelBuilder(context)),
             ),
-          ]);
-    return NavigationRail(
-      leading: extended
-          ? IconButton(
-              icon: CommonIcons.drawerOpen,
-              // no tooltip
-              onPressed: () {},
-            )
-          : drawerButton(context),
-      destinations:
-          destinations // TODO group
-              .map(
-                (final dest) => NavigationRailDestination(
-                  icon: dest.icon,
-                  label: Text(dest.labelBuilder(context)),
-                ),
-              )
-              .toList(growable: false),
-      extended: extended,
-      labelType: extended ? null : NavigationRailLabelType.all,
-      selectedIndex: _selectedIndex(
-        selectedPath: selectedPath,
-        destinations: destinations,
-      ),
-      onDestinationSelected: _goToSelectedPathCallback(
-        context,
-        destinations: destinations,
-      ),
+          )
+          .toList(growable: false),
     );
   }
+}
 
-  Widget navigationBar(
-    final BuildContext context, {
-    required final String selectedPath,
-  }) {
+class RouterNavigationBar extends StatelessWidget {
+  const RouterNavigationBar({
+    super.key,
+    required this.selectedPath,
+    required this.destinations,
+  });
+
+  final String selectedPath;
+  final List<NavDestination> destinations;
+
+  @override
+  Widget build(final BuildContext context) {
     return NavigationBar(
-      destinations: mainDestinations
+      destinations: destinations
           .map(
             (final dest) => NavigationDestination(
               icon: dest.icon,
@@ -176,33 +195,85 @@ class MainLayoutBuilder extends StatelessWidget {
       selectedIndex:
           _selectedIndex(
             selectedPath: selectedPath,
-            destinations: mainDestinations,
+            destinations: destinations,
           ) ??
           0,
       onDestinationSelected: _goToSelectedPathCallback(
         context,
-        destinations: mainDestinations,
+        destinations: destinations,
       ),
     );
   }
+}
 
-  static ValueChanged<int> _goToSelectedPathCallback(
-    final BuildContext context, {
-    required final List<NavDestination> destinations,
-  }) {
-    return (final selectedIndex) {
-      final selectedDest = destinations.elementAt(selectedIndex);
-      GoRouter.of(context).go(selectedDest.path);
-    };
-  }
+class RouterNavigationRail extends StatefulWidget {
+  const RouterNavigationRail({
+    super.key,
+    required this.selectedPath,
+    required this.mainDestinations,
+    required this.secondaryDestinations,
+    required this.extended,
+  });
 
-  static int? _selectedIndex({
-    required final String selectedPath,
-    required final List<NavDestination> destinations,
-  }) {
-    final destinationIndex = destinations.indexWhere(
-      (final dest) => selectedPath.startsWith(dest.path),
+  final List<NavDestination> mainDestinations;
+  final List<NavDestination> secondaryDestinations;
+  final bool extended;
+  final String selectedPath;
+
+  @override
+  State<RouterNavigationRail> createState() => _RouterNavigationRailState();
+}
+
+class _RouterNavigationRailState extends State<RouterNavigationRail> {
+  bool? _extended;
+
+  @override
+  Widget build(final BuildContext context) {
+    final bool extended = _extended ?? widget.extended;
+
+    final destinations = (extended
+        ? [...widget.mainDestinations, ...widget.secondaryDestinations]
+        : [
+            ...widget.mainDestinations,
+            ...widget.secondaryDestinations.where(
+              (final dest) => dest.path == widget.selectedPath,
+            ),
+          ]);
+
+    return NavigationRail(
+      leading: IconButton(
+        icon: extended ? CommonIcons.drawerOpen : CommonIcons.drawer,
+        tooltip: extended
+            ? MaterialLocalizations.of(context).closeButtonTooltip
+            : context.localize().openLabel,
+        onPressed: () {
+          if (Scaffold.of(context).hasDrawer) {
+            Scaffold.of(context).openDrawer();
+          } else {
+            setState(() {
+              _extended = !extended;
+            });
+          }
+        },
+      ),
+      destinations: destinations
+          .map(
+            (final dest) => NavigationRailDestination(
+              icon: dest.icon,
+              label: Text(dest.labelBuilder(context)),
+            ),
+          )
+          .toList(growable: false),
+      extended: extended,
+      labelType: extended ? null : NavigationRailLabelType.all,
+      selectedIndex: _selectedIndex(
+        selectedPath: widget.selectedPath,
+        destinations: destinations,
+      ),
+      onDestinationSelected: _goToSelectedPathCallback(
+        context,
+        destinations: destinations,
+      ),
     );
-    return destinationIndex >= 0 ? destinationIndex : null;
   }
 }

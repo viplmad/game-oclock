@@ -12,6 +12,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListLoadBloc,
         ListState;
 import 'package:game_oclock/components/calendar.dart';
+import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
 import 'package:game_oclock/components/show_snackbar.dart';
@@ -103,8 +104,8 @@ class CalendarListDetailBuilder<
 
                   if (layoutTier == LayoutTier.compact) {
                     if (selectedData == null) {
-                      return Scaffold(
-                        appBar: AppBar(title: Text(title)),
+                      return NestedScrollView(
+                        headerSliverBuilder: _appBarBuilder,
                         body: Column(
                           children: [
                             ExpansionTile(
@@ -142,8 +143,8 @@ class CalendarListDetailBuilder<
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Scaffold(
-                            appBar: AppBar(title: Text(title)),
+                          child: NestedScrollView(
+                            headerSliverBuilder: _appBarBuilder,
                             body: Column(
                               children: [
                                 _calendarHeader(
@@ -187,6 +188,13 @@ class CalendarListDetailBuilder<
         },
       ),
     );
+  }
+
+  List<Widget> _appBarBuilder(
+    final BuildContext context,
+    final bool innerBoxIsScrolled,
+  ) {
+    return <Widget>[SimpleSliverAppBar(title: Text(title))];
   }
 
   Widget _calendarHeader(

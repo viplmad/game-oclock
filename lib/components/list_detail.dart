@@ -268,54 +268,41 @@ class ListDetailBuilder<
     required final ListStyle selectedStyle,
   }) {
     return <Widget>[
-      SliverAppBar(
-        surfaceTintColor: Theme.of(context).primaryColor,
-        // Fixed elevation so background colour doesn't change on scroll
-        forceElevated: true,
-        elevation: 1.0,
-        scrolledUnderElevation: 1.0,
-        floating: true,
-        pinned: false,
-        snap: false,
-        automaticallyImplyLeading: false,
-        // TODO
-        flexibleSpace: FullSearchAppBar(
-          title: title,
-          onAddPressed: onSearchAddPressed,
-          onSearchChanged: (final value) => context.read<LB>().add(
-            ListQuicksearchChanged(quicksearch: value),
-          ),
-          actions: [
-            if (availableStyles.length > 1)
-              SegmentedButton<ListStyle>(
-                segments: availableStyles
-                    .map(
-                      (final style) => style == ListStyle.grid
-                          ? _listStyleGridOption
-                          : _listStyleTileOption,
-                    )
-                    .map(
-                      (final choice) => ButtonSegment<ListStyle>(
-                        value: choice.value,
-                        label: choice.widgetBuilder(context),
-                        icon: choice.icon,
-                      ),
-                    )
-                    .toList(growable: false),
-                selected: {selectedStyle},
-                onSelectionChanged: (final newSelection) {
-                  context.read<ListStyleSaveBloc>().add(
-                    ActionStarted(data: newSelection.first),
-                  );
-                },
-              ),
-            IconButton(
-              icon: CommonIcons.reload,
-              tooltip: context.localize().reloadLabel,
-              onPressed: () => context.read<LB>().add(const ListReloaded()),
+      FullSearchSliverAppBar(
+        title: Text(title),
+        onAddPressed: onSearchAddPressed,
+        onSearchChanged: (final value) =>
+            context.read<LB>().add(ListQuicksearchChanged(quicksearch: value)),
+        actions: [
+          if (availableStyles.length > 1)
+            SegmentedButton<ListStyle>(
+              segments: availableStyles
+                  .map(
+                    (final style) => style == ListStyle.grid
+                        ? _listStyleGridOption
+                        : _listStyleTileOption,
+                  )
+                  .map(
+                    (final choice) => ButtonSegment<ListStyle>(
+                      value: choice.value,
+                      label: choice.widgetBuilder(context),
+                      icon: choice.icon,
+                    ),
+                  )
+                  .toList(growable: false),
+              selected: {selectedStyle},
+              onSelectionChanged: (final newSelection) {
+                context.read<ListStyleSaveBloc>().add(
+                  ActionStarted(data: newSelection.first),
+                );
+              },
             ),
-          ],
-        ),
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () => context.read<LB>().add(const ListReloaded()),
+          ),
+        ],
       ),
     ];
   }

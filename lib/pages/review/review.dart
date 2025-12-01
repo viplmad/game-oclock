@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show ActionStarted, ReviewYearSelectBloc;
+import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -98,25 +99,6 @@ class ReviewBuilder extends StatelessWidget {
     final BuildContext context,
     final bool innerBoxIsScrolled,
   ) {
-    return <Widget>[
-      SliverAppBar(
-        surfaceTintColor: Theme.of(context).primaryColor,
-        // Fixed elevation so background colour doesn't change on scroll
-        forceElevated: true,
-        elevation: 1.0,
-        scrolledUnderElevation: 1.0,
-        floating: true,
-        pinned: false,
-        snap: false,
-        automaticallyImplyLeading: false,
-        flexibleSpace: FlexibleSpaceBar(
-          title: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(title),
-          ),
-          expandedTitleScale: 1.0,
-        ),
-      ),
-    ];
+    return <Widget>[SimpleSliverAppBar(title: Text(title))];
   }
 }

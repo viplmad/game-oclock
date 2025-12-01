@@ -56,7 +56,6 @@ class Detail extends StatelessWidget {
         snap: false,
         automaticallyImplyLeading: false,
         leading: BackButton(onPressed: onBackPressed),
-        actions: actions,
         bottom: const PreferredSize(
           preferredSize: Size(double.maxFinite, 1.0),
           child: SizedBox(),
@@ -66,6 +65,8 @@ class Detail extends StatelessWidget {
           collapseMode: CollapseMode.parallax,
           background: image ?? const SizedBox(),
         ),
+        actionsPadding: const EdgeInsetsDirectional.only(end: 8.0),
+        actions: actions,
       ),
     ];
   }
