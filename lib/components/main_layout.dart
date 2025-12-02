@@ -20,7 +20,7 @@ class MainLayoutBuilder extends StatelessWidget {
 
   final String selectedPath;
   final List<NavDestination> mainDestinations;
-  final List<NavDestination> secondaryDestinations; // TODO grouping
+  final List<NavDestination> secondaryDestinations;
   final List<NavDestination> trailingDestinations;
   final Widget child;
 

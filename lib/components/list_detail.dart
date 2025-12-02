@@ -113,14 +113,18 @@ class ListDetailBuilder<
         BlocListener<CurrentListSearchSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<void, ListSearch?>) {
-              context.read<CurrentListSearchGetBloc>().add(const ActionRestarted());
+              context.read<CurrentListSearchGetBloc>().add(
+                const ActionRestarted(),
+              );
             }
           },
         ),
         BlocListener<CurrentListStyleSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<void, ListStyle?>) {
-              context.read<CurrentListStyleGetBloc>().add(const ActionRestarted());
+              context.read<CurrentListStyleGetBloc>().add(
+                const ActionRestarted(),
+              );
             }
           },
         ),
