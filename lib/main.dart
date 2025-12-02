@@ -185,8 +185,7 @@ class GameOClockApp extends StatelessWidget {
                     themeMode: themeMode,
                     locale: locale,
                     localizationsDelegates: [
-                      DurationPickerLocalizations
-                          .delegate, // TODO use instead of hoursabbr
+                      DurationPickerLocalizations.delegate,
                       AppLocalizations.delegate,
                       CustomMaterialLocalizationsDelegate(
                         GlobalMaterialLocalizations.delegate,
