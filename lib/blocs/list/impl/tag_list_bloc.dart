@@ -1,8 +1,8 @@
-import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show SearchDTO, Tag;
+import 'package:game_oclock/models/models.dart'
+    show PageResultDTO, SearchDTO, Tag;
 import 'package:game_oclock/services/services.dart' show TagService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class TagListBloc extends ListLoadBloc<Tag> {
   TagListBloc({required this.service});
@@ -10,29 +10,14 @@ class TagListBloc extends ListLoadBloc<Tag> {
   final TagService service;
 
   @override
-  Future<ListFinal<Tag>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<Tag>> doLoad(
     final SearchDTO search,
-    final List<Tag>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.search(search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.count(search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<Tag>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.search(search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.count(search, quicksearch);
 }
 
 class TagOfGameListBloc extends ListLoadBloc<Tag> {
@@ -42,27 +27,12 @@ class TagOfGameListBloc extends ListLoadBloc<Tag> {
   final String gameId;
 
   @override
-  Future<ListFinal<Tag>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<Tag>> doLoad(
     final SearchDTO search,
-    final List<Tag>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.searchGameTags(gameId, search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.countGameTags(gameId, search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<Tag>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.searchGameTags(gameId, search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.countGameTags(gameId, search, quicksearch);
 }

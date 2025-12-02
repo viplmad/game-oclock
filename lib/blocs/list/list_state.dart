@@ -14,42 +14,42 @@ final class ListInitial<T> extends ListState<T> {
 
 final class ListLoadInProgress<T> extends ListState<T> {
   final List<T>? data;
-  final String? quicksearch;
   final SearchDTO? search;
+  final String? quicksearch;
 
   const ListLoadInProgress({
     required this.data,
-    required this.quicksearch,
     required this.search,
+    required this.quicksearch,
   });
 
   @override
-  List<Object?> get props => [data, quicksearch, search];
+  List<Object?> get props => [data, search, quicksearch];
 }
 
 sealed class ListFinal<T> extends ListState<T> {
   final List<T> data;
   final int total;
-  final String? quicksearch;
   final SearchDTO search;
+  final String? quicksearch;
 
   const ListFinal({
     required this.data,
     required this.total,
-    required this.quicksearch,
     required this.search,
+    required this.quicksearch,
   });
 
   @override
-  List<Object?> get props => [quicksearch, search];
+  List<Object?> get props => [search, quicksearch];
 }
 
 final class ListLoadSuccess<T> extends ListFinal<T> {
   const ListLoadSuccess({
     required super.data,
     required super.total,
-    required super.quicksearch,
     required super.search,
+    required super.quicksearch,
   });
 }
 
@@ -60,8 +60,8 @@ final class ListLoadFailure<T> extends ListFinal<T> {
     required this.error,
     required super.data,
     required super.total,
-    required super.quicksearch,
     required super.search,
+    required super.quicksearch,
   });
 
   @override

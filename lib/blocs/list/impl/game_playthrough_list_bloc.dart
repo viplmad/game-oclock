@@ -1,8 +1,8 @@
-import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show GamePlaythrough, SearchDTO;
+import 'package:game_oclock/models/models.dart'
+    show GamePlaythrough, PageResultDTO, SearchDTO;
 import 'package:game_oclock/services/services.dart' show GamePlaythroughService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class GamePlaythroughListBloc extends ListLoadBloc<GamePlaythrough> {
   GamePlaythroughListBloc({required this.service, required this.gameId});
@@ -11,27 +11,12 @@ class GamePlaythroughListBloc extends ListLoadBloc<GamePlaythrough> {
   final String gameId;
 
   @override
-  Future<ListFinal<GamePlaythrough>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<GamePlaythrough>> doLoad(
     final SearchDTO search,
-    final List<GamePlaythrough>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.searchForGame(gameId, search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.countForGame(gameId, search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<GamePlaythrough>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.searchForGame(gameId, search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.countForGame(gameId, search, quicksearch);
 }

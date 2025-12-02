@@ -1,9 +1,8 @@
-import 'package:game_oclock/blocs/bloc_utils.dart';
 import 'package:game_oclock/models/models.dart'
-    show Location, LocationWithDate, SearchDTO;
+    show Location, LocationWithDate, PageResultDTO, SearchDTO;
 import 'package:game_oclock/services/services.dart' show LocationService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class LocationListBloc extends ListLoadBloc<Location> {
   LocationListBloc({required this.service});
@@ -11,29 +10,14 @@ class LocationListBloc extends ListLoadBloc<Location> {
   final LocationService service;
 
   @override
-  Future<ListFinal<Location>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<Location>> doLoad(
     final SearchDTO search,
-    final List<Location>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.search(search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.count(search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<Location>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.search(search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.count(search, quicksearch);
 }
 
 class LocationAvailableListBloc extends ListLoadBloc<LocationWithDate> {
@@ -43,27 +27,12 @@ class LocationAvailableListBloc extends ListLoadBloc<LocationWithDate> {
   final String gameId;
 
   @override
-  Future<ListFinal<LocationWithDate>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<LocationWithDate>> doLoad(
     final SearchDTO search,
-    final List<LocationWithDate>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.searchAvailable(gameId, search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.countAvailable(gameId, search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<LocationWithDate>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.searchAvailable(gameId, search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.countAvailable(gameId, search, quicksearch);
 }

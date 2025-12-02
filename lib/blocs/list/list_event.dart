@@ -19,15 +19,6 @@ final class ListPageReloaded extends ListEvent {
   List<Object?> get props => [];
 }
 
-final class ListQuicksearchChanged extends ListEvent {
-  final String? quicksearch;
-
-  const ListQuicksearchChanged({required this.quicksearch});
-
-  @override
-  List<Object?> get props => [quicksearch];
-}
-
 final class ListSearchChanged extends ListEvent {
   final SearchDTO search;
 
@@ -35,6 +26,15 @@ final class ListSearchChanged extends ListEvent {
 
   @override
   List<Object?> get props => [search];
+}
+
+final class ListQuicksearchChanged extends ListEvent {
+  final String? quicksearch;
+
+  const ListQuicksearchChanged({required this.quicksearch});
+
+  @override
+  List<Object?> get props => [quicksearch];
 }
 
 final class ListPageIncremented extends ListEvent {

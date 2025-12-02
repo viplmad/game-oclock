@@ -1,8 +1,8 @@
-import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show GameSession, SearchDTO;
+import 'package:game_oclock/models/models.dart'
+    show GameSession, PageResultDTO, SearchDTO;
 import 'package:game_oclock/services/services.dart' show GameSessionService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class SessionListBloc extends ListLoadBloc<GameSession> {
   SessionListBloc({required this.service});
@@ -10,29 +10,14 @@ class SessionListBloc extends ListLoadBloc<GameSession> {
   final GameSessionService service;
 
   @override
-  Future<ListFinal<GameSession>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<GameSession>> doLoad(
     final SearchDTO search,
-    final List<GameSession>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.search(search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.count(search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<GameSession>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.search(search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.count(search, quicksearch);
 }
 
 class GameSessionListBloc extends ListLoadBloc<GameSession> {
@@ -42,27 +27,12 @@ class GameSessionListBloc extends ListLoadBloc<GameSession> {
   final String gameId;
 
   @override
-  Future<ListFinal<GameSession>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<GameSession>> doLoad(
     final SearchDTO search,
-    final List<GameSession>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.searchForGame(gameId, search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.countForGame(gameId, search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<GameSession>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.searchForGame(gameId, search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.countForGame(gameId, search, quicksearch);
 }

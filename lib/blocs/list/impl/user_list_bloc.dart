@@ -1,8 +1,8 @@
-import 'package:game_oclock/blocs/bloc_utils.dart';
-import 'package:game_oclock/models/models.dart' show SearchDTO, User;
+import 'package:game_oclock/models/models.dart'
+    show PageResultDTO, SearchDTO, User;
 import 'package:game_oclock/services/services.dart' show UserService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class UserListBloc extends ListLoadBloc<User> {
   UserListBloc({required this.service});
@@ -10,27 +10,12 @@ class UserListBloc extends ListLoadBloc<User> {
   final UserService service;
 
   @override
-  Future<ListFinal<User>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<User>> doLoad(
     final SearchDTO search,
-    final List<User>? lastData,
-    final int? lastTotal,
-  ) async {
-    final data = mergePageData(
-      search: search,
-      page: await service.search(search, quicksearch),
-      lastData: lastData,
-    );
-    final count = await mergeCount(
-      search: search,
-      countGetter: () => service.count(search, quicksearch),
-      lastTotal: lastTotal,
-    );
-    return ListLoadSuccess<User>(
-      data: data,
-      total: count,
-      quicksearch: quicksearch,
-      search: search,
-    );
-  }
+    final String? quicksearch,
+  ) => service.search(search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.count(search, quicksearch);
 }

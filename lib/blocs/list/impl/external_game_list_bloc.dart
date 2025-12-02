@@ -1,7 +1,8 @@
-import 'package:game_oclock/models/models.dart' show ExternalGame, SearchDTO;
+import 'package:game_oclock/models/models.dart'
+    show ExternalGame, PageResultDTO, SearchDTO;
 import 'package:game_oclock/services/services.dart' show IGDBService;
 
-import '../list.dart' show ListFinal, ListLoadBloc, ListLoadSuccess;
+import '../list.dart' show ListLoadBloc;
 
 class ExternalGameListBloc extends ListLoadBloc<ExternalGame> {
   ExternalGameListBloc({required this.igdbService});
@@ -9,27 +10,26 @@ class ExternalGameListBloc extends ListLoadBloc<ExternalGame> {
   final IGDBService igdbService;
 
   @override
-  Future<ListFinal<ExternalGame>> loadList(
-    final String? quicksearch,
+  Future<PageResultDTO<ExternalGame>> doLoad(
     final SearchDTO search,
-    final List<ExternalGame>? lastData,
-    final int? lastTotal,
+    final String? quicksearch,
   ) async {
     if (quicksearch == null || quicksearch.isEmpty) {
-      return ListLoadSuccess<ExternalGame>(
-        data: [],
-        total: 0,
-        quicksearch: quicksearch,
-        search: search,
-      );
+      return PageResultDTO(data: []);
     }
 
-    final data = await igdbService.search(quicksearch);
-    return ListLoadSuccess<ExternalGame>(
-      data: data,
-      total: data.length, // Avoid searching more data
-      quicksearch: quicksearch,
-      search: search,
-    );
+    return PageResultDTO(data: await igdbService.search(quicksearch));
+  }
+
+  @override
+  Future<int?> doCount(
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    if (quicksearch == null || quicksearch.isEmpty) {
+      return 0;
+    }
+
+    return null;
   }
 }
