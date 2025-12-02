@@ -8,8 +8,8 @@ import '../action.dart'
         IdentityActionBloc,
         ProducerActionBloc;
 
-class ListSearchGetBloc extends ProducerActionBloc<ListSearch> {
-  ListSearchGetBloc({required this.service, required this.space});
+class CurrentListSearchGetBloc extends ProducerActionBloc<ListSearch> {
+  CurrentListSearchGetBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
@@ -19,8 +19,8 @@ class ListSearchGetBloc extends ProducerActionBloc<ListSearch> {
       service.getCurrent(space);
 }
 
-class ListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {
-  ListSearchSaveBloc({required this.service, required this.space});
+class CurrentListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {
+  CurrentListSearchSaveBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
@@ -32,9 +32,8 @@ class ListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {
       : service.saveCurrent(space, event);
 }
 
-// TODO rename
-class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {
-  SearchGetBloc({required this.service, required this.space});
+class ListSearchGetBloc extends FunctionActionBloc<String, ListSearch> {
+  ListSearchGetBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
@@ -44,8 +43,8 @@ class SearchGetBloc extends FunctionActionBloc<String, ListSearch> {
       service.get(space, event);
 }
 
-class SearchCreateBloc extends IdentityActionBloc<ListSearch> {
-  SearchCreateBloc({required this.service, required this.space});
+class ListSearchCreateBloc extends IdentityActionBloc<ListSearch> {
+  ListSearchCreateBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
@@ -57,8 +56,8 @@ class SearchCreateBloc extends IdentityActionBloc<ListSearch> {
   ) => service.create(space, event);
 }
 
-class SearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
-  SearchUpdateBloc({required this.service, required this.space});
+class ListSearchUpdateBloc extends ConsumerActionBloc<ListSearch> {
+  ListSearchUpdateBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;

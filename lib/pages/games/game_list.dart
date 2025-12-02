@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        CurrentListSearchGetBloc,
+        CurrentListSearchSaveBloc,
+        CurrentListStyleGetBloc,
+        CurrentListStyleSaveBloc,
         DevicePlayedGameListBloc,
         ListReloaded,
-        ListSearchGetBloc,
-        ListSearchSaveBloc,
-        ListStyleGetBloc,
-        ListStyleSaveBloc,
         LocationAvailableListBloc,
         TagOfGameListBloc,
         UserGameDeleteBloc,
@@ -38,13 +38,13 @@ class UserGameListPage extends StatelessWidget {
               UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListSearchGetBloc(
+          create: (_) => CurrentListSearchGetBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
-          create: (_) => ListSearchSaveBloc(
+          create: (_) => CurrentListSearchSaveBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           ),
@@ -54,13 +54,13 @@ class UserGameListPage extends StatelessWidget {
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListStyleGetBloc(
+          create: (_) => CurrentListStyleGetBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
-          create: (_) => ListStyleSaveBloc(
+          create: (_) => CurrentListStyleSaveBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           ),

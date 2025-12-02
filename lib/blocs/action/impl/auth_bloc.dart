@@ -15,8 +15,9 @@ class CurrentUserGetBloc extends ProducerActionBloc<User> {
       service.getCurrent();
 }
 
-class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
-  SavedLoginResponseGetBloc({required this.service});
+class CurrentLoginResponseGetBloc
+    extends ProducerActionBloc<SavedLoginResponse> {
+  CurrentLoginResponseGetBloc({required this.service});
 
   final AuthService service;
 
@@ -27,8 +28,8 @@ class SavedLoginResponseGetBloc extends ProducerActionBloc<SavedLoginResponse> {
   ) => service.getCurrent();
 }
 
-class LoginSaveBloc extends ConsumerActionBloc<Login> {
-  LoginSaveBloc({required this.service, required this.authService});
+class LoginBloc extends ConsumerActionBloc<Login> {
+  LoginBloc({required this.service, required this.authService});
 
   final LoginService service;
   final AuthService authService;

@@ -7,14 +7,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        CurrentLoginResponseGetBloc,
         FormState2,
         FormStateSubmitInProgress,
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValueUpdated,
-        LoginFormBloc,
-        LoginSaveBloc,
-        SavedLoginResponseGetBloc;
+        LoginBloc,
+        LoginFormBloc;
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/components/show_snackbar.dart';
@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) => LoginSaveBloc(
+          create: (_) => LoginBloc(
             service: RepositoryProvider.of(context),
             authService: RepositoryProvider.of(context),
           ),
@@ -85,13 +85,11 @@ class LoginBuilder extends StatelessWidget {
         BlocListener<LoginFormBloc, FormState2<LoginFormData, Login>>(
           listener: (final context, final state) {
             if (state is FormStateSubmitSuccess<LoginFormData, Login>) {
-              context.read<LoginSaveBloc>().add(
-                ActionStarted(data: state.value),
-              );
+              context.read<LoginBloc>().add(ActionStarted(data: state.value));
             }
           },
         ),
-        BlocListener<LoginSaveBloc, ActionState<void>>(
+        BlocListener<LoginBloc, ActionState<void>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<void, Login>) {
               showSnackBar(
@@ -111,18 +109,18 @@ class LoginBuilder extends StatelessWidget {
           },
         ),
         BlocListener<
-          SavedLoginResponseGetBloc,
+          CurrentLoginResponseGetBloc,
           ActionState<SavedLoginResponse>
         >(
           listener: (final context, final state) {
-            SavedLoginResponse savedLogin;
+            SavedLoginResponse currentLoginResponse;
             if (state is ActionSuccess<SavedLoginResponse, void>) {
-              savedLogin = state.data;
+              currentLoginResponse = state.data;
               context.read<LoginFormBloc>().add(
                 FormValueUpdated(
                   value: Login(
-                    host: savedLogin.host,
-                    username: savedLogin.username,
+                    host: currentLoginResponse.host,
+                    username: currentLoginResponse.username,
                     password: '',
                   ),
                 ),
@@ -134,16 +132,16 @@ class LoginBuilder extends StatelessWidget {
       child: BlocBuilder<LoginFormBloc, FormState2<LoginFormData, Login>>(
         builder: (final context, final formState) {
           return BlocBuilder<
-            SavedLoginResponseGetBloc,
+            CurrentLoginResponseGetBloc,
             ActionState<SavedLoginResponse>
           >(
             builder: (final context, final getState) {
-              return BlocBuilder<LoginSaveBloc, ActionState<void>>(
-                builder: (final context, final saveState) {
+              return BlocBuilder<LoginBloc, ActionState<void>>(
+                builder: (final context, final loginState) {
                   final inProgress =
                       getState is ActionInProgress ||
                       formState is FormStateSubmitInProgress ||
-                      saveState is ActionInProgress;
+                      loginState is ActionInProgress;
 
                   return SimpleForm(
                     formGroup: formState.data.formGroup,

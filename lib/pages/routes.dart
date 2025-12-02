@@ -8,9 +8,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionFinal,
         ActionStarted,
         ActionSuccess,
+        CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
-        MinimizedLayoutBloc,
-        SavedLoginResponseGetBloc;
+        MinimizedLayoutBloc;
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart';
 import 'package:game_oclock/pages/calendar/multi_calendar.dart';
@@ -218,17 +218,17 @@ FutureOr<String?> _authGuardRedirect(
   final BuildContext context,
   final GoRouterState state,
 ) async {
-  final savedLoginBloc = context.read<SavedLoginResponseGetBloc>();
+  final currentLoginResponseBloc = context.read<CurrentLoginResponseGetBloc>();
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
-  savedLoginBloc.add(ActionStarted.empty());
-  final savedLoginState =
-      await savedLoginBloc.stream.firstWhere(
+  currentLoginResponseBloc.add(ActionStarted.empty());
+  final currentLoginResponseState =
+      await currentLoginResponseBloc.stream.firstWhere(
             (final actionState) =>
                 actionState is ActionFinal<SavedLoginResponse, void>,
           )
           as ActionFinal<SavedLoginResponse, void>;
-  if (savedLoginState is ActionFailure<SavedLoginResponse, void>) {
+  if (currentLoginResponseState is ActionFailure<SavedLoginResponse, void>) {
     return CommonPaths.loginPath;
   }
 

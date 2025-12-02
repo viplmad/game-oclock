@@ -7,11 +7,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        CurrentListSearchGetBloc,
+        CurrentListSearchSaveBloc,
         ListFinal,
         ListLoadBloc,
         ListLoadInProgress,
-        ListSearchGetBloc,
-        ListSearchSaveBloc,
         ListState;
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/search/search_list.dart';
@@ -107,7 +107,7 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<ListSearchGetBloc, ActionState<ListSearch>>(
+    return BlocBuilder<CurrentListSearchGetBloc, ActionState<ListSearch>>(
       builder: (final context, final state) {
         ListSearch currentSearch;
         if (state is ActionInProgress<ListSearch>) {
@@ -124,7 +124,7 @@ class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
           space: space,
           search: currentSearch,
           onSearchChanged: (final context, final selectedSearch) {
-            context.read<ListSearchSaveBloc>().add(
+            context.read<CurrentListSearchSaveBloc>().add(
               ActionStarted(data: selectedSearch),
             );
           },

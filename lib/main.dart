@@ -9,13 +9,13 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
         DateLocaleConfigGetBloc,
         DateLocaleConfigSaveBloc,
         LocaleGetBloc,
         LocaleSaveBloc,
         MinimizedLayoutBloc,
-        SavedLoginResponseGetBloc,
         ThemeModeGetBloc,
         ThemeModeSaveBloc;
 import 'package:game_oclock/l10n/app_localizations.dart';
@@ -93,7 +93,7 @@ class GameOClockApp extends StatelessWidget {
         providers: [
           // Data
           BlocProvider(
-            create: (_) => SavedLoginResponseGetBloc(service: authService),
+            create: (_) => CurrentLoginResponseGetBloc(service: authService),
           ),
           BlocProvider(create: (_) => CurrentUserGetBloc(service: userService)),
           // Config

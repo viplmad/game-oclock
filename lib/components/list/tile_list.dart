@@ -176,7 +176,7 @@ class ReorderableTileList<T> extends StatelessWidget {
         }
 
         return Padding(
-          key: Key('${itemWidget.hashCode}'), // TODO
+          key: itemWidget.key,
           padding: const EdgeInsets.all(4.0),
           child: borderRadius == null
               ? itemWidget

@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        SearchCreateBloc,
-        SearchFormBloc,
-        SearchGetBloc,
-        SearchUpdateBloc;
+        ListSearchCreateBloc,
+        ListSearchGetBloc,
+        ListSearchUpdateBloc,
+        SearchFormBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
@@ -34,7 +34,7 @@ class SearchCreateForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) => SearchCreateBloc(
+          create: (_) => ListSearchCreateBloc(
             service: RepositoryProvider.of(context),
             space: space,
           ),
@@ -45,7 +45,7 @@ class SearchCreateForm extends StatelessWidget {
             ListSearch,
             SearchFormData,
             SearchFormBloc,
-            SearchCreateBloc
+            ListSearchCreateBloc
           >(
             title: context.localize().creatingTitle,
             fieldsBuilder: _fieldsBuilder,
@@ -75,13 +75,13 @@ class SearchEditForm extends StatelessWidget {
           },
         ),
         BlocProvider(
-          create: (_) => SearchUpdateBloc(
+          create: (_) => ListSearchUpdateBloc(
             service: RepositoryProvider.of(context),
             space: space,
           ),
         ),
         BlocProvider(
-          create: (_) => SearchGetBloc(
+          create: (_) => ListSearchGetBloc(
             service: RepositoryProvider.of(context),
             space: space,
           )..add(ActionStarted(data: name)),
@@ -92,8 +92,8 @@ class SearchEditForm extends StatelessWidget {
             ListSearch,
             SearchFormData,
             SearchFormBloc,
-            SearchGetBloc,
-            SearchUpdateBloc
+            ListSearchGetBloc,
+            ListSearchUpdateBloc
           >(
             title: context.localize().editingTitle,
             fieldsBuilder: _fieldsBuilder,
@@ -125,6 +125,7 @@ Widget _fieldsBuilder(
               formArray.insert(newIndex, temp);
             },
             itemBuilder: (final context, final data, final index) => ListTile(
+              key: Key('${data.hashCode}'),
               // TODO Missing chainOperator
               title: Row(
                 children: [

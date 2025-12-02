@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        CurrentListSearchGetBloc,
+        CurrentListSearchSaveBloc,
+        CurrentListStyleGetBloc,
+        CurrentListStyleSaveBloc,
         DeviceDeleteBloc,
         DeviceListBloc,
         DeviceSelectBloc,
         ListReloaded,
-        ListSearchGetBloc,
-        ListSearchSaveBloc,
-        ListStyleGetBloc,
-        ListStyleSaveBloc,
         UserGamePlayedOnDeviceListBloc;
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/models/models.dart' show Device, ListStyle;
@@ -35,13 +35,13 @@ class DeviceListPage extends StatelessWidget {
               DeviceListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListSearchGetBloc(
+          create: (_) => CurrentListSearchGetBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
-          create: (_) => ListSearchSaveBloc(
+          create: (_) => CurrentListSearchSaveBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           ),
@@ -51,13 +51,13 @@ class DeviceListPage extends StatelessWidget {
               DeviceDeleteBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
-          create: (_) => ListStyleGetBloc(
+          create: (_) => CurrentListStyleGetBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
-          create: (_) => ListStyleSaveBloc(
+          create: (_) => CurrentListStyleSaveBloc(
             service: RepositoryProvider.of(context),
             space: _space,
           ),

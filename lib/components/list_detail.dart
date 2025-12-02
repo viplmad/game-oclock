@@ -6,15 +6,15 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionRestarted,
         ActionStarted,
         ActionState,
+        CurrentListSearchGetBloc,
+        CurrentListSearchSaveBloc,
+        CurrentListStyleGetBloc,
+        CurrentListStyleSaveBloc,
         IdentityActionBloc,
         ListLoadBloc,
         ListQuicksearchChanged,
         ListReloaded,
         ListSearchChanged,
-        ListSearchGetBloc,
-        ListSearchSaveBloc,
-        ListStyleGetBloc,
-        ListStyleSaveBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/components/show_form_dialog.dart';
@@ -99,7 +99,7 @@ class ListDetailBuilder<
             );
           },
         ),
-        BlocListener<ListSearchGetBloc, ActionState<ListSearch>>(
+        BlocListener<CurrentListSearchGetBloc, ActionState<ListSearch>>(
           listener: (final context, final state) {
             if (state is ActionFinal<ListSearch, void>) {
               final currentSearch = (state is ActionSuccess<ListSearch, void>)
@@ -110,22 +110,22 @@ class ListDetailBuilder<
             }
           },
         ),
-        BlocListener<ListSearchSaveBloc, ActionState<void>>(
+        BlocListener<CurrentListSearchSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<void, ListSearch?>) {
-              context.read<ListSearchGetBloc>().add(const ActionRestarted());
+              context.read<CurrentListSearchGetBloc>().add(const ActionRestarted());
             }
           },
         ),
-        BlocListener<ListStyleSaveBloc, ActionState<void>>(
+        BlocListener<CurrentListStyleSaveBloc, ActionState<void>>(
           listener: (final context, final state) {
             if (state is ActionSuccess<void, ListStyle?>) {
-              context.read<ListStyleGetBloc>().add(const ActionRestarted());
+              context.read<CurrentListStyleGetBloc>().add(const ActionRestarted());
             }
           },
         ),
       ],
-      child: BlocBuilder<ListStyleGetBloc, ActionState<ListStyle>>(
+      child: BlocBuilder<CurrentListStyleGetBloc, ActionState<ListStyle>>(
         builder: (final context, final listStyleState) {
           final selectedStyle =
               (listStyleState is ActionSuccess<ListStyle, void>)
@@ -292,7 +292,7 @@ class ListDetailBuilder<
                   .toList(growable: false),
               selected: {selectedStyle},
               onSelectionChanged: (final newSelection) {
-                context.read<ListStyleSaveBloc>().add(
+                context.read<CurrentListStyleSaveBloc>().add(
                   ActionStarted(data: newSelection.first),
                 );
               },

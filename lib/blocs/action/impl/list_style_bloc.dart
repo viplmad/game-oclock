@@ -3,8 +3,8 @@ import 'package:game_oclock/services/services.dart' show ListStyleService;
 
 import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
-class ListStyleGetBloc extends ProducerActionBloc<ListStyle> {
-  ListStyleGetBloc({required this.service, required this.space});
+class CurrentListStyleGetBloc extends ProducerActionBloc<ListStyle> {
+  CurrentListStyleGetBloc({required this.service, required this.space});
 
   final ListStyleService service;
   final String space;
@@ -14,8 +14,8 @@ class ListStyleGetBloc extends ProducerActionBloc<ListStyle> {
       service.getCurrent(space);
 }
 
-class ListStyleSaveBloc extends ConsumerActionBloc<ListStyle?> {
-  ListStyleSaveBloc({required this.service, required this.space});
+class CurrentListStyleSaveBloc extends ConsumerActionBloc<ListStyle?> {
+  CurrentListStyleSaveBloc({required this.service, required this.space});
 
   final ListStyleService service;
   final String space;
