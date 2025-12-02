@@ -98,7 +98,7 @@ class LoginBuilder extends StatelessWidget {
                 context,
                 message: context.localize().loginSuccessfulLabel,
               );
-              GoRouter.of(context).go(CommonPaths.gamesPath);
+              GoRouter.of(context).go(CommonPaths.homePath);
             }
             if (state is ActionFailure<void, Login>) {
               showSnackBar(

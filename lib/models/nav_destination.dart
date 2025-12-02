@@ -4,11 +4,13 @@ final class NavDestination {
   final Widget icon;
   final String Function(BuildContext context) labelBuilder;
   final String path;
+  final String? guardRole;
 
   const NavDestination({
     required this.icon,
     required this.labelBuilder,
     required this.path,
+    this.guardRole,
   });
 }
 

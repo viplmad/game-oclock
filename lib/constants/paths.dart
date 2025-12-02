@@ -5,6 +5,7 @@ class CommonPaths {
 
   static const String loginPath = '/login';
 
+  static const String homePath = gamesPath;
   static const String gamesPath = '/games';
   static const String locationsPath = '/locations';
   static const String devicesPath = '/devices';

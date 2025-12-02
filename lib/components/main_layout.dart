@@ -4,7 +4,6 @@ import 'package:game_oclock/blocs/blocs.dart'
     show ActionState, ActionSuccess, MinimizedLayoutBloc;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
-import 'package:game_oclock/pages/destinations.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +33,7 @@ class MainLayoutBuilder extends StatelessWidget {
         final minimized = (minimizedState is ActionSuccess<bool, bool>)
             ? minimizedState.data
             : false;
+
         return layoutTier == LayoutTier.compact && minimized
             ? Scaffold(body: child)
             : Scaffold(
@@ -302,7 +302,7 @@ class _RouterNavigationRailState extends State<RouterNavigationRail> {
       trailingAtBottom: true,
       trailing: RouterTrailingNavigation(
         selectedPath: widget.selectedPath,
-        destinations: trailingDestinations,
+        destinations: widget.trailingDestinations,
       ),
       extended: extended,
       labelType: extended ? null : NavigationRailLabelType.all,
