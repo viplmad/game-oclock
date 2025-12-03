@@ -172,7 +172,8 @@ class ListFilterToolbar extends StatelessWidget {
       onTap: () async =>
           showModalBottomSheet<ListSearch>(
             context: context,
-            builder: (final context) => SearchListPage(space: space, currentSearch: search),
+            builder: (final context) =>
+                SearchListPage(space: space, currentSearch: search),
           ).then((final selectedSearch) {
             if (selectedSearch != null && context.mounted) {
               onSearchChanged(context, selectedSearch);
