@@ -13,6 +13,7 @@ import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show ListSearch, SearchFormData, gameFieldOptions, operatorOptions;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -28,7 +29,9 @@ class SearchCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) => SearchFormBloc(
             data: SearchFormData(
-              name: FormControl<String>(validators: [Validators.required]),
+              name: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               filters: FormArray([]),
             ),
           ),
@@ -68,7 +71,9 @@ class SearchEditForm extends StatelessWidget {
           create: (_) {
             return SearchFormBloc(
               data: SearchFormData(
-                name: FormControl<String>(validators: [Validators.required]),
+                name: FormControl<String>(
+                  validators: [NotEmptyValidator(context)],
+                ),
                 filters: FormArray([]),
               ),
             );
@@ -119,54 +124,59 @@ Widget _fieldsBuilder(
         builder: (final context, final formArray, final child) {
           return ReorderableTileList(
             readOnly: readOnly,
-            items: formArray.controls as List<FormGroup>,
+            items: formArray.controls,
             onReorder: (final oldIndex, final newIndex) {
               final temp = formArray.removeAt(oldIndex);
               formArray.insert(newIndex, temp);
             },
-            itemBuilder: (final context, final data, final index) => ListTile(
-              key: Key('${data.hashCode}'),
-              // TODO Missing chainOperator
-              title: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: SimpleSelectFormField(
-                      formControl:
-                          data.controls['field'] as FormControl<String>,
-                      label: context.localize().fieldLabel,
-                      options: gameFieldOptions,
+            itemBuilder: (final context, final data, final index) {
+              final formGroup = data as FormGroup;
+              return ListTile(
+                key: Key('${formGroup.hashCode}'),
+                // TODO Missing chainOperator
+                title: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: SimpleSelectFormField(
+                        formControl:
+                            formGroup.controls['field'] as FormControl<String>,
+                        label: context.localize().fieldLabel,
+                        options: gameFieldOptions,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SimpleSelectFormField(
-                      formControl:
-                          data.controls['operator'] as FormControl<String>,
-                      label: context.localize().operatorLabel,
-                      options: operatorOptions,
+                    Expanded(
+                      flex: 1,
+                      child: SimpleSelectFormField(
+                        formControl:
+                            formGroup.controls['operator']
+                                as FormControl<String>,
+                        label: context.localize().operatorLabel,
+                        options: operatorOptions,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              subtitle: SimpleTextFormField(
-                formControl: data.controls['value'] as FormControl<String>,
-                label: context.localize().valueLabel,
-                readOnly: readOnly,
-              ),
-              trailing: IconButton(
-                icon: CommonIcons.delete,
-                tooltip: context.localize().deleteLabel,
-                onPressed: () {
-                  formArray.removeAt(index);
-                },
-              ),
-            ),
+                  ],
+                ),
+                subtitle: SimpleTextFormField(
+                  formControl:
+                      formGroup.controls['value'] as FormControl<String>,
+                  label: context.localize().valueLabel,
+                  readOnly: readOnly,
+                ),
+                trailing: IconButton(
+                  icon: CommonIcons.delete,
+                  tooltip: context.localize().deleteLabel,
+                  onPressed: () {
+                    formArray.removeAt(index);
+                  },
+                ),
+              );
+            },
           );
         },
       ),
       TextButton.icon(
-        label: Text(context.localize().createLabel),
+        label: Text(context.localize().addFilterLabel),
         icon: CommonIcons.add,
         onPressed: () {
           formData.filters.add(

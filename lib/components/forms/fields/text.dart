@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -44,7 +45,9 @@ class SimpleTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         label: FormFieldLabel(
           text: label,
-          required: formControl.validators.contains(Validators.required),
+          required: formControl.validators.any(
+            (final validator) => validator is NotEmptyValidator,
+          ),
         ),
         hintText: hint,
         suffixIcon: readOnly

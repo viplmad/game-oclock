@@ -14,6 +14,7 @@ import 'package:game_oclock/models/models.dart'
     show GameAvailable, GameAvailableFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/location_selector.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -32,13 +33,15 @@ class GameAvailableCreateForm extends StatelessWidget {
             data: GameAvailableFormData(
               gameId: FormControl<String>(
                 value: gameId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               locationId: FormControl<String>(
                 value: locationId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
-              date: FormControl<DateTime>(validators: [Validators.required]),
+              date: FormControl<DateTime>(
+                validators: [NotEmptyValidator(context)],
+              ),
             ),
           ),
         ),

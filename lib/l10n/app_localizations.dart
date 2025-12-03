@@ -448,6 +448,12 @@ abstract class AppLocalizations {
   /// **'Back'**
   String get backLabel;
 
+  /// No description provided for @addFilterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add filter'**
+  String get addFilterLabel;
+
   /// No description provided for @createLabel.
   ///
   /// In en, this message translates to:

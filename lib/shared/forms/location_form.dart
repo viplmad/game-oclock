@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show Location, LocationFormData;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -27,7 +28,7 @@ class LocationCreateForm extends StatelessWidget {
             data: LocationFormData(
               name: FormControl<String>(
                 value: initialName,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
             ),
           ),
@@ -63,7 +64,9 @@ class LocationEditForm extends StatelessWidget {
         BlocProvider(
           create: (_) => LocationFormBloc(
             data: LocationFormData(
-              name: FormControl<String>(validators: [Validators.required]),
+              name: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
             ),
           ),
         ),

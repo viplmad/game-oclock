@@ -58,6 +58,7 @@
   "loginLabel": "Login",
   "detailLabel": "Detail",
   "backLabel": "Back",
+  "addFilterLabel": "Add filter",
   "createLabel": "Create",
   "editLabel": "Edit",
   "deleteLabel": "Delete",

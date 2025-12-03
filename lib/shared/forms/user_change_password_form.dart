@@ -6,6 +6,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show UserChangePassword, UserChangePasswordFormData;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -22,10 +23,10 @@ class UserChangePasswordForm extends StatelessWidget {
           create: (_) => UserChangePasswordFormBloc(
             data: UserChangePasswordFormData(
               currentPassword: FormControl<String>(
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               newPassword: FormControl<String>(
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               newPasswordConfirmation: FormControl<String>(),
             ),

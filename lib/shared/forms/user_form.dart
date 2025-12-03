@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show User, UserFormData;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -27,9 +28,11 @@ class UserCreateForm extends StatelessWidget {
             data: UserFormData(
               username: FormControl<String>(
                 value: initialName,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
-              password: FormControl<String>(validators: [Validators.required]),
+              password: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               passwordConfirmation: FormControl<String>(),
               admin: FormControl<bool>(),
             ),
@@ -61,7 +64,9 @@ class UserEditForm extends StatelessWidget {
         BlocProvider(
           create: (_) => UserFormBloc(
             data: UserFormData(
-              username: FormControl<String>(validators: [Validators.required]),
+              username: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               password: FormControl<String>(),
               passwordConfirmation: FormControl<String>(),
               admin: FormControl<bool>(),

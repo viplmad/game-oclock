@@ -13,6 +13,7 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show GameTag, GameTagFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/tag_selector.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -31,11 +32,11 @@ class GameTagCreateForm extends StatelessWidget {
             data: GameTagFormData(
               gameId: FormControl<String>(
                 value: gameId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               tagId: FormControl<String>(
                 value: tagId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
             ),
           ),

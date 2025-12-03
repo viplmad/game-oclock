@@ -15,6 +15,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/shared/selectors/device_selector.dart';
 import 'package:game_oclock/shared/selectors/game_playthrough_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -32,15 +33,17 @@ class GameSessionCreateForm extends StatelessWidget {
             data: GameSessionFormData(
               gameId: FormControl(
                 value: gameId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               startDateTime: FormControl<DateTime>(
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               endDateTime: FormControl<DateTime>(
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
-              deviceId: FormControl<String>(validators: [Validators.required]),
+              deviceId: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               playthroughId: FormControl<String>(),
               started: FormControl<bool>(),
               finished: FormControl<String>(),

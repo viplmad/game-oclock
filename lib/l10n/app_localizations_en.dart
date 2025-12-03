@@ -188,6 +188,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backLabel => 'Back';
 
   @override
+  String get addFilterLabel => 'Add filter';
+
+  @override
   String get createLabel => 'Create';
 
   @override

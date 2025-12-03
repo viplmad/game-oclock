@@ -5,6 +5,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart' show Tag, TagFormData;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -22,7 +23,7 @@ class TagCreateForm extends StatelessWidget {
             data: TagFormData(
               name: FormControl<String>(
                 value: initialName,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
             ),
           ),
@@ -51,7 +52,9 @@ class TagEditForm extends StatelessWidget {
         BlocProvider(
           create: (_) => TagFormBloc(
             data: TagFormData(
-              name: FormControl<String>(validators: [Validators.required]),
+              name: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
             ),
           ),
         ),

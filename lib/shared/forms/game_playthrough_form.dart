@@ -14,6 +14,7 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show GamePlaythrough, GamePlaythroughFormData;
 import 'package:game_oclock/shared/selectors/game_selector.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -32,11 +33,11 @@ class GamePlaythroughCreateForm extends StatelessWidget {
             data: GamePlaythroughFormData(
               gameId: FormControl<String>(
                 value: gameId,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               name: FormControl<String>(
                 value: initialName,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
             ),
           ),
@@ -84,7 +85,9 @@ class GamePlaythroughEditForm extends StatelessWidget {
           create: (_) => GamePlaythroughFormBloc(
             data: GamePlaythroughFormData(
               gameId: FormControl<String>(disabled: true),
-              name: FormControl<String>(validators: [Validators.required]),
+              name: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
             ),
           ),
         ),

@@ -14,6 +14,7 @@ import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart'
     show UserGame, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/shared/selectors/external_game_selector.dart';
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -31,11 +32,13 @@ class UserGameCreateForm extends StatelessWidget {
             data: UserGameFormData(
               title: FormControl<String>(
                 value: initialTitle,
-                validators: [Validators.required],
+                validators: [NotEmptyValidator(context)],
               ),
               edition: FormControl<String>(),
               releaseDate: FormControl<DateTime>(),
-              status: FormControl<String>(validators: [Validators.required]),
+              status: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               rating: FormControl<int>(),
               notes: FormControl<String>(),
               genres: FormArray<String>([]),
@@ -78,7 +81,9 @@ class UserGameEditForm extends StatelessWidget {
         BlocProvider(
           create: (_) => UserGameFormBloc(
             data: UserGameFormData(
-              title: FormControl<String>(validators: [Validators.required]),
+              title: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
               edition: FormControl<String>(),
               releaseDate: FormControl<DateTime>(),
               status: FormControl<String>(),

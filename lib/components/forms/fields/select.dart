@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show OptionTextField;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'common.dart';
@@ -30,7 +31,9 @@ class SimpleSelectFormField extends StatelessWidget {
         requestFocusOnTap: true,
         label: FormFieldLabel(
           text: label,
-          required: formControl.validators.contains(Validators.required),
+          required: formControl.validators.any(
+            (final validator) => validator is NotEmptyValidator,
+          ),
         ),
         trailingIcon: readOnly || formControl.isNotNullOrEmpty
             ? null

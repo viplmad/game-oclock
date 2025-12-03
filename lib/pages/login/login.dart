@@ -20,6 +20,7 @@ import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData, SavedLoginResponse;
+import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
@@ -36,9 +37,15 @@ class LoginPage extends StatelessWidget {
         BlocProvider(
           create: (_) => LoginFormBloc(
             data: LoginFormData(
-              host: FormControl<String>(validators: [Validators.required]),
-              username: FormControl<String>(validators: [Validators.required]),
-              password: FormControl<String>(validators: [Validators.required]),
+              host: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
+              username: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
+              password: FormControl<String>(
+                validators: [NotEmptyValidator(context)],
+              ),
             ),
           ),
         ),
