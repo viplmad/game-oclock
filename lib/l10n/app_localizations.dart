@@ -448,11 +448,11 @@ abstract class AppLocalizations {
   /// **'Back'**
   String get backLabel;
 
-  /// No description provided for @addLabel.
+  /// No description provided for @createLabel.
   ///
   /// In en, this message translates to:
-  /// **'Add'**
-  String get addLabel;
+  /// **'Create'**
+  String get createLabel;
 
   /// No description provided for @editLabel.
   ///
@@ -862,11 +862,11 @@ abstract class AppLocalizations {
   /// **'Deleted successfully'**
   String get deletedSuccessfullyLabel;
 
-  /// No description provided for @unableToDeleteDataLabel.
+  /// No description provided for @unableToDeleteLabel.
   ///
   /// In en, this message translates to:
-  /// **'Unable to delete - {data}'**
-  String unableToDeleteDataLabel(Object data);
+  /// **'Unable to delete'**
+  String get unableToDeleteLabel;
 
   /// No description provided for @createdSuccessfullyLabel.
   ///
@@ -874,11 +874,11 @@ abstract class AppLocalizations {
   /// **'Created successfully'**
   String get createdSuccessfullyLabel;
 
-  /// No description provided for @unableToCreateDataLabel.
+  /// No description provided for @unableToCreateLabel.
   ///
   /// In en, this message translates to:
-  /// **'Unable to create - {data}'**
-  String unableToCreateDataLabel(Object data);
+  /// **'Unable to create'**
+  String get unableToCreateLabel;
 
   /// No description provided for @updatedSuccessfullyLabel.
   ///
@@ -886,11 +886,11 @@ abstract class AppLocalizations {
   /// **'Updated successfully'**
   String get updatedSuccessfullyLabel;
 
-  /// No description provided for @unableToUpdateDataLabel.
+  /// No description provided for @unableToUpdateLabel.
   ///
   /// In en, this message translates to:
-  /// **'Unable to update - {data}'**
-  String unableToUpdateDataLabel(Object data);
+  /// **'Unable to update'**
+  String get unableToUpdateLabel;
 
   /// No description provided for @loginSuccessfulLabel.
   ///
@@ -898,11 +898,23 @@ abstract class AppLocalizations {
   /// **'Login successful'**
   String get loginSuccessfulLabel;
 
-  /// No description provided for @unableToLoginDataLabel.
+  /// No description provided for @unableToLoginLabel.
   ///
   /// In en, this message translates to:
-  /// **'Unable to login - {data}'**
-  String unableToLoginDataLabel(Object data);
+  /// **'Unable to login'**
+  String get unableToLoginLabel;
+
+  /// No description provided for @unableToLoadListLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load list'**
+  String get unableToLoadListLabel;
+
+  /// No description provided for @unableToLoadDetailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load detail'**
+  String get unableToLoadDetailLabel;
 
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///
@@ -916,11 +928,23 @@ abstract class AppLocalizations {
   /// **'There are unsaved changes.'**
   String get leaveDirtyFormConfirmationDialogSubtitle;
 
+  /// No description provided for @errorCopiedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Error copied'**
+  String get errorCopiedText;
+
   /// No description provided for @gameEditionDataTitle.
   ///
   /// In en, this message translates to:
   /// **'{aTitle} - {bEdition}'**
   String gameEditionDataTitle(Object aTitle, Object bEdition);
+
+  /// No description provided for @errorCodeNameDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{aCode}: {aName}'**
+  String errorCodeNameDataTitle(Object aCode, Object aName);
 
   /// No description provided for @createNewDataLabel.
   ///

@@ -39,7 +39,7 @@ class SearchTextField extends StatelessWidget {
           children: [
             if (onAddPressed != null && controller.text.isNotEmpty)
               IconButton(
-                tooltip: context.localize().addLabel,
+                tooltip: context.localize().createLabel,
                 icon: CommonIcons.addInline,
                 onPressed: () => onAddPressed!(controller.text),
               ),

@@ -4,10 +4,11 @@ import 'package:game_oclock/blocs/blocs.dart'
     show ListReloaded, ListSearchChanged, SearchListBloc;
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/components/show_form_dialog.dart';
+import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 
 import 'search_form.dart';
 
@@ -22,7 +23,40 @@ class SearchListPage extends StatelessWidget {
       create: (_) =>
           SearchListBloc(service: RepositoryProvider.of(context), space: space)
             ..add(ListSearchChanged(search: SearchDTO())),
-      // TODO create button
+      child: _SearchListBuilder(space: space),
+    );
+  }
+}
+
+class _SearchListBuilder extends StatelessWidget {
+  const _SearchListBuilder({required this.space});
+
+  final String space;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListLayout(
+      toolbar: ListToolbar(
+        actions: [
+          IconButton(
+            icon: CommonIcons.add,
+            tooltip: context.localize().createLabel,
+            onPressed: () async => showFormDialog<ListSearch>(
+              context,
+              builder: (final context) => SearchCreateForm(space: space),
+              onSuccess: (final context, _) =>
+                  context.read<SearchListBloc>().add(const ListReloaded()),
+            ),
+          ),
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () =>
+                context.read<SearchListBloc>().add(const ListReloaded()),
+          ),
+        ],
+      ),
+      statusbar: const ListTotalStatusbarBuilder<ListSearch, SearchListBloc>(),
       child: GridListBuilder<ListSearch, SearchListBloc>(
         itemAspectRatio: 3.5,
         columns: (MediaQuery.sizeOf(context).width / 600).ceil(),

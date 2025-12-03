@@ -17,9 +17,6 @@ import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list_detail.dart';
-import 'package:game_oclock/components/show_confirmation_dialog.dart';
-import 'package:game_oclock/components/show_form_dialog.dart';
-import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
@@ -30,6 +27,9 @@ import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_confirmation_dialog.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:go_router/go_router.dart';
 
 class LocationDetailPage extends StatelessWidget {
@@ -134,11 +134,10 @@ class LocationDetail extends StatelessWidget {
           onDeleteSucceeded(context);
         }
         if (state is ActionFailure<void, Location>) {
-          showSnackBar(
+          showErrorSnackBar(
             context,
-            message: context.localize().unableToDeleteDataLabel(
-              state.error.message,
-            ),
+            name: context.localize().unableToDeleteLabel,
+            error: state.error,
           );
         }
       },

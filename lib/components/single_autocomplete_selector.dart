@@ -60,7 +60,7 @@ class SingleAutocompleteSelectorBuilder<
               suffixIcons: [
                 if (onAddPressed != null && formControl.isNotNullOrEmpty)
                   IconButton(
-                    tooltip: context.localize().addLabel,
+                    tooltip: context.localize().createLabel,
                     icon: CommonIcons.addInline,
                     onPressed: () => onAddPressed!(
                       formControl.value!,

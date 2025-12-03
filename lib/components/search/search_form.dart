@@ -166,7 +166,7 @@ Widget _fieldsBuilder(
         },
       ),
       TextButton.icon(
-        label: Text(context.localize().addLabel),
+        label: Text(context.localize().createLabel),
         icon: CommonIcons.add,
         onPressed: () {
           formData.filters.add(

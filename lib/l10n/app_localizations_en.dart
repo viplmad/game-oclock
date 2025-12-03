@@ -188,7 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backLabel => 'Back';
 
   @override
-  String get addLabel => 'Add';
+  String get createLabel => 'Create';
 
   @override
   String get editLabel => 'Edit';
@@ -427,33 +427,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletedSuccessfullyLabel => 'Deleted successfully';
 
   @override
-  String unableToDeleteDataLabel(Object data) {
-    return 'Unable to delete - $data';
-  }
+  String get unableToDeleteLabel => 'Unable to delete';
 
   @override
   String get createdSuccessfullyLabel => 'Created successfully';
 
   @override
-  String unableToCreateDataLabel(Object data) {
-    return 'Unable to create - $data';
-  }
+  String get unableToCreateLabel => 'Unable to create';
 
   @override
   String get updatedSuccessfullyLabel => 'Updated successfully';
 
   @override
-  String unableToUpdateDataLabel(Object data) {
-    return 'Unable to update - $data';
-  }
+  String get unableToUpdateLabel => 'Unable to update';
 
   @override
   String get loginSuccessfulLabel => 'Login successful';
 
   @override
-  String unableToLoginDataLabel(Object data) {
-    return 'Unable to login - $data';
-  }
+  String get unableToLoginLabel => 'Unable to login';
+
+  @override
+  String get unableToLoadListLabel => 'Unable to load list';
+
+  @override
+  String get unableToLoadDetailLabel => 'Unable to load detail';
 
   @override
   String get leaveDirtyFormConfirmationDialogTitle =>
@@ -464,8 +462,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'There are unsaved changes.';
 
   @override
+  String get errorCopiedText => 'Error copied';
+
+  @override
   String gameEditionDataTitle(Object aTitle, Object bEdition) {
     return '$aTitle - $bEdition';
+  }
+
+  @override
+  String errorCodeNameDataTitle(Object aCode, Object aName) {
+    return '$aCode: $aName';
   }
 
   @override

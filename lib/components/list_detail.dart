@@ -17,7 +17,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListSearchChanged,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/toolbar.dart';
-import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
@@ -31,6 +30,7 @@ import 'package:game_oclock/models/models.dart'
         defaultListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 
 import 'full_search_app_bar.dart';
 import 'list/grid_list.dart';
@@ -381,7 +381,7 @@ class ListCreateDetailBuilder<
             context.read<LB>().add(const ListReloaded()),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: context.localize().addLabel,
+        tooltip: context.localize().createLabel,
         onPressed: () async => showFormDialog<T>(
           context,
           builder: (final context) => createFormBuilder(),

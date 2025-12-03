@@ -11,9 +11,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGetBloc;
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
-import 'package:game_oclock/components/show_confirmation_dialog.dart';
-import 'package:game_oclock/components/show_form_dialog.dart';
-import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
@@ -21,6 +18,9 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/shared/forms/user_form.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_confirmation_dialog.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:go_router/go_router.dart';
 
 class UserDetailPage extends StatelessWidget {
@@ -100,11 +100,10 @@ class UserDetail extends StatelessWidget {
           onDeleteSucceeded(context);
         }
         if (state is ActionFailure<void, User>) {
-          showSnackBar(
+          showErrorSnackBar(
             context,
-            message: context.localize().unableToDeleteDataLabel(
-              state.error.message,
-            ),
+            name: context.localize().unableToDeleteLabel,
+            error: state.error,
           );
         }
       },

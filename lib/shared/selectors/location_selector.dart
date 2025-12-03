@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart' show LocationListBloc;
-import 'package:game_oclock/components/show_form_dialog.dart';
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Location;
 import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/list_item/location_list_item.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class LocationSelectorBuilder extends StatelessWidget {

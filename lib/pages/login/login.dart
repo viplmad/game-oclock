@@ -17,12 +17,12 @@ import 'package:game_oclock/blocs/blocs.dart'
         LoginFormBloc;
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
-import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, Login, LoginFormData, SavedLoginResponse;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -99,11 +99,10 @@ class LoginBuilder extends StatelessWidget {
               GoRouter.of(context).go(CommonPaths.homePath);
             }
             if (state is ActionFailure<void, Login>) {
-              showSnackBar(
+              showErrorSnackBar(
                 context,
-                message: context.localize().unableToLoginDataLabel(
-                  state.error.message,
-                ),
+                name: context.localize().unableToLoginLabel,
+                error: state.error,
               );
             }
           },

@@ -15,6 +15,7 @@ import 'package:game_oclock/components/skeletons/skeletons.dart'
 import 'package:game_oclock/models/models.dart'
     show TabDestination, UnreachableError;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 
 class Detail extends StatelessWidget {
   const Detail({
@@ -166,7 +167,16 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<GB, ActionState<T>>(
+    return BlocConsumer<GB, ActionState<T>>(
+      listener: (final context, final state) {
+        if (state is ActionFailure<T, String>) {
+          showErrorSnackBar(
+            context,
+            name: context.localize().unableToLoadDetailLabel,
+            error: state.error,
+          );
+        }
+      },
       builder: (final context, final state) {
         T data;
         if (state is ActionInProgress<T>) {

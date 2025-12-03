@@ -14,6 +14,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 
 class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
@@ -122,7 +123,16 @@ abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
   Widget build(final BuildContext context) {
     final ScrollController controller = this.controller ?? ScrollController();
 
-    return BlocBuilder<LB, ListState<T>>(
+    return BlocConsumer<LB, ListState<T>>(
+      listener: (final context, final state) {
+        if (state is ListLoadFailure<T>) {
+          showErrorSnackBar(
+            context,
+            name: context.localize().unableToLoadListLabel,
+            error: state.error,
+          );
+        }
+      },
       builder: (final context, final state) {
         return Scrollbar(
           child: list(context, state: state, controller: controller),

@@ -15,7 +15,6 @@ import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
-import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
@@ -23,6 +22,7 @@ import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/list_extension.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 
 class CalendarListDetailBuilder<
   T,

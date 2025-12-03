@@ -308,26 +308,23 @@ class ListFilterToolbar extends StatelessWidget {
   }
 }
 
-class ListButtonToolbar extends StatelessWidget {
-  const ListButtonToolbar({
-    super.key,
-    required this.label,
-    required this.icon,
-    required this.onTap,
-  });
+class ListToolbar extends StatelessWidget {
+  const ListToolbar({super.key, required this.actions});
 
-  final String label;
-  final Widget icon;
-  final VoidCallback? onTap;
+  final List<Widget> actions;
 
   @override
   Widget build(final BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      child: ElevatedButton.icon(
-        label: Text(label),
-        icon: icon,
-        onPressed: onTap,
+      height: kMinInteractiveDimension,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(end: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: actions,
+        ),
       ),
     );
   }

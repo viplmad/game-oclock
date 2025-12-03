@@ -18,10 +18,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         IdentityActionBloc;
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
-import 'package:game_oclock/components/show_snackbar.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class CreateFormBuilder<
@@ -61,11 +61,10 @@ class CreateFormBuilder<
               Navigator.pop(context, state.data);
             }
             if (state is ActionFailure<T, T>) {
-              showSnackBar(
+              showErrorSnackBar(
                 context,
-                message: context.localize().unableToCreateDataLabel(
-                  state.error.message,
-                ),
+                name: context.localize().unableToCreateLabel,
+                error: state.error,
               );
             }
           },
@@ -136,11 +135,10 @@ class EditFormBuilder<
               Navigator.pop(context, state.event);
             }
             if (state is ActionFailure<T, T>) {
-              showSnackBar(
+              showErrorSnackBar(
                 context,
-                message: context.localize().unableToUpdateDataLabel(
-                  state.error.message,
-                ),
+                name: context.localize().unableToUpdateLabel,
+                error: state.error,
               );
             }
           },

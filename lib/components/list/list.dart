@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListState;
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 
 int countWithTrailing(final List items, final Widget? trailing) =>
     items.length + (trailing == null ? 0 : 1);
@@ -33,7 +34,16 @@ abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
     final ScrollController controller = this.controller ?? ScrollController();
     controller.addListener(_paginateListener(context, controller));
 
-    return BlocBuilder<LB, ListState<T>>(
+    return BlocConsumer<LB, ListState<T>>(
+      listener: (final context, final state) {
+        if (state is ListLoadFailure<T>) {
+          showErrorSnackBar(
+            context,
+            name: context.localize().unableToLoadListLabel,
+            error: state.error,
+          );
+        }
+      },
       builder: (final context, final state) => Scrollbar(
         controller: controller,
         child: _list(context, state: state, controller: controller),
