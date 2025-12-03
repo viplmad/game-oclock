@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocationSelectBloc,
         UserGameAvailableListBloc;
 import 'package:game_oclock/components/list_detail.dart';
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart' show ListStyle, Location;
 import 'package:game_oclock/shared/forms/location_form.dart';
 import 'package:game_oclock/shared/list_item/location_list_item.dart';
@@ -20,7 +21,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'location_detail.dart';
 
-const String _space = 'location';
+const String _space = CommonSpaces.location;
 
 class LocationListPage extends StatelessWidget {
   const LocationListPage({super.key});

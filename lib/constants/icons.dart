@@ -35,7 +35,8 @@ class CommonIcons {
   static const dark = Icon(Icons.dark_mode);
   static const language = Icon(Icons.language);
   static const admin = Icon(Icons.shield);
-  static Icon star(final Color? color) => Icon(Icons.star, color: color);
+  static const star = Icon(Icons.star);
+  static Icon colorStar(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);
   static const wishlists = Icon(Icons.shopping_bag);

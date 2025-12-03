@@ -1,3 +1,4 @@
+import 'package:game_oclock/blocs/default_search.dart';
 import 'package:game_oclock/models/models.dart'
     show
         GameOClockException,
@@ -20,11 +21,17 @@ class SearchListBloc extends ListLoadBloc<ListSearch> {
     final SearchDTO search,
     final String? quicksearch,
   ) async {
+    final data = await getAllOrEmpty();
+    final defaultData = defaultListSearch[space] ?? [];
+    return PageResultDTO(data: [...defaultData, ...data]);
+  }
+
+  Future<List<ListSearch>> getAllOrEmpty() async {
     try {
-      return PageResultDTO(data: await service.getAll(space));
+      return await service.getAll(space);
     } on GameOClockException catch (e) {
       if (e.code == errorCodeNotFound) {
-        return PageResultDTO();
+        return [];
       }
       rethrow;
     }

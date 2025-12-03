@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         TagSelectBloc,
         UserGameWithTagListBloc;
 import 'package:game_oclock/components/list_detail.dart';
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart' show ListStyle, Tag;
 import 'package:game_oclock/shared/forms/tag_form.dart';
 import 'package:game_oclock/shared/list_item/tag_list_item.dart';
@@ -20,7 +21,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'tag_detail.dart';
 
-const String _space = 'tag';
+const String _space = CommonSpaces.tag;
 
 class TagListPage extends StatelessWidget {
   const TagListPage({super.key});

@@ -5,12 +5,14 @@ import 'models.dart' show SearchDTO;
 final class ListSearch extends Equatable {
   final String id;
   final String name;
+  final bool internal;
   final SearchDTO search;
 
   ListSearch.def() : this(id: '-1', name: '-', search: SearchDTO());
   const ListSearch({
     required this.id,
     required this.name,
+    this.internal = false,
     required this.search,
   });
 

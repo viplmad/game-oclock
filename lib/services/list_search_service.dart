@@ -39,20 +39,12 @@ class ListSearchService {
     return result;
   }
 
-  Future<ListSearch> getCurrent(final String space) async {
-    final currentKey = await repository.getString(_buildCurrentKey(space));
-    return get(space, currentKey);
+  Future<String> getCurrentKey(final String space) {
+    return repository.getString(_buildCurrentKey(space));
   }
 
-  Future<void> saveCurrent(final String space, final ListSearch search) async {
+  Future<void> saveCurrent(final String space, final ListSearch search) {
     final id = search.id;
-    if (!await exists(space, id)) {
-      throw GameOClockException(
-        code: errorCodeNotFound,
-        message: 'ListSearch with id $id not found',
-      );
-    }
-
     return repository.setString(_buildCurrentKey(space), id);
   }
 
@@ -68,7 +60,7 @@ class ListSearchService {
   }
 
   Future<ListSearch> create(final String space, final ListSearch search) async {
-    final id = Random().nextInt(100).toString();
+    final id = 'user-${Random().nextInt(100)}';
     if (await exists(space, id)) {
       throw GameOClockException(
         code: errorCodeAlreadyExists,

@@ -292,6 +292,30 @@ abstract class AppLocalizations {
   /// **'Value'**
   String get valueLabel;
 
+  /// No description provided for @selectedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selectedLabel;
+
+  /// No description provided for @predefinedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in'**
+  String get predefinedLabel;
+
+  /// No description provided for @addedDatetimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Added Date'**
+  String get addedDatetimeLabel;
+
+  /// No description provided for @updatedDatetimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated Date'**
+  String get updatedDatetimeLabel;
+
   /// No description provided for @idLabel.
   ///
   /// In en, this message translates to:

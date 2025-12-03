@@ -1,4 +1,6 @@
-import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:game_oclock/blocs/default_search.dart';
+import 'package:game_oclock/models/models.dart'
+    show GameOClockException, ListSearch, errorCodeNotFound;
 import 'package:game_oclock/services/services.dart' show ListSearchService;
 
 import '../action.dart'
@@ -9,14 +11,41 @@ import '../action.dart'
         ProducerActionBloc;
 
 class CurrentListSearchGetBloc extends ProducerActionBloc<ListSearch> {
-  CurrentListSearchGetBloc({required this.service, required this.space});
+  CurrentListSearchGetBloc({
+    required this.service,
+    required this.space,
+    this.defaultId,
+  });
 
   final ListSearchService service;
   final String space;
+  final String? defaultId;
 
   @override
-  Future<ListSearch> doAction(final void event, final ListSearch? lastData) =>
-      service.getCurrent(space);
+  Future<ListSearch> doAction(
+    final void event,
+    final ListSearch? lastData,
+  ) async {
+    final currentId = await getOrDefault();
+    try {
+      return defaultListSearch[space]!.firstWhere(
+        (final element) => element.id == currentId,
+      );
+    } on StateError {
+      return service.get(space, currentId);
+    }
+  }
+
+  Future<String> getOrDefault() async {
+    try {
+      return await service.getCurrentKey(space);
+    } on GameOClockException catch (e) {
+      if (e.code == errorCodeNotFound && defaultId != null) {
+        return defaultId!;
+      }
+      rethrow;
+    }
+  }
 }
 
 class CurrentListSearchSaveBloc extends ConsumerActionBloc<ListSearch?> {

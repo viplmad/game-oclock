@@ -12,6 +12,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserListBloc,
         UserSelectBloc;
 import 'package:game_oclock/components/list_detail.dart';
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart' show ListStyle, User;
 import 'package:game_oclock/shared/forms/user_form.dart';
 import 'package:game_oclock/shared/list_item/user_list_item.dart';
@@ -19,7 +20,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'user_detail.dart';
 
-const String _space = 'user';
+const String _space = CommonSpaces.user;
 
 class UserListPage extends StatelessWidget {
   const UserListPage({super.key});

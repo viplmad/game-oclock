@@ -23,7 +23,7 @@ class RatingLabel extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CommonIcons.star(color),
+                CommonIcons.colorStar(color),
                 Text(
                   value!.toString(),
                   style: Theme.of(context).textTheme.bodyLarge,

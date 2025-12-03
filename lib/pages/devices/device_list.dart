@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListReloaded,
         UserGamePlayedOnDeviceListBloc;
 import 'package:game_oclock/components/list_detail.dart';
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart' show Device, ListStyle;
 import 'package:game_oclock/shared/forms/device_form.dart';
 import 'package:game_oclock/shared/list_item/device_list_item.dart';
@@ -20,7 +21,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'device_detail.dart';
 
-const String _space = 'device';
+const String _space = CommonSpaces.device;
 
 class DeviceListPage extends StatelessWidget {
   const DeviceListPage({super.key});

@@ -13,9 +13,14 @@ import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'search_form.dart';
 
 class SearchListPage extends StatelessWidget {
-  const SearchListPage({super.key, required this.space});
+  const SearchListPage({
+    super.key,
+    required this.space,
+    required this.currentSearch,
+  });
 
   final String space;
+  final ListSearch currentSearch;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,15 +28,16 @@ class SearchListPage extends StatelessWidget {
       create: (_) =>
           SearchListBloc(service: RepositoryProvider.of(context), space: space)
             ..add(ListSearchChanged(search: SearchDTO())),
-      child: _SearchListBuilder(space: space),
+      child: _SearchListBuilder(space: space, currentSearch: currentSearch),
     );
   }
 }
 
 class _SearchListBuilder extends StatelessWidget {
-  const _SearchListBuilder({required this.space});
+  const _SearchListBuilder({required this.space, required this.currentSearch});
 
   final String space;
+  final ListSearch currentSearch;
 
   @override
   Widget build(final BuildContext context) {
@@ -64,6 +70,7 @@ class _SearchListBuilder extends StatelessWidget {
             SearchGridListItem(
               space: space,
               data: data,
+              selected: currentSearch.id == data.id,
               onTap: () => Navigator.pop(context, data),
             ),
       ),
@@ -76,11 +83,13 @@ class SearchGridListItem extends StatelessWidget {
     super.key,
     required this.space,
     required this.data,
+    required this.selected,
     required this.onTap,
   });
 
   final String space;
   final ListSearch data;
+  final bool selected;
   final VoidCallback onTap;
 
   @override
@@ -89,16 +98,33 @@ class SearchGridListItem extends StatelessWidget {
       hasImage: false,
       title: data.name,
       onTap: onTap,
-      trailing: IconButton(
-        icon: CommonIcons.edit,
-        tooltip: context.localize().editLabel,
-        onPressed: () async => showFormDialog<ListSearch>(
-          context,
-          builder: (final context) =>
-              SearchEditForm(space: space, name: data.name),
-          onSuccess: (final context, _) =>
-              context.read<SearchListBloc>().add(const ListReloaded()),
-        ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (selected)
+            Tooltip(
+              message: context.localize().selectedLabel,
+              child: CommonIcons.yes,
+            ),
+          if (data.internal)
+            Tooltip(
+              message: context.localize().predefinedLabel,
+              child: CommonIcons.star,
+            ),
+          if (!data.internal)
+            IconButton(
+              icon: CommonIcons.edit,
+              tooltip: context.localize().editLabel,
+              onPressed: () async => showFormDialog<ListSearch>(
+                context,
+                builder: (final context) =>
+                    SearchEditForm(space: space, name: data.name),
+                onSuccess: (final context, _) =>
+                    context.read<SearchListBloc>().add(const ListReloaded()),
+              ),
+            ),
+        ],
       ),
     );
   }

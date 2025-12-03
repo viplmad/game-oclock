@@ -110,6 +110,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get valueLabel => 'Value';
 
   @override
+  String get selectedLabel => 'Selected';
+
+  @override
+  String get predefinedLabel => 'Built-in';
+
+  @override
+  String get addedDatetimeLabel => 'Added Date';
+
+  @override
+  String get updatedDatetimeLabel => 'Updated Date';
+
+  @override
   String get idLabel => 'Id';
 
   @override

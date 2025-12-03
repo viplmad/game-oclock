@@ -4,49 +4,82 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'nav_destination.dart';
 
-final List<OptionTextField<String>> gameFieldOptions =
-    List.unmodifiable(<OptionTextField<String>>[
-      OptionTextField(
-        value: 'id',
-        labelBuilder: (final context) => context.localize().idLabel,
-      ),
-      OptionTextField(
-        value: 'title',
-        labelBuilder: (final context) => context.localize().titleLabel,
-      ),
-      OptionTextField(
-        value: 'edition',
-        labelBuilder: (final context) => context.localize().editionLabel,
-      ),
-    ]);
+final idField = OptionTextField(
+  value: 'id',
+  labelBuilder: (final context) => context.localize().idLabel,
+);
+
+final titleField = OptionTextField(
+  value: 'title',
+  labelBuilder: (final context) => context.localize().titleLabel,
+);
+
+final editionField = OptionTextField(
+  value: 'edition',
+  labelBuilder: (final context) => context.localize().editionLabel,
+);
+
+final releaseDateField = OptionTextField(
+  value: 'releaseDate',
+  labelBuilder: (final context) => context.localize().editionLabel,
+);
+
+final statusField = OptionTextField(
+  value: 'status',
+  labelBuilder: (final context) => context.localize().statusLabel,
+);
+
+final addedDatetimeField = OptionTextField(
+  value: 'addedDatetime',
+  labelBuilder: (final context) => context.localize().addedDatetimeLabel,
+);
+
+final updatedDatetimeField = OptionTextField(
+  value: 'updatedDatetime',
+  labelBuilder: (final context) => context.localize().updatedDatetimeLabel,
+);
+
+final gameStatusWishlist = OptionTextField(
+  value: 'wishlist',
+  labelBuilder: (final context) => context.localize().wishlistLabel,
+  color: CommonColors.wishlistColor,
+);
+
+final gameStatusLowPriorty = OptionTextField(
+  value: 'lowPriorty',
+  labelBuilder: (final context) => context.localize().lowPriorityLabel,
+  color: CommonColors.lowPriorityColor,
+);
+
+final gameStatusNextUp = OptionTextField(
+  value: 'nextUp',
+  labelBuilder: (final context) => context.localize().nextUpLabel,
+  color: CommonColors.nextUpColor,
+);
+
+final gameStatusPlaying = OptionTextField(
+  value: 'playing',
+  labelBuilder: (final context) => context.localize().playingLabel,
+  color: CommonColors.playingColor,
+);
+
+final gameStatusPlayed = OptionTextField(
+  value: 'played',
+  labelBuilder: (final context) => context.localize().playedLabel,
+  color: CommonColors.playedColor,
+);
+
+final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
+  <OptionTextField<String>>[idField, titleField, editionField, statusField],
+);
 
 final List<OptionTextField<String>> gameStatusOptions =
     List.unmodifiable(<OptionTextField<String>>[
-      OptionTextField(
-        value: 'wishlist',
-        labelBuilder: (final context) => context.localize().wishlistLabel,
-        color: CommonColors.wishlistColor,
-      ),
-      OptionTextField(
-        value: 'lowPriorty',
-        labelBuilder: (final context) => context.localize().lowPriorityLabel,
-        color: CommonColors.lowPriorityColor,
-      ),
-      OptionTextField(
-        value: 'nextUp',
-        labelBuilder: (final context) => context.localize().nextUpLabel,
-        color: CommonColors.nextUpColor,
-      ),
-      OptionTextField(
-        value: 'playing',
-        labelBuilder: (final context) => context.localize().playingLabel,
-        color: CommonColors.playingColor,
-      ),
-      OptionTextField(
-        value: 'played',
-        labelBuilder: (final context) => context.localize().playedLabel,
-        color: CommonColors.playedColor,
-      ),
+      gameStatusWishlist,
+      gameStatusLowPriorty,
+      gameStatusNextUp,
+      gameStatusPlaying,
+      gameStatusPlayed,
     ]);
 
 final List<OptionTextField<String>> gameSessionFinishedOptions =

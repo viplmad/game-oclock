@@ -16,6 +16,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameSelectBloc;
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart' show ListStyle, UserGame;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
@@ -23,7 +24,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 
 import 'game_detail.dart';
 
-const String _space = 'game';
+const String _space = CommonSpaces.game;
 
 class UserGameListPage extends StatelessWidget {
   const UserGameListPage({super.key});
@@ -41,6 +42,7 @@ class UserGameListPage extends StatelessWidget {
           create: (_) => CurrentListSearchGetBloc(
             service: RepositoryProvider.of(context),
             space: _space,
+            defaultId: 'main',
           )..add(ActionStarted.empty()),
         ),
         BlocProvider(
