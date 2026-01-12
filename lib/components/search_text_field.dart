@@ -3,7 +3,7 @@ import 'package:game_oclock/components/forms/fields/common.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-class SearchTextField extends StatelessWidget {
+class SearchTextField extends StatefulWidget {
   const SearchTextField({
     super.key,
     required this.controller,
@@ -20,34 +20,40 @@ class SearchTextField extends StatelessWidget {
   final ValueChanged<String>? onAddPressed;
 
   @override
+  State<SearchTextField> createState() => _SearchTextFieldState();
+}
+
+class _SearchTextFieldState extends State<SearchTextField> {
+  @override
   Widget build(final BuildContext context) {
     return TextField(
       autofocus: true,
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
         hintText: context.localize().searchLabel,
-        prefixIcon: onDismissed == null
+        prefixIcon: widget.onDismissed == null
             ? null
             : IconButton(
                 tooltip: context.localize().backLabel,
                 icon: CommonIcons.back,
-                onPressed: () => onDismissed!(),
+                onPressed: () => widget.onDismissed!(),
               ),
         suffixIcon: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (onAddPressed != null && controller.text.isNotEmpty)
+            if (widget.onAddPressed != null &&
+                widget.controller.text.isNotEmpty)
               IconButton(
                 tooltip: context.localize().createLabel,
                 icon: CommonIcons.addInline,
-                onPressed: () => onAddPressed!(controller.text),
+                onPressed: () => widget.onAddPressed!(widget.controller.text),
               ),
             ClearIconButton(
               onTap: () {
-                controller.clear();
-                onCleared?.call();
-                onSearchChanged(null);
+                widget.controller.clear();
+                widget.onCleared?.call();
+                widget.onSearchChanged(null);
               },
             ),
           ],
@@ -55,7 +61,8 @@ class SearchTextField extends StatelessWidget {
         border: const OutlineInputBorder(),
       ),
       onChanged: (final value) {
-        onSearchChanged(value);
+        widget.onSearchChanged(value);
+        setState(() {});
       },
     );
   }

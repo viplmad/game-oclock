@@ -91,6 +91,29 @@ class GameService {
     return 500;
   }
 
+  Future<PageResultDTO<UserGame>> searchWithPlaythrough(
+    final String playthroughId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return mockPageResult(
+      search: search,
+      quicksearch: quicksearch,
+      builder: (final index) =>
+          mockUserGame(title: 'title $playthroughId ($quicksearch) $index'),
+    );
+  }
+
+  Future<int> countWithPlaythrough(
+    final String playthroughId,
+    final SearchDTO search,
+    final String? quicksearch,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return 500;
+  }
+
   Future<void> addAvailability(
     final String gameId,
     final String locationId,
@@ -100,6 +123,13 @@ class GameService {
   }
 
   Future<void> addTag(final String gameId, final String tagId) async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> addPlaythrough(
+    final String gameId,
+    final String playthroughId,
+  ) async {
     await Future.delayed(const Duration(seconds: 1));
   }
 

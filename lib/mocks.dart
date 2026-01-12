@@ -69,8 +69,8 @@ Device mockDevice({final String? name}) {
   );
 }
 
-GamePlaythrough mockGamePlaythrough({final String? name}) {
-  return GamePlaythrough(id: mockId(), gameId: mockId(), name: name ?? 'name');
+Playthrough mockPlaythrough({final String? name}) {
+  return Playthrough(id: mockId(), name: name ?? 'name');
 }
 
 GameSession mockGameSession({final String? name}) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show DeviceListBloc;
+import 'package:game_oclock/blocs/blocs.dart'
+    show DeviceGetBloc, DeviceListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Device;
 import 'package:game_oclock/shared/forms/device_form.dart';
@@ -21,7 +22,11 @@ class DeviceSelectorBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return SingleAutocompleteSelectorBuilder<Device, DeviceListBloc>(
+    return SingleAutocompleteSelectorBuilder<
+      Device,
+      DeviceGetBloc,
+      DeviceListBloc
+    >(
       formControl: formControl,
       label: label,
       readOnly: readOnly,

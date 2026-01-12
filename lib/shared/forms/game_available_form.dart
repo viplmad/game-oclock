@@ -5,8 +5,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         GameAvailableCreateBloc,
         GameAvailableFormBloc,
         LocationCreateBloc,
+        LocationGetBloc,
         LocationListBloc,
         UserGameCreateBloc,
+        UserGameGetBloc,
         UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
@@ -52,6 +54,10 @@ class GameAvailableCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
+              UserGameGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
               UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
@@ -59,6 +65,10 @@ class GameAvailableCreateForm extends StatelessWidget {
               UserGameCreateBloc(service: RepositoryProvider.of(context)),
         ),
 
+        BlocProvider(
+          create: (_) =>
+              LocationGetBloc(service: RepositoryProvider.of(context)),
+        ),
         BlocProvider(
           create: (_) =>
               LocationListBloc(service: RepositoryProvider.of(context)),

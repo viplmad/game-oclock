@@ -73,3 +73,23 @@ class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<UserGame> {
   Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
       service.countPlayedOnDevice(deviceId, search, quicksearch);
 }
+
+class UserGameWithPlaythroughListBloc extends ListLoadBloc<UserGame> {
+  UserGameWithPlaythroughListBloc({
+    required this.service,
+    required this.playthroughId,
+  });
+
+  final GameService service;
+  final String playthroughId;
+
+  @override
+  Future<PageResultDTO<UserGame>> doLoad(
+    final SearchDTO search,
+    final String? quicksearch,
+  ) => service.searchWithPlaythrough(playthroughId, search, quicksearch);
+
+  @override
+  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+      service.countWithPlaythrough(playthroughId, search, quicksearch);
+}

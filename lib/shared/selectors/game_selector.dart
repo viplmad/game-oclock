@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show UserGameListBloc;
+import 'package:game_oclock/blocs/blocs.dart'
+    show UserGameGetBloc, UserGameListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/shared/forms/game_form.dart';
@@ -21,7 +22,11 @@ class UserGameSelectorBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return SingleAutocompleteSelectorBuilder<UserGame, UserGameListBloc>(
+    return SingleAutocompleteSelectorBuilder<
+      UserGame,
+      UserGameGetBloc,
+      UserGameListBloc
+    >(
       formControl: formControl,
       label: label,
       readOnly: readOnly,

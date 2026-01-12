@@ -1,6 +1,5 @@
 export 'auth_service.dart';
 export 'device_service.dart';
-export 'game_playthrough_service.dart';
 export 'game_service.dart';
 export 'game_session_service.dart';
 export 'igdb_service.dart';
@@ -8,6 +7,7 @@ export 'list_search_service.dart';
 export 'list_style_service.dart';
 export 'location_service.dart';
 export 'login_service.dart';
+export 'playthrough_service.dart';
 export 'settings_service.dart';
 export 'tag_service.dart';
 export 'user_service.dart';

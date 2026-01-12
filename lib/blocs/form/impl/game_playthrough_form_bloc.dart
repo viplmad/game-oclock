@@ -10,9 +10,8 @@ class GamePlaythroughFormBloc
   @override
   GamePlaythrough fromFormData(final GamePlaythroughFormData data) {
     return GamePlaythrough(
-      id: '', // TODO
       gameId: data.gameId.value!,
-      name: data.name.value!,
+      playthroughId: data.playthroughId.value!,
     );
   }
 
@@ -22,6 +21,6 @@ class GamePlaythroughFormBloc
     final GamePlaythrough? value,
   ) {
     data.gameId.value = value?.gameId;
-    data.name.value = value?.name;
+    data.playthroughId.value = value?.playthroughId;
   }
 }

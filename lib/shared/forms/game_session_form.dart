@@ -4,17 +4,22 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         GameSessionCreateBloc,
         GameSessionFormBloc,
+        PlaythroughCreateBloc,
+        PlaythroughGetBloc,
+        PlaythroughListBloc,
         TagCreateBloc,
+        TagGetBloc,
         TagListBloc,
         UserGameCreateBloc,
+        UserGameGetBloc,
         UserGameListBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
     show GameSession, GameSessionFormData, gameSessionFinishedOptions;
 import 'package:game_oclock/shared/selectors/device_selector.dart';
-import 'package:game_oclock/shared/selectors/game_playthrough_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
+import 'package:game_oclock/shared/selectors/playthrough_selector.dart';
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -57,6 +62,10 @@ class GameSessionCreateForm extends StatelessWidget {
 
         BlocProvider(
           create: (_) =>
+              UserGameGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
               UserGameListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
@@ -65,10 +74,26 @@ class GameSessionCreateForm extends StatelessWidget {
         ),
 
         BlocProvider(
+          create: (_) => TagGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
           create: (_) => TagListBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),
+        ),
+
+        BlocProvider(
+          create: (_) =>
+              PlaythroughGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              PlaythroughListBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              PlaythroughCreateBloc(service: RepositoryProvider.of(context)),
         ),
       ],
       child:
@@ -79,8 +104,7 @@ class GameSessionCreateForm extends StatelessWidget {
             GameSessionCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: (final context, final formGroup, final readOnly) =>
-                _fieldsCreateBuilder(context, gameId, formGroup, readOnly),
+            fieldsBuilder: _fieldsCreateBuilder,
           ),
     );
   }
@@ -88,7 +112,6 @@ class GameSessionCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateBuilder(
   final BuildContext context,
-  final String gameId,
   final GameSessionFormData formGroup,
   final bool readOnly,
 ) {
@@ -118,8 +141,7 @@ Widget _fieldsCreateBuilder(
         label: context.localize().deviceLabel,
         readOnly: readOnly,
       ),
-      GamePlaythroughSelectorBuilder(
-        gameId: gameId,
+      PlaythroughSelectorBuilder(
         formControl: formGroup.playthroughId,
         label: context.localize().playthroughLabel,
         readOnly: readOnly,

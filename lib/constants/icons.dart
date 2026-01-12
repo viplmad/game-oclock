@@ -44,6 +44,7 @@ class CommonIcons {
   static const locations = Icon(Icons.shelves);
   static const devices = Icon(Icons.devices);
   static const tags = Icon(Icons.sell);
+  static const playthroughs = Icon(Icons.playlist_play);
   static const users = Icon(Icons.group);
   static const settings = Icon(Icons.settings);
 

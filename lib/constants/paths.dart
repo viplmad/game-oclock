@@ -10,6 +10,7 @@ class CommonPaths {
   static const String locationsPath = '/locations';
   static const String devicesPath = '/devices';
   static const String tagsPath = '/tags';
+  static const String playthroughsPath = '/playthroughs';
   static const String usersPath = '/users';
   static const String settingsPath = '/settings';
 
@@ -22,6 +23,7 @@ class CommonPaths {
   static const String locationPath = locationsPath + _idPathParamPath;
   static const String devicePath = devicesPath + _idPathParamPath;
   static const String tagPath = tagsPath + _idPathParamPath;
+  static const String playthroughPath = playthroughsPath + _idPathParamPath;
   static const String userPath = usersPath + _idPathParamPath;
 
   static const String _idPath = ':$_idPathParam';
@@ -37,6 +39,8 @@ class CommonPaths {
       devicePath.replaceFirst(_idPath, id);
   static String buildTagPath(final String id) =>
       tagPath.replaceFirst(_idPath, id);
+  static String buildPlaythroughPath(final String id) =>
+      playthroughPath.replaceFirst(_idPath, id);
   static String buildUserPath(final String id) =>
       userPath.replaceFirst(_idPath, id);
 

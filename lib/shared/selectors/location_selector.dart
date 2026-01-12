@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show LocationListBloc;
+import 'package:game_oclock/blocs/blocs.dart'
+    show LocationGetBloc, LocationListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Location;
 import 'package:game_oclock/shared/forms/location_form.dart';
@@ -21,7 +22,11 @@ class LocationSelectorBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return SingleAutocompleteSelectorBuilder<Location, LocationListBloc>(
+    return SingleAutocompleteSelectorBuilder<
+      Location,
+      LocationGetBloc,
+      LocationListBloc
+    >(
       formControl: formControl,
       label: label,
       readOnly: readOnly,

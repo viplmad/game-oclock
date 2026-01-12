@@ -27,6 +27,12 @@ final tagsNavDestination = NavDestination(
   path: CommonPaths.tagsPath,
 );
 
+final playthroughsNavDestination = NavDestination(
+  icon: CommonIcons.playthroughs,
+  labelBuilder: (final context) => context.localize().playthroughsTitle,
+  path: CommonPaths.playthroughsPath,
+);
+
 final calendarNavDestination = NavDestination(
   icon: CommonIcons.calendar,
   labelBuilder: (final context) => context.localize().calendarTitle,
@@ -63,6 +69,7 @@ final List<NavDestination> mainDestinations = List.unmodifiable(
 final List<NavDestination> secondaryDestinations =
     List.unmodifiable(<NavDestination>[
       tagsNavDestination,
+      playthroughsNavDestination,
       calendarNavDestination,
       reviewNavDestination,
       usersNavDestination,

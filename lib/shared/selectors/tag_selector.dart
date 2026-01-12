@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show TagListBloc;
+import 'package:game_oclock/blocs/blocs.dart' show TagGetBloc, TagListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/shared/forms/tag_form.dart';
@@ -21,7 +21,7 @@ class TagSelectorBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return SingleAutocompleteSelectorBuilder<Tag, TagListBloc>(
+    return SingleAutocompleteSelectorBuilder<Tag, TagGetBloc, TagListBloc>(
       formControl: formControl,
       label: label,
       readOnly: readOnly,

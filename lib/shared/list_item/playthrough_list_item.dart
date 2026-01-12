@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/models/models.dart' show GamePlaythrough;
+import 'package:game_oclock/models/models.dart' show Playthrough;
 
-class GamePlaythroughTileListItem extends StatelessWidget {
-  const GamePlaythroughTileListItem({
+class PlaythroughTileListItem extends StatelessWidget {
+  const PlaythroughTileListItem({
     super.key,
     required this.data,
     required this.onTap,
   });
 
-  final GamePlaythrough data;
+  final Playthrough data;
   final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
-    return TileListItem(title: data.name);
+    return TileListItem(title: data.name, onTap: onTap);
   }
 }

@@ -16,6 +16,7 @@ class SimpleTextFormField extends StatelessWidget {
     this.multiline = false,
     this.obscureText = false,
     //
+    this.prefixIcon,
     this.suffixIcons,
     this.onCleared,
     this.focusNode,
@@ -30,6 +31,7 @@ class SimpleTextFormField extends StatelessWidget {
   final String? hint;
   final bool obscureText;
   final bool multiline;
+  final Widget? prefixIcon;
   final List<Widget>? suffixIcons;
   final VoidCallback? onCleared;
   final FocusNode? focusNode;
@@ -50,6 +52,7 @@ class SimpleTextFormField extends StatelessWidget {
           ),
         ),
         hintText: hint,
+        prefixIcon: prefixIcon,
         suffixIcon: readOnly
             ? null
             : Row(

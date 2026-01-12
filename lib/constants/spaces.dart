@@ -5,5 +5,6 @@ class CommonSpaces {
   static const location = 'location';
   static const device = 'device';
   static const tag = 'tag';
+  static const playthrough = 'playthrough';
   static const user = 'user';
 }

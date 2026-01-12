@@ -1,9 +1,9 @@
 import 'package:game_oclock/mocks.dart';
 import 'package:game_oclock/models/models.dart'
-    show GamePlaythrough, PageResultDTO, SearchDTO;
+    show PageResultDTO, Playthrough, SearchDTO;
 
-class GamePlaythroughService {
-  Future<PageResultDTO<GamePlaythrough>> search(
+class PlaythroughService {
+  Future<PageResultDTO<Playthrough>> search(
     final SearchDTO search,
     final String? quicksearch,
   ) async {
@@ -12,7 +12,7 @@ class GamePlaythroughService {
       search: search,
       quicksearch: quicksearch,
       builder: (final index) =>
-          mockGamePlaythrough(name: 'name ($quicksearch) $index'),
+          mockPlaythrough(name: 'name ($quicksearch) $index'),
     );
   }
 
@@ -21,8 +21,7 @@ class GamePlaythroughService {
     return 500;
   }
 
-  Future<PageResultDTO<GamePlaythrough>> searchForGame(
-    final String gameId,
+  Future<PageResultDTO<Playthrough>> searchForGame(
     final SearchDTO search,
     final String? quicksearch,
   ) async {
@@ -31,12 +30,11 @@ class GamePlaythroughService {
       search: search,
       quicksearch: quicksearch,
       builder: (final index) =>
-          mockGamePlaythrough(name: 'name ($quicksearch) $index'),
+          mockPlaythrough(name: 'name ($quicksearch) $index'),
     );
   }
 
   Future<int> countForGame(
-    final String gameId,
     final SearchDTO search,
     final String? quicksearch,
   ) async {
@@ -44,17 +42,21 @@ class GamePlaythroughService {
     return 500;
   }
 
-  Future<GamePlaythrough> get(final String id) async {
+  Future<Playthrough> get(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
-    return mockGamePlaythrough();
+    return mockPlaythrough();
   }
 
-  Future<GamePlaythrough> create(final GamePlaythrough playthrough) async {
+  Future<Playthrough> create(final Playthrough playthrough) async {
     await Future.delayed(const Duration(seconds: 5));
     return playthrough;
   }
 
-  Future<void> update(final GamePlaythrough playthrough) async {
+  Future<void> update(final Playthrough playthrough) async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> delete(final String id) async {
     await Future.delayed(const Duration(seconds: 1));
   }
 }

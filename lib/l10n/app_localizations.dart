@@ -166,6 +166,12 @@ abstract class AppLocalizations {
   /// **'Tags'**
   String get tagsTitle;
 
+  /// No description provided for @playthroughsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playthroughs'**
+  String get playthroughsTitle;
+
   /// No description provided for @usersTitle.
   ///
   /// In en, this message translates to:

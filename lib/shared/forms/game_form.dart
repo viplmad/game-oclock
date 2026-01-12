@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
+        ExternalGameGetBloc,
         ExternalGameListBloc,
         UserGameCreateBloc,
         UserGameFormBloc,
@@ -50,6 +51,8 @@ class UserGameCreateForm extends StatelessWidget {
           create: (_) =>
               UserGameCreateBloc(service: RepositoryProvider.of(context)),
         ),
+
+        BlocProvider(create: (_) => ExternalGameGetBloc()),
         BlocProvider(
           create: (_) =>
               ExternalGameListBloc(igdbService: RepositoryProvider.of(context)),

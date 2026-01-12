@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/blocs/blocs.dart' show ExternalGameListBloc;
+import 'package:game_oclock/blocs/blocs.dart'
+    show ExternalGameGetBloc, ExternalGameListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
 import 'package:game_oclock/models/models.dart' show ExternalGame;
 import 'package:game_oclock/shared/list_item/external_game_list_item.dart';
@@ -21,6 +22,7 @@ class ExternalGameSelectorBuilder extends StatelessWidget {
   Widget build(final BuildContext context) {
     return SingleAutocompleteSelectorBuilder<
       ExternalGame,
+      ExternalGameGetBloc,
       ExternalGameListBloc
     >(
       formControl: formControl,

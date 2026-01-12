@@ -24,6 +24,8 @@ import 'package:game_oclock/pages/locations/location_detail.dart';
 import 'package:game_oclock/pages/locations/location_list.dart';
 import 'package:game_oclock/pages/login/login.dart';
 import 'package:game_oclock/pages/main_layout.dart';
+import 'package:game_oclock/pages/playthroughs/playthrough_detail.dart';
+import 'package:game_oclock/pages/playthroughs/playthrough_list.dart';
 import 'package:game_oclock/pages/review/review.dart';
 import 'package:game_oclock/pages/settings/settings.dart';
 import 'package:game_oclock/pages/tags/tag_detail.dart';
@@ -144,6 +146,28 @@ final routerConfig = GoRouter(
             );
             final id = CommonPaths.getIdParameter(state);
             return TagDetailPage(id: id);
+          },
+        ),
+
+        GoRoute(
+          path: CommonPaths.playthroughsPath,
+          redirect: _destinationGuardRedirect(playthroughsNavDestination),
+          builder: (final context, final state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: false),
+            );
+            return const PlaythroughListPage();
+          },
+        ),
+        GoRoute(
+          path: CommonPaths.playthroughPath,
+          redirect: _destinationGuardRedirect(playthroughsNavDestination),
+          builder: (final context, final state) {
+            context.read<MinimizedLayoutBloc>().add(
+              const ActionStarted(data: true),
+            );
+            final id = CommonPaths.getIdParameter(state);
+            return PlaythroughDetailPage(id: id);
           },
         ),
 
