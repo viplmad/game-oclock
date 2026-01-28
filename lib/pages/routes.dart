@@ -231,11 +231,9 @@ final routerConfig = GoRouter(
 );
 
 GoRouterRedirect? _destinationGuardRedirect(final NavDestination destination) {
-  final guardRole = destination.guardRole;
-  return guardRole != null
-      ? (final context, final state) =>
-            _roleGuardRedirect(context, state, guardRole)
-      : null;
+  final guardRoles = destination.guardRoles;
+  return (final context, final state) =>
+      _roleGuardRedirect(context, state, guardRoles);
 }
 
 FutureOr<String?> _authGuardRedirect(
@@ -275,7 +273,7 @@ FutureOr<String?> _authGuardRedirect(
 FutureOr<String?> _roleGuardRedirect(
   final BuildContext context,
   final GoRouterState state,
-  final String role,
+  final List<String> roles,
 ) async {
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
@@ -289,8 +287,8 @@ FutureOr<String?> _roleGuardRedirect(
     return CommonPaths.loginPath;
   }
 
-  return (currentUserState as ActionSuccess<User, void>).data.roles.contains(
-        role,
+  return roles.contains(
+        (currentUserState as ActionSuccess<User, void>).data.role,
       )
       ? null
       : CommonPaths.homePath;

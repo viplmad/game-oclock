@@ -6,9 +6,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         PlaythroughCreateBloc,
         PlaythroughFormBloc,
         PlaythroughGetBloc,
-        PlaythroughUpdateBloc,
-        UserGameCreateBloc,
-        UserGameListBloc;
+        PlaythroughUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
@@ -39,15 +37,6 @@ class PlaythroughCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               PlaythroughCreateBloc(service: RepositoryProvider.of(context)),
-        ),
-
-        BlocProvider(
-          create: (_) =>
-              UserGameListBloc(service: RepositoryProvider.of(context)),
-        ),
-        BlocProvider(
-          create: (_) =>
-              UserGameCreateBloc(service: RepositoryProvider.of(context)),
         ),
       ],
       child:

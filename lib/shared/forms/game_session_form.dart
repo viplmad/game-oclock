@@ -7,9 +7,6 @@ import 'package:game_oclock/blocs/blocs.dart'
         PlaythroughCreateBloc,
         PlaythroughGetBloc,
         PlaythroughListBloc,
-        TagCreateBloc,
-        TagGetBloc,
-        TagListBloc,
         UserGameCreateBloc,
         UserGameGetBloc,
         UserGameListBloc;
@@ -71,16 +68,6 @@ class GameSessionCreateForm extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               UserGameCreateBloc(service: RepositoryProvider.of(context)),
-        ),
-
-        BlocProvider(
-          create: (_) => TagGetBloc(service: RepositoryProvider.of(context)),
-        ),
-        BlocProvider(
-          create: (_) => TagListBloc(service: RepositoryProvider.of(context)),
-        ),
-        BlocProvider(
-          create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),
         ),
 
         BlocProvider(

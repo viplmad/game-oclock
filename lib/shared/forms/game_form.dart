@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionStarted,
-        ExternalGameGetBloc,
-        ExternalGameListBloc,
         UserGameCreateBloc,
         UserGameFormBloc,
         UserGameGetBloc,
@@ -14,7 +12,6 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart'
     show UserGame, UserGameFormData, gameStatusOptions;
-import 'package:game_oclock/shared/selectors/external_game_selector.dart';
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -51,12 +48,6 @@ class UserGameCreateForm extends StatelessWidget {
           create: (_) =>
               UserGameCreateBloc(service: RepositoryProvider.of(context)),
         ),
-
-        BlocProvider(create: (_) => ExternalGameGetBloc()),
-        BlocProvider(
-          create: (_) =>
-              ExternalGameListBloc(igdbService: RepositoryProvider.of(context)),
-        ),
       ],
       child:
           CreateFormBuilder<
@@ -66,7 +57,7 @@ class UserGameCreateForm extends StatelessWidget {
             UserGameCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsCreateBuilder,
+            fieldsBuilder: _fieldsBuilder,
           ),
     );
   }
@@ -116,69 +107,13 @@ class UserGameEditForm extends StatelessWidget {
             UserGameUpdateBloc
           >(
             title: context.localize().editingTitle,
-            fieldsBuilder: _fieldsEditBuilder,
+            fieldsBuilder: _fieldsBuilder,
           ),
     );
   }
 }
 
-Widget _fieldsCreateBuilder(
-  final BuildContext context,
-  final UserGameFormData formGroup,
-  final bool readOnly,
-) {
-  return FormFieldsContainer(
-    children: <Widget>[
-      ExternalGameSelectorBuilder(
-        formControl: formGroup.title,
-        label: context.localize().titleLabel,
-        readOnly: readOnly,
-      ),
-      SimpleTextFormField(
-        formControl: formGroup.edition,
-        label: context.localize().editionLabel,
-        readOnly: readOnly,
-      ),
-      SimpleDateFormField(
-        formControl: formGroup.releaseDate,
-        label: context.localize().releaseDateLabel,
-        readOnly: readOnly,
-        firstDate: DateTime(1970),
-        lastDate: DateTime.now(),
-      ),
-      SimpleChoiceFormField(
-        formControl: formGroup.status,
-        label: context.localize().statusLabel,
-        readOnly: readOnly,
-        options: gameStatusOptions,
-      ),
-      SimpleRatingFormField(
-        formControl: formGroup.rating,
-        label: context.localize().ratingLabel,
-        readOnly: readOnly,
-        color: CommonColors.ratingColor,
-      ),
-      SimpleTextFormField(
-        formControl: formGroup.notes,
-        label: context.localize().notesLabel,
-        readOnly: readOnly,
-        multiline: true,
-      ),
-      SimpleMultipleSelectFormField(
-        formArray: formGroup.genres,
-        label: context.localize().genresLabel,
-        readOnly: readOnly,
-      ),
-      SimpleMultipleSelectFormField(
-        formArray: formGroup.series,
-        label: context.localize().seriesLabel,
-        readOnly: readOnly,
-      ),
-    ],
-  );
-}
-
-Widget _fieldsEditBuilder(
+Widget _fieldsBuilder(
   final BuildContext context,
   final UserGameFormData formGroup,
   final bool readOnly,

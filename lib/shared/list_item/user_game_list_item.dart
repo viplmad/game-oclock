@@ -22,7 +22,7 @@ class UserGameTileListItem extends StatelessWidget {
       title: data.edition.isEmpty
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),
-      imageURL: data.coverUrl,
+      imageURL: data.imageUrl,
       onTap: onTap,
     );
 
@@ -46,7 +46,7 @@ class UserGameGridListItem extends StatelessWidget {
       title: data.edition.isEmpty
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),
-      imageURL: data.coverUrl,
+      imageURL: data.imageUrl,
       onTap: onTap,
     );
 

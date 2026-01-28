@@ -138,7 +138,7 @@ class DeviceDetail extends StatelessWidget {
       child: DetailWithTabs(
         title: Text(data.name),
         image: SimpleCachedNetworkImage(
-          imageUrl: data.iconUrl,
+          imageUrl: data.imageUrl,
           fit: BoxFit.cover,
           applyGradient: true,
         ),

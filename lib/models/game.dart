@@ -45,8 +45,8 @@ final gameStatusWishlist = OptionTextField(
   color: CommonColors.wishlistColor,
 );
 
-final gameStatusLowPriorty = OptionTextField(
-  value: 'lowPriorty',
+final gameStatusLowPriority = OptionTextField(
+  value: 'lowPriority',
   labelBuilder: (final context) => context.localize().lowPriorityLabel,
   color: CommonColors.lowPriorityColor,
 );
@@ -76,7 +76,7 @@ final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
 final List<OptionTextField<String>> gameStatusOptions =
     List.unmodifiable(<OptionTextField<String>>[
       gameStatusWishlist,
-      gameStatusLowPriorty,
+      gameStatusLowPriority,
       gameStatusNextUp,
       gameStatusPlaying,
       gameStatusPlayed,
@@ -104,7 +104,9 @@ class Game extends Equatable {
   final DateTime? releaseDate;
   final List<String> genres;
   final List<String> series;
-  final String coverUrl;
+  final String imageUrl;
+  final String? parentId;
+  final int? parentOrder;
 
   const Game({
     required this.id,
@@ -114,7 +116,9 @@ class Game extends Equatable {
     required this.releaseDate,
     required this.genres,
     required this.series,
-    required this.coverUrl,
+    required this.imageUrl,
+    this.parentId,
+    this.parentOrder,
   });
 
   @override
@@ -134,7 +138,9 @@ class UserGame extends Game {
     required super.releaseDate,
     required super.genres,
     required super.series,
-    required super.coverUrl,
+    required super.imageUrl,
+    super.parentId,
+    super.parentOrder,
     required this.status,
     required this.rating,
     required this.notes,
@@ -152,7 +158,9 @@ class UserGameWithDate extends UserGame {
     required super.releaseDate,
     required super.genres,
     required super.series,
-    required super.coverUrl,
+    required super.imageUrl,
+    super.parentId,
+    super.parentOrder,
     required super.status,
     required super.rating,
     required super.notes,

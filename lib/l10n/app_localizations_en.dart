@@ -182,13 +182,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordLabel => 'Password';
 
   @override
+  String get roleLabel => 'Role';
+
+  @override
   String get currentPasswordLabel => 'Current Password';
 
   @override
   String get newPasswordLabel => 'New Password';
 
   @override
-  String get adminLabel => 'Administrator';
+  String get roleUserLabel => 'User';
+
+  @override
+  String get roleAdminLabel => 'Administrator';
 
   @override
   String get confirmationLabel => 'Confirmation';

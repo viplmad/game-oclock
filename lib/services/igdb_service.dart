@@ -39,7 +39,7 @@ class IGDBService {
             id: game.id.toString(),
             title: game.name,
             edition: game.versionTitle,
-            coverUrl: game.cover?.url,
+            imageUrl: game.cover?.url,
             releaseDate: game.firstReleaseDate,
             genres: game.genres
                 .map((final g) => g.name)

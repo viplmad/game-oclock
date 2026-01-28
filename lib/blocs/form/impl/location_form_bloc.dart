@@ -10,7 +10,7 @@ class LocationFormBloc extends FormBloc<LocationFormData, Location> {
     return Location(
       id: '', // TODO
       name: data.name.value!,
-      iconUrl: '', // TODO
+      imageUrl: '', // TODO
     );
   }
 

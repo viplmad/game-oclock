@@ -15,7 +15,7 @@ class UserGameFormBloc extends FormBloc<UserGameFormData, UserGame> {
       releaseDate: data.releaseDate.value,
       genres: data.genres.value?.cast() ?? [],
       series: data.series.value?.cast() ?? [],
-      coverUrl: '', // TODO
+      imageUrl: '', // TODO
       status: data.status.value!,
       rating: data.rating.value ?? 0,
       notes: data.notes.value ?? '',

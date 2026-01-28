@@ -6,20 +6,20 @@ class UserFormData extends FormData<User> {
   final FormControl<String> username;
   final FormControl<String> password;
   final FormControl<String> passwordConfirmation;
-  final FormControl<bool> admin;
+  final FormControl<String> role;
 
   UserFormData({
     required this.username,
     required this.password,
     required this.passwordConfirmation,
-    required this.admin,
+    required this.role,
   }) : super(
          formGroup: FormGroup(
            {
              'username': username,
              'password': password,
              'passwordConfirmation': passwordConfirmation,
-             'admin': admin,
+             'role': role,
            },
            validators: [
              const MustMatchValidator('password', 'passwordConfirmation', true),

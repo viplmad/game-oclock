@@ -436,6 +436,12 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// No description provided for @roleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get roleLabel;
+
   /// No description provided for @currentPasswordLabel.
   ///
   /// In en, this message translates to:
@@ -448,11 +454,17 @@ abstract class AppLocalizations {
   /// **'New Password'**
   String get newPasswordLabel;
 
-  /// No description provided for @adminLabel.
+  /// No description provided for @roleUserLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get roleUserLabel;
+
+  /// No description provided for @roleAdminLabel.
   ///
   /// In en, this message translates to:
   /// **'Administrator'**
-  String get adminLabel;
+  String get roleAdminLabel;
 
   /// No description provided for @confirmationLabel.
   ///

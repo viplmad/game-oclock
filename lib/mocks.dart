@@ -11,7 +11,7 @@ UserGame mockUserGame({final String? title}) {
     releaseDate: DateTime.now(),
     genres: [],
     series: [],
-    coverUrl:
+    imageUrl:
         'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
     status: 'played',
     rating: Random().nextInt(11),
@@ -28,7 +28,7 @@ UserGameWithDate mockUserGameWithDate({final String? title}) {
     releaseDate: DateTime.now(),
     genres: [],
     series: [],
-    coverUrl:
+    imageUrl:
         'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224760/header.jpg',
     status: 'played',
     rating: Random().nextInt(11),
@@ -45,7 +45,7 @@ Location mockLocation({final String? name}) {
   return Location(
     id: mockId(),
     name: name ?? 'name',
-    iconUrl:
+    imageUrl:
         'https://pbs.twimg.com/profile_images/1856699937456607232/KyhkroJW_400x400.png',
   );
 }
@@ -54,7 +54,7 @@ LocationWithDate mockLocationWithDate({final String? name}) {
   return LocationWithDate(
     id: mockId(),
     name: name ?? 'name',
-    iconUrl:
+    imageUrl:
         'https://pbs.twimg.com/profile_images/1856699937456607232/KyhkroJW_400x400.png',
     date: DateTime.now(),
   );
@@ -64,7 +64,7 @@ Device mockDevice({final String? name}) {
   return Device(
     id: mockId(),
     name: name ?? 'name',
-    iconUrl:
+    imageUrl:
         'https://pbs.twimg.com/profile_images/1723097406726975488/9NtoObia_400x400.jpg',
   );
 }
@@ -89,7 +89,7 @@ User mockUser({final String? username}) {
   return User(
     id: mockId(),
     username: username ?? 'username',
-    roles: ['ROLE_ADMIN'],
+    role: 'ROLE_ADMIN',
   );
 }
 

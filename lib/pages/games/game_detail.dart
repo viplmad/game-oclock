@@ -203,7 +203,7 @@ class UserGameDetail extends StatelessWidget {
       child: DetailWithTabs(
         title: Text(data.title),
         image: SimpleCachedNetworkImage(
-          imageUrl: data.coverUrl,
+          imageUrl: data.imageUrl,
           fit: BoxFit.cover,
           applyGradient: true,
         ),

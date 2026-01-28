@@ -15,7 +15,7 @@ class LocationTileListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return TileListItem(title: data.name, imageURL: data.iconUrl, onTap: onTap);
+    return TileListItem(title: data.name, imageURL: data.imageUrl, onTap: onTap);
   }
 }
 
@@ -31,6 +31,6 @@ class LocationGridListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return GridListItem(title: data.name, imageURL: data.iconUrl, onTap: onTap);
+    return GridListItem(title: data.name, imageURL: data.imageUrl, onTap: onTap);
   }
 }

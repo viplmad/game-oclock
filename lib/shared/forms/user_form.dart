@@ -9,7 +9,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart' show User, UserFormData;
+import 'package:game_oclock/models/models.dart'
+    show User, UserFormData, userRoleOptions;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -34,7 +35,7 @@ class UserCreateForm extends StatelessWidget {
                 validators: [NotEmptyValidator(context)],
               ),
               passwordConfirmation: FormControl<String>(),
-              admin: FormControl<bool>(),
+              role: FormControl<String>(),
             ),
           ),
         ),
@@ -69,7 +70,7 @@ class UserEditForm extends StatelessWidget {
               ),
               password: FormControl<String>(),
               passwordConfirmation: FormControl<String>(),
-              admin: FormControl<bool>(),
+              role: FormControl<String>(),
             ),
           ),
         ),
@@ -116,10 +117,11 @@ Widget _fieldsCreateBuilder(
         label: context.localize().passwordLabel,
         readOnly: readOnly,
       ),
-      SimpleBoolFormField(
-        formControl: formGroup.admin,
-        label: context.localize().adminLabel,
+      SimpleChoiceFormField(
+        formControl: formGroup.role,
+        label: context.localize().roleLabel,
         readOnly: readOnly,
+        options: userRoleOptions,
       ),
     ],
   );
@@ -137,10 +139,11 @@ Widget _fieldsEditBuilder(
         label: context.localize().usernameLabel,
         readOnly: readOnly,
       ),
-      SimpleBoolFormField(
-        formControl: formGroup.admin,
-        label: context.localize().adminLabel,
+      SimpleChoiceFormField(
+        formControl: formGroup.role,
+        label: context.localize().roleLabel,
         readOnly: readOnly,
+        options: userRoleOptions,
       ),
     ],
   );

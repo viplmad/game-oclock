@@ -14,7 +14,7 @@ class ExternalGameGetBloc extends FunctionActionBloc<String, ExternalGame> {
     id: event,
     title: event,
     edition: null,
-    coverUrl: null,
+    imageUrl: null,
     releaseDate: null,
   );
 }

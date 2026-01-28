@@ -20,7 +20,7 @@ class ExternalGameTileListItem extends StatelessWidget {
       subtitle: data.releaseDate == null
           ? null
           : MaterialLocalizations.of(context).formatYear(data.releaseDate!),
-      imageURL: data.coverUrl,
+      imageURL: data.imageUrl,
       trailing: data.source == sourceIgdb
           ? CommonIcons.externalSourceIgdb
           : CommonIcons.externalSourceDefault,

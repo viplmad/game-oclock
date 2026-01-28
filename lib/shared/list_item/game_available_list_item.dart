@@ -19,7 +19,7 @@ class LocationWithDateTileListItem extends StatelessWidget {
     return TileListItem(
       title: data.name,
       subtitle: MaterialLocalizations.of(context).formatCompactDate(data.date),
-      imageURL: data.iconUrl,
+      imageURL: data.imageUrl,
       onTap: onTap,
     );
   }
@@ -42,7 +42,7 @@ class GameWithDateTileListItem extends StatelessWidget {
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),
       subtitle: MaterialLocalizations.of(context).formatCompactDate(data.date),
-      imageURL: data.coverUrl,
+      imageURL: data.imageUrl,
       onTap: onTap,
     );
   }

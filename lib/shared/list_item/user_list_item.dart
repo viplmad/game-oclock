@@ -16,7 +16,7 @@ class UserTileListItem extends StatelessWidget {
       title: data.username,
       trailing: data.isAdmin
           ? Tooltip(
-              message: context.localize().adminLabel,
+              message: context.localize().roleAdminLabel,
               child: CommonIcons.admin,
             )
           : null,

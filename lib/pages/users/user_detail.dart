@@ -161,7 +161,7 @@ class UserDetail extends StatelessWidget {
         children: [
           TextLabel(label: context.localize().idLabel, value: data.id),
           TextLabel(label: context.localize().nameLabel, value: data.username),
-          BoolLabel(label: context.localize().adminLabel, value: data.isAdmin),
+          TextLabel(label: context.localize().roleLabel, value: data.role),
         ],
       ),
     );

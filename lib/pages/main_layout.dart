@@ -49,12 +49,7 @@ class MainLayout extends StatelessWidget {
     return user == null
         ? destinations
         : destinations
-              .where((final dest) {
-                final guardRole = dest.guardRole;
-                return guardRole != null
-                    ? user.roles.contains(dest.guardRole)
-                    : true;
-              })
+              .where((final dest) => dest.guardRoles.contains(user.role))
               .toList(growable: false);
   }
 }
