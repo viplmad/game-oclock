@@ -48,6 +48,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playthroughsTitle => 'Playthroughs';
 
   @override
+  String get searchTitle => 'Search';
+
+  @override
   String get usersTitle => 'Users';
 
   @override
@@ -210,6 +213,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addFilterLabel => 'Add filter';
+
+  @override
+  String get sourceLabel => 'Source';
+
+  @override
+  String get addLabel => 'Add';
 
   @override
   String get createLabel => 'Create';

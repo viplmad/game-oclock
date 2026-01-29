@@ -5,7 +5,11 @@ class GameTag extends Equatable {
   final String tagId;
   final int? order;
 
-  const GameTag({required this.gameId, required this.tagId, required this.order});
+  const GameTag({
+    required this.gameId,
+    required this.tagId,
+    required this.order,
+  });
 
   @override
   List<Object?> get props => [gameId, tagId];

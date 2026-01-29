@@ -15,7 +15,11 @@ class DeviceTileListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return TileListItem(title: data.name, imageURL: data.imageUrl, onTap: onTap);
+    return TileListItem(
+      title: data.name,
+      imageURL: data.imageUrl,
+      onTap: onTap,
+    );
   }
 }
 
@@ -31,6 +35,10 @@ class DeviceGridListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return GridListItem(title: data.name, imageURL: data.imageUrl, onTap: onTap);
+    return GridListItem(
+      title: data.name,
+      imageURL: data.imageUrl,
+      onTap: onTap,
+    );
   }
 }

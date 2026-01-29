@@ -1,6 +1,24 @@
 import 'package:game_oclock/models/models.dart' show FormData, UserGame;
 import 'package:reactive_forms/reactive_forms.dart';
 
+class UserGameExternalFormData extends FormData<UserGame> {
+  final FormControl<String> status;
+  final FormControl<int> rating;
+  final FormControl<String> notes;
+
+  UserGameExternalFormData({
+    required this.status,
+    required this.rating,
+    required this.notes,
+  }) : super(
+         formGroup: FormGroup({
+           'status': status,
+           'rating': rating,
+           'notes': notes,
+         }),
+       );
+}
+
 class UserGameFormData extends FormData<UserGame> {
   final FormControl<String> title;
   final FormControl<String> edition;

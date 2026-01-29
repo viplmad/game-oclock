@@ -4,11 +4,8 @@ import 'package:game_oclock/models/models.dart'
     show NavDestination, roleAdmin, roleUser;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
-final List<String> _allUsers = List.unmodifiable(<String>[roleUser]);
-final List<String> _onlyAdmin = List.unmodifiable(<String>[
-  roleUser,
-  roleAdmin,
-]);
+final List<String> _allUsers = List.unmodifiable(<String>[roleUser, roleAdmin]);
+final List<String> _onlyAdmin = List.unmodifiable(<String>[roleAdmin]);
 
 final gamesNavDestination = NavDestination(
   icon: CommonIcons.games,
@@ -42,6 +39,13 @@ final playthroughsNavDestination = NavDestination(
   icon: CommonIcons.playthroughs,
   labelBuilder: (final context) => context.localize().playthroughsTitle,
   path: CommonPaths.playthroughsPath,
+  guardRoles: _allUsers,
+);
+
+final searchNavDestination = NavDestination(
+  icon: CommonIcons.search,
+  labelBuilder: (final context) => context.localize().searchTitle,
+  path: CommonPaths.searchPath,
   guardRoles: _allUsers,
 );
 
@@ -85,6 +89,7 @@ final List<NavDestination> secondaryDestinations =
     List.unmodifiable(<NavDestination>[
       tagsNavDestination,
       playthroughsNavDestination,
+      searchNavDestination,
       calendarNavDestination,
       reviewNavDestination,
       usersNavDestination,

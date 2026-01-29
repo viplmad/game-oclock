@@ -15,7 +15,7 @@ final userRoleAdmin = OptionTextField(
   labelBuilder: (final context) => context.localize().roleAdminLabel,
 );
 
-final List<OptionTextField<String>> userRoleOptions= List.unmodifiable(
+final List<OptionTextField<String>> userRoleOptions = List.unmodifiable(
   <OptionTextField<String>>[userRoleUser, userRoleAdmin],
 );
 

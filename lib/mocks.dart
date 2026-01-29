@@ -19,6 +19,27 @@ UserGame mockUserGame({final String? title}) {
   );
 }
 
+ExternalGame mockExternalGame({final String? title}) {
+  return ExternalGame(
+    externalId: ExternalGameId(source: 'igdb', id: 'afafa'),
+    title: title ?? 'title',
+    edition: '',
+    releaseDate: DateTime.now(),
+    genres: [],
+    series: [],
+    imageUrl:
+        'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/400/header.jpg',
+    userInfo: Random().nextBool()
+        ? UserGameInfo(
+            id: mockId(),
+            status: 'played',
+            rating: Random().nextInt(11),
+            notes: 'cosas',
+          )
+        : null,
+  );
+}
+
 UserGameWithDate mockUserGameWithDate({final String? title}) {
   return UserGameWithDate(
     id: mockId(),

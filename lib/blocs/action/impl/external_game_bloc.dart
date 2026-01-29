@@ -1,20 +1,11 @@
 import 'package:game_oclock/models/models.dart' show ExternalGame;
 
-import '../action.dart' show FunctionActionBloc;
+import '../action.dart' show IdentityActionBloc;
 
-class ExternalGameGetBloc extends FunctionActionBloc<String, ExternalGame> {
-  ExternalGameGetBloc();
-
+class ExternalGameSelectBloc extends IdentityActionBloc<ExternalGame?> {
   @override
-  Future<ExternalGame> doAction(
-    final String event,
+  Future<ExternalGame?> doAction(
+    final ExternalGame? event,
     final ExternalGame? lastData,
-  ) async => ExternalGame(
-    source: '',
-    id: event,
-    title: event,
-    edition: null,
-    imageUrl: null,
-    releaseDate: null,
-  );
+  ) async => event;
 }

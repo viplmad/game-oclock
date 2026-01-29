@@ -172,6 +172,12 @@ abstract class AppLocalizations {
   /// **'Playthroughs'**
   String get playthroughsTitle;
 
+  /// No description provided for @searchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchTitle;
+
   /// No description provided for @usersTitle.
   ///
   /// In en, this message translates to:
@@ -495,6 +501,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add filter'**
   String get addFilterLabel;
+
+  /// No description provided for @sourceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get sourceLabel;
+
+  /// No description provided for @addLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addLabel;
 
   /// No description provided for @createLabel.
   ///

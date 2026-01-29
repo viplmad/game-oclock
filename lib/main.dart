@@ -25,9 +25,9 @@ import 'package:game_oclock/services/services.dart'
     show
         AuthService,
         DeviceService,
+        ExternalGameService,
         GameService,
         GameSessionService,
-        IGDBService,
         ListSearchService,
         ListStyleService,
         LocationService,
@@ -49,19 +49,6 @@ class GameOClockApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    const igdbClientId = String.fromEnvironment('IGDB_CLIENT_ID');
-    if (igdbClientId.isEmpty) {
-      throw Exception(
-        'IGDB Client Id not set. Set through "IGDB_CLIENT_ID" environemnt variable.',
-      );
-    }
-    const igdbClientSecret = String.fromEnvironment('IGDB_CLIENT_SECRET');
-    if (igdbClientSecret.isEmpty) {
-      throw Exception(
-        'IGDB Client Secret not set. Set through "IGDB_CLIENT_SECRET" environemnt variable.',
-      );
-    }
-
     final sharedPrefsRepository = SharedPreferencesRepository();
     final authService = AuthService(sharedPrefsRepository);
     final userService = UserService();
@@ -69,8 +56,8 @@ class GameOClockApp extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<IGDBService>(
-          create: (_) => IGDBService(igdbClientId, igdbClientSecret),
+        RepositoryProvider<ExternalGameService>(
+          create: (_) => ExternalGameService(),
         ),
         RepositoryProvider<AuthService>(create: (_) => authService),
         RepositoryProvider<UserService>(create: (_) => userService),

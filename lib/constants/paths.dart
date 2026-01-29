@@ -14,6 +14,7 @@ class CommonPaths {
   static const String usersPath = '/users';
   static const String settingsPath = '/settings';
 
+  static const String searchPath = '/search';
   static const String calendarPath = '/calendar';
   static const String reviewPath = '/review';
 

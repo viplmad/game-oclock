@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list/list_item.dart'
     show GridListItem, TileListItem;
 import 'package:game_oclock/components/triangle_banner.dart';
 import 'package:game_oclock/constants/colors.dart';
-import 'package:game_oclock/models/models.dart' show UserGame;
+import 'package:game_oclock/models/models.dart'
+    show UserGame, gameStatusOptions;
 import 'package:game_oclock/utils/localisation_extension.dart';
 
 class UserGameTileListItem extends StatelessWidget {
@@ -22,11 +24,15 @@ class UserGameTileListItem extends StatelessWidget {
       title: data.edition.isEmpty
           ? data.title
           : context.localize().gameEditionDataTitle(data.title, data.edition),
+      subtitle: data.releaseDate == null
+          ? null
+          : MaterialLocalizations.of(context).formatYear(data.releaseDate!),
+      trailing: LabelChoiceChip(value: data.status, options: gameStatusOptions),
       imageURL: data.imageUrl,
       onTap: onTap,
     );
 
-    return _addRatingBanner(listItem, data);
+    return addRatingBanner(listItem, data.rating);
   }
 }
 
@@ -50,14 +56,14 @@ class UserGameGridListItem extends StatelessWidget {
       onTap: onTap,
     );
 
-    return _addRatingBanner(listItem, data);
+    return addRatingBanner(listItem, data.rating);
   }
 }
 
-Widget _addRatingBanner(final Widget listItem, final UserGame data) {
-  return data.rating > 0
+Widget addRatingBanner(final Widget listItem, final int rating) {
+  return rating > 0
       ? TriangleBanner(
-          message: data.rating.toString(),
+          message: rating.toString(),
           location: TriangleBannerLocation.end,
           showShadow: false,
           color: CommonColors.ratingColor,
