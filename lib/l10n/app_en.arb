@@ -90,6 +90,7 @@
   "stayLabel": "Stay",
   "discardChangesLabel": "Discard changes",
   "allLabel": "All",
+  "addSessionLabel": "Add session",
   "emptySessionsOnSelectedDayMessage": "No sessions on selected day",
   "showLabel": "Show",
   "hideLabel": "Hide",

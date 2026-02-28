@@ -640,6 +640,12 @@ abstract class AppLocalizations {
   /// **'All'**
   String get allLabel;
 
+  /// No description provided for @addSessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add session'**
+  String get addSessionLabel;
+
   /// No description provided for @emptySessionsOnSelectedDayMessage.
   ///
   /// In en, this message translates to:

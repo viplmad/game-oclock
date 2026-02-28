@@ -130,7 +130,12 @@ class _UserGameListDetailBuilder extends StatelessWidget {
       listItemBuilder: (final context, final style, final data, final onTap) =>
           style == ListStyle.grid
           ? UserGameGridListItem(data: data, onTap: onTap)
-          : UserGameTileListItem(data: data, onTap: onTap),
+          : UserGameTileListItem(
+              data: data,
+              onTap: onTap,
+              onAddSessionSucceeded: (final context) =>
+                  context.read<UserGameListBloc>().add(const ListReloaded()),
+            ),
       itemAspectRatio: 1.85, // Steam header aspect ratio
     );
   }

@@ -284,6 +284,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allLabel => 'All';
 
   @override
+  String get addSessionLabel => 'Add session';
+
+  @override
   String get emptySessionsOnSelectedDayMessage => 'No sessions on selected day';
 
   @override
