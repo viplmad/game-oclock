@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart'
     show GridListItem, TileListItem;
-import 'package:game_oclock/models/models.dart' show Location;
+import 'package:game_oclock_client/api.dart';
 
 class LocationTileListItem extends StatelessWidget {
   const LocationTileListItem({
@@ -10,7 +10,7 @@ class LocationTileListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final Location data;
+  final LocationDTO data;
   final VoidCallback onTap;
 
   @override
@@ -30,7 +30,7 @@ class LocationGridListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final Location data;
+  final LocationDTO data;
   final VoidCallback onTap;
 
   @override

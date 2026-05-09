@@ -1,12 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/bloc_utils.dart';
 import 'package:game_oclock/models/models.dart'
-    show
-        ErrorDTO,
-        GameOClockException,
-        PageResultDTO,
-        SearchDTO,
-        errorCodeUnknown;
+    show ErrorDTO, GameOClockException, errorCodeUnknown;
+import 'package:game_oclock_client/api.dart';
 
 import 'list.dart'
     show
@@ -23,7 +19,8 @@ import 'list.dart'
         ListSearchChanged,
         ListState;
 
-abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
+abstract class ListLoadBloc<S extends Object>
+    extends Bloc<ListEvent, ListState<S>> {
   ListLoadBloc() : super(ListInitial<S>()) {
     on<ListReloaded>(
       (final event, final emit) async => await onListReloaded(emit),
@@ -86,7 +83,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
     final Emitter<ListState<S>> emit,
   ) async {
     if (state is ListInitial<S>) {
-      final search = SearchDTO();
+      final search = ListSearchDTO();
       emit(
         ListLoadInProgress<S>(
           data: null,
@@ -124,7 +121,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<void> onListSearchChanged(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final Emitter<ListState<S>> emit,
   ) async {
     if (state is ListInitial<S>) {
@@ -189,7 +186,7 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<ListFinal<S>> _tryLoadList(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
     final List<S>? lastData,
     final int? lastTotal,
@@ -232,9 +229,9 @@ abstract class ListLoadBloc<S> extends Bloc<ListEvent, ListState<S>> {
   }
 
   Future<PageResultDTO<S>> doLoad(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   );
 
-  Future<int?> doCount(final SearchDTO search, final String? quicksearch);
+  Future<int?> doCount(final ListSearchDTO search, final String? quicksearch);
 }

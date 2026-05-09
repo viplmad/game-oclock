@@ -4,9 +4,10 @@ import 'package:game_oclock/blocs/blocs.dart'
     show ActionStarted, TagCreateBloc, TagFormBloc, TagGetBloc, TagUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart' show Tag, TagFormData;
+import 'package:game_oclock/models/models.dart' show TagFormData;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class TagCreateForm extends StatelessWidget {
@@ -32,10 +33,18 @@ class TagCreateForm extends StatelessWidget {
           create: (_) => TagCreateBloc(service: RepositoryProvider.of(context)),
         ),
       ],
-      child: CreateFormBuilder<Tag, TagFormData, TagFormBloc, TagCreateBloc>(
-        title: context.localize().creatingTitle,
-        fieldsBuilder: _fieldsBuilder,
-      ),
+      child:
+          CreateFormBuilder<
+            NewTagDTO,
+            TagDTO,
+            String,
+            TagFormData,
+            TagFormBloc,
+            TagCreateBloc
+          >(
+            title: context.localize().creatingTitle,
+            fieldsBuilder: _fieldsBuilder,
+          ),
     );
   }
 }
@@ -59,7 +68,8 @@ class TagEditForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) => TagUpdateBloc(service: RepositoryProvider.of(context)),
+          create: (_) =>
+              TagUpdateBloc(service: RepositoryProvider.of(context), id: id),
         ),
         BlocProvider(
           create: (_) =>
@@ -69,7 +79,8 @@ class TagEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            Tag,
+            NewTagDTO,
+            TagDTO,
             TagFormData,
             TagFormBloc,
             TagGetBloc,

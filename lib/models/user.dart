@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
 import 'package:game_oclock/models/nav_destination.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 const roleAdmin = 'ROLE_ADMIN';
 const roleUser = 'ROLE_USER';
@@ -19,24 +19,28 @@ final List<OptionTextField<String>> userRoleOptions = List.unmodifiable(
   <OptionTextField<String>>[userRoleUser, userRoleAdmin],
 );
 
-class User extends Equatable {
-  final String id;
-  final String username;
+class NewUser extends NewUserDTO {
+  NewUser({super.username, required this.password});
+
   final String password;
-  final String role;
+}
 
-  bool get isAdmin => roleAdmin == role;
-
-  const User({
-    required this.id,
-    required this.username,
-    this.password = '',
-    this.role = roleUser,
+// TODO Move
+class NewMediaSession extends NewSessionDTO {
+  NewMediaSession({
+    required this.gameId,
+    required super.deviceId,
+    required super.endDatetime,
+    super.finishedStatus,
+    required super.groupId,
+    required super.startDatetime,
+    required super.started,
   });
 
-  @override
-  List<Object?> get props => [id, username];
+  final String gameId;
 }
+
+const sourceIgdb = 'igdb';
 
 class UserChangePassword {
   final String currentPassword;

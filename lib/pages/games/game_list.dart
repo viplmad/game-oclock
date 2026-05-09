@@ -17,10 +17,11 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
 import 'package:game_oclock/constants/spaces.dart';
-import 'package:game_oclock/models/models.dart' show ListStyle, UserGame;
+import 'package:game_oclock/models/models.dart' show ListStyle;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'game_detail.dart';
 
@@ -79,7 +80,7 @@ class _UserGameListDetailBuilder extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ListCreateDetailBuilder<
-      UserGame,
+      MediaDTO,
       UserGameSelectBloc,
       UserGameListBloc
     >(
@@ -90,24 +91,24 @@ class _UserGameListDetailBuilder extends StatelessWidget {
       detailBuilder: (final context, final data, final onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change
-          key: Key(data.id),
+          key: Key(data.media.id),
           providers: [
             BlocProvider(
               create: (_) => LocationAvailableListBloc(
                 service: RepositoryProvider.of(context),
-                gameId: data.id,
+                gameId: data.media.id,
               ),
             ),
             BlocProvider(
               create: (_) => TagOfGameListBloc(
                 service: RepositoryProvider.of(context),
-                gameId: data.id,
+                gameId: data.media.id,
               ),
             ),
             BlocProvider(
               create: (_) => DevicePlayedGameListBloc(
                 service: RepositoryProvider.of(context),
-                gameId: data.id,
+                gameId: data.media.id,
               ),
             ),
           ],

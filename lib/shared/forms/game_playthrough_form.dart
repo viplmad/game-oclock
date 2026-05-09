@@ -79,6 +79,8 @@ class GamePlaythroughCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<
             GamePlaythrough,
+            GamePlaythrough,
+            (String, String),
             GamePlaythroughFormData,
             GamePlaythroughFormBloc,
             GamePlaythroughCreateBloc

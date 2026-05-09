@@ -1,20 +1,18 @@
-import 'package:game_oclock/models/models.dart' show Tag, TagFormData;
+import 'package:game_oclock/models/models.dart' show TagFormData;
+import 'package:game_oclock_client/api.dart';
 
 import '../form.dart' show FormBloc;
 
-class TagFormBloc extends FormBloc<TagFormData, Tag> {
+class TagFormBloc extends FormBloc<TagFormData, NewTagDTO, TagDTO> {
   TagFormBloc({required super.data});
 
   @override
-  Tag fromFormData(final TagFormData data) {
-    return Tag(
-      id: '', // TODO
-      name: data.name.value!,
-    );
+  NewTagDTO fromFormData(final TagFormData data) {
+    return NewTagDTO(name: data.name.value!);
   }
 
   @override
-  void setFormValue(final TagFormData data, final Tag? value) {
+  void setFormValue(final TagFormData data, final TagDTO? value) {
     data.name.value = value?.name;
   }
 }

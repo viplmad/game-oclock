@@ -1,38 +1,37 @@
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, Tag;
 import 'package:game_oclock/services/services.dart' show TagService;
+import 'package:game_oclock_client/api.dart';
 
 import '../list.dart' show ListLoadBloc;
 
-class TagListBloc extends ListLoadBloc<Tag> {
+class TagListBloc extends ListLoadBloc<TagDTO> {
   TagListBloc({required this.service});
 
   final TagService service;
 
   @override
-  Future<PageResultDTO<Tag>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<TagDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.count(search, quicksearch);
 }
 
-class TagOfGameListBloc extends ListLoadBloc<Tag> {
+class TagOfGameListBloc extends ListLoadBloc<TagMediaDTO> {
   TagOfGameListBloc({required this.service, required this.gameId});
 
   final TagService service;
   final String gameId;
 
   @override
-  Future<PageResultDTO<Tag>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<TagMediaDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
-  ) => service.searchGameTags(gameId, search, quicksearch);
+  ) => service.searchMediaTags(gameId, search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
-      service.countGameTags(gameId, search, quicksearch);
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+      service.countMediaTags(gameId, search, quicksearch);
 }

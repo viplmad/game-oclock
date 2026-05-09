@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show User;
+import 'package:game_oclock/models/models.dart' show roleAdmin;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 class UserTileListItem extends StatelessWidget {
   const UserTileListItem({super.key, required this.data, required this.onTap});
 
-  final User data;
+  final UserDTO data;
   final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
     return TileListItem(
       title: data.username,
-      trailing: data.isAdmin
+      trailing: data.role == roleAdmin
           ? Tooltip(
               message: context.localize().roleAdminLabel,
               child: CommonIcons.admin,

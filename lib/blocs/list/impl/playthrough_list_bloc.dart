@@ -1,6 +1,6 @@
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, Playthrough, SearchDTO;
+import 'package:game_oclock/models/models.dart' show Playthrough;
 import 'package:game_oclock/services/services.dart' show PlaythroughService;
+import 'package:game_oclock_client/api.dart';
 
 import '../list.dart' show ListLoadBloc;
 
@@ -11,11 +11,11 @@ class PlaythroughListBloc extends ListLoadBloc<Playthrough> {
 
   @override
   Future<PageResultDTO<Playthrough>> doLoad(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.searchForGame(search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.countForGame(search, quicksearch);
 }

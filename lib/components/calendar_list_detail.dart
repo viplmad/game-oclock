@@ -25,7 +25,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 
 class CalendarListDetailBuilder<
-  T,
+  T extends Object,
   SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>
 >

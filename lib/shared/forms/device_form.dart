@@ -9,9 +9,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         DeviceUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart' show Device, DeviceFormData;
+import 'package:game_oclock/models/models.dart' show DeviceFormData;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DeviceCreateForm extends StatelessWidget {
@@ -40,7 +41,9 @@ class DeviceCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            Device,
+            NewDeviceDTO,
+            DeviceDTO,
+            String,
             DeviceFormData,
             DeviceFormBloc,
             DeviceCreateBloc
@@ -72,7 +75,7 @@ class DeviceEditForm extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) =>
-              DeviceUpdateBloc(service: RepositoryProvider.of(context)),
+              DeviceUpdateBloc(service: RepositoryProvider.of(context), id: id),
         ),
         BlocProvider(
           create: (_) =>
@@ -82,7 +85,8 @@ class DeviceEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            Device,
+            NewDeviceDTO,
+            DeviceDTO,
             DeviceFormData,
             DeviceFormBloc,
             DeviceGetBloc,

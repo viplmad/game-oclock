@@ -9,9 +9,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ListSearchChanged,
         SessionListBloc;
 import 'package:game_oclock/components/calendar_list_detail.dart';
-import 'package:game_oclock/models/models.dart' show GameSession, SearchDTO;
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 class MultiCalendarPage extends StatelessWidget {
   const MultiCalendarPage({super.key});
@@ -32,21 +32,21 @@ class MultiCalendarPage extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               SessionListBloc(service: RepositoryProvider.of(context))
-                ..add(ListSearchChanged(search: SearchDTO())),
+                ..add(ListSearchChanged(search: ListSearchDTO())),
         ),
       ],
       child:
           CalendarListDetailBuilder<
-            GameSession,
+            SessionDTO,
             GameSessionSelectBloc,
             SessionListBloc
           >(
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            dateGetter: (final data) => data.start,
+            dateGetter: (final data) => data.startDatetime,
             detailBuilder: (final context, final data, final onClosed) =>
-                Center(child: Text(data.start.toIso8601String())),
+                Center(child: Text(data.startDatetime.toIso8601String())),
             listItemBuilder: (final context, final data, final onTap) =>
                 GameSessionTileListItem(data: data, onTap: onTap),
           ),

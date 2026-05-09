@@ -1,63 +1,70 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, Tag;
+import 'package:game_oclock_client/api.dart';
+
+import 'utils.dart';
 
 class TagService {
-  Future<PageResultDTO<Tag>> search(
-    final SearchDTO search,
+  final TagsApi _api;
+
+  TagService(final ApiClient apiClient) : _api = TagsApi(apiClient);
+
+  Future<PageResultDTO<TagDTO>> search(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) => mockTag(name: 'name ($quicksearch) $index'),
+    return _api.getTags(search, q: quicksearch);
+  }
+
+  Future<int> count(
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateTagsWithHttpInfo(
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
     );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<int> count(final SearchDTO search, final String? quicksearch) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
-  }
-
-  Future<PageResultDTO<Tag>> searchGameTags(
+  Future<PageResultDTO<TagMediaDTO>> searchMediaTags(
     final String gameId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockTag(name: 'name $gameId ($quicksearch) $index'),
+    return _api.getMediaTags(gameId, search, q: quicksearch);
+  }
+
+  Future<int> countMediaTags(
+    final String gameId,
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateMediaTagsWithHttpInfo(
+      gameId,
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
     );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<int> countGameTags(
-    final String gameId,
-    final SearchDTO search,
-    final String? quicksearch,
-  ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+  Future<TagDTO> get(final String id) async {
+    return _api.getTag(id);
   }
 
-  Future<Tag> get(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockTag();
+  Future<String> create(final NewTagDTO tag) async {
+    return _api.createTag(tag);
   }
 
-  Future<Tag> create(final Tag tag) async {
-    await Future.delayed(const Duration(seconds: 5));
-    return tag;
-  }
-
-  Future<void> update(final Tag tag) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> update(final String id, final NewTagDTO tag) async {
+    return _api.updateTag(id, tag);
   }
 
   Future<void> delete(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
+    return _api.deleteTag(id);
   }
 }

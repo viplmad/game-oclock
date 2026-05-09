@@ -344,6 +344,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notContainsLabel => 'Does not contain';
 
   @override
+  String get nullLabel => 'Null';
+
+  @override
+  String get notNullLabel => 'Not Null';
+
+  @override
   String get andLabel => 'and';
 
   @override
@@ -351,9 +357,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thenLabel => 'then';
-
-  @override
-  String get nullLabel => 'null';
 
   @override
   String quote(Object data) {
@@ -428,6 +431,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String notContainsChipLabel(Object aField, Object bValue) {
     return '$aField does not contain $bValue';
+  }
+
+  @override
+  String nullChipLabel(Object aField) {
+    return '$aField is null';
+  }
+
+  @override
+  String notNullChipLabel(Object aField) {
+    return '$aField is not null';
   }
 
   @override

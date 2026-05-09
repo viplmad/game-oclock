@@ -8,6 +8,7 @@ export 'list_style_service.dart';
 export 'location_service.dart';
 export 'login_service.dart';
 export 'playthrough_service.dart';
+export 'retryable_api_client.dart';
 export 'settings_service.dart';
 export 'tag_service.dart';
 export 'user_service.dart';

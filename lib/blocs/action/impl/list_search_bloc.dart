@@ -4,11 +4,7 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/services/services.dart' show ListSearchService;
 
 import '../action.dart'
-    show
-        ConsumerActionBloc,
-        FunctionActionBloc,
-        IdentityActionBloc,
-        ProducerActionBloc;
+    show ConsumerActionBloc, FunctionActionBloc, ProducerActionBloc;
 
 class CurrentListSearchGetBloc extends ProducerActionBloc<ListSearch> {
   CurrentListSearchGetBloc({
@@ -72,17 +68,15 @@ class ListSearchGetBloc extends FunctionActionBloc<String, ListSearch> {
       service.get(space, event);
 }
 
-class ListSearchCreateBloc extends IdentityActionBloc<ListSearch> {
+class ListSearchCreateBloc extends FunctionActionBloc<ListSearch, String> {
   ListSearchCreateBloc({required this.service, required this.space});
 
   final ListSearchService service;
   final String space;
 
   @override
-  Future<ListSearch> doAction(
-    final ListSearch event,
-    final ListSearch? lastData,
-  ) => service.create(space, event);
+  Future<String> doAction(final ListSearch event, final String? lastData) =>
+      service.create(space, event);
 }
 
 class ListSearchUpdateBloc extends ConsumerActionBloc<ListSearch> {

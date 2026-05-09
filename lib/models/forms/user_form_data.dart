@@ -1,25 +1,22 @@
 import 'package:game_oclock/models/models.dart'
-    show FormData, User, UserChangePassword;
+    show FormData, NewUser, UserChangePassword;
 import 'package:reactive_forms/reactive_forms.dart';
 
-class UserFormData extends FormData<User> {
+class UserFormData extends FormData<NewUser> {
   final FormControl<String> username;
   final FormControl<String> password;
   final FormControl<String> passwordConfirmation;
-  final FormControl<String> role;
 
   UserFormData({
     required this.username,
     required this.password,
     required this.passwordConfirmation,
-    required this.role,
   }) : super(
          formGroup: FormGroup(
            {
              'username': username,
              'password': password,
              'passwordConfirmation': passwordConfirmation,
-             'role': role,
            },
            validators: [
              const MustMatchValidator('password', 'passwordConfirmation', true),

@@ -11,9 +11,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         ExternalGameSelectBloc,
         ListReloaded;
 import 'package:game_oclock/components/list_detail.dart';
-import 'package:game_oclock/models/models.dart' show ExternalGame, ListStyle;
+import 'package:game_oclock/models/models.dart' show ListStyle;
 import 'package:game_oclock/pages/search/external_game_detail.dart';
 import 'package:game_oclock/shared/list_item/external_game_list_item.dart';
+import 'package:game_oclock_client/api.dart';
 
 const String _space = 'external';
 
@@ -66,7 +67,7 @@ class _ExternalGameListDetailBuilder extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ListDetailBuilder<
-      ExternalGame,
+      PotentialMediaDTO,
       ExternalGameSelectBloc,
       ExternalGameListBloc
     >(
@@ -75,7 +76,7 @@ class _ExternalGameListDetailBuilder extends StatelessWidget {
       availableStyles: [ListStyle.tile],
       detailBuilder: (final context, final data, final onClosed) {
         return ExternalGameDetail(
-          key: Key(data.externalId.id),
+          key: Key(data.external_.id),
           data: data,
           onBackPressed: onClosed,
           onAddSucceeded: (final context) =>

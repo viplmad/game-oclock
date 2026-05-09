@@ -1,7 +1,7 @@
-import 'package:game_oclock/models/models.dart' show FormData, GameSession;
+import 'package:game_oclock/models/models.dart' show FormData, NewMediaSession;
 import 'package:reactive_forms/reactive_forms.dart';
 
-class GameSessionFormData extends FormData<GameSession> {
+class GameSessionFormData extends FormData<NewMediaSession> {
   final FormControl<String> gameId;
   final FormControl<DateTime> startDateTime;
   final FormControl<DateTime> endDateTime;

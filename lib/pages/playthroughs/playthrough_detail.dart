@@ -19,7 +19,7 @@ import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, Playthrough, SearchDTO, TabDestination, UserGame;
+    show LayoutTier, Playthrough, TabDestination;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/game_playthrough_form.dart';
 import 'package:game_oclock/shared/forms/playthrough_form.dart';
@@ -29,6 +29,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
 class PlaythroughDetailPage extends StatelessWidget {
@@ -111,7 +112,7 @@ class PlaythroughDetail extends StatelessWidget {
         labelBuilder: (final context) => context.localize().gamesTitle,
         onTap: (final context) =>
             _loadOnlyInitial<UserGameWithPlaythroughListBloc>(context),
-        child: RelationListBuilder<UserGame, UserGameWithPlaythroughListBloc>(
+        child: RelationListBuilder<MediaDTO, UserGameWithPlaythroughListBloc>(
           createFormBuilder: ([final quicksearch]) => GamePlaythroughCreateForm(
             gameId: quicksearch,
             playthroughId: data.id,
@@ -120,8 +121,9 @@ class PlaythroughDetail extends StatelessWidget {
               UserGameCreateForm(initialTitle: quicksearch),
           itemBuilder: (final context, final data) => UserGameTileListItem(
             data: data,
-            onTap: () =>
-                GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
+            onTap: () => GoRouter.of(
+              context,
+            ).go(CommonPaths.buildGamePath(data.media.id)),
           ),
         ),
       ),
@@ -159,7 +161,7 @@ class PlaythroughDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog<Playthrough>(
+            onPressed: () async => showFormDialog(
               context,
               builder: (final context) => PlaythroughEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
@@ -207,7 +209,7 @@ class PlaythroughDetail extends StatelessWidget {
   void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
-      lb.add(ListSearchChanged(search: SearchDTO()));
+      lb.add(ListSearchChanged(search: ListSearchDTO()));
     }
   }
 }

@@ -74,6 +74,8 @@ class GameTagCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<
             GameTag,
+            GameTag,
+            (String, String),
             GameTagFormData,
             GameTagFormBloc,
             GameTagCreateBloc

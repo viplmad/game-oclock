@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 
@@ -20,8 +19,8 @@ final editionField = OptionTextField(
 );
 
 final releaseDateField = OptionTextField(
-  value: 'releaseDate',
-  labelBuilder: (final context) => context.localize().editionLabel,
+  value: 'release_date',
+  labelBuilder: (final context) => context.localize().releaseDateLabel,
 );
 
 final statusField = OptionTextField(
@@ -30,19 +29,13 @@ final statusField = OptionTextField(
 );
 
 final addedDatetimeField = OptionTextField(
-  value: 'addedDatetime',
+  value: 'added_datetime',
   labelBuilder: (final context) => context.localize().addedDatetimeLabel,
 );
 
 final updatedDatetimeField = OptionTextField(
-  value: 'updatedDatetime',
+  value: 'updated_datetime',
   labelBuilder: (final context) => context.localize().updatedDatetimeLabel,
-);
-
-final gameStatusWishlist = OptionTextField(
-  value: 'wishlist',
-  labelBuilder: (final context) => context.localize().wishlistLabel,
-  color: CommonColors.wishlistColor,
 );
 
 final gameStatusLowPriority = OptionTextField(
@@ -73,14 +66,14 @@ final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
   <OptionTextField<String>>[idField, titleField, editionField, statusField],
 );
 
-final List<OptionTextField<String>> gameStatusOptions =
-    List.unmodifiable(<OptionTextField<String>>[
-      gameStatusWishlist,
-      gameStatusLowPriority,
-      gameStatusNextUp,
-      gameStatusPlaying,
-      gameStatusPlayed,
-    ]);
+final List<OptionTextField<String>> gameStatusOptions = List.unmodifiable(
+  <OptionTextField<String>>[
+    gameStatusLowPriority,
+    gameStatusNextUp,
+    gameStatusPlaying,
+    gameStatusPlayed,
+  ],
+);
 
 final List<OptionTextField<String>> gameSessionFinishedOptions =
     List.unmodifiable(<OptionTextField<String>>[
@@ -95,82 +88,3 @@ final List<OptionTextField<String>> gameSessionFinishedOptions =
         color: CommonColors.retiredColor,
       ),
     ]);
-
-class Game extends Equatable {
-  final String id;
-  final List<ExternalGameId> externalIds;
-  final String title;
-  final String edition;
-  final DateTime? releaseDate;
-  final List<String> genres;
-  final List<String> series;
-  final String imageUrl;
-  final String? parentId;
-  final int? parentOrder;
-
-  const Game({
-    required this.id,
-    required this.externalIds,
-    required this.title,
-    required this.edition,
-    required this.releaseDate,
-    required this.genres,
-    required this.series,
-    required this.imageUrl,
-    this.parentId,
-    this.parentOrder,
-  });
-
-  @override
-  List<Object?> get props => [id];
-}
-
-class UserGame extends Game {
-  final String status;
-  final int rating;
-  final String notes;
-
-  const UserGame({
-    required super.id,
-    required super.externalIds,
-    required super.title,
-    required super.edition,
-    required super.releaseDate,
-    required super.genres,
-    required super.series,
-    required super.imageUrl,
-    super.parentId,
-    super.parentOrder,
-    required this.status,
-    required this.rating,
-    required this.notes,
-  });
-}
-
-class UserGameWithDate extends UserGame {
-  final DateTime date;
-
-  const UserGameWithDate({
-    required super.id,
-    required super.externalIds,
-    required super.title,
-    required super.edition,
-    required super.releaseDate,
-    required super.genres,
-    required super.series,
-    required super.imageUrl,
-    super.parentId,
-    super.parentOrder,
-    required super.status,
-    required super.rating,
-    required super.notes,
-    required this.date,
-  });
-}
-
-class ExternalGameId {
-  final String source;
-  final String id;
-
-  ExternalGameId({required this.source, required this.id});
-}

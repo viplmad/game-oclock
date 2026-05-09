@@ -13,10 +13,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserSelectBloc;
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/spaces.dart';
-import 'package:game_oclock/models/models.dart' show ListStyle, User;
+import 'package:game_oclock/models/models.dart' show ListStyle;
 import 'package:game_oclock/shared/forms/user_form.dart';
 import 'package:game_oclock/shared/list_item/user_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'user_detail.dart';
 
@@ -72,7 +73,7 @@ class _UserListDetailBuilder extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return ListCreateDetailBuilder<User, UserSelectBloc, UserListBloc>(
+    return ListCreateDetailBuilder<UserDTO, UserSelectBloc, UserListBloc>(
       title: context.localize().usersTitle,
       searchSpace: _space,
       availableStyles: [ListStyle.tile],

@@ -42,6 +42,8 @@ class PlaythroughCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<
             Playthrough,
+            Playthrough,
+            String,
             PlaythroughFormData,
             PlaythroughFormBloc,
             PlaythroughCreateBloc
@@ -72,8 +74,10 @@ class PlaythroughEditForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) =>
-              PlaythroughUpdateBloc(service: RepositoryProvider.of(context)),
+          create: (_) => PlaythroughUpdateBloc(
+            service: RepositoryProvider.of(context),
+            id: id,
+          ),
         ),
         BlocProvider(
           create: (_) =>
@@ -83,6 +87,7 @@ class PlaythroughEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
+            Playthrough,
             Playthrough,
             PlaythroughFormData,
             PlaythroughFormBloc,

@@ -1,32 +1,33 @@
 import 'package:game_oclock/models/models.dart'
-    show GameSession, GameSessionFormData;
+    show GameSessionFormData, NewMediaSession;
+import 'package:game_oclock_client/api.dart';
 
 import '../form.dart' show FormBloc;
 
-class GameSessionFormBloc extends FormBloc<GameSessionFormData, GameSession> {
+class GameSessionFormBloc
+    extends FormBloc<GameSessionFormData, NewMediaSession, SessionDTO> {
   GameSessionFormBloc({required super.data});
 
   @override
-  GameSession fromFormData(final GameSessionFormData data) {
-    return GameSession(
+  NewMediaSession fromFormData(final GameSessionFormData data) {
+    return NewMediaSession(
       gameId: data.gameId.value!,
-      start: data.startDateTime.value!,
-      end: data.endDateTime.value!,
+      startDatetime: data.startDateTime.value!,
+      endDatetime: data.endDateTime.value!,
       deviceId: data.deviceId.value!,
-      playthroughId: data.playthroughId.value!,
+      groupId: data.playthroughId.value!,
       started: data.started.value!,
-      finished: data.finished.value!,
+      finishedStatus: MediaStatus.fromJson(data.finished.value!),
     );
   }
 
   @override
-  void setFormValue(final GameSessionFormData data, final GameSession? value) {
-    data.gameId.value = value?.gameId;
-    data.startDateTime.value = value?.start;
-    data.endDateTime.value = value?.end;
+  void setFormValue(final GameSessionFormData data, final SessionDTO? value) {
+    data.startDateTime.value = value?.startDatetime;
+    data.endDateTime.value = value?.endDatetime;
     data.deviceId.value = value?.deviceId;
-    data.playthroughId.value = value?.playthroughId;
+    data.playthroughId.value = value?.groupId;
     data.started.value = value?.started;
-    data.finished.value = value?.finished;
+    data.finished.value = value?.finishedStatus?.toJson();
   }
 }

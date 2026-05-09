@@ -1,60 +1,59 @@
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, UserGame, UserGameWithDate;
 import 'package:game_oclock/services/services.dart' show GameService;
+import 'package:game_oclock_client/api.dart';
 
 import '../list.dart' show ListLoadBloc;
 
-class UserGameListBloc extends ListLoadBloc<UserGame> {
+class UserGameListBloc extends ListLoadBloc<MediaDTO> {
   UserGameListBloc({required this.service});
 
   final GameService service;
 
   @override
-  Future<PageResultDTO<UserGame>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<MediaDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.count(search, quicksearch);
 }
 
-class UserGameAvailableListBloc extends ListLoadBloc<UserGameWithDate> {
+class UserGameAvailableListBloc extends ListLoadBloc<MediaAvailableDTO> {
   UserGameAvailableListBloc({required this.service, required this.locationId});
 
   final GameService service;
   final String locationId;
 
   @override
-  Future<PageResultDTO<UserGameWithDate>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<MediaAvailableDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.searchAvailable(locationId, search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.countAvailable(locationId, search, quicksearch);
 }
 
-class UserGameWithTagListBloc extends ListLoadBloc<UserGame> {
+class UserGameWithTagListBloc extends ListLoadBloc<MediaTagDTO> {
   UserGameWithTagListBloc({required this.service, required this.tagId});
 
   final GameService service;
   final String tagId;
 
   @override
-  Future<PageResultDTO<UserGame>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<MediaTagDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.searchWithTag(tagId, search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.countWithTag(tagId, search, quicksearch);
 }
 
-class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<UserGame> {
+class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<MediaDTO> {
   UserGamePlayedOnDeviceListBloc({
     required this.service,
     required this.deviceId,
@@ -64,17 +63,17 @@ class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<UserGame> {
   final String deviceId;
 
   @override
-  Future<PageResultDTO<UserGame>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<MediaDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.searchPlayedOnDevice(deviceId, search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.countPlayedOnDevice(deviceId, search, quicksearch);
 }
 
-class UserGameWithPlaythroughListBloc extends ListLoadBloc<UserGame> {
+class UserGameWithPlaythroughListBloc extends ListLoadBloc<MediaDTO> {
   UserGameWithPlaythroughListBloc({
     required this.service,
     required this.playthroughId,
@@ -84,12 +83,12 @@ class UserGameWithPlaythroughListBloc extends ListLoadBloc<UserGame> {
   final String playthroughId;
 
   @override
-  Future<PageResultDTO<UserGame>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<MediaDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.searchWithPlaythrough(playthroughId, search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.countWithPlaythrough(playthroughId, search, quicksearch);
 }

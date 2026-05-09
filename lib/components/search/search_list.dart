@@ -6,9 +6,10 @@ import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
 import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch, SearchDTO;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'search_form.dart';
 
@@ -27,7 +28,7 @@ class SearchListPage extends StatelessWidget {
     return BlocProvider(
       create: (_) =>
           SearchListBloc(service: RepositoryProvider.of(context), space: space)
-            ..add(ListSearchChanged(search: SearchDTO())),
+            ..add(ListSearchChanged(search: ListSearchDTO())),
       child: _SearchListBuilder(space: space, currentSearch: currentSearch),
     );
   }
@@ -47,7 +48,7 @@ class _SearchListBuilder extends StatelessWidget {
           IconButton(
             icon: CommonIcons.add,
             tooltip: context.localize().createLabel,
-            onPressed: () async => showFormDialog<ListSearch>(
+            onPressed: () async => showFormDialog(
               context,
               builder: (final context) => SearchCreateForm(space: space),
               onSuccess: (final context, _) =>
@@ -116,7 +117,7 @@ class SearchGridListItem extends StatelessWidget {
             IconButton(
               icon: CommonIcons.edit,
               tooltip: context.localize().editLabel,
-              onPressed: () async => showFormDialog<ListSearch>(
+              onPressed: () async => showFormDialog(
                 context,
                 builder: (final context) =>
                     SearchEditForm(space: space, name: data.name),

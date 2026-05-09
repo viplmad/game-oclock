@@ -9,10 +9,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart'
-    show User, UserFormData, userRoleOptions;
+import 'package:game_oclock/models/models.dart' show NewUser, UserFormData;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class UserCreateForm extends StatelessWidget {
@@ -35,7 +35,6 @@ class UserCreateForm extends StatelessWidget {
                 validators: [NotEmptyValidator(context)],
               ),
               passwordConfirmation: FormControl<String>(),
-              role: FormControl<String>(),
             ),
           ),
         ),
@@ -45,7 +44,14 @@ class UserCreateForm extends StatelessWidget {
         ),
       ],
       child:
-          CreateFormBuilder<User, UserFormData, UserFormBloc, UserCreateBloc>(
+          CreateFormBuilder<
+            NewUser,
+            UserDTO,
+            String,
+            UserFormData,
+            UserFormBloc,
+            UserCreateBloc
+          >(
             title: context.localize().creatingTitle,
             fieldsBuilder: _fieldsCreateBuilder,
           ),
@@ -70,13 +76,12 @@ class UserEditForm extends StatelessWidget {
               ),
               password: FormControl<String>(),
               passwordConfirmation: FormControl<String>(),
-              role: FormControl<String>(),
             ),
           ),
         ),
         BlocProvider(
           create: (_) =>
-              UserUpdateBloc(service: RepositoryProvider.of(context)),
+              UserUpdateBloc(service: RepositoryProvider.of(context), id: id),
         ),
         BlocProvider(
           create: (_) =>
@@ -86,7 +91,8 @@ class UserEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            User,
+            NewUserDTO,
+            UserDTO,
             UserFormData,
             UserFormBloc,
             UserGetBloc,
@@ -117,12 +123,6 @@ Widget _fieldsCreateBuilder(
         label: context.localize().passwordLabel,
         readOnly: readOnly,
       ),
-      SimpleChoiceFormField(
-        formControl: formGroup.role,
-        label: context.localize().roleLabel,
-        readOnly: readOnly,
-        options: userRoleOptions,
-      ),
     ],
   );
 }
@@ -138,12 +138,6 @@ Widget _fieldsEditBuilder(
         formControl: formGroup.username,
         label: context.localize().usernameLabel,
         readOnly: readOnly,
-      ),
-      SimpleChoiceFormField(
-        formControl: formGroup.role,
-        label: context.localize().roleLabel,
-        readOnly: readOnly,
-        options: userRoleOptions,
       ),
     ],
   );

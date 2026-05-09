@@ -1,17 +1,17 @@
-import 'package:game_oclock/models/models.dart'
-    show Login, SavedLoginResponse, User;
+import 'package:game_oclock/models/models.dart' show Login, SavedLoginResponse;
 import 'package:game_oclock/services/services.dart'
-    show AuthService, LoginService, UserService;
+    show AuthService, LoginService, RetryableApiClient, UserService;
+import 'package:game_oclock_client/api.dart';
 
 import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
 
-class CurrentUserGetBloc extends ProducerActionBloc<User> {
+class CurrentUserGetBloc extends ProducerActionBloc<UserDTO> {
   CurrentUserGetBloc({required this.service});
 
   final UserService service;
 
   @override
-  Future<User> doAction(final void event, final User? lastData) =>
+  Future<UserDTO> doAction(final void event, final UserDTO? lastData) =>
       service.getCurrent();
 }
 
@@ -29,19 +29,33 @@ class CurrentLoginResponseGetBloc
 }
 
 class LoginBloc extends ConsumerActionBloc<Login> {
-  LoginBloc({required this.service, required this.authService});
+  LoginBloc({required this.service, required this.apiClient});
 
-  final LoginService service;
-  final AuthService authService;
+  final AuthService service;
+  final RetryableApiClient apiClient;
 
   @override
   Future<void> doAction(final Login event, final void lastData) async {
-    final loginResponse = await service.login(
-      event.host,
-      event.username,
-      event.password,
+    final loginResponse = await LoginService(
+      ApiClient(basePath: event.host),
+    ).login(event.username, event.password);
+    apiClient.update(
+      basePath: event.host,
+      authentication: OAuth(
+        accessToken: loginResponse.accessToken,
+        refreshToken: loginResponse.refreshToken,
+      ),
+      onRefresh: (final client, final oauth) async {
+        final refreshResponse = await LoginService(
+          ApiClient(basePath: client.basePath),
+        ).refresh(oauth.refreshToken);
+        return OAuth(
+          accessToken: refreshResponse.accessToken,
+          refreshToken: refreshResponse.refreshToken,
+        );
+      },
     );
-    return authService.saveCurrent(
+    return service.saveCurrent(
       SavedLoginResponse(
         host: event.host,
         username: event.username,

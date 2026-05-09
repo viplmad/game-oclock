@@ -1,4 +1,4 @@
-import 'models.dart' show TokenResponse;
+import 'package:game_oclock_client/api.dart';
 
 class SavedLoginResponse {
   final String host;
@@ -25,7 +25,7 @@ class SavedLoginResponse {
     return SavedLoginResponse(
       host: json[r'host']!,
       username: json[r'username']!,
-      tokenResponse: TokenResponse.fromJson(json[r'tokenResponse']),
+      tokenResponse: TokenResponse.fromJson(json[r'tokenResponse'])!,
     );
   }
 }

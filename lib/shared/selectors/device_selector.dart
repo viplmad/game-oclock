@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show DeviceGetBloc, DeviceListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
-import 'package:game_oclock/models/models.dart' show Device;
 import 'package:game_oclock/shared/forms/device_form.dart';
 import 'package:game_oclock/shared/list_item/device_list_item.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DeviceSelectorBuilder extends StatelessWidget {
@@ -23,7 +23,7 @@ class DeviceSelectorBuilder extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return SingleAutocompleteSelectorBuilder<
-      Device,
+      DeviceDTO,
       DeviceGetBloc,
       DeviceListBloc
     >(
@@ -35,7 +35,7 @@ class DeviceSelectorBuilder extends StatelessWidget {
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
       onAddPressed: (final quicksearch, final onSelected) async =>
-          showFormDialog<Device>(
+          showFormDialog<String>(
             context,
             builder: (final context) =>
                 DeviceCreateForm(initialName: quicksearch),

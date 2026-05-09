@@ -15,6 +15,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         DateLocaleConfigSaveBloc,
         LocaleGetBloc,
         LocaleSaveBloc,
+        LoginBloc,
         MinimizedLayoutBloc,
         ThemeModeGetBloc,
         ThemeModeSaveBloc;
@@ -31,8 +32,8 @@ import 'package:game_oclock/services/services.dart'
         ListSearchService,
         ListStyleService,
         LocationService,
-        LoginService,
         PlaythroughService,
+        RetryableApiClient,
         SettingsService,
         TagService,
         UserService;
@@ -51,26 +52,32 @@ class GameOClockApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     final sharedPrefsRepository = SharedPreferencesRepository();
     final authService = AuthService(sharedPrefsRepository);
-    final userService = UserService();
     final settingsService = SettingsService(sharedPrefsRepository);
+
+    final apiClient = RetryableApiClient();
+    final userService = UserService(apiClient);
 
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ExternalGameService>(
-          create: (_) => ExternalGameService(),
+          create: (_) => ExternalGameService(apiClient),
         ),
         RepositoryProvider<AuthService>(create: (_) => authService),
+        RepositoryProvider<SettingsService>(create: (_) => settingsService),
         RepositoryProvider<UserService>(create: (_) => userService),
-        RepositoryProvider<LoginService>(create: (_) => LoginService()),
-        RepositoryProvider<GameService>(create: (_) => GameService()),
-        RepositoryProvider<TagService>(create: (_) => TagService()),
+        RepositoryProvider<GameService>(create: (_) => GameService(apiClient)),
+        RepositoryProvider<TagService>(create: (_) => TagService(apiClient)),
         RepositoryProvider<PlaythroughService>(
           create: (_) => PlaythroughService(),
         ),
-        RepositoryProvider<LocationService>(create: (_) => LocationService()),
-        RepositoryProvider<DeviceService>(create: (_) => DeviceService()),
+        RepositoryProvider<LocationService>(
+          create: (_) => LocationService(apiClient),
+        ),
+        RepositoryProvider<DeviceService>(
+          create: (_) => DeviceService(apiClient),
+        ),
         RepositoryProvider<GameSessionService>(
-          create: (_) => GameSessionService(),
+          create: (_) => GameSessionService(apiClient),
         ),
         RepositoryProvider<ListSearchService>(
           create: (_) => ListSearchService(sharedPrefsRepository),
@@ -78,7 +85,6 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<ListStyleService>(
           create: (_) => ListStyleService(sharedPrefsRepository),
         ),
-        RepositoryProvider<SettingsService>(create: (_) => settingsService),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -87,6 +93,10 @@ class GameOClockApp extends StatelessWidget {
             create: (_) => CurrentLoginResponseGetBloc(service: authService),
           ),
           BlocProvider(create: (_) => CurrentUserGetBloc(service: userService)),
+          BlocProvider(
+            create: (_) =>
+                LoginBloc(service: authService, apiClient: apiClient),
+          ),
           // Config
           BlocProvider(
             create: (_) =>

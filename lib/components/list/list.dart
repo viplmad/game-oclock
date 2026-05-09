@@ -18,7 +18,10 @@ import 'package:game_oclock/utils/show_snackbar.dart';
 int countWithTrailing(final List items, final Widget? trailing) =>
     items.length + (trailing == null ? 0 : 1);
 
-abstract class PaginatedListBuilder<T, LB extends ListLoadBloc<T>>
+abstract class PaginatedListBuilder<
+  T extends Object,
+  LB extends ListLoadBloc<T>
+>
     extends StatelessWidget {
   const PaginatedListBuilder({
     super.key,

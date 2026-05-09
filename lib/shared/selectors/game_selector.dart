@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show UserGameGetBloc, UserGameListBloc;
 import 'package:game_oclock/components/single_autocomplete_selector.dart';
-import 'package:game_oclock/models/models.dart' show UserGame;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class UserGameSelectorBuilder extends StatelessWidget {
@@ -23,7 +23,7 @@ class UserGameSelectorBuilder extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return SingleAutocompleteSelectorBuilder<
-      UserGame,
+      MediaDTO,
       UserGameGetBloc,
       UserGameListBloc
     >(
@@ -32,10 +32,10 @@ class UserGameSelectorBuilder extends StatelessWidget {
       readOnly: readOnly,
       itemBuilder: (final context, final item, final index, final onSelected) =>
           UserGameTileListItem(data: item, onTap: onSelected),
-      keyGetter: (final item) => item.id,
-      displayString: (final item) => item.title,
+      keyGetter: (final item) => item.media.id,
+      displayString: (final item) => item.media.title,
       onAddPressed: (final quicksearch, final onSelected) async =>
-          showFormDialog<UserGame>(
+          showFormDialog<String>(
             context,
             builder: (final context) =>
                 UserGameCreateForm(initialTitle: quicksearch),

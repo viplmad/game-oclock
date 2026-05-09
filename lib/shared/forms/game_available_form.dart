@@ -81,6 +81,8 @@ class GameAvailableCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<
             GameAvailable,
+            GameAvailable,
+            (String, String),
             GameAvailableFormData,
             GameAvailableFormBloc,
             GameAvailableCreateBloc

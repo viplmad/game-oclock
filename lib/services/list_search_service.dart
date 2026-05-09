@@ -59,7 +59,7 @@ class ListSearchService {
     );
   }
 
-  Future<ListSearch> create(final String space, final ListSearch search) async {
+  Future<String> create(final String space, final ListSearch search) async {
     final id = 'user-${Random().nextInt(100)}';
     if (await exists(space, id)) {
       throw GameOClockException(
@@ -71,7 +71,8 @@ class ListSearchService {
     final createdListSearch = ListSearch(
       id: id,
       name: search.name,
-      search: search.search,
+      filter: search.filter,
+      sort: search.sort,
     );
     await repository.set(
       _buildElementKey(space, id),
@@ -81,7 +82,7 @@ class ListSearchService {
 
     final ids = await _getIds(space);
     await _setIds(space, [...ids, id]);
-    return createdListSearch;
+    return id;
   }
 
   Future<void> update(final String space, final ListSearch search) async {

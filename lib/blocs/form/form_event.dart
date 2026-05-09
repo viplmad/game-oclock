@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 
-sealed class FormEvent<T> extends Equatable {
+sealed class FormEvent<N, T> extends Equatable {
   const FormEvent();
 }
 
-final class FormSubmitted<T> extends FormEvent<T> {
+final class FormSubmitted<N, T> extends FormEvent<N, T> {
   const FormSubmitted();
 
   @override
   List<Object?> get props => [];
 }
 
-final class FormValueUpdated<T> extends FormEvent<T> {
+final class FormValueUpdated<N, T> extends FormEvent<N, T> {
   final T? value;
 
   const FormValueUpdated({required this.value});

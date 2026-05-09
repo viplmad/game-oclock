@@ -1,51 +1,54 @@
-import 'package:game_oclock/models/models.dart' show Device;
 import 'package:game_oclock/services/services.dart' show DeviceService;
+import 'package:game_oclock_client/api.dart';
 
 import '../action.dart'
     show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
-class DeviceGetBloc extends FunctionActionBloc<String, Device> {
+class DeviceGetBloc extends FunctionActionBloc<String, DeviceDTO> {
   DeviceGetBloc({required this.service});
 
   final DeviceService service;
 
   @override
-  Future<Device> doAction(final String event, final Device? lastData) =>
+  Future<DeviceDTO> doAction(final String event, final DeviceDTO? lastData) =>
       service.get(event);
 }
 
-class DeviceCreateBloc extends IdentityActionBloc<Device> {
+class DeviceCreateBloc extends FunctionActionBloc<NewDeviceDTO, String> {
   DeviceCreateBloc({required this.service});
 
   final DeviceService service;
 
   @override
-  Future<Device> doAction(final Device event, final Device? lastData) =>
+  Future<String> doAction(final NewDeviceDTO event, final String? lastData) =>
       service.create(event);
 }
 
-class DeviceUpdateBloc extends ConsumerActionBloc<Device> {
-  DeviceUpdateBloc({required this.service});
+class DeviceUpdateBloc extends ConsumerActionBloc<NewDeviceDTO> {
+  DeviceUpdateBloc({required this.service, required this.id});
 
   final DeviceService service;
+  final String id;
 
   @override
-  Future<void> doAction(final Device event, final void lastData) =>
-      service.update(event);
+  Future<void> doAction(final NewDeviceDTO event, final void lastData) =>
+      service.update(id, event);
 }
 
-class DeviceDeleteBloc extends ConsumerActionBloc<Device> {
+class DeviceDeleteBloc extends ConsumerActionBloc<DeviceDTO> {
   DeviceDeleteBloc({required this.service});
 
   final DeviceService service;
 
   @override
-  Future<void> doAction(final Device event, final void lastData) =>
+  Future<void> doAction(final DeviceDTO event, final void lastData) =>
       service.delete(event.id);
 }
 
-class DeviceSelectBloc extends IdentityActionBloc<Device?> {
+class DeviceSelectBloc extends IdentityActionBloc<DeviceDTO?> {
   @override
-  Future<Device?> doAction(final Device? event, final Device? lastData) async =>
-      event;
+  Future<DeviceDTO?> doAction(
+    final DeviceDTO? event,
+    final DeviceDTO? lastData,
+  ) async => event;
 }

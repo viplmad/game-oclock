@@ -1,31 +1,33 @@
 import 'package:game_oclock/models/models.dart'
-    show User, UserChangePassword, UserChangePasswordFormData, UserFormData;
+    show NewUser, UserChangePassword, UserChangePasswordFormData, UserFormData;
+import 'package:game_oclock_client/api.dart';
 
 import '../form.dart' show FormBloc;
 
-class UserFormBloc extends FormBloc<UserFormData, User> {
+class UserFormBloc extends FormBloc<UserFormData, NewUser, UserDTO> {
   UserFormBloc({required super.data});
 
   @override
-  User fromFormData(final UserFormData data) {
-    return User(
-      id: '', // TODO
+  NewUser fromFormData(final UserFormData data) {
+    return NewUser(
       username: data.username.value!,
       password: data.password.value!,
-      role: data.role.value!,
     );
   }
 
   @override
-  void setFormValue(final UserFormData data, final User? value) {
+  void setFormValue(final UserFormData data, final UserDTO? value) {
     data.username.value = value?.username;
-    data.password.value = value?.password;
-    data.role.value = value?.role;
   }
 }
 
 class UserChangePasswordFormBloc
-    extends FormBloc<UserChangePasswordFormData, UserChangePassword> {
+    extends
+        FormBloc<
+          UserChangePasswordFormData,
+          UserChangePassword,
+          UserChangePassword
+        > {
   UserChangePasswordFormBloc({required super.data});
 
   @override

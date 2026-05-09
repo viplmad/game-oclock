@@ -760,6 +760,18 @@ abstract class AppLocalizations {
   /// **'Does not contain'**
   String get notContainsLabel;
 
+  /// No description provided for @nullLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Null'**
+  String get nullLabel;
+
+  /// No description provided for @notNullLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Null'**
+  String get notNullLabel;
+
   /// No description provided for @andLabel.
   ///
   /// In en, this message translates to:
@@ -777,12 +789,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'then'**
   String get thenLabel;
-
-  /// No description provided for @nullLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'null'**
-  String get nullLabel;
 
   /// No description provided for @quote.
   ///
@@ -873,6 +879,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{aField} does not contain {bValue}'**
   String notContainsChipLabel(Object aField, Object bValue);
+
+  /// No description provided for @nullChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} is null'**
+  String nullChipLabel(Object aField);
+
+  /// No description provided for @notNullChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{aField} is not null'**
+  String notNullChipLabel(Object aField);
 
   /// No description provided for @listStyleTileLabel.
   ///

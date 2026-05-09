@@ -9,9 +9,10 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocationUpdateBloc;
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
-import 'package:game_oclock/models/models.dart' show Location, LocationFormData;
+import 'package:game_oclock/models/models.dart' show LocationFormData;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class LocationCreateForm extends StatelessWidget {
@@ -40,7 +41,9 @@ class LocationCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            Location,
+            NewLocationDTO,
+            LocationDTO,
+            String,
             LocationFormData,
             LocationFormBloc,
             LocationCreateBloc
@@ -71,8 +74,10 @@ class LocationEditForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) =>
-              LocationUpdateBloc(service: RepositoryProvider.of(context)),
+          create: (_) => LocationUpdateBloc(
+            service: RepositoryProvider.of(context),
+            id: id,
+          ),
         ),
         BlocProvider(
           create: (_) =>
@@ -82,7 +87,8 @@ class LocationEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            Location,
+            NewLocationDTO,
+            LocationDTO,
             LocationFormData,
             LocationFormBloc,
             LocationGetBloc,

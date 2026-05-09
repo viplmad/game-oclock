@@ -19,8 +19,7 @@ import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart'
-    show LayoutTier, Location, SearchDTO, TabDestination, UserGameWithDate;
+import 'package:game_oclock/models/models.dart' show LayoutTier, TabDestination;
 import 'package:game_oclock/shared/forms/game_available_form.dart';
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/location_form.dart';
@@ -30,6 +29,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
 class LocationDetailPage extends StatelessWidget {
@@ -59,7 +59,7 @@ class LocationDetailPage extends StatelessWidget {
           ),
         ),
       ],
-      child: DetailBuilder<Location, LocationGetBloc>(
+      child: DetailBuilder<LocationDTO, LocationGetBloc>(
         onBackPressed: () => GoRouter.of(context).go(CommonPaths.locationsPath),
         builder: (final context, final data, final onBackPressed) =>
             LocationDetail(
@@ -88,7 +88,7 @@ class LocationDetail extends StatelessWidget {
     required this.onDeleteSucceeded,
   });
 
-  final Location data;
+  final LocationDTO data;
   final VoidCallback onBackPressed;
   final bool fromPage;
   final bool extended;
@@ -110,30 +110,36 @@ class LocationDetail extends StatelessWidget {
         labelBuilder: (final context) => context.localize().gamesTitle,
         onTap: (final context) =>
             _loadOnlyInitial<UserGameAvailableListBloc>(context),
-        child: RelationListBuilder<UserGameWithDate, UserGameAvailableListBloc>(
-          createFormBuilder: ([final quicksearch]) =>
-              GameAvailableCreateForm(gameId: quicksearch, locationId: data.id),
-          searchCreateFormBuilder: (final quicksearch) =>
-              UserGameCreateForm(initialTitle: quicksearch),
-          itemBuilder: (final context, final data) => GameWithDateTileListItem(
-            data: data,
-            onTap: () =>
-                GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
-          ),
-        ),
+        child:
+            RelationListBuilder<MediaAvailableDTO, UserGameAvailableListBloc>(
+              createFormBuilder: ([final quicksearch]) =>
+                  GameAvailableCreateForm(
+                    gameId: quicksearch,
+                    locationId: data.id,
+                  ),
+              searchCreateFormBuilder: (final quicksearch) =>
+                  UserGameCreateForm(initialTitle: quicksearch),
+              itemBuilder: (final context, final data) =>
+                  GameWithDateTileListItem(
+                    data: data,
+                    onTap: () => GoRouter.of(
+                      context,
+                    ).go(CommonPaths.buildGamePath(data.media.media.id)),
+                  ),
+            ),
       ),
     ]);
 
     return BlocListener<LocationDeleteBloc, ActionState<void>>(
       listener: (final context, final state) {
-        if (state is ActionSuccess<void, Location>) {
+        if (state is ActionSuccess<void, LocationDTO>) {
           showSnackBar(
             context,
             message: context.localize().deletedSuccessfullyLabel,
           );
           onDeleteSucceeded(context);
         }
-        if (state is ActionFailure<void, Location>) {
+        if (state is ActionFailure<void, LocationDTO>) {
           showErrorSnackBar(
             context,
             name: context.localize().unableToDeleteLabel,
@@ -143,11 +149,13 @@ class LocationDetail extends StatelessWidget {
       },
       child: DetailWithTabs(
         title: Text(data.name),
-        image: SimpleCachedNetworkImage(
-          imageUrl: data.imageUrl,
-          fit: BoxFit.cover,
-          applyGradient: true,
-        ),
+        image: data.imageUrl == null
+            ? null
+            : SimpleCachedNetworkImage(
+                imageUrl: data.imageUrl!,
+                fit: BoxFit.cover,
+                applyGradient: true,
+              ),
         onBackPressed: onBackPressed,
         actions: [
           if (!fromPage)
@@ -161,7 +169,7 @@ class LocationDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog<Location>(
+            onPressed: () async => showFormDialog(
               context,
               builder: (final context) => LocationEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
@@ -209,7 +217,7 @@ class LocationDetail extends StatelessWidget {
   void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
-      lb.add(ListSearchChanged(search: SearchDTO()));
+      lb.add(ListSearchChanged(search: ListSearchDTO()));
     }
   }
 }

@@ -13,20 +13,16 @@ import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/models/models.dart'
-    show
-        ExternalGame,
-        UserGame,
-        UserGameExternalFormData,
-        UserGameFormData,
-        gameStatusOptions;
+    show UserGameExternalFormData, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class UserGameExternalCreateForm extends StatelessWidget {
-  const UserGameExternalCreateForm({super.key, required this.externalData});
+  const UserGameExternalCreateForm({super.key, required this.externalId});
 
-  final ExternalGame externalData;
+  final ExternalMediaIdDTO externalId;
 
   @override
   Widget build(final BuildContext context) {
@@ -34,8 +30,15 @@ class UserGameExternalCreateForm extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserGameExternalFormBloc(
-            externalData: externalData,
             data: UserGameExternalFormData(
+              extenalSource: FormControl<String>(
+                value: externalId.source_,
+                validators: [NotEmptyValidator(context)],
+              ),
+              externalId: FormControl<String>(
+                value: externalId.id,
+                validators: [NotEmptyValidator(context)],
+              ),
               status: FormControl<String>(
                 validators: [NotEmptyValidator(context)],
               ),
@@ -51,7 +54,9 @@ class UserGameExternalCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            UserGame,
+            NewMediaDTO,
+            MediaDTO,
+            String,
             UserGameExternalFormData,
             UserGameExternalFormBloc,
             UserGameCreateBloc
@@ -60,7 +65,7 @@ class UserGameExternalCreateForm extends StatelessWidget {
             fieldsBuilder: (final context, final formGroup, final readOnly) =>
                 _fieldsCreateExternalBuilder(
                   context,
-                  externalData,
+                  externalId,
                   formGroup,
                   readOnly,
                 ),
@@ -71,32 +76,14 @@ class UserGameExternalCreateForm extends StatelessWidget {
 
 Widget _fieldsCreateExternalBuilder(
   final BuildContext context,
-  final ExternalGame externalData,
+  final ExternalMediaIdDTO externalId,
   final UserGameExternalFormData formGroup,
   final bool readOnly,
 ) {
   return FormFieldsContainer(
     children: <Widget>[
-      TextLabel(
-        label: context.localize().idLabel,
-        value: externalData.externalId.source,
-      ),
-      TextLabel(
-        label: context.localize().idLabel,
-        value: externalData.externalId.id,
-      ),
-      TextLabel(
-        label: context.localize().titleLabel,
-        value: externalData.title,
-      ),
-      TextLabel(
-        label: context.localize().editionLabel,
-        value: externalData.edition,
-      ),
-      DateLabel(
-        label: context.localize().releaseDateLabel,
-        value: externalData.releaseDate,
-      ),
+      TextLabel(label: context.localize().idLabel, value: externalId.source_),
+      TextLabel(label: context.localize().idLabel, value: externalId.id),
       SimpleChoiceFormField(
         formControl: formGroup.status,
         label: context.localize().statusLabel,
@@ -154,7 +141,9 @@ class UserGameCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            UserGame,
+            NewMediaDTO,
+            MediaDTO,
+            String,
             UserGameFormData,
             UserGameFormBloc,
             UserGameCreateBloc
@@ -192,8 +181,10 @@ class UserGameEditForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) =>
-              UserGameUpdateBloc(service: RepositoryProvider.of(context)),
+          create: (_) => UserGameUpdateBloc(
+            service: RepositoryProvider.of(context),
+            id: id,
+          ),
         ),
         BlocProvider(
           create: (_) =>
@@ -203,7 +194,8 @@ class UserGameEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            UserGame,
+            NewMediaDTO,
+            MediaDTO,
             UserGameFormData,
             UserGameFormBloc,
             UserGameGetBloc,

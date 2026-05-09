@@ -13,14 +13,14 @@ import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart'
-    show LayoutTier, TabDestination, User;
+import 'package:game_oclock/models/models.dart' show LayoutTier, TabDestination;
 import 'package:game_oclock/shared/forms/user_form.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
 class UserDetailPage extends StatelessWidget {
@@ -44,7 +44,7 @@ class UserDetailPage extends StatelessWidget {
               UserDeleteBloc(service: RepositoryProvider.of(context)),
         ),
       ],
-      child: DetailBuilder<User, UserGetBloc>(
+      child: DetailBuilder<UserDTO, UserGetBloc>(
         onBackPressed: () => GoRouter.of(context).go(CommonPaths.usersPath),
         builder: (final context, final data, final onBackPressed) => UserDetail(
           data: data,
@@ -72,7 +72,7 @@ class UserDetail extends StatelessWidget {
     required this.onDeleteSucceeded,
   });
 
-  final User data;
+  final UserDTO data;
   final VoidCallback onBackPressed;
   final bool fromPage;
   final bool extended;
@@ -92,14 +92,14 @@ class UserDetail extends StatelessWidget {
 
     return BlocListener<UserDeleteBloc, ActionState<void>>(
       listener: (final context, final state) {
-        if (state is ActionSuccess<void, User>) {
+        if (state is ActionSuccess<void, UserDTO>) {
           showSnackBar(
             context,
             message: context.localize().deletedSuccessfullyLabel,
           );
           onDeleteSucceeded(context);
         }
-        if (state is ActionFailure<void, User>) {
+        if (state is ActionFailure<void, UserDTO>) {
           showErrorSnackBar(
             context,
             name: context.localize().unableToDeleteLabel,
@@ -121,7 +121,7 @@ class UserDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog<User>(
+            onPressed: () async => showFormDialog(
               context,
               builder: (final context) => UserEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),

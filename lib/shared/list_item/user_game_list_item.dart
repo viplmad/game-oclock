@@ -5,11 +5,11 @@ import 'package:game_oclock/components/list/list_item.dart'
 import 'package:game_oclock/components/triangle_banner.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart'
-    show GameSession, UserGame, gameStatusOptions;
+import 'package:game_oclock/models/models.dart' show gameStatusOptions;
 import 'package:game_oclock/shared/forms/game_session_form.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 
 class UserGameTileListItem extends StatelessWidget {
   const UserGameTileListItem({
@@ -19,19 +19,24 @@ class UserGameTileListItem extends StatelessWidget {
     this.onAddSessionSucceeded,
   });
 
-  final UserGame data;
+  final MediaDTO data;
   final VoidCallback onTap;
   final ValueChanged<BuildContext>? onAddSessionSucceeded;
 
   @override
   Widget build(final BuildContext context) {
     final listItem = TileListItem(
-      title: data.edition.isEmpty
-          ? data.title
-          : context.localize().gameEditionDataTitle(data.title, data.edition),
-      subtitle: data.releaseDate == null
+      title: data.media.edition.isEmpty
+          ? data.media.title
+          : context.localize().gameEditionDataTitle(
+              data.media.title,
+              data.media.edition,
+            ),
+      subtitle: data.media.releaseDate == null
           ? null
-          : MaterialLocalizations.of(context).formatYear(data.releaseDate!),
+          : MaterialLocalizations.of(
+              context,
+            ).formatYear(data.media.releaseDate!),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         spacing: 8.0,
@@ -41,22 +46,25 @@ class UserGameTileListItem extends StatelessWidget {
             IconButton(
               icon: CommonIcons.addSession,
               tooltip: context.localize().addSessionLabel,
-              onPressed: () => showFormDialog<GameSession>(
+              onPressed: () => showFormDialog(
                 context,
                 builder: (final context) =>
-                    GameSessionCreateForm(gameId: data.id),
+                    GameSessionCreateForm(gameId: data.media.id),
                 onSuccess: (final context, _) =>
                     onAddSessionSucceeded!(context),
               ),
             ),
-          LabelChoiceChip(value: data.status, options: gameStatusOptions),
+          LabelChoiceChip(
+            value: data.state.status.toJson(),
+            options: gameStatusOptions,
+          ),
         ],
       ),
-      imageURL: data.imageUrl,
+      imageURL: data.media.imageUrl,
       onTap: onTap,
     );
 
-    return addRatingBanner(listItem, data.rating);
+    return addRatingBanner(listItem, data.state.rating);
   }
 }
 
@@ -67,20 +75,23 @@ class UserGameGridListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final UserGame data;
+  final MediaDTO data;
   final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
     final listItem = GridListItem(
-      title: data.edition.isEmpty
-          ? data.title
-          : context.localize().gameEditionDataTitle(data.title, data.edition),
-      imageURL: data.imageUrl,
+      title: data.media.edition.isEmpty
+          ? data.media.title
+          : context.localize().gameEditionDataTitle(
+              data.media.title,
+              data.media.edition,
+            ),
+      imageURL: data.media.imageUrl,
       onTap: onTap,
     );
 
-    return addRatingBanner(listItem, data.rating);
+    return addRatingBanner(listItem, data.state.rating);
   }
 }
 

@@ -1,17 +1,24 @@
-import 'package:game_oclock/models/models.dart' show FormData, UserGame;
+import 'package:game_oclock/models/models.dart' show FormData;
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class UserGameExternalFormData extends FormData<UserGame> {
+class UserGameExternalFormData extends FormData<NewMediaDTO> {
+  final FormControl<String> extenalSource;
+  final FormControl<String> externalId;
   final FormControl<String> status;
   final FormControl<int> rating;
   final FormControl<String> notes;
 
   UserGameExternalFormData({
+    required this.extenalSource,
+    required this.externalId,
     required this.status,
     required this.rating,
     required this.notes,
   }) : super(
          formGroup: FormGroup({
+           'externalSource': extenalSource,
+           'externalId': externalId,
            'status': status,
            'rating': rating,
            'notes': notes,
@@ -19,15 +26,15 @@ class UserGameExternalFormData extends FormData<UserGame> {
        );
 }
 
-class UserGameFormData extends FormData<UserGame> {
+class UserGameFormData extends FormData<NewMediaDTO> {
   final FormControl<String> title;
   final FormControl<String> edition;
   final FormControl<DateTime> releaseDate;
+  final FormArray<String> genres;
+  final FormArray<String> series;
   final FormControl<String> status;
   final FormControl<int> rating;
   final FormControl<String> notes;
-  final FormArray<String> genres;
-  final FormArray<String> series;
 
   UserGameFormData({
     required this.title,
@@ -43,11 +50,11 @@ class UserGameFormData extends FormData<UserGame> {
            'title': title,
            'edition': edition,
            'releaseDate': releaseDate,
+           'genres': genres,
+           'series': series,
            'status': status,
            'rating': rating,
            'notes': notes,
-           'genres': genres,
-           'series': series,
          }),
        );
 }

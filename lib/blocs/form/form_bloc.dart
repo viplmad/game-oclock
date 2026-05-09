@@ -13,14 +13,14 @@ import 'form.dart'
         FormSubmitted,
         FormValueUpdated;
 
-abstract class FormBloc<D extends FormData<T>, T>
-    extends Bloc<FormEvent<T>, FormState2<D, T>> {
+abstract class FormBloc<D extends FormData<N>, N, T>
+    extends Bloc<FormEvent<N, T>, FormState2<D, N>> {
   FormBloc({required final D data})
-    : super(FormStateInitial<D, T>(data: data)) {
-    on<FormSubmitted<T>>(
+    : super(FormStateInitial<D, N>(data: data)) {
+    on<FormSubmitted<N, T>>(
       (final event, final emit) async => await onSubmitted(emit),
     );
-    on<FormValueUpdated<T>>(
+    on<FormValueUpdated<N, T>>(
       (final event, final emit) async =>
           await onValueUpdated(event.value, emit),
     );
@@ -33,14 +33,14 @@ abstract class FormBloc<D extends FormData<T>, T>
 
     final data = state.data;
 
-    emit(FormStateSubmitInProgress<D, T>(data: data));
+    emit(FormStateSubmitInProgress<D, N>(data: data));
     data.formGroup.updateValueAndValidity();
     if (data.formGroup.valid) {
       final value = fromFormData(data);
-      emit(FormStateSubmitSuccess<D, T>(value: value, data: data));
+      emit(FormStateSubmitSuccess<D, N>(value: value, data: data));
     } else {
       emit(
-        FormStateSubmitFailure<D, T>(
+        FormStateSubmitFailure<D, N>(
           error: ErrorDTO(
             code: errorCodeInvalidForm,
             message: 'The form has ${data.formGroup.errors.length} errors',
@@ -61,10 +61,10 @@ abstract class FormBloc<D extends FormData<T>, T>
 
     final data = state.data;
     setFormValue(data, value);
-    emit(FormStateInitial<D, T>(data: data));
+    emit(FormStateInitial<D, N>(data: data));
   }
 
-  T fromFormData(final D data);
+  N fromFormData(final D data);
 
   void setFormValue(final D data, final T? value);
 }

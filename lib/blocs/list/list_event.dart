@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:game_oclock/models/models.dart' show SearchDTO;
+import 'package:game_oclock_client/api.dart';
 
 sealed class ListEvent extends Equatable {
   const ListEvent();
@@ -20,7 +20,7 @@ final class ListPageReloaded extends ListEvent {
 }
 
 final class ListSearchChanged extends ListEvent {
-  final SearchDTO search;
+  final ListSearchDTO search;
 
   const ListSearchChanged({required this.search});
 

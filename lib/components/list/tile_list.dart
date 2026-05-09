@@ -6,7 +6,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'list.dart';
 import 'list_item.dart';
 
-class TileListBuilder<T, LB extends ListLoadBloc<T>>
+class TileListBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
   const TileListBuilder({
     super.key,
@@ -58,7 +58,7 @@ class TileListBuilder<T, LB extends ListLoadBloc<T>>
   }
 }
 
-class ReorderableListBuilder<T, LB extends ListLoadBloc<T>>
+class ReorderableListBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends TileListBuilder<T, LB> {
   const ReorderableListBuilder({
     super.key,

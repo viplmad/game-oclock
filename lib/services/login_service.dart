@@ -1,13 +1,22 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart' show TokenResponse;
+import 'package:game_oclock_client/api.dart';
 
 class LoginService {
+  final AuthApi _api;
+
+  LoginService(final ApiClient apiClient) : _api = AuthApi(apiClient);
+
   Future<TokenResponse> login(
-    final String host,
     final String username,
     final String password,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockTokenResponse();
+    return _api.token(
+      GrantType.password,
+      username: username,
+      password: password,
+    );
+  }
+
+  Future<TokenResponse> refresh(final String refreshToken) async {
+    return _api.token(GrantType.refreshToken, refreshToken: refreshToken);
   }
 }

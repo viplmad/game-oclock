@@ -1,21 +1,20 @@
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, User;
 import 'package:game_oclock/services/services.dart' show UserService;
+import 'package:game_oclock_client/api.dart';
 
 import '../list.dart' show ListLoadBloc;
 
-class UserListBloc extends ListLoadBloc<User> {
+class UserListBloc extends ListLoadBloc<UserDTO> {
   UserListBloc({required this.service});
 
   final UserService service;
 
   @override
-  Future<PageResultDTO<User>> doLoad(
-    final SearchDTO search,
+  Future<PageResultDTO<UserDTO>> doLoad(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) => service.search(search, quicksearch);
 
   @override
-  Future<int> doCount(final SearchDTO search, final String? quicksearch) =>
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.count(search, quicksearch);
 }

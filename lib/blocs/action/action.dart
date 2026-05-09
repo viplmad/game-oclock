@@ -15,7 +15,7 @@ export 'impl/list_style_bloc.dart';
 export 'impl/location_bloc.dart';
 export 'impl/minimized_layout_bloc.dart';
 export 'impl/playthrough_bloc.dart';
-export 'impl/review_bloc.dart.dart';
+export 'impl/review_bloc.dart';
 export 'impl/settings_bloc.dart';
 export 'impl/tag_bloc.dart';
 export 'impl/user_bloc.dart';

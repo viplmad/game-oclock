@@ -33,6 +33,7 @@ import 'package:game_oclock/pages/tags/tag_detail.dart';
 import 'package:game_oclock/pages/tags/tag_list.dart';
 import 'package:game_oclock/pages/users/user_detail.dart';
 import 'package:game_oclock/pages/users/user_list.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -269,10 +270,10 @@ FutureOr<String?> _authGuardRedirect(
   currentUserBloc.add(ActionStarted.empty());
   final currentUserState =
       await currentUserBloc.stream.firstWhere(
-            (final actionState) => actionState is ActionFinal<User, void>,
+            (final actionState) => actionState is ActionFinal<UserDTO, void>,
           )
-          as ActionFinal<User, void>;
-  if (currentUserState is ActionFailure<User, void>) {
+          as ActionFinal<UserDTO, void>;
+  if (currentUserState is ActionFailure<UserDTO, void>) {
     return CommonPaths.loginPath;
   }
 
@@ -292,15 +293,15 @@ FutureOr<String?> _roleGuardRedirect(
   currentUserBloc.add(ActionStarted.empty());
   final currentUserState =
       await currentUserBloc.stream.firstWhere(
-            (final actionState) => actionState is ActionFinal<User, void>,
+            (final actionState) => actionState is ActionFinal<UserDTO, void>,
           )
-          as ActionFinal<User, void>;
-  if (currentUserState is ActionFailure<User, void>) {
+          as ActionFinal<UserDTO, void>;
+  if (currentUserState is ActionFailure<UserDTO, void>) {
     return CommonPaths.loginPath;
   }
 
   return roles.contains(
-        (currentUserState as ActionSuccess<User, void>).data.role,
+        (currentUserState as ActionSuccess<UserDTO, void>).data.role,
       )
       ? null
       : CommonPaths.homePath;

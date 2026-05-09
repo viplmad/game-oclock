@@ -26,11 +26,11 @@ import 'package:game_oclock/models/models.dart'
         ListStyle,
         OptionField,
         OptionTextField,
-        SearchDTO,
         defaultListStyle;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'full_search_app_bar.dart';
 import 'list/grid_list.dart';
@@ -49,7 +49,7 @@ final OptionField<ListStyle> _listStyleGridOption = OptionTextField<ListStyle>(
 );
 
 class ListDetailBuilder<
-  T,
+  T extends Object,
   SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>
 >
@@ -103,8 +103,11 @@ class ListDetailBuilder<
           listener: (final context, final state) {
             if (state is ActionFinal<ListSearch, void>) {
               final currentSearch = (state is ActionSuccess<ListSearch, void>)
-                  ? state.data.search
-                  : SearchDTO();
+                  ? ListSearchDTO(
+                      filter: state.data.filter,
+                      sort: state.data.sort,
+                    )
+                  : ListSearchDTO();
 
               context.read<LB>().add(ListSearchChanged(search: currentSearch));
             }
@@ -336,7 +339,7 @@ class ListDetailBuilder<
 }
 
 class ListCreateDetailBuilder<
-  T,
+  T extends Object,
   SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>
 >
@@ -374,7 +377,7 @@ class ListCreateDetailBuilder<
       title: title,
       searchSpace: searchSpace,
       availableStyles: availableStyles,
-      onSearchAddPressed: (final quicksearch) async => showFormDialog<T>(
+      onSearchAddPressed: (final quicksearch) async => showFormDialog(
         context,
         builder: (final context) => createFormBuilder(quicksearch),
         onSuccess: (final context, _) =>
@@ -382,7 +385,7 @@ class ListCreateDetailBuilder<
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().createLabel,
-        onPressed: () async => showFormDialog<T>(
+        onPressed: () async => showFormDialog(
           context,
           builder: (final context) => createFormBuilder(),
           onSuccess: (final context, _) =>
@@ -397,7 +400,7 @@ class ListCreateDetailBuilder<
   }
 }
 
-class RelationListBuilder<T, LB extends ListLoadBloc<T>>
+class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const RelationListBuilder({
     super.key,
@@ -421,7 +424,7 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
                 context,
                 builder: (final context) =>
                     searchCreateFormBuilder!(quicksearch),
-                onSuccess: (final context, _) async => showFormDialog<T>(
+                onSuccess: (final context, _) async => showFormDialog(
                   context,
                   builder: (final context) => createFormBuilder!(quicksearch),
                   onSuccess: (final context, _) =>
@@ -435,7 +438,7 @@ class RelationListBuilder<T, LB extends ListLoadBloc<T>>
             IconButton(
               icon: CommonIcons.link,
               tooltip: context.localize().linkLabel,
-              onPressed: () async => showFormDialog<T>(
+              onPressed: () async => showFormDialog(
                 context,
                 builder: (final context) => createFormBuilder!(),
                 onSuccess: (final context, _) =>

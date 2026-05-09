@@ -7,7 +7,7 @@ import 'package:game_oclock/utils/localisation_extension.dart';
 import 'list.dart';
 import 'list_item.dart';
 
-class GridListBuilder<T, LB extends ListLoadBloc<T>>
+class GridListBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends PaginatedListBuilder<T, LB> {
   const GridListBuilder({
     super.key,

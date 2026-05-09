@@ -1,50 +1,52 @@
-import 'package:game_oclock/models/models.dart' show Tag;
 import 'package:game_oclock/services/services.dart' show TagService;
+import 'package:game_oclock_client/api.dart';
 
 import '../action.dart'
     show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
-class TagGetBloc extends FunctionActionBloc<String, Tag> {
+class TagGetBloc extends FunctionActionBloc<String, TagDTO> {
   TagGetBloc({required this.service});
 
   final TagService service;
 
   @override
-  Future<Tag> doAction(final String event, final Tag? lastData) =>
+  Future<TagDTO> doAction(final String event, final TagDTO? lastData) =>
       service.get(event);
 }
 
-class TagCreateBloc extends IdentityActionBloc<Tag> {
+class TagCreateBloc extends FunctionActionBloc<NewTagDTO, String> {
   TagCreateBloc({required this.service});
 
   final TagService service;
 
   @override
-  Future<Tag> doAction(final Tag event, final Tag? lastData) =>
+  Future<String> doAction(final NewTagDTO event, final String? lastData) =>
       service.create(event);
 }
 
-class TagUpdateBloc extends ConsumerActionBloc<Tag> {
-  TagUpdateBloc({required this.service});
+class TagUpdateBloc extends ConsumerActionBloc<NewTagDTO> {
+  TagUpdateBloc({required this.service, required this.id});
 
   final TagService service;
+  final String id;
 
   @override
-  Future<void> doAction(final Tag event, final void lastData) =>
-      service.update(event);
+  Future<void> doAction(final NewTagDTO event, final void lastData) =>
+      service.update(id, event);
 }
 
-class TagDeleteBloc extends ConsumerActionBloc<Tag> {
+class TagDeleteBloc extends ConsumerActionBloc<TagDTO> {
   TagDeleteBloc({required this.service});
 
   final TagService service;
 
   @override
-  Future<void> doAction(final Tag event, final void lastData) =>
+  Future<void> doAction(final TagDTO event, final void lastData) =>
       service.delete(event.id);
 }
 
-class TagSelectBloc extends IdentityActionBloc<Tag?> {
+class TagSelectBloc extends IdentityActionBloc<TagDTO?> {
   @override
-  Future<Tag?> doAction(final Tag? event, final Tag? lastData) async => event;
+  Future<TagDTO?> doAction(final TagDTO? event, final TagDTO? lastData) async =>
+      event;
 }

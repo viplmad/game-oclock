@@ -4,11 +4,11 @@ import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart'
-    show ExternalGame, UserGame, gameStatusOptions;
+import 'package:game_oclock/models/models.dart' show gameStatusOptions;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
+import 'package:game_oclock_client/api.dart';
 
 class ExternalGameDetail extends StatelessWidget {
   const ExternalGameDetail({
@@ -18,31 +18,31 @@ class ExternalGameDetail extends StatelessWidget {
     required this.onAddSucceeded,
   });
 
-  final ExternalGame data;
+  final PotentialMediaDTO data;
   final VoidCallback onBackPressed;
   final ValueChanged<BuildContext> onAddSucceeded;
 
   @override
   Widget build(final BuildContext context) {
     return Detail(
-      title: Text(data.title),
-      image: data.imageUrl == null
+      title: Text(data.media.title),
+      image: data.media.imageUrl == null
           ? null
           : SimpleCachedNetworkImage(
-              imageUrl: data.imageUrl!,
+              imageUrl: data.media.imageUrl!,
               fit: BoxFit.cover,
               applyGradient: true,
             ),
       onBackPressed: onBackPressed,
       actions: [
-        if (data.userInfo == null)
+        if (data.state == null)
           IconButton(
             icon: CommonIcons.add,
             tooltip: context.localize().addLabel,
-            onPressed: () => showFormDialog<UserGame>(
+            onPressed: () => showFormDialog(
               context,
               builder: (final context) =>
-                  UserGameExternalCreateForm(externalData: data),
+                  UserGameExternalCreateForm(externalId: data.external_),
               onSuccess: (final context, _) => onAddSucceeded(context),
             ),
           ),
@@ -57,46 +57,49 @@ class ExternalGameDetail extends StatelessWidget {
         children: [
           TextLabel(
             label: context.localize().sourceLabel,
-            value: data.externalId.source,
+            value: data.external_.source_,
           ),
           TextLabel(
             label: context.localize().idLabel,
-            value: data.externalId.id,
+            value: data.external_.id,
           ),
-          TextLabel(label: context.localize().titleLabel, value: data.title),
+          TextLabel(
+            label: context.localize().titleLabel,
+            value: data.media.title,
+          ),
           TextLabel(
             label: context.localize().editionLabel,
-            value: data.edition,
+            value: data.media.edition,
           ),
           DateLabel(
             label: context.localize().releaseDateLabel,
-            value: data.releaseDate,
+            value: data.media.releaseDate,
           ),
-          if (data.userInfo != null)
+          if (data.state != null)
             ChoiceLabel(
               label: context.localize().statusLabel,
-              value: data.userInfo!.status,
+              value: data.state!.status.toJson(),
               options: gameStatusOptions,
             ),
-          if (data.userInfo != null)
+          if (data.state != null)
             RatingLabel(
               label: context.localize().ratingLabel,
-              value: data.userInfo!.rating,
+              value: data.state!.rating,
               color: CommonColors.ratingColor,
             ),
-          if (data.userInfo != null)
+          if (data.state != null)
             TextLabel(
               label: context.localize().notesLabel,
-              value: data.userInfo!.notes,
+              value: data.state!.notes,
               multiline: true,
             ),
           MultipleTextLabel(
             label: context.localize().genresLabel,
-            value: data.genres,
+            value: data.media.genres,
           ),
           MultipleTextLabel(
             label: context.localize().seriesLabel,
-            value: data.series,
+            value: data.media.series,
           ),
         ],
       ),

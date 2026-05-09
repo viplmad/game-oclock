@@ -19,9 +19,9 @@ import 'package:game_oclock/components/search_text_field.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart'
-    show ChainOperatorType, FilterDTO, ListSearch, SearchValue, SortDTO;
+import 'package:game_oclock/models/models.dart' show ListSearch;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 class ListLayout extends StatelessWidget {
   const ListLayout({
@@ -43,15 +43,15 @@ class ListLayout extends StatelessWidget {
 
     return Column(
       children: [
-        if (toolbar != null) toolbar!,
+        ?toolbar,
         Expanded(child: child),
-        if (statusbar != null) statusbar!,
+        ?statusbar,
       ],
     );
   }
 }
 
-class ListTotalStatusbarBuilder<T, LB extends ListLoadBloc<T>>
+class ListTotalStatusbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const ListTotalStatusbarBuilder({super.key});
 
@@ -98,7 +98,7 @@ class ListTotalStatusbar extends StatelessWidget {
   }
 }
 
-class ListFilterToolbarBuilder<T, LB extends ListLoadBloc<T>>
+class ListFilterToolbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
     extends StatelessWidget {
   const ListFilterToolbarBuilder({super.key, required this.space})
     : assert(space.length > 0);
@@ -149,8 +149,8 @@ class ListFilterToolbar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final filter = search.search.filter ?? [];
-    final sort = search.search.sort ?? [];
+    final filter = search.filter ?? [];
+    final sort = search.sort ?? [];
 
     return ListTile(
       title: Row(
@@ -228,49 +228,53 @@ class ListFilterToolbar extends StatelessWidget {
 
   String _buildFilterLabel(final BuildContext context, final FilterDTO filter) {
     final field = filter.field; // TODO l10n?
-    switch (filter.operator_.value) {
-      case r'Eq':
-        final value = _buildFilterValueLabel(context, filter.value);
+    switch (filter.operator_) {
+      case OperatorType.eq:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().equalChipLabel(field, value);
-      case r'NotEq':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.notEq:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().notEqualChipLabel(field, value);
-      case r'Gt':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.gt:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().greaterThanChipLabel(field, value);
-      case r'Gte':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.gte:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().greaterThanEqualChipLabel(field, value);
-      case r'Lt':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.lt:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().lessThanChipLabel(field, value);
-      case r'Lte':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.lte:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().lessThanEqualChipLabel(field, value);
-      case r'In':
-        final values = _buildFilterValuesLabel(context, filter.value);
+      case OperatorType.in_:
+        final values = _buildFilterValuesLabel(context, filter.value!);
         return context.localize().inChipLabel(field, values);
-      case r'NotIn':
-        final values = _buildFilterValuesLabel(context, filter.value);
+      case OperatorType.notIn:
+        final values = _buildFilterValuesLabel(context, filter.value!);
         return context.localize().notInChipLabel(field, values);
-      case r'StartsWith':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.startsWith:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().startsWithChipLabel(field, value);
-      case r'NotStartsWith':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.notStartsWith:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().notStartsWithChipLabel(field, value);
-      case r'EndsWith':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.endsWith:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().endsWithChipLabel(field, value);
-      case r'NotEndsWith':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.notEndsWith:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().notEndsWithChipLabel(field, value);
-      case r'Contains':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.contains:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().containsChipLabel(field, value);
-      case r'NotContains':
-        final value = _buildFilterValueLabel(context, filter.value);
+      case OperatorType.notContains:
+        final value = _buildFilterValueLabel(context, filter.value!);
         return context.localize().notContainsChipLabel(field, value);
+      case OperatorType.null_:
+        return context.localize().nullChipLabel(field);
+      case OperatorType.notNull:
+        return context.localize().notNullChipLabel(field);
       default:
         return '?';
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart'
     show GridListItem, TileListItem;
-import 'package:game_oclock/models/models.dart' show Device;
+import 'package:game_oclock_client/api.dart';
 
 class DeviceTileListItem extends StatelessWidget {
   const DeviceTileListItem({
@@ -10,7 +10,7 @@ class DeviceTileListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final Device data;
+  final DeviceDTO data;
   final VoidCallback onTap;
 
   @override
@@ -30,7 +30,7 @@ class DeviceGridListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final Device data;
+  final DeviceDTO data;
   final VoidCallback onTap;
 
   @override

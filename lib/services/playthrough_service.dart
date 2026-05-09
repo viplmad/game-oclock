@@ -1,62 +1,48 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, Playthrough, SearchDTO;
+import 'package:game_oclock/models/models.dart' show Playthrough;
+import 'package:game_oclock_client/api.dart';
 
 class PlaythroughService {
   Future<PageResultDTO<Playthrough>> search(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockPlaythrough(name: 'name ($quicksearch) $index'),
-    );
+    throw UnsupportedError('');
   }
 
-  Future<int> count(final SearchDTO search, final String? quicksearch) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+  Future<int> count(
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) async {
+    throw UnsupportedError('');
   }
 
   Future<PageResultDTO<Playthrough>> searchForGame(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockPlaythrough(name: 'name ($quicksearch) $index'),
-    );
+    throw UnsupportedError('');
   }
 
   Future<int> countForGame(
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    throw UnsupportedError('');
   }
 
   Future<Playthrough> get(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPlaythrough();
+    throw UnsupportedError('');
   }
 
-  Future<Playthrough> create(final Playthrough playthrough) async {
-    await Future.delayed(const Duration(seconds: 5));
-    return playthrough;
+  Future<String> create(final Playthrough playthrough) async {
+    throw UnsupportedError('');
   }
 
-  Future<void> update(final Playthrough playthrough) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> update(final String id, final Playthrough playthrough) async {
+    throw UnsupportedError('');
   }
 
   Future<void> delete(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
+    throw UnsupportedError('');
   }
 }

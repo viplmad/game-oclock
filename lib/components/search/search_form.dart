@@ -46,6 +46,8 @@ class SearchCreateForm extends StatelessWidget {
       child:
           CreateFormBuilder<
             ListSearch,
+            ListSearch,
+            String,
             SearchFormData,
             SearchFormBloc,
             ListSearchCreateBloc
@@ -94,6 +96,7 @@ class SearchEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
+            ListSearch,
             ListSearch,
             SearchFormData,
             SearchFormBloc,

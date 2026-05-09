@@ -1,117 +1,119 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show PageResultDTO, SearchDTO, UserGame, UserGameWithDate;
+import 'package:game_oclock_client/api.dart';
+
+import 'utils.dart';
 
 class GameService {
-  Future<PageResultDTO<UserGame>> search(
-    final SearchDTO search,
+  final MediasApi _api;
+
+  GameService(final ApiClient apiClient) : _api = MediasApi(apiClient);
+
+  Future<PageResultDTO<MediaDTO>> search(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockUserGame(title: 'title ($quicksearch) $index'),
-    );
+    return _api.getMedias(search, q: quicksearch);
   }
 
-  Future<int> count(final SearchDTO search, final String? quicksearch) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
-  }
-
-  Future<PageResultDTO<UserGameWithDate>> searchAvailable(
-    final String locationId,
-    final SearchDTO search,
+  Future<int> count(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) => mockUserGameWithDate(
-        title: 'title $locationId ($quicksearch) $index',
+    final response = await _api.aggregateMediasWithHttpInfo(
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
       ),
+      q: quicksearch,
     );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
+  }
+
+  Future<PageResultDTO<MediaAvailableDTO>> searchAvailable(
+    final String locationId,
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) async {
+    return _api.getLocationMedias(locationId, search, q: quicksearch);
   }
 
   Future<int> countAvailable(
     final String locationId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    final response = await _api.aggregateLocationMediasWithHttpInfo(
+      locationId,
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<PageResultDTO<UserGame>> searchWithTag(
+  Future<PageResultDTO<MediaTagDTO>> searchWithTag(
     final String tagId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockUserGame(title: 'title $tagId ($quicksearch) $index'),
-    );
+    return _api.getTagMedias(tagId, search, q: quicksearch);
   }
 
   Future<int> countWithTag(
     final String tagId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    final response = await _api.aggregateTagMediasWithHttpInfo(
+      tagId,
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<PageResultDTO<UserGame>> searchPlayedOnDevice(
+  Future<PageResultDTO<MediaDTO>> searchPlayedOnDevice(
     final String deviceId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockUserGame(title: 'title $deviceId ($quicksearch) $index'),
-    );
+    return _api.getDeviceMedias(deviceId, search, q: quicksearch);
   }
 
   Future<int> countPlayedOnDevice(
     final String deviceId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    final response = await _api.aggregateDeviceMediasWithHttpInfo(
+      deviceId,
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<PageResultDTO<UserGame>> searchWithPlaythrough(
+  Future<PageResultDTO<MediaDTO>> searchWithPlaythrough(
     final String playthroughId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockUserGame(title: 'title $playthroughId ($quicksearch) $index'),
-    );
+    throw UnsupportedError('');
   }
 
   Future<int> countWithPlaythrough(
     final String playthroughId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    throw UnsupportedError('');
   }
 
   Future<void> addAvailability(
@@ -119,35 +121,37 @@ class GameService {
     final String locationId,
     final DateTime date,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
+    return _api.linkMediaLocation(
+      gameId,
+      locationId,
+      DateTimeDTO(datetime: date),
+    );
   }
 
   Future<void> addTag(final String gameId, final String tagId) async {
-    await Future.delayed(const Duration(seconds: 1));
+    return _api.linkMediaTag(gameId, tagId, OrderDTO());
   }
 
   Future<void> addPlaythrough(
     final String gameId,
     final String playthroughId,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
+    throw UnsupportedError('');
   }
 
-  Future<UserGame> get(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockUserGame();
+  Future<MediaDTO> get(final String id) async {
+    return _api.getMedia(id);
   }
 
-  Future<UserGame> create(final UserGame game) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return game;
+  Future<String> create(final NewMediaDTO game) async {
+    return _api.createMedia(game);
   }
 
-  Future<void> update(final UserGame game) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> update(final String id, final NewMediaDTO game) async {
+    return _api.updateMedia(id, game);
   }
 
   Future<void> delete(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
+    return _api.deleteMedia(id);
   }
 }

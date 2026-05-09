@@ -1,26 +1,28 @@
 import 'package:equatable/equatable.dart';
-
-import 'models.dart' show SearchDTO;
+import 'package:game_oclock_client/api.dart';
 
 final class ListSearch extends Equatable {
   final String id;
   final String name;
   final bool internal;
-  final SearchDTO search;
+  final List<FilterDTO>? filter;
+  final List<SortDTO>? sort;
 
-  ListSearch.def() : this(id: '-1', name: '-', search: SearchDTO());
+  ListSearch.def() : this(id: '-1', name: '-', filter: [], sort: []);
   const ListSearch({
     required this.id,
     required this.name,
     this.internal = false,
-    required this.search,
+    required this.filter,
+    required this.sort,
   });
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json[r'id'] = id;
     json[r'name'] = name;
-    json[r'search'] = search.toJson();
+    json[r'filter'] = filter;
+    json[r'sort'] = sort;
     return json;
   }
 
@@ -30,10 +32,11 @@ final class ListSearch extends Equatable {
     return ListSearch(
       id: json[r'id'],
       name: json[r'name']!,
-      search: SearchDTO.fromJson(json[r'search'])!,
+      filter: FilterDTO.listFromJson(json[r'filter']),
+      sort: SortDTO.listFromJson(json[r'sort']),
     );
   }
 
   @override
-  List<Object?> get props => [name, search];
+  List<Object?> get props => [name, filter, sort];
 }

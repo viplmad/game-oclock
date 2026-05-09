@@ -50,7 +50,8 @@ class SingleAutocompleteSelectorBuilder<
   itemBuilder;
   final String Function(T item) keyGetter;
   final String Function(T item)? displayString;
-  final void Function(String value, ValueChanged<T> onSelected)? onAddPressed;
+  final void Function(String value, ValueChanged<String> onSelected)?
+  onAddPressed;
 
   @override
   Widget build(final BuildContext context) {
@@ -121,7 +122,7 @@ class SingleAutocompleteSelectorBuilder<
                     icon: CommonIcons.addInline,
                     onPressed: () => onAddPressed!(
                       formControl.value!,
-                      (final option) => formControl.value = keyGetter(option),
+                      (final option) => formControl.value = option,
                     ),
                   ),
               ],

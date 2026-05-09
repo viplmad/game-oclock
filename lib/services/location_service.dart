@@ -1,64 +1,70 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show Location, LocationWithDate, PageResultDTO, SearchDTO;
+import 'package:game_oclock_client/api.dart';
+
+import 'utils.dart';
 
 class LocationService {
-  Future<PageResultDTO<Location>> search(
-    final SearchDTO search,
+  final LocationsApi _api;
+
+  LocationService(final ApiClient apiClient) : _api = LocationsApi(apiClient);
+
+  Future<PageResultDTO<LocationDTO>> search(
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockLocation(name: 'name ($quicksearch) $index'),
+    return _api.getLocations(search, q: quicksearch);
+  }
+
+  Future<int> count(
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateLocationsWithHttpInfo(
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
     );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<int> count(final SearchDTO search, final String? quicksearch) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
-  }
-
-  Future<PageResultDTO<LocationWithDate>> searchAvailable(
+  Future<PageResultDTO<LocationAvailableDTO>> searchAvailable(
     final String gameId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockLocationWithDate(name: 'name $gameId ($quicksearch) $index'),
-    );
+    return _api.getMediaLocations(gameId, search, q: quicksearch);
   }
 
   Future<int> countAvailable(
     final String gameId,
-    final SearchDTO search,
+    final ListSearchDTO search,
     final String? quicksearch,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 500;
+    final response = await _api.aggregateMediaLocationsWithHttpInfo(
+      gameId,
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        filter: search.filter,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<Location> get(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockLocation();
+  Future<LocationDTO> get(final String id) async {
+    return _api.getLocation(id);
   }
 
-  Future<Location> create(final Location location) async {
-    await Future.delayed(const Duration(seconds: 5));
-    return location;
+  Future<String> create(final NewLocationDTO location) async {
+    return _api.createLocation(location);
   }
 
-  Future<void> update(final Location location) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> update(final String id, final NewLocationDTO location) async {
+    return _api.updateLocation(id, location);
   }
 
   Future<void> delete(final String id) async {
-    await Future.delayed(const Duration(seconds: 1));
+    return _api.deleteLocation(id);
   }
 }

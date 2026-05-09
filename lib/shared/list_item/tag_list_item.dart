@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/list/list_item.dart' show TileListItem;
-import 'package:game_oclock/models/models.dart' show Tag;
+import 'package:game_oclock_client/api.dart';
 
 class TagTileListItem extends StatelessWidget {
   const TagTileListItem({super.key, required this.data, required this.onTap});
 
-  final Tag data;
+  final TagDTO data;
   final VoidCallback onTap;
 
   @override

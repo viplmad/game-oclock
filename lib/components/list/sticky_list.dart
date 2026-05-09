@@ -16,7 +16,7 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 
-class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
+class StickyTopListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
   const StickyTopListBuilder({
     super.key,
@@ -60,7 +60,7 @@ class StickyTopListBuilder<K, T, LB extends ListLoadBloc<T>>
   }
 }
 
-class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
+class StickySideListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
     extends StickyListBuilder<K, T, LB> {
   const StickySideListBuilder({
     super.key,
@@ -104,7 +104,11 @@ class StickySideListBuilder<K, T, LB extends ListLoadBloc<T>>
   }
 }
 
-abstract class StickyListBuilder<K, T, LB extends ListLoadBloc<T>>
+abstract class StickyListBuilder<
+  K,
+  T extends Object,
+  LB extends ListLoadBloc<T>
+>
     extends StatelessWidget {
   const StickyListBuilder({
     super.key,

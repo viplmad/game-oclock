@@ -14,8 +14,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         FormStateSubmitSuccess,
         FormSubmitted,
         FormValueUpdated,
-        FunctionActionBloc,
-        IdentityActionBloc;
+        FunctionActionBloc;
 import 'package:game_oclock/components/label_chip.dart';
 import 'package:game_oclock/components/progress_button_icon.dart';
 import 'package:game_oclock/models/models.dart' show FormData, LayoutTier;
@@ -25,12 +24,14 @@ import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class CreateFormBuilder<
+  N,
   T,
-  D extends FormData<T>,
-  FB extends FormBloc<D, T>,
-  CB extends IdentityActionBloc<T>
+  K,
+  D extends FormData<N>,
+  FB extends FormBloc<D, N, T>,
+  CB extends FunctionActionBloc<N, K>
 >
-    extends _FormBuilder<T, D> {
+    extends _FormBuilder<N, D> {
   const CreateFormBuilder({
     super.key,
     required super.title,
@@ -44,23 +45,23 @@ class CreateFormBuilder<
   }) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<FB, FormState2<D, T>>(
+        BlocListener<FB, FormState2<D, N>>(
           listener: (final context, final state) {
-            if (state is FormStateSubmitSuccess<D, T>) {
+            if (state is FormStateSubmitSuccess<D, N>) {
               context.read<CB>().add(ActionStarted(data: state.value));
             }
           },
         ),
-        BlocListener<CB, ActionState<T>>(
+        BlocListener<CB, ActionState<K>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<T, T>) {
+            if (state is ActionSuccess<K, N>) {
               showSnackBar(
                 context,
                 message: context.localize().createdSuccessfullyLabel,
               );
               Navigator.pop(context, state.data);
             }
-            if (state is ActionFailure<T, T>) {
+            if (state is ActionFailure<K, N>) {
               showErrorSnackBar(
                 context,
                 name: context.localize().unableToCreateLabel,
@@ -70,9 +71,9 @@ class CreateFormBuilder<
           },
         ),
       ],
-      child: BlocBuilder<FB, FormState2<D, T>>(
+      child: BlocBuilder<FB, FormState2<D, N>>(
         builder: (final context, final formState) {
-          return BlocBuilder<CB, ActionState<void>>(
+          return BlocBuilder<CB, ActionState<K>>(
             builder: (final context, final createState) {
               final inProgress =
                   formState is FormStateSubmitInProgress ||
@@ -98,13 +99,14 @@ class CreateFormBuilder<
 }
 
 class EditFormBuilder<
+  N,
   T,
-  D extends FormData<T>,
-  FB extends FormBloc<D, T>,
+  D extends FormData<N>,
+  FB extends FormBloc<D, N, T>,
   GB extends FunctionActionBloc<String, T>,
-  UB extends ConsumerActionBloc<T>
+  UB extends ConsumerActionBloc<N>
 >
-    extends _FormBuilder<T, D> {
+    extends _FormBuilder<N, D> {
   const EditFormBuilder({
     super.key,
     required super.title,
@@ -118,23 +120,23 @@ class EditFormBuilder<
   }) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<FB, FormState2<D, T>>(
+        BlocListener<FB, FormState2<D, N>>(
           listener: (final context, final state) {
-            if (state is FormStateSubmitSuccess<D, T>) {
+            if (state is FormStateSubmitSuccess<D, N>) {
               context.read<UB>().add(ActionStarted(data: state.value));
             }
           },
         ),
         BlocListener<UB, ActionState<void>>(
           listener: (final context, final state) {
-            if (state is ActionSuccess<void, T>) {
+            if (state is ActionSuccess<void, N>) {
               showSnackBar(
                 context,
                 message: context.localize().updatedSuccessfullyLabel,
               );
               Navigator.pop(context, state.event);
             }
-            if (state is ActionFailure<T, T>) {
+            if (state is ActionFailure<N, N>) {
               showErrorSnackBar(
                 context,
                 name: context.localize().unableToUpdateLabel,
@@ -154,7 +156,7 @@ class EditFormBuilder<
           },
         ),
       ],
-      child: BlocBuilder<FB, FormState2<D, T>>(
+      child: BlocBuilder<FB, FormState2<D, N>>(
         builder: (final context, final formState) {
           return BlocBuilder<GB, ActionState<T>>(
             builder: (final context, final getState) {

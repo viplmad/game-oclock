@@ -2,7 +2,7 @@ import 'package:game_oclock/models/models.dart' show Login, LoginFormData;
 
 import '../form.dart' show FormBloc;
 
-class LoginFormBloc extends FormBloc<LoginFormData, Login> {
+class LoginFormBloc extends FormBloc<LoginFormData, Login, Login> {
   LoginFormBloc({required super.data});
 
   @override

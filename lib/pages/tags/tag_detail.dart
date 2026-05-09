@@ -18,17 +18,17 @@ import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart'
-    show LayoutTier, SearchDTO, TabDestination, Tag, UserGame;
+import 'package:game_oclock/models/models.dart' show LayoutTier, TabDestination;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/game_tag_form.dart';
 import 'package:game_oclock/shared/forms/tag_form.dart';
-import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
+import 'package:game_oclock/shared/list_item/media_tagged_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
 class TagDetailPage extends StatelessWidget {
@@ -57,7 +57,7 @@ class TagDetailPage extends StatelessWidget {
           ),
         ),
       ],
-      child: DetailBuilder<Tag, TagGetBloc>(
+      child: DetailBuilder<TagDTO, TagGetBloc>(
         onBackPressed: () => GoRouter.of(context).go(CommonPaths.tagsPath),
         builder: (final context, final data, final onBackPressed) => TagDetail(
           data: data,
@@ -85,7 +85,7 @@ class TagDetail extends StatelessWidget {
     required this.onDeleteSucceeded,
   });
 
-  final Tag data;
+  final TagDTO data;
   final VoidCallback onBackPressed;
   final bool fromPage;
   final bool extended;
@@ -107,15 +107,16 @@ class TagDetail extends StatelessWidget {
         labelBuilder: (final context) => context.localize().gamesTitle,
         onTap: (final context) =>
             _loadOnlyInitial<UserGameWithTagListBloc>(context),
-        child: RelationListBuilder<UserGame, UserGameWithTagListBloc>(
+        child: RelationListBuilder<MediaTagDTO, UserGameWithTagListBloc>(
           createFormBuilder: ([final quicksearch]) =>
               GameTagCreateForm(gameId: quicksearch, tagId: data.id),
           searchCreateFormBuilder: (final quicksearch) =>
               UserGameCreateForm(initialTitle: quicksearch),
-          itemBuilder: (final context, final data) => UserGameTileListItem(
+          itemBuilder: (final context, final data) => MediaTagTileListItem(
             data: data,
-            onTap: () =>
-                GoRouter.of(context).go(CommonPaths.buildGamePath(data.id)),
+            onTap: () => GoRouter.of(
+              context,
+            ).go(CommonPaths.buildGamePath(data.media.media.id)),
           ),
         ),
       ),
@@ -123,14 +124,14 @@ class TagDetail extends StatelessWidget {
 
     return BlocListener<TagDeleteBloc, ActionState<void>>(
       listener: (final context, final state) {
-        if (state is ActionSuccess<void, Tag>) {
+        if (state is ActionSuccess<void, TagDTO>) {
           showSnackBar(
             context,
             message: context.localize().deletedSuccessfullyLabel,
           );
           onDeleteSucceeded(context);
         }
-        if (state is ActionFailure<void, Tag>) {
+        if (state is ActionFailure<void, TagDTO>) {
           showErrorSnackBar(
             context,
             name: context.localize().unableToDeleteLabel,
@@ -152,7 +153,7 @@ class TagDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog<Tag>(
+            onPressed: () async => showFormDialog(
               context,
               builder: (final context) => TagEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
@@ -198,7 +199,7 @@ class TagDetail extends StatelessWidget {
   void _loadOnlyInitial<LB extends ListLoadBloc>(final BuildContext context) {
     final lb = context.read<LB>();
     if (lb.state is ListInitial) {
-      lb.add(ListSearchChanged(search: SearchDTO()));
+      lb.add(ListSearchChanged(search: ListSearchDTO()));
     }
   }
 }

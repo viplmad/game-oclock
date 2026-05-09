@@ -13,12 +13,13 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show GameSession, GameSessionFormData, gameSessionFinishedOptions;
+    show GameSessionFormData, NewMediaSession, gameSessionFinishedOptions;
 import 'package:game_oclock/shared/selectors/device_selector.dart';
 import 'package:game_oclock/shared/selectors/game_selector.dart';
 import 'package:game_oclock/shared/selectors/playthrough_selector.dart';
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class GameSessionCreateForm extends StatelessWidget {
@@ -85,7 +86,9 @@ class GameSessionCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            GameSession,
+            NewMediaSession,
+            SessionDTO,
+            (String, DateTime),
             GameSessionFormData,
             GameSessionFormBloc,
             GameSessionCreateBloc

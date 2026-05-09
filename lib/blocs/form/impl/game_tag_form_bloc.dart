@@ -2,7 +2,7 @@ import 'package:game_oclock/models/models.dart' show GameTag, GameTagFormData;
 
 import '../form.dart' show FormBloc;
 
-class GameTagFormBloc extends FormBloc<GameTagFormData, GameTag> {
+class GameTagFormBloc extends FormBloc<GameTagFormData, GameTag, GameTag> {
   GameTagFormBloc({required super.data});
 
   @override

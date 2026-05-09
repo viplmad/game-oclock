@@ -33,18 +33,22 @@ class UserChangePasswordForm extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) =>
-              UserChangePasswordBloc(service: RepositoryProvider.of(context)),
+          create: (_) => UserChangePasswordBloc(
+            service: RepositoryProvider.of(context),
+            id: id,
+          ),
         ),
       ],
       child:
           CreateFormBuilder<
             UserChangePassword,
+            UserChangePassword,
+            void,
             UserChangePasswordFormData,
             UserChangePasswordFormBloc,
             UserChangePasswordBloc
           >(
-            title: context.localize().creatingTitle,
+            title: context.localize().creatingTitle, // TODO
             fieldsBuilder: _fieldsCreateBuilder,
           ),
     );

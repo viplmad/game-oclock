@@ -3,7 +3,8 @@ import 'package:game_oclock/models/models.dart'
 
 import '../form.dart' show FormBloc;
 
-class PlaythroughFormBloc extends FormBloc<PlaythroughFormData, Playthrough> {
+class PlaythroughFormBloc
+    extends FormBloc<PlaythroughFormData, Playthrough, Playthrough> {
   PlaythroughFormBloc({required super.data});
 
   @override

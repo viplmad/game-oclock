@@ -1,18 +1,12 @@
-import 'package:game_oclock/mocks.dart';
-import 'package:game_oclock/models/models.dart'
-    show ExternalGame, PageResultDTO, SearchDTO;
+import 'package:game_oclock/models/models.dart' show sourceIgdb;
+import 'package:game_oclock_client/api.dart';
 
 class ExternalGameService {
-  Future<PageResultDTO<ExternalGame>> search(
-    final SearchDTO search,
-    final String? quicksearch,
-  ) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return mockPageResult(
-      search: search,
-      quicksearch: quicksearch,
-      builder: (final index) =>
-          mockExternalGame(title: 'title ($quicksearch) $index'),
-    );
+  final MediasApi _api;
+
+  ExternalGameService(final ApiClient apiClient) : _api = MediasApi(apiClient);
+
+  Future<List<PotentialMediaDTO>> search(final String quicksearch) async {
+    return _api.searchExternalMedias(sourceIgdb, quicksearch);
   }
 }
