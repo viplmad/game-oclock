@@ -377,7 +377,7 @@ class ListCreateDetailBuilder<
       title: title,
       searchSpace: searchSpace,
       availableStyles: availableStyles,
-      onSearchAddPressed: (final quicksearch) async => showFormDialog(
+      onSearchAddPressed: (final quicksearch) async => showReturningDialog(
         context,
         builder: (final context) => createFormBuilder(quicksearch),
         onSuccess: (final context, _) =>
@@ -385,7 +385,7 @@ class ListCreateDetailBuilder<
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().createLabel,
-        onPressed: () async => showFormDialog(
+        onPressed: () async => showReturningDialog(
           context,
           builder: (final context) => createFormBuilder(),
           onSuccess: (final context, _) =>
@@ -420,11 +420,11 @@ class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
         onAddPressed:
             createFormBuilder == null || searchCreateFormBuilder == null
             ? null
-            : (final quicksearch) async => showFormDialog(
+            : (final quicksearch) async => showReturningDialog(
                 context,
                 builder: (final context) =>
                     searchCreateFormBuilder!(quicksearch),
-                onSuccess: (final context, _) async => showFormDialog(
+                onSuccess: (final context, _) async => showReturningDialog(
                   context,
                   builder: (final context) => createFormBuilder!(quicksearch),
                   onSuccess: (final context, _) =>
@@ -438,7 +438,7 @@ class RelationListBuilder<T extends Object, LB extends ListLoadBloc<T>>
             IconButton(
               icon: CommonIcons.link,
               tooltip: context.localize().linkLabel,
-              onPressed: () async => showFormDialog(
+              onPressed: () async => showReturningDialog(
                 context,
                 builder: (final context) => createFormBuilder!(),
                 onSuccess: (final context, _) =>

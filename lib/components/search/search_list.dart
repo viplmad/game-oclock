@@ -48,7 +48,7 @@ class _SearchListBuilder extends StatelessWidget {
           IconButton(
             icon: CommonIcons.add,
             tooltip: context.localize().createLabel,
-            onPressed: () async => showFormDialog(
+            onPressed: () async => showReturningDialog(
               context,
               builder: (final context) => SearchCreateForm(space: space),
               onSuccess: (final context, _) =>
@@ -117,7 +117,7 @@ class SearchGridListItem extends StatelessWidget {
             IconButton(
               icon: CommonIcons.edit,
               tooltip: context.localize().editLabel,
-              onPressed: () async => showFormDialog(
+              onPressed: () async => showReturningDialog(
                 context,
                 builder: (final context) =>
                     SearchEditForm(space: space, name: data.name),

@@ -35,7 +35,7 @@ class UserGameSelectorBuilder extends StatelessWidget {
       keyGetter: (final item) => item.media.id,
       displayString: (final item) => item.media.title,
       onAddPressed: (final quicksearch, final onSelected) async =>
-          showFormDialog<String>(
+          showReturningDialog<String>(
             context,
             builder: (final context) =>
                 UserGameCreateForm(initialTitle: quicksearch),

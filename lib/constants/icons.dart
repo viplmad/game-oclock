@@ -53,6 +53,7 @@ class CommonIcons {
   static const datePicker = Icon(Icons.calendar_today);
   static const timePicker = Icon(Icons.schedule);
   static const durationPicker = Icon(Icons.timer);
+  static const yearPicker = Icon(Icons.date_range_outlined);
   static const review = Icon(Icons.cake);
 
   static const externalSourceDefault = Icon(Icons.cloud);

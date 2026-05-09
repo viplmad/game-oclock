@@ -281,6 +281,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardChangesLabel => 'Discard changes';
 
   @override
+  String get changeYearLabel => 'Change year';
+
+  @override
   String get allLabel => 'All';
 
   @override
@@ -306,6 +309,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeLabel => 'Time';
+
+  @override
+  String get totalSessionsLabel => 'Total Sessions';
+
+  @override
+  String get totalTimeLabel => 'Total Time';
+
+  @override
+  String get totalMediasLabel => 'Total games';
+
+  @override
+  String get totalFirstMediasLabel => 'Total games first played';
+
+  @override
+  String get longestStreakLabel => 'Longest Streak';
+
+  @override
+  String get totalMediasByReleaseYearLabel => 'Total games by release year';
 
   @override
   String get equalLabel => 'Equal';

@@ -14,23 +14,6 @@ extension AppLocalizationsExtension on AppLocalizations {
     return DateFormat.d().format(date);
   }
 
-  String formatTz(final DateTime date) {
-    final offset = date.timeZoneOffset;
-    final hours = offset.inHours > 0
-        ? offset.inHours
-        : 1; // For fixing divide by 0
-
-    if (!offset.isNegative) {
-      return '+${offset.inHours.toString().padLeft(2, '0')}:${(offset.inMinutes % (hours * 60)).toString().padLeft(2, '0')}';
-    } else {
-      return '-${(-offset.inHours).toString().padLeft(2, '0')}:${(offset.inMinutes % (hours * 60)).toString().padLeft(2, '0')}';
-    }
-  }
-
-  String toISOString(final DateTime date) {
-    return DateFormat('yyyy-MM-ddTHH:mm:ss').format(date) + formatTz(date);
-  }
-
   String formatLocale(final Locale locale) {
     if (locale == const Locale('en')) {
       return englishLabel;

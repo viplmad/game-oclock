@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'show_form_dialog.dart';
+
 Future<void> showConfirmationDialog(
   final BuildContext context, {
   required final ConfirmationDialog Function(BuildContext context) builder,
   required final ValueChanged<BuildContext> onSuccess,
   final ValueChanged<BuildContext>? onFailure,
 }) async {
-  return showDialog<bool>(context: context, builder: builder).then<void>((
-    final bool? result,
-  ) {
-    if (result != null && result) {
-      if (context.mounted) {
+  return showReturningDialog<bool>(
+    context,
+    builder: builder,
+    onSuccess: (final context, final data) {
+      if (data) {
         onSuccess(context);
       }
-    } else {
-      if (context.mounted) {
-        onFailure?.call(context);
-      }
-    }
-  });
+    },
+    onFailure: onFailure,
+  );
 }
 
 class ConfirmationDialog extends StatelessWidget {
@@ -50,6 +49,89 @@ class ConfirmationDialog extends StatelessWidget {
           child: Text(acceptLabel),
         ),
       ],
+    );
+  }
+}
+
+class YearPickerDialog extends StatefulWidget {
+  const YearPickerDialog({super.key, this.year});
+
+  final int? year;
+
+  @override
+  State<YearPickerDialog> createState() => _YearPickerDialogState();
+}
+
+class _YearPickerDialogState extends State<YearPickerDialog> {
+  DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedDate = widget.year != null
+        ? DateTime(widget.year!)
+        : DateTime.now();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(),
+              color: Theme.of(context).primaryColor,
+              //borderRadius: ShapeUtils.dialogBorderRadius,
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    MaterialLocalizations.of(context).formatYear(_selectedDate),
+                    style: Theme.of(context).primaryTextTheme.titleMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Flexible(
+            child: YearPicker(
+              firstDate: DateTime(1970),
+              lastDate: DateTime.now(),
+              selectedDate: _selectedDate,
+              onChanged: (final newDate) {
+                setState(() {
+                  _selectedDate = newDate;
+                });
+              },
+            ),
+          ),
+          OverflowBar(
+            children: <Widget>[
+              TextButton(
+                child: Text(
+                  MaterialLocalizations.of(context).cancelButtonLabel,
+                ),
+                onPressed: () async => await Navigator.maybePop<int>(context),
+              ),
+              TextButton(
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                onPressed: () async =>
+                    await Navigator.maybePop<int>(context, _selectedDate.year),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

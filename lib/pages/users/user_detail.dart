@@ -121,7 +121,7 @@ class UserDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog(
+            onPressed: () async => showReturningDialog(
               context,
               builder: (final context) => UserEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),

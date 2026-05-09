@@ -229,7 +229,7 @@ class UserGameDetail extends StatelessWidget {
           IconButton(
             icon: CommonIcons.edit,
             tooltip: context.localize().editLabel,
-            onPressed: () async => showFormDialog(
+            onPressed: () async => showReturningDialog(
               context,
               builder: (final context) => UserGameEditForm(id: data.media.id),
               onSuccess: (final context, _) => onEditSucceeded(context),

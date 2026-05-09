@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> showFormDialog<T>(
+Future<void> showReturningDialog<T>(
   final BuildContext context, {
   required final WidgetBuilder builder,
   required final void Function(BuildContext context, T data) onSuccess,

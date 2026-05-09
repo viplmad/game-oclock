@@ -1,4 +1,23 @@
+import 'package:intl/intl.dart';
+
 extension DateTimeExtension on DateTime {
+  String toIso8601WithTzString() {
+    return DateFormat('yyyy-MM-ddTHH:mm:ss').format(this) + toTzString();
+  }
+
+  String toTzString() {
+    final offset = timeZoneOffset;
+    final hours = offset.inHours > 0
+        ? offset.inHours
+        : 1; // For fixing divide by 0
+
+    if (!offset.isNegative) {
+      return '+${offset.inHours.toString().padLeft(2, '0')}:${(offset.inMinutes % (hours * 60)).toString().padLeft(2, '0')}';
+    } else {
+      return '-${(-offset.inHours).toString().padLeft(2, '0')}:${(offset.inMinutes % (hours * 60)).toString().padLeft(2, '0')}';
+    }
+  }
+
   bool isSameDay(final DateTime other) {
     return day == other.day && isInSameMonthAndYearOf(other);
   }

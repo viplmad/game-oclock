@@ -46,7 +46,7 @@ class UserGameTileListItem extends StatelessWidget {
             IconButton(
               icon: CommonIcons.addSession,
               tooltip: context.localize().addSessionLabel,
-              onPressed: () => showFormDialog(
+              onPressed: () => showReturningDialog(
                 context,
                 builder: (final context) =>
                     GameSessionCreateForm(gameId: data.media.id),

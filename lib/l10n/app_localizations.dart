@@ -634,6 +634,12 @@ abstract class AppLocalizations {
   /// **'Discard changes'**
   String get discardChangesLabel;
 
+  /// No description provided for @changeYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Change year'**
+  String get changeYearLabel;
+
   /// No description provided for @allLabel.
   ///
   /// In en, this message translates to:
@@ -687,6 +693,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time'**
   String get timeLabel;
+
+  /// No description provided for @totalSessionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sessions'**
+  String get totalSessionsLabel;
+
+  /// No description provided for @totalTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Time'**
+  String get totalTimeLabel;
+
+  /// No description provided for @totalMediasLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total games'**
+  String get totalMediasLabel;
+
+  /// No description provided for @totalFirstMediasLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total games first played'**
+  String get totalFirstMediasLabel;
+
+  /// No description provided for @longestStreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get longestStreakLabel;
+
+  /// No description provided for @totalMediasByReleaseYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total games by release year'**
+  String get totalMediasByReleaseYearLabel;
 
   /// No description provided for @equalLabel.
   ///

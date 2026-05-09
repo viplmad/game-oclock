@@ -26,6 +26,14 @@ class NewUser extends NewUserDTO {
 }
 
 // TODO Move
+class ReviewStartEnd {
+  ReviewStartEnd({required this.start, required this.end});
+
+  final DateTime start;
+  final DateTime end;
+}
+
+// TODO Move
 class NewMediaSession extends NewSessionDTO {
   NewMediaSession({
     required this.gameId,

@@ -34,6 +34,6 @@ Future<Map<int, int>> convertAggrDateHistogramResult(
     ),
   ).map(
     (final key, final val) =>
-        MapEntry(apiClient.deserializeAsync(key, 'int') as int, val),
+        MapEntry(apiClient.deserialize(key, 'int') as int, val),
   );
 }

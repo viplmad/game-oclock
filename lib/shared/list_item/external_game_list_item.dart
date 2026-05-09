@@ -46,7 +46,7 @@ class ExternalGameTileListItem extends StatelessWidget {
             IconButton(
               icon: CommonIcons.add,
               tooltip: context.localize().addLabel,
-              onPressed: () => showFormDialog(
+              onPressed: () => showReturningDialog(
                 context,
                 builder: (final context) =>
                     UserGameExternalCreateForm(externalId: data.external_),

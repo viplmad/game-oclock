@@ -30,7 +30,7 @@ class TagSelectorBuilder extends StatelessWidget {
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
       onAddPressed: (final quicksearch, final onSelected) async =>
-          showFormDialog<String>(
+          showReturningDialog<String>(
             context,
             builder: (final context) => TagCreateForm(initialName: quicksearch),
             onSuccess: (final context, final data) => onSelected(data),

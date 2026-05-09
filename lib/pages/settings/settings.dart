@@ -18,6 +18,7 @@ import 'package:game_oclock/l10n/app_localizations.dart';
 import 'package:game_oclock/models/models.dart'
     show DateLocaleConfig, OptionField, OptionTextField;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:intl/intl.dart';
 
 final List<OptionField<ThemeMode?>> _themeModeOptions =
@@ -343,46 +344,41 @@ class _SettingRadioTile<T> extends StatelessWidget {
       leading: icon,
       title: Text(label),
       subtitle: option.widgetBuilder(context),
-      onTap: () async =>
-          await showDialog<_Result<T?>?>(
-            context: context,
-            builder: (final BuildContext context) => AlertDialog(
-              title: Text(label),
-              content: RadioGroup<T?>(
-                groupValue: value,
-                onChanged: (final value) =>
-                    Navigator.pop(context, _Result(value)),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: options
-                        .map(
-                          (final option) => RadioListTile<T?>(
-                            secondary: option.icon,
-                            title: option.widgetBuilder(context),
-                            value: option.value,
-                          ),
-                        )
-                        .toList(growable: false),
-                  ),
-                ),
+      onTap: () async => await showReturningDialog<_Result<T?>>(
+        context,
+        builder: (final context) => AlertDialog(
+          title: Text(label),
+          content: RadioGroup<T?>(
+            groupValue: value,
+            onChanged: (final value) => Navigator.pop(context, _Result(value)),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: options
+                    .map(
+                      (final option) => RadioListTile<T?>(
+                        secondary: option.icon,
+                        title: option.widgetBuilder(context),
+                        value: option.value,
+                      ),
+                    )
+                    .toList(growable: false),
               ),
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: Text(context.localize().cancelLabel),
-                  onPressed: () async =>
-                      await Navigator.maybePop(context, null),
-                ),
-              ],
             ),
-          ).then((final value) {
-            if (value != null && context.mounted) {
-              onSuccess(context, value.value);
-            }
-          }),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text(context.localize().cancelLabel),
+              onPressed: () async => await Navigator.maybePop(context, null),
+            ),
+          ],
+        ),
+        onSuccess: (final context, final data) =>
+            onSuccess(context, data.value),
+      ),
     );
   }
 }

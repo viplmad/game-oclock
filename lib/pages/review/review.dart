@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
@@ -6,14 +8,22 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         ActionState,
         ActionSuccess,
+        ReviewLongestStreakGetBloc,
         ReviewTotalFirstMediasGetBloc,
         ReviewTotalMediasGetBloc,
+        ReviewTotalMediasGroupByReleaseDateYearGetBloc,
         ReviewTotalSessionsGetBloc,
         ReviewTotalTimeGetBloc,
         ReviewYearSelectBloc;
+import 'package:game_oclock/components/charts/bar_chart.dart';
+import 'package:game_oclock/components/charts/pie_chart.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/models/models.dart' show ReviewStartEnd;
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_confirmation_dialog.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
 class ReviewPage extends StatelessWidget {
@@ -46,6 +56,17 @@ class ReviewPage extends StatelessWidget {
             service: RepositoryProvider.of(context),
           ),
         ),
+        BlocProvider(
+          create: (_) => ReviewLongestStreakGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        //
+        BlocProvider(
+          create: (_) => ReviewTotalMediasGroupByReleaseDateYearGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
       ],
       child: ReviewBuilder(title: context.localize().yearInReviewTitle),
     );
@@ -65,13 +86,28 @@ class ReviewBuilder extends StatelessWidget {
           final currentYear = (state is ActionSuccess<int?, int?>)
               ? state.data ?? DateTime.now().year
               : DateTime.now().year;
+          final reviewData = ReviewStartEnd(
+            start: DateTime(currentYear),
+            end: DateTime(currentYear + 1),
+          );
 
           context.read<ReviewTotalSessionsGetBloc>().add(
-            ActionStarted(
-              data: ListSearchDTO(
-                filter: buildStartDateBetweenFilters(context, currentYear),
-              ),
-            ),
+            ActionStarted(data: reviewData),
+          );
+          context.read<ReviewTotalTimeGetBloc>().add(
+            ActionStarted(data: reviewData),
+          );
+          context.read<ReviewTotalMediasGetBloc>().add(
+            ActionStarted(data: reviewData),
+          );
+          context.read<ReviewTotalFirstMediasGetBloc>().add(
+            ActionStarted(data: reviewData),
+          );
+          context.read<ReviewLongestStreakGetBloc>().add(
+            ActionStarted(data: reviewData),
+          );
+          context.read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>().add(
+            ActionStarted(data: reviewData),
           );
         }
       },
@@ -94,35 +130,98 @@ class ReviewBuilder extends StatelessWidget {
                 items: <Widget>[
                   BlocBuilder<ReviewTotalSessionsGetBloc, ActionState<int>>(
                     builder: (final context, final state) {
-                      final res = (state is ActionSuccess<int, ListSearchDTO>)
+                      final res = (state is ActionSuccess<int, ReviewStartEnd>)
                           ? state.data
                           : 0;
 
-                      return Container(
-                        color: Colors.red,
-                        child: Center(child: Text('Total $res')),
+                      return buildCard(
+                        title: context.localize().totalSessionsLabel,
+                        value: Text(res.toString()),
                       );
                     },
                   ),
-                  Container(
-                    color: Colors.red,
-                    child: Center(child: Text('1')),
+                  BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
+                    builder: (final context, final state) {
+                      final res =
+                          (state is ActionSuccess<Duration, ReviewStartEnd>)
+                          ? state.data
+                          : Duration.zero;
+
+                      return buildCard(
+                        title: context.localize().totalTimeLabel,
+                        value: Text(context.localize().formatDuration(res)),
+                      );
+                    },
                   ),
-                  Container(
-                    color: Colors.red,
-                    child: Center(child: Text('2')),
+                  BlocBuilder<ReviewTotalMediasGetBloc, ActionState<int>>(
+                    builder: (final context, final state) {
+                      final res = (state is ActionSuccess<int, ReviewStartEnd>)
+                          ? state.data
+                          : 0;
+
+                      return buildCard(
+                        title: context.localize().totalMediasLabel,
+                        value: Text(res.toString()),
+                      );
+                    },
                   ),
-                  Container(
-                    color: Colors.red,
-                    child: Center(child: Text('3')),
+                  BlocBuilder<ReviewTotalFirstMediasGetBloc, ActionState<int>>(
+                    builder: (final context, final state) {
+                      final res = (state is ActionSuccess<int, ReviewStartEnd>)
+                          ? state.data
+                          : 0;
+
+                      return buildCard(
+                        title: context.localize().totalFirstMediasLabel,
+                        value: Text(res.toString()),
+                      );
+                    },
                   ),
-                  Container(
-                    color: Colors.red,
-                    child: Center(child: Text('4')),
+                  BlocBuilder<
+                    ReviewTotalMediasGroupByReleaseDateYearGetBloc,
+                    ActionState<Map<int, int>>
+                  >(
+                    builder: (final context, final state) {
+                      final res =
+                          (state
+                              is ActionSuccess<Map<int, int>, ReviewStartEnd>)
+                          ? state.data
+                          : Map<int, int>.unmodifiable({});
+
+                      return StatisticsBarChart<int>(
+                        id: 'total-medias-by-release-year',
+                        values: SplayTreeMap.from(
+                          res.map(
+                            (final key, final val) =>
+                                MapEntry(key.toString(), val),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  Container(
-                    color: Colors.red,
-                    child: Center(child: Text('5')),
+                  BlocBuilder<
+                    ReviewLongestStreakGetBloc,
+                    ActionState<SessionStreakDTO>
+                  >(
+                    builder: (final context, final state) {
+                      final res =
+                          (state
+                              is ActionSuccess<
+                                SessionStreakDTO,
+                                ReviewStartEnd
+                              >)
+                          ? state.data
+                          : SessionStreakDTO(
+                              days: 0,
+                              endDate: DateTime.now(),
+                              startDate: DateTime.now(),
+                            );
+
+                      return buildCard(
+                        title: context.localize().longestStreakLabel,
+                        value: Text(res.days.toString()),
+                      );
+                    },
                   ),
                 ],
                 itemBuilder: (final context, final item, final index) => item,
@@ -169,34 +268,50 @@ class ReviewBuilder extends StatelessWidget {
     );
   }
 
-  List<FilterDTO> buildStartDateBetweenFilters(
-    final BuildContext context,
-    final int year,
-  ) {
-    return List.unmodifiable(<FilterDTO>[
-      FilterDTO(
-        field: 'start_date',
-        operator_: OperatorType.gte,
-        value: SearchValue(
-          value: context.localize().toISOString(DateTime(year)),
-        ),
-        chainOperator: ChainOperatorType.and,
+  Container buildCard({
+    required final String title,
+    required final Widget value,
+  }) {
+    return Container(
+      color: Colors.red,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text(title), value],
       ),
-      FilterDTO(
-        field: 'start_date',
-        operator_: OperatorType.lt,
-        value: SearchValue(
-          value: context.localize().toISOString(DateTime(year + 1)),
-        ),
-        chainOperator: ChainOperatorType.and,
-      ),
-    ]);
+    );
   }
 
   List<Widget> _appBarBuilder(
     final BuildContext context,
     final bool innerBoxIsScrolled,
   ) {
-    return <Widget>[SimpleSliverAppBar(title: Text(title))];
+    return <Widget>[
+      SimpleSliverAppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            icon: CommonIcons.yearPicker,
+            tooltip: context.localize().changeYearLabel,
+            onPressed: () async {
+              final state = context.read<ReviewYearSelectBloc>().state;
+              final currentYear = (state is ActionSuccess<int?, int?>)
+                  ? state.data ?? DateTime.now().year
+                  : DateTime.now().year;
+
+              return await showReturningDialog<int>(
+                context,
+                builder: (final context) => YearPickerDialog(year: currentYear),
+                onSuccess: (final context, final data) {
+                  context.read<ReviewYearSelectBloc>().add(
+                    ActionStarted(data: data),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    ];
   }
 }

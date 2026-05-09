@@ -35,7 +35,7 @@ class PlaythroughSelectorBuilder extends StatelessWidget {
       keyGetter: (final item) => item.id,
       displayString: (final item) => item.name,
       onAddPressed: (final quicksearch, final onSelected) async =>
-          showFormDialog<String>(
+          showReturningDialog<String>(
             context,
             builder: (final context) =>
                 PlaythroughCreateForm(initialName: quicksearch),
