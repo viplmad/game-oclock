@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: bloc
-      sha256: a48653a82055a900b88cd35f92429f068c5a8057ae9b136d197b3d56c57efb81
+      sha256: e03b235924e4f509c27b5d6b2f949200e0a91149a9818b4f65eeb56662b75413
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.0"
+    version: "9.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -226,7 +226,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "3f64c81282ef458e366a2d5cd147ec7cd6b1805a"
+      resolved-ref: "8b5f977ef55a03fc112d66d50a7f34aee1a908e0"
       url: "https://github.com/viplmad/game-oclock-client-dart.git"
     source: git
     version: "2.0.0"

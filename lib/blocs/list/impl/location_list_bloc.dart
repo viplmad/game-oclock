@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show LocationService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,7 +17,7 @@ class LocationListBloc extends ListLoadBloc<LocationDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class LocationAvailableListBloc extends ListLoadBloc<LocationAvailableDTO> {
@@ -33,5 +34,9 @@ class LocationAvailableListBloc extends ListLoadBloc<LocationAvailableDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countAvailable(gameId, search, quicksearch);
+      service.countAvailable(
+        gameId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }

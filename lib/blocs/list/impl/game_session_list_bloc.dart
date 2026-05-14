@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show GameSessionService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,7 +17,7 @@ class SessionListBloc extends ListLoadBloc<SessionDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class GameSessionListBloc extends ListLoadBloc<SessionDTO> {
@@ -33,5 +34,9 @@ class GameSessionListBloc extends ListLoadBloc<SessionDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countForGame(gameId, search, quicksearch);
+      service.countForGame(
+        gameId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }

@@ -1,3 +1,5 @@
+import 'package:game_oclock/models/models.dart'
+    show AggregateGroupSearch, AggregateSearch;
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -16,7 +18,7 @@ class GameSessionService {
   }
 
   Future<int> count(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
@@ -42,7 +44,7 @@ class GameSessionService {
 
   Future<int> countForGame(
     final String gameId,
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaSessionsWithHttpInfo(
@@ -61,7 +63,7 @@ class GameSessionService {
 
   Future<Duration> sumTimeForGame(
     final String gameId,
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaSessionsWithHttpInfo(
@@ -76,7 +78,7 @@ class GameSessionService {
   }
 
   Future<Duration> sumTime(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
@@ -90,7 +92,7 @@ class GameSessionService {
   }
 
   Future<int> countDistinctMedias(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
@@ -108,7 +110,7 @@ class GameSessionService {
   }
 
   Future<int> countDistinctFirstTimeMedias(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateFirstSessionsWithHttpInfo(
@@ -125,8 +127,9 @@ class GameSessionService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
-  Future<Map<int, int>> countDistinctMediasByReleaseDateYear(
-    final ListSearchDTO search,
+  Future<List<AggregateGroupResultDTO<int, int>>>
+  countDistinctMediasByReleaseDateYear(
+    final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
@@ -142,14 +145,17 @@ class GameSessionService {
           interval: DateHistogramInterval.year,
         ),
         filter: search.filter,
+        sort: search.sort,
+        size: search.size,
       ),
       q: quicksearch,
     );
-    return convertAggrDateHistogramResult(_api.apiClient, response);
+    return convertAggrGroupIntByInt(_api.apiClient, response);
   }
 
-  Future<Map<int, int>> countDistinctMediasByStartDateMonth(
-    final ListSearchDTO search,
+  Future<List<AggregateGroupResultDTO<int, int>>>
+  countDistinctMediasByStartDateMonth(
+    final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
@@ -165,14 +171,16 @@ class GameSessionService {
           interval: DateHistogramInterval.month,
         ),
         filter: search.filter,
+        sort: search.sort,
+        size: search.size,
       ),
       q: quicksearch,
     );
-    return convertAggrDateHistogramResult(_api.apiClient, response);
+    return convertAggrGroupIntByInt(_api.apiClient, response);
   }
 
-  Future<Map<int, int>> countDistinctMediasByRating(
-    final ListSearchDTO search,
+  Future<List<AggregateGroupResultDTO<int, int>>> countDistinctMediasByRating(
+    final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
@@ -188,10 +196,36 @@ class GameSessionService {
           defaultValue: '-1',
         ),
         filter: search.filter,
+        sort: search.sort,
+        size: search.size,
       ),
       q: quicksearch,
     );
-    return convertAggrDateHistogramResult(_api.apiClient, response);
+    return convertAggrGroupIntByInt(_api.apiClient, response);
+  }
+
+  Future<List<AggregateGroupResultDTO<String, Duration>>> sumTimeByMedia(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(
+          field: 'time',
+          kind: AggregateMetricType.sum,
+          distinct: true,
+        ),
+        group: AggregateGroupDTO(
+          field: 'media_id',
+          kind: AggregateGroupType.field,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupStringByDuration(_api.apiClient, response);
   }
 
   Future<PageResultDTO<SessionStreakDTO>> searchStreaks(

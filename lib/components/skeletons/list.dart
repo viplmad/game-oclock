@@ -81,6 +81,42 @@ class GridListSkeleton extends StatelessWidget {
   }
 }
 
+class CenteredGridListSkeleton extends StatelessWidget {
+  const CenteredGridListSkeleton({
+    super.key,
+    required this.itemBuilder,
+    this.borderRadius,
+    required this.itemAspectRatio,
+    required this.columns,
+    required this.itemCount,
+  });
+
+  final Widget Function(int index) itemBuilder;
+  final BorderRadiusGeometry? borderRadius;
+  final double itemAspectRatio;
+  final int columns;
+  final int itemCount;
+
+  @override
+  Widget build(final BuildContext context) {
+    return LayoutBuilder(
+      builder: (final context, final constraints) {
+        return CenteredGridList(
+          items: List.filled(itemCount, 0, growable: false),
+          itemBuilder: (_, _, final index) {
+            final column = index % columns;
+            final row = (index / columns).floor();
+            return itemBuilder(column + row);
+          },
+          borderRadius: borderRadius,
+          itemAspectRatio: itemAspectRatio,
+          columns: columns,
+        );
+      },
+    );
+  }
+}
+
 class StickySideHeaderListSkeleton extends StatelessWidget {
   const StickySideHeaderListSkeleton({
     super.key,

@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show TagService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,7 +17,7 @@ class TagListBloc extends ListLoadBloc<TagDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class TagOfGameListBloc extends ListLoadBloc<TagMediaDTO> {
@@ -33,5 +34,9 @@ class TagOfGameListBloc extends ListLoadBloc<TagMediaDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countMediaTags(gameId, search, quicksearch);
+      service.countMediaTags(
+        gameId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }

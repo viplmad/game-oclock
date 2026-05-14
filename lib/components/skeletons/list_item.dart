@@ -45,6 +45,17 @@ class GridListSkeletonItem extends StatelessWidget {
   }
 }
 
+class CenteredGridListSkeletonItem extends StatelessWidget {
+  const CenteredGridListSkeletonItem({super.key, this.order = 0});
+
+  final int order;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Skeleton(order: order);
+  }
+}
+
 class SideHeaderSkeletonItem extends StatelessWidget {
   const SideHeaderSkeletonItem({super.key, this.order = 0});
 

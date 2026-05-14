@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -15,7 +16,7 @@ class TagService {
   }
 
   Future<int> count(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateTagsWithHttpInfo(
@@ -38,7 +39,7 @@ class TagService {
 
   Future<int> countMediaTags(
     final String gameId,
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaTagsWithHttpInfo(

@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -15,7 +16,7 @@ class DeviceService {
   }
 
   Future<int> count(
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateDevicesWithHttpInfo(
@@ -38,7 +39,7 @@ class DeviceService {
 
   Future<int> countPlayed(
     final String gameId,
-    final ListSearchDTO search,
+    final AggregateSearch search,
     final String? quicksearch,
   ) async {
     final response = await _api.aggregateMediaDevicesWithHttpInfo(

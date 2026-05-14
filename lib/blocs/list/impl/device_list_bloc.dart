@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show DeviceService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,7 +17,7 @@ class DeviceListBloc extends ListLoadBloc<DeviceDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class DevicePlayedGameListBloc extends ListLoadBloc<DeviceDTO> {
@@ -33,5 +34,9 @@ class DevicePlayedGameListBloc extends ListLoadBloc<DeviceDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countPlayed(gameId, search, quicksearch);
+      service.countPlayed(
+        gameId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }

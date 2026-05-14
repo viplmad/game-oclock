@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show UserService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,5 +17,5 @@ class UserListBloc extends ListLoadBloc<UserDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }

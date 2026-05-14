@@ -23,17 +23,29 @@ Future<Duration> convertAggrMetricResultToDuration(
       as Duration;
 }
 
-Future<Map<int, int>> convertAggrDateHistogramResult(
+Future<List<AggregateGroupResultIntIntDTO>> convertAggrGroupIntByInt(
   final ApiClient apiClient,
   final Response response,
 ) async {
-  return Map<String, int>.from(
-    await apiClient.deserializeAsync(
-      await decodeBodyBytes(response),
-      'Map<String, int>',
-    ),
-  ).map(
-    (final key, final val) =>
-        MapEntry(apiClient.deserialize(key, 'int') as int, val),
-  );
+  return (await apiClient.deserializeAsync(
+            await decodeBodyBytes(response),
+            'List<AggregateGroupResultIntIntDTO>',
+          )
+          as List)
+      .cast<AggregateGroupResultIntIntDTO>()
+      .toList(growable: false);
+}
+
+Future<List<AggregateGroupResultStringDurationDTO>>
+convertAggrGroupStringByDuration(
+  final ApiClient apiClient,
+  final Response response,
+) async {
+  return (await apiClient.deserializeAsync(
+            await decodeBodyBytes(response),
+            'List<AggregateGroupResultStringDurationDTO>',
+          )
+          as List)
+      .cast<AggregateGroupResultStringDurationDTO>()
+      .toList(growable: false);
 }

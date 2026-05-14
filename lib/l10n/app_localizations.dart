@@ -718,6 +718,24 @@ abstract class AppLocalizations {
   /// **'Total games first played'**
   String get totalFirstMediasLabel;
 
+  /// No description provided for @totalFinishedMediasLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total games finished'**
+  String get totalFinishedMediasLabel;
+
+  /// No description provided for @totalFirstFinishedMediasLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total games first finished'**
+  String get totalFirstFinishedMediasLabel;
+
+  /// No description provided for @longestSessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest session'**
+  String get longestSessionLabel;
+
   /// No description provided for @longestStreakLabel.
   ///
   /// In en, this message translates to:

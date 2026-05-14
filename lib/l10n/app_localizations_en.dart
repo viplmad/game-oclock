@@ -323,6 +323,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalFirstMediasLabel => 'Total games first played';
 
   @override
+  String get totalFinishedMediasLabel => 'Total games finished';
+
+  @override
+  String get totalFirstFinishedMediasLabel => 'Total games first finished';
+
+  @override
+  String get longestSessionLabel => 'Longest session';
+
+  @override
   String get longestStreakLabel => 'Longest Streak';
 
   @override

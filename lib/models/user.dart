@@ -48,6 +48,23 @@ class NewMediaSession extends NewSessionDTO {
   final String gameId;
 }
 
+class AggregateGroupSearch {
+  AggregateGroupSearch({this.filter = const [], this.size, this.sort});
+
+  List<FilterDTO>? filter;
+
+  /// Minimum value: 0
+  int? size;
+
+  AggregateGroupSortDTO? sort;
+}
+
+class AggregateSearch {
+  AggregateSearch({this.filter = const []});
+
+  List<FilterDTO>? filter;
+}
+
 const sourceIgdb = 'igdb';
 
 class UserChangePassword {

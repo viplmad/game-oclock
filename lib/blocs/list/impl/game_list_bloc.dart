@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show AggregateSearch;
 import 'package:game_oclock/services/services.dart' show GameService;
 import 'package:game_oclock_client/api.dart';
 
@@ -16,7 +17,7 @@ class UserGameListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.count(search, quicksearch);
+      service.count(AggregateSearch(filter: search.filter), quicksearch);
 }
 
 class UserGameAvailableListBloc extends ListLoadBloc<MediaAvailableDTO> {
@@ -33,7 +34,11 @@ class UserGameAvailableListBloc extends ListLoadBloc<MediaAvailableDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countAvailable(locationId, search, quicksearch);
+      service.countAvailable(
+        locationId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }
 
 class UserGameWithTagListBloc extends ListLoadBloc<MediaTagDTO> {
@@ -50,7 +55,11 @@ class UserGameWithTagListBloc extends ListLoadBloc<MediaTagDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countWithTag(tagId, search, quicksearch);
+      service.countWithTag(
+        tagId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }
 
 class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<MediaDTO> {
@@ -70,7 +79,11 @@ class UserGamePlayedOnDeviceListBloc extends ListLoadBloc<MediaDTO> {
 
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
-      service.countPlayedOnDevice(deviceId, search, quicksearch);
+      service.countPlayedOnDevice(
+        deviceId,
+        AggregateSearch(filter: search.filter),
+        quicksearch,
+      );
 }
 
 class UserGameWithPlaythroughListBloc extends ListLoadBloc<MediaDTO> {
