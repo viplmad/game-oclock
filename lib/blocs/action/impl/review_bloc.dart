@@ -1,7 +1,15 @@
+import 'dart:async';
 import 'package:game_oclock/models/models.dart'
-    show AggregateGroupSearch, AggregateSearch, ReviewStartEnd;
-import 'package:game_oclock/services/services.dart' show GameSessionService;
+    show
+        AggregateGroupSearch,
+        AggregateSearch,
+        DeviceWithTime,
+        MediaWithTime,
+        ReviewStartEnd;
+import 'package:game_oclock/services/services.dart'
+    show DeviceService, GameService, GameSessionService;
 import 'package:game_oclock/utils/date_time_extension.dart';
+import 'package:game_oclock/utils/duration_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
 import '../action.dart' show FunctionActionBloc, IdentityActionBloc;
@@ -9,40 +17,6 @@ import '../action.dart' show FunctionActionBloc, IdentityActionBloc;
 class ReviewYearSelectBloc extends IdentityActionBloc<int?> {
   @override
   Future<int?> doAction(final int? event, final int? lastData) async => event;
-}
-
-class ReviewTotalTimeGetBloc
-    extends FunctionActionBloc<ReviewStartEnd, Duration> {
-  ReviewTotalTimeGetBloc({required this.service});
-
-  final GameSessionService service;
-
-  @override
-  Future<Duration> doAction(
-    final ReviewStartEnd event,
-    final Duration? lastData,
-  ) => service.sumTime(
-    AggregateSearch(
-      filter: buildStartDateBetweenFilters(event.start, event.end),
-    ),
-    null,
-  );
-}
-
-class ReviewTotalSessionsGetBloc
-    extends FunctionActionBloc<ReviewStartEnd, int> {
-  ReviewTotalSessionsGetBloc({required this.service});
-
-  final GameSessionService service;
-
-  @override
-  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
-      service.count(
-        AggregateSearch(
-          filter: buildStartDateBetweenFilters(event.start, event.end),
-        ),
-        null,
-      );
 }
 
 class ReviewTotalMediasGetBloc extends FunctionActionBloc<ReviewStartEnd, int> {
@@ -114,28 +88,129 @@ class ReviewTotalFirstFinishedMediasGetBloc
       );
 }
 
-class ReviewLongestSessionGetBloc
-    extends FunctionActionBloc<ReviewStartEnd, SessionDTO> {
-  ReviewLongestSessionGetBloc({required this.service});
+class ReviewTotalTimeGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, Duration> {
+  ReviewTotalTimeGetBloc({required this.service});
 
   final GameSessionService service;
 
   @override
-  Future<SessionDTO> doAction(
+  Future<Duration> doAction(
     final ReviewStartEnd event,
-    final SessionDTO? lastData,
-  ) => service
-      .search(
-        ListSearchDTO(
+    final Duration? lastData,
+  ) => service.sumTime(
+    AggregateSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalSessionsGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, int> {
+  ReviewTotalSessionsGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+      service.count(
+        AggregateSearch(
           filter: buildStartDateBetweenFilters(event.start, event.end),
-          sort: List.unmodifiable(<SortDTO>[
-            SortDTO(field: 'time', order: OrderType.desc),
-          ]),
-          size: 1,
         ),
         null,
-      )
-      .then((final pageResult) => pageResult.data.first);
+      );
+}
+
+class ReviewTotalDevicesGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, int> {
+  ReviewTotalDevicesGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
+      service.countDistinctDevices(
+        AggregateSearch(
+          filter: List.unmodifiable(<FilterDTO>[
+            ...buildStartDateBetweenFilters(event.start, event.end),
+          ]),
+        ),
+        null,
+      );
+}
+
+class ReviewMostUsedDeviceGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, DeviceWithTime?> {
+  ReviewMostUsedDeviceGetBloc({
+    required this.service,
+    required this.deviceService,
+  });
+
+  final GameSessionService service;
+  final DeviceService deviceService;
+
+  @override
+  Future<DeviceWithTime?> doAction(
+    final ReviewStartEnd event,
+    final DeviceWithTime? lastData,
+  ) async {
+    final aggr = await service
+        .sumTimeByDevice(
+          AggregateGroupSearch(
+            filter: buildStartDateBetweenFilters(event.start, event.end),
+            sort: AggregateGroupSortDTO(
+              field: AggregateGroupSortType.metric,
+              order: OrderType.desc,
+            ),
+            size: 1,
+          ),
+          null,
+        )
+        .then(removeZeroDurationEntries)
+        .then((final result) => result.first);
+    if (aggr.key == '00000000-0000-0000-0000-000000000000') {
+      return null;
+    }
+    final device = await deviceService.get(aggr.key);
+    return DeviceWithTime(device: device, time: aggr.value);
+  }
+}
+
+class ReviewLongestSessionGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, MediaSessionDTO?> {
+  ReviewLongestSessionGetBloc({
+    required this.service,
+    required this.gameService,
+  });
+
+  final GameSessionService service;
+  final GameService gameService;
+
+  @override
+  Future<MediaSessionDTO?> doAction(
+    final ReviewStartEnd event,
+    final MediaSessionDTO? lastData,
+  ) async {
+    final longestSessions = await service
+        .search(
+          ListSearchDTO(
+            filter: buildStartDateBetweenFilters(event.start, event.end),
+            sort: List.unmodifiable(<SortDTO>[
+              SortDTO(field: 'time', order: OrderType.desc),
+            ]),
+            size: 1,
+          ),
+          null,
+        )
+        .then((final pageResult) => pageResult.data);
+    if (longestSessions.isEmpty) {
+      return null;
+    }
+    final longestSession = longestSessions.first;
+    final media = await gameService.get(longestSession.mediaId);
+    return MediaSessionDTO(media: media, session: longestSession);
+  }
 }
 
 class ReviewLongestStreakGetBloc
@@ -217,30 +292,58 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
 }
 
 class ReviewTop5MediasByTotalTimeListBloc
-    extends
-        FunctionActionBloc<
-          ReviewStartEnd,
-          List<AggregateGroupResultDTO<String, Duration>>
-        > {
-  ReviewTop5MediasByTotalTimeListBloc({required this.service});
+    extends FunctionActionBloc<ReviewStartEnd, List<MediaWithTime>> {
+  ReviewTop5MediasByTotalTimeListBloc({
+    required this.service,
+    required this.gameService,
+  });
 
   final GameSessionService service;
+  final GameService gameService;
 
   @override
-  Future<List<AggregateGroupResultDTO<String, Duration>>> doAction(
+  Future<List<MediaWithTime>> doAction(
     final ReviewStartEnd event,
-    final List<AggregateGroupResultDTO<String, Duration>>? lastData,
-  ) => service.sumTimeByMedia(
-    AggregateGroupSearch(
-      filter: buildStartDateBetweenFilters(event.start, event.end),
-      sort: AggregateGroupSortDTO(
-        field: AggregateGroupSortType.metric,
-        order: OrderType.desc,
+    final List<MediaWithTime>? lastData,
+  ) async {
+    final aggr = await service
+        .sumTimeByMedia(
+          AggregateGroupSearch(
+            filter: buildStartDateBetweenFilters(event.start, event.end),
+            sort: AggregateGroupSortDTO(
+              field: AggregateGroupSortType.metric,
+              order: OrderType.desc,
+            ),
+            size: 5,
+          ),
+          null,
+        )
+        .then(removeZeroDurationEntries);
+    final search = await gameService.search(
+      ListSearchDTO(
+        filter: List.unmodifiable(<FilterDTO>[
+          FilterDTO(
+            field: 'id',
+            operator_: OperatorType.in_,
+            value: SearchValue(
+              values: aggr.map((final el) => el.key).toList(growable: false),
+            ),
+            chainOperator: ChainOperatorType.and,
+          ),
+        ]),
+        size: 5,
       ),
-      size: 5,
-    ),
-    null,
-  );
+      null,
+    );
+    return aggr
+        .map(
+          (final el) => MediaWithTime(
+            media: search.data.firstWhere((final m) => m.media.id == el.key),
+            time: el.value,
+          ),
+        )
+        .toList(growable: false);
+  }
 }
 
 List<FilterDTO> buildStartDateBetweenFilters(
@@ -271,3 +374,9 @@ FilterDTO buildFinishedFilter() {
     chainOperator: ChainOperatorType.and,
   );
 }
+
+List<AggregateGroupResultDTO<String, Duration>> removeZeroDurationEntries(
+  final List<AggregateGroupResultDTO<String, Duration>> value,
+) => value
+    .where((final element) => !element.value.isZero())
+    .toList(growable: false);

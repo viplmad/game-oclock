@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyListLabel => 'Empty';
 
   @override
+  String get noDataLabel => 'No data';
+
+  @override
   String get gamesTitle => 'Games';
 
   @override
@@ -327,6 +330,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalFirstFinishedMediasLabel => 'Total games first finished';
+
+  @override
+  String get totalDevicesLabel => 'Total devices';
+
+  @override
+  String get mostUsedDeviceLabel => 'Most used device';
 
   @override
   String get longestSessionLabel => 'Longest session';

@@ -48,6 +48,20 @@ class NewMediaSession extends NewSessionDTO {
   final String gameId;
 }
 
+class DeviceWithTime {
+  DeviceWithTime({required this.device, required this.time});
+
+  final DeviceDTO device;
+  final Duration time;
+}
+
+class MediaWithTime {
+  MediaWithTime({required this.media, required this.time});
+
+  final MediaDTO media;
+  final Duration time;
+}
+
 class AggregateGroupSearch {
   AggregateGroupSearch({this.filter = const [], this.size, this.sort});
 

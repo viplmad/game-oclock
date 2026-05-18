@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// **'Empty'**
   String get emptyListLabel;
 
+  /// No description provided for @noDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noDataLabel;
+
   /// No description provided for @gamesTitle.
   ///
   /// In en, this message translates to:
@@ -729,6 +735,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total games first finished'**
   String get totalFirstFinishedMediasLabel;
+
+  /// No description provided for @totalDevicesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total devices'**
+  String get totalDevicesLabel;
+
+  /// No description provided for @mostUsedDeviceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Most used device'**
+  String get mostUsedDeviceLabel;
 
   /// No description provided for @longestSessionLabel.
   ///

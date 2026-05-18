@@ -127,6 +127,24 @@ class GameSessionService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
+  Future<int> countDistinctDevices(
+    final AggregateSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateSessionsWithHttpInfo(
+      AggregateSearchDTO(
+        aggr: AggregateMetricDTO(
+          field: 'device_id',
+          kind: AggregateMetricType.count,
+          distinct: true,
+        ),
+        filter: search.filter,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrMetricResultToInt(_api.apiClient, response);
+  }
+
   Future<List<AggregateGroupResultDTO<int, int>>>
   countDistinctMediasByReleaseDateYear(
     final AggregateGroupSearch search,
@@ -218,6 +236,31 @@ class GameSessionService {
         group: AggregateGroupDTO(
           field: 'media_id',
           kind: AggregateGroupType.field,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupStringByDuration(_api.apiClient, response);
+  }
+
+  Future<List<AggregateGroupResultDTO<String, Duration>>> sumTimeByDevice(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(
+          field: 'time',
+          kind: AggregateMetricType.sum,
+          distinct: true,
+        ),
+        group: AggregateGroupDTO(
+          field: 'device_id',
+          kind: AggregateGroupType.field,
+          defaultValue: '00000000-0000-0000-0000-000000000000',
         ),
         filter: search.filter,
         sort: search.sort,
