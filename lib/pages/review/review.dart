@@ -28,6 +28,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ReviewTotalTimeGetBloc,
         ReviewYearSelectBloc;
 import 'package:game_oclock/components/charts/bar_chart.dart';
+import 'package:game_oclock/components/charts/pie_chart.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
@@ -659,52 +660,92 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildTotalMediasGroupByReleaseDateYearChart() {
-    return BlocBuilder<
-      ReviewTotalMediasGroupByReleaseDateYearGetBloc,
-      ActionState<List<AggregateGroupResultDTO<int, int>>>
-    >(
-      builder: (final context, final state) {
-        return buildFromState(
-          context,
-          state: state,
-          onRetryTap: () => context
-              .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
-              .add(const ActionRestarted()),
-          builder: (final context, final data) => StatisticsBarChart<int>(
-            id: 'total-medias-by-release-year',
-            values: SplayTreeMap.fromIterable(
-              data,
-              key: (final element) => element.key.toString(),
-              value: (final element) => element.value,
-            ),
-            colour: chartColors.first,
-          ),
+    return BlocBuilder<ReviewYearSelectBloc, ActionState<int?>>(
+      builder: (final context, final yearState) {
+        final currentYear = (yearState is ActionSuccess<int?, int?>)
+            ? yearState.data ?? DateTime.now().year
+            : DateTime.now().year;
+        final recentYear = currentYear - 7;
+
+        return BlocBuilder<
+          ReviewTotalMediasGroupByReleaseDateYearGetBloc,
+          ActionState<List<AggregateGroupResultDTO<int, int>>>
+        >(
+          builder: (final context, final state) {
+            return buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) => StatisticsPieChart<int>(
+                id: 'total-medias-by-release-year',
+                values: SplayTreeMap.from(<String, int>{
+                  'New releases': data
+                      .where((final el) => el.key == currentYear)
+                      .fold(0, (final prev, final el) => prev + el.value),
+                  'Recent': data
+                      .where(
+                        (final el) =>
+                            el.key < currentYear && el.key >= recentYear,
+                      )
+                      .fold(0, (final prev, final el) => prev + el.value),
+                  'Classic': data
+                      .where((final el) => el.key < recentYear)
+                      .fold(0, (final prev, final el) => prev + el.value),
+                }),
+                valueFormatter: (final domain, _) => domain,
+                colours: chartColors.take(3).toList(growable: false),
+              ),
+            );
+          },
         );
       },
     );
   }
 
   Widget buildTotalFinishedMediasGroupByReleaseDateYearChart() {
-    return BlocBuilder<
-      ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
-      ActionState<List<AggregateGroupResultDTO<int, int>>>
-    >(
-      builder: (final context, final state) {
-        return buildFromState(
-          context,
-          state: state,
-          onRetryTap: () => context
-              .read<ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc>()
-              .add(const ActionRestarted()),
-          builder: (final context, final data) => StatisticsBarChart<int>(
-            id: 'total-finished-medias-by-release-year',
-            values: SplayTreeMap.fromIterable(
-              data,
-              key: (final element) => element.key.toString(),
-              value: (final element) => element.value,
-            ),
-            colour: chartColors.first,
-          ),
+    return BlocBuilder<ReviewYearSelectBloc, ActionState<int?>>(
+      builder: (final context, final yearState) {
+        final currentYear = (yearState is ActionSuccess<int?, int?>)
+            ? yearState.data ?? DateTime.now().year
+            : DateTime.now().year;
+        final recentYear = currentYear - 7;
+
+        return BlocBuilder<
+          ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
+          ActionState<List<AggregateGroupResultDTO<int, int>>>
+        >(
+          builder: (final context, final state) {
+            return buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<
+                    ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
+                  >()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) => StatisticsPieChart<int>(
+                id: 'total-finished-medias-by-release-year',
+                values: SplayTreeMap.from(<String, int>{
+                  'New releases': data
+                      .where((final el) => el.key == currentYear)
+                      .fold(0, (final prev, final el) => prev + el.value),
+                  'Recent': data
+                      .where(
+                        (final el) =>
+                            el.key < currentYear && el.key >= recentYear,
+                      )
+                      .fold(0, (final prev, final el) => prev + el.value),
+                  'Classic': data
+                      .where((final el) => el.key < recentYear)
+                      .fold(0, (final prev, final el) => prev + el.value),
+                }),
+                valueFormatter: (final domain, _) => domain,
+                colours: chartColors.take(3).toList(growable: false),
+              ),
+            );
+          },
         );
       },
     );
