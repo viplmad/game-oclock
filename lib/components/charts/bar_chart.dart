@@ -10,7 +10,7 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
     super.key,
     required this.id,
     required this.values,
-    this.colour,
+    required this.colourGetter,
     this.vertical = true,
     this.hideDomainLabels = false,
     this.hideValueLabels = false,
@@ -20,8 +20,8 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
   });
 
   final String id;
-  final SplayTreeMap<String, N> values;
-  final Color? colour;
+  final List<SeriesEntry<N>> values;
+  final Color Function(String domain, int index) colourGetter;
   final bool vertical;
   final bool hideDomainLabels;
   final bool hideValueLabels;
@@ -33,9 +33,18 @@ class StatisticsBarChart<N extends num> extends StatelessWidget {
   Widget build(final context) {
     return StatisticsStackedBarChart<N>(
       id: id,
-      domainLabels: values.keys.toList(growable: false),
-      stackedValues: [values.values.toList(growable: false)],
-      colours: colour != null ? <Color>[colour!] : <Color>[],
+      values: values
+          .map(
+            (final el) => SeriesEntry(
+              key: el.key,
+              value: List<SeriesEntry<N>>.unmodifiable(<SeriesEntry<N>>[
+                SeriesEntry(key: 'val', value: el.value),
+              ]),
+            ),
+          )
+          .toList(growable: false),
+      colourGetter: (final domain, _, final index, _) =>
+          colourGetter(domain, index),
       vertical: vertical,
       hideDomainLabels: hideDomainLabels,
       hideValueLabels: hideValueLabels,
@@ -50,9 +59,8 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
   const StatisticsStackedBarChart({
     super.key,
     required this.id,
-    required this.domainLabels,
-    required this.stackedValues,
-    this.colours = const <Color>[],
+    required this.values,
+    required this.colourGetter,
     this.vertical = true,
     this.hideDomainLabels = false,
     this.hideValueLabels = false,
@@ -62,9 +70,14 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
   });
 
   final String id;
-  final List<String> domainLabels;
-  final List<List<N>> stackedValues;
-  final List<Color> colours;
+  final List<SeriesEntry<List<SeriesEntry<N>>>> values;
+  final Color Function(
+    String domain,
+    String label,
+    int domainIndex,
+    int labelIndex,
+  )
+  colourGetter;
   final bool vertical;
   final bool hideDomainLabels;
   final bool hideValueLabels;
@@ -78,44 +91,85 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
         ? (_) => ''
         : valueFormatter ?? (final value) => value.toString();
 
-    final seriesList = <charts.Series<SeriesElement<N>, String>>[];
+    final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
+      defaultThemeTextColor(context),
+    );
 
-    for (int valueIndex = 0; valueIndex < stackedValues.length; valueIndex++) {
-      final List<N> values = stackedValues.elementAt(valueIndex);
-      final Color colour = colours.isEmpty
-          ? Theme.of(context).primaryColor
-          : colours.elementAt(valueIndex);
-      final charts.Color seriesColour = charts.ColorUtil.fromDartColor(colour);
-      final charts.Color outsideTextColour = charts.ColorUtil.fromDartColor(
-        defaultThemeTextColor(context),
-      );
+    final temp = <SeriesEntry<List<SeriesEntry<N>>>>[];
+    final uniqueSubLabels = values
+        .map((final e) => e.value.map((final e) => e.key))
+        .fold(<String>{}, (final prev, final el) => prev..addAll(el))
+        .toList(growable: false);
+    // Normalise
+    uniqueSubLabels.forEach((final subLabel) {
+      temp.add(SeriesEntry(key: subLabel, value: []));
+    });
 
-      final data = SplayTreeMap.fromIterables(domainLabels, values)
-          .entries
-          .indexed
-          .map((final indexed) {
-            final entry = indexed.$2;
-            final currentLabel = entry.key;
-            final currentValue = entry.value;
+    values.indexed.forEach((final indexed) {
+      final entry = indexed.$2;
+      final currentLabel = entry.key;
+      final currentValue = entry.value;
 
-            return SeriesElement<N>(indexed.$1, currentLabel, currentValue);
-          })
-          .toList(growable: false);
+      // Normalise
+      uniqueSubLabels.forEach((final subLabel) {
+        temp
+            .firstWhere((final el) => el.key == subLabel)
+            .value
+            .add(SeriesEntry(key: currentLabel, value: 0 as N));
+      });
 
-      final series = charts.Series<SeriesElement<N>, String>(
-        id: valueIndex.toString(),
-        colorFn: (_, _) => seriesColour,
-        domainFn: (final element, _) => element.domainLabel,
-        measureFn: (final element, _) => element.value,
-        data: data,
-        labelAccessorFn: (final element, _) =>
-            element.value > 0 ? labelAccessor(element.value) : '',
-        outsideLabelStyleAccessorFn: (_, _) =>
-            charts.TextStyleSpec(color: outsideTextColour),
-      );
+      currentValue.indexed.forEach((final subIndexed) {
+        final subEntry = subIndexed.$2;
+        final currentSubLabel = subEntry.key;
+        final currentSubValue = subEntry.value;
 
-      seriesList.add(series);
-    }
+        temp.firstWhere((final el) => el.key == currentSubLabel).value.setAll(
+          indexed.$1,
+          [SeriesEntry(key: currentLabel, value: currentSubValue)],
+        );
+      });
+    });
+
+    final seriesList = temp.indexed
+        .map((final indexed) {
+          final entry = indexed.$2;
+          final currentLabel = entry.key; // id
+          final currentValue = entry.value;
+
+          final data = currentValue.indexed
+              .map((final subIndexed) {
+                final subEntry = subIndexed.$2;
+                final currentSubLabel = subEntry.key;
+                final currentSubValue = subEntry.value;
+
+                return SeriesElement<N>(
+                  subIndexed.$1,
+                  currentSubLabel, // year
+                  currentSubValue,
+                );
+              })
+              .toList(growable: false);
+
+          return charts.Series<SeriesElement<N>, String>(
+            id: currentLabel,
+            colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
+              colourGetter(
+                element.domainLabel,
+                currentLabel,
+                element.index,
+                uniqueSubLabels.indexOf(currentLabel),
+              ),
+            ),
+            domainFn: (final element, _) => element.domainLabel,
+            measureFn: (final element, _) => element.value,
+            data: data,
+            labelAccessorFn: (final element, _) =>
+                element.value > 0 ? labelAccessor(element.value) : '',
+            outsideLabelStyleAccessorFn: (_, _) =>
+                charts.TextStyleSpec(color: outsideTextColour),
+          );
+        })
+        .toList(growable: false);
 
     final textStyleSpec = charts.TextStyleSpec(
       color: charts.ColorUtil.fromDartColor(defaultThemeTextColor(context)),

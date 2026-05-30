@@ -42,4 +42,8 @@ extension AppLocalizationsExtension on AppLocalizations {
 
     return '$hoursString $minutesString';
   }
+
+  String monthAbbr(final int month) {
+    return DateFormat.MMM().format(DateTime(2000, month, 1));
+  }
 }

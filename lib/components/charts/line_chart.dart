@@ -11,7 +11,7 @@ class StatisticsLineChart extends StatelessWidget {
     super.key,
     required this.id,
     required this.values,
-    this.colour,
+    required this.colourGetter,
     this.vertical = true,
     this.hideDomainLabels = false,
     this.hideValueLabels = false,
@@ -21,8 +21,8 @@ class StatisticsLineChart extends StatelessWidget {
   });
 
   final String id;
-  final SplayTreeMap<String, int> values;
-  final Color? colour;
+  final List<SeriesEntry<int>> values;
+  final Color Function(String domain, int index) colourGetter;
   final bool vertical;
   final bool hideDomainLabels;
   final bool hideValueLabels;
@@ -36,13 +36,11 @@ class StatisticsLineChart extends StatelessWidget {
         ? (_) => ''
         : valueFormatter ?? (final int value) => value.toString();
 
-    final finalColour = colour ?? Theme.of(context).primaryColor;
-    final seriesColour = charts.ColorUtil.fromDartColor(finalColour);
     final outsideTextColour = charts.ColorUtil.fromDartColor(
       defaultThemeTextColor(context),
     );
 
-    final data = values.entries.indexed
+    final data = values.indexed
         .map((final indexed) {
           final entry = indexed.$2;
           final currentLabel = entry.key;
@@ -54,7 +52,9 @@ class StatisticsLineChart extends StatelessWidget {
 
     final series = charts.Series<SeriesElement<int>, int>(
       id: id,
-      colorFn: (_, _) => seriesColour,
+      colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
+        colourGetter(element.domainLabel, element.index),
+      ),
       domainFn: (final element, _) => element.index,
       measureFn: (final element, _) => element.value,
       data: data,
@@ -85,7 +85,7 @@ class StatisticsLineChart extends StatelessWidget {
               tickFormatterSpec: charts.BasicNumericTickFormatterSpec(
                 // WTF ??
                 (final measure) => (measure?.toInt() ?? 0) < values.length
-                    ? values.keys.elementAt(measure?.toInt() ?? 0)
+                    ? values.elementAt(measure?.toInt() ?? 0).key
                     : '',
               ),
             ),

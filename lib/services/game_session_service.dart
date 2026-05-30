@@ -145,6 +145,39 @@ class GameSessionService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
+  Future<
+    List<
+      AggregateGroupResultDTO<
+        int,
+        List<AggregateGroupResultDTO<String, Duration>>
+      >
+    >
+  >
+  sumTimeByMonthThenMedia(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        group: AggregateGroupDTO(
+          field: 'start_date',
+          kind: AggregateGroupType.dateHistogram,
+          interval: DateHistogramInterval.month,
+        ),
+        subgroup: AggregateGroupDTO(
+          field: 'media_id',
+          kind: AggregateGroupType.field,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupIntByStringDuration(_api.apiClient, response);
+  }
+
   Future<List<AggregateGroupResultDTO<int, int>>>
   countDistinctMediasByReleaseDateYear(
     final AggregateGroupSearch search,

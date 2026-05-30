@@ -159,10 +159,12 @@ class ReviewMostUsedDeviceGetBloc
         .sumTimeByDevice(
           AggregateGroupSearch(
             filter: buildStartDateBetweenFilters(event.start, event.end),
-            sort: AggregateGroupSortDTO(
-              field: AggregateGroupSortType.metric,
-              order: OrderType.desc,
-            ),
+            sort: List.unmodifiable(<AggregateGroupSortDTO>[
+              AggregateGroupSortDTO(
+                field: AggregateGroupSortType.metric,
+                order: OrderType.desc,
+              ),
+            ]),
             size: 1,
           ),
           null,
@@ -251,10 +253,12 @@ class ReviewTotalMediasGroupByReleaseDateYearGetBloc
   ) => service.countDistinctMediasByReleaseDateYear(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
-      sort: AggregateGroupSortDTO(
-        field: AggregateGroupSortType.metric,
-        order: OrderType.asc,
-      ),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
     ),
     null,
   );
@@ -282,10 +286,63 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
         buildFinishedFilter(),
         ...buildStartDateBetweenFilters(event.start, event.end),
       ]),
-      sort: AggregateGroupSortDTO(
-        field: AggregateGroupSortType.metric,
-        order: OrderType.asc,
-      ),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalTimeGroupByMonthThenMediaGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<
+            AggregateGroupResultDTO<
+              int,
+              List<AggregateGroupResultDTO<String, Duration>>
+            >
+          >
+        > {
+  ReviewTotalTimeGroupByMonthThenMediaGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<
+    List<
+      AggregateGroupResultDTO<
+        int,
+        List<AggregateGroupResultDTO<String, Duration>>
+      >
+    >
+  >
+  doAction(
+    final ReviewStartEnd event,
+    final List<
+      AggregateGroupResultDTO<
+        int,
+        List<AggregateGroupResultDTO<String, Duration>>
+      >
+    >?
+    lastData,
+  ) => service.sumTimeByMonthThenMedia(
+    AggregateGroupSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.group,
+          order: OrderType.asc,
+        ),
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.desc,
+        ),
+      ]),
     ),
     null,
   );
@@ -310,10 +367,12 @@ class ReviewTop5MediasByTotalTimeListBloc
         .sumTimeByMedia(
           AggregateGroupSearch(
             filter: buildStartDateBetweenFilters(event.start, event.end),
-            sort: AggregateGroupSortDTO(
-              field: AggregateGroupSortType.metric,
-              order: OrderType.desc,
-            ),
+            sort: List.unmodifiable(<AggregateGroupSortDTO>[
+              AggregateGroupSortDTO(
+                field: AggregateGroupSortType.metric,
+                order: OrderType.desc,
+              ),
+            ]),
             size: 5,
           ),
           null,

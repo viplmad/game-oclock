@@ -136,6 +136,24 @@ abstract class AppLocalizations {
   /// **'No data'**
   String get noDataLabel;
 
+  /// No description provided for @newReleasesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New releases'**
+  String get newReleasesLabel;
+
+  /// No description provided for @recentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recentLabel;
+
+  /// No description provided for @classicLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get classicLabel;
+
   /// No description provided for @gamesTitle.
   ///
   /// In en, this message translates to:

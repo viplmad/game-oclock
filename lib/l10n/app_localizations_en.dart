@@ -30,6 +30,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDataLabel => 'No data';
 
   @override
+  String get newReleasesLabel => 'New releases';
+
+  @override
+  String get recentLabel => 'Recent';
+
+  @override
+  String get classicLabel => 'Classic';
+
+  @override
   String get gamesTitle => 'Games';
 
   @override

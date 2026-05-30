@@ -10,6 +10,16 @@ class SeriesElement<N extends num> {
   final N value;
 }
 
+class SeriesEntry<T> {
+  SeriesEntry({required this.key, required this.value});
+
+  final String key;
+  final T value;
+
+  @override
+  String toString() => '$key : $value';
+}
+
 Color defaultThemeTextColor(final BuildContext context) {
   return isThemeDark(context) ? CommonColors.white : CommonColors.black;
 }

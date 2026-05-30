@@ -26,9 +26,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         ReviewTotalMediasGroupByReleaseDateYearGetBloc,
         ReviewTotalSessionsGetBloc,
         ReviewTotalTimeGetBloc,
+        ReviewTotalTimeGroupByMonthThenMediaGetBloc,
         ReviewYearSelectBloc;
 import 'package:game_oclock/components/charts/bar_chart.dart';
 import 'package:game_oclock/components/charts/pie_chart.dart';
+import 'package:game_oclock/components/charts/series_element.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
@@ -130,6 +132,11 @@ class ReviewPage extends StatelessWidget {
             service: RepositoryProvider.of(context),
           ),
         ),
+        BlocProvider(
+          create: (_) => ReviewTotalTimeGroupByMonthThenMediaGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
         //
         BlocProvider(
           create: (_) => ReviewTop5MediasByTotalTimeListBloc(
@@ -179,6 +186,9 @@ class ReviewBuilder extends StatelessWidget {
           _loadOnlyNotInitial<ReviewTotalTimeGetBloc>(context, reviewData);
           _loadOnlyNotInitial<ReviewTotalSessionsGetBloc>(context, reviewData);
 
+          _loadOnlyNotInitial<ReviewTotalDevicesGetBloc>(context, reviewData);
+          _loadOnlyNotInitial<ReviewMostUsedDeviceGetBloc>(context, reviewData);
+
           _loadOnlyNotInitial<ReviewLongestSessionGetBloc>(context, reviewData);
 
           _loadOnlyNotInitial<ReviewLongestStreakGetBloc>(context, reviewData);
@@ -191,6 +201,11 @@ class ReviewBuilder extends StatelessWidget {
           _loadOnlyNotInitial<
             ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
           >(context, reviewData);
+
+          _loadOnlyNotInitial<ReviewTotalTimeGroupByMonthThenMediaGetBloc>(
+            context,
+            reviewData,
+          );
 
           _loadOnlyNotInitial<ReviewTop5MediasByTotalTimeListBloc>(
             context,
@@ -402,13 +417,86 @@ class ReviewBuilder extends StatelessWidget {
   Widget buildPlayTimeChartList(final BuildContext context) {
     return CenteredGridList(
       borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
-      items: [31, 32, 33, 34, 35, 36, 37, 38, 39],
-      itemBuilder: (final context, final item, final index) => Container(
-        color: Colors.red,
-        child: Center(child: Text('$item')),
-      ),
+      items: <Test>[
+        Test(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewTotalTimeGroupByMonthThenMediaGetBloc>(
+              context,
+            );
+          },
+          child: buildPlayMonthChart(),
+        ),
+      ],
+      itemBuilder: (final context, final item, final index) {
+        item.onRender();
+        return item.child;
+      },
       itemAspectRatio: 2,
       columns: (MediaQuery.sizeOf(context).width / 500).ceil(),
+    );
+  }
+
+  Widget buildPlayMonthChart() {
+    return BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
+      builder: (final context, final totalState) {
+        return BlocBuilder<
+          ReviewTotalTimeGroupByMonthThenMediaGetBloc,
+          ActionState<
+            List<
+              AggregateGroupResultDTO<
+                int,
+                List<AggregateGroupResultDTO<String, Duration>>
+              >
+            >
+          >
+        >(
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: totalState,
+            onRetryTap: () => context.read<ReviewTotalTimeGetBloc>().add(
+              const ActionRestarted(),
+            ),
+            builder: (final context, final totalData) => buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<ReviewTotalTimeGroupByMonthThenMediaGetBloc>()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) =>
+                  StatisticsStackedBarChart<double>(
+                    id: 'total-time-by-month-then-media',
+                    values: List.generate(DateTime.monthsPerYear, (
+                      final index,
+                    ) {
+                      final month = index + 1;
+                      final l =
+                          data
+                              .where((final el) => el.key == month)
+                              .firstOrNull
+                              ?.value ??
+                          [];
+                      return SeriesEntry(
+                        key: context.localize().monthAbbr(month),
+                        value: l
+                            .map(
+                              (final el) => SeriesEntry(
+                                key: el.key,
+                                value:
+                                    (el.value.inMinutes / totalData.inMinutes) *
+                                    100,
+                              ),
+                            )
+                            .toList(growable: false),
+                      );
+                    }, growable: false),
+                    hideValueLabels: true,
+                    colourGetter: (_, _, _, final index) =>
+                        chartColors.elementAt(index % chartColors.length),
+                  ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -671,34 +759,41 @@ class ReviewBuilder extends StatelessWidget {
           ReviewTotalMediasGroupByReleaseDateYearGetBloc,
           ActionState<List<AggregateGroupResultDTO<int, int>>>
         >(
-          builder: (final context, final state) {
-            return buildFromState(
-              context,
-              state: state,
-              onRetryTap: () => context
-                  .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
-                  .add(const ActionRestarted()),
-              builder: (final context, final data) => StatisticsPieChart<int>(
-                id: 'total-medias-by-release-year',
-                values: SplayTreeMap.from(<String, int>{
-                  'New releases': data
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: state,
+            onRetryTap: () => context
+                .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
+                .add(const ActionRestarted()),
+            builder: (final context, final data) => StatisticsPieChart<int>(
+              id: 'total-medias-by-release-year',
+              values: List.unmodifiable(<SeriesEntry<int>>[
+                SeriesEntry(
+                  key: context.localize().newReleasesLabel,
+                  value: data
                       .where((final el) => el.key == currentYear)
                       .fold(0, (final prev, final el) => prev + el.value),
-                  'Recent': data
+                ),
+                SeriesEntry(
+                  key: context.localize().recentLabel,
+                  value: data
                       .where(
                         (final el) =>
                             el.key < currentYear && el.key >= recentYear,
                       )
                       .fold(0, (final prev, final el) => prev + el.value),
-                  'Classic': data
+                ),
+                SeriesEntry(
+                  key: context.localize().classicLabel,
+                  value: data
                       .where((final el) => el.key < recentYear)
                       .fold(0, (final prev, final el) => prev + el.value),
-                }),
-                valueFormatter: (final domain, _) => domain,
-                colours: chartColors.take(3).toList(growable: false),
-              ),
-            );
-          },
+                ),
+              ]),
+              valueFormatter: (final domain, _) => domain,
+              colourGetter: (_, final index) => chartColors.elementAt(index),
+            ),
+          ),
         );
       },
     );
@@ -716,36 +811,41 @@ class ReviewBuilder extends StatelessWidget {
           ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
           ActionState<List<AggregateGroupResultDTO<int, int>>>
         >(
-          builder: (final context, final state) {
-            return buildFromState(
-              context,
-              state: state,
-              onRetryTap: () => context
-                  .read<
-                    ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
-                  >()
-                  .add(const ActionRestarted()),
-              builder: (final context, final data) => StatisticsPieChart<int>(
-                id: 'total-finished-medias-by-release-year',
-                values: SplayTreeMap.from(<String, int>{
-                  'New releases': data
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: state,
+            onRetryTap: () => context
+                .read<ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc>()
+                .add(const ActionRestarted()),
+            builder: (final context, final data) => StatisticsPieChart<int>(
+              id: 'total-finished-medias-by-release-year',
+              values: List.unmodifiable(<SeriesEntry<int>>[
+                SeriesEntry(
+                  key: context.localize().newReleasesLabel,
+                  value: data
                       .where((final el) => el.key == currentYear)
                       .fold(0, (final prev, final el) => prev + el.value),
-                  'Recent': data
+                ),
+                SeriesEntry(
+                  key: context.localize().recentLabel,
+                  value: data
                       .where(
                         (final el) =>
                             el.key < currentYear && el.key >= recentYear,
                       )
                       .fold(0, (final prev, final el) => prev + el.value),
-                  'Classic': data
+                ),
+                SeriesEntry(
+                  key: context.localize().classicLabel,
+                  value: data
                       .where((final el) => el.key < recentYear)
                       .fold(0, (final prev, final el) => prev + el.value),
-                }),
-                valueFormatter: (final domain, _) => domain,
-                colours: chartColors.take(3).toList(growable: false),
-              ),
-            );
-          },
+                ),
+              ]),
+              valueFormatter: (final domain, _) => domain,
+              colourGetter: (_, final index) => chartColors.elementAt(index),
+            ),
+          ),
         );
       },
     );
@@ -761,7 +861,7 @@ class ReviewBuilder extends StatelessWidget {
 
   Widget buildEmptyCard(final BuildContext context) {
     return CardWithTap(
-      borderRadius: BorderRadius.all(Radius.circular(kCardBorderRadius)),
+      borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -830,6 +930,9 @@ class ReviewBuilder extends StatelessWidget {
               _reloadOnlyNotInitial<ReviewTotalTimeGetBloc>(context);
               _reloadOnlyNotInitial<ReviewTotalSessionsGetBloc>(context);
 
+              _reloadOnlyNotInitial<ReviewTotalDevicesGetBloc>(context);
+              _reloadOnlyNotInitial<ReviewMostUsedDeviceGetBloc>(context);
+
               _reloadOnlyNotInitial<ReviewLongestSessionGetBloc>(context);
 
               _reloadOnlyNotInitial<ReviewLongestStreakGetBloc>(context);
@@ -842,6 +945,10 @@ class ReviewBuilder extends StatelessWidget {
                 ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
               >(context);
 
+              _reloadOnlyNotInitial<
+                ReviewTotalTimeGroupByMonthThenMediaGetBloc
+              >(context);
+
               _reloadOnlyNotInitial<ReviewTop5MediasByTotalTimeListBloc>(
                 context,
               );
@@ -850,6 +957,10 @@ class ReviewBuilder extends StatelessWidget {
         ],
       ),
     ];
+  }
+
+  static int _preparePercentageForChart(final double percentage) {
+    return (percentage * 100).round();
   }
 }
 

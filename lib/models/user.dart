@@ -70,7 +70,7 @@ class AggregateGroupSearch {
   /// Minimum value: 0
   int? size;
 
-  AggregateGroupSortDTO? sort;
+  List<AggregateGroupSortDTO>? sort;
 }
 
 class AggregateSearch {

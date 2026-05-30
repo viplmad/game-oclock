@@ -11,14 +11,14 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
     super.key,
     required this.id,
     required this.values,
-    this.colours = const <Color>[],
+    required this.colourGetter,
     this.valueFormatter,
     this.onTap,
   });
 
   final String id;
-  final SplayTreeMap<String, N> values;
-  final List<Color> colours;
+  final List<SeriesEntry<N>> values;
+  final Color Function(String domain, int index) colourGetter;
   final String Function(String domain, N value)? valueFormatter;
   final ValueChanged<int>? onTap;
 
@@ -27,7 +27,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
     final String Function(String, N) labelAccessor =
         valueFormatter ?? (_, final value) => value.toString();
 
-    final data = values.entries.indexed
+    final data = values.indexed
         .map((final indexed) {
           final entry = indexed.$2;
           final currentLabel = entry.key;
@@ -44,9 +44,7 @@ class StatisticsPieChart<N extends num> extends StatelessWidget {
     final series = charts.Series<SeriesElement<N>, String>(
       id: id,
       colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
-        colours.isEmpty
-            ? Theme.of(context).primaryColor
-            : colours.elementAt(element.index),
+        colourGetter(element.domainLabel, element.index),
       ),
       domainFn: (final element, _) => element.domainLabel,
       measureFn: (final element, _) => element.value,
