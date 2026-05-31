@@ -36,6 +36,19 @@ Future<List<AggregateGroupResultIntIntDTO>> convertAggrGroupIntByInt(
       .toList(growable: false);
 }
 
+Future<List<AggregateGroupResultStringIntDTO>> convertAggrGroupStringByInt(
+  final ApiClient apiClient,
+  final Response response,
+) async {
+  return (await apiClient.deserializeAsync(
+            await decodeBodyBytes(response),
+            'List<AggregateGroupResultStringIntDTO>',
+          )
+          as List)
+      .cast<AggregateGroupResultStringIntDTO>()
+      .toList(growable: false);
+}
+
 Future<List<AggregateGroupResultIntStringDurationDTO>>
 convertAggrGroupIntByStringDuration(
   final ApiClient apiClient,

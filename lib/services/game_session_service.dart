@@ -303,6 +303,30 @@ class GameSessionService {
     return convertAggrGroupIntByInt(_api.apiClient, response);
   }
 
+  Future<List<AggregateGroupResultDTO<String, int>>> countDistinctMediasByGenre(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(
+          field: 'media_id',
+          kind: AggregateMetricType.count,
+          distinct: true,
+        ),
+        group: AggregateGroupDTO(
+          field: 'media_genre',
+          kind: AggregateGroupType.field,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupStringByInt(_api.apiClient, response);
+  }
+
   Future<List<AggregateGroupResultDTO<String, Duration>>> sumTimeByMedia(
     final AggregateGroupSearch search,
     final String? quicksearch,

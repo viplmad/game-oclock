@@ -161,6 +161,7 @@ class ReviewMostUsedDeviceGetBloc
             filter: buildStartDateBetweenFilters(event.start, event.end),
             sort: List.unmodifiable(<AggregateGroupSortDTO>[
               AggregateGroupSortDTO(
+                // Sort by time
                 field: AggregateGroupSortType.metric,
                 order: OrderType.desc,
               ),
@@ -255,6 +256,7 @@ class ReviewTotalMediasGroupByReleaseDateYearGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
+          // Sort by count
           field: AggregateGroupSortType.metric,
           order: OrderType.asc,
         ),
@@ -288,6 +290,7 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
       ]),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
+          // Sort by count
           field: AggregateGroupSortType.metric,
           order: OrderType.asc,
         ),
@@ -335,10 +338,12 @@ class ReviewTotalTimeGroupByMonthThenMediaGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
+          // Sort first by month
           field: AggregateGroupSortType.group,
           order: OrderType.asc,
         ),
         AggregateGroupSortDTO(
+          // Then by time
           field: AggregateGroupSortType.metric,
           order: OrderType.desc,
         ),
@@ -369,6 +374,7 @@ class ReviewTop5MediasByTotalTimeListBloc
             filter: buildStartDateBetweenFilters(event.start, event.end),
             sort: List.unmodifiable(<AggregateGroupSortDTO>[
               AggregateGroupSortDTO(
+                // Sort by time
                 field: AggregateGroupSortType.metric,
                 order: OrderType.desc,
               ),
@@ -424,10 +430,41 @@ class ReviewTotalMediasGroupByRatingGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
-          field: AggregateGroupSortType.metric,
+          // Sort by rating
+          field: AggregateGroupSortType.group,
           order: OrderType.asc,
         ),
       ]),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalMediasGroupByGenreGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<AggregateGroupResultDTO<String, int>>
+        > {
+  ReviewTotalMediasGroupByGenreGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<List<AggregateGroupResultDTO<String, int>>> doAction(
+    final ReviewStartEnd event,
+    final List<AggregateGroupResultDTO<String, int>>? lastData,
+  ) => service.countDistinctMediasByGenre(
+    AggregateGroupSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          // Sort by count
+          field: AggregateGroupSortType.metric,
+          order: OrderType.desc,
+        ),
+      ]),
+      size: 6,
     ),
     null,
   );
@@ -455,7 +492,8 @@ class ReviewTotalFinishedMediasGroupByMonthGetBloc
       ]),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
-          field: AggregateGroupSortType.metric,
+          // Sort by month
+          field: AggregateGroupSortType.group,
           order: OrderType.asc,
         ),
       ]),
@@ -483,7 +521,8 @@ class ReviewTotalTimeGroupByWeekdayGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
-          field: AggregateGroupSortType.metric,
+          // Sort by weekday
+          field: AggregateGroupSortType.group,
           order: OrderType.asc,
         ),
       ]),
@@ -511,7 +550,8 @@ class ReviewTotalTimeGroupByHourGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
         AggregateGroupSortDTO(
-          field: AggregateGroupSortType.metric,
+          // Sort by hour
+          field: AggregateGroupSortType.group,
           order: OrderType.asc,
         ),
       ]),

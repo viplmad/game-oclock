@@ -24,6 +24,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ReviewTotalFirstFinishedMediasGetBloc,
         ReviewTotalFirstMediasGetBloc,
         ReviewTotalMediasGetBloc,
+        ReviewTotalMediasGroupByGenreGetBloc,
         ReviewTotalMediasGroupByRatingGetBloc,
         ReviewTotalMediasGroupByReleaseDateYearGetBloc,
         ReviewTotalSessionsGetBloc,
@@ -138,6 +139,11 @@ class ReviewPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
+          create: (_) => ReviewTotalMediasGroupByGenreGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
           create: (_) => ReviewTotalTimeGroupByMonthThenMediaGetBloc(
             service: RepositoryProvider.of(context),
           ),
@@ -226,6 +232,11 @@ class ReviewBuilder extends StatelessWidget {
           _loadOnlyNotInitial<
             ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
           >(context, reviewData);
+
+          _loadOnlyNotInitial<ReviewTotalMediasGroupByGenreGetBloc>(
+            context,
+            reviewData,
+          );
 
           _loadOnlyNotInitial<ReviewTotalTimeGroupByMonthThenMediaGetBloc>(
             context,
@@ -393,7 +404,14 @@ class ReviewBuilder extends StatelessWidget {
           },
           child: buildTotalFinishedMediasGroupByReleaseDateYearChart(),
         ),
-        LazyRender(onRender: () {}, child: buildTotalMediasGroupByGenreChart()),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewTotalMediasGroupByGenreGetBloc>(
+              context,
+            );
+          },
+          child: buildTotalMediasGroupByGenreChart(),
+        ),
       ],
       itemBuilder: (final context, final item, final index) {
         item.onRender();
@@ -540,6 +558,7 @@ class ReviewBuilder extends StatelessWidget {
               builder: (final context, final data) =>
                   StatisticsStackedBarChart<double>(
                     id: 'total-time-by-month-then-media',
+                    // Generate from fixed length in case some months have no data
                     values: List.generate(DateTime.monthsPerYear, (
                       final index,
                     ) {
@@ -588,6 +607,7 @@ class ReviewBuilder extends StatelessWidget {
             .add(const ActionRestarted()),
         builder: (final context, final data) => StatisticsBarChart<int>(
           id: 'total-medias-by-rating',
+          // Generate from fixed length in case some ratings have no data
           values: List.generate(10, (final index) {
             final rating = index + 1;
             return SeriesEntry(
@@ -616,7 +636,8 @@ class ReviewBuilder extends StatelessWidget {
             .read<ReviewTotalFinishedMediasGroupByMonthGetBloc>()
             .add(const ActionRestarted()),
         builder: (final context, final data) => StatisticsBarChart<int>(
-          id: 'total-medias-by-rating',
+          id: 'total-finished-medias-by-month',
+          // Generate from fixed length in case some months have no data
           values: List.generate(DateTime.monthsPerYear, (final index) {
             final month = index + 1;
             return SeriesEntry(
@@ -646,6 +667,7 @@ class ReviewBuilder extends StatelessWidget {
             .add(const ActionRestarted()),
         builder: (final context, final data) => StatisticsLineChart<int>(
           id: 'total-time-by-weekday',
+          // Generate from fixed length in case some weekdays have no data
           values: List.generate(DateTime.daysPerWeek, (final index) {
             final weekday = index + 1;
             // TODO take into account date config starting day of week
@@ -676,6 +698,7 @@ class ReviewBuilder extends StatelessWidget {
         ),
         builder: (final context, final data) => StatisticsLineChart<int>(
           id: 'total-time-by-hour',
+          // Generate from fixed length in case some hours have no data
           values: List.generate(TimeOfDay.hoursPerDay, (final index) {
             final hour = index;
             return SeriesEntry(
@@ -1044,8 +1067,26 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildTotalMediasGroupByGenreChart() {
-    // TODO
-    return Container();
+    return BlocBuilder<
+      ReviewTotalMediasGroupByGenreGetBloc,
+      ActionState<List<AggregateGroupResultDTO<String, int>>>
+    >(
+      builder: (final context, final state) => buildFromState(
+        context,
+        state: state,
+        onRetryTap: () => context
+            .read<ReviewTotalMediasGroupByGenreGetBloc>()
+            .add(const ActionRestarted()),
+        builder: (final context, final data) => StatisticsBarChart<int>(
+          id: 'total-medias-by-genre',
+          values: data
+              .map((final el) => SeriesEntry(key: el.key, value: el.value))
+              .toList(growable: false),
+          vertical: false,
+          colourGetter: (_, final index) => chartColors.elementAt(index),
+        ),
+      ),
+    );
   }
 
   Widget buildStatContainer(final String title, final String value) {
@@ -1137,6 +1178,10 @@ class ReviewBuilder extends StatelessWidget {
               _reloadOnlyNotInitial<
                 ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
               >(context);
+
+              _reloadOnlyNotInitial<ReviewTotalMediasGroupByGenreGetBloc>(
+                context,
+              );
 
               _reloadOnlyNotInitial<
                 ReviewTotalTimeGroupByMonthThenMediaGetBloc
