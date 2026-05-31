@@ -63,3 +63,16 @@ convertAggrGroupStringByDuration(
       .cast<AggregateGroupResultStringDurationDTO>()
       .toList(growable: false);
 }
+
+Future<List<AggregateGroupResultIntDurationDTO>> convertAggrGroupIntByDuration(
+  final ApiClient apiClient,
+  final Response response,
+) async {
+  return (await apiClient.deserializeAsync(
+            await decodeBodyBytes(response),
+            'List<AggregateGroupResultIntDurationDTO>',
+          )
+          as List)
+      .cast<AggregateGroupResultIntDurationDTO>()
+      .toList(growable: false);
+}

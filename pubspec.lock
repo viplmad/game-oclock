@@ -226,7 +226,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: b087a8c3845ba44df9a9a6481679e9c0e85ecc70
+      resolved-ref: f94f5aa34bbe294fcaa8f25fae8982e48918cb3a
       url: "https://github.com/viplmad/game-oclock-client-dart.git"
     source: git
     version: "2.0.0"

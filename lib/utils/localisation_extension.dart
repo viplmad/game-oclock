@@ -46,4 +46,9 @@ extension AppLocalizationsExtension on AppLocalizations {
   String monthAbbr(final int month) {
     return DateFormat.MMM().format(DateTime(2000, month, 1));
   }
+
+  String weekdayAbbr(final int weekday) {
+    // 2024 starts on monday == isoweekday 1
+    return DateFormat.E().format(DateTime(2024, DateTime.january, weekday));
+  }
 }

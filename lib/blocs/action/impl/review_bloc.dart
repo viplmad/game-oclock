@@ -170,8 +170,8 @@ class ReviewMostUsedDeviceGetBloc
           null,
         )
         .then(removeZeroDurationEntries)
-        .then((final result) => result.first);
-    if (aggr.key == '00000000-0000-0000-0000-000000000000') {
+        .then((final result) => result.firstOrNull);
+    if (aggr == null) {
       return null;
     }
     final device = await deviceService.get(aggr.key);
@@ -330,7 +330,7 @@ class ReviewTotalTimeGroupByMonthThenMediaGetBloc
       >
     >?
     lastData,
-  ) => service.sumTimeByMonthThenMedia(
+  ) => service.sumTimeByStartDateMonthThenMedia(
     AggregateGroupSearch(
       filter: buildStartDateBetweenFilters(event.start, event.end),
       sort: List.unmodifiable(<AggregateGroupSortDTO>[
@@ -403,6 +403,121 @@ class ReviewTop5MediasByTotalTimeListBloc
         )
         .toList(growable: false);
   }
+}
+
+class ReviewTotalMediasGroupByRatingGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<AggregateGroupResultDTO<int, int>>
+        > {
+  ReviewTotalMediasGroupByRatingGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<List<AggregateGroupResultDTO<int, int>>> doAction(
+    final ReviewStartEnd event,
+    final List<AggregateGroupResultDTO<int, int>>? lastData,
+  ) => service.countDistinctMediasByRating(
+    AggregateGroupSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalFinishedMediasGroupByMonthGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<AggregateGroupResultDTO<int, int>>
+        > {
+  ReviewTotalFinishedMediasGroupByMonthGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<List<AggregateGroupResultDTO<int, int>>> doAction(
+    final ReviewStartEnd event,
+    final List<AggregateGroupResultDTO<int, int>>? lastData,
+  ) => service.countDistinctMediasByStartDateMonth(
+    AggregateGroupSearch(
+      filter: List.unmodifiable(<FilterDTO>[
+        buildFinishedFilter(),
+        ...buildStartDateBetweenFilters(event.start, event.end),
+      ]),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalTimeGroupByWeekdayGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<AggregateGroupResultDTO<int, Duration>>
+        > {
+  ReviewTotalTimeGroupByWeekdayGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(
+    final ReviewStartEnd event,
+    final List<AggregateGroupResultDTO<int, Duration>>? lastData,
+  ) => service.sumTimeByStartDateWeekday(
+    AggregateGroupSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
+    ),
+    null,
+  );
+}
+
+class ReviewTotalTimeGroupByHourGetBloc
+    extends
+        FunctionActionBloc<
+          ReviewStartEnd,
+          List<AggregateGroupResultDTO<int, Duration>>
+        > {
+  ReviewTotalTimeGroupByHourGetBloc({required this.service});
+
+  final GameSessionService service;
+
+  @override
+  Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(
+    final ReviewStartEnd event,
+    final List<AggregateGroupResultDTO<int, Duration>>? lastData,
+  ) => service.sumTimeByStartDateHour(
+    AggregateGroupSearch(
+      filter: buildStartDateBetweenFilters(event.start, event.end),
+      sort: List.unmodifiable(<AggregateGroupSortDTO>[
+        AggregateGroupSortDTO(
+          field: AggregateGroupSortType.metric,
+          order: OrderType.asc,
+        ),
+      ]),
+    ),
+    null,
+  );
 }
 
 List<FilterDTO> buildStartDateBetweenFilters(

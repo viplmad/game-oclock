@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'series_element.dart';
 
-class StatisticsLineChart extends StatelessWidget {
+class StatisticsLineChart<N extends num> extends StatelessWidget {
   const StatisticsLineChart({
     super.key,
     required this.id,
@@ -21,20 +21,20 @@ class StatisticsLineChart extends StatelessWidget {
   });
 
   final String id;
-  final List<SeriesEntry<int>> values;
+  final List<SeriesEntry<N>> values;
   final Color Function(String domain, int index) colourGetter;
   final bool vertical;
   final bool hideDomainLabels;
   final bool hideValueLabels;
-  final String Function(int value)? valueFormatter;
+  final String Function(N value)? valueFormatter;
   final String Function(num? measure)? measureFormatter;
   final ValueChanged<int>? onDomainTap;
 
   @override
   Widget build(final context) {
-    final String Function(int) labelAccessor = hideValueLabels
+    final String Function(N) labelAccessor = hideValueLabels
         ? (_) => ''
-        : valueFormatter ?? (final int value) => value.toString();
+        : valueFormatter ?? (final value) => value.toString();
 
     final outsideTextColour = charts.ColorUtil.fromDartColor(
       defaultThemeTextColor(context),
@@ -46,11 +46,11 @@ class StatisticsLineChart extends StatelessWidget {
           final currentLabel = entry.key;
           final currentValue = entry.value;
 
-          return SeriesElement<int>(indexed.$1, currentLabel, currentValue);
+          return SeriesElement<N>(indexed.$1, currentLabel, currentValue);
         })
         .toList(growable: false);
 
-    final series = charts.Series<SeriesElement<int>, int>(
+    final series = charts.Series<SeriesElement<N>, int>(
       id: id,
       colorFn: (final element, _) => charts.ColorUtil.fromDartColor(
         colourGetter(element.domainLabel, element.index),

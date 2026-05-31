@@ -1,5 +1,6 @@
 import 'package:game_oclock/models/models.dart'
     show AggregateGroupSearch, AggregateSearch;
+import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -145,6 +146,49 @@ class GameSessionService {
     return convertAggrMetricResultToInt(_api.apiClient, response);
   }
 
+  Future<List<AggregateGroupResultDTO<int, Duration>>>
+  sumTimeByStartDateWeekday(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        group: AggregateGroupDTO(
+          field: 'start_date',
+          kind: AggregateGroupType.dateHistogram,
+          interval: DateHistogramInterval.weekday,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupIntByDuration(_api.apiClient, response);
+  }
+
+  Future<List<AggregateGroupResultDTO<int, Duration>>> sumTimeByStartDateHour(
+    final AggregateGroupSearch search,
+    final String? quicksearch,
+  ) async {
+    final response = await _api.aggregateGroupSessionsWithHttpInfo(
+      AggregateGroupSearchDTO(
+        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        group: AggregateGroupDTO(
+          field: 'start_date',
+          kind: AggregateGroupType.dateHistogram,
+          interval: DateHistogramInterval.hour,
+        ),
+        filter: search.filter,
+        sort: search.sort,
+        size: search.size,
+      ),
+      q: quicksearch,
+    );
+    return convertAggrGroupIntByDuration(_api.apiClient, response);
+  }
+
   Future<
     List<
       AggregateGroupResultDTO<
@@ -153,7 +197,7 @@ class GameSessionService {
       >
     >
   >
-  sumTimeByMonthThenMedia(
+  sumTimeByStartDateMonthThenMedia(
     final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
@@ -183,6 +227,7 @@ class GameSessionService {
     final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
+    final defaultValue = DateTime(1970);
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
@@ -194,6 +239,7 @@ class GameSessionService {
           field: 'media_release_date',
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.year,
+          defaultValue: defaultValue.toIso8601WithTzString(),
         ),
         filter: search.filter,
         sort: search.sort,
@@ -201,7 +247,10 @@ class GameSessionService {
       ),
       q: quicksearch,
     );
-    return convertAggrGroupIntByInt(_api.apiClient, response);
+    final data = await convertAggrGroupIntByInt(_api.apiClient, response);
+    return data
+        .takeWhile((final val) => val.key != defaultValue.year)
+        .toList(growable: false);
   }
 
   Future<List<AggregateGroupResultDTO<int, int>>>
@@ -244,7 +293,6 @@ class GameSessionService {
         group: AggregateGroupDTO(
           field: 'media_rating',
           kind: AggregateGroupType.field,
-          defaultValue: '-1',
         ),
         filter: search.filter,
         sort: search.sort,
@@ -283,6 +331,7 @@ class GameSessionService {
     final AggregateGroupSearch search,
     final String? quicksearch,
   ) async {
+    final defaultValue = '00000000-0000-0000-0000-000000000000';
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
@@ -293,7 +342,7 @@ class GameSessionService {
         group: AggregateGroupDTO(
           field: 'device_id',
           kind: AggregateGroupType.field,
-          defaultValue: '00000000-0000-0000-0000-000000000000',
+          defaultValue: defaultValue,
         ),
         filter: search.filter,
         sort: search.sort,
@@ -301,7 +350,13 @@ class GameSessionService {
       ),
       q: quicksearch,
     );
-    return convertAggrGroupStringByDuration(_api.apiClient, response);
+    final data = await convertAggrGroupStringByDuration(
+      _api.apiClient,
+      response,
+    );
+    return data
+        .takeWhile((final val) => val.key != defaultValue)
+        .toList(growable: false);
   }
 
   Future<PageResultDTO<SessionStreakDTO>> searchStreaks(

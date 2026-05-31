@@ -19,16 +19,21 @@ import 'package:game_oclock/blocs/blocs.dart'
         ReviewTop5MediasByTotalTimeListBloc,
         ReviewTotalDevicesGetBloc,
         ReviewTotalFinishedMediasGetBloc,
+        ReviewTotalFinishedMediasGroupByMonthGetBloc,
         ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
         ReviewTotalFirstFinishedMediasGetBloc,
         ReviewTotalFirstMediasGetBloc,
         ReviewTotalMediasGetBloc,
+        ReviewTotalMediasGroupByRatingGetBloc,
         ReviewTotalMediasGroupByReleaseDateYearGetBloc,
         ReviewTotalSessionsGetBloc,
         ReviewTotalTimeGetBloc,
+        ReviewTotalTimeGroupByHourGetBloc,
         ReviewTotalTimeGroupByMonthThenMediaGetBloc,
+        ReviewTotalTimeGroupByWeekdayGetBloc,
         ReviewYearSelectBloc;
 import 'package:game_oclock/components/charts/bar_chart.dart';
+import 'package:game_oclock/components/charts/line_chart.dart';
 import 'package:game_oclock/components/charts/pie_chart.dart';
 import 'package:game_oclock/components/charts/series_element.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
@@ -137,6 +142,26 @@ class ReviewPage extends StatelessWidget {
             service: RepositoryProvider.of(context),
           ),
         ),
+        BlocProvider(
+          create: (_) => ReviewTotalMediasGroupByRatingGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ReviewTotalFinishedMediasGroupByMonthGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ReviewTotalTimeGroupByWeekdayGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ReviewTotalTimeGroupByHourGetBloc(
+            service: RepositoryProvider.of(context),
+          ),
+        ),
         //
         BlocProvider(
           create: (_) => ReviewTop5MediasByTotalTimeListBloc(
@@ -203,6 +228,26 @@ class ReviewBuilder extends StatelessWidget {
           >(context, reviewData);
 
           _loadOnlyNotInitial<ReviewTotalTimeGroupByMonthThenMediaGetBloc>(
+            context,
+            reviewData,
+          );
+
+          _loadOnlyNotInitial<ReviewTotalMediasGroupByRatingGetBloc>(
+            context,
+            reviewData,
+          );
+
+          _loadOnlyNotInitial<ReviewTotalFinishedMediasGroupByMonthGetBloc>(
+            context,
+            reviewData,
+          );
+
+          _loadOnlyNotInitial<ReviewTotalTimeGroupByWeekdayGetBloc>(
+            context,
+            reviewData,
+          );
+
+          _loadOnlyNotInitial<ReviewTotalTimeGroupByHourGetBloc>(
             context,
             reviewData,
           );
@@ -275,15 +320,15 @@ class ReviewBuilder extends StatelessWidget {
   Widget buildInitialSummaryList(final BuildContext context) {
     return CenteredGridList(
       borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
-      items: <Test>[
-        Test(
+      items: <LazyRender>[
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewTotalMediasGetBloc>(context);
             _loadOnlyInitialReview<ReviewTotalFirstMediasGetBloc>(context);
           },
           child: buildTotalMediasSummary(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewTotalFinishedMediasGetBloc>(context);
             _loadOnlyInitialReview<ReviewTotalFirstFinishedMediasGetBloc>(
@@ -292,27 +337,27 @@ class ReviewBuilder extends StatelessWidget {
           },
           child: buildTotalFinishedMediasSummary(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewTotalTimeGetBloc>(context);
             _loadOnlyInitialReview<ReviewTotalSessionsGetBloc>(context);
           },
           child: buildTotalTimeSummary(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewTotalDevicesGetBloc>(context);
             _loadOnlyInitialReview<ReviewMostUsedDeviceGetBloc>(context);
           },
           child: buildDevicesSummary(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewLongestSessionGetBloc>(context);
           },
           child: buildLongestSessionSummary(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewLongestStreakGetBloc>(context);
           },
@@ -331,8 +376,8 @@ class ReviewBuilder extends StatelessWidget {
   Widget buildSummaryChartList(final BuildContext context) {
     return CenteredGridList(
       borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
-      items: <Test>[
-        Test(
+      items: <LazyRender>[
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<
               ReviewTotalMediasGroupByReleaseDateYearGetBloc
@@ -340,7 +385,7 @@ class ReviewBuilder extends StatelessWidget {
           },
           child: buildTotalMediasGroupByReleaseDateYearChart(),
         ),
-        Test(
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<
               ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
@@ -348,7 +393,7 @@ class ReviewBuilder extends StatelessWidget {
           },
           child: buildTotalFinishedMediasGroupByReleaseDateYearChart(),
         ),
-        Test(onRender: () {}, child: buildTotalMediasGroupByGenreChart()),
+        LazyRender(onRender: () {}, child: buildTotalMediasGroupByGenreChart()),
       ],
       itemBuilder: (final context, final item, final index) {
         item.onRender();
@@ -417,14 +462,44 @@ class ReviewBuilder extends StatelessWidget {
   Widget buildPlayTimeChartList(final BuildContext context) {
     return CenteredGridList(
       borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
-      items: <Test>[
-        Test(
+      items: <LazyRender>[
+        LazyRender(
           onRender: () {
             _loadOnlyInitialReview<ReviewTotalTimeGroupByMonthThenMediaGetBloc>(
               context,
             );
           },
-          child: buildPlayMonthChart(),
+          child: buildPlayMonthMediaChart(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewTotalMediasGroupByRatingGetBloc>(
+              context,
+            );
+          },
+          child: buildTotalMediasGroupByRatingChart(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<
+              ReviewTotalFinishedMediasGroupByMonthGetBloc
+            >(context);
+          },
+          child: buildTotalFinishedMediasGroupByMonthChart(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewTotalTimeGroupByWeekdayGetBloc>(
+              context,
+            );
+          },
+          child: buildPlayWeekdayChart(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewTotalTimeGroupByHourGetBloc>(context);
+          },
+          child: buildPlayHourChart(),
         ),
       ],
       itemBuilder: (final context, final item, final index) {
@@ -436,7 +511,7 @@ class ReviewBuilder extends StatelessWidget {
     );
   }
 
-  Widget buildPlayMonthChart() {
+  Widget buildPlayMonthMediaChart() {
     return BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
       builder: (final context, final totalState) {
         return BlocBuilder<
@@ -497,6 +572,123 @@ class ReviewBuilder extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget buildTotalMediasGroupByRatingChart() {
+    return BlocBuilder<
+      ReviewTotalMediasGroupByRatingGetBloc,
+      ActionState<List<AggregateGroupResultDTO<int, int>>>
+    >(
+      builder: (final context, final state) => buildFromState(
+        context,
+        state: state,
+        onRetryTap: () => context
+            .read<ReviewTotalMediasGroupByRatingGetBloc>()
+            .add(const ActionRestarted()),
+        builder: (final context, final data) => StatisticsBarChart<int>(
+          id: 'total-medias-by-rating',
+          values: List.generate(10, (final index) {
+            final rating = index + 1;
+            return SeriesEntry(
+              key: rating.toString(),
+              value: data
+                  .where((final el) => el.key == rating)
+                  .fold(0, (final prev, final el) => prev + el.value),
+            );
+          }, growable: false),
+          hideValueLabels: true,
+          colourGetter: (_, _) => chartColors.elementAt(0),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTotalFinishedMediasGroupByMonthChart() {
+    return BlocBuilder<
+      ReviewTotalFinishedMediasGroupByMonthGetBloc,
+      ActionState<List<AggregateGroupResultDTO<int, int>>>
+    >(
+      builder: (final context, final state) => buildFromState(
+        context,
+        state: state,
+        onRetryTap: () => context
+            .read<ReviewTotalFinishedMediasGroupByMonthGetBloc>()
+            .add(const ActionRestarted()),
+        builder: (final context, final data) => StatisticsBarChart<int>(
+          id: 'total-medias-by-rating',
+          values: List.generate(DateTime.monthsPerYear, (final index) {
+            final month = index + 1;
+            return SeriesEntry(
+              key: context.localize().monthAbbr(month),
+              value: data
+                  .where((final el) => el.key == month)
+                  .fold(0, (final prev, final el) => prev + el.value),
+            );
+          }, growable: false),
+          hideValueLabels: true,
+          colourGetter: (_, _) => chartColors.elementAt(0),
+        ),
+      ),
+    );
+  }
+
+  Widget buildPlayWeekdayChart() {
+    return BlocBuilder<
+      ReviewTotalTimeGroupByWeekdayGetBloc,
+      ActionState<List<AggregateGroupResultDTO<int, Duration>>>
+    >(
+      builder: (final context, final state) => buildFromState(
+        context,
+        state: state,
+        onRetryTap: () => context
+            .read<ReviewTotalTimeGroupByWeekdayGetBloc>()
+            .add(const ActionRestarted()),
+        builder: (final context, final data) => StatisticsLineChart<int>(
+          id: 'total-time-by-weekday',
+          values: List.generate(DateTime.daysPerWeek, (final index) {
+            final weekday = index + 1;
+            // TODO take into account date config starting day of week
+            return SeriesEntry(
+              key: context.localize().weekdayAbbr(weekday),
+              value: data
+                  .where((final el) => el.key == weekday)
+                  .fold(0, (final prev, final el) => prev + el.value.inMinutes),
+            );
+          }, growable: false),
+          hideValueLabels: true,
+          colourGetter: (_, _) => chartColors.elementAt(0),
+        ),
+      ),
+    );
+  }
+
+  Widget buildPlayHourChart() {
+    return BlocBuilder<
+      ReviewTotalTimeGroupByHourGetBloc,
+      ActionState<List<AggregateGroupResultDTO<int, Duration>>>
+    >(
+      builder: (final context, final state) => buildFromState(
+        context,
+        state: state,
+        onRetryTap: () => context.read<ReviewTotalTimeGroupByHourGetBloc>().add(
+          const ActionRestarted(),
+        ),
+        builder: (final context, final data) => StatisticsLineChart<int>(
+          id: 'total-time-by-hour',
+          values: List.generate(TimeOfDay.hoursPerDay, (final index) {
+            final hour = index;
+            return SeriesEntry(
+              key: hour.toString().padLeft(2, '0'),
+              value: data
+                  .where((final el) => el.key == hour)
+                  .fold(0, (final prev, final el) => prev + el.value.inMinutes),
+            );
+          }, growable: false),
+          hideValueLabels: true,
+          colourGetter: (_, _) => chartColors.elementAt(0),
+        ),
+      ),
     );
   }
 
@@ -852,6 +1044,7 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildTotalMediasGroupByGenreChart() {
+    // TODO
     return Container();
   }
 
@@ -949,6 +1142,20 @@ class ReviewBuilder extends StatelessWidget {
                 ReviewTotalTimeGroupByMonthThenMediaGetBloc
               >(context);
 
+              _reloadOnlyNotInitial<ReviewTotalMediasGroupByRatingGetBloc>(
+                context,
+              );
+
+              _reloadOnlyNotInitial<
+                ReviewTotalFinishedMediasGroupByMonthGetBloc
+              >(context);
+
+              _reloadOnlyNotInitial<ReviewTotalTimeGroupByWeekdayGetBloc>(
+                context,
+              );
+
+              _reloadOnlyNotInitial<ReviewTotalTimeGroupByHourGetBloc>(context);
+
               _reloadOnlyNotInitial<ReviewTop5MediasByTotalTimeListBloc>(
                 context,
               );
@@ -958,14 +1165,10 @@ class ReviewBuilder extends StatelessWidget {
       ),
     ];
   }
-
-  static int _preparePercentageForChart(final double percentage) {
-    return (percentage * 100).round();
-  }
 }
 
-class Test {
-  Test({required this.child, required this.onRender});
+class LazyRender {
+  LazyRender({required this.child, required this.onRender});
 
   final Widget child;
   final VoidCallback onRender;
