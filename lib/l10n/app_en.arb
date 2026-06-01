@@ -9,6 +9,14 @@
   "newReleasesLabel": "New releases",
   "recentLabel": "Recent",
   "classicLabel": "Classic",
+  "playtimeByMonthTitle": "Playtime by month",
+  "playedByRatingTitle": "Played by rating",
+  "finishedByMonthTitle": "Finished by month",
+  "playtimeByWeekdayTitle": "Playtime by weekday",
+  "playtimeByHourTitle": "Playtime by hour",
+  "playedByReleaseYearTitle": "Played by release year",
+  "finishedByReleaseYearTitle": "Finished by release year",
+  "playedByGenreTitle": "Played by genre",
   "gamesTitle": "Games",
   "locationsTitle": "Locations",
   "devicesTitle": "Devices",
@@ -176,5 +184,7 @@
   "linkLabel": "Link",
   "totalDataLabel": "Total: {data}",
   "hoursAbbr": "{hours} {hours, plural, =1{hr.} other{hrs.}}",
-  "minutesAbbr": "{minutes} min."
+  "minutesAbbr": "{minutes} min.",
+  "daysLabel": "{days} {days, plural, =1{day} other{days}}",
+  "gamesLabel": "{games} {games, plural, =1{game} other{games}}"
 }

@@ -39,6 +39,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classicLabel => 'Classic';
 
   @override
+  String get playtimeByMonthTitle => 'Playtime by month';
+
+  @override
+  String get playedByRatingTitle => 'Played by rating';
+
+  @override
+  String get finishedByMonthTitle => 'Finished by month';
+
+  @override
+  String get playtimeByWeekdayTitle => 'Playtime by weekday';
+
+  @override
+  String get playtimeByHourTitle => 'Playtime by hour';
+
+  @override
+  String get playedByReleaseYearTitle => 'Played by release year';
+
+  @override
+  String get finishedByReleaseYearTitle => 'Finished by release year';
+
+  @override
+  String get playedByGenreTitle => 'Played by genre';
+
+  @override
   String get gamesTitle => 'Games';
 
   @override
@@ -598,5 +622,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String minutesAbbr(Object minutes) {
     return '$minutes min.';
+  }
+
+  @override
+  String daysLabel(num days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'days',
+      one: 'day',
+    );
+    return '$days $_temp0';
+  }
+
+  @override
+  String gamesLabel(num games) {
+    String _temp0 = intl.Intl.pluralLogic(
+      games,
+      locale: localeName,
+      other: 'games',
+      one: 'game',
+    );
+    return '$games $_temp0';
   }
 }

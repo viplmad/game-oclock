@@ -49,6 +49,8 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
+const int maxRecentYears = 7;
+
 final List<Color> chartColors = <Color>[
   Colors.redAccent,
   Colors.deepPurpleAccent,
@@ -463,13 +465,19 @@ class ReviewBuilder extends StatelessWidget {
 
         return CenteredGridList(
           items: items,
-          itemBuilder: (final context, final item, final index) => buildCard(
-            primary: buildStatContainer('Media', item.media.media.title),
-            secondary: buildStatContainer(
-              'Time',
-              context.localize().formatDuration(item.time),
-            ),
-          ),
+          itemBuilder: (final context, final item, final index) =>
+              buildStatCard(
+                primary: buildStatContainer(
+                  context,
+                  'Media',
+                  item.media.media.title,
+                ),
+                secondary: buildStatContainer(
+                  context,
+                  'Time', // TODO
+                  context.localize().formatDuration(item.time),
+                ),
+              ),
           itemAspectRatio: 2,
           columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
         );
@@ -525,7 +533,7 @@ class ReviewBuilder extends StatelessWidget {
         return item.child;
       },
       itemAspectRatio: 2,
-      columns: (MediaQuery.sizeOf(context).width / 500).ceil(),
+      columns: (MediaQuery.sizeOf(context).width / 800).ceil(),
     );
   }
 
@@ -555,38 +563,38 @@ class ReviewBuilder extends StatelessWidget {
               onRetryTap: () => context
                   .read<ReviewTotalTimeGroupByMonthThenMediaGetBloc>()
                   .add(const ActionRestarted()),
-              builder: (final context, final data) =>
-                  StatisticsStackedBarChart<double>(
-                    id: 'total-time-by-month-then-media',
-                    // Generate from fixed length in case some months have no data
-                    values: List.generate(DateTime.monthsPerYear, (
-                      final index,
-                    ) {
-                      final month = index + 1;
-                      final l =
-                          data
-                              .where((final el) => el.key == month)
-                              .firstOrNull
-                              ?.value ??
-                          [];
-                      return SeriesEntry(
-                        key: context.localize().monthAbbr(month),
-                        value: l
-                            .map(
-                              (final el) => SeriesEntry(
-                                key: el.key,
-                                value:
-                                    (el.value.inMinutes / totalData.inMinutes) *
-                                    100,
-                              ),
-                            )
-                            .toList(growable: false),
-                      );
-                    }, growable: false),
-                    hideValueLabels: true,
-                    colourGetter: (_, _, _, final index) =>
-                        chartColors.elementAt(index % chartColors.length),
-                  ),
+              builder: (final context, final data) => buildChartCard(
+                title: context.localize().playtimeByMonthTitle,
+                chart: StatisticsStackedBarChart<int>(
+                  id: 'total-time-by-month-then-media',
+                  // Generate from fixed length in case some months have no data
+                  values: List.generate(DateTime.monthsPerYear, (final index) {
+                    final month = index + 1;
+                    final l =
+                        data
+                            .where((final el) => el.key == month)
+                            .firstOrNull
+                            ?.value ??
+                        [];
+                    return SeriesEntry(
+                      key: context.localize().monthAbbr(month),
+                      value: l
+                          .map(
+                            (final el) => SeriesEntry(
+                              key: el.key,
+                              value: el.value.inMinutes,
+                            ),
+                          )
+                          .toList(growable: false),
+                    );
+                  }, growable: false),
+                  hideValueLabels: true,
+                  measureFormatter: (final measure) =>
+                      _preparePercentageMeasure(context, measure, totalData),
+                  colourGetter: (_, _, _, final index) =>
+                      chartColors.elementAt(index % chartColors.length),
+                ),
+              ),
             ),
           ),
         );
@@ -605,20 +613,23 @@ class ReviewBuilder extends StatelessWidget {
         onRetryTap: () => context
             .read<ReviewTotalMediasGroupByRatingGetBloc>()
             .add(const ActionRestarted()),
-        builder: (final context, final data) => StatisticsBarChart<int>(
-          id: 'total-medias-by-rating',
-          // Generate from fixed length in case some ratings have no data
-          values: List.generate(10, (final index) {
-            final rating = index + 1;
-            return SeriesEntry(
-              key: rating.toString(),
-              value: data
-                  .where((final el) => el.key == rating)
-                  .fold(0, (final prev, final el) => prev + el.value),
-            );
-          }, growable: false),
-          hideValueLabels: true,
-          colourGetter: (_, _) => chartColors.elementAt(0),
+        builder: (final context, final data) => buildChartCard(
+          title: context.localize().playedByRatingTitle,
+          chart: StatisticsBarChart<int>(
+            id: 'total-medias-by-rating',
+            // Generate from fixed length in case some ratings have no data
+            values: List.generate(10, (final index) {
+              final rating = index + 1;
+              return SeriesEntry(
+                key: '$rating',
+                value: data
+                    .where((final el) => el.key == rating)
+                    .fold(0, (final prev, final el) => prev + el.value),
+              );
+            }, growable: false),
+            hideValueLabels: true,
+            colourGetter: (_, _) => chartColors.elementAt(0),
+          ),
         ),
       ),
     );
@@ -635,111 +646,165 @@ class ReviewBuilder extends StatelessWidget {
         onRetryTap: () => context
             .read<ReviewTotalFinishedMediasGroupByMonthGetBloc>()
             .add(const ActionRestarted()),
-        builder: (final context, final data) => StatisticsBarChart<int>(
-          id: 'total-finished-medias-by-month',
-          // Generate from fixed length in case some months have no data
-          values: List.generate(DateTime.monthsPerYear, (final index) {
-            final month = index + 1;
-            return SeriesEntry(
-              key: context.localize().monthAbbr(month),
-              value: data
-                  .where((final el) => el.key == month)
-                  .fold(0, (final prev, final el) => prev + el.value),
-            );
-          }, growable: false),
-          hideValueLabels: true,
-          colourGetter: (_, _) => chartColors.elementAt(0),
+        builder: (final context, final data) => buildChartCard(
+          title: context.localize().finishedByMonthTitle,
+          chart: StatisticsBarChart<int>(
+            id: 'total-finished-medias-by-month',
+            // Generate from fixed length in case some months have no data
+            values: List.generate(DateTime.monthsPerYear, (final index) {
+              final month = index + 1;
+              return SeriesEntry(
+                key: context.localize().monthAbbr(month),
+                value: data
+                    .where((final el) => el.key == month)
+                    .fold(0, (final prev, final el) => prev + el.value),
+              );
+            }, growable: false),
+            hideValueLabels: true,
+            colourGetter: (_, _) => chartColors.elementAt(0),
+          ),
         ),
       ),
     );
   }
 
   Widget buildPlayWeekdayChart() {
-    return BlocBuilder<
-      ReviewTotalTimeGroupByWeekdayGetBloc,
-      ActionState<List<AggregateGroupResultDTO<int, Duration>>>
-    >(
-      builder: (final context, final state) => buildFromState(
-        context,
-        state: state,
-        onRetryTap: () => context
-            .read<ReviewTotalTimeGroupByWeekdayGetBloc>()
-            .add(const ActionRestarted()),
-        builder: (final context, final data) => StatisticsLineChart<int>(
-          id: 'total-time-by-weekday',
-          // Generate from fixed length in case some weekdays have no data
-          values: List.generate(DateTime.daysPerWeek, (final index) {
-            final weekday = index + 1;
-            // TODO take into account date config starting day of week
-            return SeriesEntry(
-              key: context.localize().weekdayAbbr(weekday),
-              value: data
-                  .where((final el) => el.key == weekday)
-                  .fold(0, (final prev, final el) => prev + el.value.inMinutes),
-            );
-          }, growable: false),
-          hideValueLabels: true,
-          colourGetter: (_, _) => chartColors.elementAt(0),
-        ),
-      ),
+    return BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
+      builder: (final context, final totalState) {
+        return BlocBuilder<
+          ReviewTotalTimeGroupByWeekdayGetBloc,
+          ActionState<List<AggregateGroupResultDTO<int, Duration>>>
+        >(
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: totalState,
+            onRetryTap: () => context.read<ReviewTotalTimeGetBloc>().add(
+              const ActionRestarted(),
+            ),
+            builder: (final context, final totalData) => buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<ReviewTotalTimeGroupByWeekdayGetBloc>()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) => buildChartCard(
+                title: context.localize().playtimeByWeekdayTitle,
+                chart: StatisticsLineChart<int>(
+                  id: 'total-time-by-weekday',
+                  // Generate from fixed length in case some weekdays have no data
+                  values: List.generate(DateTime.daysPerWeek, (final index) {
+                    final weekday = index + 1;
+                    // TODO take into account date config starting day of week
+                    return SeriesEntry(
+                      key: context.localize().weekdayAbbr(weekday),
+                      value: data
+                          .where((final el) => el.key == weekday)
+                          .fold(
+                            0,
+                            (final prev, final el) => prev + el.value.inMinutes,
+                          ),
+                    );
+                  }, growable: false),
+                  hideValueLabels: true,
+                  measureFormatter: (final measure) =>
+                      _preparePercentageMeasure(context, measure, totalData),
+                  colourGetter: (_, _) => chartColors.elementAt(0),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget buildPlayHourChart() {
-    return BlocBuilder<
-      ReviewTotalTimeGroupByHourGetBloc,
-      ActionState<List<AggregateGroupResultDTO<int, Duration>>>
-    >(
-      builder: (final context, final state) => buildFromState(
-        context,
-        state: state,
-        onRetryTap: () => context.read<ReviewTotalTimeGroupByHourGetBloc>().add(
-          const ActionRestarted(),
-        ),
-        builder: (final context, final data) => StatisticsLineChart<int>(
-          id: 'total-time-by-hour',
-          // Generate from fixed length in case some hours have no data
-          values: List.generate(TimeOfDay.hoursPerDay, (final index) {
-            final hour = index;
-            return SeriesEntry(
-              key: hour.toString().padLeft(2, '0'),
-              value: data
-                  .where((final el) => el.key == hour)
-                  .fold(0, (final prev, final el) => prev + el.value.inMinutes),
-            );
-          }, growable: false),
-          hideValueLabels: true,
-          colourGetter: (_, _) => chartColors.elementAt(0),
-        ),
-      ),
+    return BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
+      builder: (final context, final totalState) {
+        return BlocBuilder<
+          ReviewTotalTimeGroupByHourGetBloc,
+          ActionState<List<AggregateGroupResultDTO<int, Duration>>>
+        >(
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: totalState,
+            onRetryTap: () => context.read<ReviewTotalTimeGetBloc>().add(
+              const ActionRestarted(),
+            ),
+            builder: (final context, final totalData) => buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<ReviewTotalTimeGroupByHourGetBloc>()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) => buildChartCard(
+                title: context.localize().playtimeByHourTitle,
+                chart: StatisticsLineChart<int>(
+                  id: 'total-time-by-hour',
+                  // Generate from fixed length in case some hours have no data
+                  values: List.generate(TimeOfDay.hoursPerDay, (final index) {
+                    final hour = index;
+                    return SeriesEntry(
+                      key: context.localize().formatHour(hour),
+                      value: data
+                          .where((final el) => el.key == hour)
+                          .fold(
+                            0,
+                            (final prev, final el) => prev + el.value.inMinutes,
+                          ),
+                    );
+                  }, growable: false),
+                  hideValueLabels: true,
+                  measureFormatter: (final measure) =>
+                      _preparePercentageMeasure(context, measure, totalData),
+                  colourGetter: (_, _) => chartColors.elementAt(0),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  static String _preparePercentageMeasure(
+    final BuildContext context,
+    final num? measure,
+    final Duration totalData,
+  ) {
+    final percentage = (measure ?? 0) / totalData.inMinutes;
+    return percentage < 0.01
+        ? '<${context.localize().formatPercentage(0.01)}'
+        : context.localize().formatPercentage(percentage);
   }
 
   Widget buildTotalMediasSummary() {
     return BlocBuilder<ReviewTotalMediasGetBloc, ActionState<int>>(
-      builder: (final context, final state) {
+      builder: (final context, final totalState) {
         return BlocBuilder<ReviewTotalFirstMediasGetBloc, ActionState<int>>(
           builder: (final context, final firstState) {
             return buildFromState(
               context,
-              state: state,
+              state: totalState,
               onRetryTap: () => context.read<ReviewTotalMediasGetBloc>().add(
                 const ActionRestarted(),
               ),
-              builder: (final context, final data) => buildFromState(
+              builder: (final context, final totalData) => buildFromState(
                 context,
                 state: firstState,
                 onRetryTap: () => context
                     .read<ReviewTotalFirstMediasGetBloc>()
                     .add(const ActionRestarted()),
-                builder: (final context, final firstData) => buildCard(
+                builder: (final context, final firstData) => buildStatCard(
                   primary: buildStatContainer(
+                    context,
                     context.localize().totalMediasLabel,
-                    data.toString(),
+                    '$totalData',
                   ),
                   secondary: buildStatContainer(
+                    context,
                     context.localize().totalFirstMediasLabel,
-                    firstData.toString(),
+                    '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
                   ),
                 ),
               ),
@@ -751,33 +816,44 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildTotalFinishedMediasSummary() {
-    return BlocBuilder<ReviewTotalFinishedMediasGetBloc, ActionState<int>>(
-      builder: (final context, final state) {
-        return BlocBuilder<
-          ReviewTotalFirstFinishedMediasGetBloc,
-          ActionState<int>
-        >(
-          builder: (final context, final firstState) {
-            return buildFromState(
-              context,
-              state: state,
-              onRetryTap: () => context
-                  .read<ReviewTotalFinishedMediasGetBloc>()
-                  .add(const ActionRestarted()),
-              builder: (final context, final data) => buildFromState(
+    return BlocBuilder<ReviewTotalMediasGetBloc, ActionState<int>>(
+      builder: (final context, final totalTotalState) {
+        return BlocBuilder<ReviewTotalFinishedMediasGetBloc, ActionState<int>>(
+          builder: (final context, final totalState) {
+            return BlocBuilder<
+              ReviewTotalFirstFinishedMediasGetBloc,
+              ActionState<int>
+            >(
+              builder: (final context, final firstState) => buildFromState(
                 context,
-                state: firstState,
-                onRetryTap: () => context
-                    .read<ReviewTotalFirstFinishedMediasGetBloc>()
-                    .add(const ActionRestarted()),
-                builder: (final context, final firstData) => buildCard(
-                  primary: buildStatContainer(
-                    context.localize().totalFinishedMediasLabel,
-                    data.toString(),
-                  ),
-                  secondary: buildStatContainer(
-                    context.localize().totalFirstFinishedMediasLabel,
-                    firstData.toString(),
+                state: totalTotalState,
+                onRetryTap: () => context.read<ReviewTotalMediasGetBloc>().add(
+                  const ActionRestarted(),
+                ),
+                builder: (final context, final totalTotalData) => buildFromState(
+                  context,
+                  state: totalState,
+                  onRetryTap: () => context
+                      .read<ReviewTotalFinishedMediasGetBloc>()
+                      .add(const ActionRestarted()),
+                  builder: (final context, final totalData) => buildFromState(
+                    context,
+                    state: firstState,
+                    onRetryTap: () => context
+                        .read<ReviewTotalFirstFinishedMediasGetBloc>()
+                        .add(const ActionRestarted()),
+                    builder: (final context, final firstData) => buildStatCard(
+                      primary: buildStatContainer(
+                        context,
+                        context.localize().totalFinishedMediasLabel,
+                        '$totalData (${context.localize().formatPercentage(totalData / totalTotalData)})',
+                      ),
+                      secondary: buildStatContainer(
+                        context,
+                        context.localize().totalFirstFinishedMediasLabel,
+                        '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -805,14 +881,16 @@ class ReviewBuilder extends StatelessWidget {
                 onRetryTap: () => context
                     .read<ReviewTotalSessionsGetBloc>()
                     .add(const ActionRestarted()),
-                builder: (final context, final sessionsData) => buildCard(
+                builder: (final context, final sessionsData) => buildStatCard(
                   primary: buildStatContainer(
+                    context,
                     context.localize().totalTimeLabel,
                     context.localize().formatDuration(data),
                   ),
                   secondary: buildStatContainer(
+                    context,
                     context.localize().totalSessionsLabel,
-                    sessionsData.toString(),
+                    '$sessionsData',
                   ),
                 ),
               ),
@@ -845,12 +923,14 @@ class ReviewBuilder extends StatelessWidget {
                     .add(const ActionRestarted()),
                 builder: (final context, final mostData) => mostData == null
                     ? buildEmptyCard(context)
-                    : buildCard(
+                    : buildStatCard(
                         primary: buildStatContainer(
+                          context,
                           context.localize().totalDevicesLabel,
-                          data.toString(),
+                          '$data',
                         ),
                         secondary: buildStatContainer(
+                          context,
                           context.localize().mostUsedDeviceLabel,
                           '${mostData.device.name} - ${context.localize().formatDuration(mostData.time)}',
                         ),
@@ -877,14 +957,16 @@ class ReviewBuilder extends StatelessWidget {
           ),
           builder: (final context, final data) => data == null
               ? buildEmptyCard(context)
-              : buildCard(
+              : buildStatCard(
                   primary: buildStatContainer(
+                    context,
                     context.localize().longestSessionLabel,
-                    data.media.media.title,
+                    context.localize().formatDuration(data.session.time),
                   ),
                   secondary: buildStatContainer(
-                    'Start end', // TODO
-                    '${data.session.startDatetime.toIso8601String()} - ${data.session.endDatetime.toIso8601String()}',
+                    context,
+                    '${MaterialLocalizations.of(context).formatCompactDate(data.session.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.startDatetime))} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.session.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.endDatetime))}',
+                    data.media.media.title,
                   ),
                 ),
         );
@@ -947,14 +1029,16 @@ class ReviewBuilder extends StatelessWidget {
           onRetryTap: () => context.read<ReviewLongestStreakGetBloc>().add(
             const ActionRestarted(),
           ),
-          builder: (final context, final data) => buildCard(
+          builder: (final context, final data) => buildStatCard(
             primary: buildStatContainer(
+              context,
               context.localize().longestStreakLabel,
-              data.days.toString(),
+              context.localize().daysLabel(data.days),
             ),
             secondary: buildStatContainer(
-              'Start end', // TODO
-              '${MaterialLocalizations.of(context).formatCompactDate(data.startDate)} - ${MaterialLocalizations.of(context).formatCompactDate(data.endDate)}',
+              context,
+              '${MaterialLocalizations.of(context).formatCompactDate(data.startDate)} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.endDate)}',
+              context.localize().gamesLabel(data.mediaIds.length),
             ),
           ),
         );
@@ -968,47 +1052,73 @@ class ReviewBuilder extends StatelessWidget {
         final currentYear = (yearState is ActionSuccess<int?, int?>)
             ? yearState.data ?? DateTime.now().year
             : DateTime.now().year;
-        final recentYear = currentYear - 7;
+        final recentYear = currentYear - maxRecentYears;
 
-        return BlocBuilder<
-          ReviewTotalMediasGroupByReleaseDateYearGetBloc,
-          ActionState<List<AggregateGroupResultDTO<int, int>>>
-        >(
-          builder: (final context, final state) => buildFromState(
-            context,
-            state: state,
-            onRetryTap: () => context
-                .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
-                .add(const ActionRestarted()),
-            builder: (final context, final data) => StatisticsPieChart<int>(
-              id: 'total-medias-by-release-year',
-              values: List.unmodifiable(<SeriesEntry<int>>[
-                SeriesEntry(
-                  key: context.localize().newReleasesLabel,
-                  value: data
-                      .where((final el) => el.key == currentYear)
-                      .fold(0, (final prev, final el) => prev + el.value),
+        return BlocBuilder<ReviewTotalMediasGetBloc, ActionState<int>>(
+          builder: (final context, final totalState) {
+            return BlocBuilder<
+              ReviewTotalMediasGroupByReleaseDateYearGetBloc,
+              ActionState<List<AggregateGroupResultDTO<int, int>>>
+            >(
+              builder: (final context, final state) => buildFromState(
+                context,
+                state: totalState,
+                onRetryTap: () => context.read<ReviewTotalMediasGetBloc>().add(
+                  const ActionRestarted(),
                 ),
-                SeriesEntry(
-                  key: context.localize().recentLabel,
-                  value: data
-                      .where(
-                        (final el) =>
-                            el.key < currentYear && el.key >= recentYear,
-                      )
-                      .fold(0, (final prev, final el) => prev + el.value),
+                builder: (final context, final totalData) => buildFromState(
+                  context,
+                  state: state,
+                  onRetryTap: () => context
+                      .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
+                      .add(const ActionRestarted()),
+                  builder: (final context, final data) => buildChartCard(
+                    title: context.localize().playedByReleaseYearTitle,
+                    chart: StatisticsPieChart<int>(
+                      id: 'total-medias-by-release-year',
+                      values: List.unmodifiable(<SeriesEntry<int>>[
+                        SeriesEntry(
+                          key: context.localize().newReleasesLabel,
+                          value: data
+                              .where((final el) => el.key == currentYear)
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                        SeriesEntry(
+                          key: context.localize().recentLabel,
+                          value: data
+                              .where(
+                                (final el) =>
+                                    el.key < currentYear &&
+                                    el.key >= recentYear,
+                              )
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                        SeriesEntry(
+                          key: context.localize().classicLabel,
+                          value: data
+                              .where((final el) => el.key < recentYear)
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                      ]),
+                      valueFormatter: (final domain, final value) =>
+                          '$domain - ${context.localize().formatPercentage(value / totalData)} ($value)',
+                      colourGetter: (_, final index) =>
+                          chartColors.elementAt(index),
+                    ),
+                  ),
                 ),
-                SeriesEntry(
-                  key: context.localize().classicLabel,
-                  value: data
-                      .where((final el) => el.key < recentYear)
-                      .fold(0, (final prev, final el) => prev + el.value),
-                ),
-              ]),
-              valueFormatter: (final domain, _) => domain,
-              colourGetter: (_, final index) => chartColors.elementAt(index),
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -1020,45 +1130,115 @@ class ReviewBuilder extends StatelessWidget {
         final currentYear = (yearState is ActionSuccess<int?, int?>)
             ? yearState.data ?? DateTime.now().year
             : DateTime.now().year;
-        final recentYear = currentYear - 7;
+        final recentYear = currentYear - maxRecentYears;
 
+        return BlocBuilder<ReviewTotalFinishedMediasGetBloc, ActionState<int>>(
+          builder: (final context, final totalState) {
+            return BlocBuilder<
+              ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
+              ActionState<List<AggregateGroupResultDTO<int, int>>>
+            >(
+              builder: (final context, final state) => buildFromState(
+                context,
+                state: totalState,
+                onRetryTap: () => context
+                    .read<ReviewTotalFinishedMediasGetBloc>()
+                    .add(const ActionRestarted()),
+                builder: (final context, final totalData) => buildFromState(
+                  context,
+                  state: state,
+                  onRetryTap: () => context
+                      .read<
+                        ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
+                      >()
+                      .add(const ActionRestarted()),
+                  builder: (final context, final data) => buildChartCard(
+                    title: context.localize().finishedByReleaseYearTitle,
+                    chart: StatisticsPieChart<int>(
+                      id: 'total-finished-medias-by-release-year',
+                      values: List.unmodifiable(<SeriesEntry<int>>[
+                        SeriesEntry(
+                          key: context.localize().newReleasesLabel,
+                          value: data
+                              .where((final el) => el.key == currentYear)
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                        SeriesEntry(
+                          key: context.localize().recentLabel,
+                          value: data
+                              .where(
+                                (final el) =>
+                                    el.key < currentYear &&
+                                    el.key >= recentYear,
+                              )
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                        SeriesEntry(
+                          key: context.localize().classicLabel,
+                          value: data
+                              .where((final el) => el.key < recentYear)
+                              .fold(
+                                0,
+                                (final prev, final el) => prev + el.value,
+                              ),
+                        ),
+                      ]),
+                      valueFormatter: (final domain, final value) =>
+                          '$domain - ${context.localize().formatPercentage(value / totalData)} ($value)',
+                      colourGetter: (_, final index) =>
+                          chartColors.elementAt(index),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget buildTotalMediasGroupByGenreChart() {
+    return BlocBuilder<ReviewTotalMediasGetBloc, ActionState<int>>(
+      builder: (final context, final totalState) {
         return BlocBuilder<
-          ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc,
-          ActionState<List<AggregateGroupResultDTO<int, int>>>
+          ReviewTotalMediasGroupByGenreGetBloc,
+          ActionState<List<AggregateGroupResultDTO<String, int>>>
         >(
           builder: (final context, final state) => buildFromState(
             context,
-            state: state,
-            onRetryTap: () => context
-                .read<ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc>()
-                .add(const ActionRestarted()),
-            builder: (final context, final data) => StatisticsPieChart<int>(
-              id: 'total-finished-medias-by-release-year',
-              values: List.unmodifiable(<SeriesEntry<int>>[
-                SeriesEntry(
-                  key: context.localize().newReleasesLabel,
-                  value: data
-                      .where((final el) => el.key == currentYear)
-                      .fold(0, (final prev, final el) => prev + el.value),
-                ),
-                SeriesEntry(
-                  key: context.localize().recentLabel,
-                  value: data
-                      .where(
-                        (final el) =>
-                            el.key < currentYear && el.key >= recentYear,
+            state: totalState,
+            onRetryTap: () => context.read<ReviewTotalMediasGetBloc>().add(
+              const ActionRestarted(),
+            ),
+            builder: (final context, final totalData) => buildFromState(
+              context,
+              state: state,
+              onRetryTap: () => context
+                  .read<ReviewTotalMediasGroupByGenreGetBloc>()
+                  .add(const ActionRestarted()),
+              builder: (final context, final data) => buildChartCard(
+                title: context.localize().playedByGenreTitle,
+                chart: StatisticsBarChart<int>(
+                  id: 'total-medias-by-genre',
+                  values: data
+                      .map(
+                        (final el) => SeriesEntry(key: el.key, value: el.value),
                       )
-                      .fold(0, (final prev, final el) => prev + el.value),
+                      .toList(growable: false),
+                  vertical: false,
+                  valueFormatter: (final value) =>
+                      '${context.localize().formatPercentage(value / totalData)} ($value)',
+                  colourGetter: (_, final index) =>
+                      chartColors.elementAt(index),
                 ),
-                SeriesEntry(
-                  key: context.localize().classicLabel,
-                  value: data
-                      .where((final el) => el.key < recentYear)
-                      .fold(0, (final prev, final el) => prev + el.value),
-                ),
-              ]),
-              valueFormatter: (final domain, _) => domain,
-              colourGetter: (_, final index) => chartColors.elementAt(index),
+              ),
             ),
           ),
         );
@@ -1066,31 +1246,19 @@ class ReviewBuilder extends StatelessWidget {
     );
   }
 
-  Widget buildTotalMediasGroupByGenreChart() {
-    return BlocBuilder<
-      ReviewTotalMediasGroupByGenreGetBloc,
-      ActionState<List<AggregateGroupResultDTO<String, int>>>
-    >(
-      builder: (final context, final state) => buildFromState(
-        context,
-        state: state,
-        onRetryTap: () => context
-            .read<ReviewTotalMediasGroupByGenreGetBloc>()
-            .add(const ActionRestarted()),
-        builder: (final context, final data) => StatisticsBarChart<int>(
-          id: 'total-medias-by-genre',
-          values: data
-              .map((final el) => SeriesEntry(key: el.key, value: el.value))
-              .toList(growable: false),
-          vertical: false,
-          colourGetter: (_, final index) => chartColors.elementAt(index),
-        ),
+  Widget buildStatContainer(
+    final BuildContext context,
+    final String text,
+    final String value,
+  ) {
+    return ListTile(
+      title: Text(
+        value,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.headlineLarge,
       ),
+      subtitle: Text(text, style: Theme.of(context).textTheme.bodyLarge),
     );
-  }
-
-  Widget buildStatContainer(final String title, final String value) {
-    return ListTile(title: Text(title), subtitle: Text(value));
   }
 
   Widget buildEmptyCard(final BuildContext context) {
@@ -1104,7 +1272,7 @@ class ReviewBuilder extends StatelessWidget {
     );
   }
 
-  Widget buildCard({
+  Widget buildStatCard({
     required final Widget primary,
     required final Widget secondary,
   }) {
@@ -1113,9 +1281,23 @@ class ReviewBuilder extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
+        children: [primary, secondary],
+      ),
+    );
+  }
+
+  Widget buildChartCard({
+    required final String title,
+    required final Widget chart,
+  }) {
+    return CardWithTap(
+      borderRadius: const BorderRadius.all(Radius.circular(kCardBorderRadius)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(flex: 2, child: primary),
-          Expanded(flex: 1, child: secondary),
+          ListTile(title: Text(title)),
+          Expanded(child: chart),
         ],
       ),
     );

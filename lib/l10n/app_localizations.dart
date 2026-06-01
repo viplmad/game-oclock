@@ -154,6 +154,54 @@ abstract class AppLocalizations {
   /// **'Classic'**
   String get classicLabel;
 
+  /// No description provided for @playtimeByMonthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playtime by month'**
+  String get playtimeByMonthTitle;
+
+  /// No description provided for @playedByRatingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Played by rating'**
+  String get playedByRatingTitle;
+
+  /// No description provided for @finishedByMonthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished by month'**
+  String get finishedByMonthTitle;
+
+  /// No description provided for @playtimeByWeekdayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playtime by weekday'**
+  String get playtimeByWeekdayTitle;
+
+  /// No description provided for @playtimeByHourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playtime by hour'**
+  String get playtimeByHourTitle;
+
+  /// No description provided for @playedByReleaseYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Played by release year'**
+  String get playedByReleaseYearTitle;
+
+  /// No description provided for @finishedByReleaseYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished by release year'**
+  String get finishedByReleaseYearTitle;
+
+  /// No description provided for @playedByGenreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Played by genre'**
+  String get playedByGenreTitle;
+
   /// No description provided for @gamesTitle.
   ///
   /// In en, this message translates to:
@@ -1161,6 +1209,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} min.'**
   String minutesAbbr(Object minutes);
+
+  /// No description provided for @daysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} {days, plural, =1{day} other{days}}'**
+  String daysLabel(num days);
+
+  /// No description provided for @gamesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{games} {games, plural, =1{game} other{games}}'**
+  String gamesLabel(num games);
 }
 
 class _AppLocalizationsDelegate

@@ -10,6 +10,14 @@ extension LocalizeContext on BuildContext {
 }
 
 extension AppLocalizationsExtension on AppLocalizations {
+  String formatHour(final int hour) {
+    return hour.toString().padLeft(2, '0');
+  }
+
+  String formatPercentage(final double value) {
+    return NumberFormat.decimalPercentPattern(decimalDigits: 0).format(value);
+  }
+
   String formatDay(final DateTime date) {
     return DateFormat.d().format(date);
   }
