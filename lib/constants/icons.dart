@@ -55,6 +55,20 @@ class CommonIcons {
   static const durationPicker = Icon(Icons.timer);
   static const yearPicker = Icon(Icons.date_range_outlined);
   static const review = Icon(Icons.cake);
+  static const session = Icon(Icons.schedule);
+  static const finished = Icon(Icons.emoji_events_outlined);
+  static const first = Icon(Icons.fiber_new_outlined);
+  static const notFirst = Icon(Icons.history);
+  static const notFirstFinished = Icon(Icons.event_repeat_outlined);
+  static const longestSessionIcon = Icon(Icons.weekend_outlined);
+  static const longestStreakIcon = Icon(Icons.local_fire_department_outlined);
+  static const firstItem = Icon(Icons.looks_one_outlined);
+  static const secondItem = Icon(Icons.looks_two_outlined);
+  static const thirdItem = Icon(Icons.looks_3_outlined);
+  static const fourthItem = Icon(Icons.looks_4_outlined);
+  static const fifthItem = Icon(Icons.looks_5_outlined);
+  static const chart = Icon(Icons.new_releases_outlined);
+  static const genreChart = Icon(Icons.collections_bookmark);
 
   static const externalSourceDefault = Icon(Icons.cloud);
   static const externalSourceIgdb = ImageIcon(

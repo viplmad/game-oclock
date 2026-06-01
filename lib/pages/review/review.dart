@@ -469,11 +469,19 @@ class ReviewBuilder extends StatelessWidget {
               buildStatCard(
                 primary: buildStatContainer(
                   context,
+                  [
+                    CommonIcons.firstItem,
+                    CommonIcons.secondItem,
+                    CommonIcons.thirdItem,
+                    CommonIcons.fourthItem,
+                    CommonIcons.fifthItem,
+                  ].elementAt(index),
                   'Media',
                   item.media.media.title,
                 ),
                 secondary: buildStatContainer(
                   context,
+                  CommonIcons.session,
                   'Time', // TODO
                   context.localize().formatDuration(item.time),
                 ),
@@ -564,6 +572,7 @@ class ReviewBuilder extends StatelessWidget {
                   .read<ReviewTotalTimeGroupByMonthThenMediaGetBloc>()
                   .add(const ActionRestarted()),
               builder: (final context, final data) => buildChartCard(
+                icon: CommonIcons.calendar,
                 title: context.localize().playtimeByMonthTitle,
                 chart: StatisticsStackedBarChart<int>(
                   id: 'total-time-by-month-then-media',
@@ -614,6 +623,7 @@ class ReviewBuilder extends StatelessWidget {
             .read<ReviewTotalMediasGroupByRatingGetBloc>()
             .add(const ActionRestarted()),
         builder: (final context, final data) => buildChartCard(
+          icon: CommonIcons.star,
           title: context.localize().playedByRatingTitle,
           chart: StatisticsBarChart<int>(
             id: 'total-medias-by-rating',
@@ -647,6 +657,7 @@ class ReviewBuilder extends StatelessWidget {
             .read<ReviewTotalFinishedMediasGroupByMonthGetBloc>()
             .add(const ActionRestarted()),
         builder: (final context, final data) => buildChartCard(
+          icon: CommonIcons.finished,
           title: context.localize().finishedByMonthTitle,
           chart: StatisticsBarChart<int>(
             id: 'total-finished-medias-by-month',
@@ -688,13 +699,16 @@ class ReviewBuilder extends StatelessWidget {
                   .read<ReviewTotalTimeGroupByWeekdayGetBloc>()
                   .add(const ActionRestarted()),
               builder: (final context, final data) => buildChartCard(
+                icon: CommonIcons.calendar,
                 title: context.localize().playtimeByWeekdayTitle,
                 chart: StatisticsLineChart<int>(
                   id: 'total-time-by-weekday',
                   // Generate from fixed length in case some weekdays have no data
                   values: List.generate(DateTime.daysPerWeek, (final index) {
-                    final weekday = index + 1;
-                    // TODO take into account date config starting day of week
+                    final weekday =
+                        index +
+                        (MaterialLocalizations.of(context).firstDayOfWeekIndex %
+                            7);
                     return SeriesEntry(
                       key: context.localize().weekdayAbbr(weekday),
                       value: data
@@ -738,6 +752,7 @@ class ReviewBuilder extends StatelessWidget {
                   .read<ReviewTotalTimeGroupByHourGetBloc>()
                   .add(const ActionRestarted()),
               builder: (final context, final data) => buildChartCard(
+                icon: CommonIcons.calendar,
                 title: context.localize().playtimeByHourTitle,
                 chart: StatisticsLineChart<int>(
                   id: 'total-time-by-hour',
@@ -798,11 +813,13 @@ class ReviewBuilder extends StatelessWidget {
                 builder: (final context, final firstData) => buildStatCard(
                   primary: buildStatContainer(
                     context,
+                    CommonIcons.session,
                     context.localize().totalMediasLabel,
                     '$totalData',
                   ),
                   secondary: buildStatContainer(
                     context,
+                    CommonIcons.first,
                     context.localize().totalFirstMediasLabel,
                     '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
                   ),
@@ -845,11 +862,13 @@ class ReviewBuilder extends StatelessWidget {
                     builder: (final context, final firstData) => buildStatCard(
                       primary: buildStatContainer(
                         context,
+                        CommonIcons.finished,
                         context.localize().totalFinishedMediasLabel,
                         '$totalData (${context.localize().formatPercentage(totalData / totalTotalData)})',
                       ),
                       secondary: buildStatContainer(
                         context,
+                        CommonIcons.first,
                         context.localize().totalFirstFinishedMediasLabel,
                         '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
                       ),
@@ -884,11 +903,13 @@ class ReviewBuilder extends StatelessWidget {
                 builder: (final context, final sessionsData) => buildStatCard(
                   primary: buildStatContainer(
                     context,
+                    CommonIcons.session,
                     context.localize().totalTimeLabel,
                     context.localize().formatDuration(data),
                   ),
                   secondary: buildStatContainer(
                     context,
+                    CommonIcons.session,
                     context.localize().totalSessionsLabel,
                     '$sessionsData',
                   ),
@@ -926,11 +947,13 @@ class ReviewBuilder extends StatelessWidget {
                     : buildStatCard(
                         primary: buildStatContainer(
                           context,
+                          CommonIcons.devices,
                           context.localize().totalDevicesLabel,
                           '$data',
                         ),
                         secondary: buildStatContainer(
                           context,
+                          CommonIcons.devices,
                           context.localize().mostUsedDeviceLabel,
                           '${mostData.device.name} - ${context.localize().formatDuration(mostData.time)}',
                         ),
@@ -960,11 +983,13 @@ class ReviewBuilder extends StatelessWidget {
               : buildStatCard(
                   primary: buildStatContainer(
                     context,
+                    CommonIcons.longestSessionIcon,
                     context.localize().longestSessionLabel,
                     context.localize().formatDuration(data.session.time),
                   ),
                   secondary: buildStatContainer(
                     context,
+                    CommonIcons.games,
                     '${MaterialLocalizations.of(context).formatCompactDate(data.session.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.startDatetime))} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.session.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.endDatetime))}',
                     data.media.media.title,
                   ),
@@ -1032,11 +1057,13 @@ class ReviewBuilder extends StatelessWidget {
           builder: (final context, final data) => buildStatCard(
             primary: buildStatContainer(
               context,
+              CommonIcons.longestStreakIcon,
               context.localize().longestStreakLabel,
               context.localize().daysLabel(data.days),
             ),
             secondary: buildStatContainer(
               context,
+              CommonIcons.games,
               '${MaterialLocalizations.of(context).formatCompactDate(data.startDate)} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.endDate)}',
               context.localize().gamesLabel(data.mediaIds.length),
             ),
@@ -1073,6 +1100,7 @@ class ReviewBuilder extends StatelessWidget {
                       .read<ReviewTotalMediasGroupByReleaseDateYearGetBloc>()
                       .add(const ActionRestarted()),
                   builder: (final context, final data) => buildChartCard(
+                    icon: CommonIcons.chart,
                     title: context.localize().playedByReleaseYearTitle,
                     chart: StatisticsPieChart<int>(
                       id: 'total-medias-by-release-year',
@@ -1153,6 +1181,7 @@ class ReviewBuilder extends StatelessWidget {
                       >()
                       .add(const ActionRestarted()),
                   builder: (final context, final data) => buildChartCard(
+                    icon: CommonIcons.chart,
                     title: context.localize().finishedByReleaseYearTitle,
                     chart: StatisticsPieChart<int>(
                       id: 'total-finished-medias-by-release-year',
@@ -1224,6 +1253,7 @@ class ReviewBuilder extends StatelessWidget {
                   .read<ReviewTotalMediasGroupByGenreGetBloc>()
                   .add(const ActionRestarted()),
               builder: (final context, final data) => buildChartCard(
+                icon: CommonIcons.genreChart,
                 title: context.localize().playedByGenreTitle,
                 chart: StatisticsBarChart<int>(
                   id: 'total-medias-by-genre',
@@ -1248,10 +1278,12 @@ class ReviewBuilder extends StatelessWidget {
 
   Widget buildStatContainer(
     final BuildContext context,
+    final Icon icon,
     final String text,
     final String value,
   ) {
     return ListTile(
+      leading: icon,
       title: Text(
         value,
         overflow: TextOverflow.ellipsis,
@@ -1287,6 +1319,7 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildChartCard({
+    required final Icon icon,
     required final String title,
     required final Widget chart,
   }) {
@@ -1296,7 +1329,7 @@ class ReviewBuilder extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListTile(title: Text(title)),
+          ListTile(leading: icon, title: Text(title)),
           Expanded(child: chart),
         ],
       ),
