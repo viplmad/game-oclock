@@ -101,7 +101,7 @@ Widget addRatingBanner(final Widget listItem, final int rating) {
           message: rating.toString(),
           location: TriangleBannerLocation.end,
           showShadow: false,
-          color: CommonColors.ratingColor,
+          color: CommonColors.rating,
           textStyle: const TextStyle(
             color: CommonColors.white,
             fontSize: 20,

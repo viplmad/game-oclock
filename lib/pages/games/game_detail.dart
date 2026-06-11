@@ -290,7 +290,7 @@ class UserGameDetail extends StatelessWidget {
           RatingLabel(
             label: context.localize().ratingLabel,
             value: data.state.rating,
-            color: CommonColors.ratingColor,
+            color: CommonColors.rating,
           ),
           TextLabel(
             label: context.localize().notesLabel,

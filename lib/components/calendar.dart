@@ -86,10 +86,10 @@ class LogCalendar extends StatelessWidget {
   final ValueChanged<DateTime> onPageChanged;
 
   static const BoxShape shape = BoxShape.circle;
-  static const Color todayColour = CommonColors.activeColor;
-  static const Color selectedColour = CommonColors.activeColor;
-  static const Color logColour = CommonColors.playingColor;
-  static Color finishedColour = CommonColors.finishedColor;
+  static const Color todayColour = CommonColors.active;
+  static const Color selectedColour = CommonColors.active;
+  static const Color logColour = CommonColors.playing;
+  static Color finishedColour = CommonColors.finished;
 
   @override
   Widget build(final BuildContext context) {

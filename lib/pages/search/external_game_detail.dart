@@ -85,7 +85,7 @@ class ExternalGameDetail extends StatelessWidget {
             RatingLabel(
               label: context.localize().ratingLabel,
               value: data.state!.rating,
-              color: CommonColors.ratingColor,
+              color: CommonColors.rating,
             ),
           if (data.state != null)
             TextLabel(

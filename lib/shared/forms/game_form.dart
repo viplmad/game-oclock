@@ -94,7 +94,7 @@ Widget _fieldsCreateExternalBuilder(
         formControl: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
-        color: CommonColors.ratingColor,
+        color: CommonColors.rating,
       ),
       SimpleTextFormField(
         formControl: formGroup.notes,
@@ -242,7 +242,7 @@ Widget _fieldsBuilder(
         formControl: formGroup.rating,
         label: context.localize().ratingLabel,
         readOnly: readOnly,
-        color: CommonColors.ratingColor,
+        color: CommonColors.rating,
       ),
       SimpleTextFormField(
         formControl: formGroup.notes,

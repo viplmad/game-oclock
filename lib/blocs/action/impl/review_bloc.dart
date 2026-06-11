@@ -31,6 +31,7 @@ class ReviewTotalMediasGetBloc extends FunctionActionBloc<ReviewStartEnd, int> {
           filter: buildStartDateBetweenFilters(event.start, event.end),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -47,6 +48,7 @@ class ReviewTotalFirstMediasGetBloc
           filter: buildStartDateBetweenFilters(event.start, event.end),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -66,6 +68,7 @@ class ReviewTotalFinishedMediasGetBloc
           ]),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -85,6 +88,7 @@ class ReviewTotalFirstFinishedMediasGetBloc
           ]),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -103,6 +107,7 @@ class ReviewTotalTimeGetBloc
       filter: buildStartDateBetweenFilters(event.start, event.end),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -119,6 +124,7 @@ class ReviewTotalSessionsGetBloc
           filter: buildStartDateBetweenFilters(event.start, event.end),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -137,6 +143,7 @@ class ReviewTotalDevicesGetBloc
           ]),
         ),
         null,
+        calculateOnCurrentYear(event.start),
       );
 }
 
@@ -169,6 +176,7 @@ class ReviewMostUsedDeviceGetBloc
             size: 1,
           ),
           null,
+          calculateOnCurrentYear(event.start),
         )
         .then(removeZeroDurationEntries)
         .then((final result) => result.firstOrNull);
@@ -205,6 +213,7 @@ class ReviewLongestSessionGetBloc
             size: 1,
           ),
           null,
+          // no mode, not so demanding query
         )
         .then((final pageResult) => pageResult.data);
     if (longestSessions.isEmpty) {
@@ -233,6 +242,7 @@ class ReviewLongestStreakGetBloc
           size: 1,
         ),
         null,
+        calculateOnCurrentYear(event.start),
       )
       .then((final pageResult) => pageResult.data.first);
 }
@@ -263,6 +273,7 @@ class ReviewTotalMediasGroupByReleaseDateYearGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -297,6 +308,7 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -350,6 +362,7 @@ class ReviewTotalTimeGroupByMonthThenMediaGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -382,6 +395,7 @@ class ReviewTop5MediasByTotalTimeListBloc
             size: 5,
           ),
           null,
+          calculateOnCurrentYear(event.start),
         )
         .then(removeZeroDurationEntries);
     final search = await gameService.search(
@@ -437,6 +451,7 @@ class ReviewTotalMediasGroupByRatingGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -467,6 +482,7 @@ class ReviewTotalMediasGroupByGenreGetBloc
       size: 6,
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -499,6 +515,7 @@ class ReviewTotalFinishedMediasGroupByMonthGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -528,6 +545,7 @@ class ReviewTotalTimeGroupByWeekdayGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -557,6 +575,7 @@ class ReviewTotalTimeGroupByHourGetBloc
       ]),
     ),
     null,
+    calculateOnCurrentYear(event.start),
   );
 }
 
@@ -587,6 +606,13 @@ FilterDTO buildFinishedFilter() {
     value: SearchValue(value: MediaStatus.completed.toJson()),
     chainOperator: ChainOperatorType.and,
   );
+}
+
+FetchMode calculateOnCurrentYear(final DateTime startDate) {
+  final currentYear = DateTime.now().year;
+  return currentYear == startDate.year
+      ? FetchMode.onlyCalculate
+      : FetchMode.storedOrCalculate;
 }
 
 List<AggregateGroupResultDTO<String, Duration>> removeZeroDurationEntries(

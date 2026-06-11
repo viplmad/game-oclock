@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 
 import 'constants.dart';
 
@@ -62,9 +63,18 @@ class CommonIcons {
   static const notFirstFinished = Icon(Icons.event_repeat_outlined);
   static const longestSessionIcon = Icon(Icons.weekend_outlined);
   static const longestStreakIcon = Icon(Icons.local_fire_department_outlined);
-  static const firstItem = Icon(Icons.looks_one_outlined);
-  static const secondItem = Icon(Icons.looks_two_outlined);
-  static const thirdItem = Icon(Icons.looks_3_outlined);
+  static const firstItem = Icon(
+    Icons.looks_one_outlined,
+    color: CommonColors.gold,
+  );
+  static Icon secondItem = Icon(
+    Icons.looks_two_outlined,
+    color: CommonColors.silver,
+  );
+  static const thirdItem = Icon(
+    Icons.looks_3_outlined,
+    color: CommonColors.bronze,
+  );
   static const fourthItem = Icon(Icons.looks_4_outlined);
   static const fifthItem = Icon(Icons.looks_5_outlined);
   static const chart = Icon(Icons.new_releases_outlined);

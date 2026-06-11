@@ -39,11 +39,13 @@ import 'package:game_oclock/components/charts/pie_chart.dart';
 import 'package:game_oclock/components/charts/series_element.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
+import 'package:game_oclock/components/list/list_item.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show DeviceWithTime, MediaWithTime, ReviewStartEnd, UnreachableError;
+import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
@@ -277,11 +279,11 @@ class ReviewBuilder extends StatelessWidget {
           child: Column(
             children: [
               buildInitialSummaryList(context),
-              const Divider(), // TODO
+              const Divider(),
               buildSummaryChartList(context),
-              const Divider(), // TODO
+              const Divider(),
               buildTop5SummaryList(context),
-              const Divider(), // TODO
+              const Divider(),
               buildPlayTimeChartList(context),
             ],
           ),
@@ -426,68 +428,111 @@ class ReviewBuilder extends StatelessWidget {
 
   Widget buildTop5SummaryList(final BuildContext context) {
     _loadOnlyInitialReview<ReviewTop5MediasByTotalTimeListBloc>(context);
-    return BlocBuilder<
-      ReviewTop5MediasByTotalTimeListBloc,
-      ActionState<List<MediaWithTime>>
-    >(
-      builder: (final context, final state) {
-        List<MediaWithTime> items = [];
-        if (state is ActionInProgress<List<MediaWithTime>>) {
-          if (state.data == null || state.data!.isEmpty) {
-            return CenteredGridListSkeleton(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(kCardBorderRadius),
-              ),
-              itemBuilder: (final index) =>
-                  CenteredGridListSkeletonItem(order: index),
-              itemAspectRatio: 2,
-              itemCount: 5,
-              columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
-            );
-          }
-          items = state.data!;
-        } else if (state is ActionFinal<List<MediaWithTime>, ReviewStartEnd>) {
-          if (state is ActionSuccess<List<MediaWithTime>, ReviewStartEnd>) {
-            if (state.data.isEmpty) {
-              return Center(child: Text(context.localize().emptyListLabel));
-            }
-            items = state.data;
-          }
-          if (state is ActionFailure<List<MediaWithTime>, ReviewStartEnd>) {
-            return buildErrorWidget(
-              context,
-              onRetryTap: () => context
-                  .read<ReviewTop5MediasByTotalTimeListBloc>()
-                  .add(const ActionRestarted()),
-            );
-          }
-        }
+    return BlocBuilder<ReviewTotalTimeGetBloc, ActionState<Duration>>(
+      builder: (final context, final totalTimeState) {
+        return BlocBuilder<
+          ReviewTop5MediasByTotalTimeListBloc,
+          ActionState<List<MediaWithTime>>
+        >(
+          builder: (final context, final state) => buildFromState(
+            context,
+            state: totalTimeState,
+            onRetryTap: () => context.read<ReviewTotalTimeGetBloc>().add(
+              const ActionRestarted(),
+            ),
+            builder: (final context, final totalTimeData) {
+              List<MediaWithTime> items = [];
+              if (state is ActionInProgress<List<MediaWithTime>>) {
+                if (state.data == null || state.data!.isEmpty) {
+                  return CenteredGridListSkeleton(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(kCardBorderRadius),
+                    ),
+                    itemBuilder: (final index) =>
+                        CenteredGridListSkeletonItem(order: index),
+                    itemAspectRatio: 2,
+                    itemCount: 5,
+                    columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
+                  );
+                }
+                items = state.data!;
+              } else if (state
+                  is ActionFinal<List<MediaWithTime>, ReviewStartEnd>) {
+                if (state
+                    is ActionSuccess<List<MediaWithTime>, ReviewStartEnd>) {
+                  if (state.data.isEmpty) {
+                    return Center(
+                      child: Text(context.localize().emptyListLabel),
+                    );
+                  }
+                  items = state.data;
+                }
+                if (state
+                    is ActionFailure<List<MediaWithTime>, ReviewStartEnd>) {
+                  return buildErrorWidget(
+                    context,
+                    onRetryTap: () => context
+                        .read<ReviewTop5MediasByTotalTimeListBloc>()
+                        .add(const ActionRestarted()),
+                  );
+                }
+              }
 
-        return CenteredGridList(
-          items: items,
-          itemBuilder: (final context, final item, final index) =>
-              buildStatCard(
-                primary: buildStatContainer(
-                  context,
-                  [
-                    CommonIcons.firstItem,
-                    CommonIcons.secondItem,
-                    CommonIcons.thirdItem,
-                    CommonIcons.fourthItem,
-                    CommonIcons.fifthItem,
-                  ].elementAt(index),
-                  'Media',
-                  item.media.media.title,
-                ),
-                secondary: buildStatContainer(
-                  context,
-                  CommonIcons.session,
-                  'Time', // TODO
-                  context.localize().formatDuration(item.time),
-                ),
-              ),
-          itemAspectRatio: 2,
-          columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
+              return CenteredGridList(
+                items: items,
+                itemBuilder: (final context, final item, final index) =>
+                    addRatingBanner(
+                      CardWithTap(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(kCardBorderRadius),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            [
+                              CommonIcons.firstItem,
+                              CommonIcons.secondItem,
+                              CommonIcons.thirdItem,
+                              CommonIcons.fourthItem,
+                              CommonIcons.fifthItem,
+                            ].elementAt(index),
+                            TileListItem(
+                              title: item.media.media.edition.isEmpty
+                                  ? item.media.media.title
+                                  : context.localize().gameEditionDataTitle(
+                                      item.media.media.title,
+                                      item.media.media.edition,
+                                    ),
+                              subtitle: item.media.media.releaseDate == null
+                                  ? null
+                                  : MaterialLocalizations.of(
+                                      context,
+                                    ).formatYear(item.media.media.releaseDate!),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                spacing: 8.0,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [CommonIcons.finished], // TODO
+                              ),
+                              imageURL: item.media.media.imageUrl,
+                            ),
+                            buildStatContainer(
+                              context,
+                              CommonIcons.session,
+                              context.localize().totalTimeLabel,
+                              '${context.localize().formatDuration(item.time)} (${context.localize().formatPercentage(item.time.inMinutes / totalTimeData.inMinutes)})',
+                            ),
+                          ],
+                        ),
+                      ),
+                      item.media.state.rating,
+                    ),
+                itemAspectRatio: 2,
+                columns: (MediaQuery.sizeOf(context).width / 700).ceil(),
+              );
+            },
+          ),
         );
       },
     );
@@ -1342,7 +1387,15 @@ class ReviewBuilder extends StatelessWidget {
   ) {
     return <Widget>[
       SimpleSliverAppBar(
-        title: Text(title),
+        title: BlocBuilder<ReviewYearSelectBloc, ActionState<int?>>(
+          builder: (final context, final yearState) {
+            final currentYear = (yearState is ActionSuccess<int?, int?>)
+                ? yearState.data ?? DateTime.now().year
+                : DateTime.now().year;
+
+            return Text('$title - $currentYear');
+          },
+        ),
         actions: [
           IconButton(
             icon: CommonIcons.yearPicker,

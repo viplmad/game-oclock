@@ -41,25 +41,25 @@ final updatedDatetimeField = OptionTextField(
 final gameStatusLowPriority = OptionTextField(
   value: 'lowPriority',
   labelBuilder: (final context) => context.localize().lowPriorityLabel,
-  color: CommonColors.lowPriorityColor,
+  color: CommonColors.lowPriority,
 );
 
 final gameStatusNextUp = OptionTextField(
   value: 'nextUp',
   labelBuilder: (final context) => context.localize().nextUpLabel,
-  color: CommonColors.nextUpColor,
+  color: CommonColors.nextUp,
 );
 
 final gameStatusPlaying = OptionTextField(
   value: 'playing',
   labelBuilder: (final context) => context.localize().playingLabel,
-  color: CommonColors.playingColor,
+  color: CommonColors.playing,
 );
 
 final gameStatusPlayed = OptionTextField(
   value: 'played',
   labelBuilder: (final context) => context.localize().playedLabel,
-  color: CommonColors.playedColor,
+  color: CommonColors.played,
 );
 
 final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
@@ -80,11 +80,11 @@ final List<OptionTextField<String>> gameSessionFinishedOptions =
       OptionTextField(
         value: 'completed',
         labelBuilder: (final context) => context.localize().completedLabel,
-        color: CommonColors.completedColor,
+        color: CommonColors.completed,
       ),
       OptionTextField(
         value: 'retired',
         labelBuilder: (final context) => context.localize().retiredLabel,
-        color: CommonColors.retiredColor,
+        color: CommonColors.retired,
       ),
     ]);

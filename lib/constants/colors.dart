@@ -10,14 +10,18 @@ class CommonColors {
   static const transparent = Colors.transparent;
   static Color blackTransparent = Colors.black87.withAlpha(128);
 
-  static const ratingColor = Color(0xA0B71C1C);
-  static const wishlistColor = Colors.yellow;
-  static const lowPriorityColor = Colors.grey;
-  static const nextUpColor = Colors.red;
-  static const playingColor = Colors.blue;
-  static const playedColor = Colors.green;
-  static const completedColor = Colors.green;
-  static const retiredColor = Colors.grey;
-  static Color finishedColor = Colors.grey[800]!;
-  static const activeColor = Colors.red;
+  static const rating = Color(0xA0B71C1C);
+  static const wishlist = Colors.yellow;
+  static const lowPriority = Colors.grey;
+  static const nextUp = Colors.red;
+  static const playing = Colors.blue;
+  static const played = Colors.green;
+  static const completed = Colors.green;
+  static const retired = Colors.grey;
+  static Color finished = Colors.grey[800]!;
+  static const active = Colors.red;
+
+  static const gold = Color(0xffC9B037);
+  static Color silver = finished;
+  static const bronze = Color(0xffAD8A56);
 }
