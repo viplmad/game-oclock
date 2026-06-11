@@ -6,4 +6,3 @@ export 'date_time.dart';
 export 'duration.dart';
 export 'number.dart';
 export 'text.dart';
-export 'time.dart';

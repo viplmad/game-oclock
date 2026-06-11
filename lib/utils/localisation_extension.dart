@@ -22,6 +22,10 @@ extension AppLocalizationsExtension on AppLocalizations {
     return DateFormat.d().format(date);
   }
 
+  String formatDayMonth(final DateTime date) {
+    return DateFormat.MMMd().format(date);
+  }
+
   String formatLocale(final Locale locale) {
     if (locale == const Locale('en')) {
       return englishLabel;

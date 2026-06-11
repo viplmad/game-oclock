@@ -51,7 +51,7 @@ class SingleCalendarPage extends StatelessWidget {
             detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.startDatetime.toIso8601String())),
             listItemBuilder: (final context, final data, final onTap) =>
-                GameSessionTileListItem(data: data, onTap: onTap),
+                SessionTileListItem(data: data, onTap: onTap),
           ),
     );
   }

@@ -269,7 +269,7 @@ class FullForm extends StatelessWidget {
             final bool shouldPop = formGroup.pristine
                 ? true
                 : await _showLeaveConfirmationDialog(context) ?? false;
-            if (context.mounted && shouldPop) {
+            if (shouldPop && context.mounted) {
               Navigator.pop(context);
             }
           },

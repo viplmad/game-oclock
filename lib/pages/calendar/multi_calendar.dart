@@ -31,8 +31,16 @@ class MultiCalendarPage extends StatelessWidget {
         BlocProvider(create: (_) => GameSessionSelectBloc()),
         BlocProvider(
           create: (_) =>
-              SessionListBloc(service: RepositoryProvider.of(context))
-                ..add(ListSearchChanged(search: ListSearchDTO())),
+              SessionListBloc(service: RepositoryProvider.of(context))..add(
+                ListSearchChanged(
+                  search: ListSearchDTO(
+                    size: 20,
+                    sort: List.unmodifiable([
+                      SortDTO(field: 'start_date', order: OrderType.desc),
+                    ]),
+                  ),
+                ),
+              ),
         ),
       ],
       child:

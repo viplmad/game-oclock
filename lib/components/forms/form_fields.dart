@@ -8,4 +8,3 @@ export 'fields/duration.dart';
 export 'fields/number.dart';
 export 'fields/select.dart';
 export 'fields/text.dart';
-export 'fields/time.dart';

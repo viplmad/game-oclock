@@ -10,6 +10,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         IdentityActionBloc,
         ListFinal,
         ListLoadBloc,
+        ListLoadSuccess,
+        ListReloaded,
         ListState;
 import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
@@ -17,6 +19,7 @@ import 'package:game_oclock/components/list/sticky_list.dart'
     show StickySideListBuilder;
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -194,7 +197,18 @@ class CalendarListDetailBuilder<
     final BuildContext context,
     final bool innerBoxIsScrolled,
   ) {
-    return <Widget>[SimpleSliverAppBar(title: Text(title))];
+    return <Widget>[
+      SimpleSliverAppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () => context.read<LB>().add(const ListReloaded()),
+          ),
+        ],
+      ),
+    ];
   }
 
   Widget _calendarHeader(
@@ -214,15 +228,22 @@ class CalendarListDetailBuilder<
     required final DateTime selectedDay,
     required final DateTime focusedDay,
   }) {
-    return LogCalendar(
-      logDays: Set.unmodifiable([]),
-      firstDay: firstDay,
-      lastDay: lastDay,
-      focusedDay: focusedDay,
-      selectedDay: selectedDay,
-      onDaySelected: (final value) =>
-          context.read<CalendarDaySelectBloc>().add(ActionStarted(data: value)),
-      onPageChanged: (final value) => onCalendarPageChanged(context, value),
+    return BlocBuilder<LB, ListState<T>>(
+      builder: (final context, final listState) {
+        final logs = (listState is ListLoadSuccess<T>) ? listState.data : <T>[];
+
+        return LogCalendar(
+          logDays: logs.map(dateGetter).toSet(),
+          firstDay: firstDay,
+          lastDay: lastDay,
+          focusedDay: focusedDay,
+          selectedDay: selectedDay,
+          onDaySelected: (final value) => context
+              .read<CalendarDaySelectBloc>()
+              .add(ActionStarted(data: value)),
+          onPageChanged: (final value) => onCalendarPageChanged(context, value),
+        );
+      },
     );
   }
 
@@ -262,7 +283,7 @@ class CalendarListDetailBuilder<
                 backgroundColor: CommonColors.darkerGrey,
                 foregroundColor: CommonColors.white,
                 child: Text(
-                  context.localize().formatDay(date),
+                  context.localize().formatDayMonth(date),
                   style: DefaultTextStyle.of(
                     context,
                   ).style.copyWith(color: CommonColors.white),

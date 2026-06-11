@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/shared/year_picker_dialog.dart' show SimpleYearPicker;
 
 import 'show_form_dialog.dart';
 
@@ -85,7 +86,10 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
             decoration: BoxDecoration(
               border: Border.all(),
               color: Theme.of(context).primaryColor,
-              //borderRadius: ShapeUtils.dialogBorderRadius,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(28.0),
+                topRight: Radius.circular(28.0),
+              ),
             ),
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -104,9 +108,10 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
             ),
           ),
           Flexible(
-            child: YearPicker(
+            child: SimpleYearPicker(
               firstDate: DateTime(1970),
               lastDate: DateTime.now(),
+              initialDate: _selectedDate,
               selectedDate: _selectedDate,
               onChanged: (final newDate) {
                 setState(() {

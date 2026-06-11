@@ -16,10 +16,7 @@ class ExternalGameListBloc extends ListLoadBloc<PotentialMediaDTO> {
     final String? quicksearch,
   ) async {
     if (quicksearch == null) {
-      throw GameOClockException(
-        code: errorCodeUnknown,
-        message: 'Quicksearch cannot be empty',
-      );
+      return PageResultDTO(page: 1, size: 0);
     }
 
     final data = await service.search(quicksearch);
