@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_oclock/shared/year_picker_dialog.dart' show SimpleYearPicker;
+import 'package:game_oclock/shared/year_picker_dialog.dart'
+    show SimpleYearPicker;
 
 import 'show_form_dialog.dart';
 

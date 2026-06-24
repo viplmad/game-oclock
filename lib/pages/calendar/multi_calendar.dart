@@ -7,6 +7,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         CalendarDaySelectBloc,
         CalendarYearDatesBloc,
         GameSessionSelectBloc,
+        LastSessionGetBloc,
         SessionListBloc;
 import 'package:game_oclock/components/calendar_list_detail.dart';
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
@@ -20,15 +21,14 @@ class MultiCalendarPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) =>
-              CalendarDaySelectBloc()..add(ActionStarted(data: DateTime.now())),
-        ),
-        BlocProvider(
-          create: (_) =>
-              CalendarDayFocusBloc()..add(ActionStarted(data: DateTime.now())),
-        ),
+        BlocProvider(create: (_) => CalendarDaySelectBloc()),
+        BlocProvider(create: (_) => CalendarDayFocusBloc()),
         BlocProvider(create: (_) => GameSessionSelectBloc()),
+        BlocProvider(
+          create: (_) =>
+              LastSessionGetBloc(service: RepositoryProvider.of(context))
+                ..add(ActionStarted.empty()),
+        ),
         BlocProvider(
           create: (_) =>
               SessionListBloc(service: RepositoryProvider.of(context)),
@@ -43,12 +43,13 @@ class MultiCalendarPage extends StatelessWidget {
             SessionDTO,
             GameSessionSelectBloc,
             SessionListBloc,
-            CalendarYearDatesBloc
+            CalendarYearDatesBloc,
+            LastSessionGetBloc
           >(
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            dateGetter: (final data) => data.startDatetime,
+            dateGetter: (final data) => data.endDatetime,
             detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.startDatetime.toIso8601String())),
             listItemBuilder: (final context, final data, final onTap) =>

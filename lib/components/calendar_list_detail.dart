@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
+        ActionFinal,
         ActionStarted,
         ActionState,
         ActionSuccess,
@@ -11,7 +12,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         IdentityActionBloc,
         ListLoadBloc,
         ListReloaded,
-        ListSearchChanged;
+        ListSearchChanged,
+        ProducerActionBloc;
 import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
@@ -26,7 +28,8 @@ class CalendarListDetailBuilder<
   T extends Object,
   SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>,
-  CB extends FunctionActionBloc<DateTime, Set<DateTime>>
+  CB extends FunctionActionBloc<DateTime, Set<DateTime>>,
+  LSB extends ProducerActionBloc<T?>
 >
     extends StatelessWidget {
   const CalendarListDetailBuilder({
@@ -55,6 +58,23 @@ class CalendarListDetailBuilder<
 
     return MultiBlocListener(
       listeners: [
+        BlocListener<LSB, ActionState<T?>>(
+          listener: (final context, final lastState) {
+            if (lastState is ActionFinal<T?, void>) {
+              final last = (lastState is ActionSuccess<T?, void>)
+                  ? lastState.data
+                  : null;
+              final lastDate = last == null ? DateTime.now() : dateGetter(last);
+
+              context.read<CalendarDaySelectBloc>().add(
+                ActionStarted(data: lastDate),
+              );
+              context.read<CalendarDayFocusBloc>().add(
+                ActionStarted(data: lastDate),
+              );
+            }
+          },
+        ),
         BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
           listener: (final context, final selectDayState) {
             if (selectDayState is ActionSuccess<DateTime, DateTime>) {

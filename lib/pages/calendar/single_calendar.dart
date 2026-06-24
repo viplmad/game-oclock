@@ -7,7 +7,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         CalendarDaySelectBloc,
         CalendarGameYearDatesBloc,
         GameSessionListBloc,
-        GameSessionSelectBloc;
+        GameSessionSelectBloc,
+        LastGameSessionGetBloc;
 import 'package:game_oclock/components/calendar_list_detail.dart';
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -22,15 +23,15 @@ class SingleCalendarPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) =>
-              CalendarDaySelectBloc()..add(ActionStarted(data: DateTime.now())),
-        ),
-        BlocProvider(
-          create: (_) =>
-              CalendarDayFocusBloc()..add(ActionStarted(data: DateTime.now())),
-        ),
+        BlocProvider(create: (_) => CalendarDaySelectBloc()),
+        BlocProvider(create: (_) => CalendarDayFocusBloc()),
         BlocProvider(create: (_) => GameSessionSelectBloc()),
+        BlocProvider(
+          create: (_) => LastGameSessionGetBloc(
+            service: RepositoryProvider.of(context),
+            gameId: gameId,
+          )..add(ActionStarted.empty()),
+        ),
         BlocProvider(
           create: (_) => GameSessionListBloc(
             service: RepositoryProvider.of(context),
@@ -49,12 +50,13 @@ class SingleCalendarPage extends StatelessWidget {
             SessionDTO,
             GameSessionSelectBloc,
             GameSessionListBloc,
-            CalendarGameYearDatesBloc
+            CalendarGameYearDatesBloc,
+            LastGameSessionGetBloc
           >(
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
-            dateGetter: (final data) => data.startDatetime,
+            dateGetter: (final data) => data.endDatetime,
             detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.startDatetime.toIso8601String())),
             listItemBuilder: (final context, final data, final onTap) =>
