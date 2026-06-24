@@ -7,30 +7,26 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionSuccess,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
+        FunctionActionBloc,
         IdentityActionBloc,
-        ListFinal,
         ListLoadBloc,
-        ListLoadSuccess,
         ListReloaded,
-        ListState;
+        ListSearchChanged;
 import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
-import 'package:game_oclock/components/list/sticky_list.dart'
-    show StickySideListBuilder;
-import 'package:game_oclock/constants/colors.dart';
-import 'package:game_oclock/constants/constants.dart';
+import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
-import 'package:game_oclock/utils/list_extension.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:game_oclock/utils/show_snackbar.dart';
+import 'package:game_oclock_client/api.dart';
 
 class CalendarListDetailBuilder<
   T extends Object,
   SB extends IdentityActionBloc<T?>,
-  LB extends ListLoadBloc<T>
+  LB extends ListLoadBloc<T>,
+  CB extends FunctionActionBloc<DateTime, Set<DateTime>>
 >
     extends StatelessWidget {
   const CalendarListDetailBuilder({
@@ -56,35 +52,54 @@ class CalendarListDetailBuilder<
   @override
   Widget build(final BuildContext context) {
     final layoutTier = layoutTierFromContext(context);
-    final ScrollController scrollController = ScrollController();
 
-    return BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
-      listener: (final context, final selectDayState) async {
-        if (selectDayState is ActionSuccess<DateTime, DateTime>) {
-          final DateTime selectedDay = selectDayState.data;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CalendarDaySelectBloc, ActionState<DateTime>>(
+          listener: (final context, final selectDayState) {
+            if (selectDayState is ActionSuccess<DateTime, DateTime>) {
+              final DateTime selectedDay = selectDayState.data;
 
-          final ListState<T> listState = context.read<LB>().state;
-          if (listState is ListFinal<T>) {
-            final List<T> data = listState.data;
-            final int indexOf = data.indexWhere(
-              (final element) => dateGetter(element).isSameDay(selectedDay),
-            );
-
-            if (indexOf >= 0) {
-              await scrollController.animateTo(
-                indexOf * 56.0, // Size of one line ListTile
-                duration: const Duration(seconds: 1),
-                curve: Curves.easeInCubic,
-              );
-            } else {
-              showSnackBar(
-                context,
-                message: context.localize().emptySessionsOnSelectedDayMessage,
+              context.read<LB>().add(
+                ListSearchChanged(
+                  search: ListSearchDTO(
+                    filter: List.unmodifiable(<FilterDTO>[
+                      FilterDTO(
+                        field: 'start_date',
+                        operator_: OperatorType.lt,
+                        value: SearchValue(
+                          value: selectedDay.addDays(1).toIso8601WithTzString(),
+                        ),
+                        chainOperator: ChainOperatorType.and,
+                      ),
+                      FilterDTO(
+                        field: 'end_date',
+                        operator_: OperatorType.gte,
+                        value: SearchValue(
+                          value: selectedDay.toIso8601WithTzString(),
+                        ),
+                        chainOperator: ChainOperatorType.and,
+                      ),
+                    ]),
+                    sort: List.unmodifiable([
+                      SortDTO(field: 'start_date', order: OrderType.desc),
+                    ]),
+                  ),
+                ),
               );
             }
-          }
-        }
-      },
+          },
+        ),
+        BlocListener<CalendarDayFocusBloc, ActionState<DateTime>>(
+          listener: (final context, final focusDayState) {
+            if (focusDayState is ActionSuccess<DateTime, DateTime>) {
+              final DateTime focusedDay = focusDayState.data;
+
+              context.read<CB>().add(ActionStarted<DateTime>(data: focusedDay));
+            }
+          },
+        ),
+      ],
       child: BlocBuilder<CalendarDaySelectBloc, ActionState<DateTime>>(
         builder: (final context, final selectDayState) {
           final DateTime selectedDay =
@@ -125,11 +140,7 @@ class CalendarListDetailBuilder<
                               ],
                             ),
                             Expanded(
-                              child: _list(
-                                context,
-                                selectedData: selectedData,
-                                scrollController: scrollController,
-                              ),
+                              child: _list(context, selectedData: selectedData),
                             ),
                           ],
                         ),
@@ -166,11 +177,7 @@ class CalendarListDetailBuilder<
                         const VerticalDivider(width: 1.0),
                         Expanded(
                           flex: selectedData == null ? 4 : 2,
-                          child: _list(
-                            context,
-                            selectedData: selectedData,
-                            scrollController: scrollController,
-                          ),
+                          child: _list(context, selectedData: selectedData),
                         ),
                         if (selectedData != null)
                           Expanded(
@@ -228,12 +235,14 @@ class CalendarListDetailBuilder<
     required final DateTime selectedDay,
     required final DateTime focusedDay,
   }) {
-    return BlocBuilder<LB, ListState<T>>(
-      builder: (final context, final listState) {
-        final logs = (listState is ListLoadSuccess<T>) ? listState.data : <T>[];
+    return BlocBuilder<CB, ActionState<Set<DateTime>>>(
+      builder: (final context, final state) {
+        final logs = (state is ActionSuccess<Set<DateTime>, DateTime>)
+            ? state.data
+            : <DateTime>{}; // TODO build based on state
 
         return LogCalendar(
-          logDays: logs.map(dateGetter).toSet(),
+          logDays: logs,
           firstDay: firstDay,
           lastDay: lastDay,
           focusedDay: focusedDay,
@@ -263,52 +272,36 @@ class CalendarListDetailBuilder<
     );
   }
 
-  Widget _list(
-    final BuildContext context, {
-    required final T? selectedData,
-    required final ScrollController? scrollController,
-  }) {
-    return StickySideListBuilder<DateTime, T, LB>(
-      controller: scrollController,
-      groupTransformer: _groupByDate,
-      headerBuilder: (final date) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 4.0, left: 4.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: kAvatarWidth,
-              height: kAvatarHeight,
-              child: CircleAvatar(
-                backgroundColor: CommonColors.darkerGrey,
-                foregroundColor: CommonColors.white,
-                child: Text(
-                  context.localize().formatDayMonth(date),
-                  style: DefaultTextStyle.of(
-                    context,
-                  ).style.copyWith(color: CommonColors.white),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+  Widget _list(final BuildContext context, {required final T? selectedData}) {
+    return TileListBuilder<T, LB>(
+      borderRadius: BorderRadius.zero,
       itemBuilder: (final context, final data, final index) => listItemBuilder(
         context,
         data,
-        () => _select(
+        () => _selectOrUnselectIfSame(
           context,
           selectBloc: context.read<SB>(),
-          data: data == selectedData
-              ? null // Remove selection if pressed on the same one
-              : data,
+          data: data,
+          selectedData: selectedData,
         ),
       ),
     );
   }
 
-  Map<DateTime, List<T>> _groupByDate(final List<T> items) =>
-      items.groupBy((final item) => dateGetter(item).normalizeDate());
+  void _selectOrUnselectIfSame(
+    final BuildContext context, {
+    required final SB selectBloc,
+    required final T? data,
+    required final T? selectedData,
+  }) {
+    _select(
+      context,
+      selectBloc: context.read<SB>(),
+      data: data == selectedData
+          ? null // Remove selection if pressed on the same one
+          : data,
+    );
+  }
 
   void _select(
     final BuildContext context, {

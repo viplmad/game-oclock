@@ -509,7 +509,7 @@ class ReviewBuilder extends StatelessWidget {
                                   : MaterialLocalizations.of(
                                       context,
                                     ).formatYear(item.media.media.releaseDate!),
-                              trailing: Row(
+                              trailing: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 spacing: 8.0,
                                 crossAxisAlignment: CrossAxisAlignment.center,

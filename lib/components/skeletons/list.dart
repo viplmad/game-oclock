@@ -117,33 +117,6 @@ class CenteredGridListSkeleton extends StatelessWidget {
   }
 }
 
-class StickySideHeaderListSkeleton extends StatelessWidget {
-  const StickySideHeaderListSkeleton({
-    super.key,
-    required this.headerBuilder,
-    required this.itemBuilder,
-    this.borderRadius,
-  });
-
-  final Widget Function() headerBuilder;
-  final Widget Function(int index) itemBuilder;
-  final BorderRadiusGeometry? borderRadius;
-
-  @override
-  Widget build(final BuildContext context) {
-    return StickySideHeaderList(
-      items: List.filled(3, 0, growable: false).fold(
-        <int, List<int>>{},
-        (final prev, final el) =>
-            prev..[el] = List.filled(3, 0, growable: false),
-      ),
-      headerBuilder: (_) => headerBuilder(),
-      itemBuilder: (_, _, final index) => itemBuilder(index),
-      borderRadius: borderRadius,
-    );
-  }
-}
-
 class StickyTopHeaderListSkeleton extends StatelessWidget {
   const StickyTopHeaderListSkeleton({
     super.key,

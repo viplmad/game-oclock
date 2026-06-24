@@ -1,5 +1,3 @@
-import 'package:game_oclock/models/models.dart'
-    show GameOClockException, errorCodeUnknown;
 import 'package:game_oclock/services/services.dart' show ExternalGameService;
 import 'package:game_oclock_client/api.dart';
 

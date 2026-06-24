@@ -8,8 +8,8 @@ import 'package:game_oclock/models/models.dart'
         ReviewStartEnd;
 import 'package:game_oclock/services/services.dart'
     show DeviceService, GameService, GameSessionService;
-import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/duration_extension.dart';
+import 'package:game_oclock/utils/filter_utils.dart';
 import 'package:game_oclock_client/api.dart';
 
 import '../action.dart' show FunctionActionBloc, IdentityActionBloc;
@@ -178,7 +178,7 @@ class ReviewMostUsedDeviceGetBloc
           null,
           calculateOnCurrentYear(event.start),
         )
-        .then(removeZeroDurationEntries)
+        .then(_removeZeroDurationEntries)
         .then((final result) => result.firstOrNull);
     if (aggr == null) {
       return null;
@@ -397,7 +397,7 @@ class ReviewTop5MediasByTotalTimeListBloc
           null,
           calculateOnCurrentYear(event.start),
         )
-        .then(removeZeroDurationEntries);
+        .then(_removeZeroDurationEntries);
     final search = await gameService.search(
       ListSearchDTO(
         filter: List.unmodifiable(<FilterDTO>[
@@ -579,43 +579,7 @@ class ReviewTotalTimeGroupByHourGetBloc
   );
 }
 
-List<FilterDTO> buildStartDateBetweenFilters(
-  final DateTime startDate,
-  final DateTime endDate,
-) {
-  return List.unmodifiable(<FilterDTO>[
-    FilterDTO(
-      field: 'start_date',
-      operator_: OperatorType.gte,
-      value: SearchValue(value: startDate.toIso8601WithTzString()),
-      chainOperator: ChainOperatorType.and,
-    ),
-    FilterDTO(
-      field: 'start_date',
-      operator_: OperatorType.lt,
-      value: SearchValue(value: endDate.toIso8601WithTzString()),
-      chainOperator: ChainOperatorType.and,
-    ),
-  ]);
-}
-
-FilterDTO buildFinishedFilter() {
-  return FilterDTO(
-    field: 'finished_status',
-    operator_: OperatorType.eq,
-    value: SearchValue(value: MediaStatus.completed.toJson()),
-    chainOperator: ChainOperatorType.and,
-  );
-}
-
-FetchMode calculateOnCurrentYear(final DateTime startDate) {
-  final currentYear = DateTime.now().year;
-  return currentYear == startDate.year
-      ? FetchMode.onlyCalculate
-      : FetchMode.storedOrCalculate;
-}
-
-List<AggregateGroupResultDTO<String, Duration>> removeZeroDurationEntries(
+List<AggregateGroupResultDTO<String, Duration>> _removeZeroDurationEntries(
   final List<AggregateGroupResultDTO<String, Duration>> value,
 ) => value
     .where((final element) => !element.value.isZero())

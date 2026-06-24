@@ -5,8 +5,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionStarted,
         CalendarDayFocusBloc,
         CalendarDaySelectBloc,
+        CalendarYearDatesBloc,
         GameSessionSelectBloc,
-        ListSearchChanged,
         SessionListBloc;
 import 'package:game_oclock/components/calendar_list_detail.dart';
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
@@ -31,23 +31,19 @@ class MultiCalendarPage extends StatelessWidget {
         BlocProvider(create: (_) => GameSessionSelectBloc()),
         BlocProvider(
           create: (_) =>
-              SessionListBloc(service: RepositoryProvider.of(context))..add(
-                ListSearchChanged(
-                  search: ListSearchDTO(
-                    size: 20,
-                    sort: List.unmodifiable([
-                      SortDTO(field: 'start_date', order: OrderType.desc),
-                    ]),
-                  ),
-                ),
-              ),
+              SessionListBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              CalendarYearDatesBloc(service: RepositoryProvider.of(context)),
         ),
       ],
       child:
           CalendarListDetailBuilder<
             SessionDTO,
             GameSessionSelectBloc,
-            SessionListBloc
+            SessionListBloc,
+            CalendarYearDatesBloc
           >(
             title: context.localize().calendarTitle,
             firstDay: DateTime(1970),

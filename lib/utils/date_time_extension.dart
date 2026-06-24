@@ -31,6 +31,10 @@ extension DateTimeExtension on DateTime {
     return DateTime.utc(year, month, day);
   }
 
+  DateTime addDays(final int days) {
+    return add(Duration(days: days));
+  }
+
   DateTime atFirstDayOfNextMonth() {
     final nextMonth = (month + 1) % 12;
     final newYear = nextMonth == 1;

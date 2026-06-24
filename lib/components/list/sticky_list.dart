@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart'
-    show SliverStickyHeader;
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ListFinal,
@@ -53,50 +51,6 @@ class StickyTopListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
   @override
   Widget skeletonListView() {
     return StickyTopHeaderListSkeleton(
-      headerBuilder: () => skeletonHeaderBuilder(),
-      itemBuilder: (final index) => skeletonItemBuilder(order: index),
-      borderRadius: borderRadius,
-    );
-  }
-}
-
-class StickySideListBuilder<K, T extends Object, LB extends ListLoadBloc<T>>
-    extends StickyListBuilder<K, T, LB> {
-  const StickySideListBuilder({
-    super.key,
-    required super.itemBuilder,
-    this.borderRadius,
-    super.controller,
-    required super.groupTransformer,
-    required super.headerBuilder,
-  });
-
-  final BorderRadiusGeometry? borderRadius;
-
-  @override
-  Widget listView({
-    required final List<T> items,
-    required final Widget Function(BuildContext context, T item, int index)
-    itemBuilder,
-    required final ScrollController controller,
-  }) {
-    return StickySideHeaderList(
-      items: groupTransformer(items),
-      headerBuilder: headerBuilder,
-      itemBuilder: itemBuilder,
-      borderRadius: borderRadius,
-      controller: controller,
-    );
-  }
-
-  @override
-  Widget skeletonHeaderBuilder({final int order = 0}) {
-    return SideHeaderSkeletonItem(order: order);
-  }
-
-  @override
-  Widget skeletonListView() {
-    return StickySideHeaderListSkeleton(
       headerBuilder: () => skeletonHeaderBuilder(),
       itemBuilder: (final index) => skeletonItemBuilder(order: index),
       borderRadius: borderRadius,
@@ -235,41 +189,6 @@ class StickyTopHeaderList<K, T> extends StatelessWidget {
   }
 }
 
-class StickySideHeaderList<K, T> extends StatelessWidget {
-  const StickySideHeaderList({
-    super.key,
-    required this.items,
-    required this.headerBuilder,
-    required this.itemBuilder,
-    this.borderRadius,
-    this.controller,
-  });
-
-  final Map<K, List<T>> items;
-  final Widget Function(K key) headerBuilder;
-  final Widget Function(BuildContext context, T item, int index) itemBuilder;
-  final BorderRadiusGeometry? borderRadius;
-  final ScrollController? controller;
-
-  @override
-  Widget build(final BuildContext context) {
-    return CustomScrollView(
-      shrinkWrap: true,
-      controller: controller,
-      slivers: items.entries
-          .map((final entry) {
-            return SliverSideGroup<T>(
-              items: entry.value,
-              header: headerBuilder(entry.key),
-              itemBuilder: itemBuilder,
-              borderRadius: borderRadius,
-            );
-          })
-          .toList(growable: false),
-    );
-  }
-}
-
 class SliverTopGroup<T> extends StatelessWidget {
   const SliverTopGroup({
     super.key,
@@ -309,48 +228,6 @@ class SliverTopGroup<T> extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-class SliverSideGroup<T> extends StatelessWidget {
-  const SliverSideGroup({
-    super.key,
-    required this.items,
-    required this.header,
-    required this.itemBuilder,
-    this.borderRadius,
-  });
-
-  final List<T> items;
-  final Widget header;
-  final Widget Function(BuildContext context, T item, int index) itemBuilder;
-  final BorderRadiusGeometry? borderRadius;
-
-  @override
-  Widget build(final BuildContext context) {
-    final count = items.length;
-
-    return SliverStickyHeader(
-      overlapsContent: true,
-      header: header,
-      sliver: SliverPadding(
-        padding: const EdgeInsets.only(left: 60),
-        sliver: SliverList.builder(
-          itemCount: count,
-          itemBuilder: (final context, final index) {
-            final T item = items.elementAt(index);
-            final Widget itemWidget = itemBuilder(context, item, index);
-
-            return Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: borderRadius == null
-                  ? itemWidget
-                  : ClipRRect(borderRadius: borderRadius!, child: itemWidget),
-            );
-          },
-        ),
-      ),
     );
   }
 }
