@@ -55,6 +55,18 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
+Future<void> showYearPicker(
+  final BuildContext context, {
+  required final int year,
+  required final void Function(BuildContext context, int data) onSuccess,
+}) async {
+  return showReturningDialog<int>(
+    context,
+    builder: (final context) => YearPickerDialog(year: year),
+    onSuccess: onSuccess,
+  );
+}
+
 class YearPickerDialog extends StatefulWidget {
   const YearPickerDialog({super.key, this.year});
 

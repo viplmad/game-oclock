@@ -13,11 +13,13 @@ class SimpleSliverAppBar extends StatelessWidget {
     required this.title,
     this.actions,
     this.titlePadding,
+    this.pinned = false,
   });
 
   final Widget title;
   final List<Widget>? actions;
   final EdgeInsetsGeometry? titlePadding;
+  final bool pinned;
 
   @override
   Widget build(final BuildContext context) {
@@ -31,7 +33,7 @@ class SimpleSliverAppBar extends StatelessWidget {
       elevation: 1.0,
       scrolledUnderElevation: 1.0,
       floating: true,
-      pinned: false,
+      pinned: pinned,
       snap: false,
       automaticallyImplyLeading: false,
       leading: hasLeading

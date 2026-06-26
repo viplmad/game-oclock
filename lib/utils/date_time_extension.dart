@@ -18,6 +18,10 @@ extension DateTimeExtension on DateTime {
     }
   }
 
+  int daysDifference(final DateTime other) {
+    return normalizeDate().difference(other.normalizeDate()).inDays;
+  }
+
   bool isSameDay(final DateTime other) {
     return day == other.day && isInSameMonthAndYearOf(other);
   }
@@ -36,13 +40,15 @@ extension DateTimeExtension on DateTime {
   }
 
   DateTime atFirstDayOfNextMonth() {
-    final nextMonth = (month + 1) % 12;
+    var nextMonth = (month + 1) % 12;
+    nextMonth = nextMonth == 0 ? 12 : nextMonth;
     final newYear = nextMonth == 1;
     return DateTime(newYear ? year + 1 : year, nextMonth, 1);
   }
 
   DateTime atFirstDayOfPreviousMonth() {
-    final nextMonth = (month - 1) % 12;
+    var nextMonth = (month - 1) % 12;
+    nextMonth = nextMonth == 0 ? 12 : nextMonth;
     final newYear = nextMonth == 12;
     return DateTime(newYear ? year - 1 : year, nextMonth, 1);
   }

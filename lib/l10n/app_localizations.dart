@@ -1221,6 +1221,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{games} {games, plural, =1{game} other{games}}'**
   String gamesLabel(num games);
+
+  /// No description provided for @daysBeforeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{day before} other{{days} days before}}'**
+  String daysBeforeLabel(num days);
+
+  /// No description provided for @nextDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{next day} other{after {days} days}}'**
+  String nextDaysLabel(num days);
 }
 
 class _AppLocalizationsDelegate

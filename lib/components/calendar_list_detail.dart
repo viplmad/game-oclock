@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionFinal,
+        ActionRestarted,
         ActionStarted,
         ActionState,
         ActionSuccess,
@@ -22,6 +23,7 @@ import 'package:game_oclock/models/models.dart' show LayoutTier;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
 class CalendarListDetailBuilder<
@@ -38,6 +40,7 @@ class CalendarListDetailBuilder<
     required this.firstDay,
     required this.lastDay,
     required this.dateGetter,
+    this.floatingActionButton,
     required this.detailBuilder,
     required this.listItemBuilder,
   });
@@ -45,11 +48,17 @@ class CalendarListDetailBuilder<
   final String title;
   final DateTime firstDay;
   final DateTime lastDay;
-
   final DateTime Function(T data) dateGetter;
+  final FloatingActionButton? floatingActionButton;
+
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
-  final Widget Function(BuildContext context, T data, VoidCallback onTap)
+  final Widget Function(
+    BuildContext context,
+    T data,
+    DateTime selectedDay,
+    VoidCallback onTap,
+  )
   listItemBuilder;
 
   @override
@@ -102,7 +111,7 @@ class CalendarListDetailBuilder<
                       ),
                     ]),
                     sort: List.unmodifiable([
-                      SortDTO(field: 'start_date', order: OrderType.desc),
+                      SortDTO(field: 'start_date', order: OrderType.asc),
                     ]),
                   ),
                 ),
@@ -160,7 +169,11 @@ class CalendarListDetailBuilder<
                               ],
                             ),
                             Expanded(
-                              child: _list(context, selectedData: selectedData),
+                              child: _list(
+                                context,
+                                selectedDay: selectedDay,
+                                selectedData: selectedData,
+                              ),
                             ),
                           ],
                         ),
@@ -197,7 +210,11 @@ class CalendarListDetailBuilder<
                         const VerticalDivider(width: 1.0),
                         Expanded(
                           flex: selectedData == null ? 4 : 2,
-                          child: _list(context, selectedData: selectedData),
+                          child: _list(
+                            context,
+                            selectedDay: selectedDay,
+                            selectedData: selectedData,
+                          ),
                         ),
                         if (selectedData != null)
                           Expanded(
@@ -227,6 +244,51 @@ class CalendarListDetailBuilder<
     return <Widget>[
       SimpleSliverAppBar(
         title: Text(title),
+        actions: [
+          IconButton(
+            icon: CommonIcons.yearPicker,
+            tooltip: context.localize().changeYearLabel,
+            onPressed: () async {
+              final state = context.read<CalendarDayFocusBloc>().state;
+              final DateTime focusedDay =
+                  (state is ActionSuccess<DateTime, DateTime>)
+                  ? state.data
+                  : DateTime.now();
+
+              return await showYearPicker(
+                context,
+                year: focusedDay.year,
+                onSuccess: (final context, final data) {
+                  context.read<CalendarDayFocusBloc>().add(
+                    ActionStarted(
+                      data: DateTime(data, focusedDay.month, focusedDay.day),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: CommonIcons.reload,
+            tooltip: context.localize().reloadLabel,
+            onPressed: () => context.read<CB>().add(const ActionRestarted()),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _appBarListBuilder(
+    final BuildContext context,
+    final bool innerBoxIsScrolled,
+    final DateTime selectedDay,
+  ) {
+    return <Widget>[
+      SimpleSliverAppBar(
+        pinned: true,
+        title: Text(
+          MaterialLocalizations.of(context).formatCompactDate(selectedDay),
+        ),
         actions: [
           IconButton(
             icon: CommonIcons.reload,
@@ -292,18 +354,43 @@ class CalendarListDetailBuilder<
     );
   }
 
-  Widget _list(final BuildContext context, {required final T? selectedData}) {
-    return TileListBuilder<T, LB>(
-      borderRadius: BorderRadius.zero,
-      itemBuilder: (final context, final data, final index) => listItemBuilder(
-        context,
-        data,
-        () => _selectOrUnselectIfSame(
-          context,
-          selectBloc: context.read<SB>(),
-          data: data,
-          selectedData: selectedData,
-        ),
+  Widget _list(
+    final BuildContext context, {
+    required final DateTime selectedDay,
+    required final T? selectedData,
+  }) {
+    return NestedScrollView(
+      headerSliverBuilder: (final context, final innerBoxIsScrolled) =>
+          _appBarListBuilder(context, innerBoxIsScrolled, selectedDay),
+      body: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: TileListBuilder<T, LB>(
+                  borderRadius: BorderRadius.zero,
+                  itemBuilder: (final context, final data, final index) =>
+                      listItemBuilder(
+                        context,
+                        data,
+                        selectedDay,
+                        () => _selectOrUnselectIfSame(
+                          context,
+                          selectBloc: context.read<SB>(),
+                          data: data,
+                          selectedData: selectedData,
+                        ),
+                      ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: floatingActionButton,
+          ),
+        ],
       ),
     );
   }

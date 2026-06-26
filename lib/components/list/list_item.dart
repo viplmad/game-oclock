@@ -83,7 +83,7 @@ class GridListItem extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Stack(
-      children: <Widget>[
+      children: [
         Positioned.fill(
           child: _ListItemGridTile(title: title, imageURL: imageURL),
         ),

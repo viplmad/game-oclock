@@ -48,7 +48,6 @@ import 'package:game_oclock/models/models.dart'
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
-import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
 const int maxRecentYears = 7;
@@ -1406,9 +1405,9 @@ class ReviewBuilder extends StatelessWidget {
                   ? state.data ?? DateTime.now().year
                   : DateTime.now().year;
 
-              return await showReturningDialog<int>(
+              return await showYearPicker(
                 context,
-                builder: (final context) => YearPickerDialog(year: currentYear),
+                year: currentYear,
                 onSuccess: (final context, final data) {
                   context.read<ReviewYearSelectBloc>().add(
                     ActionStarted(data: data),

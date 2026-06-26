@@ -52,8 +52,13 @@ class MultiCalendarPage extends StatelessWidget {
             dateGetter: (final data) => data.endDatetime,
             detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.startDatetime.toIso8601String())),
-            listItemBuilder: (final context, final data, final onTap) =>
-                GameSessionTileListItem(data: data, onTap: onTap),
+            listItemBuilder:
+                (final context, final data, final selectedDay, final onTap) =>
+                    GameSessionTileListItem(
+                      data: data,
+                      selectedDay: selectedDay,
+                      onTap: onTap,
+                    ),
           ),
     );
   }

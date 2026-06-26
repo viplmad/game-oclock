@@ -645,4 +645,26 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$games $_temp0';
   }
+
+  @override
+  String daysBeforeLabel(num days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days before',
+      one: 'day before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextDaysLabel(num days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'after $days days',
+      one: 'next day',
+    );
+    return '$_temp0';
+  }
 }

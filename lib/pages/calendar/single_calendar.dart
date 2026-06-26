@@ -8,10 +8,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         CalendarGameYearDatesBloc,
         GameSessionListBloc,
         GameSessionSelectBloc,
-        LastGameSessionGetBloc;
+        LastGameSessionGetBloc,
+        ListReloaded;
 import 'package:game_oclock/components/calendar_list_detail.dart';
+import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/shared/forms/game_session_form.dart';
 import 'package:game_oclock/shared/list_item/game_session_list_item.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
 class SingleCalendarPage extends StatelessWidget {
@@ -57,10 +61,27 @@ class SingleCalendarPage extends StatelessWidget {
             firstDay: DateTime(1970),
             lastDay: DateTime.now(),
             dateGetter: (final data) => data.endDatetime,
+            floatingActionButton: FloatingActionButton(
+              tooltip: context.localize().addSessionLabel,
+              onPressed: () => showReturningDialog(
+                context,
+                builder: (final context) =>
+                    GameSessionCreateForm(gameId: gameId),
+                onSuccess: (final context, _) => context
+                    .read<GameSessionListBloc>()
+                    .add(const ListReloaded()),
+              ),
+              child: CommonIcons.addSession,
+            ),
             detailBuilder: (final context, final data, final onClosed) =>
                 Center(child: Text(data.startDatetime.toIso8601String())),
-            listItemBuilder: (final context, final data, final onTap) =>
-                SessionTileListItem(data: data, onTap: onTap),
+            listItemBuilder:
+                (final context, final data, final selectedDay, final onTap) =>
+                    SessionTileListItem(
+                      data: data,
+                      selectedDay: selectedDay,
+                      onTap: onTap,
+                    ),
           ),
     );
   }
