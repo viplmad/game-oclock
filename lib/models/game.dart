@@ -1,5 +1,6 @@
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'nav_destination.dart';
 
@@ -38,28 +39,28 @@ final updatedDatetimeField = OptionTextField(
   labelBuilder: (final context) => context.localize().updatedDatetimeLabel,
 );
 
-final gameStatusLowPriority = OptionTextField(
-  value: 'lowPriority',
-  labelBuilder: (final context) => context.localize().lowPriorityLabel,
+final gameStatusNextUp = OptionTextField(
+  value: MediaStatus.planning.toJson(),
+  labelBuilder: (final context) => context.localize().nextUpLabel,
   color: CommonColors.lowPriority,
 );
 
-final gameStatusNextUp = OptionTextField(
-  value: 'nextUp',
-  labelBuilder: (final context) => context.localize().nextUpLabel,
-  color: CommonColors.nextUp,
-);
-
 final gameStatusPlaying = OptionTextField(
-  value: 'playing',
+  value: MediaStatus.inProgress.toJson(),
   labelBuilder: (final context) => context.localize().playingLabel,
   color: CommonColors.playing,
 );
 
-final gameStatusPlayed = OptionTextField(
-  value: 'played',
-  labelBuilder: (final context) => context.localize().playedLabel,
-  color: CommonColors.played,
+final gameStatusCompleted = OptionTextField(
+  value: MediaStatus.completed.toJson(),
+  labelBuilder: (final context) => context.localize().completedLabel,
+  color: CommonColors.completed,
+);
+
+final gameStatusDropped = OptionTextField(
+  value: MediaStatus.dropped.toJson(),
+  labelBuilder: (final context) => context.localize().droppedLabel,
+  color: CommonColors.dropped,
 );
 
 final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
@@ -68,23 +69,15 @@ final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
 
 final List<OptionTextField<String>> gameStatusOptions = List.unmodifiable(
   <OptionTextField<String>>[
-    gameStatusLowPriority,
     gameStatusNextUp,
     gameStatusPlaying,
-    gameStatusPlayed,
+    gameStatusCompleted,
+    gameStatusDropped,
   ],
 );
 
 final List<OptionTextField<String>> gameSessionFinishedOptions =
     List.unmodifiable(<OptionTextField<String>>[
-      OptionTextField(
-        value: 'completed',
-        labelBuilder: (final context) => context.localize().completedLabel,
-        color: CommonColors.completed,
-      ),
-      OptionTextField(
-        value: 'retired',
-        labelBuilder: (final context) => context.localize().retiredLabel,
-        color: CommonColors.retired,
-      ),
+      gameStatusCompleted,
+      gameStatusDropped,
     ]);

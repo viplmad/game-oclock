@@ -28,10 +28,11 @@ import 'package:game_oclock_client/api.dart';
 
 class CalendarListDetailBuilder<
   T extends Object,
+  L extends Object,
   SB extends IdentityActionBloc<T?>,
   LB extends ListLoadBloc<T>,
   CB extends FunctionActionBloc<DateTime, Set<DateTime>>,
-  LSB extends ProducerActionBloc<T?>
+  LSB extends ProducerActionBloc<L?>
 >
     extends StatelessWidget {
   const CalendarListDetailBuilder({
@@ -39,7 +40,7 @@ class CalendarListDetailBuilder<
     required this.title,
     required this.firstDay,
     required this.lastDay,
-    required this.dateGetter,
+    required this.endDateGetter,
     this.floatingActionButton,
     required this.detailBuilder,
     required this.listItemBuilder,
@@ -48,7 +49,7 @@ class CalendarListDetailBuilder<
   final String title;
   final DateTime firstDay;
   final DateTime lastDay;
-  final DateTime Function(T data) dateGetter;
+  final DateTime Function(L data) endDateGetter;
   final FloatingActionButton? floatingActionButton;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
@@ -67,13 +68,15 @@ class CalendarListDetailBuilder<
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<LSB, ActionState<T?>>(
+        BlocListener<LSB, ActionState<L?>>(
           listener: (final context, final lastState) {
-            if (lastState is ActionFinal<T?, void>) {
-              final last = (lastState is ActionSuccess<T?, void>)
+            if (lastState is ActionFinal<L?, void>) {
+              final last = (lastState is ActionSuccess<L?, void>)
                   ? lastState.data
                   : null;
-              final lastDate = last == null ? DateTime.now() : dateGetter(last);
+              final lastDate = last == null
+                  ? DateTime.now()
+                  : endDateGetter(last);
 
               context.read<CalendarDaySelectBloc>().add(
                 ActionStarted(data: lastDate),

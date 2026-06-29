@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
-        GameSessionCreateBloc,
         GameSessionFormBloc,
         PlaythroughCreateBloc,
         PlaythroughGetBloc,
         PlaythroughListBloc,
+        SessionCreateBloc,
         UserGameCreateBloc,
         UserGameGetBloc,
         UserGameListBloc;
@@ -55,7 +55,7 @@ class GameSessionCreateForm extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) =>
-              GameSessionCreateBloc(service: RepositoryProvider.of(context)),
+              SessionCreateBloc(service: RepositoryProvider.of(context)),
         ),
 
         BlocProvider(
@@ -91,7 +91,7 @@ class GameSessionCreateForm extends StatelessWidget {
             (String, DateTime),
             GameSessionFormData,
             GameSessionFormBloc,
-            GameSessionCreateBloc
+            SessionCreateBloc
           >(
             title: context.localize().creatingTitle,
             fieldsBuilder: _fieldsCreateBuilder,

@@ -27,8 +27,16 @@ class SessionTileListItem extends StatelessWidget {
         spacing: 8.0,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (data.started) CommonIcons.first,
-          if (data.finishedStatus != null) CommonIcons.finished,
+          if (data.started)
+            Tooltip(
+              message: context.localize().startedLabel,
+              child: CommonIcons.first,
+            ),
+          if (data.finishedStatus != null)
+            Tooltip(
+              message: context.localize().finishedLabel,
+              child: CommonIcons.finished,
+            ),
         ],
       ),
       onTap: onTap,
@@ -37,25 +45,48 @@ class SessionTileListItem extends StatelessWidget {
   }
 }
 
-class GameSessionTileListItem extends StatelessWidget {
-  const GameSessionTileListItem({
+class SessionWithMediaTileListItem extends StatelessWidget {
+  const SessionWithMediaTileListItem({
     super.key,
     required this.data,
     this.selectedDay,
     required this.onTap,
   });
 
-  final SessionDTO data; // TODO with media
+  final MediaSessionDTO data;
   final DateTime? selectedDay;
   final VoidCallback onTap;
 
   @override
   Widget build(final BuildContext context) {
     return TileListItem(
-      title: _buildTitle(context, data, selectedDay),
-      subtitle: context.localize().formatDuration(data.time),
+      title: data.media.media.edition.isEmpty
+          ? data.media.media.title
+          : context.localize().gameEditionDataTitle(
+              data.media.media.title,
+              data.media.media.edition,
+            ),
+      subtitle:
+          '${_buildTitle(context, data.session, selectedDay)} · ${context.localize().formatDuration(data.session.time)}',
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8.0,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (data.session.started)
+            Tooltip(
+              message: context.localize().startedLabel,
+              child: CommonIcons.first,
+            ),
+          if (data.session.finishedStatus != null)
+            Tooltip(
+              message: context.localize().finishedLabel,
+              child: CommonIcons.finished,
+            ),
+        ],
+      ),
+      imageURL: data.media.media.imageUrl,
       onTap: onTap,
-      hasImage: false,
     );
   }
 }

@@ -5,10 +5,10 @@ import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
 
-class GameSessionService {
+class SessionService {
   final MediaSessionsApi _api;
 
-  GameSessionService(final ApiClient apiClient)
+  SessionService(final ApiClient apiClient)
     : _api = MediaSessionsApi(apiClient);
 
   Future<PageResultDTO<SessionDTO>> search(

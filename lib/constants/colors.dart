@@ -13,11 +13,10 @@ class CommonColors {
   static const rating = Color(0xA0B71C1C);
   static const wishlist = Colors.yellow;
   static const lowPriority = Colors.grey;
-  static const nextUp = Colors.red;
   static const playing = Colors.blue;
   static const played = Colors.green;
   static const completed = Colors.green;
-  static const retired = Colors.grey;
+  static const dropped = Colors.grey;
   static Color finished = Colors.grey[800]!;
   static const active = Colors.red;
 

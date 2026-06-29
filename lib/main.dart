@@ -28,12 +28,12 @@ import 'package:game_oclock/services/services.dart'
         DeviceService,
         ExternalGameService,
         GameService,
-        GameSessionService,
         ListSearchService,
         ListStyleService,
         LocationService,
         PlaythroughService,
         RetryableApiClient,
+        SessionService,
         SettingsService,
         TagService,
         UserService;
@@ -76,8 +76,8 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<DeviceService>(
           create: (_) => DeviceService(apiClient),
         ),
-        RepositoryProvider<GameSessionService>(
-          create: (_) => GameSessionService(apiClient),
+        RepositoryProvider<SessionService>(
+          create: (_) => SessionService(apiClient),
         ),
         RepositoryProvider<ListSearchService>(
           create: (_) => ListSearchService(sharedPrefsRepository),

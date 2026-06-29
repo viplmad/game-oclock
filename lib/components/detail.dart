@@ -167,6 +167,36 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
 
   @override
   Widget build(final BuildContext context) {
+    return GetBuilder<T, GB>(
+      skeletonBuilder: (_) => DetailSkeleton(onBackPressed: onBackPressed),
+      errorBuilder: (final context, final onRetryTap) => Center(
+        child: DetailError(
+          title: context.localize().errorDetailLoadTitle,
+          onRetryTap: onRetryTap,
+        ),
+      ),
+      builder: (final context, final data) =>
+          builder(context, data, onBackPressed),
+    );
+  }
+}
+
+class GetBuilder<T, GB extends FunctionActionBloc<String, T>>
+    extends StatelessWidget {
+  const GetBuilder({
+    super.key,
+    required this.builder,
+    required this.errorBuilder,
+    required this.skeletonBuilder,
+  });
+
+  final Widget Function(BuildContext context, T data) builder;
+  final Widget Function(BuildContext context, VoidCallback onRetryTap)
+  errorBuilder;
+  final Widget Function(BuildContext context) skeletonBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
     return BlocConsumer<GB, ActionState<T>>(
       listener: (final context, final state) {
         if (state is ActionFailure<T, String>) {
@@ -182,17 +212,14 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
         if (state is ActionInProgress<T>) {
           if (state.data == null) {
             // First time
-            return DetailSkeleton(onBackPressed: onBackPressed);
+            return skeletonBuilder(context);
           }
           data = state.data as T;
         } else if (state is ActionFinal<T, String>) {
           if (state is ActionFailure<T, String>) {
-            return Center(
-              child: DetailError(
-                title: context.localize().errorDetailLoadTitle,
-                onRetryTap: () =>
-                    context.read<GB>().add(const ActionRestarted()),
-              ),
+            return errorBuilder(
+              context,
+              () => context.read<GB>().add(const ActionRestarted()),
             );
           } else if (state is ActionSuccess<T, String>) {
             data = state.data;
@@ -203,7 +230,7 @@ class DetailBuilder<T, GB extends FunctionActionBloc<String, T>>
           return const SizedBox();
         }
 
-        return builder(context, data, onBackPressed);
+        return builder(context, data);
       },
     );
   }

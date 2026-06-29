@@ -26,13 +26,13 @@ class RetryableApiClient extends ApiClient {
   // If collectionFormat is 'multi', a key might appear multiple times.
   @override
   Future<Response> invokeAPI(
-    String path,
-    String method,
-    List<QueryParam> queryParams,
-    Object? body,
-    Map<String, String> headerParams,
-    Map<String, String> formParams,
-    String? contentType,
+    final String path,
+    final String method,
+    final List<QueryParam> queryParams,
+    final Object? body,
+    final Map<String, String> headerParams,
+    final Map<String, String> formParams,
+    final String? contentType,
   ) async {
     if (apiClient == null) {
       throw Error();

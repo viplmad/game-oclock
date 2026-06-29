@@ -302,7 +302,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completedLabel => 'Completed';
 
   @override
-  String get retiredLabel => 'Retired';
+  String get droppedLabel => 'Dropped';
 
   @override
   String get openLabel => 'Open';

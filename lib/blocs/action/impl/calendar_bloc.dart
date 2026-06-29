@@ -1,4 +1,4 @@
-import 'package:game_oclock/services/services.dart' show GameSessionService;
+import 'package:game_oclock/services/services.dart' show SessionService;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/filter_utils.dart';
 import 'package:game_oclock_client/api.dart';
@@ -25,7 +25,7 @@ class CalendarDayFocusBloc extends IdentityActionBloc<DateTime> {
 class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
   LastSessionGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<SessionDTO?> doAction(
@@ -50,7 +50,7 @@ class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
 class LastGameSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
   LastGameSessionGetBloc({required this.service, required this.gameId});
 
-  final GameSessionService service;
+  final SessionService service;
   final String gameId;
 
   @override
@@ -79,7 +79,7 @@ class CalendarYearDatesBloc
   CalendarYearDatesBloc({required this.service})
     : cache = <int, Set<DateTime>>{};
 
-  final GameSessionService service;
+  final SessionService service;
   final Map<int, Set<DateTime>> cache;
 
   @override
@@ -111,7 +111,7 @@ class CalendarGameYearDatesBloc
   CalendarGameYearDatesBloc({required this.service, required this.gameId})
     : cache = <int, Set<DateTime>>{};
 
-  final GameSessionService service;
+  final SessionService service;
   final String gameId;
   final Map<int, Set<DateTime>> cache;
 
@@ -151,7 +151,7 @@ class CalendarGameYearDatesBloc
 
 // TODO use something else than streak endpoint
 Future<Set<DateTime>> _searchSessionDates(
-  final GameSessionService service,
+  final SessionService service,
   final ListSearchDTO search,
   final String? quicksearch,
   final FetchMode? mode,

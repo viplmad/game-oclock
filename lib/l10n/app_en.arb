@@ -96,7 +96,7 @@
   "playingLabel": "Playing",
   "playedLabel": "Played",
   "completedLabel": "Completed",
-  "retiredLabel": "Retired",
+  "droppedLabel": "Dropped",
   "openLabel": "Open",
   "modifiedLabel": "Modified",
   "stayLabel": "Stay",

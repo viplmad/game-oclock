@@ -57,6 +57,7 @@ class CommonIcons {
   static const review = Icon(Icons.cake);
   static const session = Icon(Icons.schedule);
   static const finished = Icon(Icons.emoji_events_outlined);
+  static const dropped = Icon(Icons.stop_circle_outlined);
   static const first = Icon(Icons.fiber_new_outlined);
   static const notFirst = Icon(Icons.history);
   static const notFirstFinished = Icon(Icons.event_repeat_outlined);

@@ -7,7 +7,7 @@ import 'package:game_oclock/models/models.dart'
         MediaWithTime,
         ReviewStartEnd;
 import 'package:game_oclock/services/services.dart'
-    show DeviceService, GameService, GameSessionService;
+    show DeviceService, GameService, SessionService;
 import 'package:game_oclock/utils/duration_extension.dart';
 import 'package:game_oclock/utils/filter_utils.dart';
 import 'package:game_oclock_client/api.dart';
@@ -22,7 +22,7 @@ class ReviewYearSelectBloc extends IdentityActionBloc<int?> {
 class ReviewTotalMediasGetBloc extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalMediasGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -39,7 +39,7 @@ class ReviewTotalFirstMediasGetBloc
     extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalFirstMediasGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -56,7 +56,7 @@ class ReviewTotalFinishedMediasGetBloc
     extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalFinishedMediasGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -76,7 +76,7 @@ class ReviewTotalFirstFinishedMediasGetBloc
     extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalFirstFinishedMediasGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -96,7 +96,7 @@ class ReviewTotalTimeGetBloc
     extends FunctionActionBloc<ReviewStartEnd, Duration> {
   ReviewTotalTimeGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<Duration> doAction(
@@ -115,7 +115,7 @@ class ReviewTotalSessionsGetBloc
     extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalSessionsGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -132,7 +132,7 @@ class ReviewTotalDevicesGetBloc
     extends FunctionActionBloc<ReviewStartEnd, int> {
   ReviewTotalDevicesGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<int> doAction(final ReviewStartEnd event, final int? lastData) =>
@@ -154,7 +154,7 @@ class ReviewMostUsedDeviceGetBloc
     required this.deviceService,
   });
 
-  final GameSessionService service;
+  final SessionService service;
   final DeviceService deviceService;
 
   @override
@@ -195,7 +195,7 @@ class ReviewLongestSessionGetBloc
     required this.gameService,
   });
 
-  final GameSessionService service;
+  final SessionService service;
   final GameService gameService;
 
   @override
@@ -229,7 +229,7 @@ class ReviewLongestStreakGetBloc
     extends FunctionActionBloc<ReviewStartEnd, SessionStreakDTO> {
   ReviewLongestStreakGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<SessionStreakDTO> doAction(
@@ -255,7 +255,7 @@ class ReviewTotalMediasGroupByReleaseDateYearGetBloc
         > {
   ReviewTotalMediasGroupByReleaseDateYearGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
@@ -287,7 +287,7 @@ class ReviewTotalFinishedMediasGroupByReleaseDateYearGetBloc
     required this.service,
   });
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
@@ -325,7 +325,7 @@ class ReviewTotalTimeGroupByMonthThenMediaGetBloc
         > {
   ReviewTotalTimeGroupByMonthThenMediaGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<
@@ -373,7 +373,7 @@ class ReviewTop5MediasByTotalTimeListBloc
     required this.gameService,
   });
 
-  final GameSessionService service;
+  final SessionService service;
   final GameService gameService;
 
   @override
@@ -405,7 +405,10 @@ class ReviewTop5MediasByTotalTimeListBloc
             field: 'id',
             operator_: OperatorType.in_,
             value: SearchValue(
-              values: aggr.map((final el) => el.key).toList(growable: false),
+              values: aggr
+                  .map((final el) => el.key)
+                  .toSet()
+                  .toList(growable: false),
             ),
             chainOperator: ChainOperatorType.and,
           ),
@@ -433,7 +436,7 @@ class ReviewTotalMediasGroupByRatingGetBloc
         > {
   ReviewTotalMediasGroupByRatingGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
@@ -463,7 +466,7 @@ class ReviewTotalMediasGroupByGenreGetBloc
         > {
   ReviewTotalMediasGroupByGenreGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<String, int>>> doAction(
@@ -494,7 +497,7 @@ class ReviewTotalFinishedMediasGroupByMonthGetBloc
         > {
   ReviewTotalFinishedMediasGroupByMonthGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, int>>> doAction(
@@ -527,7 +530,7 @@ class ReviewTotalTimeGroupByWeekdayGetBloc
         > {
   ReviewTotalTimeGroupByWeekdayGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(
@@ -557,7 +560,7 @@ class ReviewTotalTimeGroupByHourGetBloc
         > {
   ReviewTotalTimeGroupByHourGetBloc({required this.service});
 
-  final GameSessionService service;
+  final SessionService service;
 
   @override
   Future<List<AggregateGroupResultDTO<int, Duration>>> doAction(

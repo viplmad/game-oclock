@@ -5,13 +5,17 @@ import '../action.dart'
     show ConsumerActionBloc, FunctionActionBloc, IdentityActionBloc;
 
 class DeviceGetBloc extends FunctionActionBloc<String, DeviceDTO> {
-  DeviceGetBloc({required this.service});
+  DeviceGetBloc({required this.service, final bool cache = false})
+    : cache = cache ? <String, DeviceDTO>{} : null;
 
   final DeviceService service;
+  final Map<String, DeviceDTO>? cache;
 
   @override
-  Future<DeviceDTO> doAction(final String event, final DeviceDTO? lastData) =>
-      service.get(event);
+  Future<DeviceDTO> doAction(
+    final String event,
+    final DeviceDTO? lastData,
+  ) async => cache?[event] ?? service.get(event);
 }
 
 class DeviceCreateBloc extends FunctionActionBloc<NewDeviceDTO, String> {

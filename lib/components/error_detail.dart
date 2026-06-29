@@ -15,19 +15,39 @@ class DetailError extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Center(child: Text(title)),
+          Text(title),
           OutlinedButton.icon(
             icon: CommonIcons.reload,
             label: Text(
               context.localize().retryLabel,
-              maxLines: 1,
               style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
             ),
             onPressed: onRetryTap,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LabelError extends StatelessWidget {
+  const LabelError({super.key, required this.label, required this.onRetryTap});
+
+  final String label;
+  final VoidCallback onRetryTap;
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListTile(
+      title: Text(label, style: Theme.of(context).textTheme.titleSmall),
+      trailing: OutlinedButton.icon(
+        icon: CommonIcons.reload,
+        label: Text(
+          context.localize().retryLabel,
+          style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
+        ),
+        onPressed: onRetryTap,
       ),
     );
   }

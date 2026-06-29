@@ -676,11 +676,11 @@ abstract class AppLocalizations {
   /// **'Completed'**
   String get completedLabel;
 
-  /// No description provided for @retiredLabel.
+  /// No description provided for @droppedLabel.
   ///
   /// In en, this message translates to:
-  /// **'Retired'**
-  String get retiredLabel;
+  /// **'Dropped'**
+  String get droppedLabel;
 
   /// No description provided for @openLabel.
   ///
