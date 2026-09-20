@@ -19,7 +19,9 @@ import 'package:game_oclock/components/search_text_field.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show ListSearch;
+import 'package:game_oclock/constants/spaces.dart';
+import 'package:game_oclock/models/models.dart'
+    show ListSearch, OptionTextField;
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
@@ -123,6 +125,7 @@ class ListFilterToolbarBuilder<T extends Object, LB extends ListLoadBloc<T>>
         return ListFilterToolbar(
           space: space,
           search: currentSearch,
+          options: getSpaceFieldOptions(space),
           onSearchChanged: (final context, final selectedSearch) {
             context.read<CurrentListSearchSaveBloc>().add(
               ActionStarted(data: selectedSearch),
@@ -139,11 +142,13 @@ class ListFilterToolbar extends StatelessWidget {
     super.key,
     required this.space,
     required this.search,
+    required this.options,
     required this.onSearchChanged,
   }) : assert(space.length > 0);
 
   final String space;
   final ListSearch search;
+  final List<OptionTextField<String>> options;
   final void Function(BuildContext context, ListSearch selectedSearch)
   onSearchChanged;
 
@@ -189,7 +194,14 @@ class ListFilterToolbar extends StatelessWidget {
     final widgets = <Widget>[];
     for (var i = 0; i < filters.length; i++) {
       final filter = filters.elementAt(i);
-      widgets.add(LabelChip(label: _buildFilterLabel(context, filter)));
+      widgets.add(
+        LabelChip(
+          label: context.localize().filterValueLabel(
+            filter,
+            _buildFilterFieldLabel(options, filter.field)(context),
+          ),
+        ),
+      );
 
       if (i < filters.length - 1) {
         widgets.add(
@@ -215,7 +227,7 @@ class ListFilterToolbar extends StatelessWidget {
       widgets.add(
         LabelChip(
           icon: _buildSortIcon(sort),
-          label: _buildSortLabel(context, sort),
+          label: _buildFilterFieldLabel(options, sort.field)(context),
         ),
       );
 
@@ -224,64 +236,6 @@ class ListFilterToolbar extends StatelessWidget {
       }
     }
     return widgets;
-  }
-
-  String _buildFilterLabel(final BuildContext context, final FilterDTO filter) {
-    final field = filter.field; // TODO l10n?
-    switch (filter.operator_) {
-      case OperatorType.eq:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().equalChipLabel(field, value);
-      case OperatorType.notEq:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().notEqualChipLabel(field, value);
-      case OperatorType.gt:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().greaterThanChipLabel(field, value);
-      case OperatorType.gte:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().greaterThanEqualChipLabel(field, value);
-      case OperatorType.lt:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().lessThanChipLabel(field, value);
-      case OperatorType.lte:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().lessThanEqualChipLabel(field, value);
-      case OperatorType.in_:
-        final values = _buildFilterValuesLabel(context, filter.value!);
-        return context.localize().inChipLabel(field, values);
-      case OperatorType.notIn:
-        final values = _buildFilterValuesLabel(context, filter.value!);
-        return context.localize().notInChipLabel(field, values);
-      case OperatorType.startsWith:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().startsWithChipLabel(field, value);
-      case OperatorType.notStartsWith:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().notStartsWithChipLabel(field, value);
-      case OperatorType.endsWith:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().endsWithChipLabel(field, value);
-      case OperatorType.notEndsWith:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().notEndsWithChipLabel(field, value);
-      case OperatorType.contains:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().containsChipLabel(field, value);
-      case OperatorType.notContains:
-        final value = _buildFilterValueLabel(context, filter.value!);
-        return context.localize().notContainsChipLabel(field, value);
-      case OperatorType.null_:
-        return context.localize().nullChipLabel(field);
-      case OperatorType.notNull:
-        return context.localize().notNullChipLabel(field);
-      default:
-        return '?';
-    }
-  }
-
-  String _buildSortLabel(final BuildContext context, final SortDTO sort) {
-    return sort.field; // TODO l10n?
   }
 
   Widget _buildSortIcon(final SortDTO sort) {
@@ -294,22 +248,19 @@ class ListFilterToolbar extends StatelessWidget {
     }
   }
 
-  String _buildFilterValueLabel(
-    final BuildContext context,
-    final SearchValue value,
+  String Function(BuildContext) _buildFilterFieldLabel(
+    final List<OptionTextField<String>> options,
+    final String field,
   ) {
-    return value.value == null
-        ? context.localize().nullLabel
-        : context.localize().quote(value.value!);
-  }
-
-  String _buildFilterValuesLabel(
-    final BuildContext context,
-    final SearchValue value,
-  ) {
-    return (value.values ?? [])
-        .map((final val) => context.localize().quote(val))
-        .join(', ');
+    return options
+        .firstWhere(
+          (final option) => option.value == field,
+          orElse: () => OptionTextField(
+            value: field,
+            labelBuilder: (final context) => field,
+          ),
+        )
+        .labelBuilder;
   }
 }
 

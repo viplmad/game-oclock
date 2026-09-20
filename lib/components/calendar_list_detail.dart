@@ -19,7 +19,8 @@ import 'package:game_oclock/components/calendar.dart';
 import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier;
+import 'package:game_oclock/models/models.dart'
+    show LayoutTier, endDateField, startDateField;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
@@ -97,7 +98,7 @@ class CalendarListDetailBuilder<
                   search: ListSearchDTO(
                     filter: List.unmodifiable(<FilterDTO>[
                       FilterDTO(
-                        field: 'start_date',
+                        field: startDateField.value,
                         operator_: OperatorType.lt,
                         value: SearchValue(
                           value: selectedDay.addDays(1).toIso8601WithTzString(),
@@ -105,7 +106,7 @@ class CalendarListDetailBuilder<
                         chainOperator: ChainOperatorType.and,
                       ),
                       FilterDTO(
-                        field: 'end_date',
+                        field: endDateField.value,
                         operator_: OperatorType.gte,
                         value: SearchValue(
                           value: selectedDay.toIso8601WithTzString(),
@@ -114,7 +115,10 @@ class CalendarListDetailBuilder<
                       ),
                     ]),
                     sort: List.unmodifiable([
-                      SortDTO(field: 'start_date', order: OrderType.asc),
+                      SortDTO(
+                        field: startDateField.value,
+                        order: OrderType.asc,
+                      ),
                     ]),
                   ),
                 ),

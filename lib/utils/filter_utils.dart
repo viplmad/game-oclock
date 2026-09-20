@@ -1,3 +1,5 @@
+import 'package:game_oclock/models/models.dart'
+    show endDateField, finishedStatusField, startDateField;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
@@ -7,13 +9,13 @@ List<FilterDTO> buildStartDateBetweenFilters(
 ) {
   return List.unmodifiable(<FilterDTO>[
     FilterDTO(
-      field: 'start_date',
+      field: startDateField.value,
       operator_: OperatorType.lt,
       value: SearchValue(value: endDate.toIso8601WithTzString()),
       chainOperator: ChainOperatorType.and,
     ),
     FilterDTO(
-      field: 'end_date',
+      field: endDateField.value,
       operator_: OperatorType.gte,
       value: SearchValue(value: startDate.toIso8601WithTzString()),
       chainOperator: ChainOperatorType.and,
@@ -23,7 +25,7 @@ List<FilterDTO> buildStartDateBetweenFilters(
 
 FilterDTO buildFinishedFilter() {
   return FilterDTO(
-    field: 'finished_status',
+    field: finishedStatusField.value,
     operator_: OperatorType.eq,
     value: SearchValue(value: MediaStatus.completed.toJson()),
     chainOperator: ChainOperatorType.and,

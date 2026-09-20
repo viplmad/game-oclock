@@ -1,3 +1,5 @@
+import 'package:game_oclock/models/models.dart'
+    show mediaIdField, startDateField;
 import 'package:game_oclock/services/services.dart' show SessionService;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/filter_utils.dart';
@@ -36,7 +38,7 @@ class LastSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
         .search(
           ListSearchDTO(
             sort: List.unmodifiable(<SortDTO>[
-              SortDTO(field: 'start_date', order: OrderType.desc),
+              SortDTO(field: startDateField.value, order: OrderType.desc),
             ]),
             size: 1,
           ),
@@ -63,7 +65,7 @@ class LastGameSessionGetBloc extends ProducerActionBloc<SessionDTO?> {
           gameId,
           ListSearchDTO(
             sort: List.unmodifiable(<SortDTO>[
-              SortDTO(field: 'start_date', order: OrderType.desc),
+              SortDTO(field: startDateField.value, order: OrderType.desc),
             ]),
             size: 1,
           ),
@@ -132,7 +134,7 @@ class CalendarGameYearDatesBloc
       ListSearchDTO(
         filter: List.unmodifiable(<FilterDTO>[
           FilterDTO(
-            field: 'media_id',
+            field: mediaIdField.value,
             operator_: OperatorType.eq,
             value: SearchValue(value: gameId),
             chainOperator: ChainOperatorType.and,

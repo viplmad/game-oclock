@@ -122,6 +122,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseDateFormatLabel => 'Choose date format';
 
   @override
+  String get syncLabel => 'Sync';
+
+  @override
+  String get unsyncLabel => 'Unsync';
+
+  @override
   String get gameLabel => 'Game';
 
   @override
@@ -167,6 +173,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get idLabel => 'Id';
 
   @override
+  String get kindLabel => 'Kind';
+
+  @override
   String get titleLabel => 'Title';
 
   @override
@@ -174,6 +183,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get releaseDateLabel => 'Release Date';
+
+  @override
+  String get imageLabel => 'Image';
+
+  @override
+  String get parentIdLabel => 'Parent Id';
+
+  @override
+  String get parentOrderLabel => 'Parent Order';
 
   @override
   String get statusLabel => 'Status';
@@ -369,6 +387,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mostUsedDeviceLabel => 'Most used device';
+
+  @override
+  String get firstSessionLabel => 'First session';
+
+  @override
+  String get lastSessionLabel => 'Last session';
 
   @override
   String get longestSessionLabel => 'Longest session';
@@ -575,6 +599,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unableToLoadDetailLabel => 'Unable to load detail';
 
   @override
+  String get syncedSuccessfullyLabel => 'Synced successfully';
+
+  @override
+  String get unableToSyncLabel => 'Unable to sync';
+
+  @override
+  String get unsyncedSuccessfullyLabel => 'Unsynced successfully';
+
+  @override
+  String get unableToUnsyncLabel => 'Unable to unsync';
+
+  @override
   String get leaveDirtyFormConfirmationDialogTitle =>
       'Are you sure you want to leave?';
 
@@ -584,6 +620,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCopiedText => 'Error copied';
+
+  @override
+  String get genrePlatformLabel => 'Platform';
+
+  @override
+  String get genrePuzzleLabel => 'Puzzle';
+
+  @override
+  String get genreAdventureLabel => 'Adventure';
+
+  @override
+  String get genreIndieLabel => 'Indie';
 
   @override
   String gameEditionDataTitle(Object aTitle, Object bEdition) {

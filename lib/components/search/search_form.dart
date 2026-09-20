@@ -11,8 +11,9 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/list/tile_list.dart';
 import 'package:game_oclock/constants/icons.dart';
+import 'package:game_oclock/constants/spaces.dart';
 import 'package:game_oclock/models/models.dart'
-    show ListSearch, SearchFormData, gameFieldOptions, operatorOptions;
+    show ListSearch, OptionTextField, SearchFormData, operatorOptions;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -53,7 +54,13 @@ class SearchCreateForm extends StatelessWidget {
             ListSearchCreateBloc
           >(
             title: context.localize().creatingTitle,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsBuilder(
+                  context,
+                  getSpaceFieldOptions(space),
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -104,7 +111,13 @@ class SearchEditForm extends StatelessWidget {
             ListSearchUpdateBloc
           >(
             title: context.localize().editingTitle,
-            fieldsBuilder: _fieldsBuilder,
+            fieldsBuilder: (final context, final formGroup, final readOnly) =>
+                _fieldsBuilder(
+                  context,
+                  getSpaceFieldOptions(space),
+                  formGroup,
+                  readOnly,
+                ),
           ),
     );
   }
@@ -112,6 +125,7 @@ class SearchEditForm extends StatelessWidget {
 
 Widget _fieldsBuilder(
   final BuildContext context,
+  final List<OptionTextField<String>> options,
   final SearchFormData formData,
   final bool readOnly,
 ) {
@@ -145,7 +159,7 @@ Widget _fieldsBuilder(
                         formControl:
                             formGroup.controls['field'] as FormControl<String>,
                         label: context.localize().fieldLabel,
-                        options: gameFieldOptions,
+                        options: options,
                       ),
                     ),
                     Expanded(

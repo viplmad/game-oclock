@@ -1,4 +1,4 @@
-import 'package:game_oclock/models/models.dart' show AggregateSearch;
+import 'package:game_oclock/models/models.dart' show AggregateSearch, idField;
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -21,7 +21,10 @@ class GameService {
   ) async {
     final response = await _api.aggregateMediasWithHttpInfo(
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -45,7 +48,10 @@ class GameService {
     final response = await _api.aggregateLocationMediasWithHttpInfo(
       locationId,
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -69,7 +75,10 @@ class GameService {
     final response = await _api.aggregateTagMediasWithHttpInfo(
       tagId,
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -93,7 +102,10 @@ class GameService {
     final response = await _api.aggregateDeviceMediasWithHttpInfo(
       deviceId,
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -154,5 +166,13 @@ class GameService {
 
   Future<void> delete(final String id) async {
     return _api.deleteMedia(id);
+  }
+
+  Future<void> sync(final String id) async {
+    return _api.syncMedia(id);
+  }
+
+  Future<void> unsync(final String id) async {
+    return _api.unsyncMedia(id);
   }
 }

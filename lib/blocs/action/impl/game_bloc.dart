@@ -45,6 +45,26 @@ class UserGameDeleteBloc extends ConsumerActionBloc<MediaDTO> {
       service.delete(event.media.id);
 }
 
+class UserGameSyncBloc extends ConsumerActionBloc<MediaDTO> {
+  UserGameSyncBloc({required this.service});
+
+  final GameService service;
+
+  @override
+  Future<void> doAction(final MediaDTO event, final void lastData) =>
+      service.sync(event.media.id);
+}
+
+class UserGameUnsyncBloc extends ConsumerActionBloc<MediaDTO> {
+  UserGameUnsyncBloc({required this.service});
+
+  final GameService service;
+
+  @override
+  Future<void> doAction(final MediaDTO event, final void lastData) =>
+      service.unsync(event.media.id);
+}
+
 class UserGameSelectBloc extends IdentityActionBloc<MediaDTO?> {
   @override
   Future<MediaDTO?> doAction(

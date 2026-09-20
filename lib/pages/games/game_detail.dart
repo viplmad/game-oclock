@@ -14,7 +14,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocationAvailableListBloc,
         TagOfGameListBloc,
         UserGameDeleteBloc,
-        UserGameGetBloc;
+        UserGameGetBloc,
+        UserGameSyncBloc,
+        UserGameUnsyncBloc;
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
@@ -60,6 +62,14 @@ class UserGameDetailPage extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameSyncBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameUnsyncBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => LocationAvailableListBloc(
@@ -183,23 +193,63 @@ class UserGameDetail extends StatelessWidget {
       ),
     ]);
 
-    return BlocListener<UserGameDeleteBloc, ActionState<void>>(
-      listener: (final context, final state) {
-        if (state is ActionSuccess<void, MediaDTO>) {
-          showSnackBar(
-            context,
-            message: context.localize().deletedSuccessfullyLabel,
-          );
-          onDeleteSucceeded(context);
-        }
-        if (state is ActionFailure<void, MediaDTO>) {
-          showErrorSnackBar(
-            context,
-            name: context.localize().unableToDeleteLabel,
-            error: state.error,
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UserGameDeleteBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, MediaDTO>) {
+              showSnackBar(
+                context,
+                message: context.localize().deletedSuccessfullyLabel,
+              );
+              onDeleteSucceeded(context);
+            }
+            if (state is ActionFailure<void, MediaDTO>) {
+              showErrorSnackBar(
+                context,
+                name: context.localize().unableToDeleteLabel,
+                error: state.error,
+              );
+            }
+          },
+        ),
+        BlocListener<UserGameSyncBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, MediaDTO>) {
+              showSnackBar(
+                context,
+                message: context.localize().syncedSuccessfullyLabel,
+              );
+              onEditSucceeded(context);
+            }
+            if (state is ActionFailure<void, MediaDTO>) {
+              showErrorSnackBar(
+                context,
+                name: context.localize().unableToSyncLabel,
+                error: state.error,
+              );
+            }
+          },
+        ),
+        BlocListener<UserGameUnsyncBloc, ActionState<void>>(
+          listener: (final context, final state) {
+            if (state is ActionSuccess<void, MediaDTO>) {
+              showSnackBar(
+                context,
+                message: context.localize().unsyncedSuccessfullyLabel,
+              );
+              onEditSucceeded(context);
+            }
+            if (state is ActionFailure<void, MediaDTO>) {
+              showErrorSnackBar(
+                context,
+                name: context.localize().unableToUnsyncLabel,
+                error: state.error,
+              );
+            }
+          },
+        ),
+      ],
       child: DetailWithTabs(
         title: Text(data.media.title),
         image: data.media.imageUrl == null
@@ -233,6 +283,19 @@ class UserGameDetail extends StatelessWidget {
               context,
               builder: (final context) => UserGameEditForm(id: data.media.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
+            ),
+          ),
+          IconButton(
+            icon: CommonIcons.sync,
+            tooltip: context.localize().syncLabel,
+            onPressed: () =>
+                context.read<UserGameSyncBloc>().add(ActionStarted(data: data)),
+          ),
+          IconButton(
+            icon: CommonIcons.sync,
+            tooltip: context.localize().unsyncLabel,
+            onPressed: () => context.read<UserGameUnsyncBloc>().add(
+              ActionStarted(data: data),
             ),
           ),
           IconButton(

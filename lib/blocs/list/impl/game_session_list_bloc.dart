@@ -1,3 +1,4 @@
+import 'package:game_oclock/models/models.dart' show idField;
 import 'package:game_oclock/services/services.dart'
     show GameService, SessionService;
 import 'package:game_oclock_client/api.dart';
@@ -75,7 +76,7 @@ class SessionWithMediaListBloc extends ListLoadBloc<MediaSessionDTO> {
       ListSearchDTO(
         filter: List.unmodifiable(<FilterDTO>[
           FilterDTO(
-            field: 'id',
+            field: idField.value,
             operator_: OperatorType.in_,
             value: SearchValue(values: mediaIds),
             chainOperator: ChainOperatorType.and,

@@ -151,7 +151,7 @@ class SessionDetail extends StatelessWidget {
               ),
               if (data.started)
                 IconLabel(
-                  icon: CommonIcons.first,
+                  icon: CommonIcons.firstStarted,
                   label: context.localize().startedLabel,
                 ),
               if (data.finishedStatus == MediaStatus.completed)

@@ -13,6 +13,8 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionState,
         ActionSuccess,
         FunctionActionBloc,
+        ReviewFirstSessionGetBloc,
+        ReviewLastSessionGetBloc,
         ReviewLongestSessionGetBloc,
         ReviewLongestStreakGetBloc,
         ReviewMostUsedDeviceGetBloc,
@@ -120,6 +122,18 @@ class ReviewPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
+          create: (_) => ReviewFirstSessionGetBloc(
+            service: RepositoryProvider.of(context),
+            gameService: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ReviewLastSessionGetBloc(
+            service: RepositoryProvider.of(context),
+            gameService: RepositoryProvider.of(context),
+          ),
+        ),
+        BlocProvider(
           create: (_) => ReviewLongestSessionGetBloc(
             service: RepositoryProvider.of(context),
             gameService: RepositoryProvider.of(context),
@@ -222,6 +236,9 @@ class ReviewBuilder extends StatelessWidget {
 
           _loadOnlyNotInitial<ReviewTotalDevicesGetBloc>(context, reviewData);
           _loadOnlyNotInitial<ReviewMostUsedDeviceGetBloc>(context, reviewData);
+
+          _loadOnlyNotInitial<ReviewFirstSessionGetBloc>(context, reviewData);
+          _loadOnlyNotInitial<ReviewLastSessionGetBloc>(context, reviewData);
 
           _loadOnlyNotInitial<ReviewLongestSessionGetBloc>(context, reviewData);
 
@@ -364,6 +381,18 @@ class ReviewBuilder extends StatelessWidget {
             _loadOnlyInitialReview<ReviewMostUsedDeviceGetBloc>(context);
           },
           child: buildDevicesSummary(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewFirstSessionGetBloc>(context);
+          },
+          child: buildFirstSessionSummary(),
+        ),
+        LazyRender(
+          onRender: () {
+            _loadOnlyInitialReview<ReviewLastSessionGetBloc>(context);
+          },
+          child: buildLastSessionSummary(),
         ),
         LazyRender(
           onRender: () {
@@ -634,7 +663,7 @@ class ReviewBuilder extends StatelessWidget {
                       value: l
                           .map(
                             (final el) => SeriesEntry(
-                              key: el.key,
+                              key: context.localize().genreLabel(el.key),
                               value: el.value.inMinutes,
                             ),
                           )
@@ -863,7 +892,7 @@ class ReviewBuilder extends StatelessWidget {
                   ),
                   secondary: buildStatContainer(
                     context,
-                    CommonIcons.first,
+                    CommonIcons.firstStarted,
                     context.localize().totalFirstMediasLabel,
                     '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
                   ),
@@ -912,7 +941,7 @@ class ReviewBuilder extends StatelessWidget {
                       ),
                       secondary: buildStatContainer(
                         context,
-                        CommonIcons.first,
+                        CommonIcons.firstStarted,
                         context.localize().totalFirstFinishedMediasLabel,
                         '$firstData (${context.localize().formatPercentage(firstData / totalData)})',
                       ),
@@ -1005,6 +1034,73 @@ class ReviewBuilder extends StatelessWidget {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget buildFirstSessionSummary() {
+    return BlocBuilder<
+      ReviewFirstSessionGetBloc,
+      ActionState<MediaSessionDTO?>
+    >(
+      builder: (final context, final state) {
+        return buildFromState(
+          context,
+          state: state,
+          onRetryTap: () => context.read<ReviewFirstSessionGetBloc>().add(
+            const ActionRestarted(),
+          ),
+          builder: (final context, final data) => data == null
+              ? buildEmptyCard(context)
+              : buildStatCard(
+                  primary: buildStatContainer(
+                    context,
+                    CommonIcons.first,
+                    context.localize().firstSessionLabel,
+                    MaterialLocalizations.of(
+                      context,
+                    ).formatCompactDate(data.session.startDatetime),
+                  ),
+                  secondary: buildStatContainer(
+                    context,
+                    CommonIcons.games,
+                    '${MaterialLocalizations.of(context).formatCompactDate(data.session.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.startDatetime))} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.session.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.endDatetime))}',
+                    data.media.media.title,
+                  ),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget buildLastSessionSummary() {
+    return BlocBuilder<ReviewLastSessionGetBloc, ActionState<MediaSessionDTO?>>(
+      builder: (final context, final state) {
+        return buildFromState(
+          context,
+          state: state,
+          onRetryTap: () => context.read<ReviewLastSessionGetBloc>().add(
+            const ActionRestarted(),
+          ),
+          builder: (final context, final data) => data == null
+              ? buildEmptyCard(context)
+              : buildStatCard(
+                  primary: buildStatContainer(
+                    context,
+                    CommonIcons.last,
+                    context.localize().lastSessionLabel,
+                    MaterialLocalizations.of(
+                      context,
+                    ).formatCompactDate(data.session.startDatetime),
+                  ),
+                  secondary: buildStatContainer(
+                    context,
+                    CommonIcons.games,
+                    '${MaterialLocalizations.of(context).formatCompactDate(data.session.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.startDatetime))} ⮕ ${MaterialLocalizations.of(context).formatCompactDate(data.session.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.endDatetime))}',
+                    data.media.media.title,
+                  ),
+                ),
         );
       },
     );
@@ -1433,6 +1529,9 @@ class ReviewBuilder extends StatelessWidget {
 
               _reloadOnlyNotInitial<ReviewTotalDevicesGetBloc>(context);
               _reloadOnlyNotInitial<ReviewMostUsedDeviceGetBloc>(context);
+
+              _reloadOnlyNotInitial<ReviewFirstSessionGetBloc>(context);
+              _reloadOnlyNotInitial<ReviewLastSessionGetBloc>(context);
 
               _reloadOnlyNotInitial<ReviewLongestSessionGetBloc>(context);
 

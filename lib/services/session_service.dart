@@ -1,5 +1,14 @@
 import 'package:game_oclock/models/models.dart'
-    show AggregateGroupSearch, AggregateSearch;
+    show
+        AggregateGroupSearch,
+        AggregateSearch,
+        deviceIdField,
+        mediaGenreField,
+        mediaIdField,
+        mediaRatingField,
+        mediaReleaseDateField,
+        startDateField,
+        timeField;
 import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
@@ -26,7 +35,7 @@ class SessionService {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
         ),
         filter: search.filter,
@@ -54,7 +63,7 @@ class SessionService {
       gameId,
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
         ),
         filter: search.filter,
@@ -72,7 +81,10 @@ class SessionService {
     final response = await _api.aggregateMediaSessionsWithHttpInfo(
       gameId,
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        aggr: AggregateMetricDTO(
+          field: timeField.value,
+          kind: AggregateMetricType.sum,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -87,7 +99,10 @@ class SessionService {
   ) async {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        aggr: AggregateMetricDTO(
+          field: timeField.value,
+          kind: AggregateMetricType.sum,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -104,7 +119,7 @@ class SessionService {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
@@ -124,7 +139,7 @@ class SessionService {
     final response = await _api.aggregateFirstSessionsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
@@ -144,7 +159,7 @@ class SessionService {
     final response = await _api.aggregateSessionsWithHttpInfo(
       AggregateSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'device_id',
+          field: deviceIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
@@ -164,9 +179,12 @@ class SessionService {
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
-        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        aggr: AggregateMetricDTO(
+          field: timeField.value,
+          kind: AggregateMetricType.sum,
+        ),
         group: AggregateGroupDTO(
-          field: 'start_date',
+          field: startDateField.value,
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.weekday,
         ),
@@ -187,9 +205,12 @@ class SessionService {
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
-        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        aggr: AggregateMetricDTO(
+          field: timeField.value,
+          kind: AggregateMetricType.sum,
+        ),
         group: AggregateGroupDTO(
-          field: 'start_date',
+          field: startDateField.value,
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.hour,
         ),
@@ -218,14 +239,17 @@ class SessionService {
   ) async {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
-        aggr: AggregateMetricDTO(field: 'time', kind: AggregateMetricType.sum),
+        aggr: AggregateMetricDTO(
+          field: timeField.value,
+          kind: AggregateMetricType.sum,
+        ),
         group: AggregateGroupDTO(
-          field: 'start_date',
+          field: startDateField.value,
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.month,
         ),
         subgroup: AggregateGroupDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateGroupType.field,
         ),
         filter: search.filter,
@@ -248,12 +272,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'media_release_date',
+          field: mediaReleaseDateField.value,
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.year,
           defaultValue: defaultValue.toIso8601WithTzString(),
@@ -280,12 +304,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'start_date',
+          field: startDateField.value,
           kind: AggregateGroupType.dateHistogram,
           interval: DateHistogramInterval.month,
         ),
@@ -307,12 +331,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'media_rating',
+          field: mediaRatingField.value,
           kind: AggregateGroupType.field,
         ),
         filter: search.filter,
@@ -333,12 +357,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateMetricType.count,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'media_genre',
+          field: mediaGenreField.value,
           kind: AggregateGroupType.field,
         ),
         filter: search.filter,
@@ -359,12 +383,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'time',
+          field: timeField.value,
           kind: AggregateMetricType.sum,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'media_id',
+          field: mediaIdField.value,
           kind: AggregateGroupType.field,
         ),
         filter: search.filter,
@@ -386,12 +410,12 @@ class SessionService {
     final response = await _api.aggregateGroupSessionsWithHttpInfo(
       AggregateGroupSearchDTO(
         aggr: AggregateMetricDTO(
-          field: 'time',
+          field: timeField.value,
           kind: AggregateMetricType.sum,
           distinct: true,
         ),
         group: AggregateGroupDTO(
-          field: 'device_id',
+          field: deviceIdField.value,
           kind: AggregateGroupType.field,
           defaultValue: defaultValue,
         ),

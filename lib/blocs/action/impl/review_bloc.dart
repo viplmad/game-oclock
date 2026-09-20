@@ -5,7 +5,10 @@ import 'package:game_oclock/models/models.dart'
         AggregateSearch,
         DeviceWithTime,
         MediaWithTime,
-        ReviewStartEnd;
+        ReviewStartEnd,
+        idField,
+        startDateField,
+        timeField;
 import 'package:game_oclock/services/services.dart'
     show DeviceService, GameService, SessionService;
 import 'package:game_oclock/utils/duration_extension.dart';
@@ -188,6 +191,74 @@ class ReviewMostUsedDeviceGetBloc
   }
 }
 
+class ReviewFirstSessionGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, MediaSessionDTO?> {
+  ReviewFirstSessionGetBloc({required this.service, required this.gameService});
+
+  final SessionService service;
+  final GameService gameService;
+
+  @override
+  Future<MediaSessionDTO?> doAction(
+    final ReviewStartEnd event,
+    final MediaSessionDTO? lastData,
+  ) async {
+    final firstSessions = await service
+        .search(
+          ListSearchDTO(
+            filter: buildStartDateBetweenFilters(event.start, event.end),
+            sort: List.unmodifiable(<SortDTO>[
+              SortDTO(field: startDateField.value, order: OrderType.asc),
+            ]),
+            size: 1,
+          ),
+          null,
+          // no mode, not so demanding query
+        )
+        .then((final pageResult) => pageResult.data);
+    if (firstSessions.isEmpty) {
+      return null;
+    }
+    final firstSession = firstSessions.first;
+    final media = await gameService.get(firstSession.mediaId);
+    return MediaSessionDTO(media: media, session: firstSession);
+  }
+}
+
+class ReviewLastSessionGetBloc
+    extends FunctionActionBloc<ReviewStartEnd, MediaSessionDTO?> {
+  ReviewLastSessionGetBloc({required this.service, required this.gameService});
+
+  final SessionService service;
+  final GameService gameService;
+
+  @override
+  Future<MediaSessionDTO?> doAction(
+    final ReviewStartEnd event,
+    final MediaSessionDTO? lastData,
+  ) async {
+    final lastSessions = await service
+        .search(
+          ListSearchDTO(
+            filter: buildStartDateBetweenFilters(event.start, event.end),
+            sort: List.unmodifiable(<SortDTO>[
+              SortDTO(field: startDateField.value, order: OrderType.desc),
+            ]),
+            size: 1,
+          ),
+          null,
+          // no mode, not so demanding query
+        )
+        .then((final pageResult) => pageResult.data);
+    if (lastSessions.isEmpty) {
+      return null;
+    }
+    final lastSession = lastSessions.first;
+    final media = await gameService.get(lastSession.mediaId);
+    return MediaSessionDTO(media: media, session: lastSession);
+  }
+}
+
 class ReviewLongestSessionGetBloc
     extends FunctionActionBloc<ReviewStartEnd, MediaSessionDTO?> {
   ReviewLongestSessionGetBloc({
@@ -208,7 +279,7 @@ class ReviewLongestSessionGetBloc
           ListSearchDTO(
             filter: buildStartDateBetweenFilters(event.start, event.end),
             sort: List.unmodifiable(<SortDTO>[
-              SortDTO(field: 'time', order: OrderType.desc),
+              SortDTO(field: timeField.value, order: OrderType.desc),
             ]),
             size: 1,
           ),
@@ -402,7 +473,7 @@ class ReviewTop5MediasByTotalTimeListBloc
       ListSearchDTO(
         filter: List.unmodifiable(<FilterDTO>[
           FilterDTO(
-            field: 'id',
+            field: idField.value,
             operator_: OperatorType.in_,
             value: SearchValue(
               values: aggr

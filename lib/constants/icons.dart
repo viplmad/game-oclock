@@ -11,6 +11,8 @@ class CommonIcons {
   static const add = Icon(Icons.add);
   static const edit = Icon(Icons.edit);
   static const delete = Icon(Icons.delete);
+  static const sync = Icon(Icons.sync);
+  static const unsync = Icon(Icons.sync_disabled);
   static const link = Icon(Icons.add_link);
   static const unlink = Icon(Icons.link_off);
   static const search = Icon(Icons.search);
@@ -58,11 +60,13 @@ class CommonIcons {
   static const session = Icon(Icons.schedule);
   static const finished = Icon(Icons.emoji_events_outlined);
   static const dropped = Icon(Icons.stop_circle_outlined);
-  static const first = Icon(Icons.fiber_new_outlined);
-  static const notFirst = Icon(Icons.history);
+  static const firstStarted = Icon(Icons.fiber_new_outlined);
+  static const notFirstStarted = Icon(Icons.history);
   static const notFirstFinished = Icon(Icons.event_repeat_outlined);
   static const longestSessionIcon = Icon(Icons.weekend_outlined);
   static const longestStreakIcon = Icon(Icons.local_fire_department_outlined);
+  static const first = Icon(Icons.first_page);
+  static const last = Icon(Icons.last_page);
   static const firstItem = Icon(
     Icons.looks_one_outlined,
     color: CommonColors.gold,

@@ -2,41 +2,61 @@ import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
+import 'fields.dart';
 import 'nav_destination.dart';
 
-final idField = OptionTextField(
-  value: 'id',
-  labelBuilder: (final context) => context.localize().idLabel,
+final mediaKindField = OptionDynamicField(
+  value: 'kind',
+  type: FieldType.options,
+  labelBuilder: (final context) => context.localize().kindLabel,
 );
 
-final titleField = OptionTextField(
+final titleField = OptionDynamicField(
   value: 'title',
+  type: FieldType.text,
   labelBuilder: (final context) => context.localize().titleLabel,
 );
 
-final editionField = OptionTextField(
+final editionField = OptionDynamicField(
   value: 'edition',
+  type: FieldType.text,
   labelBuilder: (final context) => context.localize().editionLabel,
 );
 
-final releaseDateField = OptionTextField(
+final releaseDateField = OptionDynamicField(
   value: 'release_date',
+  type: FieldType.datetime,
   labelBuilder: (final context) => context.localize().releaseDateLabel,
 );
 
-final statusField = OptionTextField(
+final parentIdField = OptionDynamicField(
+  value: 'parent_id',
+  type: FieldType.text,
+  labelBuilder: (final context) => context.localize().parentIdLabel,
+);
+
+final parentOrderField = OptionDynamicField(
+  value: 'parent_order',
+  type: FieldType.integer,
+  labelBuilder: (final context) => context.localize().parentOrderLabel,
+);
+
+final statusField = OptionDynamicField(
   value: 'status',
+  type: FieldType.options,
   labelBuilder: (final context) => context.localize().statusLabel,
 );
 
-final addedDatetimeField = OptionTextField(
-  value: 'added_datetime',
-  labelBuilder: (final context) => context.localize().addedDatetimeLabel,
+final ratingField = OptionDynamicField(
+  value: 'rating',
+  type: FieldType.integer,
+  labelBuilder: (final context) => context.localize().ratingLabel,
 );
 
-final updatedDatetimeField = OptionTextField(
-  value: 'updated_datetime',
-  labelBuilder: (final context) => context.localize().updatedDatetimeLabel,
+final notesField = OptionDynamicField(
+  value: 'notes',
+  type: FieldType.text,
+  labelBuilder: (final context) => context.localize().notesLabel,
 );
 
 final gameStatusNextUp = OptionTextField(
@@ -63,9 +83,22 @@ final gameStatusDropped = OptionTextField(
   color: CommonColors.dropped,
 );
 
-final List<OptionTextField<String>> gameFieldOptions = List.unmodifiable(
-  <OptionTextField<String>>[idField, titleField, editionField, statusField],
-);
+final List<OptionTextField<String>> gameFieldOptions =
+    List.unmodifiable(<OptionTextField<String>>[
+      idField,
+      mediaKindField,
+      titleField,
+      editionField,
+      releaseDateField,
+      imageField,
+      parentIdField,
+      parentOrderField,
+      statusField,
+      ratingField,
+      notesField,
+      addedDatetimeField,
+      updatedDatetimeField,
+    ]);
 
 final List<OptionTextField<String>> gameStatusOptions = List.unmodifiable(
   <OptionTextField<String>>[

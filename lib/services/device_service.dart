@@ -1,4 +1,4 @@
-import 'package:game_oclock/models/models.dart' show AggregateSearch;
+import 'package:game_oclock/models/models.dart' show AggregateSearch, idField;
 import 'package:game_oclock_client/api.dart';
 
 import 'utils.dart';
@@ -21,7 +21,10 @@ class DeviceService {
   ) async {
     final response = await _api.aggregateDevicesWithHttpInfo(
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,
@@ -45,7 +48,10 @@ class DeviceService {
     final response = await _api.aggregateMediaDevicesWithHttpInfo(
       gameId,
       AggregateSearchDTO(
-        aggr: AggregateMetricDTO(field: 'id', kind: AggregateMetricType.count),
+        aggr: AggregateMetricDTO(
+          field: idField.value,
+          kind: AggregateMetricType.count,
+        ),
         filter: search.filter,
       ),
       q: quicksearch,

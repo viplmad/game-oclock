@@ -13,7 +13,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         TagOfGameListBloc,
         UserGameDeleteBloc,
         UserGameListBloc,
-        UserGameSelectBloc;
+        UserGameSelectBloc,
+        UserGameSyncBloc,
+        UserGameUnsyncBloc;
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
 import 'package:game_oclock/constants/spaces.dart';
@@ -55,6 +57,14 @@ class UserGameListPage extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               UserGameDeleteBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameSyncBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameUnsyncBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) => CurrentListStyleGetBloc(

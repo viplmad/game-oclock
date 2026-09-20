@@ -316,6 +316,18 @@ abstract class AppLocalizations {
   /// **'Choose date format'**
   String get chooseDateFormatLabel;
 
+  /// No description provided for @syncLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get syncLabel;
+
+  /// No description provided for @unsyncLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsync'**
+  String get unsyncLabel;
+
   /// No description provided for @gameLabel.
   ///
   /// In en, this message translates to:
@@ -406,6 +418,12 @@ abstract class AppLocalizations {
   /// **'Id'**
   String get idLabel;
 
+  /// No description provided for @kindLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get kindLabel;
+
   /// No description provided for @titleLabel.
   ///
   /// In en, this message translates to:
@@ -423,6 +441,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Release Date'**
   String get releaseDateLabel;
+
+  /// No description provided for @imageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get imageLabel;
+
+  /// No description provided for @parentIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Id'**
+  String get parentIdLabel;
+
+  /// No description provided for @parentOrderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Order'**
+  String get parentOrderLabel;
 
   /// No description provided for @statusLabel.
   ///
@@ -814,6 +850,18 @@ abstract class AppLocalizations {
   /// **'Most used device'**
   String get mostUsedDeviceLabel;
 
+  /// No description provided for @firstSessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'First session'**
+  String get firstSessionLabel;
+
+  /// No description provided for @lastSessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last session'**
+  String get lastSessionLabel;
+
   /// No description provided for @longestSessionLabel.
   ///
   /// In en, this message translates to:
@@ -1150,6 +1198,30 @@ abstract class AppLocalizations {
   /// **'Unable to load detail'**
   String get unableToLoadDetailLabel;
 
+  /// No description provided for @syncedSuccessfullyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced successfully'**
+  String get syncedSuccessfullyLabel;
+
+  /// No description provided for @unableToSyncLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to sync'**
+  String get unableToSyncLabel;
+
+  /// No description provided for @unsyncedSuccessfullyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsynced successfully'**
+  String get unsyncedSuccessfullyLabel;
+
+  /// No description provided for @unableToUnsyncLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to unsync'**
+  String get unableToUnsyncLabel;
+
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///
   /// In en, this message translates to:
@@ -1167,6 +1239,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error copied'**
   String get errorCopiedText;
+
+  /// No description provided for @genrePlatformLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get genrePlatformLabel;
+
+  /// No description provided for @genrePuzzleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzle'**
+  String get genrePuzzleLabel;
+
+  /// No description provided for @genreAdventureLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get genreAdventureLabel;
+
+  /// No description provided for @genreIndieLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Indie'**
+  String get genreIndieLabel;
 
   /// No description provided for @gameEditionDataTitle.
   ///

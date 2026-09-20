@@ -52,3 +52,17 @@ final class OptionTextField<T> extends OptionField<T> {
     super.color,
   }) : super(widgetBuilder: (final context) => Text(labelBuilder(context)));
 }
+
+enum FieldType { text, integer, bool, duration, datetime, options }
+
+final class OptionDynamicField<T> extends OptionTextField<T> {
+  final FieldType type;
+
+  OptionDynamicField({
+    super.icon,
+    required super.labelBuilder,
+    required super.value,
+    required this.type,
+    super.color,
+  });
+}

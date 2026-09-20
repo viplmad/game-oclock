@@ -1,3 +1,12 @@
+import 'package:game_oclock/models/models.dart'
+    show
+        OptionTextField,
+        deviceFieldOptions,
+        gameFieldOptions,
+        locationFieldOptions,
+        tagFieldOptions,
+        userFieldOptions;
+
 class CommonSpaces {
   CommonSpaces._();
 
@@ -7,4 +16,16 @@ class CommonSpaces {
   static const tag = 'tag';
   static const playthrough = 'playthrough';
   static const user = 'user';
+}
+
+List<OptionTextField<String>> getSpaceFieldOptions(final String space) {
+  return switch (space) {
+    CommonSpaces.game => gameFieldOptions,
+    CommonSpaces.location => locationFieldOptions,
+    CommonSpaces.device => deviceFieldOptions,
+    CommonSpaces.tag => tagFieldOptions,
+    // TODO CommonSpaces.playthrough => playthroughFieldOptions,
+    CommonSpaces.user => userFieldOptions,
+    _ => List.empty(growable: false),
+  };
 }

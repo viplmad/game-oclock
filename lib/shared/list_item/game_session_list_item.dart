@@ -30,7 +30,7 @@ class SessionTileListItem extends StatelessWidget {
           if (data.started)
             Tooltip(
               message: context.localize().startedLabel,
-              child: CommonIcons.first,
+              child: CommonIcons.firstStarted,
             ),
           if (data.finishedStatus != null)
             Tooltip(
@@ -76,7 +76,7 @@ class SessionWithMediaTileListItem extends StatelessWidget {
           if (data.session.started)
             Tooltip(
               message: context.localize().startedLabel,
-              child: CommonIcons.first,
+              child: CommonIcons.firstStarted,
             ),
           if (data.session.finishedStatus != null)
             Tooltip(
