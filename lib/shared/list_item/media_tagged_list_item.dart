@@ -17,8 +17,9 @@ class TagMediaTileListItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TileListItem(
       title: data.tag.name,
-      subtitle: data.tagged.order.toString(),
+      subtitle: data.tagged.order?.toString(),
       onTap: onTap,
+      hasImage: false,
     );
   }
 }

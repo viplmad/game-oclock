@@ -64,9 +64,9 @@ abstract class FunctionActionBloc<E, S>
         error: ErrorDTO(code: e.code, message: e.message),
         event: event,
       );
-    } catch (e) {
+    } catch (e, s) {
       return ActionFailure<S, E>(
-        error: ErrorDTO(code: errorCodeUnknown, message: e.toString()),
+        error: ErrorDTO(code: errorCodeUnknown, message: '$e: $s'),
         event: event,
       );
     }

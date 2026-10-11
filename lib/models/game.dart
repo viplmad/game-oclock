@@ -62,13 +62,13 @@ final notesField = OptionDynamicField(
 final gameStatusNextUp = OptionTextField(
   value: MediaStatus.planning.toJson(),
   labelBuilder: (final context) => context.localize().nextUpLabel,
-  color: CommonColors.lowPriority,
+  color: CommonColors.planning,
 );
 
 final gameStatusPlaying = OptionTextField(
   value: MediaStatus.inProgress.toJson(),
   labelBuilder: (final context) => context.localize().playingLabel,
-  color: CommonColors.playing,
+  color: CommonColors.inProgress,
 );
 
 final gameStatusCompleted = OptionTextField(

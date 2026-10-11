@@ -104,7 +104,9 @@ class ExternalGameDetail extends StatelessWidget {
           MultipleTextLabel(
             icon: CommonIcons.genre,
             label: context.localize().genresLabel,
-            value: data.media.genres,
+            value: data.media.genres
+                .map(context.localize().genreLabel)
+                .toList(growable: false),
           ),
           MultipleTextLabel(
             icon: CommonIcons.series,

@@ -88,7 +88,7 @@ class LogCalendar extends StatelessWidget {
   static const BoxShape shape = BoxShape.circle;
   static const Color todayColour = CommonColors.active;
   static const Color selectedColour = CommonColors.active;
-  static const Color logColour = CommonColors.playing;
+  static const Color logColour = CommonColors.inProgress;
   static Color finishedColour = CommonColors.finished;
 
   @override

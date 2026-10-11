@@ -217,9 +217,9 @@ abstract class ListLoadBloc<S extends Object>
         search: search,
         quicksearch: quicksearch,
       );
-    } catch (e) {
+    } catch (e, s) {
       return ListLoadFailure<S>(
-        error: ErrorDTO(code: errorCodeUnknown, message: e.toString()),
+        error: ErrorDTO(code: errorCodeUnknown, message: '$e: $s'),
         data: lastData ?? [],
         total: lastTotal ?? 0,
         search: search,
