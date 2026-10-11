@@ -332,7 +332,7 @@ class RouterTrailingNavigation extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 8.0),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: destinations

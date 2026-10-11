@@ -70,6 +70,13 @@ final usersNavDestination = NavDestination(
   guardRoles: _onlyAdmin,
 );
 
+final logoutNavDestination = NavDestination(
+  icon: CommonIcons.logout,
+  labelBuilder: (final context) => context.localize().logoutLabel,
+  path: CommonPaths.logoutPath,
+  guardRoles: _allUsers,
+);
+
 final settingsNavDestination = NavDestination(
   icon: CommonIcons.settings,
   labelBuilder: (final context) => context.localize().settingsTitle,
@@ -96,5 +103,5 @@ final List<NavDestination> secondaryDestinations =
     ]);
 
 final List<NavDestination> trailingDestinations = List.unmodifiable(
-  <NavDestination>[settingsNavDestination],
+  <NavDestination>[logoutNavDestination, settingsNavDestination],
 );

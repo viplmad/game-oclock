@@ -3,7 +3,8 @@ import 'package:game_oclock/services/services.dart'
     show AuthService, LoginService, RetryableApiClient, UserService;
 import 'package:game_oclock_client/api.dart';
 
-import '../action.dart' show ConsumerActionBloc, ProducerActionBloc;
+import '../action.dart'
+    show ConsumerActionBloc, IdentityActionBloc, ProducerActionBloc;
 
 class CurrentUserGetBloc extends ProducerActionBloc<UserDTO> {
   CurrentUserGetBloc({required this.service});
@@ -62,5 +63,22 @@ class LoginBloc extends ConsumerActionBloc<Login> {
         tokenResponse: loginResponse,
       ),
     );
+  }
+}
+
+class LogoutBloc extends IdentityActionBloc<void> {
+  LogoutBloc({required this.service, required this.apiClient});
+
+  final AuthService service;
+  final RetryableApiClient apiClient;
+
+  @override
+  Future<void> doAction(final void event, final void lastData) async {
+    apiClient.update(
+      basePath: 'fake',
+      authentication: OAuth(accessToken: 'access', refreshToken: 'refresh'),
+      onRefresh: null,
+    );
+    return service.removeCurrent();
   }
 }

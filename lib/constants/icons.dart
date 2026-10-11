@@ -64,6 +64,7 @@ class CommonIcons {
   static const tags = Icon(Icons.sell);
   static const playthroughs = Icon(Icons.playlist_play);
   static const users = Icon(Icons.group);
+  static const logout = Icon(Icons.logout);
   static const settings = Icon(Icons.settings);
 
   static const calendar = Icon(Icons.calendar_month);

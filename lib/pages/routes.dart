@@ -10,6 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionSuccess,
         CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
+        LogoutBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart';
@@ -203,6 +204,14 @@ final routerConfig = GoRouter(
             );
             final id = CommonPaths.getIdParameter(state);
             return UserDetailPage(id: id);
+          },
+        ),
+
+        GoRoute(
+          path: CommonPaths.logoutPath,
+          redirect: (final context, final state) {
+            context.read<LogoutBloc>().add(ActionStarted.empty());
+            return CommonPaths.loginPath;
           },
         ),
 

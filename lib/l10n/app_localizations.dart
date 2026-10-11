@@ -604,6 +604,12 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get loginLabel;
 
+  /// No description provided for @logoutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logoutLabel;
+
   /// No description provided for @detailLabel.
   ///
   /// In en, this message translates to:

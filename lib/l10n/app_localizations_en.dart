@@ -266,6 +266,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginLabel => 'Login';
 
   @override
+  String get logoutLabel => 'Logout';
+
+  @override
   String get detailLabel => 'Detail';
 
   @override

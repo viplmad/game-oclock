@@ -84,6 +84,7 @@
   "roleAdminLabel": "Administrator",
   "confirmationLabel": "Confirmation",
   "loginLabel": "Login",
+  "logoutLabel": "Logout",
   "detailLabel": "Detail",
   "backLabel": "Back",
   "addFilterLabel": "Add filter",

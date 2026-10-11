@@ -4,6 +4,7 @@ class CommonPaths {
   CommonPaths._();
 
   static const String loginPath = '/login';
+  static const String logoutPath = '/logout';
 
   static const String homePath = gamesPath;
   static const String gamesPath = '/games';
