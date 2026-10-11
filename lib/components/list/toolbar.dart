@@ -168,7 +168,7 @@ class ListFilterToolbar extends StatelessWidget {
                   context.localize().allLabel,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 )
-              : Text(search.name),
+              : Text(search.labelBuilder(context)),
           ..._buildFilterChips(context, filter),
           ..._buildSortChips(context, sort),
         ],

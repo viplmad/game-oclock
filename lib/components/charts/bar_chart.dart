@@ -101,24 +101,24 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
         .fold(<String>{}, (final prev, final el) => prev..addAll(el))
         .toList(growable: false);
     // Normalise
-    uniqueSubLabels.forEach((final subLabel) {
+    for (final subLabel in uniqueSubLabels) {
       temp.add(SeriesEntry(key: subLabel, value: []));
-    });
+    }
 
-    values.indexed.forEach((final indexed) {
+    for (final indexed in values.indexed) {
       final entry = indexed.$2;
       final currentLabel = entry.key;
       final currentValue = entry.value;
 
       // Normalise
-      uniqueSubLabels.forEach((final subLabel) {
+      for (final subLabel in uniqueSubLabels) {
         temp
             .firstWhere((final el) => el.key == subLabel)
             .value
             .add(SeriesEntry(key: currentLabel, value: 0 as N));
-      });
+      }
 
-      currentValue.indexed.forEach((final subIndexed) {
+      for (final subIndexed in currentValue.indexed) {
         final subEntry = subIndexed.$2;
         final currentSubLabel = subEntry.key;
         final currentSubValue = subEntry.value;
@@ -127,8 +127,8 @@ class StatisticsStackedBarChart<N extends num> extends StatelessWidget {
           indexed.$1,
           [SeriesEntry(key: currentLabel, value: currentSubValue)],
         );
-      });
-    });
+      }
+    }
 
     final seriesList = temp.indexed
         .map((final indexed) {

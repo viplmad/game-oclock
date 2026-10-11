@@ -43,6 +43,7 @@ import 'package:game_oclock/components/full_search_app_bar.dart';
 import 'package:game_oclock/components/list/grid_list.dart';
 import 'package:game_oclock/components/list/list_item.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/constants.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
@@ -53,22 +54,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock_client/api.dart';
 
 const int maxRecentYears = 7;
-
-final List<Color> chartColors = <Color>[
-  Colors.redAccent,
-  Colors.deepPurpleAccent,
-  Colors.blueAccent,
-  Colors.lightGreen[700]!,
-  Colors.deepOrangeAccent,
-  Colors.blueGrey,
-  Colors.brown,
-  Colors.lime[900]!,
-  Colors.indigoAccent,
-  Colors.pinkAccent,
-  Colors.cyan[700]!,
-  Colors.purple[300]!,
-  Colors.orangeAccent,
-];
 
 class ReviewPage extends StatelessWidget {
   const ReviewPage({super.key});
@@ -673,8 +658,9 @@ class ReviewBuilder extends StatelessWidget {
                   hideValueLabels: true,
                   measureFormatter: (final measure) =>
                       _preparePercentageMeasure(context, measure, totalData),
-                  colourGetter: (_, _, _, final index) =>
-                      chartColors.elementAt(index % chartColors.length),
+                  colourGetter: (_, _, _, final index) => CommonColors
+                      .chartColors
+                      .elementAt(index % CommonColors.chartColors.length),
                 ),
               ),
             ),
@@ -711,7 +697,7 @@ class ReviewBuilder extends StatelessWidget {
               );
             }, growable: false),
             hideValueLabels: true,
-            colourGetter: (_, _) => chartColors.elementAt(0),
+            colourGetter: (_, _) => CommonColors.chartColors.elementAt(0),
           ),
         ),
       ),
@@ -745,7 +731,7 @@ class ReviewBuilder extends StatelessWidget {
               );
             }, growable: false),
             hideValueLabels: true,
-            colourGetter: (_, _) => chartColors.elementAt(0),
+            colourGetter: (_, _) => CommonColors.chartColors.elementAt(0),
           ),
         ),
       ),
@@ -795,7 +781,7 @@ class ReviewBuilder extends StatelessWidget {
                   hideValueLabels: true,
                   measureFormatter: (final measure) =>
                       _preparePercentageMeasure(context, measure, totalData),
-                  colourGetter: (_, _) => chartColors.elementAt(0),
+                  colourGetter: (_, _) => CommonColors.chartColors.elementAt(0),
                 ),
               ),
             ),
@@ -845,7 +831,7 @@ class ReviewBuilder extends StatelessWidget {
                   hideValueLabels: true,
                   measureFormatter: (final measure) =>
                       _preparePercentageMeasure(context, measure, totalData),
-                  colourGetter: (_, _) => chartColors.elementAt(0),
+                  colourGetter: (_, _) => CommonColors.chartColors.elementAt(0),
                 ),
               ),
             ),
@@ -1280,7 +1266,7 @@ class ReviewBuilder extends StatelessWidget {
                       valueFormatter: (final domain, final value) =>
                           '$domain - ${context.localize().formatPercentage(value / totalData)} ($value)',
                       colourGetter: (_, final index) =>
-                          chartColors.elementAt(index),
+                          CommonColors.chartColors.elementAt(index),
                     ),
                   ),
                 ),
@@ -1361,7 +1347,7 @@ class ReviewBuilder extends StatelessWidget {
                       valueFormatter: (final domain, final value) =>
                           '$domain - ${context.localize().formatPercentage(value / totalData)} ($value)',
                       colourGetter: (_, final index) =>
-                          chartColors.elementAt(index),
+                          CommonColors.chartColors.elementAt(index),
                     ),
                   ),
                 ),
@@ -1406,7 +1392,7 @@ class ReviewBuilder extends StatelessWidget {
                   valueFormatter: (final value) =>
                       '${context.localize().formatPercentage(value / totalData)} ($value)',
                   colourGetter: (_, final index) =>
-                      chartColors.elementAt(index),
+                      CommonColors.chartColors.elementAt(index),
                 ),
               ),
             ),

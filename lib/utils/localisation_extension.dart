@@ -71,6 +71,9 @@ extension AppLocalizationsExtension on AppLocalizations {
       'puzzle' => genrePuzzleLabel,
       'adventure' => genreAdventureLabel,
       'indie' => genreIndieLabel,
+      'strategy' => genreStrategyLabel,
+      'role-playing-rpg' => genreRolePlayingRPGLabel,
+      'shooter' => genreShooterLabel,
       _ => slug,
     };
   }

@@ -68,7 +68,7 @@ class ListSearchService {
       );
     }
 
-    final createdListSearch = ListSearch(
+    final createdListSearch = ListSearch.manual(
       id: id,
       name: search.name,
       filter: search.filter,

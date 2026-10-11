@@ -1,4 +1,3 @@
-// TODO use on snackbars
 final class ErrorDTO {
   final String code;
   final String message;

@@ -14,6 +14,7 @@ class SimpleYearPicker extends StatefulWidget {
   /// The [currentDate, [firstDate], [lastDate], [selectedDate], and [onChanged]
   /// arguments must be non-null. The [lastDate] must be after the [firstDate].
   SimpleYearPicker({
+    super.key,
     required this.firstDate,
     required this.lastDate,
     required this.initialDate,
@@ -39,7 +40,7 @@ class SimpleYearPicker extends StatefulWidget {
   final ValueChanged<DateTime> onChanged;
 
   @override
-  _SimpleYearPickerState createState() => _SimpleYearPickerState();
+  State<SimpleYearPicker> createState() => _SimpleYearPickerState();
 }
 
 class _SimpleYearPickerState extends State<SimpleYearPicker> {
@@ -79,7 +80,7 @@ class _SimpleYearPickerState extends State<SimpleYearPicker> {
     if (isSelected) {
       textColor = colorScheme.onPrimary;
     } else {
-      textColor = colorScheme.onSurface.withOpacity(0.87);
+      textColor = colorScheme.onSurface.withValues(alpha: 0.87);
     }
     final TextStyle itemStyle = textTheme.bodyLarge!.apply(color: textColor);
 

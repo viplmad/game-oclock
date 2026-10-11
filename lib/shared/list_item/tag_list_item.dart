@@ -10,6 +10,6 @@ class TagTileListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return TileListItem(title: data.name, onTap: onTap);
+    return TileListItem(title: data.name, onTap: onTap, hasImage: false);
   }
 }

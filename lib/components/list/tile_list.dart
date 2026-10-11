@@ -163,7 +163,7 @@ class ReorderableTileList<T> extends StatelessWidget {
     return ReorderableListView.builder(
       buildDefaultDragHandles: !readOnly,
       shrinkWrap: true,
-      onReorder: onReorder,
+      onReorderItem: onReorder,
       itemCount: count,
       scrollController: controller,
       itemBuilder: (final context, final index) {

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/colors.dart';
+import 'package:game_oclock/constants/icons.dart';
 
 class SimpleCachedNetworkImage extends StatelessWidget {
   const SimpleCachedNetworkImage({
@@ -33,7 +34,8 @@ class SimpleCachedNetworkImage extends StatelessWidget {
       fit: fit,
       useOldImageOnUrlChange: true,
       progressIndicatorBuilder: (_, _, _) => const ImageSkeleton(),
-      errorWidget: (_, _, _) => Container(color: CommonColors.grey),
+      errorWidget: (_, _, _) =>
+          Container(color: CommonColors.grey, child: CommonIcons.brokenImage),
     );
   }
 }

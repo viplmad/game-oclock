@@ -70,6 +70,7 @@ class _SimpleDateTimeFormFieldState extends State<SimpleDateTimeFormField> {
     ).then<void>((final dateValue) {
       if (dateValue != null && context.mounted) {
         return showTimePicker(
+          // ignore: use_build_context_synchronously
           context: context,
           initialTime: widget.formControl.value == null
               ? TimeOfDay.now()

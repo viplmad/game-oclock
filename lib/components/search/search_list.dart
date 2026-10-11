@@ -97,7 +97,7 @@ class SearchGridListItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TileListItem(
       hasImage: false,
-      title: data.name,
+      title: data.labelBuilder(context),
       onTap: onTap,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

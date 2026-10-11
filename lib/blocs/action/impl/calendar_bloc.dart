@@ -1,7 +1,6 @@
 import 'package:game_oclock/models/models.dart'
     show mediaIdField, startDateField;
 import 'package:game_oclock/services/services.dart' show SessionService;
-import 'package:game_oclock/utils/date_time_extension.dart';
 import 'package:game_oclock/utils/filter_utils.dart';
 import 'package:game_oclock_client/api.dart';
 
@@ -151,24 +150,12 @@ class CalendarGameYearDatesBloc
   }
 }
 
-// TODO use something else than streak endpoint
 Future<Set<DateTime>> _searchSessionDates(
   final SessionService service,
   final ListSearchDTO search,
   final String? quicksearch,
   final FetchMode? mode,
 ) async {
-  final streaks = await service
-      .searchStreaks(search, quicksearch, mode)
-      .then((final pageResult) => pageResult.data);
-  return streaks
-      .map(
-        (final s) => List.generate(
-          s.days,
-          (final days) => s.startDate.addDays(days),
-          growable: false,
-        ),
-      )
-      .expand((final d) => d)
-      .toSet();
+  final dates = await service.searchDates(search, quicksearch, mode);
+  return dates.toSet();
 }

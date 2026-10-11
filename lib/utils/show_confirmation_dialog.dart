@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/shared/year_picker_dialog.dart'
     show SimpleYearPicker;
 
@@ -114,7 +115,7 @@ class _YearPickerDialogState extends State<YearPickerDialog> {
                   child: Text(
                     MaterialLocalizations.of(context).formatYear(_selectedDate),
                     style: Theme.of(context).primaryTextTheme.titleMedium!
-                        .copyWith(color: Colors.white),
+                        .copyWith(color: CommonColors.white),
                   ),
                 ),
               ],

@@ -611,6 +611,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unableToUnsyncLabel => 'Unable to unsync';
 
   @override
+  String get unableToGetInitialValue => 'Unable to get initial value';
+
+  @override
   String get leaveDirtyFormConfirmationDialogTitle =>
       'Are you sure you want to leave?';
 
@@ -620,6 +623,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCopiedText => 'Error copied';
+
+  @override
+  String get mainLabel => 'Main';
+
+  @override
+  String get lastAddedLabel => 'Last Added';
+
+  @override
+  String get lastUpdatedLabel => 'Last Updated';
 
   @override
   String get genrePlatformLabel => 'Platform';
@@ -632,6 +644,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get genreIndieLabel => 'Indie';
+
+  @override
+  String get genreStrategyLabel => 'Strategy';
+
+  @override
+  String get genreRolePlayingRPGLabel => 'Role-playing (RPG)';
+
+  @override
+  String get genreShooterLabel => 'Shooter';
 
   @override
   String gameEditionDataTitle(Object aTitle, Object bEdition) {

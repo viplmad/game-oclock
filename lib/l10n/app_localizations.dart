@@ -1222,6 +1222,12 @@ abstract class AppLocalizations {
   /// **'Unable to unsync'**
   String get unableToUnsyncLabel;
 
+  /// No description provided for @unableToGetInitialValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to get initial value'**
+  String get unableToGetInitialValue;
+
   /// No description provided for @leaveDirtyFormConfirmationDialogTitle.
   ///
   /// In en, this message translates to:
@@ -1239,6 +1245,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error copied'**
   String get errorCopiedText;
+
+  /// No description provided for @mainLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Main'**
+  String get mainLabel;
+
+  /// No description provided for @lastAddedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Added'**
+  String get lastAddedLabel;
+
+  /// No description provided for @lastUpdatedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get lastUpdatedLabel;
 
   /// No description provided for @genrePlatformLabel.
   ///
@@ -1263,6 +1287,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Indie'**
   String get genreIndieLabel;
+
+  /// No description provided for @genreStrategyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategy'**
+  String get genreStrategyLabel;
+
+  /// No description provided for @genreRolePlayingRPGLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Role-playing (RPG)'**
+  String get genreRolePlayingRPGLabel;
+
+  /// No description provided for @genreShooterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Shooter'**
+  String get genreShooterLabel;
 
   /// No description provided for @gameEditionDataTitle.
   ///

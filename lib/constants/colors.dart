@@ -23,4 +23,20 @@ class CommonColors {
   static const gold = Color(0xffC9B037);
   static Color silver = finished;
   static const bronze = Color(0xffAD8A56);
+
+  static final List<Color> chartColors = <Color>[
+    Colors.redAccent,
+    Colors.deepPurpleAccent,
+    Colors.blueAccent,
+    Colors.lightGreen[700]!,
+    Colors.deepOrangeAccent,
+    Colors.blueGrey,
+    Colors.brown,
+    Colors.lime[900]!,
+    Colors.indigoAccent,
+    Colors.pinkAccent,
+    Colors.cyan[700]!,
+    Colors.purple[300]!,
+    Colors.orangeAccent,
+  ];
 }

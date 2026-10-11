@@ -9,6 +9,7 @@ import 'package:game_oclock/models/models.dart'
         statusField,
         titleField,
         updatedDatetimeField;
+import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock_client/api.dart';
 
 final Map<String, List<ListSearch>> defaultListSearch = Map.unmodifiable(
@@ -16,38 +17,34 @@ final Map<String, List<ListSearch>> defaultListSearch = Map.unmodifiable(
 );
 
 final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
-  ListSearch(
+  ListSearch.internal(
     id: 'main',
-    name: 'Main', // TODO i18n
-    internal: true,
+    labelBuilder: (final context) => context.localize().mainLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: releaseDateField.value, order: OrderType.asc),
       SortDTO(field: titleField.value, order: OrderType.asc),
     ]),
   ),
-  ListSearch(
+  ListSearch.internal(
     id: 'lastAdded',
-    name: 'Last Added',
-    internal: true,
+    labelBuilder: (final context) => context.localize().lastAddedLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: addedDatetimeField.value, order: OrderType.desc),
     ]),
   ),
-  ListSearch(
+  ListSearch.internal(
     id: 'lastUpdated',
-    name: 'Last Updated',
-    internal: true,
+    labelBuilder: (final context) => context.localize().lastUpdatedLabel,
     filter: List.unmodifiable(<FilterDTO>[]),
     sort: List.unmodifiable(<SortDTO>[
       SortDTO(field: updatedDatetimeField.value, order: OrderType.desc),
     ]),
   ),
-  ListSearch(
+  ListSearch.internal(
     id: 'playing',
-    name: 'Playing',
-    internal: true,
+    labelBuilder: (final context) => context.localize().playingLabel,
     filter: List.unmodifiable(<FilterDTO>[
       FilterDTO(
         field: statusField.value,
@@ -60,10 +57,9 @@ final List<ListSearch> gameDefaultFilters = List.unmodifiable(<ListSearch>[
       SortDTO(field: titleField.value, order: OrderType.asc),
     ]),
   ),
-  ListSearch(
+  ListSearch.internal(
     id: 'nextUp',
-    name: 'Next Up',
-    internal: true,
+    labelBuilder: (final context) => context.localize().nextUpLabel,
     filter: List.unmodifiable(<FilterDTO>[
       FilterDTO(
         field: statusField.value,

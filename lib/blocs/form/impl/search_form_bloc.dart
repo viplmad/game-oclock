@@ -9,7 +9,7 @@ class SearchFormBloc extends FormBloc<SearchFormData, ListSearch, ListSearch> {
 
   @override
   ListSearch fromFormData(final SearchFormData data) {
-    return ListSearch(
+    return ListSearch.manual(
       id: '', // TODO
       name: data.name.value!,
       filter: (data.filters.controls as List<FormGroup>)

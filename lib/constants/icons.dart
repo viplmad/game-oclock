@@ -40,6 +40,7 @@ class CommonIcons {
   static const admin = Icon(Icons.shield);
   static const addSession = Icon(Icons.more_time);
   static const star = Icon(Icons.star);
+  static const brokenImage = Icon(Icons.broken_image);
   static Icon colorStar(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);

@@ -443,6 +443,13 @@ class SessionService {
     return _api.getSessionStreaks(search, q: quicksearch, mode: mode);
   }
 
+  Future<List<DateTime>> searchDates(
+    final ListSearchDTO search,
+    final String? quicksearch,
+    final FetchMode? mode,) async {
+    return _api.getSessionDates(search, q: quicksearch, mode: mode);
+  }
+
   Future<SessionDTO> get(final String gameId, final DateTime startDate) async {
     return _api.getMediaSession(gameId, DateTimeDTO(datetime: startDate));
   }

@@ -63,7 +63,7 @@ class SingleAutocompleteSelectorBuilder<
           if (state is ActionFailure<T, String>) {
             showErrorSnackBar(
               context,
-              name: 'TODO', // TODO
+              name: context.localize().unableToGetInitialValue,
               error: state.error,
             );
           }

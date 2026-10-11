@@ -42,22 +42,18 @@ class _CustomMaterialLocalizations extends _DelegateMaterialLocalizations {
       ? dateConfig.dateFormat!.pattern!
       : super.dateHelpText;
 
-  @override
-  String get dateSeparator => super.dateSeparator;
+  //String get dateSeparator => super.dateSeparator;
 
   @override
   String formatCompactDate(final DateTime date) => dateConfig.dateFormat != null
       ? dateConfig.dateFormat!.format(date)
       : super.formatCompactDate(date);
 
-  @override
-  String formatFullDate(final DateTime date) => super.formatFullDate(date);
+  //String formatFullDate(final DateTime date) => super.formatFullDate(date);
 
-  @override
-  String formatMediumDate(final DateTime date) => super.formatMediumDate(date);
+  //String formatMediumDate(final DateTime date) => super.formatMediumDate(date);
 
-  @override
-  String formatShortDate(final DateTime date) => super.formatShortDate(date);
+  //String formatShortDate(final DateTime date) => super.formatShortDate(date);
 
   @override
   String formatTimeOfDay(
@@ -72,13 +68,9 @@ class _CustomMaterialLocalizations extends _DelegateMaterialLocalizations {
           alwaysUse24HourFormat: alwaysUse24HourFormat,
         );
 
-  @override
-  DateTime? parseCompactDate(final String? inputString) =>
-      super.parseCompactDate(inputString);
+  //DateTime? parseCompactDate(final String? inputString) => super.parseCompactDate(inputString);
 
-  @override
-  TimeOfDayFormat timeOfDayFormat({final bool alwaysUse24HourFormat = false}) =>
-      super.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
+  //TimeOfDayFormat timeOfDayFormat({final bool alwaysUse24HourFormat = false}) => super.timeOfDayFormat(alwaysUse24HourFormat: alwaysUse24HourFormat);
 }
 
 abstract class _DelegateMaterialLocalizations extends MaterialLocalizations {

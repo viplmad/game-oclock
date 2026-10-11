@@ -86,8 +86,8 @@ class SessionWithMediaListBloc extends ListLoadBloc<MediaSessionDTO> {
       ),
       null,
     );
-    medias.data.forEach((final m) {
+    for (final m in medias.data) {
       mediaCache[m.media.id] = m;
-    });
+    }
   }
 }

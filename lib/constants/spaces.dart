@@ -4,6 +4,7 @@ import 'package:game_oclock/models/models.dart'
         deviceFieldOptions,
         gameFieldOptions,
         locationFieldOptions,
+        playthroughFieldOptions,
         tagFieldOptions,
         userFieldOptions;
 
@@ -24,7 +25,7 @@ List<OptionTextField<String>> getSpaceFieldOptions(final String space) {
     CommonSpaces.location => locationFieldOptions,
     CommonSpaces.device => deviceFieldOptions,
     CommonSpaces.tag => tagFieldOptions,
-    // TODO CommonSpaces.playthrough => playthroughFieldOptions,
+    CommonSpaces.playthrough => playthroughFieldOptions,
     CommonSpaces.user => userFieldOptions,
     _ => List.empty(growable: false),
   };
