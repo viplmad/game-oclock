@@ -5,11 +5,13 @@ import 'package:game_oclock/models/nav_destination.dart';
 class ChoiceLabel extends StatelessWidget {
   const ChoiceLabel({
     super.key,
+    required this.icon,
     required this.label,
     required this.value,
     required this.options,
   });
 
+  final Widget icon;
   final String label;
   final String? value;
   final List<OptionTextField<String>> options;
@@ -17,6 +19,7 @@ class ChoiceLabel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ListTile(
+      leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       trailing: value == null
           ? const Text('-')

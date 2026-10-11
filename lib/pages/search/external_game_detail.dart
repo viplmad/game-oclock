@@ -56,48 +56,58 @@ class ExternalGameDetail extends StatelessWidget {
       child: LabelsContainer(
         children: [
           TextLabel(
+            icon: CommonIcons.externalSourceDefault,
             label: context.localize().sourceLabel,
             value: data.external_.source_,
           ),
           TextLabel(
+            icon: CommonIcons.id,
             label: context.localize().idLabel,
             value: data.external_.id,
           ),
           TextLabel(
+            icon: CommonIcons.title,
             label: context.localize().titleLabel,
             value: data.media.title,
           ),
           TextLabel(
+            icon: CommonIcons.edition,
             label: context.localize().editionLabel,
             value: data.media.edition,
           ),
           DateLabel(
+            icon: CommonIcons.release,
             label: context.localize().releaseDateLabel,
             value: data.media.releaseDate,
           ),
           if (data.state != null)
             ChoiceLabel(
+              icon: CommonIcons.status,
               label: context.localize().statusLabel,
               value: data.state!.status.toJson(),
               options: gameStatusOptions,
             ),
           if (data.state != null)
             RatingLabel(
+              icon: CommonIcons.rating,
               label: context.localize().ratingLabel,
               value: data.state!.rating,
               color: CommonColors.rating,
             ),
           if (data.state != null)
             TextLabel(
+              icon: CommonIcons.notes,
               label: context.localize().notesLabel,
               value: data.state!.notes,
               multiline: true,
             ),
           MultipleTextLabel(
+            icon: CommonIcons.genre,
             label: context.localize().genresLabel,
             value: data.media.genres,
           ),
           MultipleTextLabel(
+            icon: CommonIcons.series,
             label: context.localize().seriesLabel,
             value: data.media.series,
           ),

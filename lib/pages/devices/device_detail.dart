@@ -193,8 +193,16 @@ class DeviceDetail extends StatelessWidget {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
-          TextLabel(label: context.localize().idLabel, value: data.id),
-          TextLabel(label: context.localize().nameLabel, value: data.name),
+          TextLabel(
+            icon: CommonIcons.id,
+            label: context.localize().idLabel,
+            value: data.id,
+          ),
+          TextLabel(
+            icon: CommonIcons.title,
+            label: context.localize().nameLabel,
+            value: data.name,
+          ),
         ],
       ),
     );

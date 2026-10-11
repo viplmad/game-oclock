@@ -12,6 +12,7 @@ import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/constants/colors.dart';
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
     show UserGameExternalFormData, UserGameFormData, gameStatusOptions;
 import 'package:game_oclock/utils/form_validators.dart';
@@ -82,8 +83,16 @@ Widget _fieldsCreateExternalBuilder(
 ) {
   return FormFieldsContainer(
     children: <Widget>[
-      TextLabel(label: context.localize().idLabel, value: externalId.source_),
-      TextLabel(label: context.localize().idLabel, value: externalId.id),
+      TextLabel(
+        icon: CommonIcons.externalSourceDefault,
+        label: context.localize().idLabel,
+        value: externalId.source_,
+      ),
+      TextLabel(
+        icon: CommonIcons.id,
+        label: context.localize().idLabel,
+        value: externalId.id,
+      ),
       SimpleChoiceFormField(
         formControl: formGroup.status,
         label: context.localize().statusLabel,

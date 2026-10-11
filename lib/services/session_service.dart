@@ -446,7 +446,8 @@ class SessionService {
   Future<List<DateTime>> searchDates(
     final ListSearchDTO search,
     final String? quicksearch,
-    final FetchMode? mode,) async {
+    final FetchMode? mode,
+  ) async {
     return _api.getSessionDates(search, q: quicksearch, mode: mode);
   }
 

@@ -18,6 +18,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorDetailLoadTitle => 'Error loading detail.';
 
   @override
+  String get errorTotalTimeLoadTitle => 'Error loading total time.';
+
+  @override
+  String get errorFinishesLoadTitle => 'Error loading finishes.';
+
+  @override
   String get errorPageLoadTitle => 'Loading error.';
 
   @override

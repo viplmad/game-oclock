@@ -136,16 +136,19 @@ class SessionDetail extends StatelessWidget {
           child: LabelsContainer(
             children: [
               TextLabel(
+                icon: CommonIcons.startDate,
                 label: context.localize().startDateTimeLabel,
                 value:
                     '${MaterialLocalizations.of(context).formatCompactDate(data.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.startDatetime))}',
               ),
               TextLabel(
+                icon: CommonIcons.endDate,
                 label: context.localize().endDateTimeLabel,
                 value:
                     '${MaterialLocalizations.of(context).formatCompactDate(data.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.endDatetime))}',
               ),
               TextLabel(
+                icon: CommonIcons.time,
                 label: context.localize().timeLabel,
                 value: context.localize().formatDuration(data.time),
               ),
@@ -166,7 +169,10 @@ class SessionDetail extends StatelessWidget {
                 ),
               if (data.deviceId != null)
                 GetBuilder<DeviceDTO, DeviceGetBloc>(
-                  skeletonBuilder: (_) => const LabelSkeleton(order: 0),
+                  skeletonBuilder: (final context) => LabelSkeleton(
+                    order: 0,
+                    label: context.localize().deviceLabel,
+                  ),
                   errorBuilder: (final context, final onRetryTap) => Center(
                     child: LabelError(
                       label: context.localize().errorDetailLoadTitle,
@@ -174,6 +180,7 @@ class SessionDetail extends StatelessWidget {
                     ),
                   ),
                   builder: (final context, final device) => TextLabel(
+                    icon: CommonIcons.devices,
                     label: context.localize().deviceLabel,
                     value: device.name,
                   ),

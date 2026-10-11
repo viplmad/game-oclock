@@ -197,21 +197,15 @@ class _ListItemGridTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return GridTile(
-      footer: Container(
-        color: CommonColors.blackTransparent,
-        child: Text(
-          title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 18.0, color: CommonColors.white),
+    return Tooltip(
+      message: title,
+      child: GridTile(
+        child: CachedImage(
+          imageURL: imageURL ?? '',
+          fit: BoxFit.cover,
+          backgroundColour: CommonColors.black,
+          applyGradient: false,
         ),
-      ),
-      child: CachedImage(
-        imageURL: imageURL ?? '',
-        fit: BoxFit.cover,
-        backgroundColour: CommonColors.black,
-        applyGradient: false,
       ),
     );
   }

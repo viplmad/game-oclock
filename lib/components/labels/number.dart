@@ -4,11 +4,13 @@ import 'package:game_oclock/constants/icons.dart';
 class RatingLabel extends StatelessWidget {
   const RatingLabel({
     super.key,
+    required this.icon,
     required this.label,
     required this.value,
     this.color,
   });
 
+  final Widget icon;
   final String label;
   final int? value;
   final Color? color;
@@ -16,6 +18,7 @@ class RatingLabel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ListTile(
+      leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       trailing: value == null
           ? const Text('-')

@@ -41,6 +41,19 @@ class CommonIcons {
   static const addSession = Icon(Icons.more_time);
   static const star = Icon(Icons.star);
   static const brokenImage = Icon(Icons.broken_image);
+  static const id = Icon(Icons.fingerprint);
+  static const title = Icon(Icons.title);
+  static const edition = Icon(Icons.short_text);
+  static const release = Icon(Icons.new_releases_outlined);
+  static const status = Icon(Icons.check);
+  static const rating = Icon(Icons.star_outline);
+  static const notes = Icon(Icons.notes);
+  static const genre = Icon(Icons.category_outlined);
+  static const series = Icon(Icons.bookmark_outline);
+  static const role = Icon(Icons.shield_outlined);
+  static const startDate = first;
+  static const endDate = last;
+  static const time = session;
   static Icon colorStar(final Color? color) => Icon(Icons.star, color: color);
 
   static const games = Icon(Icons.videogame_asset);
@@ -83,7 +96,6 @@ class CommonIcons {
   static const fourthItem = Icon(Icons.looks_4_outlined);
   static const fifthItem = Icon(Icons.looks_5_outlined);
   static const chart = Icon(Icons.new_releases_outlined);
-  static const genreChart = Icon(Icons.collections_bookmark);
 
   static const externalSourceDefault = Icon(Icons.cloud);
   static const externalSourceIgdb = ImageIcon(

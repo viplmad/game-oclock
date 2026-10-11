@@ -14,14 +14,18 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocationAvailableListBloc,
         TagOfGameListBloc,
         UserGameDeleteBloc,
+        UserGameFinishesGetBloc,
         UserGameGetBloc,
         UserGameSyncBloc,
+        UserGameTotalTimeGetBloc,
         UserGameUnsyncBloc;
 import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
+import 'package:game_oclock/components/error_detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list_detail.dart'
     show RelationListBuilder;
+import 'package:game_oclock/components/skeletons/skeletons.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
@@ -57,6 +61,16 @@ class UserGameDetailPage extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               UserGameGetBloc(service: RepositoryProvider.of(context))
+                ..add(ActionStarted(data: id)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameTotalTimeGetBloc(service: RepositoryProvider.of(context))
+                ..add(ActionStarted(data: id)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameFinishesGetBloc(service: RepositoryProvider.of(context))
                 ..add(ActionStarted(data: id)),
         ),
         BlocProvider(
@@ -292,7 +306,7 @@ class UserGameDetail extends StatelessWidget {
                 context.read<UserGameSyncBloc>().add(ActionStarted(data: data)),
           ),
           IconButton(
-            icon: CommonIcons.sync,
+            icon: CommonIcons.unsync,
             tooltip: context.localize().unsyncLabel,
             onPressed: () => context.read<UserGameUnsyncBloc>().add(
               ActionStarted(data: data),
@@ -332,41 +346,94 @@ class UserGameDetail extends StatelessWidget {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
-          TextLabel(label: context.localize().idLabel, value: data.media.id),
           TextLabel(
+            icon: CommonIcons.id,
+            label: context.localize().idLabel,
+            value: data.media.id,
+          ),
+          TextLabel(
+            icon: CommonIcons.title,
             label: context.localize().titleLabel,
             value: data.media.title,
           ),
           TextLabel(
+            icon: CommonIcons.edition,
             label: context.localize().editionLabel,
             value: data.media.edition,
           ),
           DateLabel(
+            icon: CommonIcons.release,
             label: context.localize().releaseDateLabel,
             value: data.media.releaseDate,
           ),
           ChoiceLabel(
+            icon: CommonIcons.status,
             label: context.localize().statusLabel,
             value: data.state.status.toJson(),
             options: gameStatusOptions,
           ),
           RatingLabel(
+            icon: CommonIcons.rating,
             label: context.localize().ratingLabel,
             value: data.state.rating,
             color: CommonColors.rating,
           ),
           TextLabel(
+            icon: CommonIcons.notes,
             label: context.localize().notesLabel,
             value: data.state.notes,
             multiline: true,
           ),
           MultipleTextLabel(
+            icon: CommonIcons.genre,
             label: context.localize().genresLabel,
             value: data.media.genres,
           ),
           MultipleTextLabel(
+            icon: CommonIcons.series,
             label: context.localize().seriesLabel,
             value: data.media.series,
+          ),
+          GetBuilder<Duration, UserGameTotalTimeGetBloc>(
+            skeletonBuilder: (final context) => LabelSkeleton(
+              order: 0,
+              icon: CommonIcons.time,
+              label: context.localize().totalTimeLabel,
+            ),
+            errorBuilder: (final context, final onRetryTap) => Center(
+              child: LabelError(
+                label: context.localize().errorTotalTimeLoadTitle,
+                onRetryTap: onRetryTap,
+              ),
+            ),
+            builder: (final context, final data) => DurationLabel(
+              icon: CommonIcons.time,
+              label: context.localize().totalTimeLabel,
+              value: data,
+            ),
+          ),
+          GetBuilder<List<SessionDTO>, UserGameFinishesGetBloc>(
+            skeletonBuilder: (final context) => LabelSkeleton(
+              order: 1,
+              icon: CommonIcons.finished,
+              label: context.localize().finishedLabel,
+            ),
+            errorBuilder: (final context, final onRetryTap) => Center(
+              child: LabelError(
+                label: context.localize().errorFinishesLoadTitle,
+                onRetryTap: onRetryTap,
+              ),
+            ),
+            builder: (final context, final data) => TextLabel(
+              icon: CommonIcons.finished,
+              label: context.localize().finishedLabel,
+              value: data.isEmpty
+                  ? null
+                  : MaterialLocalizations.of(
+                          context,
+                        ).formatCompactDate(data.first.startDatetime) +
+                        (data.length > 1 ? '(+)' : ''),
+            ),
           ),
         ],
       ),

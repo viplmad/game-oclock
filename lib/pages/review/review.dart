@@ -1379,7 +1379,7 @@ class ReviewBuilder extends StatelessWidget {
                   .read<ReviewTotalMediasGroupByGenreGetBloc>()
                   .add(const ActionRestarted()),
               builder: (final context, final data) => buildChartCard(
-                icon: CommonIcons.genreChart,
+                icon: CommonIcons.genre,
                 title: context.localize().playedByGenreTitle,
                 chart: StatisticsBarChart<int>(
                   id: 'total-medias-by-genre',
@@ -1404,7 +1404,7 @@ class ReviewBuilder extends StatelessWidget {
 
   Widget buildStatContainer(
     final BuildContext context,
-    final Icon icon,
+    final Widget icon,
     final String text,
     final String value,
   ) {
@@ -1445,7 +1445,7 @@ class ReviewBuilder extends StatelessWidget {
   }
 
   Widget buildChartCard({
-    required final Icon icon,
+    required final Widget icon,
     required final String title,
     required final Widget chart,
   }) {

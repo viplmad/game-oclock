@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:game_oclock/constants/icons.dart';
 
 class IconLabel extends StatelessWidget {
-  const IconLabel({super.key, required this.label, required this.icon});
+  const IconLabel({super.key, required this.icon, required this.label});
 
-  final String label;
   final Widget icon;
+  final String label;
 
   @override
   Widget build(final BuildContext context) {
@@ -17,14 +17,21 @@ class IconLabel extends StatelessWidget {
 }
 
 class BoolLabel extends StatelessWidget {
-  const BoolLabel({super.key, required this.label, required this.value});
+  const BoolLabel({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
+  final Widget icon;
   final String label;
   final bool? value;
 
   @override
   Widget build(final BuildContext context) {
     return ListTile(
+      leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       trailing: value == null
           ? const Text('-')

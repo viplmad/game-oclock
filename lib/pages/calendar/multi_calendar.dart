@@ -116,24 +116,29 @@ class SessionWithMediaDetail extends StatelessWidget {
           child: LabelsContainer(
             children: [
               TextLabel(
+                icon: CommonIcons.title,
                 label: context.localize().titleLabel,
                 value: data.media.media.title,
               ),
               TextLabel(
+                icon: CommonIcons.edition,
                 label: context.localize().editionLabel,
                 value: data.media.media.edition,
               ),
               TextLabel(
+                icon: CommonIcons.startDate,
                 label: context.localize().startDateTimeLabel,
                 value:
                     '${MaterialLocalizations.of(context).formatCompactDate(data.session.startDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.startDatetime))}',
               ),
               TextLabel(
+                icon: CommonIcons.endDate,
                 label: context.localize().endDateTimeLabel,
                 value:
                     '${MaterialLocalizations.of(context).formatCompactDate(data.session.endDatetime)} ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(data.session.endDatetime))}',
               ),
               TextLabel(
+                icon: CommonIcons.time,
                 label: context.localize().timeLabel,
                 value: context.localize().formatDuration(data.session.time),
               ),
@@ -154,7 +159,10 @@ class SessionWithMediaDetail extends StatelessWidget {
                 ),
               if (data.session.deviceId != null)
                 GetBuilder<DeviceDTO, DeviceGetBloc>(
-                  skeletonBuilder: (_) => const LabelSkeleton(order: 0),
+                  skeletonBuilder: (final context) => LabelSkeleton(
+                    order: 0,
+                    label: context.localize().deviceLabel,
+                  ),
                   errorBuilder: (final context, final onRetryTap) => Center(
                     child: LabelError(
                       label: context.localize().errorDetailLoadTitle,
@@ -162,6 +170,7 @@ class SessionWithMediaDetail extends StatelessWidget {
                     ),
                   ),
                   builder: (final context, final device) => TextLabel(
+                    icon: CommonIcons.devices,
                     label: context.localize().deviceLabel,
                     value: device.name,
                   ),

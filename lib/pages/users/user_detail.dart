@@ -159,9 +159,21 @@ class UserDetail extends StatelessWidget {
     return SingleChildScrollView(
       child: LabelsContainer(
         children: [
-          TextLabel(label: context.localize().idLabel, value: data.id),
-          TextLabel(label: context.localize().nameLabel, value: data.username),
-          TextLabel(label: context.localize().roleLabel, value: data.role),
+          TextLabel(
+            icon: CommonIcons.id,
+            label: context.localize().idLabel,
+            value: data.id,
+          ),
+          TextLabel(
+            icon: CommonIcons.title,
+            label: context.localize().nameLabel,
+            value: data.username,
+          ),
+          TextLabel(
+            icon: CommonIcons.role,
+            label: context.localize().roleLabel,
+            value: data.role,
+          ),
         ],
       ),
     );

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class TextLabel extends StatelessWidget {
   const TextLabel({
     super.key,
+    required this.icon,
     required this.label,
     required this.value,
     this.multiline = false,
   });
 
+  final Widget icon;
   final String label;
   final String? value;
   final bool multiline;
@@ -15,9 +17,10 @@ class TextLabel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ListTile(
+      leading: icon,
       title: Text(label, style: Theme.of(context).textTheme.titleSmall),
       subtitle: Text(
-        value ?? '',
+        value ?? '-',
         style: Theme.of(context).textTheme.bodyLarge,
         maxLines: multiline ? null : 1,
         overflow: TextOverflow.ellipsis,
@@ -27,14 +30,26 @@ class TextLabel extends StatelessWidget {
 }
 
 class MultipleTextLabel extends StatelessWidget {
-  const MultipleTextLabel({super.key, required this.label, this.value});
+  const MultipleTextLabel({
+    super.key,
+    required this.icon,
+    required this.label,
+    this.value,
+  });
 
+  final Widget icon;
   final String label;
   final List<String>? value;
   final separator = ',';
 
   @override
   Widget build(final BuildContext context) {
-    return TextLabel(label: label, value: value?.join('$separator '));
+    return TextLabel(
+      icon: icon,
+      label: label,
+      value: value == null || value!.isEmpty
+          ? null
+          : value!.join('$separator '),
+    );
   }
 }

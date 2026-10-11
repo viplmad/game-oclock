@@ -2,6 +2,8 @@
   "englishLabel": "English",
   "errorListPageLoadTitle": "Error loading page.",
   "errorDetailLoadTitle": "Error loading detail.",
+  "errorTotalTimeLoadTitle": "Error loading total time.",
+  "errorFinishesLoadTitle": "Error loading finishes.",
   "errorPageLoadTitle": "Loading error.",
   "retryLabel": "Retry",
   "emptyListLabel": "Empty",

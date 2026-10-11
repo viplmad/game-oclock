@@ -12,9 +12,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         LocationAvailableListBloc,
         TagOfGameListBloc,
         UserGameDeleteBloc,
+        UserGameFinishesGetBloc,
         UserGameListBloc,
         UserGameSelectBloc,
         UserGameSyncBloc,
+        UserGameTotalTimeGetBloc,
         UserGameUnsyncBloc;
 import 'package:game_oclock/components/list_detail.dart'
     show ListCreateDetailBuilder;
@@ -53,6 +55,14 @@ class UserGameListPage extends StatelessWidget {
             service: RepositoryProvider.of(context),
             space: _space,
           ),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameTotalTimeGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameFinishesGetBloc(service: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (_) =>
@@ -99,6 +109,14 @@ class _UserGameListDetailBuilder extends StatelessWidget {
       createFormBuilder: ([final quicksearch]) =>
           UserGameCreateForm(initialTitle: quicksearch),
       detailBuilder: (final context, final data, final onClosed) {
+        // Load derived blocs
+        context.read<UserGameTotalTimeGetBloc>().add(
+          ActionStarted(data: data.media.id),
+        );
+        context.read<UserGameFinishesGetBloc>().add(
+          ActionStarted(data: data.media.id),
+        );
+
         return MultiBlocProvider(
           // Recreate on selection change
           key: Key(data.media.id),

@@ -112,6 +112,18 @@ abstract class AppLocalizations {
   /// **'Error loading detail.'**
   String get errorDetailLoadTitle;
 
+  /// No description provided for @errorTotalTimeLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading total time.'**
+  String get errorTotalTimeLoadTitle;
+
+  /// No description provided for @errorFinishesLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading finishes.'**
+  String get errorFinishesLoadTitle;
+
   /// No description provided for @errorPageLoadTitle.
   ///
   /// In en, this message translates to:
