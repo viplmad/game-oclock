@@ -79,6 +79,7 @@ class _UserListDetailBuilder extends StatelessWidget {
       availableStyles: [ListStyle.tile],
       createFormBuilder: ([final quicksearch]) =>
           UserCreateForm(initialName: quicksearch),
+      idGetter: (final data) => data.id,
       detailBuilder: (final context, final data, final onClosed) {
         return UserDetail(
           key: Key(data.id),

@@ -192,6 +192,7 @@
   "unableToLoginLabel": "Unable to login",
   "unableToLoadListLabel": "Unable to load list",
   "unableToLoadDetailLabel": "Unable to load detail",
+  "syncInProgressLabel": "Syncing...",
   "syncedSuccessfullyLabel": "Synced successfully",
   "unableToSyncLabel": "Unable to sync",
   "unsyncedSuccessfullyLabel": "Unsynced successfully",

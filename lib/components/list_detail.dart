@@ -12,9 +12,11 @@ import 'package:game_oclock/blocs/blocs.dart'
         CurrentListStyleSaveBloc,
         IdentityActionBloc,
         ListLoadBloc,
+        ListLoadSuccess,
         ListQuicksearchChanged,
         ListReloaded,
         ListSearchChanged,
+        ListState,
         MinimizedLayoutBloc;
 import 'package:game_oclock/components/list/toolbar.dart';
 import 'package:game_oclock/constants/constants.dart';
@@ -64,6 +66,7 @@ class ListDetailBuilder<
     required this.itemAspectRatio,
     this.floatingActionButton,
     this.onSearchAddPressed,
+    required this.idGetter,
   });
 
   final String title;
@@ -71,6 +74,7 @@ class ListDetailBuilder<
   final List<ListStyle> availableStyles;
   final FloatingActionButton? floatingActionButton;
   final ValueChanged<String>? onSearchAddPressed;
+  final String Function(T data) idGetter;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
@@ -128,6 +132,30 @@ class ListDetailBuilder<
               context.read<CurrentListStyleGetBloc>().add(
                 const ActionRestarted(),
               );
+            }
+          },
+        ),
+        BlocListener<LB, ListState<T>>(
+          listener: (final context, final state) {
+            if (state is ListLoadSuccess<T>) {
+              final listData = state.data;
+
+              final selectState = context.read<SB>().state;
+              if (selectState is ActionSuccess<T?, T?>) {
+                final selectData = selectState.data;
+
+                if (selectData != null) {
+                  try {
+                    final selectedId = idGetter(selectData);
+                    final reloadedData = listData.firstWhere(
+                      (final el) => idGetter(el) == selectedId,
+                    );
+                    context.read<SB>().add(ActionStarted(data: reloadedData));
+                  } on StateError {
+                    return;
+                  }
+                }
+              }
             }
           },
         ),
@@ -349,6 +377,7 @@ class ListCreateDetailBuilder<
     required this.title,
     required this.searchSpace,
     this.availableStyles = const [ListStyle.tile, ListStyle.grid],
+    required this.idGetter,
     required this.createFormBuilder,
     required this.detailBuilder,
     required this.listItemBuilder,
@@ -359,6 +388,7 @@ class ListCreateDetailBuilder<
   final String searchSpace;
   final List<ListStyle> availableStyles;
   final Widget Function([String? value]) createFormBuilder;
+  final String Function(T data) idGetter;
 
   final Widget Function(BuildContext context, T data, VoidCallback onClosed)
   detailBuilder;
@@ -383,6 +413,7 @@ class ListCreateDetailBuilder<
         onSuccess: (final context, _) =>
             context.read<LB>().add(const ListReloaded()),
       ),
+      idGetter: idGetter,
       floatingActionButton: FloatingActionButton(
         tooltip: context.localize().createLabel,
         onPressed: () async => showReturningDialog(

@@ -84,6 +84,7 @@ class _PlaythroughListDetailBuilder extends StatelessWidget {
       availableStyles: [ListStyle.tile],
       createFormBuilder: ([final quicksearch]) =>
           PlaythroughCreateForm(initialName: quicksearch),
+      idGetter: (final data) => data.id,
       detailBuilder: (final context, final data, final onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change

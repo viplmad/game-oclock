@@ -84,6 +84,7 @@ class _LocationListDetailBuilder extends StatelessWidget {
       searchSpace: _space,
       createFormBuilder: ([final quicksearch]) =>
           LocationCreateForm(initialName: quicksearch),
+      idGetter: (final data) => data.id,
       detailBuilder: (final context, final data, final onClosed) {
         return MultiBlocProvider(
           // Recreate on selection change

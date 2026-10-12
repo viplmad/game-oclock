@@ -110,6 +110,7 @@ class _UserGameListDetailBuilder extends StatelessWidget {
       searchSpace: _space,
       createFormBuilder: ([final quicksearch]) =>
           UserGameCreateForm(initialTitle: quicksearch),
+      idGetter: (final data) => data.media.id,
       detailBuilder: (final context, final data, final onClosed) {
         // Load derived blocs
         context.read<UserGameTotalTimeGetBloc>().add(

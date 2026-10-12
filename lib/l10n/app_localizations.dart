@@ -1252,6 +1252,12 @@ abstract class AppLocalizations {
   /// **'Unable to load detail'**
   String get unableToLoadDetailLabel;
 
+  /// No description provided for @syncInProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get syncInProgressLabel;
+
   /// No description provided for @syncedSuccessfullyLabel.
   ///
   /// In en, this message translates to:

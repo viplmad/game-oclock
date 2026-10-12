@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionFailure,
+        ActionInProgress,
         ActionInitial,
         ActionRestarted,
         ActionStarted,
@@ -315,6 +316,12 @@ class UserGameDetail extends StatelessWidget {
         ),
         BlocListener<UserGameSyncBloc, ActionState<void>>(
           listener: (final context, final state) {
+            if (state is ActionInProgress<void>) {
+              showSnackBar(
+                context,
+                message: context.localize().syncInProgressLabel,
+              );
+            }
             if (state is ActionSuccess<void, MediaDTO>) {
               showSnackBar(
                 context,

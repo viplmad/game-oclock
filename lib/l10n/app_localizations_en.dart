@@ -626,6 +626,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unableToLoadDetailLabel => 'Unable to load detail';
 
   @override
+  String get syncInProgressLabel => 'Syncing...';
+
+  @override
   String get syncedSuccessfullyLabel => 'Synced successfully';
 
   @override
