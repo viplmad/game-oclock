@@ -17,7 +17,7 @@ final nameField = OptionDynamicField(
 final imageField = OptionDynamicField(
   value: 'image_url',
   type: FieldType.text,
-  labelBuilder: (final context) => context.localize().imageLabel,
+  labelBuilder: (final context) => context.localize().imageUrlLabel,
 );
 
 final addedDatetimeField = OptionDynamicField(

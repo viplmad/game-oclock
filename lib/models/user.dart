@@ -43,62 +43,6 @@ class NewUser extends NewUserDTO {
   final String password;
 }
 
-// TODO Move
-class ReviewStartEnd {
-  ReviewStartEnd({required this.start, required this.end});
-
-  final DateTime start;
-  final DateTime end;
-}
-
-// TODO Move
-class NewMediaSession extends NewSessionDTO {
-  NewMediaSession({
-    required this.gameId,
-    required super.deviceId,
-    required super.endDatetime,
-    super.finishedStatus,
-    required super.groupId,
-    required super.startDatetime,
-    required super.started,
-  });
-
-  final String gameId;
-}
-
-class DeviceWithTime {
-  DeviceWithTime({required this.device, required this.time});
-
-  final DeviceDTO device;
-  final Duration time;
-}
-
-class MediaWithTime {
-  MediaWithTime({required this.media, required this.time});
-
-  final MediaDTO media;
-  final Duration time;
-}
-
-class AggregateGroupSearch {
-  AggregateGroupSearch({this.filter = const [], this.size, this.sort});
-
-  List<FilterDTO>? filter;
-
-  /// Minimum value: 0
-  int? size;
-
-  List<AggregateGroupSortDTO>? sort;
-}
-
-class AggregateSearch {
-  AggregateSearch({this.filter = const []});
-
-  List<FilterDTO>? filter;
-}
-
-const sourceIgdb = 'igdb';
-
 class UserChangePassword {
   final String currentPassword;
   final String newPassword;

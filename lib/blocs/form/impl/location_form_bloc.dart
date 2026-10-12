@@ -11,7 +11,7 @@ class LocationFormBloc
   NewLocationDTO fromFormData(final LocationFormData data) {
     return NewLocationDTO(
       name: data.name.value!,
-      imageUrl: '', // TODO
+      imageUrl: data.imageUrl.value,
     );
   }
 

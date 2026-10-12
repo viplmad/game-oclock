@@ -3,6 +3,7 @@ export 'form_event.dart';
 export 'form_state.dart';
 export 'impl/device_form_bloc.dart';
 export 'impl/game_available_form_bloc.dart';
+export 'impl/game_child_form_bloc.dart';
 export 'impl/game_form_bloc.dart';
 export 'impl/game_playthrough_form_bloc.dart';
 export 'impl/game_session_form_bloc.dart';

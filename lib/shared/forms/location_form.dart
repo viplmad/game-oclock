@@ -31,6 +31,7 @@ class LocationCreateForm extends StatelessWidget {
                 value: initialName,
                 validators: [NotEmptyValidator(context)],
               ),
+              imageUrl: FormControl<String>(),
             ),
           ),
         ),
@@ -70,6 +71,7 @@ class LocationEditForm extends StatelessWidget {
               name: FormControl<String>(
                 validators: [NotEmptyValidator(context)],
               ),
+              imageUrl: FormControl<String>(),
             ),
           ),
         ),
@@ -111,6 +113,11 @@ Widget _fieldsBuilder(
       SimpleTextFormField(
         formControl: formGroup.name,
         label: context.localize().nameLabel,
+        readOnly: readOnly,
+      ),
+      SimpleTextFormField(
+        formControl: formGroup.imageUrl,
+        label: context.localize().imageUrlLabel,
         readOnly: readOnly,
       ),
     ],

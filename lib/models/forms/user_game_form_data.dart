@@ -30,6 +30,7 @@ class UserGameFormData extends FormData<NewMediaDTO> {
   final FormControl<String> title;
   final FormControl<String> edition;
   final FormControl<DateTime> releaseDate;
+  final FormControl<String> imageUrl;
   final FormArray<String> genres;
   final FormArray<String> series;
   final FormControl<String> status;
@@ -40,6 +41,7 @@ class UserGameFormData extends FormData<NewMediaDTO> {
     required this.title,
     required this.edition,
     required this.releaseDate,
+    required this.imageUrl,
     required this.status,
     required this.rating,
     required this.notes,
@@ -50,6 +52,7 @@ class UserGameFormData extends FormData<NewMediaDTO> {
            'title': title,
            'edition': edition,
            'releaseDate': releaseDate,
+           'imageUrl': imageUrl,
            'genres': genres,
            'series': series,
            'status': status,

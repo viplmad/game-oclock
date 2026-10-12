@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show Playthrough;
+import 'package:game_oclock/models/models.dart'
+    show NewPlaythrough, Playthrough;
 import 'package:game_oclock_client/api.dart';
 
 class PlaythroughService {
@@ -34,11 +35,11 @@ class PlaythroughService {
     throw UnsupportedError('');
   }
 
-  Future<String> create(final Playthrough playthrough) async {
+  Future<String> create(final NewPlaythrough playthrough) async {
     throw UnsupportedError('');
   }
 
-  Future<void> update(final String id, final Playthrough playthrough) async {
+  Future<void> update(final String id, final NewPlaythrough playthrough) async {
     throw UnsupportedError('');
   }
 

@@ -14,6 +14,10 @@ class UserGameGetBloc extends FunctionActionBloc<String, MediaDTO> {
       service.get(event);
 }
 
+class UserGameParentGetBloc extends UserGameGetBloc {
+  UserGameParentGetBloc({required super.service});
+}
+
 class UserGameCreateBloc extends FunctionActionBloc<NewMediaDTO, String> {
   UserGameCreateBloc({required this.service});
 

@@ -51,6 +51,7 @@ class CommonIcons {
   static const genre = Icon(Icons.category_outlined);
   static const series = Icon(Icons.bookmark_outline);
   static const role = Icon(Icons.shield_outlined);
+  static const source = externalSourceDefault;
   static const startDate = first;
   static const endDate = last;
   static const time = session;

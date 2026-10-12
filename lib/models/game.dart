@@ -5,6 +5,8 @@ import 'package:game_oclock_client/api.dart';
 import 'fields.dart';
 import 'nav_destination.dart';
 
+const sourceIgdb = 'igdb';
+
 final mediaKindField = OptionDynamicField(
   value: 'kind',
   type: FieldType.options,

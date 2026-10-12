@@ -31,6 +31,7 @@ class DeviceCreateForm extends StatelessWidget {
                 value: initialName,
                 validators: [NotEmptyValidator(context)],
               ),
+              imageUrl: FormControl<String>(),
             ),
           ),
         ),
@@ -70,6 +71,7 @@ class DeviceEditForm extends StatelessWidget {
               name: FormControl<String>(
                 validators: [NotEmptyValidator(context)],
               ),
+              imageUrl: FormControl<String>(),
             ),
           ),
         ),
@@ -109,6 +111,11 @@ Widget _fieldsBuilder(
       SimpleTextFormField(
         formControl: formData.name,
         label: context.localize().nameLabel,
+        readOnly: readOnly,
+      ),
+      SimpleTextFormField(
+        formControl: formData.imageUrl,
+        label: context.localize().imageUrlLabel,
         readOnly: readOnly,
       ),
     ],

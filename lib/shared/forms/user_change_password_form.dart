@@ -48,7 +48,7 @@ class UserChangePasswordForm extends StatelessWidget {
             UserChangePasswordFormBloc,
             UserChangePasswordBloc
           >(
-            title: context.localize().creatingTitle, // TODO
+            title: context.localize().changingPasswordTitle,
             fieldsBuilder: _fieldsCreateBuilder,
           ),
     );

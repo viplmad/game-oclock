@@ -4,7 +4,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class DeviceFormData extends FormData<NewDeviceDTO> {
   final FormControl<String> name;
+  final FormControl<String> imageUrl;
 
-  DeviceFormData({required this.name})
-    : super(formGroup: FormGroup({'name': name}));
+  DeviceFormData({required this.name, required this.imageUrl})
+    : super(formGroup: FormGroup({'name': name, 'imageUrl': imageUrl}));
 }

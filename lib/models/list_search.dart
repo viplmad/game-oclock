@@ -54,3 +54,20 @@ final class ListSearch extends Equatable {
   @override
   List<Object?> get props => [name, filter, sort];
 }
+
+class AggregateGroupSearch {
+  AggregateGroupSearch({this.filter = const [], this.size, this.sort});
+
+  List<FilterDTO>? filter;
+
+  /// Minimum value: 0
+  int? size;
+
+  List<AggregateGroupSortDTO>? sort;
+}
+
+class AggregateSearch {
+  AggregateSearch({this.filter = const []});
+
+  List<FilterDTO>? filter;
+}

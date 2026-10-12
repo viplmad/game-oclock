@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorFinishesLoadTitle => 'Error loading finishes.';
 
   @override
+  String get errorLoadParentGameTitle => 'Error loading parent game.';
+
+  @override
   String get errorPageLoadTitle => 'Loading error.';
 
   @override
@@ -70,6 +73,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gamesTitle => 'Games';
+
+  @override
+  String get dlcsTitle => 'DLCs';
 
   @override
   String get locationsTitle => 'Locations';
@@ -152,6 +158,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editingTitle => 'Editing';
 
   @override
+  String get changingPasswordTitle => 'Changing password';
+
+  @override
   String get nameLabel => 'Name';
 
   @override
@@ -191,13 +200,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get releaseDateLabel => 'Release Date';
 
   @override
-  String get imageLabel => 'Image';
+  String get imageUrlLabel => 'Image URL';
 
   @override
   String get parentIdLabel => 'Parent Id';
 
   @override
   String get parentOrderLabel => 'Parent Order';
+
+  @override
+  String get parentGameLabel => 'Parent Game';
+
+  @override
+  String get childGameLabel => 'Child Game';
+
+  @override
+  String get orderLabel => 'Order';
 
   @override
   String get statusLabel => 'Status';

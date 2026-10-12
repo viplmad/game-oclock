@@ -8,12 +8,14 @@ import 'package:game_oclock/blocs/blocs.dart'
         CurrentListStyleGetBloc,
         CurrentListStyleSaveBloc,
         DevicePlayedGameListBloc,
+        GameChildrenListBloc,
         ListReloaded,
         LocationAvailableListBloc,
         TagOfGameListBloc,
         UserGameDeleteBloc,
         UserGameFinishesGetBloc,
         UserGameListBloc,
+        UserGameParentGetBloc,
         UserGameSelectBloc,
         UserGameSyncBloc,
         UserGameTotalTimeGetBloc,
@@ -121,6 +123,17 @@ class _UserGameListDetailBuilder extends StatelessWidget {
           // Recreate on selection change
           key: Key(data.media.id),
           providers: [
+            BlocProvider(
+              create: (_) => UserGameParentGetBloc(
+                service: RepositoryProvider.of(context),
+              ),
+            ),
+            BlocProvider(
+              create: (_) => GameChildrenListBloc(
+                service: RepositoryProvider.of(context),
+                gameId: data.media.id,
+              ),
+            ),
             BlocProvider(
               create: (_) => LocationAvailableListBloc(
                 service: RepositoryProvider.of(context),

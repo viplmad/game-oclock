@@ -10,7 +10,7 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/forms/create_edit_form.dart';
 import 'package:game_oclock/components/forms/form_fields.dart';
 import 'package:game_oclock/models/models.dart'
-    show Playthrough, PlaythroughFormData;
+    show NewPlaythrough, Playthrough, PlaythroughFormData;
 import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -41,7 +41,7 @@ class PlaythroughCreateForm extends StatelessWidget {
       ],
       child:
           CreateFormBuilder<
-            Playthrough,
+            NewPlaythrough,
             Playthrough,
             String,
             PlaythroughFormData,
@@ -87,7 +87,7 @@ class PlaythroughEditForm extends StatelessWidget {
       ],
       child:
           EditFormBuilder<
-            Playthrough,
+            NewPlaythrough,
             Playthrough,
             PlaythroughFormData,
             PlaythroughFormBloc,

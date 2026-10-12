@@ -68,6 +68,47 @@ class UserGameTileListItem extends StatelessWidget {
   }
 }
 
+class UserGameWithOrderTileListItem extends StatelessWidget {
+  const UserGameWithOrderTileListItem({
+    super.key,
+    required this.data,
+    required this.onTap,
+    required this.order,
+  });
+
+  final MediaDTO data;
+  final VoidCallback onTap;
+  final int? order;
+
+  @override
+  Widget build(final BuildContext context) {
+    final listItem = TileListItem(
+      title: data.media.edition.isEmpty
+          ? data.media.title
+          : context.localize().gameEditionDataTitle(
+              data.media.title,
+              data.media.edition,
+            ),
+      subtitle: order == null ? '' : '$order',
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8.0,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          LabelChoiceChip(
+            value: data.state.status.toJson(),
+            options: gameStatusOptions,
+          ),
+        ],
+      ),
+      imageURL: data.media.imageUrl,
+      onTap: onTap,
+    );
+
+    return addRatingBanner(listItem, data.state.rating);
+  }
+}
+
 class UserGameGridListItem extends StatelessWidget {
   const UserGameGridListItem({
     super.key,

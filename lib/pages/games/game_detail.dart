@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionFailure,
+        ActionInitial,
         ActionRestarted,
         ActionStarted,
         ActionState,
         ActionSuccess,
         DevicePlayedGameListBloc,
+        GameChildrenListBloc,
         ListInitial,
         ListLoadBloc,
         ListSearchChanged,
@@ -16,6 +18,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         UserGameDeleteBloc,
         UserGameFinishesGetBloc,
         UserGameGetBloc,
+        UserGameParentGetBloc,
         UserGameSyncBloc,
         UserGameTotalTimeGetBloc,
         UserGameUnsyncBloc;
@@ -23,6 +26,9 @@ import 'package:game_oclock/components/cached_image.dart';
 import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/error_detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
+import 'package:game_oclock/components/list/list_item.dart'
+    show TileListErrorItem;
+import 'package:game_oclock/components/list/toolbar.dart' show ListToolbar;
 import 'package:game_oclock/components/list_detail.dart'
     show RelationListBuilder;
 import 'package:game_oclock/components/skeletons/skeletons.dart';
@@ -32,6 +38,7 @@ import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
     show LayoutTier, TabDestination, gameStatusOptions;
 import 'package:game_oclock/shared/forms/game_available_form.dart';
+import 'package:game_oclock/shared/forms/game_child_form.dart';
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/game_tag_form.dart';
 import 'package:game_oclock/shared/forms/location_form.dart';
@@ -39,6 +46,7 @@ import 'package:game_oclock/shared/forms/tag_form.dart';
 import 'package:game_oclock/shared/list_item/device_list_item.dart';
 import 'package:game_oclock/shared/list_item/game_available_list_item.dart';
 import 'package:game_oclock/shared/list_item/media_tagged_list_item.dart';
+import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_confirmation_dialog.dart';
@@ -84,6 +92,16 @@ class UserGameDetailPage extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               UserGameUnsyncBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              UserGameParentGetBloc(service: RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (_) => GameChildrenListBloc(
+            service: RepositoryProvider.of(context),
+            gameId: id,
+          ),
         ),
         BlocProvider(
           create: (_) => LocationAvailableListBloc(
@@ -150,6 +168,74 @@ class UserGameDetail extends StatelessWidget {
     );
 
     final List<TabDestination> tabs = List.unmodifiable(<TabDestination>[
+      TabDestination(
+        icon: CommonIcons.dlcs,
+        labelBuilder: (final context) => context.localize().dlcsTitle,
+        onTap: (final context) {
+          if (data.media.parentId != null) {
+            final gb = context.read<UserGameParentGetBloc>();
+            if (gb.state is ActionInitial<MediaDTO>) {
+              gb.add(ActionStarted(data: data.media.parentId!));
+            }
+          }
+          _loadOnlyInitial<GameChildrenListBloc>(context);
+        },
+        child: Column(
+          children: [
+            if (data.media.parentId != null)
+              Column(
+                children: [
+                  ListToolbar(
+                    actions: [
+                      IconButton(
+                        icon: CommonIcons.reload,
+                        tooltip: context.localize().reloadLabel,
+                        onPressed: () => context
+                            .read<UserGameParentGetBloc>()
+                            .add(const ActionRestarted()),
+                      ),
+                    ],
+                  ),
+                  GetBuilder<MediaDTO, UserGameParentGetBloc>(
+                    skeletonBuilder: (final context) =>
+                        const TileListSkeletonItem(),
+                    errorBuilder: (final context, final onRetryTap) =>
+                        TileListErrorItem(
+                          title: context.localize().errorLoadParentGameTitle,
+                          onRetryTap: onRetryTap,
+                        ),
+                    builder: (final context, final parent) =>
+                        UserGameWithOrderTileListItem(
+                          data: parent,
+                          order: data.media.parentOrder,
+                          onTap: () => GoRouter.of(
+                            context,
+                          ).go(CommonPaths.buildGamePath(parent.media.id)),
+                        ),
+                  ),
+                ],
+              ),
+            Expanded(
+              child: RelationListBuilder<MediaDTO, GameChildrenListBloc>(
+                createFormBuilder: ([final quicksearch]) => GameChildCreateForm(
+                  parentGameId: data.media.id,
+                  childGameId: quicksearch,
+                ),
+                searchCreateFormBuilder: (final quicksearch) =>
+                    UserGameCreateForm(initialTitle: quicksearch),
+                itemBuilder: (final context, final child) =>
+                    UserGameWithOrderTileListItem(
+                      data: child,
+                      order: child.media.parentOrder,
+                      onTap: () => GoRouter.of(
+                        context,
+                      ).go(CommonPaths.buildGamePath(child.media.id)),
+                    ),
+              ),
+            ),
+          ],
+        ),
+      ),
       TabDestination(
         icon: CommonIcons.locations,
         labelBuilder: (final context) => context.localize().locationsTitle,

@@ -4,7 +4,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class LocationFormData extends FormData<NewLocationDTO> {
   final FormControl<String> name;
+  final FormControl<String> imageUrl;
 
-  LocationFormData({required this.name})
-    : super(formGroup: FormGroup({'name': name}));
+  LocationFormData({required this.name, required this.imageUrl})
+    : super(formGroup: FormGroup({'name': name, 'imageUrl': imageUrl}));
 }

@@ -1,4 +1,5 @@
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:game_oclock_client/api.dart';
 
 import 'fields.dart';
 import 'nav_destination.dart';
@@ -82,3 +83,31 @@ final List<OptionTextField<String>> sessionFieldOptions =
       addedDatetimeField,
       updatedDatetimeField,
     ]);
+
+class ReviewStartEnd {
+  ReviewStartEnd({required this.start, required this.end});
+
+  final DateTime start;
+  final DateTime end;
+}
+
+class NewMediaSession extends NewSessionDTO {
+  NewMediaSession({
+    required this.gameId,
+    required super.deviceId,
+    required super.endDatetime,
+    super.finishedStatus,
+    required super.groupId,
+    required super.startDatetime,
+    required super.started,
+  });
+
+  final String gameId;
+}
+
+class MediaWithTime {
+  MediaWithTime({required this.media, required this.time});
+
+  final MediaDTO media;
+  final Duration time;
+}

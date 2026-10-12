@@ -8,10 +8,7 @@ class DeviceFormBloc extends FormBloc<DeviceFormData, NewDeviceDTO, DeviceDTO> {
 
   @override
   NewDeviceDTO fromFormData(final DeviceFormData data) {
-    return NewDeviceDTO(
-      name: data.name.value!,
-      imageUrl: '', // TODO
-    );
+    return NewDeviceDTO(name: data.name.value!, imageUrl: data.imageUrl.value);
   }
 
   @override

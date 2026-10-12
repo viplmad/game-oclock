@@ -84,7 +84,7 @@ Widget _fieldsCreateExternalBuilder(
   return FormFieldsContainer(
     children: <Widget>[
       TextLabel(
-        icon: CommonIcons.externalSourceDefault,
+        icon: CommonIcons.source,
         label: context.localize().idLabel,
         value: externalId.source_,
       ),
@@ -109,7 +109,7 @@ Widget _fieldsCreateExternalBuilder(
         formControl: formGroup.notes,
         label: context.localize().notesLabel,
         readOnly: readOnly,
-        multiline: true,
+        keyboardType: TextInputType.multiline,
       ),
     ],
   );
@@ -133,6 +133,7 @@ class UserGameCreateForm extends StatelessWidget {
               ),
               edition: FormControl<String>(),
               releaseDate: FormControl<DateTime>(),
+              imageUrl: FormControl<String>(),
               status: FormControl<String>(
                 validators: [NotEmptyValidator(context)],
               ),
@@ -181,6 +182,7 @@ class UserGameEditForm extends StatelessWidget {
               ),
               edition: FormControl<String>(),
               releaseDate: FormControl<DateTime>(),
+              imageUrl: FormControl<String>(validators: []),
               status: FormControl<String>(),
               rating: FormControl<int>(),
               notes: FormControl<String>(),
@@ -241,6 +243,11 @@ Widget _fieldsBuilder(
         firstDate: DateTime(1970),
         lastDate: DateTime.now(),
       ),
+      SimpleTextFormField(
+        formControl: formGroup.imageUrl,
+        label: context.localize().imageUrlLabel,
+        readOnly: readOnly,
+      ),
       SimpleChoiceFormField(
         formControl: formGroup.status,
         label: context.localize().statusLabel,
@@ -257,7 +264,7 @@ Widget _fieldsBuilder(
         formControl: formGroup.notes,
         label: context.localize().notesLabel,
         readOnly: readOnly,
-        multiline: true,
+        keyboardType: TextInputType.multiline,
       ),
       SimpleMultipleSelectFormField(
         formArray: formGroup.genres,

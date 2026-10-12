@@ -13,7 +13,7 @@ class SimpleTextFormField extends StatelessWidget {
     required this.label,
     this.readOnly = false,
     this.hint,
-    this.multiline = false,
+    this.keyboardType = TextInputType.text,
     this.obscureText = false,
     //
     this.prefixIcon,
@@ -30,7 +30,7 @@ class SimpleTextFormField extends StatelessWidget {
   final bool readOnly;
   final String? hint;
   final bool obscureText;
-  final bool multiline;
+  final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final List<Widget>? suffixIcons;
   final VoidCallback? onCleared;
@@ -78,8 +78,8 @@ class SimpleTextFormField extends StatelessWidget {
               ),
         border: const OutlineInputBorder(),
       ),
-      maxLines: multiline ? null : 1,
-      keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+      maxLines: keyboardType == TextInputType.multiline ? null : 1,
+      keyboardType: keyboardType,
       obscureText: obscureText,
       onTap: (_) => onTap?.call(),
       onChanged: onChanged != null

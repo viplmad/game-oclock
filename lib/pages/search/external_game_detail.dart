@@ -56,7 +56,7 @@ class ExternalGameDetail extends StatelessWidget {
       child: LabelsContainer(
         children: [
           TextLabel(
-            icon: CommonIcons.externalSourceDefault,
+            icon: CommonIcons.source,
             label: context.localize().sourceLabel,
             value: data.external_.source_,
           ),

@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show Playthrough;
+import 'package:game_oclock/models/models.dart'
+    show NewPlaythrough, Playthrough;
 import 'package:game_oclock/services/services.dart' show PlaythroughService;
 
 import '../action.dart'
@@ -16,24 +17,24 @@ class PlaythroughGetBloc extends FunctionActionBloc<String, Playthrough> {
   ) => service.get(event);
 }
 
-class PlaythroughCreateBloc extends FunctionActionBloc<Playthrough, String> {
+class PlaythroughCreateBloc extends FunctionActionBloc<NewPlaythrough, String> {
   PlaythroughCreateBloc({required this.service});
 
   final PlaythroughService service;
 
   @override
-  Future<String> doAction(final Playthrough event, final String? lastData) =>
+  Future<String> doAction(final NewPlaythrough event, final String? lastData) =>
       service.create(event);
 }
 
-class PlaythroughUpdateBloc extends ConsumerActionBloc<Playthrough> {
+class PlaythroughUpdateBloc extends ConsumerActionBloc<NewPlaythrough> {
   PlaythroughUpdateBloc({required this.service, required this.id});
 
   final PlaythroughService service;
   final String id;
 
   @override
-  Future<void> doAction(final Playthrough event, final void lastData) =>
+  Future<void> doAction(final NewPlaythrough event, final void lastData) =>
       service.update(id, event);
 }
 

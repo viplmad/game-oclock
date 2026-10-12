@@ -124,6 +124,12 @@ abstract class AppLocalizations {
   /// **'Error loading finishes.'**
   String get errorFinishesLoadTitle;
 
+  /// No description provided for @errorLoadParentGameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading parent game.'**
+  String get errorLoadParentGameTitle;
+
   /// No description provided for @errorPageLoadTitle.
   ///
   /// In en, this message translates to:
@@ -219,6 +225,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Games'**
   String get gamesTitle;
+
+  /// No description provided for @dlcsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'DLCs'**
+  String get dlcsTitle;
 
   /// No description provided for @locationsTitle.
   ///
@@ -376,6 +388,12 @@ abstract class AppLocalizations {
   /// **'Editing'**
   String get editingTitle;
 
+  /// No description provided for @changingPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing password'**
+  String get changingPasswordTitle;
+
   /// No description provided for @nameLabel.
   ///
   /// In en, this message translates to:
@@ -454,11 +472,11 @@ abstract class AppLocalizations {
   /// **'Release Date'**
   String get releaseDateLabel;
 
-  /// No description provided for @imageLabel.
+  /// No description provided for @imageUrlLabel.
   ///
   /// In en, this message translates to:
-  /// **'Image'**
-  String get imageLabel;
+  /// **'Image URL'**
+  String get imageUrlLabel;
 
   /// No description provided for @parentIdLabel.
   ///
@@ -471,6 +489,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Parent Order'**
   String get parentOrderLabel;
+
+  /// No description provided for @parentGameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Game'**
+  String get parentGameLabel;
+
+  /// No description provided for @childGameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Game'**
+  String get childGameLabel;
+
+  /// No description provided for @orderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get orderLabel;
 
   /// No description provided for @statusLabel.
   ///

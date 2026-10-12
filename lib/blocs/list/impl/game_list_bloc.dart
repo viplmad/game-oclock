@@ -1,4 +1,5 @@
-import 'package:game_oclock/models/models.dart' show AggregateSearch;
+import 'package:game_oclock/models/models.dart'
+    show AggregateSearch, parentIdField;
 import 'package:game_oclock/services/services.dart' show GameService;
 import 'package:game_oclock_client/api.dart';
 
@@ -18,6 +19,48 @@ class UserGameListBloc extends ListLoadBloc<MediaDTO> {
   @override
   Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
       service.count(AggregateSearch(filter: search.filter), quicksearch);
+}
+
+class GameChildrenListBloc extends ListLoadBloc<MediaDTO> {
+  GameChildrenListBloc({required this.service, required this.gameId});
+
+  final GameService service;
+  final String gameId;
+
+  @override
+  Future<PageResultDTO<MediaDTO>> doLoad(
+    final ListSearchDTO search,
+    final String? quicksearch,
+  ) => service.search(
+    search.copyWith(
+      filter: List.unmodifiable(<FilterDTO>[
+        _buildParentFilter(),
+        ...(search.filter ?? []),
+      ]),
+    ),
+    quicksearch,
+  );
+
+  @override
+  Future<int> doCount(final ListSearchDTO search, final String? quicksearch) =>
+      service.count(
+        AggregateSearch(
+          filter: List.unmodifiable(<FilterDTO>[
+            _buildParentFilter(),
+            ...(search.filter ?? []),
+          ]),
+        ),
+        quicksearch,
+      );
+
+  FilterDTO _buildParentFilter() {
+    return FilterDTO(
+      chainOperator: ChainOperatorType.and,
+      field: parentIdField.value,
+      operator_: OperatorType.eq,
+      value: SearchValue(value: gameId),
+    );
+  }
 }
 
 class UserGameAvailableListBloc extends ListLoadBloc<MediaAvailableDTO> {

@@ -47,7 +47,7 @@ class UserGameFormBloc
         releaseDate: data.releaseDate.value,
         genres: data.genres.value?.cast() ?? [],
         series: data.series.value?.cast() ?? [],
-        imageUrl: '', // TODO
+        imageUrl: data.imageUrl.value,
       ),
       state: NewMediaStateDTO(
         status: MediaStatus.fromJson(data.status.value!),
