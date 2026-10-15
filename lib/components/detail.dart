@@ -12,8 +12,9 @@ import 'package:game_oclock/blocs/blocs.dart'
 import 'package:game_oclock/components/error_detail.dart' show DetailError;
 import 'package:game_oclock/components/skeletons/skeletons.dart'
     show DetailSkeleton;
+import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart'
-    show TabDestination, UnreachableError;
+    show ActionDestination, TabDestination, UnreachableError;
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 
@@ -25,13 +26,15 @@ class Detail extends StatelessWidget {
     required this.onBackPressed,
     required this.child,
     this.actions,
+    this.moreActions,
   });
 
   final Widget title;
   final Widget? image;
   final VoidCallback onBackPressed;
   final Widget child;
-  final List<Widget>? actions;
+  final List<ActionDestination>? actions;
+  final List<ActionDestination>? moreActions;
 
   @override
   Widget build(final BuildContext context) {
@@ -67,9 +70,61 @@ class Detail extends StatelessWidget {
           background: image ?? const SizedBox(),
         ),
         actionsPadding: const EdgeInsetsDirectional.only(end: 8.0),
-        actions: actions,
+        actions: actions == null && moreActions == null
+            ? null
+            : <Widget>[
+                if (actions != null && actions!.isNotEmpty)
+                  ...actions!.map(
+                    (final e) => IconButton(
+                      icon: e.icon,
+                      tooltip: e.labelBuilder(context),
+                      onPressed: () => e.onTap(context),
+                    ),
+                  ),
+                if (moreActions != null && moreActions!.isNotEmpty)
+                  MorePopupMenu(actions: moreActions!),
+              ],
       ),
     ];
+  }
+}
+
+class MorePopupMenu extends StatefulWidget {
+  const MorePopupMenu({super.key, required this.actions});
+
+  final List<ActionDestination> actions;
+
+  @override
+  State<MorePopupMenu> createState() => _MorePopupMenuState();
+}
+
+class _MorePopupMenuState extends State<MorePopupMenu> {
+  @override
+  Widget build(final BuildContext context) {
+    return MenuAnchor(
+      menuChildren: widget.actions
+          .map(
+            (final e) => MenuItemButton(
+              leadingIcon: e.icon,
+              onPressed: () => e.onTap(context),
+              child: Text(e.labelBuilder(context)),
+            ),
+          )
+          .toList(growable: false),
+      builder: (_, final controller, _) {
+        return IconButton(
+          icon: CommonIcons.menu,
+          tooltip: context.localize().moreLabel,
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -88,7 +143,7 @@ class DetailWithTabs extends StatelessWidget {
   final Widget title;
   final Widget? image;
   final VoidCallback onBackPressed;
-  final List<Widget>? actions;
+  final List<ActionDestination>? actions;
   final bool extended;
   final TabDestination mainTab;
   final List<TabDestination> tabs;
@@ -104,7 +159,16 @@ class DetailWithTabs extends StatelessWidget {
       title: title,
       image: image,
       onBackPressed: onBackPressed,
-      actions: actions,
+      actions: extended
+          ? actions
+          : (actions != null && actions!.isNotEmpty
+                ? actions!.sublist(0, 1)
+                : null),
+      moreActions: extended
+          ? null
+          : (actions != null && actions!.length > 1
+                ? actions!.sublist(1)
+                : null),
       child: extended
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,

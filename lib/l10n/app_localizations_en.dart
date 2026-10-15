@@ -655,6 +655,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorCopiedText => 'Error copied';
 
   @override
+  String get moreLabel => 'More';
+
+  @override
   String get mainLabel => 'Main';
 
   @override

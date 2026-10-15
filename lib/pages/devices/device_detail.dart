@@ -19,7 +19,8 @@ import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
-import 'package:game_oclock/models/models.dart' show LayoutTier, TabDestination;
+import 'package:game_oclock/models/models.dart'
+    show ActionDestination, LayoutTier, TabDestination;
 import 'package:game_oclock/shared/forms/device_form.dart';
 import 'package:game_oclock/shared/list_item/user_game_list_item.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
@@ -40,6 +41,8 @@ class DeviceDetailPage extends StatelessWidget {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
+      // Recreate on selection change
+      key: Key(id),
       providers: [
         BlocProvider(
           create: (_) =>
@@ -58,7 +61,9 @@ class DeviceDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<DeviceDTO, DeviceGetBloc>(
-        onBackPressed: () => GoRouter.of(context).go(CommonPaths.devicesPath),
+        onBackPressed: () => GoRouter.of(context).canPop()
+            ? GoRouter.of(context).pop()
+            : GoRouter.of(context).go(CommonPaths.devicesPath),
         builder: (final context, final data, final onBackPressed) =>
             DeviceDetail(
               data: data,
@@ -148,25 +153,30 @@ class DeviceDetail extends StatelessWidget {
         onBackPressed: onBackPressed,
         actions: [
           if (!fromPage)
-            IconButton(
+            ActionDestination(
               icon: CommonIcons.view,
-              tooltip: context.localize().viewLabel,
-              onPressed: () =>
+              labelBuilder: (final context) => context.localize().viewLabel,
+              onTap: (final context) =>
                   GoRouter.of(context).go(CommonPaths.buildDevicePath(data.id)),
             ),
-          IconButton(
+          ActionDestination(
+            icon: CommonIcons.reload,
+            labelBuilder: (final context) => context.localize().reloadLabel,
+            onTap: (final context) => onEditSucceeded(context),
+          ),
+          ActionDestination(
             icon: CommonIcons.edit,
-            tooltip: context.localize().editLabel,
-            onPressed: () async => showReturningDialog(
+            labelBuilder: (final context) => context.localize().editLabel,
+            onTap: (final context) async => showReturningDialog(
               context,
               builder: (final context) => DeviceEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
             ),
           ),
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.delete,
-            tooltip: context.localize().deleteLabel,
-            onPressed: () async => showConfirmationDialog(
+            labelBuilder: (final context) => context.localize().deleteLabel,
+            onTap: (final context) async => showConfirmationDialog(
               context,
               builder: (final context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,

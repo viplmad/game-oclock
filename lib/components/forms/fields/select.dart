@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:game_oclock/models/models.dart' show OptionTextField;
 import 'package:game_oclock/utils/form_validators.dart';
@@ -39,9 +41,20 @@ class SimpleSelectFormField extends StatelessWidget {
             ? null
             : ClearIconButton(onTap: () => formControl.value = null),
         forceErrorText: formControl.hasErrors
-            ? formControl.errors.values.first
-                  as String // TODO use validator
+            ? formControl.errors.values.first as String
             : null,
+        /*validator: (final value) {
+          return formControl.validators
+              .fold(<String, dynamic>{}, (final prev, final validator) {
+                final val = validator.validate(formControl);
+                return val == null ? prev : prev
+                  ..addAll(val!);
+              })
+              .entries
+              .where((final e) => e.value is bool && e.value as bool)
+              .map((final e) => e.key)
+              .firstOrNull;
+        },*/
         dropdownMenuEntries: options
             .map(
               (final field) => DropdownMenuEntry<String>(
@@ -77,6 +90,7 @@ class SimpleMultipleSelectFormField extends StatefulWidget {
 class _SimpleMultipleSelectFormFieldState
     extends State<SimpleMultipleSelectFormField> {
   late final FormControl<String> textFormControl;
+  late final StreamSubscription<String?> textListener;
   final separator = ',';
 
   @override
@@ -86,19 +100,25 @@ class _SimpleMultipleSelectFormFieldState
       validators: widget.formArray.validators,
     );
     textFormControl.setErrors(widget.formArray.errors, markAsDirty: false);
+    textListener = textFormControl.valueChanges.listen((final value) {
+      widget.formArray.value = value
+          ?.split(separator)
+          .map((final e) => e.trim())
+          .toList(growable: false);
+    });
 
     super.initState();
   }
 
   @override
-  Widget build(final BuildContext context) {
-    textFormControl.valueChanges.listen((final value) {
-      widget.formArray.value = value
-          ?.split(separator)
-          .map((final e) => e.trim())
-          .toList(growable: false);
-    }); // TODO close
+  void dispose() {
+    unawaited(textListener.cancel());
 
+    super.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     return SimpleTextFormField(
       formControl: textFormControl,
       readOnly: widget.readOnly,

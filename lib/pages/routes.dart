@@ -6,10 +6,12 @@ import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionFailure,
         ActionFinal,
+        ActionInitial,
         ActionStarted,
         ActionSuccess,
         CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
+        InitApiClientBloc,
         LogoutBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/constants/paths.dart';
@@ -263,26 +265,40 @@ FutureOr<String?> _authGuardRedirect(
   final GoRouterState state,
 ) async {
   final currentLoginResponseBloc = context.read<CurrentLoginResponseGetBloc>();
+  final initApiBloc = context.read<InitApiClientBloc>();
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
   currentLoginResponseBloc.add(ActionStarted.empty());
-  final currentLoginResponseState =
-      await currentLoginResponseBloc.stream.firstWhere(
-            (final actionState) =>
-                actionState is ActionFinal<SavedLoginResponse, void>,
-          )
-          as ActionFinal<SavedLoginResponse, void>;
-  if (currentLoginResponseState is ActionFailure<SavedLoginResponse, void>) {
+  await currentLoginResponseBloc.stream.firstWhere(
+    (final actionState) => actionState is ActionFinal<SavedLoginResponse, void>,
+  );
+  if (currentLoginResponseBloc.state
+      is ActionFailure<SavedLoginResponse, void>) {
     return CommonPaths.loginPath;
   }
 
-  currentUserBloc.add(ActionStarted.empty());
-  final currentUserState =
-      await currentUserBloc.stream.firstWhere(
-            (final actionState) => actionState is ActionFinal<UserDTO, void>,
-          )
-          as ActionFinal<UserDTO, void>;
-  if (currentUserState is ActionFailure<UserDTO, void>) {
+  initApiBloc.add(
+    ActionStarted(
+      data:
+          (currentLoginResponseBloc.state
+                  as ActionSuccess<SavedLoginResponse, void>)
+              .data,
+    ),
+  );
+  await initApiBloc.stream.firstWhere(
+    (final actionState) => actionState is ActionFinal<void, SavedLoginResponse>,
+  );
+  if (initApiBloc.state is ActionFailure<void, SavedLoginResponse>) {
+    return CommonPaths.loginPath;
+  }
+
+  if (currentUserBloc.state is ActionInitial) {
+    currentUserBloc.add(ActionStarted.empty());
+    await currentUserBloc.stream.firstWhere(
+      (final actionState) => actionState is ActionFinal<UserDTO, void>,
+    );
+  }
+  if (currentUserBloc.state is ActionFailure<UserDTO, void>) {
     return CommonPaths.loginPath;
   }
 
@@ -299,18 +315,18 @@ FutureOr<String?> _roleGuardRedirect(
 ) async {
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
-  currentUserBloc.add(ActionStarted.empty());
-  final currentUserState =
-      await currentUserBloc.stream.firstWhere(
-            (final actionState) => actionState is ActionFinal<UserDTO, void>,
-          )
-          as ActionFinal<UserDTO, void>;
-  if (currentUserState is ActionFailure<UserDTO, void>) {
+  if (currentUserBloc.state is ActionInitial) {
+    currentUserBloc.add(ActionStarted.empty());
+    await currentUserBloc.stream.firstWhere(
+      (final actionState) => actionState is ActionFinal<UserDTO, void>,
+    );
+  }
+  if (currentUserBloc.state is ActionFailure<UserDTO, void>) {
     return CommonPaths.loginPath;
   }
 
   return roles.contains(
-        (currentUserState as ActionSuccess<UserDTO, void>).data.role,
+        (currentUserBloc.state as ActionSuccess<UserDTO, void>).data.role,
       )
       ? null
       : CommonPaths.homePath;

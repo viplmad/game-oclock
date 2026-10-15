@@ -1306,6 +1306,12 @@ abstract class AppLocalizations {
   /// **'Error copied'**
   String get errorCopiedText;
 
+  /// No description provided for @moreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreLabel;
+
   /// No description provided for @mainLabel.
   ///
   /// In en, this message translates to:

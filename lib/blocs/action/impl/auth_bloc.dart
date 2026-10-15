@@ -29,22 +29,25 @@ class CurrentLoginResponseGetBloc
   ) => service.getCurrent();
 }
 
-class LoginBloc extends ConsumerActionBloc<Login> {
-  LoginBloc({required this.service, required this.apiClient});
+class InitApiClientBloc extends ConsumerActionBloc<SavedLoginResponse> {
+  InitApiClientBloc({required this.apiClient});
 
-  final AuthService service;
   final RetryableApiClient apiClient;
 
   @override
-  Future<void> doAction(final Login event, final void lastData) async {
-    final loginResponse = await LoginService(
-      ApiClient(basePath: event.host),
-    ).login(event.username, event.password);
+  Future<void> doAction(
+    final SavedLoginResponse event,
+    final void lastData,
+  ) async {
+    if (apiClient.apiClient != null) {
+      return;
+    }
+
     apiClient.update(
       basePath: event.host,
       authentication: OAuth(
-        accessToken: loginResponse.accessToken,
-        refreshToken: loginResponse.refreshToken,
+        accessToken: event.tokenResponse.accessToken,
+        refreshToken: event.tokenResponse.refreshToken,
       ),
       onRefresh: (final client, final oauth) async {
         final refreshResponse = await LoginService(
@@ -56,6 +59,20 @@ class LoginBloc extends ConsumerActionBloc<Login> {
         );
       },
     );
+  }
+}
+
+class LoginBloc extends ConsumerActionBloc<Login> {
+  LoginBloc({required this.service, required this.apiClient});
+
+  final AuthService service;
+  final RetryableApiClient apiClient;
+
+  @override
+  Future<void> doAction(final Login event, final void lastData) async {
+    final loginResponse = await LoginService(
+      ApiClient(basePath: event.host),
+    ).login(event.username, event.password);
     return service.saveCurrent(
       SavedLoginResponse(
         host: event.host,

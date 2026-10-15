@@ -4,7 +4,8 @@ import 'package:game_oclock/components/detail.dart';
 import 'package:game_oclock/components/labels/labels.dart';
 import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
-import 'package:game_oclock/models/models.dart' show gameStatusOptions;
+import 'package:game_oclock/models/models.dart'
+    show ActionDestination, gameStatusOptions;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
@@ -36,10 +37,10 @@ class ExternalGameDetail extends StatelessWidget {
       onBackPressed: onBackPressed,
       actions: [
         if (data.state == null)
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.add,
-            tooltip: context.localize().addLabel,
-            onPressed: () => showReturningDialog(
+            labelBuilder: (final context) => context.localize().addLabel,
+            onTap: (final context) => showReturningDialog(
               context,
               builder: (final context) =>
                   UserGameExternalCreateForm(externalId: data.external_),

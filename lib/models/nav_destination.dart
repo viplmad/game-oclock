@@ -14,17 +14,26 @@ final class NavDestination {
   });
 }
 
-final class TabDestination {
-  final Widget icon;
-  final String Function(BuildContext context) labelBuilder;
-  final ValueChanged<BuildContext> onTap;
+final class TabDestination extends ActionDestination {
   final Widget child;
 
   const TabDestination({
+    required super.icon,
+    required super.labelBuilder,
+    required super.onTap,
+    required this.child,
+  });
+}
+
+final class ActionDestination {
+  final Widget icon;
+  final String Function(BuildContext context) labelBuilder;
+  final ValueChanged<BuildContext> onTap;
+
+  const ActionDestination({
     required this.icon,
     required this.labelBuilder,
     required this.onTap,
-    required this.child,
   });
 }
 

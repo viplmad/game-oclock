@@ -19,7 +19,7 @@ import 'package:game_oclock/components/list_detail.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, Playthrough, TabDestination;
+    show ActionDestination, LayoutTier, Playthrough, TabDestination;
 import 'package:game_oclock/shared/forms/game_form.dart';
 import 'package:game_oclock/shared/forms/game_playthrough_form.dart';
 import 'package:game_oclock/shared/forms/playthrough_form.dart';
@@ -42,6 +42,8 @@ class PlaythroughDetailPage extends StatelessWidget {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
+      // Recreate on selection change
+      key: Key(id),
       providers: [
         BlocProvider(
           create: (_) =>
@@ -60,8 +62,9 @@ class PlaythroughDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<Playthrough, PlaythroughGetBloc>(
-        onBackPressed: () =>
-            GoRouter.of(context).go(CommonPaths.playthroughsPath),
+        onBackPressed: () => GoRouter.of(context).canPop()
+            ? GoRouter.of(context).pop()
+            : GoRouter.of(context).go(CommonPaths.playthroughsPath),
         builder: (final context, final data, final onBackPressed) =>
             PlaythroughDetail(
               data: data,
@@ -151,26 +154,31 @@ class PlaythroughDetail extends StatelessWidget {
         onBackPressed: onBackPressed,
         actions: [
           if (!fromPage)
-            IconButton(
+            ActionDestination(
               icon: CommonIcons.view,
-              tooltip: context.localize().viewLabel,
-              onPressed: () => GoRouter.of(
+              labelBuilder: (final context) => context.localize().viewLabel,
+              onTap: (final context) => GoRouter.of(
                 context,
               ).go(CommonPaths.buildPlaythroughPath(data.id)),
             ),
-          IconButton(
+          ActionDestination(
+            icon: CommonIcons.reload,
+            labelBuilder: (final context) => context.localize().reloadLabel,
+            onTap: (final context) => onEditSucceeded(context),
+          ),
+          ActionDestination(
             icon: CommonIcons.edit,
-            tooltip: context.localize().editLabel,
-            onPressed: () async => showReturningDialog(
+            labelBuilder: (final context) => context.localize().editLabel,
+            onTap: (final context) async => showReturningDialog(
               context,
               builder: (final context) => PlaythroughEditForm(id: data.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
             ),
           ),
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.delete,
-            tooltip: context.localize().deleteLabel,
-            onPressed: () async => showConfirmationDialog(
+            labelBuilder: (final context) => context.localize().deleteLabel,
+            onTap: (final context) async => showConfirmationDialog(
               context,
               builder: (final context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,

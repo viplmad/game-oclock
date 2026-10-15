@@ -97,7 +97,7 @@ class LoginBuilder extends StatelessWidget {
                 context,
                 message: context.localize().loginSuccessfulLabel,
               );
-              GoRouter.of(context).go(CommonPaths.homePath);
+              GoRouter.of(context).go(CommonPaths.homePath); // TODO redirectUrl
             }
             if (state is ActionFailure<void, Login>) {
               showErrorSnackBar(

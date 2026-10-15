@@ -13,6 +13,7 @@ import 'package:game_oclock/blocs/blocs.dart'
         CurrentUserGetBloc,
         DateLocaleConfigGetBloc,
         DateLocaleConfigSaveBloc,
+        InitApiClientBloc,
         LocaleGetBloc,
         LocaleSaveBloc,
         LoginBloc,
@@ -102,6 +103,7 @@ class GameOClockApp extends StatelessWidget {
             create: (_) =>
                 LogoutBloc(service: authService, apiClient: apiClient),
           ),
+          BlocProvider(create: (_) => InitApiClientBloc(apiClient: apiClient)),
           // Config
           BlocProvider(
             create: (_) =>

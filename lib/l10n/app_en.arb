@@ -201,6 +201,7 @@
   "leaveDirtyFormConfirmationDialogTitle": "Are you sure you want to leave?",
   "leaveDirtyFormConfirmationDialogSubtitle": "There are unsaved changes.",
   "errorCopiedText": "Error copied",
+  "moreLabel": "More",
   "mainLabel": "Main",
   "lastAddedLabel": "Last Added",
   "lastUpdatedLabel": "Last Updated",

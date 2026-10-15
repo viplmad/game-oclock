@@ -6,6 +6,7 @@ import 'constants.dart';
 class CommonIcons {
   CommonIcons._();
 
+  static const menu = Icon(Icons.more_vert);
   static const show = Icon(Icons.visibility_off);
   static const hide = Icon(Icons.visibility);
   static const add = Icon(Icons.add);

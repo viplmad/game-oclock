@@ -37,7 +37,7 @@ import 'package:game_oclock/constants/colors.dart';
 import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/constants/paths.dart';
 import 'package:game_oclock/models/models.dart'
-    show LayoutTier, TabDestination, gameStatusOptions;
+    show ActionDestination, LayoutTier, TabDestination, gameStatusOptions;
 import 'package:game_oclock/shared/forms/game_available_form.dart';
 import 'package:game_oclock/shared/forms/game_child_form.dart';
 import 'package:game_oclock/shared/forms/game_form.dart';
@@ -66,6 +66,8 @@ class UserGameDetailPage extends StatelessWidget {
     final layoutTier = layoutTierFromContext(context);
 
     return MultiBlocProvider(
+      // Recreate on selection change
+      key: Key(id),
       providers: [
         BlocProvider(
           create: (_) =>
@@ -124,7 +126,9 @@ class UserGameDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<MediaDTO, UserGameGetBloc>(
-        onBackPressed: () => GoRouter.of(context).go(CommonPaths.gamesPath),
+        onBackPressed: () => GoRouter.of(context).canPop()
+            ? GoRouter.of(context).pop()
+            : GoRouter.of(context).go(CommonPaths.gamesPath),
         builder: (final context, final data, final onBackPressed) =>
             UserGameDetail(
               data: data,
@@ -368,47 +372,52 @@ class UserGameDetail extends StatelessWidget {
               ),
         onBackPressed: onBackPressed,
         actions: [
-          IconButton(
-            icon: CommonIcons.calendar,
-            tooltip: context.localize().calendarLabel,
-            onPressed: () => GoRouter.of(
-              context,
-            ).go(CommonPaths.buildGameCalendarPath(data.media.id)),
-          ),
           if (!fromPage)
-            IconButton(
+            ActionDestination(
               icon: CommonIcons.view,
-              tooltip: context.localize().viewLabel,
-              onPressed: () => GoRouter.of(
+              labelBuilder: (final context) => context.localize().viewLabel,
+              onTap: (final context) => GoRouter.of(
                 context,
               ).go(CommonPaths.buildGamePath(data.media.id)),
             ),
-          IconButton(
+          ActionDestination(
+            icon: CommonIcons.reload,
+            labelBuilder: (final context) => context.localize().reloadLabel,
+            onTap: (final context) => onEditSucceeded(context),
+          ),
+          ActionDestination(
+            icon: CommonIcons.calendar,
+            labelBuilder: (final context) => context.localize().calendarLabel,
+            onTap: (final context) => GoRouter.of(
+              context,
+            ).go(CommonPaths.buildGameCalendarPath(data.media.id)),
+          ),
+          ActionDestination(
             icon: CommonIcons.edit,
-            tooltip: context.localize().editLabel,
-            onPressed: () async => showReturningDialog(
+            labelBuilder: (final context) => context.localize().editLabel,
+            onTap: (final context) async => showReturningDialog(
               context,
               builder: (final context) => UserGameEditForm(id: data.media.id),
               onSuccess: (final context, _) => onEditSucceeded(context),
             ),
           ),
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.sync,
-            tooltip: context.localize().syncLabel,
-            onPressed: () =>
+            labelBuilder: (final context) => context.localize().syncLabel,
+            onTap: (final context) =>
                 context.read<UserGameSyncBloc>().add(ActionStarted(data: data)),
           ),
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.unsync,
-            tooltip: context.localize().unsyncLabel,
-            onPressed: () => context.read<UserGameUnsyncBloc>().add(
+            labelBuilder: (final context) => context.localize().unsyncLabel,
+            onTap: (final context) => context.read<UserGameUnsyncBloc>().add(
               ActionStarted(data: data),
             ),
           ),
-          IconButton(
+          ActionDestination(
             icon: CommonIcons.delete,
-            tooltip: context.localize().deleteLabel,
-            onPressed: () async => showConfirmationDialog(
+            labelBuilder: (final context) => context.localize().deleteLabel,
+            onTap: (final context) async => showConfirmationDialog(
               context,
               builder: (final context) => ConfirmationDialog(
                 title: context.localize().deleteDialogTitle,
