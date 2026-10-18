@@ -74,7 +74,7 @@ class _ExternalGameListDetailBuilder extends StatelessWidget {
       title: 'Search', // TODO
       searchSpace: _space,
       availableStyles: [ListStyle.tile],
-      idGetter: (data) => data.external_.id,
+      idGetter: (final data) => data.external_.id,
       detailBuilder: (final context, final data, final onClosed) {
         return ExternalGameDetail(
           key: Key(data.external_.id),
