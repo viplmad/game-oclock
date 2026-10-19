@@ -2,7 +2,7 @@ import 'package:duration_picker/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+//import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionRestarted,
@@ -43,7 +43,7 @@ import 'package:game_oclock/services/shared_preferences_repository.dart';
 import 'package:game_oclock/utils/custom_material_localizations.dart';
 
 void main() {
-  usePathUrlStrategy();
+  //usePathUrlStrategy();
   runApp(const GameOClockApp());
 }
 
