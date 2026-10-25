@@ -1,19 +1,20 @@
 import 'package:duration_picker/localization/localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-//import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:game_oclock/blocs/blocs.dart'
     show
         ActionRestarted,
         ActionStarted,
         ActionState,
         ActionSuccess,
+        ApiClientInitBloc,
         CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
         DateLocaleConfigGetBloc,
         DateLocaleConfigSaveBloc,
-        InitApiClientBloc,
         LocaleGetBloc,
         LocaleSaveBloc,
         LoginBloc,
@@ -43,7 +44,9 @@ import 'package:game_oclock/services/shared_preferences_repository.dart';
 import 'package:game_oclock/utils/custom_material_localizations.dart';
 
 void main() {
-  //usePathUrlStrategy();
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
   runApp(const GameOClockApp());
 }
 
@@ -87,6 +90,7 @@ class GameOClockApp extends StatelessWidget {
         RepositoryProvider<ListStyleService>(
           create: (_) => ListStyleService(sharedPrefsRepository),
         ),
+        RepositoryProvider<PathHistory>(create: (_) => PathHistory()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -103,7 +107,7 @@ class GameOClockApp extends StatelessWidget {
             create: (_) =>
                 LogoutBloc(service: authService, apiClient: apiClient),
           ),
-          BlocProvider(create: (_) => InitApiClientBloc(apiClient: apiClient)),
+          BlocProvider(create: (_) => ApiClientInitBloc(apiClient: apiClient)),
           // Config
           BlocProvider(
             create: (_) =>

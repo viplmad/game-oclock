@@ -30,7 +30,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class TagDetailPage extends StatelessWidget {
   const TagDetailPage({super.key, required this.id});
@@ -61,9 +60,7 @@ class TagDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<TagDTO, TagGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.tagsPath),
+        onBackPressed: () => goBack(context, defaultPath: CommonPaths.tagsPath),
         builder: (final context, final data, final onBackPressed) => TagDetail(
           data: data,
           fromPage: true,
@@ -72,7 +69,7 @@ class TagDetailPage extends StatelessWidget {
           onEditSucceeded: (final context) =>
               context.read<TagGetBloc>().add(const ActionRestarted()),
           onDeleteSucceeded: (final context) =>
-              GoRouter.of(context).go(CommonPaths.tagsPath),
+              goBack(context, defaultPath: CommonPaths.tagsPath),
         ),
       ),
     );
@@ -119,9 +116,10 @@ class TagDetail extends StatelessWidget {
               UserGameCreateForm(initialTitle: quicksearch),
           itemBuilder: (final context, final data) => MediaTagTileListItem(
             data: data,
-            onTap: () => GoRouter.of(
+            onTap: () => go(
               context,
-            ).go(CommonPaths.buildGamePath(data.media.media.id)),
+              path: CommonPaths.buildGamePath(data.media.media.id),
+            ),
           ),
         ),
       ),
@@ -153,7 +151,7 @@ class TagDetail extends StatelessWidget {
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
               onTap: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.buildTagPath(data.id)),
+                  go(context, path: CommonPaths.buildTagPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,

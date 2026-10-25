@@ -54,7 +54,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class UserGameDetailPage extends StatelessWidget {
   const UserGameDetailPage({super.key, required this.id});
@@ -126,9 +125,8 @@ class UserGameDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<MediaDTO, UserGameGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.gamesPath),
+        onBackPressed: () =>
+            goBack(context, defaultPath: CommonPaths.gamesPath),
         builder: (final context, final data, final onBackPressed) =>
             UserGameDetail(
               data: data,
@@ -138,7 +136,7 @@ class UserGameDetailPage extends StatelessWidget {
               onEditSucceeded: (final context) =>
                   context.read<UserGameGetBloc>().add(const ActionRestarted()),
               onDeleteSucceeded: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.gamesPath),
+                  goBack(context, defaultPath: CommonPaths.gamesPath),
             ),
       ),
     );
@@ -213,9 +211,10 @@ class UserGameDetail extends StatelessWidget {
                         UserGameWithOrderTileListItem(
                           data: parent,
                           order: data.media.parentOrder,
-                          onTap: () => GoRouter.of(
+                          onTap: () => go(
                             context,
-                          ).go(CommonPaths.buildGamePath(parent.media.id)),
+                            path: CommonPaths.buildGamePath(parent.media.id),
+                          ),
                         ),
                   ),
                 ],
@@ -232,9 +231,10 @@ class UserGameDetail extends StatelessWidget {
                     UserGameWithOrderTileListItem(
                       data: child,
                       order: child.media.parentOrder,
-                      onTap: () => GoRouter.of(
+                      onTap: () => go(
                         context,
-                      ).go(CommonPaths.buildGamePath(child.media.id)),
+                        path: CommonPaths.buildGamePath(child.media.id),
+                      ),
                     ),
               ),
             ),
@@ -261,9 +261,10 @@ class UserGameDetail extends StatelessWidget {
               itemBuilder: (final context, final data) =>
                   LocationWithDateTileListItem(
                     data: data,
-                    onTap: () => GoRouter.of(
+                    onTap: () => go(
                       context,
-                    ).go(CommonPaths.buildLocationPath(data.location.id)),
+                      path: CommonPaths.buildLocationPath(data.location.id),
+                    ),
                   ),
             ),
       ),
@@ -279,7 +280,7 @@ class UserGameDetail extends StatelessWidget {
           itemBuilder: (final context, final data) => TagMediaTileListItem(
             data: data,
             onTap: () =>
-                GoRouter.of(context).go(CommonPaths.buildTagPath(data.tag.id)),
+                go(context, path: CommonPaths.buildTagPath(data.tag.id)),
           ),
         ),
       ),
@@ -292,7 +293,7 @@ class UserGameDetail extends StatelessWidget {
           itemBuilder: (final context, final data) => DeviceTileListItem(
             data: data,
             onTap: () =>
-                GoRouter.of(context).go(CommonPaths.buildDevicePath(data.id)),
+                go(context, path: CommonPaths.buildDevicePath(data.id)),
           ),
         ),
       ),
@@ -376,9 +377,8 @@ class UserGameDetail extends StatelessWidget {
             ActionDestination(
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) => GoRouter.of(
-                context,
-              ).go(CommonPaths.buildGamePath(data.media.id)),
+              onTap: (final context) =>
+                  go(context, path: CommonPaths.buildGamePath(data.media.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
@@ -388,9 +388,10 @@ class UserGameDetail extends StatelessWidget {
           ActionDestination(
             icon: CommonIcons.calendar,
             labelBuilder: (final context) => context.localize().calendarLabel,
-            onTap: (final context) => GoRouter.of(
+            onTap: (final context) => go(
               context,
-            ).go(CommonPaths.buildGameCalendarPath(data.media.id)),
+              path: CommonPaths.buildGameCalendarPath(data.media.id),
+            ),
           ),
           ActionDestination(
             icon: CommonIcons.edit,

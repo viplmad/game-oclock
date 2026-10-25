@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_oclock/models/models.dart' show ErrorDTO, LayoutTier;
+import 'package:game_oclock/pages/routes.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
+import 'package:go_router/go_router.dart';
 
 import 'copy_to_clipboard.dart';
+
+void goBack(final BuildContext context, {required final String defaultPath}) {
+  final PathHistory history = RepositoryProvider.of(context);
+  final historyPath = history.pop();
+
+  final path = historyPath ?? defaultPath;
+  GoRouter.of(context).go(path);
+}
+
+void go(final BuildContext context, {required final String path}) {
+  GoRouter.of(context).go(path);
+}
 
 void showSnackBar(
   final BuildContext context, {

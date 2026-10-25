@@ -226,7 +226,7 @@ class ListDetailBuilder<
         : detailBuilder(
             context,
             selectedData,
-            () => _select(context, selectBloc: selectBloc, data: null),
+            () => _select(selectBloc: selectBloc, data: null),
           );
   }
 
@@ -349,7 +349,6 @@ class ListDetailBuilder<
     required final T? selectedData,
   }) {
     _select(
-      context,
       selectBloc: context.read<SB>(),
       data: data == selectedData
           ? null // Remove selection if pressed on the same one
@@ -357,11 +356,7 @@ class ListDetailBuilder<
     );
   }
 
-  void _select(
-    final BuildContext context, {
-    required final SB selectBloc,
-    required final T? data,
-  }) {
+  void _select({required final SB selectBloc, required final T? data}) {
     selectBloc.add(ActionStarted(data: data));
   }
 }

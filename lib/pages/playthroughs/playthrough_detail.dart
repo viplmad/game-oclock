@@ -30,7 +30,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class PlaythroughDetailPage extends StatelessWidget {
   const PlaythroughDetailPage({super.key, required this.id});
@@ -62,9 +61,8 @@ class PlaythroughDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<Playthrough, PlaythroughGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.playthroughsPath),
+        onBackPressed: () =>
+            goBack(context, defaultPath: CommonPaths.playthroughsPath),
         builder: (final context, final data, final onBackPressed) =>
             PlaythroughDetail(
               data: data,
@@ -75,7 +73,7 @@ class PlaythroughDetailPage extends StatelessWidget {
                   .read<PlaythroughGetBloc>()
                   .add(const ActionRestarted()),
               onDeleteSucceeded: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.playthroughsPath),
+                  goBack(context, defaultPath: CommonPaths.playthroughsPath),
             ),
       ),
     );
@@ -124,9 +122,8 @@ class PlaythroughDetail extends StatelessWidget {
               UserGameCreateForm(initialTitle: quicksearch),
           itemBuilder: (final context, final data) => UserGameTileListItem(
             data: data,
-            onTap: () => GoRouter.of(
-              context,
-            ).go(CommonPaths.buildGamePath(data.media.id)),
+            onTap: () =>
+                go(context, path: CommonPaths.buildGamePath(data.media.id)),
           ),
         ),
       ),
@@ -157,9 +154,8 @@ class PlaythroughDetail extends StatelessWidget {
             ActionDestination(
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) => GoRouter.of(
-                context,
-              ).go(CommonPaths.buildPlaythroughPath(data.id)),
+              onTap: (final context) =>
+                  go(context, path: CommonPaths.buildPlaythroughPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,

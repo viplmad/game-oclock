@@ -31,7 +31,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class LocationDetailPage extends StatelessWidget {
   const LocationDetailPage({super.key, required this.id});
@@ -63,9 +62,8 @@ class LocationDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<LocationDTO, LocationGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.locationsPath),
+        onBackPressed: () =>
+            goBack(context, defaultPath: CommonPaths.locationsPath),
         builder: (final context, final data, final onBackPressed) =>
             LocationDetail(
               data: data,
@@ -75,7 +73,7 @@ class LocationDetailPage extends StatelessWidget {
               onEditSucceeded: (final context) =>
                   context.read<LocationGetBloc>().add(const ActionRestarted()),
               onDeleteSucceeded: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.locationsPath),
+                  goBack(context, defaultPath: CommonPaths.locationsPath),
             ),
       ),
     );
@@ -127,9 +125,10 @@ class LocationDetail extends StatelessWidget {
               itemBuilder: (final context, final data) =>
                   GameWithDateTileListItem(
                     data: data,
-                    onTap: () => GoRouter.of(
+                    onTap: () => go(
                       context,
-                    ).go(CommonPaths.buildGamePath(data.media.media.id)),
+                      path: CommonPaths.buildGamePath(data.media.media.id),
+                    ),
                   ),
             ),
       ),
@@ -167,9 +166,8 @@ class LocationDetail extends StatelessWidget {
             ActionDestination(
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
-              onTap: (final context) => GoRouter.of(
-                context,
-              ).go(CommonPaths.buildLocationPath(data.id)),
+              onTap: (final context) =>
+                  go(context, path: CommonPaths.buildLocationPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,

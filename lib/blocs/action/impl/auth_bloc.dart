@@ -29,8 +29,8 @@ class CurrentLoginResponseGetBloc
   ) => service.getCurrent();
 }
 
-class InitApiClientBloc extends ConsumerActionBloc<SavedLoginResponse> {
-  InitApiClientBloc({required this.apiClient});
+class ApiClientInitBloc extends ConsumerActionBloc<SavedLoginResponse> {
+  ApiClientInitBloc({required this.apiClient});
 
   final RetryableApiClient apiClient;
 

@@ -24,7 +24,6 @@ import 'package:game_oclock/utils/form_validators.dart';
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
-import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginPage extends StatelessWidget {
@@ -97,7 +96,7 @@ class LoginBuilder extends StatelessWidget {
                 context,
                 message: context.localize().loginSuccessfulLabel,
               );
-              GoRouter.of(context).go(CommonPaths.homePath); // TODO redirectUrl
+              go(context, path: CommonPaths.homePath); // TODO redirectUrl
             }
             if (state is ActionFailure<void, Login>) {
               showErrorSnackBar(

@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show FutureOr;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,9 +9,9 @@ import 'package:game_oclock/blocs/blocs.dart'
         ActionInitial,
         ActionStarted,
         ActionSuccess,
+        ApiClientInitBloc,
         CurrentLoginResponseGetBloc,
         CurrentUserGetBloc,
-        InitApiClientBloc,
         LogoutBloc,
         MinimizedLayoutBloc;
 import 'package:game_oclock/constants/paths.dart';
@@ -39,10 +39,62 @@ import 'package:game_oclock/pages/users/user_list.dart';
 import 'package:game_oclock_client/api.dart';
 import 'package:go_router/go_router.dart';
 
+class PathHistory {
+  final history = <String>[];
+  bool ignoreNextPush = false;
+
+  void push(final String path) {
+    if (ignoreNextPush) {
+      return;
+    }
+    history.add(path);
+  }
+
+  String? pop() {
+    if (history.isEmpty) {
+      return null;
+    }
+    ignoreNextPush = true;
+    return history.removeLast();
+  }
+}
+
+class _HistoryNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPush(
+    final Route<dynamic> route,
+    final Route<dynamic>? previousRoute,
+  ) {
+    if (previousRoute != null) {
+      final path = _buildPath(previousRoute);
+      if (path != null) {
+        final PathHistory history = RepositoryProvider.of(
+          route.navigator!.context,
+        );
+        history.push(path);
+      }
+    }
+
+    super.didPush(route, previousRoute);
+  }
+
+  static String? _buildPath(final Route<dynamic> route) {
+    String? path = route.settings.name;
+    final args = route.settings.arguments;
+    if (path != null && args is Map<String, String>) {
+      for (final entry in args.entries) {
+        path = path!.replaceAll(':${entry.key}', entry.value);
+      }
+    }
+    return path;
+  }
+}
+
 // GoRouter configuration
 final routerConfig = GoRouter(
   initialLocation: CommonPaths.loginPath,
   redirect: _authGuardRedirect,
+  observers: [_HistoryNavigatorObserver()],
   routes: [
     GoRoute(
       path: CommonPaths.loginPath,
@@ -265,7 +317,7 @@ FutureOr<String?> _authGuardRedirect(
   final GoRouterState state,
 ) async {
   final currentLoginResponseBloc = context.read<CurrentLoginResponseGetBloc>();
-  final initApiBloc = context.read<InitApiClientBloc>();
+  final initApiBloc = context.read<ApiClientInitBloc>();
   final currentUserBloc = context.read<CurrentUserGetBloc>();
 
   currentLoginResponseBloc.add(ActionStarted.empty());

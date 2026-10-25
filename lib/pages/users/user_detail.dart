@@ -22,7 +22,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class UserDetailPage extends StatelessWidget {
   const UserDetailPage({super.key, required this.id});
@@ -48,9 +47,8 @@ class UserDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<UserDTO, UserGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.usersPath),
+        onBackPressed: () =>
+            goBack(context, defaultPath: CommonPaths.usersPath),
         builder: (final context, final data, final onBackPressed) => UserDetail(
           data: data,
           fromPage: true,
@@ -59,7 +57,7 @@ class UserDetailPage extends StatelessWidget {
           onEditSucceeded: (final context) =>
               context.read<UserGetBloc>().add(const ActionRestarted()),
           onDeleteSucceeded: (final context) =>
-              GoRouter.of(context).go(CommonPaths.usersPath),
+              goBack(context, defaultPath: CommonPaths.usersPath),
         ),
       ),
     );
@@ -121,7 +119,7 @@ class UserDetail extends StatelessWidget {
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
               onTap: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.buildUserPath(data.id)),
+                  go(context, path: CommonPaths.buildUserPath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,

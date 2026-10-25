@@ -6,7 +6,7 @@ import 'package:game_oclock/constants/icons.dart';
 import 'package:game_oclock/models/models.dart' show LayoutTier, NavDestination;
 import 'package:game_oclock/utils/layout_tier_utils.dart';
 import 'package:game_oclock/utils/localisation_extension.dart';
-import 'package:go_router/go_router.dart';
+import 'package:game_oclock/utils/show_snackbar.dart';
 
 class MainLayoutBuilder extends StatelessWidget {
   const MainLayoutBuilder({
@@ -136,7 +136,7 @@ void _goToSelectedPath(
   final BuildContext context,
   final NavDestination destination,
 ) {
-  GoRouter.of(context).go(destination.path);
+  go(context, path: destination.path);
   Scaffold.of(context).closeDrawer();
 }
 

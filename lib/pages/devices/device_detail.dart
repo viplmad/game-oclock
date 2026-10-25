@@ -29,7 +29,6 @@ import 'package:game_oclock/utils/show_confirmation_dialog.dart';
 import 'package:game_oclock/utils/show_form_dialog.dart';
 import 'package:game_oclock/utils/show_snackbar.dart';
 import 'package:game_oclock_client/api.dart';
-import 'package:go_router/go_router.dart';
 
 class DeviceDetailPage extends StatelessWidget {
   const DeviceDetailPage({super.key, required this.id});
@@ -61,9 +60,8 @@ class DeviceDetailPage extends StatelessWidget {
         ),
       ],
       child: DetailBuilder<DeviceDTO, DeviceGetBloc>(
-        onBackPressed: () => GoRouter.of(context).canPop()
-            ? GoRouter.of(context).pop()
-            : GoRouter.of(context).go(CommonPaths.devicesPath),
+        onBackPressed: () =>
+            goBack(context, defaultPath: CommonPaths.devicesPath),
         builder: (final context, final data, final onBackPressed) =>
             DeviceDetail(
               data: data,
@@ -73,7 +71,7 @@ class DeviceDetailPage extends StatelessWidget {
               onEditSucceeded: (final context) =>
                   context.read<DeviceGetBloc>().add(const ActionRestarted()),
               onDeleteSucceeded: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.devicesPath),
+                  goBack(context, defaultPath: CommonPaths.devicesPath),
             ),
       ),
     );
@@ -116,9 +114,8 @@ class DeviceDetail extends StatelessWidget {
         child: RelationListBuilder<MediaDTO, UserGamePlayedOnDeviceListBloc>(
           itemBuilder: (final context, final data) => UserGameTileListItem(
             data: data,
-            onTap: () => GoRouter.of(
-              context,
-            ).go(CommonPaths.buildGamePath(data.media.id)),
+            onTap: () =>
+                go(context, path: CommonPaths.buildGamePath(data.media.id)),
           ),
         ),
       ),
@@ -157,7 +154,7 @@ class DeviceDetail extends StatelessWidget {
               icon: CommonIcons.view,
               labelBuilder: (final context) => context.localize().viewLabel,
               onTap: (final context) =>
-                  GoRouter.of(context).go(CommonPaths.buildDevicePath(data.id)),
+                  go(context, path: CommonPaths.buildDevicePath(data.id)),
             ),
           ActionDestination(
             icon: CommonIcons.reload,
