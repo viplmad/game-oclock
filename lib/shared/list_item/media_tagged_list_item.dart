@@ -43,7 +43,7 @@ class MediaTagTileListItem extends StatelessWidget {
               data.media.media.title,
               data.media.media.edition,
             ),
-      subtitle: data.tagged.order.toString(),
+      subtitle: data.tagged.order?.toString(),
       imageURL: data.media.media.imageUrl,
       onTap: onTap,
     );
