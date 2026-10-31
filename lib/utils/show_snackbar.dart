@@ -8,12 +8,16 @@ import 'package:go_router/go_router.dart';
 
 import 'copy_to_clipboard.dart';
 
-void goBack(final BuildContext context, {required final String defaultPath}) {
+void goBack(final BuildContext context, {final String? defaultPath}) {
   final PathHistory history = RepositoryProvider.of(context);
   final historyPath = history.pop();
 
   final path = historyPath ?? defaultPath;
-  GoRouter.of(context).go(path);
+  if (path == null) {
+    GoRouter.of(context).pop();
+  } else {
+    GoRouter.of(context).go(path);
+  }
 }
 
 void go(final BuildContext context, {required final String path}) {
